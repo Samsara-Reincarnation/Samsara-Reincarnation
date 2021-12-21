@@ -702,7 +702,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 							SetPointerExt(AAPTR_TARGET, 0, targettid);
 							Thing_ChangeTID(targettid, 0);
 						}
-						if(!CheckInventory("TotenkopfMonsterSet") && wolfmode == 2) 
+						if(!CheckInventory("TotenkopfMonsterSet") && wolfmode == 3) 
 						{	
 							TakeInventory("WolfLostMonsterSet", 0x7FFFFFFF);
 							GiveInventory("TotenkopfMonsterSet", 1); 
