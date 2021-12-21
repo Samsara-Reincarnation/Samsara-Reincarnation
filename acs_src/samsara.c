@@ -3066,7 +3066,7 @@ Script "Samsara_PickupMode" (void) net clientside
 }
 
 Str modestringsdefault[2] = { "On", "Off" };
-Str modestringswolf[3] = { "Classic", "Lost Missons", "Totenkopf SDL" };
+Str modestringswolf[4] = { "Classic", "Lost Missons", "Macintosh", "Totenkopf SDL" };
 Str modestringshexen[3] = { "Parias", "Daedolon", "Baratus" };
 Str modestringsrott[5] = { "Ian Paul Freeley", "Taradino Cassatt", "Thi Barrett", "Lorelei Ni", "Doug Wendt" };
 
@@ -3083,7 +3083,7 @@ Script "Samsara_ChangeAltClass" (void) net
 			break;
 		case 3:
 			mode = GetUserCvar(pln,"sams_cl_wolfmode");
-			if(mode == 2)
+			if(mode == 3)
 				mode = 0;
 			else
 				mode++;
