@@ -7,7 +7,7 @@ actor "Dual Neutron Disruptor": InstantSwitchWeapon
 	Weapon.BobRangeY 0.6
 	Weapon.BobSpeed 1.5	
     Inventory.PickUpSound "wolfen/knifeget"
-    Obituary "%k \cvdesintegrated\c- %o \cvwith the Dual Neutron Disruptor\c-"
+    Obituary "%k disintegrated %o with the Dual Neutron Disruptor."
     Inventory.PickupMessage "You got a Dual Neutron Disruptor!"
     DamageType "BlakeBullet"
     Weapon.AmmoUse 1
@@ -87,7 +87,6 @@ actor "Dual Neutron Disruptor": InstantSwitchWeapon
 		DRIF EB 3
 		Goto Ready
 	  CoopHoldAOG:
-		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopHoldAOG")
         TNT1 A 0 A_PlayWeaponSound("DRifle/Fire")
         DRIF H 4 BRIGHT A_FireCustomMissile("BlakeBullet3",random(-40,40)/10.0,1,0,1,0,random(-38,38)/10.0)
 		TNT1 A 0 A_PlayWeaponSound("DRifle/Fire")
@@ -96,7 +95,6 @@ actor "Dual Neutron Disruptor": InstantSwitchWeapon
 		DRIF JG 3
         Goto Ready		
 	  CoopFireAOG:
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopFireAOG")
         DRIF G 2
         TNT1 A 0 A_PlayWeaponSound("DRifle/Fire")
         DRIF H 4 BRIGHT A_FireCustomMissile("BlakeBullet3",random(-40,40)/10.0,1,0,1,0,random(-38,38)/10.0)

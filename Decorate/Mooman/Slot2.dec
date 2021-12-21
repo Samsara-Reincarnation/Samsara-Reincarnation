@@ -32,7 +32,18 @@ Actor " Plasma Shotgun " : Weapon
 		Loop	
 	Fire:
 		TNT1 A 0 A_GunFlash("FakeFlash")
+		GW20 A 0 A_JumpIfInventory("SPModeOn",1,"SPFire")	
 		GW20 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopFire")	
+		GW20 A 10 bright A_PlayWeaponSound("greed/plasmashot")
+		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBallDM",-8,0,-2,0)
+		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBallDM",-4,0,-1,0)
+		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBallDM",4,0,1,0)
+		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBallDM",8,0,2,0)
+		GW20 B 0 bright A_FireCustomMissile("PGShotgunPlasmaBallDM",0,1,0,0)
+		GW20 B 9 bright
+		GW20 A 10
+		goto Ready		
+	SPFire:
 		GW20 A 10 bright A_PlayWeaponSound("greed/plasmashot")
 		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBall",-8,0,-2,0)
 		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBall",-4,0,-1,0)
@@ -41,7 +52,7 @@ Actor " Plasma Shotgun " : Weapon
 		GW20 B 0 bright A_FireCustomMissile("PGShotgunPlasmaBall",0,1,0,0)
 		GW20 B 9 bright
 		GW20 A 10
-		goto Ready		
+		goto Ready			
 	CoopFire:
 		GW20 A 10 bright A_PlayWeaponSound("greed/plasmashot")
 		GW20 A 0 A_FireCustomMissile("PGShotgunPlasmaBallCoop",-8,0,-2,0)
@@ -106,3 +117,5 @@ Actor PGShotgunPlasmaBallPuff
 }
 
 Actor PGShotgunPlasmaBallCoop : PGShotgunPlasmaBall { +THRUSPECIES Species "Player" }
+
+Actor PGShotgunPlasmaBallDM : PGShotgunPlasmaBall { Damage (14) }

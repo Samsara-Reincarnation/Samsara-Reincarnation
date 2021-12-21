@@ -7,7 +7,7 @@ actor "Anti-Plasma Cannon": InstantSwitchWeapon
 	Weapon.BobRangeY 0.6
 	Weapon.BobSpeed 1.5	
     Inventory.PickUpSound "wolfen/knifeget"
-    Obituary "%k \cvobliterated\c- %o \cvwith the Anti-Plasma Cannon\c-"
+    Obituary "%k obliterated %o with the Anti-Plasma Cannon"
     Inventory.PickupMessage "You got an Anti-Plasma Cannon!"
     DamageType "BlakePlasma"
     Weapon.AmmoUse 8
@@ -33,6 +33,7 @@ actor "Anti-Plasma Cannon": InstantSwitchWeapon
 		TNT1 A 0 A_JumpIfInventory("BlakeAOGToken", 1, "FireAOG")
         DCAN B 3
 	  Hold:	
+		TNT1 A 0 A_JumpIfInventory("BlakeAOGToken", 1, "HoldAOG")
         TNT1 A 0 A_PlayWeaponSound("DRifle/Fire")
 		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"SPHold")
 	    TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopHold")
