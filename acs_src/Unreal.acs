@@ -42,6 +42,11 @@ Script "Unreal_Loop" Enter
 			lasttimer = Timer();
 		}
 		
+		if(GetActorViewHeight(0) < 28.0)
+			GiveInventory("IsCrouching",1);
+		else
+			TakeInventory("IsCrouching",1);
+		
 		delay(1);	
 		TakeInventory("Unreal_Combo", 1);
 	}		
@@ -249,8 +254,8 @@ Script "Unreal_ASMDTrace" (void)
 	SetActivatorToTarget(0);
 	int angle = GetActorAngle(0);
 	int pitch = GetActorPitch(0);
-	int playX = GetActorX(0) + FixedMul(sin(angle),10.0);
-	int playY = GetActorY(0) - FixedMul(cos(angle),10.0);
+	int playX = GetActorX(0) + FixedMul(sin(angle),13.0);
+	int playY = GetActorY(0) - FixedMul(cos(angle),13.0);
 	int playZ = GetActorZ(0) + GetActorViewHeight(0) - 8.0;
 	int newtid = UniqueTid();
 	
@@ -310,4 +315,114 @@ Script "Unreal_GibScale" (void)
 			else if(spacecube < 500000) { SetActorProperty(0,APROP_ScaleX,1.5); SetActorProperty(0,APROP_ScaleY,1.5); }
 			else if(spacecube < 1000000) { SetActorProperty(0,APROP_ScaleX,2.0); SetActorProperty(0,APROP_ScaleY,2.0); }
 			else { SetActorProperty(0,APROP_ScaleX,1.0); SetActorProperty(0,APROP_ScaleY,1.0); }
-}			
+}	
+
+Script "Unreal_RedeemerPitch" (void)
+{
+	SetActivatorToTarget(0);
+	SetResultValue(GetActorPitch(0)/182);
+}	
+
+Script "Unreal_Recoil" (void)
+{
+	int GZDoom = !GetPlayerAccountName(0);
+	int rolldir = -1 + (2*random(0,1));
+	int randomroll = random(45,90);
+	int rollamount = random(2,3);
+	int rollcounter;
+	SetActorRoll(0,0);
+	while(rollcounter < rollamount)
+	{
+		if(GZDoom)
+			SetActorRoll(0,GetActorRoll(0)+(rolldir*randomroll));
+		SetActorProperty(0,APROP_Viewheight,GetActorProperty(0,APROP_Viewheight)-1.0);
+		Delay(1);
+		rollcounter++;
+	}
+	while(rollcounter > 0)
+	{
+		if(GZDoom)
+			SetActorRoll(0,GetActorRoll(0)-(rolldir*randomroll));
+		SetActorProperty(0,APROP_Viewheight,GetActorProperty(0,APROP_Viewheight)+1.0);
+		Delay(1);
+		rollcounter--;
+	}
+	SetActorRoll(0,0);
+}	
+
+Script "Unreal_RedeemerRocket" (void)
+{
+	int GZDoom = !GetPlayerAccountName(0);
+	int abortDelay;
+	int missileTid = UniqueTid();
+	int maxturn = 2160;
+	int turnamount = 180;
+	Thing_ChangeTid(0,missileTid);
+	SetActivator(0,AAPTR_Target);
+	ChangeCamera(missileTid,0,0);
+	SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
+	SetActorPitch(missileTid,GetActorPitch(0));
+	while(ClassifyActor(missileTid) > 0 && ClassifyActor(0) & ACTOR_ALIVE)
+	{
+		SetFont("UNREDEEM");
+		SetHudSize(640,480,1);
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_ADDBLEND,10000,CR_UNTRANSLATED,320.0,240.0,0.1,0.67);
+		int yaw = GetPlayerInput(-1,INPUT_YAW);
+		int pitch = -GetPlayerInput(-1,INPUT_PITCH);
+		int speedUp = (GetPlayerInput(-1,INPUT_BUTTONS) & BT_ATTACK)+1;
+		int abort = GetPlayerInput(-1,INPUT_BUTTONS) & BT_ALTATTACK;
+		SetActorAngle(missileTid,GetActorAngle(missileTid)+yaw);
+		SetActorPitch(missileTid,GetActorPitch(missileTid)+pitch);
+		int velx = FixedMul(16*cos(GetActorAngle(missileTid)),cos(GetActorPitch(missileTid)));
+		int vely = FixedMul(16*sin(GetActorAngle(missileTid)),cos(GetActorPitch(missileTid)));
+		int velz = -16*sin(GetActorPitch(missileTid));
+		SetActorVelocity(missileTid,velx*speedUp,vely*speedUp,velz*speedUp,0,0);
+		
+		if(GZDoom)
+		{
+			int roll = GetActorRoll(missileTid);
+			
+			if(roll >= 0.5 && roll < 1.0)
+				roll-=1.0;	
+
+			if(yaw < 0)
+			{
+				if(roll < maxturn)
+					SetActorRoll(missileTid,roll+turnamount);
+			}
+			else if(yaw > 0)
+			{
+				if(roll > -maxturn)
+					SetActorRoll(missileTid,roll-turnamount);
+			}
+			else if(roll != 0)
+			{
+				if(roll > 0)
+					SetActorRoll(missileTid,roll-turnamount);
+				else
+					SetActorRoll(missileTid,roll+turnamount);
+					
+				if(roll != 0)
+				{
+					if(roll > 0)
+						SetActorRoll(missileTid,roll-turnamount);
+					else
+						SetActorRoll(missileTid,roll+turnamount);
+				}
+			}	
+		}
+		
+		Delay(1);
+		abortDelay++;
+		if(abort != 0 && abortDelay > 7)
+		{
+			SetActorVelocity(missileTid,velx*2,vely*2,velz*2,0,0);
+			break;
+		}
+	}
+	GiveInventory("Unreal_RedeemerLoad",1);
+	HudMessage(s:"";HUDMSG_PLAIN,10000,CR_UNTRANSLATED,240.0,240.0,0.1);
+	SetHudSize(0,0,0);
+	ChangeCamera(0,0,0);
+	SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
+}

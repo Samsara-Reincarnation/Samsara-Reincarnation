@@ -25,6 +25,7 @@ Actor Unreal_ASMDShockRifle : UnrealWeapon
 			TNT1 A 1 A_Raise
 			loop	
 		Ready:
+			UN01 A 0 A_GiveInventory("Unreal_ASMDSelected",1)
 			UN01 ABCDEFGH 2 A_WeaponReady(WRF_NOFIRE)
 			Goto WIdle
 		WIdle:
@@ -43,27 +44,30 @@ Actor Unreal_ASMDShockRifle : UnrealWeapon
 			UN02 CCDDEE 6 A_WeaponReady
 			Goto WIdle
 		Deselect:
+			UN01 A 0 A_TakeInventory("Unreal_ASMDSelected",1)
 			UN01 KLMN 2 
 		InstantDeselect: // I have to copy paste this everytime. Thanks, Zandronum.
 			TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Lower
 			TNT1 A 1 A_Lower
 			Wait			
 		Fire:
-			UN01 P 6 BRIGHT A_FireBullets(0.5,0.5,-1,35,"U1ASMDTracerPuff",FBF_NORANDOM|FBF_NORANDOMPUFFZ|FBF_USEAMMO)//A_FireCustomMissile("U1ASMDTracer",Random(-0.5,0.5),1,0,0,Random(-0.5,0.5))
+			UN01 P 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN01 P 4 BRIGHT A_FireBullets(0.5,0.5,-1,35,"U1ASMDTracerPuff",FBF_NORANDOM|FBF_NORANDOMPUFFZ|FBF_USEAMMO)//A_FireCustomMissile("U1ASMDTracer",Random(-0.5,0.5),1,0,0,Random(-0.5,0.5))
 			UN01 Q 0 BRIGHT A_PlaySound("Unreal/ASMD/Fire1", CHAN_WEAPON)
 			UN01 Q 0 BRIGHT A_GiveInventory("UShockRifleFired", 1)
-			UN01 Q 5 BRIGHT
-			UN01 RS 6
-			UN01 T 6 A_Refire
+			UN01 Q 4 BRIGHT
+			UN01 RS 4
+			UN01 T 4 A_WeaponReady
 			Goto WIdle
 		AltFire:
+			UN01 U 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN01 U 0 BRIGHT A_SetBlend("29 8f e8", 0.10, 10)
-			UN01 U 5 BRIGHT A_FireCustomMissile("U1ASMDBall", 0,1,8,0)
+			UN01 U 4 BRIGHT A_FireCustomMissile("U1ASMDBall", 0,1,13,5)
 			UN01 V 0 BRIGHT A_PlaySound("Unreal/ASMD/Fire2", CHAN_WEAPON)
 			UN01 V 0 BRIGHT A_GiveInventory("UShockRifleFired", 1)
 			UN01 V 4 BRIGHT 
-			UN01 WX 3 
-			UN01 Y 4 A_Refire
+			UN01 WX 4
+			UN01 Y 4 A_WeaponReady
 			Goto WIdle
 	}
 }
@@ -71,6 +75,8 @@ Actor Unreal_ASMDShockRifle : UnrealWeapon
 Actor U1ASMDTracerPuff
 {
 	DamageType "ASMDShockTrace"
+	Height 16
+	Radius 8
 	+HITTRACER
 	+PUFFGETSOWNER
 	+PUFFONACTORS
@@ -145,7 +151,7 @@ Actor U1ASMDBall
 	+FORCERADIUSDMG
 	+THRUSPECIES
 	Radius 12
-	Height 12
+	Height 24
 	Health 1
 	Scale 0.5
 	RenderStyle Add
@@ -189,8 +195,8 @@ Actor U1ASMDBall
 
 Actor UASMDBallHitbox
 {
-	Height 12
-	Radius 12
+	Height 64
+	Radius 32
 	Health 1
 	Mass 50000
 	+ISMONSTER
@@ -210,7 +216,7 @@ Actor UASMDBallHitbox
 			TNT1 A 0
 			TNT1 A 0 A_GiveInventory("IsUShockBall",1)
 		SpawnLoop:
-			TNT1 A 2 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
+			TNT1 A 2 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_COPYINTERPOLATION)
 			Loop
 		Death:
 			TNT1 A 2 

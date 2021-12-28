@@ -23,6 +23,7 @@ Actor Unreal_Stinger : UnrealWeapon
         TNT1 A 1 A_Raise
         loop
 	Deselect:
+		UN02 A 0 A_TakeInventory("Unreal_StingerSelected",1)
 		UN02 ABCDEFG 1 //A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 		UN02 HI 1 //A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 	InstantDeselect:
@@ -30,6 +31,7 @@ Actor Unreal_Stinger : UnrealWeapon
 		TNT1 A 1 A_Lower
 		Wait			
 	Ready:
+		UN01 A 0 A_GiveInventory("Unreal_StingerSelected",1)
 		UN01 A 0 A_PlaySound("Unreal/Stinger/Load", CHAN_WEAPON)
 		UN01 ABCDEFG 1 A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 		UN01 HIJKLMNOP 1 A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
@@ -39,16 +41,17 @@ Actor Unreal_Stinger : UnrealWeapon
 		UN01 W 3 A_WeaponReady
 		Loop
 	Fire:
+		UN03 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 		UN03 A 0 BRIGHT A_PlaySound("Unreal/Stinger/Fire", CHAN_WEAPON)
 		UN03 A 2 BRIGHT 
-		UN03 B 1 BRIGHT A_FireCustomMissile("UnrealStingerShot", random(-1,1), 1, 5, 0, random(-1,1))
+		UN03 B 1 BRIGHT A_FireCustomMissile("UnrealStingerShot", frandom(-1,1), 1, 13, 4, 0, frandom(-1,1))
 		UN03 C 1 BRIGHT A_Refire
 		Goto EndFire
 	Hold:
 		UN03 A 0 BRIGHT A_PlaySound("Unreal/Stinger/Fire2", CHAN_WEAPON, 1.0, true)
 	Hold2:	
-		UN03 A 2 BRIGHT 
-		UN03 B 1 BRIGHT A_FireCustomMissile("UnrealStingerShot", random(-1,1), 1, 5, 0, random(-1,1))
+		UN03 A 2 BRIGHT ACS_NamedExecuteWithResult("Unreal_Recoil") 
+		UN03 B 1 BRIGHT A_FireCustomMissile("UnrealStingerShot", frandom(-1,1), 1, 13, 4, frandom(-1,1))
 		UN03 C 1 BRIGHT A_Refire("Hold2")
 		Goto EndFire
 	EndFire:
@@ -56,15 +59,16 @@ Actor Unreal_Stinger : UnrealWeapon
 		UN01 W 1 A_PlaySound("Unreal/Stinger/EndFire", CHAN_WEAPON)
 		Goto WIdle
 	Altfire:
+		UN03 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 		UN03 A 0 BRIGHT A_PlaySound("Unreal/Stinger/AltFire", CHAN_WEAPON)
-		UN03 A 4 BRIGHT A_FireCustomMissile("UnrealStingerShot", random(-10,10), 1, 5, random(-10,10)*2, random(-10,10)*2)
-		UN03 BBBB 0 BRIGHT A_FireCustomMissile("UnrealStingerShot", random(-10,10), 0, 5, random(-10,10)*2, random(-10,10)*2)
+		UN03 A 4 BRIGHT A_FireCustomMissile("UnrealStingerShot", frandom(-10,10), 1, 13, 4, 0, frandom(-10,10))
+		UN03 BBBB 0 BRIGHT A_FireCustomMissile("UnrealStingerShot", frandom(-10,10), 0, 13, 4, 0, frandom(-10,10))
 		UN03 A 2 BRIGHT
 		UN03 B 2 BRIGHT
 		UN03 C 6 A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 		UN03 DD 6 A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 		Goto WIdle
-		}
+	}
 }		
 
 Actor UnrealStingerShot : FastProjectile

@@ -23,6 +23,7 @@ Actor Unreal_Minigun : UnrealWeapon
 			TNT1 A 1 A_Raise
 			loop	
 		Ready:
+			UN01 A 0 A_GiveInventory("Unreal_MinigunSelected",1)
 			UN01 ABCDEF 2
 			UN01 GHIJKL 2
 			Goto WIdle
@@ -33,6 +34,7 @@ Actor Unreal_Minigun : UnrealWeapon
 			UN06 ABCDEFGHIJJIHGFEDCBA 2 A_WeaponReady
 			Goto WIdle
 		Deselect:
+			UN07 A 0 A_TakeInventory("Unreal_MinigunSelected",1)
 			UN07 ABCDE 2
 			Goto InstantDeselect
 		InstantDeselect: // I have to copy paste this everytime. Thanks, Zandronum.
@@ -42,27 +44,34 @@ Actor Unreal_Minigun : UnrealWeapon
 		Fire:
 			UN03 A 0 A_PlaySound("Unreal/Minigun/Fire", CHAN_WEAPON, 1.0, True)
 		Hold:
+			UN03 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 A 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 B 2 BRIGHT
 		Hold2:
+			UN03 C 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 C 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 D 2 BRIGHT 
 		Hold3:
+			UN03 E 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 E 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 F 2 BRIGHT
 		Hold4:
+			UN03 G 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 G 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 H 2 BRIGHT 
 		Hold5:
+			UN03 I 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 I 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 J 2
 			UN03 K 0 BRIGHT A_JumpIfInventory("Unreal_Combo", 1, "AltHold")
 			UN03 K 0 BRIGHT A_Refire("Hold6")
 			Goto WindDown
 		Hold6:
+			UN03 K 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 K 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 L 2 BRIGHT
 		Hold7:
+			UN03 M 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 M 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 A 0 BRIGHT A_Refire
 			Goto WindDown
@@ -73,42 +82,42 @@ Actor Unreal_Minigun : UnrealWeapon
 			Goto WIdle
 		AltFire:
 			UN03 A 0 A_PlaySound("Unreal/Minigun/Fire", CHAN_WEAPON, 1.0, True)
-			UN03 A 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 B 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 C 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 D 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 E 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	
-			UN03 F 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 G 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 H 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 I 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 J 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	
-			UN03 K 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 L 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN03 M 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	
+			UN03 A 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 B 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 B 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 C 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 C 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 D 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 D 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 E 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 E 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 F 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 F 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 G 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 G 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 H 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 H 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 I 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 I 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 J 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 J 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 K 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 K 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 L 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 L 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN03 M 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN03 M 2 BRIGHT A_FireBullets(1,1,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)	UN04 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 A 0 BRIGHT A_Refire
 			Goto WindDown
 		AltHold:
 			UN04 A 0 BRIGHT A_StopSound(CHAN_WEAPON)
 			UN04 A 0 BRIGHT A_PlaySound("Unreal/Minigun/Altfire", CHAN_WEAPON, 1.0, True)
 			UN04 A 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 B 1 BRIGHT
+			UN04 B 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 C 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 D 1 BRIGHT
+			UN04 D 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 E 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 F 1 BRIGHT
+			UN04 F 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 G 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 H 1 BRIGHT
+			UN04 H 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 I 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 J 1 BRIGHT
+			UN04 J 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 K 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 L 1 BRIGHT
+			UN04 L 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 M 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 N 1 BRIGHT
+			UN04 N 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 O 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 P 1 BRIGHT
+			UN04 P 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 Q 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
-			UN04 R 1 BRIGHT
+			UN04 R 1 BRIGHT	ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 S 1 BRIGHT A_FireBullets(4,4,1,Random(15,22), "UnrealMiniPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN04 A 0 A_Refire
 			Goto WindDown

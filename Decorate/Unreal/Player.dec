@@ -1,4 +1,16 @@
 Actor UnrealClass : Boolean { }
+Actor Unreal_AutoMagSelected : Boolean {}
+Actor Unreal_DPistolSelected : Boolean {}
+Actor Unreal_RazorJackSelected : Boolean {}
+Actor Unreal_ASMDSelected : Boolean {}
+Actor Unreal_FlakSelected : Boolean {}
+Actor Unreal_StingerSelected : Boolean {}
+Actor Unreal_EightBallSelected : Boolean {}
+Actor Unreal_MinigunSelected : Boolean {}
+Actor Unreal_RedeemerSelected : Boolean {}
+Actor Unreal_BioRifleSelected : Boolean {}
+Actor Unreal_RifleSelected : Boolean {}
+Actor Unreal_CARSelected : Boolean {}
 
 Actor UnrealPlayer : PlayerPawn 
 {
@@ -13,7 +25,6 @@ Actor UnrealPlayer : PlayerPawn
 	Player.Soundclass "Prisoner849"
 	Player.JumpZ 10//Default is 8
 	Species "Player"
-	Scale 0.6
 	Player.ViewHeight 48
 	BloodType "UnrealBloodyPuff"
 	DamageFactor "RebelMissile", 0
@@ -50,85 +61,328 @@ Actor UnrealPlayer : PlayerPawn
 	States
 	{
 		Spawn:
-			UN00 A 0 NoDelay A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"See")
-			UN00 A 6
-			UN00 B 6
-			UN00 C 6
-			UN00 D 6
-			UN00 E 6
-			UN00 F 6
-			UN00 G 6
-			Loop
+			UF00 A 0
+			UF00 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"SpawnStand")
+			U100 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"SpawnStand")
+			U201 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"SpawnStand")
+			U301 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"SpawnStand")
+			U401 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"SpawnStand")
+			U501 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"SpawnStand")
+			U601 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"SpawnStand")
+			U701 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"SpawnStand")
+			UA01 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"SpawnStand")
+			UB01 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"SpawnStand")
+			UC01 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"SpawnStand")
+			U000 A 0
+		SpawnStand:
+			"####" A 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" B 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" B 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" B 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" C 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" C 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" C 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" D 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" D 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" D 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" E 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" E 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" E 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" F 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" F 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" F 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" G 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" G 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" G 4 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"See")		"####" A 0 A_JumpIfInventory("IsCrouching",1,"SpawnCrouch")	"####" A 0 A_JumpIf(waterlevel > 1, "Tread")
+			Goto Spawn
+		SpawnCrouch:
+			UF06 A 0
+			UF06 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"Crouching")
+			U106 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"Crouching")
+			U207 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"Crouching")
+			U307 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"Crouching")
+			U407 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"Crouching")
+			U507 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"Crouching")
+			U607 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"Crouching")
+			U707 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"Crouching")
+			UA07 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"Crouching")
+			UB07 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"Crouching")
+			UC07 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"Crouching")
+			U006 A 0
+		Crouching:
+			"####" A 0 A_JumpIfInventory("IsCrouching",1,1)
+			Goto Spawn
+			"####" A 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"SeeCrouch")	"####" A 0 A_JumpIf(waterlevel > 1, "Tread")
+			Goto SpawnCrouch
 		See:
-			UN01 A 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 B 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 C 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 D 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 E 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 F 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 G 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 H 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			UN01 I 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
-			Loop
-		Melee:	
+			UF02 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"Run")
+			U102 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"Run")
+			U203 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"Run")
+			U303 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"Run")
+			U403 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"Run")
+			U503 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"Run")
+			U603 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"Run")
+			U703 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"Run")
+			UA03 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"Run")
+			UB03 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"Run")
+			UC03 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"Run")
+			U002 A 0
+		Run:
+			"####" A 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" B 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" B 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" B 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" C 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" C 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" C 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" D 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" D 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" D 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" E 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" E 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" E 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" F 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" F 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" F 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" G 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" G 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" G 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" H 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" H 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" H 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" I 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" I 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" I 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" J 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" J 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" J 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Spawn")	"####" A 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")	"####" A 0 A_JumpIf(waterlevel > 1, "Swim")
+			Goto See
+		SeeCrouch:
+			UF06 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"Crawling")
+			U106 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"Crawling")
+			U207 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"Crawling")
+			U307 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"Crawling")
+			U407 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"Crawling")
+			U507 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"Crawling")
+			U607 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"Crawling")
+			U707 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"Crawling")
+			UA07 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"Crawling")
+			UB07 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"Crawling")
+			UC07 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"Crawling")
+			U006 A 0
+		Crawling:
+			"####" A 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" B 0 A_JumpIf(waterlevel > 1, "Swim")	"####" B 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" B 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" C 0 A_JumpIf(waterlevel > 1, "Swim")	"####" C 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" C 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" D 0 A_JumpIf(waterlevel > 1, "Swim")	"####" D 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" D 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" E 0 A_JumpIf(waterlevel > 1, "Swim")	"####" E 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" E 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" F 0 A_JumpIf(waterlevel > 1, "Swim")	"####" F 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" F 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" G 0 A_JumpIf(waterlevel > 1, "Swim")	"####" G 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" G 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" H 0 A_JumpIf(waterlevel > 1, "Swim")	"####" H 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" H 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" I 0 A_JumpIf(waterlevel > 1, "Swim")	"####" I 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" I 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" J 0 A_JumpIf(waterlevel > 1, "Swim")	"####" J 0 A_JumpIfInventory("IsCrouching",1,1)	Goto See
+			"####" J 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"SpawnCrouch")	"####" A 0 A_JumpIf(waterlevel > 1, "Swim")	"####" A 0 A_JumpIfInventory("IsCrouching",1,"SeeCrouch")
+			Goto See
+		Melee:
 		Missile:
-			UN02 A 2 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"RunFire")
-			UN02 B 2 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"RunFire")
-			UN02 C 2 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"RunFire")
-			UN02 D 2 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"RunFire")
-			UN02 E 2 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"RunFire")
-			UN02 F 2 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"RunFire")
+			UF04 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"Shooting")
+			U104 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"Shooting")
+			U205 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"ShootingL")
+			U305 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"ShootingL")
+			U405 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"ShootingL")
+			U505 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"ShootingL")
+			U605 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"ShootingL")
+			U705 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"ShootingL")
+			UA05 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"ShootingL")
+			UB05 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"ShootingL")
+			UC05 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"ShootingL")
+			U004 A 0
+		Shooting:
+			"####" A 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" A 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" B 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" C 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" D 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" E 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" F 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" G 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" H 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" A 0
+			Goto Spawn
+		ShootingL:
+			"####" A 0 A_JumpIf(waterlevel > 1, "Tread")
+			"####" A 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" B 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" C 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" D 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" E 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" F 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" G 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" H 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" I 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" J 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"RunFire")
+			"####" A 0
 			Goto Spawn
 		RunFire:
-			UN01 J 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 K 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 L 2  A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 M 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 N 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 O 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 P 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 Q 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 R 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
-			UN01 S 2 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Missile")
+			UF13 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"RunShooting")
+			U113 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"RunShooting")
+			U214 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"RunShooting")
+			U314 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"RunShooting")
+			U414 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"RunShooting")
+			U514 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"RunShooting")
+			U614 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"RunShooting")
+			U714 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"RunShooting")
+			UA14 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"RunShooting")
+			UB14 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"RunShooting")
+			UC14 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"RunShooting")
+			U013 A 0
+		RunShooting:
+			"####" A 0 A_JumpIf(waterlevel > 1, "Swim")
+			"####" A 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" B 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" C 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" D 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" E 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" F 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" G 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" H 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" I 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
+			"####" J 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Missile")
 			Goto Spawn
+		Tread:
+			UF0A A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"Treading")
+			U10A A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"Treading")
+			U20B A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"Treading")
+			U30B A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"Treading")
+			U40B A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"Treading")
+			U50B A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"Treading")
+			U60B A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"Treading")
+			U70B A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"Treading")
+			UA0B A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"Treading")
+			UB0B A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"Treading")
+			UC0B A 0 A_JumpIfInventory("Unreal_CARSelected",1,"Treading")
+			U00A A 0
+		Treading:
+			"####" A 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" B 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" B 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" C 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" C 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" D 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" D 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" E 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" E 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" F 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" F 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" G 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" G 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" H 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" H 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" I 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" I 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" J 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" J 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" K 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" K 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" L 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" L 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" M 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" M 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" N 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" N 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" O 0 A_JumpIf(waterlevel < 2, "Spawn")
+			"####" O 2 A_JumpIf(abs(momx) > 0.1 || abs(momy) > 0.1,"Swim")	"####" A 0 A_JumpIf(waterlevel < 2, "Spawn")
+			Goto Tread
+		Swim:
+			UF08 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"Swimming")
+			U108 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"Swimming")
+			U209 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"Swimming")
+			U309 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"Swimming")
+			U409 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"Swimming")
+			U509 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"Swimming")
+			U609 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"Swimming")
+			U709 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"Swimming")
+			UA09 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"Swimming")
+			UB09 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"Swimming")
+			UC09 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"Swimming")
+			U008 A 0
+		Swimming:
+			"####" A 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" B 0 A_JumpIf(waterlevel < 2, "See")
+			"####" B 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" C 0 A_JumpIf(waterlevel < 2, "See")
+			"####" C 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" D 0 A_JumpIf(waterlevel < 2, "See")
+			"####" D 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" E 0 A_JumpIf(waterlevel < 2, "See")
+			"####" E 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" F 0 A_JumpIf(waterlevel < 2, "See")
+			"####" F 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" G 0 A_JumpIf(waterlevel < 2, "See")
+			"####" G 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" H 0 A_JumpIf(waterlevel < 2, "See")
+			"####" H 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" I 0 A_JumpIf(waterlevel < 2, "See")
+			"####" I 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" J 0 A_JumpIf(waterlevel < 2, "See")
+			"####" J 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" K 0 A_JumpIf(waterlevel < 2, "See")
+			"####" K 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" L 0 A_JumpIf(waterlevel < 2, "See")
+			"####" L 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" M 0 A_JumpIf(waterlevel < 2, "See")
+			"####" M 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" N 0 A_JumpIf(waterlevel < 2, "See")
+			"####" N 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" O 0 A_JumpIf(waterlevel < 2, "See")
+			"####" O 2 A_JumpIf(abs(momx) < 0.1 && abs(momy) < 0.1,"Tread")	"####" A 0 A_JumpIf(waterlevel < 2, "See")
+			Goto Swim
 		Pain:
-			UN03 A 0 A_Jump(256, "LeftPain", "RightPain", "GutPain", "HeadPain")
+			U020 A 0 A_Jump(256, "LeftPain", "RightPain", "GutPain", "HeadPain")
 			Goto LeftPain
 		LeftPain:
-			UN03 A 6 A_Pain
+			UF20 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"LeftPaining")
+			U120 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"LeftPaining")
+			U220 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"LeftPaining")
+			U320 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"LeftPaining")
+			U420 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"LeftPaining")
+			U520 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"LeftPaining")
+			U620 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"LeftPaining")
+			U720 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"LeftPaining")
+			UA20 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"LeftPaining")
+			UB20 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"LeftPaining")
+			UC20 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"LeftPaining")
+			U020 A 0
+		LeftPaining:
+			"####" A 6 A_Pain
 			Goto Spawn
 		RightPain:
-			UN03 C 6 A_Pain
-			Goto Spawn	
+			UF20 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"RightPaining")
+			U120 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"RightPaining")
+			U220 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"RightPaining")
+			U320 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"RightPaining")
+			U420 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"RightPaining")
+			U520 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"RightPaining")
+			U620 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"RightPaining")
+			U720 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"RightPaining")
+			UA20 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"RightPaining")
+			UB20 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"RightPaining")
+			UC20 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"RightPaining")
+			U020 A 0
+		RightPaining:
+			"####" C 6 A_Pain
+			Goto Spawn
 		GutPain:
-			UN03 B 6 A_Pain
+			UF20 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"GutPaining")
+			U120 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"GutPaining")
+			U220 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"GutPaining")
+			U320 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"GutPaining")
+			U420 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"GutPaining")
+			U520 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"GutPaining")
+			U620 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"GutPaining")
+			U720 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"GutPaining")
+			UA20 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"GutPaining")
+			UB20 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"GutPaining")
+			UC20 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"GutPaining")
+			U020 A 0
+		GutPaining:
+			"####" B 6 A_Pain
 			Goto Spawn	
 		HeadPain:
-			UN03 D 6 A_Pain
+			UF20 A 0 A_JumpIfInventory("Unreal_DPistolSelected",1,"HeadPaining")
+			U120 A 0 A_JumpIfInventory("Unreal_RazorJackSelected",1,"HeadPaining")
+			U220 A 0 A_JumpIfInventory("Unreal_ASMDSelected",1,"HeadPaining")
+			U320 A 0 A_JumpIfInventory("Unreal_FlakSelected",1,"HeadPaining")
+			U420 A 0 A_JumpIfInventory("Unreal_StingerSelected",1,"HeadPaining")
+			U520 A 0 A_JumpIfInventory("Unreal_EightBallSelected",1,"HeadPaining")
+			U620 A 0 A_JumpIfInventory("Unreal_MinigunSelected",1,"HeadPaining")
+			U720 A 0 A_JumpIfInventory("Unreal_RedeemerSelected",1,"HeadPaining")
+			UA20 A 0 A_JumpIfInventory("Unreal_BioRifleSelected",1,"HeadPaining")
+			UB20 A 0 A_JumpIfInventory("Unreal_RifleSelected",1,"HeadPaining")
+			UC20 A 0 A_JumpIfInventory("Unreal_CARSelected",1,"HeadPaining")
+			U020 A 0
+		HeadPaining:
+			"####" D 6 A_Pain
 			Goto Spawn	
 		Death:
-			UN04 A 2 A_PlayerScream
-			UN04 B 2 A_NoBlocking
-			UN04 C 2
-			UN04 D 2
-			UN04 E 2
-			UN04 F 2
-			UN04 G 2
-			UN04 H 2
-			UN04 I 2
-			UN04 J 2
-			UN04 K 2
-			UN04 L 2
-			UN04 M 2
-			UN04 N 2
-			UN04 O 2
-			UN04 P 2
-			UN04 Q 2
-			UN04 R 2
-			UN04 S 2
-			UN04 T 2
-			UN04 U 2
-			UN04 V -1
+			U00C A 0 A_Jump(256,"Death1","Death2","Death3","Death4","Death5","Death6")
+		Death1:
+			U00C A 2 A_PlayerScream
+			U00C B 2 A_NoBlocking
+			U00C "CDEFGHIJKLMNOPQRSTUVWXYZ[\]" 2
+			U00D ABCDEFGHIJKLM 2
+			U00D N -1
+			Stop
+		Death2:
+			U00E A 2 A_PlayerScream
+			U00E B 2 A_NoBlocking
+			U00E CDEFGHIJKLMNOPQ 2
+			U00E R -1
+			Stop
+		Death3:
+			U00F A 2 A_PlayerScream
+			U00F B 2 A_NoBlocking
+			U00F CDEFGHIJKLMNO 2
+			U00F P -1
+			Stop
+		Death4:
+			U010 A 2 A_PlayerScream
+			U010 B 2 A_NoBlocking
+			U010 CDEFGHIJKL 2
+			U010 M -1
+			Stop
+		Death5:
+			U011 A 2 A_PlayerScream
+			U011 B 2 A_NoBlocking
+			U011 CDEFGHIJKLMNO 2
+			U011 P -1
+			Stop
+		Death6:
+			U012 A 2 A_PlayerScream
+			U012 B 2 A_NoBlocking
+			U012 CDEFGHIJ 2
+			U012 K -1
 			Stop
 		XDeath:
 			TNT1 A 0 A_PlaySound("Unreal/Enemygibbed", CHAN_BODY)
@@ -143,24 +397,6 @@ Actor UnrealPlayer : PlayerPawn
 			TNT1 A 0 A_SpawnItemEx("Unreal_BloodSpot",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)		
 			TNT1 A 2 A_NoBlocking
 			TNT1 A -1 A_FadeOut
-			Stop
-		Death.RottExplosive:
-			TNT1 A 0 A_SpawnItemEx("RottGibbedMan",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_Jump(128,2)
-			TNT1 A 0 A_GiveToTarget("LudicrousGibsItem", 1)
-			BLAN A 1 A_UnsetSolid
-			TNT1 A -1
-			Stop
-		Death.RottFire:
-			TNT1 A 0 A_UnsetSolid
-			TNT1 A 0 A_SpawnItem("BurningSkeleton") 
-			TNT1 A -1
-			Stop
-		Death.RottDisintegrate:
-			TNT1 A 0 A_PlayerScream
-			TNT1 A 0 A_UnsetSolid
-			TNT1 A 5 A_SpawnItem("RGodModeDeath")
-			TNT1 A -1
 			Stop
 		Disintegrate:
 			"####" "#" 0 A_UnsetSolid

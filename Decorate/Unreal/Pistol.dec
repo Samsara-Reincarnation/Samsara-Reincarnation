@@ -52,7 +52,8 @@ Actor Unreal_AutoMag : UnrealWeapon
 	Fire:
 		UN00 BC 2
 	Hold:	
-		UN00 C 0  A_PlaySound("Unreal/Automag/Fire", CHAN_WEAPON)
+		UN00 C 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+		UN00 C 0 A_PlaySound("Unreal/Automag/Fire", CHAN_WEAPON)
 		UN00 C 0 A_SpawnItemEx("UnrealBrassShell", 8, -16, 39, 0, 0, 3, -90, SXF_NOCHECKPOSITION|SXF_MULTIPLYSPEED|SXF_TRANSFERPITCH)		
 		UN00 C 0 A_Jump(256, "Fire1","Fire2","Fire3")
 		Goto Fire1
@@ -85,7 +86,8 @@ Actor Unreal_AutoMag : UnrealWeapon
 	Altfire:
 		UN06 FE 3
 	AltHolding:	
-		UN01 F 0 A_SpawnItemEx("UnrealBrassShell", 2, -16, 36, 0, 0, 3, -90, SXF_NOCHECKPOSITION|SXF_MULTIPLYSPEED|SXF_TRANSFERPITCH)	
+		UN01 F 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+		UN01 F 0 A_SpawnItemEx("UnrealBrassShell", 11, -16, 42, 0, 0, 3, -90, SXF_NOCHECKPOSITION|SXF_MULTIPLYSPEED|SXF_TRANSFERPITCH)	
 		UN06 E 0 A_PlaySound("Unreal/Automag/Fire", CHAN_WEAPON)
 		//UN06 E 0 A_Jump(256, "AltFire1", "AltFire2", "AltFire3", "AltFire4", "AltFire5") Not sure why these are necessary
 		Goto AltFire1
@@ -140,5 +142,5 @@ Actor Unreal_AutoMag : UnrealWeapon
 		UN04 FGHI 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSECONDARY|WRF_NOSWITCH)
 		UN04 J 1 A_TakeInventory("UAutomagCounter", 999)
 		Goto Idle1
-		}
+	}
 }			

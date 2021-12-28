@@ -31,17 +31,19 @@ Actor Unreal_EightBall : UnrealWeapon
 			TNT1 A 1 A_Raise
 			loop			
 		Ready:
+			UN01 A 0 A_GiveInventory("Unreal_EightBallSelected",1)
 			UN01 A 2 A_GiveInventory("URocketsLoaded", 1)
 			UN01 BCDEFGH 2
 			Goto WIdle
 		WIdle:
-			UN03 A 0 A_GunFlash("IdleFlash")
+			UN03 A 0 A_GunFlash("IdleFlash",GFF_NOEXTCHANGE)
 			UN03 A 2 A_WeaponReady
 			Loop
 		IdleFlash:
 			TNT1 A 2 A_FireBullets(1,1,1,0, "Unreal_EightballTargeterPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
 			Stop
 		Deselect:
+			UN02 A 0 A_TakeInventory("Unreal_EightBallSelected",1)
 			UN02 A 2 A_TakeInventory("URocketsLoaded", 6)
 			UN02 A 0 A_TakeInventory("Unreal_TargetLocked", 6)
 			UN02 A 0 A_TakeInventory("Unreal_EightballLockTimer", 999)
@@ -62,21 +64,18 @@ Actor Unreal_EightBall : UnrealWeapon
 			Goto Release	
 			UN04 A 0 A_JumpIfInventory("URocketsLoaded", 6, "Release")
 			UN04 A 0 A_JumpIfInventory("Unreal_Combo", 1, "ComboHold")
-			UN04 A 0 A_GunFlash("LoadFlash")
-			UN04 A 2 
-			UN04 B 2
-			UN04 C 2
+			UN04 A 0 A_GunFlash("LoadFlash",GFF_NOEXTCHANGE)
+			UN04 ABC 2 
 			UN04 D 2 A_PlaySound("Unreal/Eightball/Load", CHAN_WEAPON)
 			UN04 E 2 A_TakeInventory("RocketAmmo", 1, TIF_NOTAKEINFINITE)
 			UN04 F 2 A_GiveInventory("URocketsLoaded", 1)
 			UN04 G 2 	
 			UN04 H 2 A_PlaySound("Unreal/Eightball/Barrel", CHAN_BODY, 0.5)
-			UN04 I 2
-			UN04 J 2
-			UN04 K 2
+			UN04 IJK 2
 			UN04 L 2 A_Refire
 			Goto Release		
-		Release:		
+		Release:	
+			UN05 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 6, "Release6")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 5, "Release5")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 4, "Release4")
@@ -175,19 +174,17 @@ Actor Unreal_EightBall : UnrealWeapon
 			UN04 A 0 A_JumpIfInventory("RocketAmmo", 1, 1)
 			Goto ReleaseGren			
 			UN04 A 0 A_JumpIfInventory("URocketsLoaded", 6, "ReleaseGren")
-			UN04 A 2
-			UN04 B 2
-			UN04 C 2
+			UN04 ABC 2
 			UN04 D 2 A_PlaySound("Unreal/Eightball/Load", CHAN_WEAPON)
 			UN04 E 2 A_TakeInventory("RocketAmmo", 1, TIF_NOTAKEINFINITE)
 			UN04 F 2 A_GiveInventory("URocketsLoaded", 1)
 			UN04 G 2 	
 			UN04 H 2 A_PlaySound("Unreal/Eightball/Barrel", CHAN_BODY, 0.5)
-			UN04 I 2
-			UN04 J 2
-			UN04 K 2 A_Refire
+			UN04 IJ 2
+			UN04 K 1 A_Refire
 			Goto ReleaseGren				
 		ReleaseGren:	
+			UN05 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 6, "ReleaseGren6")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 5, "ReleaseGren5")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 4, "ReleaseGren4")
@@ -257,20 +254,17 @@ Actor Unreal_EightBall : UnrealWeapon
 			Goto ReleaseCombo			
 			UN04 A 0 A_JumpIfInventory("URocketsLoaded", 6, "ReleaseCombo")
 			UN04 A 0 A_GunFlash("LoadFlash")
-			UN04 A 2
-			UN04 B 2
-			UN04 C 2
+			UN04 ABC 2
 			UN04 D 2 A_PlaySound("Unreal/Eightball/Load", CHAN_WEAPON)
 			UN04 E 2 A_TakeInventory("RocketAmmo", 1, TIF_NOTAKEINFINITE)
 			UN04 F 2 A_GiveInventory("URocketsLoaded", 1)
-			UN04 G 2 	
+			UN04 G 2	
 			UN04 H 2 A_PlaySound("Unreal/Eightball/Barrel", CHAN_BODY, 0.5)
-			UN04 I 2
-			UN04 J 2
-			UN04 K 2
-			UN04 L 2 A_Refire("ComboHold")
+			UN04 IJK 2
+			UN04 L 1 A_Refire("ComboHold")
 			Goto ReleaseCombo	 
-		ReleaseCombo:	
+		ReleaseCombo:
+			UN05 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 6, "ReleaseCombo6")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 5, "ReleaseCombo5")
 			UN05 A 0 A_JumpIfInventory("URocketsLoaded", 4, "ReleaseCombo4")
@@ -356,8 +350,8 @@ Actor Unreal_EightballRocket
 			UN00 A 0 A_JumpIfInTargetInventory("Unreal_TargetLocked", 1, "SpawnLocked")
 			UN00 AB 2
 		SpawnLoop:
-			UN00 C 3 A_ScaleVelocity(1.1)
-			UN00 C 3 A_SpawnItemEx("UnrealSmoke", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+			UN00 C 0 A_ScaleVelocity(1.1)
+			UN00 C 1 A_SpawnItemEx("UnrealSmoke",0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
 			Loop
 		SpawnLocked:
 			UN00 A 2 ACS_NamedExecuteAlways("rocketFollow",0,0,0,0)
@@ -402,8 +396,8 @@ Actor Unreal_EightballGrenade
 			UN00 A 0 ThrustThingZ(0,10,0,1)
 		SpawnLoop:
 			TNT1 A 0 A_SetAngle(Angle+User_Angle)
-			UN00 AAAAA 1 A_SetPitch(Pitch-15)
-			UN00 A 1 A_SpawnItemEx("UnrealPuff", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
+			UN00 A 0 A_SetPitch(Pitch-15)
+			UN00 A 1 A_SpawnItemEx("UnrealSmoke", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
 			Loop
 		Death:
 			TNT1 A 0 A_PlaySound("Unreal/Flak/Explode2", CHAN_WEAPON)
@@ -411,7 +405,7 @@ Actor Unreal_EightballGrenade
 			TNT1 A 0 A_SpawnItemEX("Unreal_EightballExplosiveEffect", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION)
 			TNT1 A 5
 			Stop	
-			}
+	}
 }			
 
 Actor Unreal_EightballTargeterPuff

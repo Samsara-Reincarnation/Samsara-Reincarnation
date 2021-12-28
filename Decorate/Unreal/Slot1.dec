@@ -23,11 +23,12 @@ Actor Unreal_RazorJack : UnrealWeapon
 			TNT1 A 1 A_Raise
 			loop	
 		Ready:
+			UN01 A 0 A_GiveInventory("Unreal_RazorJackSelected",1)
 			UN01 ABCDEFGHIJKLMNOP 2 A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 			UN03 ABCDE 1 A_WeaponReady(WRF_NOFIRE|WRF_NOBOB)
 			Goto WIdle
 		WIdle:
-			UN04 A 0 A_GunFlash("ReadyFlash")
+			UN04 A 0 A_GunFlash("ReadyFlash",GFF_NOEXTCHANGE)
 			UN04 ABCDEFGH 2 A_WeaponReady
 			UN04 IJKLMNOP 2 A_WeaponReady
 			Loop
@@ -36,6 +37,7 @@ Actor Unreal_RazorJack : UnrealWeapon
 			TNT1 AAAAAAAA 2 A_FireBullets(1,1,1,0, "Unreal_RazorBlankPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
 			Stop
 		Deselect:
+			UN08 A 0 A_TakeInventory("Unreal_RazorJackSelected",1)
 			UN08 ABCD 2
 			Goto InstantDeselect
 		InstantDeselect: // I have to copy paste this everytime. Thanks, Zandronum.
@@ -43,25 +45,27 @@ Actor Unreal_RazorJack : UnrealWeapon
 			TNT1 A 1 A_Lower
 			Wait			
 		Fire:
+			UN02 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN02 A 0 BRIGHT A_SetBlend("9f 2a e3", 0.15, 10)
 			UN02 A 0 BRIGHT A_PlaySound("Unreal/RazorJack/Fire", CHAN_BODY)
-			UN02 A 4 BRIGHT A_FireCustomMissile("Unreal_Razor1", 0,1,0,8)
-			UN02 B 3 BRIGHT
+			UN02 A 2 BRIGHT A_FireCustomMissile("Unreal_Razor1", 0,1,0,8)
+			UN02 CE 2 BRIGHT
 			UN02 CDEF 1 BRIGHT 
 			UN03 ABCD 1 BRIGHT
-			UN03 E 1 BRIGHT A_Refire
+			UN03 E 2 BRIGHT A_Refire
 			Goto WIdle
 		Altfire:
 			UN05 ABCDEFGHI 2
 			Goto AltHold
 		AltHold:
+			UN05 J 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN05 J 0 BRIGHT A_SetBlend("9f 2a e3", 0.15, 10)
 			UN05 J 0 BRIGHT A_PlaySound("Unreal/RazorJack/Fire", CHAN_BODY)
-			UN05 J 4 BRIGHT A_FireCustomMissile("Unreal_Razor2", 0,1,-16,8)	
-			UN05 K 3 BRIGHT A_FireBullets(1,1,1,0, "Unreal_RazorBlankPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
-			UN05 L 1 BRIGHT A_FireBullets(1,1,1,0, "Unreal_RazorBlankPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
+			UN05 J 2 BRIGHT A_FireCustomMissile("Unreal_Razor2", 0,1,-16,8)	
+			UN05 K 2 BRIGHT A_FireBullets(1,1,1,0, "Unreal_RazorBlankPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
+			UN05 L 2 BRIGHT A_FireBullets(1,1,1,0, "Unreal_RazorBlankPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
 			UN06 ABC 2 BRIGHT A_FireBullets(1,1,1,0, "Unreal_RazorBlankPuff", FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE)
-			UN06 D 1 BRIGHT A_Refire
+			UN06 D 2 BRIGHT A_Refire
 			Goto AltEnd
 		AltEnd:
 			UN07 A 0 A_GunFlash("AltEndFlash")

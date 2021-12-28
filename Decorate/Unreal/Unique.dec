@@ -32,6 +32,7 @@ Actor Unreal_GESBioRifle : UnrealWeapon //  unique 1
 			TNT1 A 1 A_Raise
 			loop	
 		Ready:
+			UN01 A 0 A_GiveInventory("Unreal_BioRifleSelected",1)
 			UN01 ABCDEFGHIJ 2 
 			Goto WIdle
 		WIdle:
@@ -44,6 +45,7 @@ Actor Unreal_GESBioRifle : UnrealWeapon //  unique 1
 			UN05 ABC 4 A_WeaponReady
 			Goto WIdle
 		Deselect:
+			UN06 A 0 A_TakeInventory("Unreal_BioRifleSelected",1)
 			UN06 ABCDEFG 2
 			Goto InstantDeselect
 		InstantDeselect: // I have to copy paste this everytime. Thanks, Zandronum.
@@ -51,8 +53,9 @@ Actor Unreal_GESBioRifle : UnrealWeapon //  unique 1
 			TNT1 A 1 A_Lower
 			Wait	
 		Fire:
+			UN04 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 A 0 BRIGHT A_SetBlend("3d e3 2a", 0.10, 10)
-			UN04 A 3 BRIGHT A_FireCustomMissile("Unreal_BioRGel", 0, 1, 16, 0, 0)
+			UN04 A 2 BRIGHT A_FireCustomMissile("Unreal_BioRGel", 0, 1, 16, 0, 0)
 			UN04 B 0 BRIGHT A_PlaySound("Unreal/BRifle/Fire", CHAN_WEAPON)
 			UN04 B 2 BRIGHT
 			UN04 C 2 BRIGHT
@@ -111,6 +114,7 @@ Actor Unreal_GESBioRifle : UnrealWeapon //  unique 1
 			UN03 KLMN 9
 			Goto Release
 		Release:
+			UN04 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN04 A 0 A_StopSound(CHAN_WEAPON)
 			UN04 A 0 A_JumpIfInventory("Unreal_GESChargePower", 0, "Release5")
 			UN04 A 0 A_JumpIfInventory("Unreal_GESChargePower", 4, "Release4")
@@ -623,12 +627,14 @@ Actor Unreal_Rifle : UnrealWeapon // unique 2
 			TNT1 A 1 A_Raise
 			loop	
 		Ready:
+			UN01 A 0 A_GiveInventory("Unreal_RifleSelected",1)
 			UN01 ABCDEFGHIJ 2
 			Goto WIdle
 		Widle:
 			UN01 K 4 A_WeaponReady
 			Loop
 		Fire:
+			UN02 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN02 A 0 BRIGHT A_SetBlend("e3 be 2a", 0.10, 10)
 			UN02 A 5 BRIGHT A_FireCustomMissile("Unreal_SniperTracer", 0, 1, 0, 0)  //A_FireBullets(1,1, 1, 0, "UnrealSniperPuff", FBF_USEAMMO|FBF_NORANDOM) 
 			UN02 A 0 BRIGHT A_SpawnItemEx("UnrealBrassShell", 8, -16, 39, 0, 0, 3, -90, SXF_NOCHECKPOSITION|SXF_MULTIPLYSPEED|SXF_TRANSFERPITCH)
@@ -805,6 +811,7 @@ Actor Unreal_Rifle : UnrealWeapon // unique 2
 			UN01 K 8 A_ZoomFactor(1.0)
 			Goto WIdle
 		Deselect:
+			UN03 A 0 A_TakeInventory("Unreal_RifleSelected",1)
 			UN03 A 2 A_ZoomFactor(1.0)
 			UN03 BCDEFGH 2 
 			Goto InstantDeselect
@@ -876,6 +883,7 @@ Actor Unreal_Duster : UnrealWeapon //unique 3
 			TNT1 A 1 A_Raise
 			loop				
 		Ready:
+			UN04 A 0 A_GiveInventory("Unreal_CARSelected",1)
 			UN04 ABCDEFGH 2
 			Goto WIdle
 		WIdle:
@@ -884,6 +892,7 @@ Actor Unreal_Duster : UnrealWeapon //unique 3
 		Fire:
 			UN03 A 0 BRIGHT A_PlaySound("Unreal/CAR/Fire", CHAN_WEAPON, 1.0, True)
 		Hold:
+			UN03 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 A 2 BRIGHT A_FireBullets(3,3, 1, 12, "UnrealPuff", FBF_USEAMMO|FBF_NORANDOM)
 			UN03 B 1 BRIGHT
 			UN03 C 1 BRIGHT 
@@ -895,18 +904,20 @@ Actor Unreal_Duster : UnrealWeapon //unique 3
 			Goto WIdle
 		ComboFire:
 			UN03 A 0 BRIGHT A_JumpIfInventory("Clip", 5, 1)
-			Goto ComboFire+7
+			Goto ComboFire+8
+			UN03 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
 			UN03 A 0 BRIGHT A_PlaySound("Unreal/CAR/AltFire", CHAN_BODY)
-			UNO3 A 1 BRIGHT A_FireCustomMissile("Unreal_DusterShell", 0, 0, 5,0)
-			UN03 A 0 BRIGHT A_GiveInventory("Unreal_CARCooldown", 29)
-			UN03 A 0 BRIGHT A_TakeInventory("Clip", 5, TIF_NOTAKEINFINITE)
-			UN03 A 0 BRIGHT ACS_NamedExecuteAlways("Unreal_CARifleCooldown", 0)
-			UN03 A 0 BRIGHT A_Refire("Hold")
+			UN03 A 1 BRIGHT A_FireCustomMissile("Unreal_DusterShell", 0, 0, 13,0)
+			UN03 C 0 BRIGHT A_GiveInventory("Unreal_CARCooldown", 29)
+			UN03 C 0 BRIGHT A_TakeInventory("Clip", 5, TIF_NOTAKEINFINITE)
+			UN03 C 0 BRIGHT ACS_NamedExecuteAlways("Unreal_CARifleCooldown", 0)
+			UN03 C 0 BRIGHT A_Refire("Hold")
 			UN03 C 0 BRIGHT A_StopSound(CHAN_WEAPON)
 			UN03 C 0 BRIGHT A_PlaySound("Unreal/CAR/Stop", CHAN_WEAPON)
 			Goto WIdle			
 		AltFire:
-			UN01 A 2 BRIGHT A_FireCustomMissile("Unreal_DusterShell", 0, 1, 5,0)
+			UN01 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+			UN01 A 2 BRIGHT A_FireCustomMissile("Unreal_DusterShell", 0, 1, 13,0)
 			UN01 B 2 BRIGHT A_PlaySound("Unreal/CAR/AltFire", CHAN_WEAPON)
 			UN01 CDEFG 2 BRIGHT
 			UN01 H 7
@@ -914,6 +925,7 @@ Actor Unreal_Duster : UnrealWeapon //unique 3
 			UN01 HIJ 2
 			Goto Widle
 		Deselect:
+			UN02 A 0 A_TakeInventory("Unreal_CARSelected",1)
 			UN02 ABCD 2
 			Goto InstantDeselect
 		InstantDeselect: // I have to copy paste this everytime. Thanks, Zandronum.
