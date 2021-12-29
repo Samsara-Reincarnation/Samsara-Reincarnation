@@ -9,7 +9,7 @@ Actor HLSporeCounter : Ammo
 {
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
-	Inventory.MaxAmount 5
+	Inventory.MaxAmount 10
 }
 
 Actor " RPG " : HLWeapon
@@ -28,7 +28,7 @@ Actor " RPG " : HLWeapon
 	//+WEAPON.NOAUTOFIRE
 	Weapon.AmmoType2 "HLSporeCounter"
     Weapon.AmmoUse2 1
-    Weapon.AmmoGive2 5
+    Weapon.AmmoGive2 10
 	Inventory.RestrictedTo "HalfLifePlayer"	
 	states
 	{
@@ -284,17 +284,24 @@ Actor " RPG " : HLWeapon
 		OP08 ABCDEFGHIJKLMNOPQRST 1
 		Goto ReloadAmmoOpp
 	ReloadAmmoOpp:
-		TNT1 A 0 A_JumpIfInventory("HLSporeCounter",5,"ReloadFinishOpp")
-		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		OP09 A 0 A_JumpIfInventory("HLSporeCounter",0,"ReloadFinishOpp")
+		OP09 A 0 A_JumpIfInventory("RocketAmmo",1,1)
 		goto ReloadFinishOpp
-		TNT1 A 0 A_WeaponReady(WRF_NOBOB)
-		TNT1 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
-		TNT1 A 0 A_GiveInventory("HLSporeCounter",1)
-		TNT1 A 0 A_Playsound("HLSporeLauncher/Reload", CHAN_WEAPON)
+		OP09 A 0 A_WeaponReady(WRF_NOBOB)
+		OP09 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
+		OP09 A 0 A_GiveInventory("HLSporeCounter",1)
+		OP09 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		Goto ReloadAmmoFinish
+		OP09 A 0 A_JumpIfInventory("HLSporeCounter",0,"ReloadAmmoFinish")
+		OP09 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
+		OP09 A 0 A_GiveInventory("HLSporeCounter",1)
+	ReloadAmmoFinish:
+		OP09 A 0 A_Playsound("HLSporeLauncher/Reload", CHAN_WEAPON)
 		OP09 ABCDEFGHIJKLMNOPQRSTUVWYZ 1
 		OP10 ABC 1 
 		OP10 D 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-		Loop
+		OP09 A 0 A_Refire("ReloadFinishOpp")
+		Goto ReloadAmmoOpp
 	ReloadFinishOpp:
 		OP11 ABCDEFGHIJKLMNOPQRSTUVWXY 1
 		goto WIdle

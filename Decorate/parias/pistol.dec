@@ -2,6 +2,7 @@ actor "Sapphire Wand" : MWeapWand
 {
     Weapon.SelectionOrder 3600
     Weapon.SlotNumber 1
+	+WEAPON.NOALERT
     +INVENTORY.UNDROPPABLE
     Weapon.KickBack 0
     Weapon.YAdjust 9
@@ -54,6 +55,7 @@ actor "Sapphire Wand" : MWeapWand
       Fire:
 		TNT1 A 0 A_JumpIfInventory("HexenClassMode", 2, "FireFighter")
 		TNT1 A 0 A_JumpIfInventory("HexenClassMode", 1, "FireMage")
+		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopFire")	  
 		H116 A 2 Bright
 		H116 B 0 A_PlaySoundEx("hexen/jadefire","auto")
@@ -92,6 +94,7 @@ actor "Sapphire Wand" : MWeapWand
 		MWND A 3 Offset (0, 32) A_ReFire
 		Goto Ready
 	  FireFighter:
+		TNT1 A 0 A_AlertMonsters
 		H100 B 0 A_JumpIfCloser(64, "FireFighterMelee")
 		H100 B 6 A_FireCustomMissile("HexenImpalerMissile",0,1)
 		H100 B 0 A_Recoil(1)

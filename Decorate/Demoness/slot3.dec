@@ -9,6 +9,7 @@ ACTOR Hexen2SpellBookMagicMissile : Weapon
   Weapon.BobStyle Alpha   
   Weapon.AmmoType "Clip"
   Weapon.AmmoGive 16
+  Weapon.AmmoUse 2
   Tag "Magic Missiles"
   +WEAPON.NOALERT
   States
@@ -112,7 +113,7 @@ ACTOR Hexen2SpellBookMagicMissile : Weapon
 	  Goto FireEmpty
 	  HX04 A 0 A_AlertMonsters
 	  HX04 A 0 A_GunFlash("DemonessFire",GFF_NOEXTCHANGE)
-	  HX04 A 0 ACS_NamedExecuteAlways("Hexen2_AmmoLoop",0,9,2,1)
+	  //HX04 A 0 ACS_NamedExecuteWithResult("Hexen2_AmmoLoop",9,2,1)
 	  HX04 A 0 A_GiveInventory("Hexen2WeaponHold",1)
 	  HX04 ABCDE 2
 	FireHold:
@@ -120,10 +121,11 @@ ACTOR Hexen2SpellBookMagicMissile : Weapon
 	  Goto FireStop
 	  HX04 E 0 A_AlertMonsters
 	  HX04 E 0 A_JumpIfInventory("CoopModeOn", 1, "FireHoldCoop")
-	  HX04 E 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+	  HX04 E 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FireHoldPowered")
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileBall",0,1,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStar",0,0,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileHandFX",0,0,-7,7)
+	  HX04 E 0 A_TakeInventory("Clip",2,TIF_NOTAKEINFINITE)
 	  HX04 E 0 A_JumpIfInventory("Hexen2HoldFlash",1,5)
 	  HX04 E 0 A_GunFlash("DemonessFireLoop",GFF_NOEXTCHANGE) 
 	  HX04 E 8
@@ -139,10 +141,11 @@ ACTOR Hexen2SpellBookMagicMissile : Weapon
 	  HX04 FGH 2
 	  Goto WeaponIdle
 	FireHoldCoop:
-	  HX04 E 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+	  HX04 E 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FireHoldPowered")
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileBallCoop",0,1,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarCoop",0,0,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileHandFX",0,0,-7,7)
+	  HX04 E 0 A_TakeInventory("Clip",2,TIF_NOTAKEINFINITE)
 	  HX04 E 0 A_JumpIfInventory("Hexen2HoldFlash",1,5)
 	  HX04 E 0 A_GunFlash("DemonessFireLoop",GFF_NOEXTCHANGE) 
 	  HX04 E 8
@@ -169,39 +172,38 @@ ACTOR Hexen2SpellBookMagicMissile : Weapon
 	  "####" "#" 0 A_TakeInventory("Hexen2WeaponHold",1)
 	  "####" "#" 2 Bright
 	FirePowered:
-	  HX04 A 0 A_JumpIfInventory("Clip",10,1)
+	  HX04 A 0 A_JumpIfInventory("Clip",6,1)
 	  Goto FireEmpty
+	  HX04 A 0 A_AlertMonsters
 	  HX04 A 0 A_GunFlash("DemonessFirePowered",GFF_NOEXTCHANGE)
-//	  HX04 A 0 ACS_NamedExecuteAlways("Hexen2_AmmoLoop",0,15,3,1)
+	  //HX04 A 0 ACS_NamedExecuteWithResult("Hexen2_AmmoLoop",15,3,1)
 	  HX04 A 0 A_GiveInventory("Hexen2WeaponHold",1)
 	  HX04 ABCDE 2
-	  HX04 A 0 A_JumpIfInventory("Clip",10,1)
-	  Goto FireStop
-	  HX04 E 0 A_JumpIfInventory("PowerWeaponLevel2",1,1)
-	  Goto WeaponIdle
+	FireHoldPowered: 
+	  HX04 A 0 A_JumpIfInventory("Clip",6,1)
+	  Goto FireStopPowered
 	  HX04 E 0 A_AlertMonsters
 	  HX04 E 0 A_JumpIfInventory("CoopModeOn", 1, "FireHoldPoweredCoop")
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarPowered",0,0,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarPowered",-3,0,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarPowered",3,0,-10,4)
-	  HX04 E 0 A_TakeInventory("Clip", 10, TIF_NOTAKEINFINITE)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileHandFX",0,0,-7,7)
+	  HX04 E 0 A_TakeInventory("Clip",6,TIF_NOTAKEINFINITE)
 	  HX04 E 0 A_GunFlash("DemonessFireLoopFlash",GFF_NOEXTCHANGE) 
-	  HX04 E 8 Bright
-	  HX04 F 0 A_TakeInventory("Hexen2WeaponHold",1)
-	  HX04 F 0 A_GunFlash("DemonessFireStopPowered",GFF_NOEXTCHANGE)
-	  HX04 FGH 2 Bright
-	  Goto WeaponIdle
+	  HX04 E 8
+	  HX04 E 0 A_Refire("FireHold")
+	  Goto FireStopPowered
 	FireHoldPoweredCoop: 
-	  HX04 A 0 A_JumpIfInventory("Clip",10,1)
-	  Goto FireStop	
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarPoweredCoop",0,0,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarPoweredCoop",-3,0,-10,4)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileStarPoweredCoop",3,0,-10,4)
-	  HX04 E 0 A_TakeInventory("Clip", 10, TIF_NOTAKEINFINITE)
 	  HX04 E 0 A_FireCustomMissile("Hexen2MagicMissileHandFX",0,0,-7,7)
+	  HX04 E 0 A_TakeInventory("Clip",6,TIF_NOTAKEINFINITE)
 	  HX04 E 0 A_GunFlash("DemonessFireLoopFlash",GFF_NOEXTCHANGE) 
-	  HX04 E 8 Bright
+	  HX04 E 8
+	  HX04 E 0 A_Refire("FireHold")
+	  Goto FireStopPowered
+	FireStopPowered:
 	  HX04 F 0 A_TakeInventory("Hexen2WeaponHold",1)
 	  HX04 F 0 A_GunFlash("DemonessFireStopPowered",GFF_NOEXTCHANGE)
 	  HX04 FGH 2 Bright

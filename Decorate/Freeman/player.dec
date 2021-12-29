@@ -1,6 +1,5 @@
 Actor HalfLifeClass : Boolean {}
 Actor HalfLifeCrouching : Boolean {}
-Actor HalfLifeSpawned : Boolean { Inventory.InterHubAmount 0 }
 Actor HalfLifeOpposingForce : Boolean {}
 Actor HalfLifeOpposingForceSet : Inventory { Inventory.MaxAmount 1 Inventory.InterHubAmount 0 }
 Actor HalfLifeMusicPlayingToken : Boolean {}
@@ -121,12 +120,7 @@ actor HalfLifePlayer : PlayerPawn
 	var int user_scaley;
 	states
 	{
-		Spawn: //desync killer
-			VL11 A 0 
-			VL11 A 0 A_JumpIfInventory("HalfLifeSpawned",1,"SpawnNormal")
-			VL11 A 0 A_GiveInventory("HalfLifeSpawned",1)
-			VL11 A 1
-		SpawnNormal:	
+		Spawn:	
 			VL11 A 0 A_JumpIfInventory("freeman_unique2selected",1,"Crossbow_Spawn")
 			VL11 A 0 A_JumpIfInventory("freeman_uniqueselected",1,"Squeak_Spawn")
 			VL11 A 0 A_JumpIfInventory("freeman_slot7selected",1,"Egon_Spawn")

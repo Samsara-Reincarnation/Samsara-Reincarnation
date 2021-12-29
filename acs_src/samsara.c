@@ -377,6 +377,27 @@ script "SamsaraDecorate" (int choice, int arg1, int arg2) //215 - SAMSARA_DECORA
             }
         }
         break;
+		
+	  case 38:
+		if(GetCvar("sams_notimefreeze"))
+		{
+			GiveInventory("InvulnPowerup",1);
+		}
+		else
+		{
+			if(CheckInventory("CorvusClass"))
+			{
+				PlaySound(0,"heretic/itemget");
+				GiveInventory("TimeFreezeSphereHeretic",1);		
+			}
+			else
+			{
+				PlaySound(0,"misc/p_pkup", CHAN_ITEM);
+				GiveInventory("PowerTimeFreezer",1);
+				GiveInventory("PowerTimeFreezerColor",1);
+			}
+		}
+		break;
     }
     
     SetResultValue(result);
@@ -3006,63 +3027,110 @@ Script "AllyCellPhone" ENTER
 
 // Until Zandronum doesn't crash with the old keybindings in KEYCONF, this will be required, I'm afraid
 
-Script "Samsara_Keybinds" (int button) net
+Str modestringsdefault[2] = { "Off", "On" };
+Str modestringswolf[4] = { "Classic", "Lost Missons", "Macintosh", "Totenkopf SDL" };
+Str modestringshexen[3] = { "Parias", "Daedolon", "Baratus" };
+Str modestringsrott[5] = { "Ian Paul Freeley", "Taradino Cassatt", "Thi Barrett", "Lorelei Ni", "Doug Wendt" };
+str heromusicmodes[3] = { "Off", "Class", "Game" };
+str pickupmodes[3] = { "Old-Style", "Hybrid", "Class" };
+
+Script "Samsara_Keybinds_Clientside" (int button) net clientside
 {
+	int mode;
 	Switch(button)
 	{
 		Case 1:
 			SetUserCvar(PlayerNumber(),"sams_cl_vanilladoom", !GetUserCvar(PlayerNumber(),"sams_cl_vanilladoom"));
-			break;
-		
-		Case 2:
-			SetUserCvar(PlayerNumber(),"sams_cl_wolfmove", !GetUserCvar(PlayerNumber(),"sams_cl_wolfmove"));
+			
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_vanilladoom");
+			Log(s:"\cgVanilla Doom Animations ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 			
 		Case 3:
 			SetUserCvar(PlayerNumber(),"sams_cl_ballgag", !GetUserCvar(PlayerNumber(),"sams_cl_ballgag"));
-			break;
-
-		Case 4:
-			SetUserCvar(PlayerNumber(),"sams_cl_weaponhud", !GetUserCvar(PlayerNumber(),"sams_cl_weaponhud"));
+			
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_ballgag");
+			Log(s:"\cgCharacters can talk ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 			
 		Case 5:
 			SetUserCvar(PlayerNumber(),"sams_cl_moremessages", !GetUserCvar(PlayerNumber(),"sams_cl_moremessages"));
+			
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_moremessages");
+			Log(s:"\cgAlternate messages: ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 			
 		Case 6:
 			SetUserCvar(PlayerNumber(),"sams_cl_printpickup", !GetUserCvar(PlayerNumber(),"sams_cl_printpickup"));
+			
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_printpickup");
+			Log(s:"\cgPrint pickup messages: ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 			
 		Case 7:
 			SetUserCvar(PlayerNumber(),"sams_cl_norecoil", !GetUserCvar(PlayerNumber(),"sams_cl_norecoil"));
+			
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_norecoil");
+			Log(s:"\cgRanger Recoil: ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 			
 		Case 8:
-			SetUserCvar(PlayerNumber(),"sams_cl_heromusic", !GetUserCvar(PlayerNumber(),"sams_cl_heromusic"));
+			if(GetUserCvar(PlayerNumber(),"sams_cl_heromusic") == 2)
+				SetUserCvar(PlayerNumber(),"sams_cl_heromusic", 0);
+			else
+				SetUserCvar(PlayerNumber(),"sams_cl_heromusic", GetUserCvar(PlayerNumber(),"sams_cl_heromusic")+1);
 			
-			If(GetCvar("sams_cl_heromusic") == false) 
+			If(GetCvar("sams_cl_heromusic") == false)
+			{
+				StopSound(0, CHAN_VOICE);
 				LocalSetMusic("*",0);
+			}
 			else 
-				ACS_NamedExecuteAlways("SamsaraOST_Enter",0,0,0,0);		
+				ACS_NamedExecuteWithResult("SamsaraOST_Enter",0,0,0,0);	
+				
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_heromusic");
+			Log(s:"\cgHero Music: ", s:"\ck", s:heromusicmodes[mode]);
 			break;
 			
-		Case 10:
-			SetUserCvar(PlayerNumber(),"sams_cl_rottbar", !GetUserCvar(PlayerNumber(),"sams_cl_rottbar"));
+		Case 9:
+			if(GetUserCvar(PlayerNumber(),"sams_cl_pickupmode") < 2)
+				SetUserCvar(PlayerNumber(),"sams_cl_pickupmode", GetUserCvar(PlayerNumber(),"sams_cl_pickupmode")+1);
+					
+			else
+				SetUserCvar(PlayerNumber(),"sams_cl_pickupmode", 0);
+				
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_pickupmode");
+			Log(s:"\cgPickup Mode: ", s:"\ck", s:heromusicmodes[mode]);
 			break;
 	}
 }
 
-//sigh, this one's handled different
-
-Script "Samsara_PickupMode" (void) net clientside
+Script "Samsara_Keybinds" (int button) net
 {
+	int mode;
+	Switch(button)
+	{
+		Case 2:
+			SetUserCvar(PlayerNumber(),"sams_cl_wolfmove", !GetUserCvar(PlayerNumber(),"sams_cl_wolfmove"));
 			
-	if(GetUserCvar(PlayerNumber(),"sams_cl_pickupmode") < 2)
-		SetUserCvar(PlayerNumber(),"sams_cl_pickupmode", GetUserCvar(PlayerNumber(),"sams_cl_pickupmode")+1);
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_wolfmove");
+			Log(s:"\cgWolfenstein Character Movement ", s:"\ck", s:modestringsdefault[mode]);
+			break;
+
+		Case 4:
+			SetUserCvar(PlayerNumber(),"sams_cl_weaponhud", !GetUserCvar(PlayerNumber(),"sams_cl_weaponhud"));
 			
-	else
-		SetUserCvar(PlayerNumber(),"sams_cl_pickupmode", 0);
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_weaponhud");
+			Log(s:"\cgWeapon bar ", s:"\ck", s:modestringsdefault[mode]);
+			break;
+			
+		Case 10:
+			SetUserCvar(PlayerNumber(),"sams_cl_rottbar", !GetUserCvar(PlayerNumber(),"sams_cl_rottbar"));
+			
+			mode = GetUserCvar(PlayerNumber(),"sams_cl_pickupmode");
+			Log(s:"\cgRott Bar: ", s:"\ck", s:modestringsdefault[mode]);
+			break;
+	}
 }
 
 Str modestringsdefault[2] = { "On", "Off" };
@@ -3077,9 +3145,8 @@ Script "Samsara_ChangeAltClass" (void) net
 	switch(PlayerClass(pln))
 	{
 		case 0:
-			mode = GetUserCvar(pln,"sams_cl_doom64");
-			SetUserCvar(pln,"sams_cl_doom64",!mode);
-			Log(s:"\cgDoom 64 Mode: ", s:"\ck", s:modestringsdefault[mode]);
+			mode = !GetUserCvar(pln,"sams_cl_doom64");
+			SetUserCvar(pln,"sams_cl_doom64",mode);
 			break;
 		case 3:
 			mode = GetUserCvar(pln,"sams_cl_wolfmode");
@@ -3088,7 +3155,6 @@ Script "Samsara_ChangeAltClass" (void) net
 			else
 				mode++;
 				
-			Log(s:"\cgWolfenstein 3D Mode: ", s:"\ck", s:modestringswolf[mode]);
 			SetUserCvar(pln,"sams_cl_wolfmode",mode);
 			break;
 		case 4:
@@ -3098,13 +3164,11 @@ Script "Samsara_ChangeAltClass" (void) net
 			else
 				mode++;
 				
-			Log(s:"\cgHexen Class: ", s:"\ck", s:modestringshexen[mode]);
 			SetUserCvar(pln,"sams_cl_hexclass",mode);
 			break;
 		case 5:
-			mode = GetUserCvar(pln,"sams_cl_dkclab");
-			SetUserCvar(pln,"sams_cl_dkclab",!mode);
-			Log(s:"\cgDuke Nukem Life's a Beach: ", s:"\ck", s:modestringsdefault[mode]);
+			mode = !GetUserCvar(pln,"sams_cl_dkclab");
+			SetUserCvar(pln,"sams_cl_dkclab",mode);
 			break;
 		case 8:
 			mode = GetUserCvar(pln,"sams_cl_rottmode");
@@ -3113,17 +3177,53 @@ Script "Samsara_ChangeAltClass" (void) net
 			else
 				mode++;
 				
-			Log(s:"\cgH.U.N.T. Team Member: ", s:"\ck", s:modestringsrott[mode]);
 			SetUserCvar(pln,"sams_cl_rottmode",mode);
 			break;
 		case 9:
-			mode = GetUserCvar(pln,"sams_cl_bsaog");
-			SetUserCvar(pln,"sams_cl_bsaog",!mode);
+			mode = !GetUserCvar(pln,"sams_cl_bsaog");
+			SetUserCvar(pln,"sams_cl_bsaog",mode);
+			break;
+		case 19:
+			mode = !GetUserCvar(pln,"sams_cl_shephardmode");
+			SetUserCvar(pln,"sams_cl_shephardmode",mode);
+			break;
+	}
+	ACS_NamedExecuteWithResult("Samsara_LogClass",PlayerClass(pln),mode);
+}
+
+//Sigh
+Script "Samsara_LogClass" (int type, int mode) clientside
+{
+	switch(type)
+	{
+		case 0:
+			SetUserCvar(PlayerNumber(),"sams_cl_doom64",mode);
+			Log(s:"\cgDoom 64 Mode: ", s:"\ck", s:modestringsdefault[mode]);
+			break;
+		case 3:		
+			SetUserCvar(PlayerNumber(),"sams_cl_wolfmode",mode);
+			Log(s:"\cgWolfenstein 3D Mode: ", s:"\ck", s:modestringswolf[mode]);
+			break;
+		case 4:
+			SetUserCvar(PlayerNumber(),"sams_cl_hexclass",mode);
+			Log(s:"\cgHexen Class: ", s:"\ck", s:modestringshexen[mode]);
+			break;
+		case 5:
+			SetUserCvar(PlayerNumber(),"sams_cl_dkclab",mode);
+			Log(s:"\cgDuke Nukem Life's a Beach: ", s:"\ck", s:modestringsdefault[mode]);
+			break;
+		case 8:
+			SetUserCvar(PlayerNumber(),"sams_cl_rottmode",mode);
+			Log(s:"\cgH.U.N.T. Team Member: ", s:"\ck", s:modestringsrott[mode]);
+			break;
+		case 9:
+			SetUserCvar(PlayerNumber(),"sams_cl_bsaog",mode);
 			Log(s:"\cgBlake Stone Aliens of Gold: ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 		case 19:
-			mode = GetUserCvar(pln,"sams_cl_shephardmode");
-			SetUserCvar(pln,"sams_cl_shephardmode",!mode);
+			SetUserCvar(PlayerNumber(),"sams_cl_shephardmode",mode);
+			if(CheckInventory("flashlightinventory") == true)
+				ACS_NamedExecuteWithResult("HL2677",0,0,0,0);
 			Log(s:"\cgHalf Life Opposing Force: ", s:"\ck", s:modestringsdefault[mode]);
 			break;
 	}
@@ -4037,14 +4137,14 @@ Script "Samsara_BotAltClassHandler" (int playernum)
 			playername = GetUserCvarString(playernum,"name");
 			playername = StrRight(playername,strlen(playername)-2);
 			playername = StrLeft(playername,strlen(playername)-2);
+			if(StrCmp(playername,"B.J. Blazkowicz (Mac)") == 0)
+			{	
+				SetUserCvar(playernum,"sams_cl_wolfmode",2);
+			}	
 			if(StrCmp(playername,"B.J. Blazkowicz (Lost)") == 0)
 			{	
 				SetUserCvar(playernum,"sams_cl_wolfmode",1);
 			}
-			if(StrCmp(playername,"B.J. Blazkowicz (Mac)") == 0)
-			{	
-				SetUserCvar(playernum,"sams_cl_wolfmode",2);
-			}			
 			if(StrCmp(playername,"B.J. Blazkowicz (Totenkopf)") == 0)
 			{	
 				SetUserCvar(playernum,"sams_cl_wolfmode",3);
@@ -4289,7 +4389,7 @@ Script "Samsara_PlayerShrinker" (int condition)
 			Thing_Remove(newtid);
 		}
 		if((ClassifyActor(0) & ACTOR_DEAD))
-				terminate;
+			terminate;
 			
 		SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
 		for(a = 0; a < 10; a++)
@@ -4313,11 +4413,14 @@ Script "Samsara_PlayerShrinker" (int condition)
 
 script "Catacomb_HourglassCooldown" (void)
 {
-    if (CheckInventory("Catacomb_HourglassCooldown") > 0)
+	if(!GetCvar("sams_notimefreeze"))
+		GiveInventory("PowerCatacomb_TimeFreeze",1);
+	else
+		GiveInventory("PowerCatacomb_Invulnerability",1);
+    while(CheckInventory("Catacomb_HourglassCooldown") > 0)
     {
         delay(35);
         TakeInventory("Catacomb_HourglassCooldown",1);
-        restart;
     }
 } 
 

@@ -8,7 +8,8 @@ ACTOR Hexen2SpellBookBoneShard : Weapon
   Weapon.BobSpeed 1.4
   Weapon.BobStyle Alpha   
   Weapon.AmmoType "Cell"
-  Weapon.AmmoGive 20
+  Weapon.AmmoGive 40
+  Weapon.AmmoUse 1
   Tag "Bone Shards"
   +WEAPON.NOALERT
   States
@@ -103,13 +104,13 @@ ACTOR Hexen2SpellBookBoneShard : Weapon
 	  stop
 	Fire:
 	  HX00 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
-	  HX00 A 0 A_JumpIfInventory("Cell",2,1)
+	  HX00 A 0 A_JumpIfInventory("Cell",1,1)
 	  Goto FireEmpty
 	  HX00 A 0 A_AlertMonsters
 	  HX00 A 0 A_GunFlash("DemonessFire",GFF_NOEXTCHANGE)
 	  HX00 A 0 A_JumpIfInventory("CoopModeOn", 1, "FireCoop")
-	  HX00 A 0 ACS_NamedExecuteAlways("Hexen2_AmmoLoop",0,7,2,4)
 	  HX00 A 0 A_GiveInventory("Hexen2WeaponHold",1)
+	  HX00 A 0 ACS_NamedExecuteWithResult("Hexen2_AmmoLoop",5,1,4)
 	  HX00 AB 2
 	  HX00 C 2
 	  HX00 C 0 A_PlaySound("Hexen2/BonerFire", CHAN_WEAPON, 1,0)
@@ -118,7 +119,7 @@ ACTOR Hexen2SpellBookBoneShard : Weapon
 	  HX00 C 0 A_Refire("FireHold")
 	  Goto FireStop
 	FireHold: //maybe causing issues leaving this as hold
-	  HX00 C 0 A_JumpIfInventory("Cell",2,1)
+	  HX00 C 0 A_JumpIfInventory("Cell",1,1)
 	  Goto FireStop
 	  HX00 C 0 A_AlertMonsters
 	  HX00 C 2
@@ -142,36 +143,36 @@ ACTOR Hexen2SpellBookBoneShard : Weapon
 	  HX00 GHIJKL 2
       Goto WeaponIdle
     FireCoop:
-	  HX00 A 0 ACS_NamedExecuteAlways("Hexen2_AmmoLoop",0,7,2,4)
 	  HX00 A 0 A_GiveInventory("Hexen2WeaponHold",1)
+	  HX00 A 0 ACS_NamedExecuteWithResult("Hexen2_AmmoLoop",5,1,4)
 	  HX00 AB 2
 	  HX00 C 2
 	  HX00 C 0 A_PlaySound("Hexen2/BonerFire", CHAN_WEAPON, 1,0)
-	  HX00 CCCC 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), frandom(-6.1, 6.1), 0, 0)
+	  HX00 CCCC 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), 0, frandom(-6.1, 6.1), 0, 0)
 	  HX00 C 0 A_FireCustomMissile("Hexen2BoneShotProjectileCoop",random(-5,5),0,-8,8,0,random(-5,5))
 	  HX00 C 0 A_Refire("FireHoldCoop")
 	  Goto FireStop
 	FireHoldCoop: //maybe causing issues leaving this as hold
-	  HX00 C 0 A_JumpIfInventory("Cell",2,1)
+	  HX00 C 0 A_JumpIfInventory("Cell",1,1)
 	  Goto FireStopCoop
 	  HX00 C 0 A_AlertMonsters
 	  HX00 C 2
 	  HX00 C 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
 	  HX00 C 0 A_PlaySound("Hexen2/BonerFire", CHAN_WEAPON, 1,0)
-	  HX00 CCCC 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), frandom(-6.1, 6.1), 0, 0)
+	  HX00 CCCC 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), 0, frandom(-6.1, 6.1), 0, 0)
 	  HX00 C 0 A_FireCustomMissile("Hexen2BoneShotProjectileCoop",random(-5,5),0,-8,8,0,random(-5,5))
 	  HX00 C 0 A_Refire("FireHoldCoop")	
 	FireStopCoop:
 	  HX00 D 0 A_TakeInventory("Hexen2WeaponHold",1)
 	  HX00 D 0 A_GunFlash("DemonessFireStop",GFF_NOEXTCHANGE)
 	  HX00 D 0 A_Jump(52,6)
-	  HX00 DDDD 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), frandom(-6.1, 6.1), 0, 0)
+	  HX00 DDDD 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), 0, frandom(-6.1, 6.1), 0, 0)
 	  HX00 D 2 A_FireCustomMissile("Hexen2BoneShotProjectileCoop",random(-5,5),0,-8,8,0,random(-5,5))
 	  HX00 E 0 A_Jump(52,6)
-	  HX00 EEEE 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), frandom(-6.1, 6.1), 0, 0)
+	  HX00 EEEE 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), 0, frandom(-6.1, 6.1), 0, 0)
 	  HX00 E 2 A_FireCustomMissile("Hexen2BoneShotProjectileCoop",random(-5,5),0,-8,8,0,random(-5,5))
 	  HX00 F 0 A_Jump(52,6)
-	  HX00 FFFF 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), frandom(-6.1, 6.1), 0, 0)
+	  HX00 FFFF 0 A_FireCustomMissile("Hexen2Bullet", frandom(-6.1, 6.1), 0, frandom(-6.1, 6.1), 0, 0)
 	  HX00 F 2 A_FireCustomMissile("Hexen2BoneShotProjectileCoop",random(-5,5),0,-8,8,0,random(-5,5))
 	  HX00 GHIJKL 2
       Goto WeaponIdle	  

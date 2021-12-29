@@ -65,68 +65,6 @@ StatusBar Fullscreen, forcescaled
 		DrawImage "Q2AMM4", 150, 176;
 	}
   }
-	InInventory PainKillerClass, 1
-	{
-		Alpha 0.25
-		{
-			DrawImage "PKHUDTOP", 84, -1;
-			DrawImage "PKHUDLEF", 0, 172;
-			DrawImage "PKHUDRIT", 276, 172;
-		}
-		DrawImage "PKKILLS", 128, 3;
-		DrawImage "PKENERGY", 4, 176;
-		DrawImage "PKSOULS", 177, 0;
-		DrawNumber 3, PKHUDFNT, Untranslated, Health, alignment(left), fillzeros, 15, 176;
-		DrawNumber 3, PKHUDFNT, Untranslated, Armor, alignment(left), fillzeros, 15, 186;
-		DrawNumber 5, PKHUDFNT, Untranslated, KillCountAmount, alignment(left), fillzeros, 92, 2;
-		DrawNumber 5, PKHUDFNT, Untranslated, Painkiller_SoulCount, alignment(left), fillzeros, 192, 2;
-		IsSelected not Painkiller_Painkiller
-		{
-			DrawNumber 3, PKHUDFNT, Untranslated, Ammo1, alignment(right), fillzeros, 305, 176;
-			DrawNumber 3, PKHUDFNT, Untranslated, Ammo2, alignment(right), fillzeros, 305, 186;
-		}
-		else
-		{
-			DrawImage "PK08L0", 300, 176;
-			DrawImage "PK08M0", 300, 186;
-			DrawImage "PKINFINY", 282, 176;
-			DrawImage "PKINFINY", 282, 186;
-		}
-		IsSelected Painkiller_Shotgun
-		{
-			DrawImage "PK08A0", 304, 176;
-			DrawImage "PK08B0", 304, 186;
-		}
-		IsSelected Painkiller_Stakegun
-		{
-			DrawImage "PK08C0", 304, 176;
-			DrawImage "PK08D0", 304, 186;
-		}
-		IsSelected Painkiller_Rifle
-		{
-			DrawImage "PK08E0", 303, 176;
-			DrawImage "PK08F0", 305, 186;
-		}
-		IsSelected Painkiller_RocketLauncher
-		{
-			DrawImage "PK08D0", 304, 176;
-			DrawImage "PK08G0", 304, 186;
-		}
-		IsSelected Painkiller_Electrodriver
-		{
-			DrawImage "PK08H0", 304, 176;
-			DrawImage "PK08I0", 305, 186;
-		}
-		IsSelected Painkiller_BoltGun
-		{
-			DrawImage "PK08J0", 305, 176;
-			DrawImage "PK08K0", 305, 186;
-		}
-		
-		//DrawSwitchableImage ArmorType ArmorPack2, "PKARMOR0", "PKARMOR3", 4, 186;	
-		//DrawSwitchableImage ArmorType ArmorPack1, "PKARMOR0", "PKARMOR2", 4, 186;
-		//DrawSwitchableImage ArmorType ArmorScrap, "PKARMOR0", "PKARMOR1", 4, 186;	
-	}  
 
     GameMode TeamGame, CTF, OneFlagCTF, Skulltag, TeamLMS, TeamPossession
     {
@@ -155,13 +93,11 @@ StatusBar Fullscreen, forcescaled
 	}
 	InInventory not BittermanClass, 1 {
 	InInventory not HalfLifeClass, 1 {
-	InInventory not PainkillerClass, 1 {
 	InInventory not BondClass, 1 {
-	InInventory not RottClass, 1 { DrawImage "HUDBAR", 13, 185; } } } } }
+	InInventory not RottClass, 1 { DrawImage "HUDBAR", 13, 185; } } } } 
 	InInventory CalebClass, 1 { drawbar "TNTMTR01", "TNTMTR00", Ammo ThrowPower, horizontal, 124, 192; }
 	InInventory not BittermanClass, 1 {
 	InInventory not HalfLifeClass, 1 {
-	InInventory not PainkillerClass, 1 {
 	InInventory not RottClass, 1 { 
 	InInventory not BondClass, 1 {
      //Armor
@@ -169,7 +105,6 @@ StatusBar Fullscreen, forcescaled
      DrawImage "ARMRICON", 8, 191;
      DrawNumber 3, INDEXFON, White, Armor, FillZeros, 28, 191;
      InInventory BasicArmor, 101 { DrawBar "HARMO2", "HEMPTY", Armor, Horizontal, /*Reverse, */ 14, 186; }
-		}
 	   }
 	  }
 	 }
@@ -188,14 +123,12 @@ StatusBar Fullscreen, forcescaled
 	InInventory not BittermanClass, 1 {
 	InInventory not HalfLifeClass, 1 {
 	InInventory not RottClass, 1 {
-	InInventory not PainkillerClass, 1 {
 	InInventory not BondClass, 1 {
      //Health
      DrawImage "HUDBAR", 18, 180;
      DrawBar "HHEALTH", "HEMPTY", Health, Horizontal, /*Reverse, */ 19, 181;
      DrawImage "HLTHICON", 40, 191;
      DrawNumber 3, INDEXFON, Gold, Health, 60, 191, Red, 25, White, 50;
-		}
 	   }
 	  }
      }
@@ -292,7 +225,6 @@ StatusBar Fullscreen, forcescaled
     {
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {
 		InInventory not BondClass, 1 {
 		InInventory not CatacombClass, 1 {
@@ -421,7 +353,7 @@ StatusBar Fullscreen, forcescaled
 		}	
 		IsSelected "Machine Gun"
 		{
-			InInventory WolfenClassMode, 3
+			InInventory WolfenClassMode, 2
 			{
 				DrawImage "HUDBAR", 250, 192;
 				DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
@@ -517,71 +449,7 @@ StatusBar Fullscreen, forcescaled
             DrawImage "HUDBAR", 250, 192;
             DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
             DrawNumber 3, INDEXFON, White, Ammo2, 270, 186;
-        }	
-		IsSelected "RTCW_Luger"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMA0", 238, 195, Center;
-		}	
-		IsSelected "RTCW_Colt"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMA0", 238, 195, Center;
-		}		
-		IsSelected "RTCW_MP40"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMA0", 238, 195, Center;
-		}	
-		IsSelected "RTCW_Thompson"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMA0", 238, 195, Center;
-		}	
-		IsSelected "RTCW_STEN"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMA0", 238, 195, Center;
-		}	
-		IsSelected "RTCW_FG42"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMA0", 238, 195, Center;
-		}	
-		IsSelected "RTCW_Mauser"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMB0", 238, 195, Center;
-		}	
-		IsSelected "RTCW_Snooper"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMB0", 238, 195, Center;
-		}		
-		IsSelected "RTCW_Venom"
-		{
-            DrawImage "HUDBAR", 250, 192;
-            DrawBar "HAMBAR", "HEMPTY", ammo2, Horizontal, Reverse, 251, 193;
-            DrawNumber 3, INDEXFON, White, ammo2, 270, 186;
-            DrawImage "AMSMD0", 238, 195, Center;
-		}			
-		
+        }			
 		
         IsSelected ".44 Magnum Mega Class A1"
         {
@@ -608,7 +476,6 @@ StatusBar Fullscreen, forcescaled
             DrawBar "HAMBAR", "HEMPTY", RocketAmmo, Horizontal, Reverse, 251, 193;
             DrawNumber 3, INDEXFON, White, RocketAmmo, 270, 186;
             DrawImage AmmoIcon2, 228, 192, Center;
-								}
 							}
 						}			
 					}
@@ -639,10 +506,8 @@ StatusBar Fullscreen, forcescaled
     {
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
         InInventory not RottClass, 1 {
 			InInventory GotWeapon0, 1 {DrawImage "STYSNUM1", 126, 10;} 
-					}
 				}
 			}
         }
@@ -673,10 +538,8 @@ StatusBar Fullscreen, forcescaled
 		IsSelected "Totenkopf_MauserDual" { drawimage "STY2NUM1", 126, 10; }	
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {
 			DrawSwitchableImage WeaponSlot 2, "", "STYSNUM2", 136, 10;
-					}
 				}
 			}
         }
@@ -707,10 +570,8 @@ StatusBar Fullscreen, forcescaled
 		IsSelected "Totenkopf_Sniper" { drawimage "STY2NUM2", 136, 10; }
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {
 			DrawSwitchableImage WeaponSlot 3, "", "STYSNUM3", 146, 10;
-					}
 				}
 			}
         }
@@ -741,9 +602,7 @@ StatusBar Fullscreen, forcescaled
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
 		InInventory not RottClass, 1 {
-		InInventory not PainkillerClass, 1 {
 			DrawSwitchableImage WeaponSlot 4, "", "STYSNUM4", 156, 10;
-					}
 				}
 			}
         }
@@ -774,10 +633,8 @@ StatusBar Fullscreen, forcescaled
 		IsSelected "Totenkopf_MP40Dual" { drawimage "STY2NUM4", 156, 10; }
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {        
 			DrawSwitchableImage WeaponSlot 5, "", "STYSNUM5", 166, 10;
-					}
 				}
 			}
         }
@@ -808,10 +665,8 @@ StatusBar Fullscreen, forcescaled
 //		IsSelected "Totenkopf_Panzerschreck" { drawimage "STY2NUM5", 166, 10; }
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {		
 			DrawSwitchableImage WeaponSlot 6, "", "STYSNUM6", 176, 10;
-					}
 				}
 			}
         }
@@ -842,10 +697,8 @@ StatusBar Fullscreen, forcescaled
 //		IsSelected "Totenkopf_Chaingun" { drawimage "STY2NUM6", 176, 10; }
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {        
 			DrawSwitchableImage WeaponSlot 7, "", "STYSNUM7", 186, 10;
-					}
 				}
 			}
         }
@@ -911,7 +764,6 @@ StatusBar Fullscreen, forcescaled
 
 		InInventory not BittermanClass, 1 {
 		InInventory not HalfLifeClass, 1 {
-		InInventory not PainkillerClass, 1 {
 		InInventory not RottClass, 1 {	
 		InInventory not CatacombClass, 1 {
 		
@@ -920,7 +772,6 @@ StatusBar Fullscreen, forcescaled
         InInventory KeyYellow, 1 { drawimage "YKEYICON", 240, 169; }
         InInventory KeyGreen, 1 { drawimage "GKEYICON", 255, 169; }
         InInventory KeyBlue, 1 { drawimage "BKEYICON", 270, 169; }
-						}
 					}
 				}
 			}
@@ -4296,7 +4147,7 @@ StatusBar normal, forcescaled
 
     playerclass Blazkowicz
     {
-		InInventory WolfenClassMode, 3
+		InInventory WolfenClassMode, 2
 		{
 			DrawImage "TKSDLBAR", 0, 168;
 			DrawNumber 3, SDLNUMS, untranslated, health, 119, 180, untranslated, 25, untranslated, 50;
@@ -4492,7 +4343,7 @@ StatusBar normal, forcescaled
 		}
         InInventory ExpandedHud, 1
         {
-		  InInventory WolfenClassMode, 3
+		  InInventory WolfenClassMode, 2
 		  {
 				drawimage "TKBART", 0, 0;
 				InInventory Totenkopf_FlameThrower, 1 { drawimage "SDLWP8N", -17, 11; }
@@ -4557,7 +4408,7 @@ StatusBar normal, forcescaled
                 InInventory GotWeapon0, 1 { drawimage "WPWOLF1Y", 49, 11; }
             }
 
-            InInventory not WolfenClassMode
+            InInventory not WolfenClassMode, 1
 			{
 				InInventory GotWeapon2, 1 { drawimage "WEPSELW2", 87, 0; }
 				InInventory GotWeapon2, 1 { drawimage "WPWOLF2N", 82, 11; }
@@ -4615,35 +4466,6 @@ StatusBar normal, forcescaled
 				IsSelected "Spear of Destiny" { drawimage "WEPSELY7", 251, 0; }
 				IsSelected "Spear of Destiny" { drawimage "WPWLF27Y", 247, 11; }
 				}
-			ininventory WolfenClassMode, 2
-			{
-				InInventory GotWeapon2, 1 { drawimage "WEPSELW2", 87, 0; }
-				InInventory GotWeapon2, 1 { drawimage "WPWLF32N", 82, 11; }
-				InInventory GotWeapon3, 1 { drawimage "WEPSELW2", 87, 0; }
-				InInventory GotWeapon3, 1 { drawimage "WPWLF32N", 82, 11; }
-				IsSelected "Machine Gun" { drawimage "WEPSELY2", 87, 0; }
-				IsSelected "Machine Gun" { drawimage "WPWLF32Y", 82, 11; }
-
-				InInventory GotWeapon4, 1 { drawimage "WEPSELW4", 154, 0; }
-				InInventory GotWeapon4, 1 { drawimage "WPWLF34N", 148, 11; }
-				IsSelected "  Chaingun  " { drawimage "WEPSELY4", 154, 0; }
-				IsSelected "  Chaingun  " { drawimage "WPWLF34Y", 148, 11; }
-
-				InInventory GotWeapon5, 1 { drawimage "WEPSELW5", 186, 0; }
-				InInventory GotWeapon5, 1 { drawimage "WPWLF35N", 181, 11; }
-				IsSelected " Rocket Launcher " { drawimage "WEPSELY5", 186, 0; }
-				IsSelected " Rocket Launcher " { drawimage "WPWLF35Y", 181, 11; }
-
-				InInventory GotWeapon6, 1 { drawimage "WEPSELW6", 219, 0; }
-				InInventory GotWeapon6, 1 { drawimage "WPWLF36N", 214, 11; }
-				IsSelected " Flamethrower " { drawimage "WEPSELY6", 219, 0; }
-				IsSelected " Flamethrower " { drawimage "WPWLF36Y", 214, 11; }
-
-				InInventory GotWeapon7, 1 { drawimage "WEPSELW7", 251, 0; }
-				InInventory GotWeapon7, 1 { drawimage "WPWLF27N", 247, 11; }
-				IsSelected "Spear of Destiny" { drawimage "WEPSELY7", 251, 0; }
-				IsSelected "Spear of Destiny" { drawimage "WPWLF27Y", 247, 11; }
-				}				
 			  }	
 			}
         }
@@ -8017,7 +7839,7 @@ drawselectedinventory alwaysshowcounter, ERADFONT, 340, 167, 340, 178, untransla
 
     playerclass Blazkowicz
     {
-		InInventory WolfenClassMode, 3
+		InInventory WolfenClassMode, 2
 		{
 			DrawImage "TKSDLBAR", 0, 168;
 			DrawNumber 3, SDLNUMS, untranslated, health, 119, 180, untranslated, 25, untranslated, 50;

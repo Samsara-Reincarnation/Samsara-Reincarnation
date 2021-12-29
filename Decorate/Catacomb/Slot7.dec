@@ -604,14 +604,10 @@ Actor Catacomb_Hourglass : CustomInventory
 			Loop
 		Use:
 			TNT1 A 0 A_JumpIfInventory("Catacomb_HourglassCooldown",1,"UseFail")
-			TNT1 A 1
-			TNT1 A 0 A_GiveInventory("PowerCatacomb_TimeFreeze",1)
 			TNT1 A 0 ACS_NamedExecuteAlways("Catacomb_HourglassCooldown", 0)
 			TNT1 A 0 A_GiveInventory("Catacomb_HourglassCooldown",180)
 			fail
-
 		UseFail:
-			TNT1 A 1
 			TNT1 A 0 A_Print("The Crystal Hourglass hasn't cooled down yet")
 			fail
 	}
@@ -620,6 +616,11 @@ Actor Catacomb_Hourglass : CustomInventory
 Actor Catacomb_HourglassCooldown : inventory { -INVBAR +INVENTORY.UNDROPPABLE inventory.maxamount 180 }
 
 Actor PowerCatacomb_TimeFreeze : PowerTimeFreezer
+{
+	Powerup.Duration -20
+}	
+
+Actor PowerCatacomb_Invulnerability : PowerInvulnerable
 {
 	Powerup.Duration -20
 }	

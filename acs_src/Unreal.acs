@@ -369,14 +369,14 @@ Script "Unreal_RedeemerRocket" (void)
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_ADDBLEND,10000,CR_UNTRANSLATED,320.0,240.0,0.1,0.67);
 		int yaw = GetPlayerInput(-1,INPUT_YAW);
 		int pitch = -GetPlayerInput(-1,INPUT_PITCH);
-		int speedUp = (GetPlayerInput(-1,INPUT_BUTTONS) & BT_ATTACK)+1;
+		int detonate = (GetPlayerInput(-1,INPUT_BUTTONS) & BT_ATTACK);
 		int abort = GetPlayerInput(-1,INPUT_BUTTONS) & BT_ALTATTACK;
 		SetActorAngle(missileTid,GetActorAngle(missileTid)+yaw);
 		SetActorPitch(missileTid,GetActorPitch(missileTid)+pitch);
 		int velx = FixedMul(16*cos(GetActorAngle(missileTid)),cos(GetActorPitch(missileTid)));
 		int vely = FixedMul(16*sin(GetActorAngle(missileTid)),cos(GetActorPitch(missileTid)));
 		int velz = -16*sin(GetActorPitch(missileTid));
-		SetActorVelocity(missileTid,velx*speedUp,vely*speedUp,velz*speedUp,0,0);
+		SetActorVelocity(missileTid,velx,vely,velz,0,0);
 		
 		if(GZDoom)
 		{
@@ -417,6 +417,11 @@ Script "Unreal_RedeemerRocket" (void)
 		if(abort != 0 && abortDelay > 7)
 		{
 			SetActorVelocity(missileTid,velx*2,vely*2,velz*2,0,0);
+			break;
+		}
+		else if(detonate)
+		{
+			SetActorState(missileTid,"Death",1);
 			break;
 		}
 	}

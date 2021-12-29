@@ -42,7 +42,6 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 		RR:				R_SR J 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		Bitterman:      Q2WP A 35 A_ChangeFlag("FLOATBOB", 0) 	goto SpawnLoop
 		LostWolfguy: 	WCHP B 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		MacWolfguy: 	WCHP C 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		BeachDukeGuy:	CHGP B 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		Shephard: 		HW40 Z 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		Demoness:  		HX00 A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -60,7 +59,7 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 			UN00 A 10 A_ChangeFlag("FLOATBOB", 0) 
 			UN00 A 10 BRIGHT  A_ChangeFlag("FLOATBOB", 0)   
 			goto SpawnLoop
-		RTCW: RW98 A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop						
+		RTCW: RW98 A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
 
         DoomFull:      PDCH B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         ChexFull:      PRPZ B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -89,7 +88,6 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 		JonFull:	   PSPK H 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
 		RRFull:	       RRPK G 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
         BittermanFull: Q2WP C 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		MacWolfFull:  PWCG F 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		LostWolfFull:  PWCG D 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		BeachDukeFull: PRPR D 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		ShephardFull:  PHL4 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -127,7 +125,6 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 		JonEmpty:	   	PSPK I 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
 		RREmpty:	    RRPK H 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
 		BittermanEmpty: Q2WP B 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		MacWolfEmpty:  PWCG E 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		LostWolfEmpty:  PWCG C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		BeachDukeEmpty: PRPR C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		ShephardEmpty:  PHL4 A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -145,7 +142,6 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 		TNT1 A 0 A_JumpIfInventory("MarathonClass", 0, "CheckMarathon")
 		TNT1 A 0 A_JumpIfInventory("BondClass", 1, "CheckBond")
 		TNT1 A 0 A_JumpIfInventory("WolfenClass", 1, "CheckWolfen")
-		TNT1 A 0 A_JumpIfInventory("RTCWClass", 1, "CheckRTCW")	 
 		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 4) & 3) == 1, "PickupSuccess")
         Goto PickupFailure
 	  CheckDoom:
@@ -178,15 +174,6 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 		Stop
 		TNT1 A 0 A_JumpIfInventory("RocketAmmo", 0, 1)
 		TNT1 A 0 A_GiveInventory("RocketAmmo",1)
-		Stop		
-	  CheckRTCW:
-	    TNT1 A 0 A_JumpIfInventory("RTCW_FG42", 1, "RTCWPickupAmmo")
-        TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 4) & 3) == 1, "PickupSuccess")
-	    Goto PickupSuccess
-	  RTCWPickupAmmo:
-		TNT1 A 0 A_JumpIfInventory("Clip", 0, "PickupFailure")
-		TNT1 A 0 A_GiveInventory("Clip",20)
-		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientWeaponPickup",0, 5)		
 		Stop
 	  CheckMarathon:
 		TNT1 A 0 A_JumpIfInventory("MA-75B Assault Rifle", 1, "MarathonPickupAmmo")
@@ -244,7 +231,16 @@ actor SamsaraSlotFourPickup: SamsaraSlotPickup replaces Chaingun
 		TNT1 A 0 A_PlaySound("Totenkopf/getweapon")
 		TNT1 A 0 A_GiveInventory("Samsara_ModeWeaponChange", 1)
 		TNT1 A 0 A_GiveInventory("Totenkopf_IHaveDualMP40s",1)
-		Goto PickupSuccess		
+		Goto PickupSuccess	
+	  CheckRTCW:
+	    //TNT1 A 0 A_JumpIfInventory("RTCW_FG42", 1, "RTCWPickupAmmo")
+        TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 4) & 3) == 1, "PickupSuccess")
+	    Goto PickupSuccess
+	  /*RTCWPickupAmmo:
+		TNT1 A 0 A_JumpIfInventory("Clip", 0, "PickupFailure")
+		TNT1 A 0 A_GiveInventory("Clip",20)
+		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientWeaponPickup",0, 5)		
+		Stop*/
     }
 }
 
@@ -262,7 +258,6 @@ actor SamsaraSlotFourDrop: SamsaraSlotFourPickup
 	  TNT1 A 0 A_JumpIfInventory("SWClass", 1, "CheckSW")
 	  TNT1 A 0 A_JumpIfInventory("BondClass", 1, "CheckBond")
 	  TNT1 A 0 A_JumpIfInventory("WolfenClass", 1, "CheckWolfen")
-	  TNT1 A 0 A_JumpIfInventory("RTCWClass", 1, "CheckRTCW")	 	  
 	  TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 4, 1) & 1) == 1, "PickupSuccess")
       goto PickupFailure
 	CheckStrife:
@@ -288,15 +283,6 @@ actor SamsaraSlotFourDrop: SamsaraSlotFourPickup
 	  TNT1 A 0 A_JumpIfInventory("RocketAmmo", 0, 1)
 	  TNT1 A 0 A_GiveInventory("RocketAmmo",1)
 	  Stop
-	  CheckRTCW:
-	    TNT1 A 0 A_JumpIfInventory("RTCW_FG42", 1, "RTCWPickupAmmo")
-        TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 4) & 3) == 1, "PickupSuccess")
-	    Goto PickupSuccess
-	  RTCWPickupAmmo:
-		TNT1 A 0 A_JumpIfInventory("Clip", 0, "PickupFailure")
-		TNT1 A 0 A_GiveInventory("Clip",20)
-		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientWeaponPickup",0, 5)		
-		Stop	  
 	  CheckMarathon:
 		TNT1 A 0 A_JumpIfInventory("MA-75B Assault Rifle", 1, "MarathonPickupAmmo")
 		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 4) & 3) == 1, "PickupSuccess")

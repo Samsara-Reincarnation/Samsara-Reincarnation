@@ -13,24 +13,6 @@ addmenukey "Pickup Msg. Mode" samsara_cmd_msgmode
 addmenukey "Compendium: Open"  samsara_compendium
 addmenukey "Server Settings" samsara_cmd_settings
 
-alias samsara_id_vanilladoom  "set samsara_cl_vanilladoom  $samsara_cl_vanilladoom;  archivecvar samsara_cl_vanilladoom"
-alias samsara_id_wolfmove     "set samsara_cl_wolfmove     $samsara_cl_wolfmove;     archivecvar samsara_cl_wolfmove"   
-alias samsara_id_ballgag      "set samsara_cl_ballgag      $samsara_cl_ballgag;      archivecvar samsara_cl_ballgag"    
-alias samsara_id_weaponhud    "set samsara_cl_weaponhud    $samsara_cl_weaponhud;    archivecvar samsara_cl_weaponhud"  
-alias samsara_id_moremessages "set samsara_cl_moremessages $samsara_cl_moremessages; archivecvar samsara_cl_moremessages"
-alias samsara_id_printpickup  "set samsara_cl_printpickup  $samsara_cl_printpickup;  archivecvar samsara_cl_printpickup"
-alias samsara_id_pickupmode   "set samsara_cl_pickupmode   $samsara_cl_pickupmode;   archivecvar samsara_cl_pickupmode"
-alias samsara_id_norecoil     "set samsara_cl_norecoil     $samsara_cl_norecoil;     archivecvar samsara_cl_norecoil" 
-
-alias samsara_cmd_vanilladoomanims "samsara_id_vanilladoom;  eval != 1 $samsara_cl_vanilladoom samsara_cl_vanilladoom;   showmode \"Vanilla animations\" $samsara_cl_vanilladoom"
-alias samsara_cmd_bjwalk           "samsara_id_wolfmove;     eval != 1 $samsara_cl_wolfmove samsara_cl_wolfmove;         showmode \"Wolfenstein movement\" $samsara_cl_wolfmove"
-alias samsara_cmd_dukestfu         "samsara_id_ballgag;      eval != 1 $samsara_cl_ballgag samsara_cl_ballgag;           showmode \"Ballgag mode\" $samsara_cl_ballgag"
-alias samsara_cmd_norecoil         "samsara_id_norecoil;     eval != 1 $samsara_cl_norecoil samsara_cl_norecoil;         showmode \"No recoil\" $samsara_cl_norecoil"
-alias samsara_cmd_wephud           "samsara_id_weaponhud;    eval != 1 $samsara_cl_weaponhud samsara_cl_weaponhud;       showmode \"Weapon bar\" $samsara_cl_weaponhud"
-alias samsara_cmd_moremessages     "samsara_id_moremessages; eval != 1 $samsara_cl_moremessages samsara_cl_moremessages; showmode \"Alternate messages\" $samsara_cl_moremessages"
-alias samsara_cmd_msgmode          "samsara_id_printpickup;  eval != 1 $samsara_cl_printpickup samsara_cl_printpickup;   showmode \"Print pickup messages\" $samsara_cl_printpickup"
-alias samsara_cmd_weppickups       "samsara_id_pickupmode;   eval %  + $samsara_cl_pickupmode 1 3 samsara_cl_pickupmode; showpickupmode"
-
 alias samsara_cmd_settings "pukename SamsaraGetSettings"
 alias samsara_compendium   "pukename \"Samsara_Compendium_Initiate\"
 alias changelog        "pukename SamsaraChangelog 1"
@@ -38,11 +20,6 @@ alias cvarinfo         "pukename SamsaraChangelog 2"
 //alias changelogoff     "pukename SamsaraChangelog 2"
 
 defaultbind home samsara_compendium
-
-alias showmode "test != 0 %2 \"set truth True\" \"set truth False\"; echo %1 is\\cf $truth; unset truth"
-
-alias showpickupmode "test == $samsara_cl_pickupmode 2 \"echo \\\\cdClass-specific\\\\c- weapon mode set\" \"showpickup2\""
-alias showpickup2    "test == $samsara_cl_pickupmode 1 \"echo \\\\cdHybrid\\\\c- weapon mode set\" \"echo \\\\cdOld-style\\\\c- weapon mode set\""
 
 // THIS SHOULD NOT BE HERE, BUT ADDING IT TO MAPINFO DOESN'T SEEM TO BE PERFECT RIGHT NOW SO HERE'S TO A BACKUP PLAN
 addslotdefault 0 " Fist "
@@ -433,16 +410,17 @@ addmenukey "Switch to Unique 1" samsara_cmd_switchunique1
 addmenukey "Switch to Unique 2" samsara_cmd_switchunique2
 addmenukey "Switch to Unique 3" samsara_cmd_switchunique3
 
-alias samsara_cmd_vanilladoomanims "pukename \"Samsara_KeyBinds\" 1;	archivecvar samsara_cl_vanilladoom;		showmode \"Vanilla animations\" $samsara_cl_vanilladoom"
-alias samsara_cmd_bjwalk           "pukename \"Samsara_KeyBinds\" 2;	archivecvar samsara_cl_wolfmove;		showmode \"Wolfenstein movement\" $samsara_cl_wolfmove"
-alias samsara_cmd_dukestfu         "pukename \"Samsara_KeyBinds\" 3;	archivecvar samsara_cl_ballgag;			showmode \"Ballgag mode\" $samsara_cl_ballgag"
-alias samsara_cmd_wephud           "pukename \"Samsara_KeyBinds\" 4;	archivecvar samsara_cl_weaponhud;		showmode \"Weapon bar\" $samsara_cl_weaponhud"
-alias samsara_cmd_moremessages     "pukename \"Samsara_KeyBinds\" 5;	archivecvar samsara_cl_moremessages;	showmode \"Alternate messages\" $samsara_cl_moremessages"
-alias samsara_cmd_msgmode          "pukename \"Samsara_KeyBinds\" 6;	archivecvar samsara_cl_printpickup;		showmode \"Print pickup messages\" $samsara_cl_printpickup"
-alias samsara_cmd_norecoil         "pukename \"Samsara_KeyBinds\" 7;	archivecvar samsara_cl_norecoil;		showmode \"No recoil\" $samsara_cl_norecoil"
-alias samsara_cmd_heromusic        "pukename \"Samsara_KeyBinds\" 8;	archivecvar samsara_cl_heromusic;		showmode \"Hero Music\" $samsara_cl_heromusic"
+alias samsara_cmd_vanilladoomanims "pukename \"Samsara_Keybinds_Clientside\" 1;
+alias samsara_cmd_bjwalk           "pukename \"Samsara_KeyBinds\" 2;
+alias samsara_cmd_dukestfu         "pukename \"Samsara_Keybinds_Clientside\" 3;
+alias samsara_cmd_wephud           "pukename \"Samsara_KeyBinds\" 4;
+alias samsara_cmd_moremessages     "pukename \"Samsara_Keybinds_Clientside\" 5;
+alias samsara_cmd_msgmode          "pukename \"Samsara_Keybinds_Clientside\" 6;
+alias samsara_cmd_norecoil         "pukename \"Samsara_Keybinds_Clientside\" 7;
+alias samsara_cmd_heromusic        "pukename \"Samsara_Keybinds_Clientside\" 8;
+alias samsara_cmd_weppickups       "pukename \"Samsara_Keybinds_Clientside\" 9;
+//alias samsara_cmd_rottbar          "pukename \"Samsara_KeyBinds\" 10;
 alias samsara_cmd_altmode          "pukename \"Samsara_ChangeAltClass\";
-alias samsara_cmd_weppickups       "pukename \"Samsara_PickupMode\";	archivecvar samsara_cl_pickupmode;		showpickupmode"
 alias samsara_cmd_classuniques1    "pukename Samsara_UniqueKeys"
 alias samsara_cmd_classuniques2    "pukename Samsara_UniqueKeys 1"
 alias samsara_cmd_switchfist       "pukename \"Samsara_WeaponHotkeys\" 0;
@@ -454,4 +432,5 @@ alias samsara_cmd_switchunique3    "pukename \"Samsara_WeaponHotkeys\" 11;
 alias samsara_zdtaunt "pukename TauntButton"
 
 defaultbind ' samsara_cmd_altmode
-defaultbind f samsara_cmd_classuniques
+defaultbind f samsara_cmd_classuniques1
+defaultbind g samsara_cmd_classuniques2

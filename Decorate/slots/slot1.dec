@@ -17,8 +17,7 @@ actor SamsaraSlotOnePickup: SamsaraSlotPickup replaces Chainsaw
         Doomguy:  WSAW A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         Chexguy:  CSPR A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         Heretic:  WGNT A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-        MacWolfGuy:
-		Wolfguy:  WKNP A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+        Wolfguy:  WKNP A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		HexenMage:
 		HexenFighter:
         Hexen:    PSBG A 35 A_ChangeFlag("FLOATBOB", 1)   goto SpawnLoop
@@ -52,13 +51,11 @@ actor SamsaraSlotOnePickup: SamsaraSlotPickup replaces Chainsaw
 		Bond:   	GE00 Z 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		Totenkopf:  TK10 K 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		Catacomb:	CT01 YZ 14 BRIGHT A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		
 		Painkiller:	
 			PK99 A 0 A_ChangeFlag("FLOATBOB", 1)   
 			PK99 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("Painkiller_Stake_Icon",0,0,40)
 			PK99 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("Painkiller_Stake_Icon2",0,0,40)
 			goto SpawnLoop
-			
 		Unreal: 		
 			UN00 A 10 A_ChangeFlag("FLOATBOB", 0) 
 			UN00 A 10 BRIGHT  A_ChangeFlag("FLOATBOB", 0)   
@@ -68,7 +65,6 @@ actor SamsaraSlotOnePickup: SamsaraSlotPickup replaces Chainsaw
         DoomFull:      PSAW B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         ChexFull:      PBSP B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         HereticFull:   PGNT B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		MacWolfFull:
         WolfFull:      PKNF B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		HexenMageFull:
         HexenFighterFull:
@@ -134,7 +130,6 @@ actor SamsaraSlotOnePickup: SamsaraSlotPickup replaces Chainsaw
 		JonEmpty:		PSPK C 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
 		RREmpty:		RRPK B 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		BittermanEmpty: Q2WP B 35 Bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop	
-		MacWolfEmpty:
 		LostWolfEmpty:  PKNF A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		BeachDukeEmpty: PPBM C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		ShephardEmpty:  POP1 A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -197,18 +192,18 @@ actor SamsaraSlotOnePickup: SamsaraSlotPickup replaces Chainsaw
 		 TNT1 A 0 ACS_NamedExecuteAlways("HL2685",0,11)
 		 goto PickupSuccess
 	  CheckBond:
-		 TNT1 A 0 A_JumpIfInventory("Goldeneye_ThrowingKnivesAmmo", 0, "CheckBond2")
-		 TNT1 A 0 A_JumpIfInventory("Goldeneye_ThrowingKnives", 1, 3)	  
-		 TNT1 A 0 A_GiveInventory("Goldeneye_ThrowingKnivesAmmo", 2)
-		 TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3) == 1, "PickupSuccess")
-		 Goto PickupSuccess
-		 TNT1 A 0 A_GiveInventory("Goldeneye_ThrowingKnivesDualToken", 1)
-		 TNT1 A 0 A_GiveInventory("Goldeneye_ThrowingKnivesAmmo", 2)
-		 TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientWeaponPickup",0, 1)
-		 Goto PickupSuccess
+		TNT1 A 0 A_JumpIfInventory("Goldeneye_ThrowingKnivesAmmo", 0, "CheckBond2")
+		TNT1 A 0 A_JumpIfInventory("Goldeneye_ThrowingKnives", 1, 3)	  
+		TNT1 A 0 A_GiveInventory("Goldeneye_ThrowingKnivesAmmo", 2)
+		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3) == 1, "PickupSuccess")
+		Goto PickupSuccess
+		TNT1 A 0 A_GiveInventory("Goldeneye_ThrowingKnivesDualToken", 1)
+		TNT1 A 0 A_GiveInventory("Goldeneye_ThrowingKnivesAmmo", 2)
+		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientWeaponPickup",0, 1)
+		Goto PickupSuccess
 	  CheckBond2:
-		 TNT1 A 0 A_JumpIfInventory("Goldeneye_ThrowingKnivesDualToken", 1, "PickupFailure")
-		 Goto CheckBond+1
+		TNT1 A 0 A_JumpIfInventory("Goldeneye_ThrowingKnivesDualToken", 1, "PickupFailure")
+		Goto CheckBond+1
 	  CheckWolfen:
 		TNT1 A 0 A_JumpIfInventory("WolfenClassMode", 3, "CheckTotenkopf")
 		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3) == 1, "PickupSuccess")
@@ -223,7 +218,7 @@ actor SamsaraSlotOnePickup: SamsaraSlotPickup replaces Chainsaw
 		TNT1 A 0 A_JumpIfInventory("Totenkopf_IHaveMauser",1,"PickupTotenkopfDual")
 		TNT1 A 0 A_GiveInventory("Totenkopf_IHaveMauser", 1)
 		TNT1 A 0 A_GiveInventory("Samsara_ModeWeaponChange", 1)
-		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3), "PickupSuccess")
+		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3) == 1, "PickupSuccess")
 		Goto PickupFailure
 	  PickupTotenkopfDual:
 //		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3), 1)
@@ -255,7 +250,7 @@ actor SamsaraSlotOneDrop: SamsaraSlotOnePickup
 		TNT1 A 0 ACS_NamedExecuteAlways("HL2685",0,11)
 		goto PickupSuccess
 	  CheckWolfen:
-		TNT1 A 0 A_JumpIfInventory("WolfenClassMode", 2, "CheckTotenkopf")
+		TNT1 A 0 A_JumpIfInventory("WolfenClassMode", 3, "CheckTotenkopf")
 		TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 1) & 3) == 1, "PickupSuccess")
         Goto PickupFailure
 	  CheckTotenkopf:
