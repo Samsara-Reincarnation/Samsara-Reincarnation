@@ -142,7 +142,7 @@ actor "Fusion Pistol" : Weapon
       AltFire:
         TNT1 A 0 A_JumpIfInventory("FusionBullet",1,1)
         goto Ready
-        FUSN A 1 A_PlaySoundEx("marathon/fusion/charge","soundslot7",0,0)
+        FUSN A 1 A_PlaySound("marathon/fusion/charge",CHAN_7)
         TNT1 A 0 A_GiveInventory("FusionChargan",5)
 
       AltHold:
@@ -151,6 +151,7 @@ actor "Fusion Pistol" : Weapon
         TNT1 A 0 A_GiveInventory("FusionChargan",1)
         TNT1 A 0 A_Refire
         TNT1 A 0 A_JumpIfInventory("FusionChargeLevel",1,"AltChargeFire")
+        TNT1 A 0 A_StopSound(CHAN_7)
         TNT1 A 0 A_TakeInventory("FusionChargan",7)
         goto Ready
 
