@@ -287,8 +287,18 @@ actor "ONI-71 Wave Motion Cannon": Weapon// replaces RocketLauncher
         TNT1 A 0 A_Recoil(7)
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_ZoomFactor(0.99,ZOOM_INSTANT)
-        TNT1 A 0 A_FireCustomMissile("WMCRailLevel1",0,1,0,0)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopRailLevel1")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopRailLevel1")
         TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel1")
+        goto RailLevel1_1
+
+      CoopRailLevel1:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissileCoop",0,0,0,0)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel1Coop")
+        goto RailLevel1_1
+
+      RailLevel1_1:
         MWMC B 2 A_TakeInventory("ChargeLevel",99)
         TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
         MWMC C 2 A_TakeInventory("ChargeLevel",99)
@@ -320,16 +330,22 @@ actor "ONI-71 Wave Motion Cannon": Weapon// replaces RocketLauncher
         TNT1 A 0 A_Recoil(7)
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_ZoomFactor(0.99,ZOOM_INSTANT)
-        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopRailLevel2")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"SPRailLevel2")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopRailLevel2")
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
         TNT1 A 0 A_FireCustomMissile("WMCRailLevel2DM")
         goto RailLevel2_2
         
-      CoopRailLevel2:
+      SPRailLevel2:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
         TNT1 A 0 A_FireCustomMissile("WMCRailLevel2")
         goto RailLevel2_2
-        
+
+      CoopRailLevel2:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissileCoop",0,0,0,0)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel2Coop")
+        goto RailLevel2_2
+
       RailLevel2_2:
         TNT1 A 0 A_TakeInventory("WMCAmmo",1, TIF_NOTAKEINFINITE)
         MWMC B 2 A_TakeInventory("ChargeLevel2",99)
@@ -361,16 +377,22 @@ actor "ONI-71 Wave Motion Cannon": Weapon// replaces RocketLauncher
         TNT1 A 0 A_Recoil(7)
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_ZoomFactor(0.99,ZOOM_INSTANT)
-        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopRailLevel3")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"SPRailLevel3")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopRailLevel3")
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
         TNT1 A 0 A_FireCustomMissile("WMCRailLevel3DM")
         goto RailLevel3_3
         
-      CoopRailLevel3:
+      SPRailLevel3:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,0,0,0)
         TNT1 A 0 A_FireCustomMissile("WMCRailLevel3")
         goto RailLevel3_3
-        
+
+      CoopRailLevel3:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissileCoop",0,0,0,0)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel3Coop")
+        goto RailLevel3_3
+
       RailLevel3_3:
         TNT1 A 0 A_TakeInventory("WMCAmmo",3, TIF_NOTAKEINFINITE)
         MWMC B 2 A_TakeInventory("ChargeLevel2",99)
@@ -828,6 +850,8 @@ actor WMCRailLevel1: FastProjectile
     }
 }
 
+actor WMCRailLevel1Coop: WMCRailLevel1 { Species "Player" +THRUSPECIES }
+
 actor WMCRailLevel2: FastProjectile
 {
     Damage (random(150,200))
@@ -873,6 +897,8 @@ actor WMCRailLevel2DM: WMCRailLevel2
         stop
     }
 }
+
+actor WMCRailLevel2Coop: WMCRailLevel2 { Species "Player" +THRUSPECIES }
 
 actor WMCRailLevel3: FastProjectile
 {
@@ -1000,6 +1026,69 @@ actor WMCRailLevel3DM: WMCRailLevel3
         TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,315,6)
         TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,337,6)
         TNT1 A 1
+        TNT1 AAAAAAAA 0 A_SpawnItemEx("WMCGrenadeExplosion", random(5,-5), random(5,-5), random(5,-5), 0.4*random(2,5), 0.4*random(2,5), 0.4*random(2,5), random(0,360), 128, 0)
+        WCHT ABCDEFGHIJKLLMMNNOOPPQQRR 1 BRIGHT
+        stop
+    }
+}
+
+actor WMCRailLevel3Coop: WMCRailLevel3
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_Explode(250+random(0,50),196)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,0,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,22,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,45,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,67,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,90,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,112,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,135,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,157,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,180,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,202,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,225,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,247,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,270,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,292,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,315,6)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,337,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,0,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,22,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,45,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,67,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,90,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,112,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,135,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,157,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,180,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,202,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,225,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,247,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,270,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,292,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,315,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,337,6)
+        TNT1 A 1
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,0,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,22,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,45,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,67,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,90,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,112,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,135,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,157,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,180,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,202,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,225,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,247,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,270,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,292,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,315,6)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,337,6)
         TNT1 AAAAAAAA 0 A_SpawnItemEx("WMCGrenadeExplosion", random(5,-5), random(5,-5), random(5,-5), 0.4*random(2,5), 0.4*random(2,5), 0.4*random(2,5), random(0,360), 128, 0)
         WCHT ABCDEFGHIJKLLMMNNOOPPQQRR 1 BRIGHT
         stop
@@ -1246,6 +1335,8 @@ actor WMCRailLevel3BabyDM: WMCRailLevel3Baby
     }
 }
 
+actor WMCRailLevel3BabyCoop: WMCRailLevel3Baby { Species "Player" +THRUSPECIES }
+
 actor WMCBeamExplode: FastProjectile
 {
     Damage 0
@@ -1370,6 +1461,8 @@ actor WMCBeamMissile
     }
 }
 
+actor WMCBeamMissileCoop: WMCBeamMissile { Species "Player" +THRUSPECIES }
+
 actor WMCBeamMissileBaby
 {
     radius 10
@@ -1408,6 +1501,8 @@ actor WMCBeamMissileBaby
         stop
     }
 }
+
+actor WMCBeamMissileBabyCoop: WMCBeamMissileBaby { Species "Player" +THRUSPECIES }
 
 actor WMCBeam
 {

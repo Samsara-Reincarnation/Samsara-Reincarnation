@@ -200,7 +200,26 @@ actor SpearBoltDM: SpearBolt
     }
 }
 
-actor SpearBolt2: SpearBolt { +THRUSPECIES Species "Player" }
+actor SpearBolt2: SpearBolt
+{
+    +THRUSPECIES
+    Species "Player"
+    States
+    {
+      Spawn:
+        SPB1 ABABABAB 3 BRIGHT A_SpawnItemEx("SpearShotTrail", 0, 0, 0)
+        goto Death
+
+      Death:
+        SPX1 A 0 A_Stop
+        SPX1 AAAAAAAAAAAAAAAAAAAA 0 A_CustomMissile("SpearShotMiniCoop", 0, 0, random(-180, 180), 2, random(-25, 25))
+        SPX1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_CustomMissile("SpearShotMini2Coop", 0, 0, random(-180, 180), 2, random(-25, 25))
+        SPX1 A 0 A_Scream
+        SPX1 A 4 BRIGHT A_Explode(120, 240, 0)
+        SPX1 BCDEF 4 BRIGHT
+        Stop
+    }
+}
 
 actor SpearShotMini
 {
@@ -260,6 +279,8 @@ actor SpearShotMiniDM: SpearShotMini
     }
 }
 
+actor SpearShotMiniCoop: SpearShotMini { Species "Player" +THRUSPECIES }
+
 actor SpearShotMini2
 {
     Radius 3
@@ -313,6 +334,8 @@ actor SpearShotMini2DM: SpearShotMini2
         Stop
     }
 }
+
+actor SpearShotMini2Coop: SpearShotMini2 { Species "Player" +THRUSPECIES }
 
 actor SpearShotTrail 
 {
