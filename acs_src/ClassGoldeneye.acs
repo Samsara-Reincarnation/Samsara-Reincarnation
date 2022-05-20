@@ -200,7 +200,7 @@ Script "BondAltHold" (void) Clientside
 str GoldeneyeWeaponInfo[18][8] = {
 	
 	{ "Goldeneye_Slapper", "Unarmed", "Unarmed", "-1", "-1", "-1", "-1" },
-	{ "Goldeneye_PP7Silenced", "PP7 (Silenced)", "PP7 (Silenced)", "Clip", "Goldeneye_PP7Magazine", "B57B31", "Goldeneye_PP7DualMagazine", "Goldeneye_PP7DualToken" },
+	{ "Goldeneye_PP7Silenced", "PP7 (Silenced)", "PP7 (Silenced)", "-2", "Goldeneye_PP7Magazine", "B57B31", "Goldeneye_PP7DualMagazine", "Goldeneye_PP7DualToken" },
 	{ "Goldeneye_ThrowingKnives", "Throwing Knife", "Throwing Knife", "Goldeneye_ThrowingKnivesAmmo", "Goldeneye_ThrowingKnivesMagazine", "B47A9D", "Goldeneye_ThrowingKnivesDualMagazine", "Goldeneye_KnifeDualToken" },
 	{ "Goldeneye_KF7Soviet", "KF7 Soviet", "KF7   Soviet", "Clip", "Goldeneye_KF7Magazine", "B579A6", "Goldeneye_KF7DualMagazine", "Goldeneye_KF7DualToken" },
 	{ "Goldeneye_AutoShotgun", "Automatic Shotgun", "Automatic Shotgun", "Shell", "Goldeneye_AutoshotgunMagazine", "B47C9E", "Goldeneye_AutoShotgunDualMagazine", "Goldeneye_ShotgunDualToken" },
@@ -208,7 +208,7 @@ str GoldeneyeWeaponInfo[18][8] = {
 	{ "Goldeneye_RocketLauncher", "Rocket Launcher", "Rocket Launcher", "RocketAmmo", "Goldeneye_RocketLauncherMagazine", "B46EF5", "Goldeneye_RocketLauncherDualMagazine", "Goldeneye_RocketLauncherDualToken" },
 	{ "Goldeneye_RCP90", "RC-P90", "RC-P90", "Cell", "Goldeneye_RCP90Magazine", "B57B31", "Goldeneye_RCP90DualMagazine", "Goldeneye_RCP90DualToken" },
 	{ "Goldeneye_Moonraker", "Laser", "Military Laser", "Cell", "-1", "-1", "-1", "Goldeneye_LaserDualToken" },
-	{ "Goldeneye_Goldengun", "Golden Gun", "Golden Gun", "Cell", "Goldeneye_GoldenGunMagazine", "B57B31", "Goldeneye_GoldenGunDualMagazine", "Goldeneye_GoldenGunDualToken" },
+	{ "Goldeneye_Goldengun", "Golden Gun", "Golden Gun", "Goldeneye_GoldenGunRounds", "Goldeneye_GoldenGunMagazine", "B57B31", "Goldeneye_GoldenGunDualMagazine", "Goldeneye_GoldenGunDualToken" },
 	{ "Goldeneye_TimedMines", "Mine (Timed)", "Mine (Timed)", "-1", "RocketAmmo", "B58731", "-1", "-1" },
 	{ "Goldeneye_ProximityMines", "Mine (Proximity)", "Mine (Proximity)", "-1", "RocketAmmo", "B57E9F", "-1", "-1" },
 	{ "Goldeneye_RemoteMines", "Mine (Remote)", "Mine (Remote)", "-1", "RocketAmmo", "B57BC0", "-1", "-1" },
@@ -433,9 +433,12 @@ Script "BondWatchInterface" (void) Clientside
 				{
 					if(CheckWeapon(GoldeneyeWeaponInfo[a][0]))
 					{
-						if(strcmp(GoldeneyeWeaponInfo[a][3], "-1"))
+						if(strcmp(GoldeneyeWeaponInfo[a][3], "-1") && strcmp(GoldeneyeWeaponInfo[a][3], "-2"))
 							HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[a][3]); HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11969, CR_GREEN, 226.5, 182.0, 1.0);
-						
+
+						if(!strcmp(GoldeneyeWeaponInfo[a][3], "-2") && CheckInventory("PistolModeOn"))
+							HudMessage(d:CheckInventory("Clip"); HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11969, CR_GREEN, 226.5, 182.0, 1.0);
+
 						if(strcmp(GoldeneyeWeaponInfo[a][2], "-1"))
 							HudMessage(s:GoldeneyeWeaponInfo[a][2]; HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11999, CR_GREEN, 128.4, 176.0, 1.0);
 						
@@ -461,9 +464,12 @@ Script "BondWatchInterface" (void) Clientside
 					if(strcmp(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][2], "-1"))
 						HudMessage(s:GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][2]; HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11999, CR_GREEN, 128.4, 176.0, 1.0);
 					
-					if(strcmp(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][3], "-1"))
+					if(strcmp(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][3], "-1") && strcmp(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][3], "-2"))
 						HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][3]); HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11969, CR_GREEN, 226.5, 182.0, 1.0);
-					
+
+					if(!strcmp(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][3], "-2") && CheckInventory("PistolModeOn"))
+						HudMessage(d:CheckInventory("Clip"); HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11969, CR_GREEN, 226.5, 182.0, 1.0);
+
 					if(strcmp(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][4], "-1"))
 						HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[CheckInventory("BondWeaponSwitchToken")-1][4]); HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 11968, CR_GREEN, 216.6, 182.0, 1.0);
 					
@@ -989,9 +995,12 @@ Script "BondHudDisplay" Enter Clientside
 						RemoveMessages(12010, 12015);
 						SetFont("GEFONTS");
 						SetHudSize(360, 240, false);
-						if(strcmp(GoldeneyeWeaponInfo[a][3], "-1"))
+						if(strcmp(GoldeneyeWeaponInfo[a][3], "-1") && strcmp(GoldeneyeWeaponInfo[a][3], "-2"))
 							HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[a][3]); HUDMSG_PLAIN, 12010, CR_UNTRANSLATED, 326.5, 228.0, 1.0);
-						
+
+						if(!strcmp(GoldeneyeWeaponInfo[a][3], "-2") && CheckInventory("PistolModeOn"))
+							HudMessage(d:CheckInventory("Clip"); HUDMSG_PLAIN, 12010, CR_UNTRANSLATED, 326.5, 228.0, 1.0);
+
 						if(strcmp(GoldeneyeWeaponInfo[a][4], "-1"))
 							HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[a][4]); HUDMSG_PLAIN, 12011, CR_UNTRANSLATED, 316.6, 228.0, 1.0);
 							
@@ -1004,9 +1013,12 @@ Script "BondHudDisplay" Enter Clientside
 							
 						if(CheckInventory("BondDualWieldToken"))
 						{
-							if(strcmp(GoldeneyeWeaponInfo[a][3], "-1"))
+							if(strcmp(GoldeneyeWeaponInfo[a][3], "-1") && strcmp(GoldeneyeWeaponInfo[a][3], "-2"))
 								HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[a][3]); HUDMSG_PLAIN, 12013, CR_UNTRANSLATED, 44.5, 228.0, 1.0);
-							
+
+							if(!strcmp(GoldeneyeWeaponInfo[a][3], "-2") && CheckInventory("PistolModeOn"))
+								HudMessage(d:CheckInventory("Clip"); HUDMSG_PLAIN, 12013, CR_UNTRANSLATED, 44.5, 228.0, 1.0);
+
 							if(strcmp(GoldeneyeWeaponInfo[a][6], "-1"))
 								HudMessage(d:CheckInventory(GoldeneyeWeaponInfo[a][6]); HUDMSG_PLAIN, 12014, CR_UNTRANSLATED, 34.6, 228.0, 1.0);
 								
