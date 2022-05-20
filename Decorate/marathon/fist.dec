@@ -409,8 +409,7 @@ actor "Steel Knuckles" : Weapon
         
       LeftFist1:
         FIS4 A 0 A_GiveInventory("GibfistSide")
-        TNT1 A 0 A_JumpIf(momx >= 6,"LeftFist2")
-        TNT1 A 0 A_JumpIf(momx <= -6,"LeftFist2")
+        TNT1 A 0 A_JumpIf((momx*momx) + (momy*momy) >= 49,"LeftFist2")
         FIS4 ABC 1
         FIS4 D 1 A_CustomPunch(random(12,14),1,0,"BlankPuffMarathon",96)
         FIS4 E 2
@@ -442,8 +441,7 @@ actor "Steel Knuckles" : Weapon
         
       RightFist1:
         FIS5 A 0 A_TakeInventory("GibfistSide")
-        TNT1 A 0 A_JumpIf(momx >= 6,"RightFist2")
-        TNT1 A 0 A_JumpIf(momx <= -6,"RightFist2")
+        TNT1 A 0 A_JumpIf((momx*momx) + (momy*momy) >= 49,"RightFist2")
         FIS5 ABC 1
         FIS5 D 1 A_CustomPunch(random(12,14),1,0,"BlankPuffMarathon",96)
         FIS5 E 2
