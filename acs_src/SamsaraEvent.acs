@@ -420,13 +420,45 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
         ACS_NamedExecuteAlways("SamsaraScheduled", 0, respawning,1,0);
 
         if (GetCVar("sv_shotgunstart") > 0) { GiveClassWeapon(samsaraClassNum(), 3, 3);}
-        if (GetCvar("sams_backpackstart") == 1) { GiveInventory("Backpack",1); }
+
+        if (GetCvar("sams_backpackstart") == 1)
+        {
+            GiveInventory("Backpack", 1);
+
+            switch (samsaraClassNum())
+            {
+              case CLASS_WOLFEN:
+                GiveInventory("Totenkopf_IHaveDualPistols", 1);
+                GiveInventory("Samsara_ModeWeaponChange", 1);
+                break;
+
+              case CLASS_BOND:
+                GiveInventory("Goldeneye_PP7DualToken", 1);
+                break;
+            }
+        }
     }
     else
     { if (GameType() != GAME_NET_COOPERATIVE)
     {
         if (GetCVar("sv_shotgunstart") > 0) { GiveClassWeapon(samsaraClassNum(), 3, 3);}
-        if (GetCvar("sams_backpackstart") == 1) { GiveInventory("Backpack",1); }
+
+        if (GetCvar("sams_backpackstart") == 1)
+        {
+            GiveInventory("Backpack", 1);
+
+            switch (samsaraClassNum())
+            {
+              case CLASS_WOLFEN:
+                GiveInventory("Totenkopf_IHaveDualPistols", 1);
+                GiveInventory("Samsara_ModeWeaponChange", 1);
+                break;
+
+              case CLASS_BOND:
+                GiveInventory("Goldeneye_PP7DualToken", 1);
+                break;
+            }
+        }
     }}
 
     HandleChainsawSpawn(respawning);
