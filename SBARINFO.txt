@@ -164,30 +164,18 @@ StatusBar Fullscreen, forcescaled
             DrawImage "HUDBAR", 250, 180;
             DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 181;
             DrawNumber 3, INDEXFON, White, Ammo Clip, 298, 185;
-            DrawImage "AMSMA0", 238, 185, Center; }			
+            DrawImage "AMSMA0", 238, 185, Center; }
+    IsSelected "Glock 17" {
+            DrawImage "HUDBAR", 250, 192;
+            DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 193;
+            DrawNumber 3, INDEXFON, White, Ammo Clip, 270, 186;
+            DrawImage "AMSMA0", 238, 185, Center; }
     IsSelected ".44 Magnum Mega Class A1" {
-            InInventory not SynthFireActive, 1
-            {
-                DrawImage "HUDBAR", 250, 180;
-                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
-                DrawNumber 3, INDEXFON, White, Ammo1, 298, 185;
-				DrawImage "AMSMA0", 238, 185, Center;
-            }
-            InInventory SynthFireActive, 1
-            {
-                DrawImage "HUDBAR", 250, 180;
-                DrawBar "HAMBAR", "HEMPTY", MagnumBullet, Horizontal, Reverse, 251, 181;
-				DrawNumber 3, INDEXFON, Yellow, Clip, 273, 174;
-                DrawNumber 3, INDEXFON, White, MagnumBullet, 298, 185;
-				DrawImage "AMSMA0", 238, 185, Center;
-				
-                DrawImage "HUDBAR", 250, 192;
-                DrawBar "HAMBAR", "HEMPTY", MagnumBulletRight, Horizontal, Reverse, 251, 193;
-				DrawNumber 3, INDEXFON, Yellow, Clip, 298, 174;
-                DrawNumber 3, INDEXFON, White, MagnumBulletRight, 270, 186;
-				DrawImage "AMSMA0", 238, 195, Center;
-			}
-		}
+            DrawImage "AMSMA0", 238, 185, Center;
+
+            DrawNumber 3, INDEXFON, Yellow, Clip, 273, 174;
+
+            InInventory UsingDualPistols, 1 { DrawNumber 3, INDEXFON, Yellow, Clip, 298, 174; } }
     IsSelected "Single Shotgun" {
             DrawImage "HUDBAR", 250, 180;
             DrawBar "HAMBAR", "HEMPTY", Ammo Shell, Horizontal, Reverse, 251, 181;
@@ -256,10 +244,10 @@ StatusBar Fullscreen, forcescaled
 		InInventory not RottClass, 1 {
 		InInventory not BondClass, 1 {
 		InInventory not CatacombClass, 1 {
-		IsSelected Not " 18mm Auto " {
+		IsSelected Not " 18mm Auto ", "Machine Gun" {
 			DrawImage AmmoIcon1, 238, 185, Center;
 		}	
-        IsSelected not ".44 Magnum Mega Class A1"
+        IsSelected not ".44 Magnum Mega Class A1", "Machine Gun"
         {
 			IsSelected not " RPG "
 			{		
@@ -277,6 +265,7 @@ StatusBar Fullscreen, forcescaled
             DrawImage "HUDBAR", 250, 192;
             DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
             DrawNumber 3, INDEXFON, White, Ammo2, 270, 186;
+            DrawImage AmmoIcon2, 228, 192, Center;
         }
         IsSelected "MA-75B Assault Rifle"
         {
@@ -285,8 +274,8 @@ StatusBar Fullscreen, forcescaled
             DrawNumber 3, INDEXFON, White, Ammo GrenadeInClip, 270, 186;
 			DrawNumber 3, INDEXFON, Yellow, Clip, 273, 174;
 			DrawNumber 3, INDEXFON, Brown, RocketAmmo, 298, 174;
-            DrawImage "AMSMC0", 238, 195, Center;
             DrawImage "AMSMA0", 238, 185, Center;
+            DrawImage "AMSMC0", 228, 192, Center;
         }
         IsSelected "KKV-7 SMG Flechette"
         {
@@ -323,8 +312,8 @@ StatusBar Fullscreen, forcescaled
             DrawNumber 3, INDEXFON, White, Ammo2, 270, 186;
 			DrawNumber 3, INDEXFON, LightBlue, Cell, 273, 174;
 			DrawNumber 3, INDEXFON, Brown, RocketAmmo, 298, 174;			
-            DrawImage "AMSMC0", 238, 195, Center;
             DrawImage "AMSMD0", 238, 185, Center;
+            DrawImage "AMSMC0", 228, 192, Center;
         }
 		IsSelected ".357 python"
 		{
@@ -387,11 +376,16 @@ StatusBar Fullscreen, forcescaled
 		{
 			InInventory WolfenClassMode, 2
 			{
-				DrawImage "HUDBAR", 250, 192;
-				DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
-				DrawNumber 3, INDEXFON, White, Ammo2, 270, 186;
-				DrawImage "AMSMB0", 238, 185, Center;
-			}	
+                DrawImage "HUDBAR", 250, 180;
+                DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 181;
+                DrawNumber 3, INDEXFON, White, Ammo2, 298, 185;
+                DrawImage "AMSMB0", 238, 185, Center;
+			} else {
+                DrawImage "HUDBAR", 250, 180;
+                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                DrawNumber 3, INDEXFON, White, Ammo1, 298, 185;
+                DrawImage "AMSMA0", 238, 185, Center;
+			}
 		}		
 		IsSelected "AlienDualBlaster"
 		{
@@ -475,32 +469,24 @@ StatusBar Fullscreen, forcescaled
             DrawImage "HUDBAR", 250, 192;
             DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
             DrawNumber 3, INDEXFON, White, Ammo2, 270, 186;
+            DrawImage AmmoIcon2, 228, 192, Center;
         }		
         IsSelected "Hexen2TempestStaff"
         {
             DrawImage "HUDBAR", 250, 192;
             DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
             DrawNumber 3, INDEXFON, White, Ammo2, 270, 186;
+            DrawImage AmmoIcon2, 228, 192, Center;
         }			
 		
         IsSelected ".44 Magnum Mega Class A1"
         {
-			InInventory PistolModeOn, 1 
-			{
-				DrawNumber 3, INDEXFON, Yellow, Clip, 273, 174;
-			}
-            InInventory not SynthFireActive, 1
-            {
-                DrawImage "HUDBAR", 250, 180;
-                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
-                DrawNumber 3, INDEXFON, White, Ammo1, 298, 185;
-            }
-            InInventory SynthFireActive, 1
-            {
-                DrawImage "HUDBAR", 250, 180;
-                DrawBar "HAMBAR", "HEMPTY", MagnumBullet, Horizontal, Reverse, 251, 181;
-                DrawNumber 3, INDEXFON, White, MagnumBullet, 298, 185;
+            DrawImage "HUDBAR", 250, 180;
+            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+            DrawNumber 3, INDEXFON, White, Ammo1, 298, 185;
 
+            InInventory UsingDualPistols, 1
+            {
                 DrawImage "HUDBAR", 250, 192;
                 DrawBar "HAMBAR", "HEMPTY", MagnumBulletRight, Horizontal, Reverse, 251, 193;
                 DrawNumber 3, INDEXFON, White, MagnumBulletRight, 270, 186;
@@ -4943,6 +4929,8 @@ StatusBar normal, forcescaled
 
         IsSelected ".44 Magnum Mega Class A1"
         {
+            InInventory PistolModeOn, 1 { drawimage "STY2NUM1", 268, 173; }
+
 		    InInventory not UsingDualPistols, 1
 			{
             DrawImage "MARPISEM", 5, 178;
@@ -4962,7 +4950,7 @@ StatusBar normal, forcescaled
             InInventory MagnumBullet, 7 { DrawImage "MARPISAM", 35, 178; }
             InInventory MagnumBullet, 8 { DrawImage "MARPISAM", 40, 178; }
 			}
-            InInventory SynthFireActive, 1
+            InInventory UsingDualPistols, 1
             {
                 DrawImage "MARPISEM", 5, 173;
                 DrawImage "MARPISEM", 10, 173;
@@ -8526,6 +8514,8 @@ drawselectedinventory alwaysshowcounter, ERADFONT, 340, 167, 340, 178, untransla
 
         IsSelected ".44 Magnum Mega Class A1"
         {
+            InInventory PistolModeOn, 1 { drawimage "STY2NUM1", 268, 173; }
+
 		    InInventory not UsingDualPistols, 1
 			{
             DrawImage "MARPISEM", 5, 178;
@@ -8545,7 +8535,7 @@ drawselectedinventory alwaysshowcounter, ERADFONT, 340, 167, 340, 178, untransla
             InInventory MagnumBullet, 7 { DrawImage "MARPISAM", 35, 178; }
             InInventory MagnumBullet, 8 { DrawImage "MARPISAM", 40, 178; }
 			}
-            InInventory SynthFireActive, 1
+            InInventory UsingDualPistols, 1
             {
                 DrawImage "MARPISEM", 5, 173;
                 DrawImage "MARPISEM", 10, 173;
