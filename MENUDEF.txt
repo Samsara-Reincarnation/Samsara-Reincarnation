@@ -31,7 +31,7 @@ OptionMenu "SamsaraClientOptions"
     Title "Samsara Clientside Options"
     StaticText "Player Preferences", 1
     Option "Wolfenstein Style Movement",   "samsara_cl_wolfmove",            "OnOff"
-    Option "Doom Animations & Balance",    "samsara_cl_vanilladoom",         "DoomAnims"
+    Option "Weapon Animations",            "samsara_cl_smoothanims",         "SmoothAnims"
     Option "Weapon HUD Bar",               "samsara_cl_weaponhud",           "OnOff"
     Option "Legacy Fullscreen HUD",        "samsara_cl_legacyfullscreenhud", "OnOff"
     Option "HUD Team Text Indicator",      "samsara_cl_teamtext",            "OnOff"
@@ -56,12 +56,12 @@ OptionMenu "SamsaraClientOptions"
     StaticText ""
     StaticText "Hero Soundtrack", 1
     Option "Hero Music",               "samsara_cl_heromusic",         "HeroSoundTrack"
-    Option "Hero Game Music Override", "samsara_cl_heromusicoverride", "HeroSoundTrackOverride"
+    Submenu "Hero Game Music Overrides", "SamsaraHeroMusicOverrideOptions"
     Option "Blood Music",              "samsara_cl_bloodcd",           "MIDIOrCDMusic"
     Option "Hexen 2 Music",            "samsara_cl_hex2cd",            "MIDIOrCDMusic"
     StaticText ""
     StaticText "Alternative Characters", 1
-    Option "Doom Character",             "samsara_cl_doom64",       "DoomClass"
+    Option "Doom Character",             "samsara_cl_doommode",     "DoomClass"
     Option "Wolfenstein 3D Character",   "samsara_cl_wolfmode",     "WolfenClass"
     Option "Hexen 1 Character",          "samsara_cl_hexclass",     "HexenClass"
     Option "Duke Nukem 3D Skins",        "samsara_cl_dkclab",       "DukeSkins"
@@ -75,10 +75,53 @@ OptionMenu "SamsaraClientOptions"
     Option "Gib Persistence", "samsara_cl_bloodypersistent", "OnOff"
 }
 
-OptionValue DoomAnims
+OptionMenu "SamsaraHeroMusicOverrideOptions"
 {
-    0, "Improved"
-    1, "Vanilla"
+    Title "Hero Game Music Overrides"
+    Option "Doom",                          "samsara_cl_heromusic_doom",       "OnOff"
+    Option "Chex Quest",                    "samsara_cl_heromusic_chex",       "OnOff"
+    Option "Heretic",                       "samsara_cl_heromusic_heretic",    "OnOff"
+    Option "Wolfenstein 3D",                "samsara_cl_heromusic_wolf3d",     "OnOff"
+    Option "Hexen",                         "samsara_cl_heromusic_hexen1",     "OnOff"
+    Option "Duke Nukem 3D",                 "samsara_cl_heromusic_duke3d",     "OnOff"
+    Option "Marathon",                      "samsara_cl_heromusic_marathon",   "OnOff"
+    Option "Quake I",                       "samsara_cl_heromusic_quake1",     "OnOff"
+    Option "Rise of the Triad",             "samsara_cl_heromusic_rott",       "OnOff"
+    Option "Blake Stone",                   "samsara_cl_heromusic_bstone",     "OnOff"
+    Option "Blood",                         "samsara_cl_heromusic_blood",      "OnOff"
+    Option "Strife",                        "samsara_cl_heromusic_strife",     "OnOff"
+    Option "Doom 64",                       "samsara_cl_heromusic_doom64",     "OnOff"
+    Option "Eradicator",                    "samsara_cl_heromusic_erad",       "OnOff"
+    Option "Corridor 7",                    "samsara_cl_heromusic_c7",         "OnOff"
+    Option "Rebel Moon Rising",             "samsara_cl_heromusic_rmr",        "OnOff"
+    Option "Star Wars: Dark Forces",        "samsara_cl_heromusic_darkf",      "OnOff"
+    Option "In Pursuit of Greed",           "samsara_cl_heromusic_ipog",       "OnOff"
+    Option "Disruptor",                     "samsara_cl_heromusic_disrup",     "OnOff"
+    Option "Witchaven",                     "samsara_cl_heromusic_witch",      "OnOff"
+    Option "Half-Life",                     "samsara_cl_heromusic_halflife",   "OnOff"
+    Option "Shadow Warrior",                "samsara_cl_heromusic_sw",         "OnOff"
+    Option "CyberMage",                     "samsara_cl_heromusic_cm",         "OnOff"
+    Option "PowerSlave/Exhumed",            "samsara_cl_heromusic_ps",         "OnOff"
+    Option "Redneck Rampage",               "samsara_cl_heromusic_rr",         "OnOff"
+    Option "Quake II",                      "samsara_cl_heromusic_quake2",     "OnOff"
+    Option "Hexen 2",                       "samsara_cl_heromusic_hexen2",     "OnOff"
+    Option "GoldenEye 007",                 "samsara_cl_heromusic_goldeneye",  "OnOff"
+    Option "Duke Nukem 3D: Life's a Beach", "samsara_cl_heromusic_dukelab",    "OnOff"
+    Option "Half-Life: Opposing Force",     "samsara_cl_heromusic_hlop",       "OnOff"
+    Option "Castle Totenkopf SDL",          "samsara_cl_heromusic_totenkopf",  "OnOff"
+    Option "Catacomb 3D",                   "samsara_cl_heromusic_catacomb",   "OnOff"
+    Option "Painkiller",                    "samsara_cl_heromusic_painkiller", "OnOff"
+    Option "Unreal",                        "samsara_cl_heromusic_unreal",     "OnOff"
+    Option "Return to Castle Wolfenstein",  "samsara_cl_heromusic_rtcw",       "OnOff"
+    Option "Quake III Arena",               "samsara_cl_heromusic_quake3",     "OnOff"
+    Option "Descent",                       "samsara_cl_heromusic_descent",    "OnOff"
+    Option "Deus Ex",                       "samsara_cl_heromusic_deusex",     "OnOff"
+}
+
+OptionValue SmoothAnims
+{
+    0, "Vanilla"
+    1, "Smooth"
 }
 
 OptionValue PickupGraphics
@@ -129,48 +172,6 @@ OptionValue HeroSoundTrack
     2, "Game Override"
 }
 
-OptionValue HeroSoundTrackOverride
-{
-    0, "Doom"
-    1, "Chex"
-    2, "Heretic"
-    3, "Wolfenstein 3D"
-    4, "Hexen"
-    5, "Duke Nukem 3D"
-    6, "Marathon"
-    7, "Quake I"
-    8, "Rise of the Triad"
-    9, "Blake Stone"
-    10, "Blood"
-    11, "Strife"
-    12, "Doom 64"
-    13, "Eradicator"
-    14, "Corridor 7"
-    15, "Rebel Moon Rising"
-    16, "Star Wars: Dark Forces"
-    17, "In Pursuit of Greed"
-    18, "Disruptor"
-    19, "Witchaven"
-    20, "Half-Life"
-    21, "Shadow Warrior"
-    22, "CyberMage"
-    23, "PowerSlave/Exhumed"
-    24, "Redneck Rampage"
-    25, "Quake II"
-    26, "Hexen 2"
-    27, "GoldenEye 007"
-    28, "Duke Nukem 3D: Life's a Beach"
-    29, "Half-Life: Opposing Force"
-    30, "Castle Totenkopf SDL"
-    31, "Catacomb 3D"
-    32, "Painkiller"
-    33, "Unreal"
-    34, "Return to Castle Wolfenstein"
-	35, "Quake III Arena"
-	36, "Descent"
-	37, "Deus Ex"
-}
-
 OptionValue MIDIOrCDMusic
 {
     0, "MIDI"
@@ -179,8 +180,9 @@ OptionValue MIDIOrCDMusic
 
 OptionValue DoomClass
 {
-    0, "Doomguy"
+    0, "Doomguy (Original)"
     1, "Doom 64 Guy"
+    2, "Doomguy (Stronghold)"
 }
 
 OptionValue WolfenClass
@@ -251,7 +253,7 @@ OptionMenu "SamsaraServerSideOptions"
     StaticText "General Options", 1
     Option "Jump Height",                        "samsara_jumpmod",                "JumpModOptions"
     Option "Armor Mode",                         "samsara_Armormode",              "ArmorModeOptions"
-	Option "Speed Modifier",             		 "samsara_speedmod", 			   "RunModOptions"
+    Option "Speed Modifier",                      "samsara_speedmod",                "RunModOptions"
     Option "Health Cap",                         "samsara_nohealthcap",            "OffOn"
     Option "Boss Monologues",                    "samsara_nomonologues",           "OffOn"
     Option "Everybody Rocket Jumps",             "samsara_allcanrj",               "YesNo"
@@ -259,6 +261,7 @@ OptionMenu "SamsaraServerSideOptions"
     Option "Duke Expander Mode",                 "samsara_microwavepop",           "MicrowavePopStyle"
     Slider "Doom 64 Guy Starting Artifacts",     "samsara_unmakerartifacts",       0,  3, 1
     Slider "Strife Starting Upgrades",           "samsara_strifeupgrades",         0, 10, 1
+    Option "Deus Ex Starting Skills",              "samsara_deusexstartingskills",   "StartingSkillsOptions"
     Option "Random Character Spawn Rate",        "samsara_randomcharacters",       "MiscCharactersOptions"
     Option "Random Character Spawn Mode",        "samsara_misccharacterspawnmode", "MiscCharactersSpawnMode"
     Option "Christmas Mode",                     "samsara_merrychristmas",         "OnOff"
@@ -268,7 +271,7 @@ OptionMenu "SamsaraServerSideOptions"
     Option "Use LMS Rules in All Gamemodes", "samsara_lmsrules", "YesNo"
     Option "LMS HP/Armor Values",            "samsara_lmslife",  "LMSLifeOption"
     Option "Allow Ultimate Weapons in LMS",  "samsara_lmsult",   "YesNo"
-	Option "Allow Unique Weapons in LMS",    "samsara_lmsuniques", "YesNo"
+    Option "Allow Unique Weapons in LMS",    "samsara_lmsuniques", "YesNo"
     StaticText ""
     StaticText "Turkey Puncher Options", 1
     Option "Super Turbo Turkey Puncher Mode", "samsara_superturboturkeypuncher3000", "ChickensOptionsA"
@@ -283,7 +286,7 @@ OptionMenu "SamsaraServerSideOptions"
     Option "Ultimate Weapons Stay",               "samsara_permault",            "YesNo"
     Option "Start with Unique",                   "samsara_uniquestart",         "UniqueStartOptions"
     Option "Start with Slot 1",                   "samsara_chainsawstart",       "ChainsawStartOptions"
-	Option "Start with Slot 2",                   "samsara_shotgunstart",        "ChainsawStartOptions"
+    Option "Start with Slot 2",                   "samsara_shotgunstart",        "ChainsawStartOptions"
     Option "Start with Backpack",                 "samsara_backpackstart",       "YesNo"
     Option "Quad Damage Behavior",                "samsara_permaquad",           "QuadBehavior"
     Option "Caleb: Guns Akimbo Behavior",         "samsara_permakimbo",          "AkimboBehavior"
@@ -322,46 +325,50 @@ OptionMenu "SamsaraServerSideOptions"
     Option "Enable Hexen 2",            "samsara_misccharspawn_hexen2",   "YesNo"
     StaticText ""
     StaticText "Character Ban Options", 1
-    Option "Ban Doomguy",           "samsara_bandoomguy",           "YesNo"
-    Option "Ban Chex Warrior",      "samsara_banchex",              "YesNo"
-    Option "Ban Corvus",            "samsara_bancorvus",            "YesNo"
-    Option "Ban B.J. Blazkowicz",   "samsara_banbj",                "YesNo"
-    Option "Ban Parias",            "samsara_banparias",            "YesNo"
-    Option "Ban Duke Nukem",        "samsara_banduke",              "YesNo"
-    Option "Ban Security Officer",  "samsara_banso",                "YesNo"
-    Option "Ban Ranger",            "samsara_banranger",            "YesNo"
-    Option "Ban Ian Paul Freeley",  "samsara_banfreely",            "YesNo"
-    Option "Ban Blake Stone",       "samsara_banblake",             "YesNo"
-    Option "Ban Caleb",             "samsara_bancaleb",             "YesNo"
-    Option "Ban Strifeguy",         "samsara_banstrifeguy",         "YesNo"
-    Option "Ban Eleena Brynstaarl", "samsara_baneleena",            "YesNo"
-    Option "Ban Space Seal",        "samsara_banspaceseal",         "YesNo"
-    Option "Ban LDF Commando",      "samsara_banrebelmooncommando", "YesNo"
-    Option "Ban Kyle Katarn",       "samsara_bankatarn",            "YesNo"
-    Option "Ban Aldus Kaden",       "samsara_banmooman",            "YesNo"
-    Option "Ban Jack Curtis",       "samsara_bandisruptor",         "YesNo"
-    Option "Ban Grondoval",         "samsara_bangrondoval",         "YesNo"
-    Option "Ban Gordon Freeman",    "samsara_banfreeman",           "YesNo"
-    Option "Ban Lo Wang",           "samsara_banwang",              "YesNo"
-    Option "Ban CyberMage",         "samsara_bancm",                "YesNo"
-    Option "Ban Jon P.",            "samsara_banjon",               "YesNo"
-    Option "Ban Leonard",           "samsara_banrr",                "YesNo"
-    Option "Ban Bitterman",         "samsara_banq2",                "YesNo"
-    Option "Ban Demoness",          "samsara_bandemoness",          "YesNo"
-    Option "Ban James Bond",        "samsara_banbond",              "YesNo"
-    Option "Ban Petton Everhail",   "samsara_banpetton",            "YesNo"
-	Option "Ban Sarge",   			"samsara_bansarge",             "YesNo"
-	Option "Ban Pyro-GX",   		"samsara_banpyrogx",            "YesNo"
-	Option "Ban JC Denton",   		"samsara_banjcdenton",            "YesNo"	
+    Option "Ban Doomguy",                "samsara_bandoomguy",           "YesNo"
+    Option "Ban Chex Warrior",           "samsara_banchex",              "YesNo"
+    Option "Ban Corvus",                 "samsara_bancorvus",            "YesNo"
+    Option "Ban B.J. Blazkowicz",        "samsara_banbj",                "YesNo"
+    Option "Ban Parias",                 "samsara_banparias",            "YesNo"
+    Option "Ban Duke Nukem",             "samsara_banduke",              "YesNo"
+    Option "Ban Security Officer",       "samsara_banso",                "YesNo"
+    Option "Ban Ranger",                 "samsara_banranger",            "YesNo"
+    Option "Ban Ian Paul Freeley",       "samsara_banfreely",            "YesNo"
+    Option "Ban Blake Stone",            "samsara_banblake",             "YesNo"
+    Option "Ban Caleb",                  "samsara_bancaleb",             "YesNo"
+    Option "Ban Strifeguy",              "samsara_banstrifeguy",         "YesNo"
+    Option "Ban Eleena Brynstaarl",      "samsara_baneleena",            "YesNo"
+    Option "Ban Space Seal",             "samsara_banspaceseal",         "YesNo"
+    Option "Ban LDF Commando",           "samsara_banrebelmooncommando", "YesNo"
+    Option "Ban Kyle Katarn",            "samsara_bankatarn",            "YesNo"
+    Option "Ban Aldus Kaden",            "samsara_banmooman",            "YesNo"
+    Option "Ban Jack Curtis",            "samsara_bandisruptor",         "YesNo"
+    Option "Ban Grondoval",              "samsara_bangrondoval",         "YesNo"
+    Option "Ban Gordon Freeman",         "samsara_banfreeman",           "YesNo"
+    Option "Ban Lo Wang",                "samsara_banwang",              "YesNo"
+    Option "Ban CyberMage",              "samsara_bancm",                "YesNo"
+    Option "Ban Jon P.",                 "samsara_banjon",               "YesNo"
+    Option "Ban Leonard",                "samsara_banrr",                "YesNo"
+    Option "Ban Bitterman",              "samsara_banq2",                "YesNo"
+    Option "Ban Demoness",               "samsara_bandemoness",          "YesNo"
+    Option "Ban James Bond",             "samsara_banbond",              "YesNo"
+    Option "Ban Petton Everhail",        "samsara_banpetton",            "YesNo"
+    Option "Ban Daniel Garner",          "samsara_bandaniel",            "YesNo"
+    Option "Ban Prisoner 849",           "samsara_banprisoner",          "YesNo"
+    Option "Ban B.J. Blazkowicz (RTCW)", "samsara_banrtcw",              "YesNo"
+    Option "Ban Sarge",                  "samsara_bansarge",             "YesNo"
+    Option "Ban Pyro-GX",                "samsara_banpyrogx",            "YesNo"
+    Option "Ban JC Denton",              "samsara_banjcdenton",          "YesNo"
     StaticText ""
     StaticText "Ability Options", 1
+    Option "Doomguy: Balance",                  "samsara_doomguybalance",  "DoomguyBalanceOptions"
     Option "LAZ Device Mode",                   "samsara_classiclaz",      "ClassicLAZOptions"
     Option "Zandronum: Ban Corvus' Morph Ovum", "samsara_banmorphovum",    "YesNo"
     Option "Ban Duke's Jetpack",                "samsara_banjetpack",      "YesNo"
     Option "Ban Wolfenstein Style Movement",    "samsara_banwolfmove",     "YesNo"
     Option "Custom Gravity",                    "samsara_nocustomgravity", "OffOn"
     Option "Painkiller: Demon Morph",           "samsara_nodemonmorph",    "OffOn"
-	Option "Descent: Pyro-GX Flight",           "samsara_descentflight",   "OnOff"
+    Option "Descent: Pyro-GX Flight",           "samsara_descentflight",   "OnOff"
     StaticText ""
     StaticText "Class Multiplier Options", 1
     Slider "Doomguy Damage Multiplier",       "samsara_doomguydamage",            -10, 30, 2
@@ -420,12 +427,18 @@ OptionMenu "SamsaraServerSideOptions"
     Slider "Bond Defense Multiplier",         "samsara_bonddefense",              -10, 20, 2
     Slider "Petton Damage Multiplier",        "samsara_pettondamage",             -10, 30, 2
     Slider "Petton Defense Multiplier",       "samsara_pettondefense",            -10, 20, 2
-	Slider "Sarge Damage Multiplier",      	  "samsara_sargedamage",              -10, 30, 2
-	Slider "Sarge Defense Multiplier",        "samsara_sargedefense",             -10, 20, 2
-	Slider "Pyro-GX Damage Multiplier",       "samsara_pyrogxdamage",             -10, 30, 2
-	Slider "Pyro-GX Defense Multiplier",      "samsara_pyrogxdefense",            -10, 20, 2
-	Slider "JC Denton Damage Multiplier",       "samsara_jcdentondamage",             -10, 30, 2
-	Slider "JC Denton Defense Multiplier",      "samsara_jcdentondefense",            -10, 20, 2	
+    Slider "Daniel Damage Multiplier",        "samsara_danieldamage",             -10, 30, 2
+    Slider "Daniel Defense Multiplier",       "samsara_danieldefense",            -10, 20, 2
+    Slider "Prisoner Damage Multiplier",      "samsara_prisonerdamage",           -10, 30, 2
+    Slider "Prisoner Defense Multiplier",     "samsara_prisonerdefense",          -10, 20, 2
+    Slider "RTCW Damage Multiplier",          "samsara_rtcwdamage",               -10, 30, 2
+    Slider "RTCW Defense Multiplier",         "samsara_rtcwdefense",              -10, 20, 2
+    Slider "Sarge Damage Multiplier",         "samsara_sargedamage",              -10, 30, 2
+    Slider "Sarge Defense Multiplier",        "samsara_sargedefense",             -10, 20, 2
+    Slider "Pyro-GX Damage Multiplier",       "samsara_pyrogxdamage",             -10, 30, 2
+    Slider "Pyro-GX Defense Multiplier",      "samsara_pyrogxdefense",            -10, 20, 2
+    Slider "JC Denton Damage Multiplier",     "samsara_jcdentondamage",           -10, 30, 2
+    Slider "JC Denton Defense Multiplier",    "samsara_jcdentondefense",          -10, 20, 2
 }
 
 OptionValue JumpModOptions
@@ -588,6 +601,12 @@ OptionValue SamsaraItemReplacer
     22, "Slot VII"
 }
 
+OptionValue DoomguyBalanceOptions
+{
+    0, "Vanilla"
+    1, "Improved"
+}
+
 OptionValue ClassicLAZOptions
 {
     0, "Modern"
@@ -596,21 +615,30 @@ OptionValue ClassicLAZOptions
 
 OptionValue RunModOptions
 {
-	-1, "Immobile"
-	1, "Cement Shoes"
-	25, "Modern FPS Protagonist"
-	50, "Slower"
-	75, "Slow"
-	90, "Slightly Slow"
-	100, "Default"
-	110, "Slightly Fast"
-	125, "Fast"
-	150, "Faster"
-	200, "Even Faster"
-	400, "Even More Faster"
-	600, "Yet Even More Faster"
-	1000, "HELP"
-	2000, "FUCK"
-	5000, "AAAAAAAAAAA"
-	10000, "JESUS TAKE THE WHEEL"
+    -1, "Immobile"
+    1, "Cement Shoes"
+    25, "Modern FPS Protagonist"
+    50, "Slower"
+    75, "Slow"
+    90, "Slightly Slow"
+    100, "Default"
+    110, "Slightly Fast"
+    125, "Fast"
+    150, "Faster"
+    200, "Even Faster"
+    400, "Even More Faster"
+    600, "Yet Even More Faster"
+    1000, "HELP"
+    2000, "FUCK"
+    5000, "AAAAAAAAAAA"
+    10000, "JESUS TAKE THE WHEEL"
+}
+
+OptionValue StartingSkillsOptions
+{
+    0, "Untrained"
+    1, "Trained"
+    2, "Proficient"
+    3, "Advanced"
+    4, "Master"
 }

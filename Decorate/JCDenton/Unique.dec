@@ -12,7 +12,7 @@ Actor DeusEx_LAM : DeusExWeapon
 	+WEAPON.NOAUTOFIRE
 	Weapon.UpSound "DeusEx/LAM/Select"
 	Inventory.PickupMessage "You found a LAM."
-	Obituary "%o was blown up with %k's LAM."		
+	Obituary "%o was blown up with %k's LAM."
 	States
 	{
 		Spawn:
@@ -21,12 +21,12 @@ Actor DeusEx_LAM : DeusExWeapon
 		Select:
 			TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Raise
 			TNT1 A 1 A_Raise
-			loop		
-	    Ready:	
+			loop
+	    Ready:
 			DX00 B 0 A_JumpIfInventory("RocketAmmo", 1, 1)
 			Goto ReadyNothing
-			DX00 B 0 A_GiveInventory("DeusEx_LAMEquipped", 1)			
-			DX00 BCDEFGHIJKL 2 
+			DX00 B 0 A_GiveInventory("DeusEx_LAMEquipped", 1)
+			DX00 BCDEFGHIJKL 2
 			DX00 L 0 A_TakeInventory("DeusEx_Reloading", 1)
 			Goto ReadyLoop
 		ReadyLoop:
@@ -53,7 +53,7 @@ Actor DeusEx_LAM : DeusExWeapon
 			Goto ReadyLoop
 		Flash1:
 			TNT1 AAAAAAAAAAAAAAA 2 A_FireCustomMissile("DeusEx_LAMWallMissile", 0, 0, 0, 0)
-			Stop			
+			Stop
 		Idle2:
 			DX01 U 0 A_GunFlash("Flash2")
 			DX01 "UVWXYZ[\]" 6 A_WeaponReady
@@ -62,13 +62,18 @@ Actor DeusEx_LAM : DeusExWeapon
 		Flash2:	
 			TNT1 AAAAAAAAAAAAAAA 2 A_FireCustomMissile("DeusEx_LAMWallMissile", 0, 0, 0, 0)
 			TNT1 AAAAAAAAAAAAAAA 2 A_FireCustomMissile("DeusEx_LAMWallMissile", 0, 0, 0, 0)
-			Stop				
+			Stop
 		Fire:
 			DX00 B 0 A_JumpIfInventory("RocketAmmo", 1, 1)
-			Goto Deselect		
+			Goto Deselect
 			DX00 N 0 A_JumpIfInventory("DeusEx_LAMMayPlant", 1, "FirePlant")
 			DX00 NOPQRS 2
+			DX00 T 0 A_JumpIfInventory("CoopModeOn",1,2)
 			DX00 T 2 A_FireCustomMissile("DeusEx_LAMProjectile", Random(-3,3), 1, 16, 5, 0, 5)
+			Goto FireEnd
+			DX00 T 2 A_FireCustomMissile("DeusEx_LAMProjectileCoop", Random(-3,3), 1, 16, 5, 0, 5)
+			Goto FireEnd
+		FireEnd:
 			DX00 U 2
 			Goto GrabAnother
 		FirePlant:
@@ -80,7 +85,7 @@ Actor DeusEx_LAM : DeusExWeapon
 			Goto ReadyNothing
 		ReloadSuccess:
 			DX00 B 0 A_PlaySound("DeusEx/LAM/Select", CHAN_WEAPON)
-			DX00 BCDEFGHIJKL 2 
+			DX00 BCDEFGHIJKL 2
 			Goto ReadyLoop
 		ReadyNothing:
 			TNT1 A 0 A_JumpIfInventory("RocketAmmo", 1, "ReloadSuccess")
@@ -89,17 +94,17 @@ Actor DeusEx_LAM : DeusExWeapon
 		Deselect:
 			DX00 W 0 A_JumpIfInventory("RocketAmmo", 1, 1)
 			Goto DeselectNothing
-			DX00 W 0 A_GiveInventory("DeusEx_LAMEquipped", 1)		
+			DX00 W 0 A_GiveInventory("DeusEx_LAMEquipped", 1)
 			DX00 W 0 A_GiveInventory("DeusEx_Reloading", 1)
 			DX00 WXYZ 2 
 			Goto Super::InstantDeselect
 		DeselectNothing:
 			TNT1 AA 1
 			Goto Super::InstantDeselect
-		}
+	}
 }
 
-Actor DeusEx_LAMProjectile 
+Actor DeusEx_LAMProjectile
 {
 	Projectile
 	-NOGRAVITY
@@ -126,15 +131,15 @@ Actor DeusEx_LAMProjectile
 			DX00 A 0 ThrustThingZ(0,10,0,1)
 			Goto SpawnLoop
 			TNT1 A 0
-			TNT1 A 0 A_SetUserVar(User_Angle,Random(-6,-1))	
+			TNT1 A 0 A_SetUserVar(User_Angle,Random(-6,-1))
 			DX00 A 0 ThrustThingZ(0,10,0,1)
-		SpawnLoop:	
+		SpawnLoop:
 			DX00 A 0 A_JumpIfInventory("DeusEx_LAMTimer", 0, "Detonate")
 			TNT1 A 0 A_SetAngle(Angle+User_Angle)
 			DX00 AAAAA 1 A_SetPitch(Pitch-15)
 			DX00 A 1 A_GiveInventory("DeusEx_LAMTimer", 1)
 			Loop
-		Bounce:	
+		Bounce:
 			TNT1 A 0 A_ChangeFlag("USEBOUNCESTATE",0)
 			DX00 A 0 A_JumpIfInventory("DeusEx_LAMTimer", 0, "Detonate")
 			TNT1 A 0 A_SetAngle(Angle+User_Angle)
@@ -145,11 +150,11 @@ Actor DeusEx_LAMProjectile
 		OnFloor:
 			DX00 A 0 A_GiveInventory("DeusEx_LAMTimer",1)
 			DX00 A 17 A_JumpIfInventory("DeusEx_LAMTimer",0,"Detonate")
-			Loop			
+			Loop
 		Death:
 			RW00 A 0 A_Stop
 			RW00 A 0 A_JumpIfInventory("DeusEx_LAMTimer",0,1)
-			Goto OnFloor			
+			Goto OnFloor
 		Detonate:
 			DX00 A 3 A_AlertMonsters(72)
 			DX00 A 3 BRIGHT A_PlaySound("DeusEx/LAM/Beep", CHAN_BODY)
@@ -162,22 +167,22 @@ Actor DeusEx_LAMProjectile
 			DX00 A 3 A_AlertMonsters(72)
 			DX00 A 3 BRIGHT A_PlaySound("DeusEx/LAM/Beep", CHAN_BODY)
 			DX00 A 3 A_AlertMonsters(72)
-		Crash:			
-		XDeath:				
-		XPlode:	
+		Crash:
+		XDeath:
+		XPlode:
 			TNT1 A 0 A_PlaySound("DeusEx/LAM/Explode", CHAN_BODY)
 			TNT1 A 0 A_AlertMonsters(2400)
 			TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveX", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
-			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveY", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)			
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveY", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 4, 50), 77)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 4, 50), 154)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 4, 50), 230)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 4, 50), 307)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 4, 50), 384)
 			Stop
-		}
-}	
+	}
+}
 
 Actor DeusEx_LAMProjectileCoop : DeusEx_LAMProjectile { Species "Player" +THRUSPECIES }
 
@@ -193,7 +198,7 @@ Actor DeusEx_LAMWallMissile : DeusExBullet
 			TNT1 A 0 NODELAY
 			TNT1 A 1 A_TakeFromTarget("DeusEx_LAMMayPlant", 999)
 			Stop
-		XDeath:	
+		XDeath:
 		Crash:
 			TNT1 A 0 
 			TNT1 A 1 A_TakeFromTarget("DeusEx_LAMMayPlant", 999)
@@ -203,7 +208,7 @@ Actor DeusEx_LAMWallMissile : DeusExBullet
 			TNT1 A 1 A_GiveToTarget("DeusEx_LAMMayPlant", 1)
 			Stop
 	}
-}	
+}
 
 Actor DeusEx_LAMStatic
 {
@@ -269,16 +274,16 @@ Actor DeusEx_LAMStatic
 			DX00 A 3 //A_AlertMonsters(72)
 		Death:	
 			TNT1 A 1 A_CustomMissile("DeusEx_LAMExplosion", 0, 0, angle, CMF_TRACKOWNER)
-			TNT1 A 5		
+			TNT1 A 5
 			Stop
-		}
-}			
+	}
+}
 
 Actor DeusEx_LAMPlantMissile : DeusExBullet
 {
 	Damage(0)
 	+THRUACTORS
-	+ISMONSTER	
+	+ISMONSTER
 	Speed 32
 	Decal None
 	States
@@ -287,9 +292,9 @@ Actor DeusEx_LAMPlantMissile : DeusExBullet
 			TNT1 A 0 NODELAY
 			TNT1 A 1 //A_TakeFromTarget("DeusEx_LAMMayPlant", 999)
 			Stop
-		XDeath:	
+		XDeath:
 		Crash:
-			TNT1 A 0 
+			TNT1 A 0
 			TNT1 A 1 //A_TakeFromTarget("DeusEx_LAMMayPlant", 999)
 			Stop
 		Death:
@@ -298,7 +303,7 @@ Actor DeusEx_LAMPlantMissile : DeusExBullet
 			TNT1 A 1 A_CustomMissile("DeusEx_LAMStatic", 0, 0, angle, CMF_TRACKOWNER)
 			Stop
 	}
-}	
+}
 
 Actor DeusEx_LAMExplosion
 {
@@ -320,7 +325,7 @@ Actor DeusEx_LAMExplosion
 			TNT1 A 0 A_AlertMonsters(2400)
 			TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveX", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
-			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveY", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)			
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveY", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 2, 50), 77)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 2, 50), 154)
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 2, 50), 230)
@@ -328,6 +333,103 @@ Actor DeusEx_LAMExplosion
 			TNT1 A 2 A_Explode(CallACS("DeusEx_WeaponSkillDamage", 2, 50), 384)
 			Stop
 	}
-}	
+}
 
 Actor DeusEx_LAMTimer : Inventory { +INVENTORY.UNDROPPABLE Inventory.MaxAmount 5 Inventory.InterHubAmount 0  }
+
+Actor DeusEx_NanoSword : DeusEx_CombatKnife
+{
+	Weapon.SlotNumber 9
+	Weapon.SlotPriority 2
+	-WEAPON.WIMPY_WEAPON
+	Tag "Dragon Tooth Sword"
+	Weapon.UpSound "DeusEx/NanoSword/Select"
+	Inventory.PickupMessage "You found the Dragon Tooth Sword!"
+	Obituary "%o was shown %h's large Dragon Tooth Sword."		
+	States
+	{
+		Spawn:
+			DX03 A -1 Bright
+			Stop
+		Select:
+			TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Raise
+			TNT1 A 1 A_Raise
+			loop				
+		Ready:
+			DX00 BCDEFGHIJKL 3
+			Goto ReadyLoop
+		ReadyLoop:
+			DX02 E 0 A_Jump(2, "Idle1", "Idle2")
+			DX02 EFGHIJK 10 A_WeaponReady 
+			Loop
+		Fire:
+			DX00 M 0 A_Jump(256, "Attack1", "Attack2")
+			Goto Attack1
+		Attack1:
+			DX00 M 1
+			DX00 NO 2
+			DX00 PQRS 2
+			DX00 T 1 A_PlaySound("DeusEx/NanoSword/Fire", CHAN_WEAPON)
+			DX00 U 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", 8, 0, 0, 4)
+			DX00 U 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", 4, 0, 0, 2)
+			DX00 U 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", 0, 0, 0, 0)
+			DX00 U 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", -4, 0, 0, -2)
+			DX00 U 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", -8, 0, 0, -4)
+			DX00 U 1 
+			DX00 VWX 1
+			DX00 YZ 1
+			DX00 "[" 3 A_Refire
+			Goto ReadyLoop
+		Attack2:
+			DX00 "\]" 2
+			DX01 A 1
+			DX01 BCDE 2
+			DX01 F 1 A_PlaySound("DeusEx/NanoSword/Fire", CHAN_WEAPON)
+			DX01 G 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", 12, 0, 0, 2)
+			DX01 G 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", 6, 0, 0, 2)
+			DX01 G 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", 0, 0, 0, 2)
+			DX01 G 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", -6, 0, 0, 2)
+			DX01 G 0 A_FireCustomMissile("DeusEx_NanoSwordMissile", -12, 0, 0, 2)
+			DX01 G 1
+			DX01 HIJ 1
+			DX01 K 2 A_Refire
+			Goto ReadyLoop
+		Idle1:
+			DX01 UVWXYZ 10 A_WeaponReady
+			Goto ReadyLoop
+		Idle2:
+			DX01 "\]" 10 A_WeaponReady
+			DX02 ABCDE 10 A_WeaponReady
+			Goto ReadyLoop
+		Deselect:
+			DX01 NOPQRS 2
+			Goto Super::InstantDeselect	
+	}
+}	
+
+Actor DeusEx_NanoSwordMissile : DeusExBullet
+{
+	Damage(CallACS("DeusEx_WeaponSkillDamage", 2, 10))
+	Speed 60
+	Decal none
+	DamageType "DeusExMelee"
+	States
+	{
+		Spawn:
+			TNT1 A 0 NODELAY
+			TNT1 A 1 
+			Stop
+		Crash:
+			TNT1 A 0 A_PlaySound("DeusEx/NanoSword/HitSoft", CHAN_BODY)
+			TNT1 A 1 A_Explode(CallACS("DeusEx_BackDamage",CallACS("DeusEx_WeaponSkillDamage", 2, 10)),8,!XF_HURTSOURCE,0,8)
+			Stop
+		Death:
+			TNT1 A 0 A_PlaySound("DeusEx/NanoSword/HitHard", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DeusEx_BulletPuff",0,0,0,0,0,1,0,0)
+			Stop
+		XDeath:
+			TNT1 A 0 A_PlaySound("DeusEx/NanoSword/HitFlesh", CHAN_BODY)
+			TNT1 A 1 A_Explode(CallACS("DeusEx_BackDamage",CallACS("DeusEx_WeaponSkillDamage", 2, 10)),8,!XF_HURTSOURCE,0,8)
+			Stop	
+	}
+}	

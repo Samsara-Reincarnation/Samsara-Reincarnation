@@ -68,7 +68,7 @@ actor SamsaraSlotSevenPickup: SamsaraSlotPickup replaces BFG9000
 			UN00 A 10 A_ChangeFlag("FLOATBOB", 0)  
 			goto SpawnLoop	
 		RTCW: RW98 A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		Sarge:  Q399 ABCDEFGH 1 A_ChangeFlag("FLOATBOB", 1)   goto SpawnLoop
+		Sarge:  Q399 ABCDEFGH 1 Bright A_ChangeFlag("FLOATBOB", 1)   goto SpawnLoop
 		Descent:  DS54 ABCDEFGHIJKLMNO 2 A_ChangeFlag("FLOATBOB", 1)   goto SpawnLoop
 		DeusEx:	  DX03 A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		
@@ -132,8 +132,9 @@ actor SamsaraSlotSevenPickup: SamsaraSlotPickup replaces BFG9000
 		PainkillerFull:  PK99 C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		UnrealFull:  	UN00 C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		RTCWFull:  		RW98 C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		SargeFull:			Q399 C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+		SargeFull:			Q399 Q 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		DescentFull:		PGX7 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+		DeusExFull:		DX03 C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 
         DoomEmpty:     PBFG A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         ChexEmpty:     PLZD A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -183,6 +184,7 @@ actor SamsaraSlotSevenPickup: SamsaraSlotPickup replaces BFG9000
 		RTCWEmpty:  		RW98 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		SargeEmpty:			Q399 IJKLMNOP 1 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		DescentEmpty:		PGX7 A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+		DeusExEmpty:		DX03 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 
         DoomPunchdrunk:     DGBZ A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
         ChexPunchdrunk:     CBRK ABCD 8 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
@@ -317,31 +319,6 @@ actor SamsaraSlotSevenDrop: SamsaraSlotSevenPickup
   }
 }
 
-actor SamsaraBFG10kReplace:     SamsaraSlotSevenPickup replaces BFG10k
-{
-	States
-	{
-		IWasDropped:
-			Goto SpawnLoop	
-		Doomguy:  BFG2 A 35 A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
-		Pickup:
-			TNT1 A 0 A_JumpIfInventory("DoomGuyClass", 1, "CheckDoom")	 
-			TNT1 A 0 A_JumpIfInventory("CalebClass", 1, "CheckCaleb")
-			TNT1 A 0 A_JumpIfInventory("StrifeClass", 1, "CheckStrife")	  
-			TNT1 A 0 A_JumpIfInventory("DisruptorClass", 1, "CheckJack")
-			TNT1 A 0 A_JumpIfInventory("BittermanClass", 1, "CheckBitterman")
-			TNT1 A 0 A_JumpIfInventory("CatacombClass", 1, "CheckCatacomb")
-			TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 7) & 3) == 1, "PickupSuccess")
-			Goto PickupFailure
-		CheckDoom:
-			TNT1 A 0 A_GiveInventory("DGHasBFG10K",1)
-			TNT1 A 0 A_JumpIfInventory("Doom64Mode", 1, 2)
-			TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 11) & 3) == 1, "PickupSuccess")
-			Goto PickupFailure
-			TNT1 A 0 A_JumpIf((ACS_NamedExecuteWithResult("SamsaraGiveWeapon", 7) & 3) == 1, "PickupSuccess")
-			Goto PickupFailure
-	}
-}
 actor SamsaraSlotSeven_Chex:    RandomSpawner replaces LAZDevice { DropItem "SamsaraSlotSevenPickup" }
 actor SamsaraSlotSeven_Heretic:    RandomSpawner replaces Mace { DropItem "SamsaraSlotSevenPickup" }
 actor SamsaraSlotSeven_Hexen1:  RandomSpawner replaces CWeaponPiece1 { DropItem "SamsaraSlotSevenPickup" }

@@ -1137,7 +1137,8 @@ actor AmmoBackpack : CustomInventory replaces Backpack
         AMPK A 20 BRIGHT
         loop	
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("MarathonClass", 1, "PickupMarathon")
+        TNT1 A 0 A_JumpIfInventory("DoomguyClass", 0, "PickupDoom")
+		TNT1 A 0 A_JumpIfInventory("MarathonClass", 1, "PickupMarathon")
         TNT1 A 0 A_JumpIfInventory("HexenClass", 1, "PickupHexen")
 		TNT1 A 0 A_JumpIfInventory("Hexen2Class", 1, "PickupHexen2")
         TNT1 A 0 A_JumpIfInventory("WolfenClass", 1, "PickupWolfen")
@@ -1147,6 +1148,7 @@ actor AmmoBackpack : CustomInventory replaces Backpack
 		TNT1 A 0 A_JumpIfInventory("UnrealClass", 1, "PickupUnreal")	
 		TNT1 A 0 A_JumpIfInventory("PainkillerClass", 0, "PickupPainkiller")
 		TNT1 A 0 A_JumpIfInventory("Q3Class", 1, "PickupSarge")
+		TNT1 A 0 A_JumpIfInventory("DeusExClass", 1, "PickupDenton")
 //		TNT1 A 0 A_JumpIfInventory("WitchavenClass", 0, "PickupWitchaven")	Why?
         TNT1 A 0 A_PlaySound("ammo/backpack")
         TNT1 A 1 A_GiveInventory("Backpack", 1)
@@ -1155,7 +1157,17 @@ actor AmmoBackpack : CustomInventory replaces Backpack
         TNT1 A 0 A_PlaySound("ammo/backpack")
         TNT1 A 0 A_GiveInventory("Backpack", 2)
         stop
-      PickupWolfen:
+      PickupDoom:
+        TNT1 A 0 A_PlaySound("ammo/backpack")
+        TNT1 A 0 A_GiveInventory("Backpack", 1)
+		TNT1 A 0 A_GiveInventory("DGStrHasLandMines")
+		TNT1 A 0 A_GiveInventory("DoomguyStrMines", 5)
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode", 2, "PickupDoomStronghold")
+        stop
+	  PickupDoomStronghold:
+		TNT1 A 0 A_GiveInventory("Land Mine Layer", 1)
+		stop
+	  PickupWolfen:
         TNT1 A 0 A_PlaySound("ammo/backpack")
         TNT1 A 0 A_GiveInventory("Backpack", 1)
 		TNT1 A 0 A_GiveInventory("Totenkopf_IHaveDualPistols")
@@ -1231,6 +1243,30 @@ actor AmmoBackpack : CustomInventory replaces Backpack
 		TNT1 A 0 A_GiveInventory("Q3AmmoRegenerationDummy",1)
 		TNT1 A 1 A_GiveInventory("Backpack", 1)
         stop
+	  PickupDenton:
+		TNT1 A 0 A_PlaySound("DeusEx/WeaponPickup")
+		TNT1 A 0 A_Jump(128, "PickupDenton2")
+		TNT1 A 0 A_JumpIfInventory("DeusEx_StealthPistol", 1, "PickupDenton2")
+		TNT1 A 0 A_GiveInventory("DeusEx_StealthPistol", 1)
+		TNT1 A 0 A_GiveInventory("DeusEx_LAM", 1)
+		TNT1 A 1 A_GiveInventory("Backpack", 1)
+        stop		
+	  PickupDenton2:
+		TNT1 A 0 A_JumpIfInventory("DeusEx_StealthPistol", 1, 2)
+		TNT1 A 0 A_JumpIfInventory("DeusEx_LAM", 1, "PickupDenton3")
+		TNT1 A 0 A_GiveInventory("DeusEx_LAM", 1)
+		TNT1 A 1 A_GiveInventory("Backpack", 1)
+        stop		  
+	  PickupDenton3:
+		TNT1 A 0 A_JumpIfInventory("DeusEx_StealthPistol", 1, "PickupDenton4")
+		TNT1 A 0 A_GiveInventory("DeusEx_StealthPistol", 1)
+		TNT1 A 1 A_GiveInventory("Backpack", 1)
+        stop		
+	  PickupDenton4:
+		TNT1 A 0 A_GiveInventory("Clip", 20)
+		TNT1 A 0 A_GiveInventory("RocketAmmo", 3)
+		TNT1 A 1 A_GiveInventory("Backpack", 1)
+        stop			
       PickupFail:
         AMPK A 1 BRIGHT
         fail		

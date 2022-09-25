@@ -123,6 +123,7 @@ actor SamsaraUniquePickup1: CustomInventory
 		RTCWSpecial:  		RW98 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		SargeSpecial:			Q399 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		DescentSpecial:		GXUN A 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+		DeusExSpecial:		DX03 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 	   
       Pickup:
 		TNT1 A 0 A_JumpIfInventory("HalfLifeClass", 1, "PickupHL")
@@ -299,6 +300,7 @@ actor SamsaraUniquePickup2: CustomInventory
 		RTCWSpecial:  		RW98 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		SargeSpecial:			Q399 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		DescentSpecial:		GXUN B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+		DeusExSpecial:		DX03 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 
       Pickup:
 		TNT1 A 0 A_JumpIfInventory("CorvusClass", 1, "PickupAlt")
@@ -502,6 +504,7 @@ actor SamsaraUniquePickup3: CustomInventory
 		RTCWSpecial:  		RW98 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		SargeSpecial:			Q399 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		DescentSpecial:		GXUN C 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
+		DeusExSpecial:		DX03 B 35 bright A_ChangeFlag("FLOATBOB", 0)   goto SpawnLoop
 		
       Pickup:
 		TNT1 A 0 A_JumpIfInventory("CorvusClass", 1, "PickupAlt")
@@ -596,53 +599,3 @@ actor SamsaraUniquePickup_Heretic:  SamsaraUniquePickup replaces ArtiEgg { }
 actor SamsaraUniquePickup_Heretic2 : SamsaraUniquePickup replaces ArtiTomeOfPower { }
 actor SamsaraUniquePickup_Hexen:    SamsaraUniquePickup replaces ArtiPork { }
 actor SamsaraUniquePickup_Hexen2: SamsaraUniquePickup replaces ArtiDarkServant { }
-
-actor DoomguyBerserker: Trigger
-{
-    States
-    {
-      Pickup:
-        TNT1 A 0 A_JumpIfInventory("Doom64Mode",1,"PickupDoom64")
-      PickupArtifact:
-        TNT1 A 0 A_GiveInventory("Doom64UnmakerArtifact")
-      PickupBerserkSwitchCheck:
-        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 44) == 0, "PickupBerserkFinish")
-        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 44) == 1, 1)
-        goto PickupBerserkSwitch
-        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserkFinish")
-      PickupBerserkSwitch:
-        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraBerserkFistSwitchHack") //A_SelectWeapon(" Fist ")
-      PickupBerserkFinish:
-        TNT1 A 0 A_GiveInventory("PowerStrength")
-        TNT1 A 0 A_GiveInventory("PowerChainsawBerserk")
-        TNT1 AAAA 0 A_GiveInventory("Medikit") //HealThing(100,0)
-        stop
-
-      PickupDoom64:
-        TNT1 A 0 A_SetBlend("FF0000",0.15,105)
-        goto PickupArtifact
-    }
-}
-
-actor ChexSoulsphere: Trigger
-{
-    States
-    {
-      Pickup:
-        TNT1 A 0 A_GiveInventory("Soulsphere")
-        stop
-    }
-}
-
-actor QuakeRegenGiver: Trigger
-{
-    States
-    {
-      Pickup:
-        TNT1 A 0 A_GiveInventory("QuakeRegenTimer", 1050)
-        stop
-    }
-}
-
-
-actor Doom64GuyBerserk: DoomguyBerserker {}
