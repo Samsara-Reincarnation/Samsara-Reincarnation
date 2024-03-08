@@ -1,0 +1,171 @@
+#library "KINGPIN"
+#include "zcommon.acs"
+#include "commonFuncs.acs"
+
+Script "GlobalRecoil" (int duration, int intensity, int halfdampen)
+{
+	int i = 0;
+	for(i = 0; i < duration; i++)
+	{
+		SetActorPitch(0,GetActorPitch(0)-intensity);
+		Delay(1);
+	}
+	for(i = duration; i > 0; i--)
+	{
+		SetActorPitch(0,GetActorPitch(0)+intensity/(halfdampen+1));
+		Delay(1);
+	}
+}
+
+//A decorate won't convert a decimal to a floating point as far as my knowledge goes, so it's up to the decorate to multiply the intended decimal by 65536
+Script "Kingpin_FX" (int type, int duration, int maxSize)
+{
+	int i = 0;
+	int startScaleX = GetActorProperty(0,APROP_ScaleX);
+	int startScaleY = GetActorProperty(0,APROP_ScaleY);
+	switch(type)
+	{
+		case 1:
+			for(i = 0; i <= duration; i++)
+			{
+				//SetActorProperty(0,APROP_Alpha,(1.0/duration)*i);
+				SetActorProperty(0,APROP_ScaleX,startScaleX+(maxSize/duration)*i);
+				SetActorProperty(0,APROP_ScaleY,startScaleY+(maxSize/duration)*i);
+				Delay(1);
+			}
+			for(i = duration; i >= 0; i--)
+			{
+				SetActorProperty(0,APROP_Alpha,(1.0/duration)*i);
+				Delay(1);
+			}
+			Thing_Remove(0);
+			break;
+		case 2:
+			for(i = 0; i <= duration; i++)
+			{
+				SetActorProperty(0,APROP_ScaleX,startScaleX+(maxSize/duration)*i);
+				SetActorProperty(0,APROP_ScaleY,startScaleY+(maxSize/duration)*i);
+				Delay(1);
+			}
+			Thing_Remove(0);
+			break;
+	}
+}
+
+Script "Kingpin_GrenadeFuse" (void)
+{
+	GiveInventory("Kingpin_GrenadeFuse",105);
+	while(CheckInventory("Kingpin_GrenadeFuse") > 0)
+	{
+		TakeInventory("Kingpin_GrenadeFuse",1);
+		Delay(1);
+	}
+}
+
+Script "Kingpin_BloodGenerator_Offsets" (void)
+{
+	int missilex = GetActorX(0);
+	int missiley = GetActorY(0);
+	int missilez = GetActorZ(0);
+	int missileAngle = GetActorAngle(0);
+	SetActivator(0,AAPTR_Tracer);
+
+	int enemyx = GetActorX(0);
+	int enemyy = GetActorY(0);
+	int enemyz = GetActorZ(0);
+	int currentangle = GetActorAngle(0);
+	int vang = VectorAngle(enemyx - missilex, enemyy - missiley);
+	int angle = vang % 1.0;
+	SetInventory("Kingpin_BloodGeneratorAngle",angle+65536);
+	SetInventory("Kingpin_BloodGeneratorBleedAngle",missileAngle+65536);
+	SetInventory("Kingpin_BloodGeneratorZ",(missilez - enemyz)>>16 + 65536);
+}
+
+Script "Kingpin_BloodGenerator_Return" (int mode)
+{
+	int result;
+	switch(mode)
+	{
+		case 1:
+			result = ((CheckInventory("Kingpin_BloodGeneratorAngle") - 65536)/182)+180;
+			break;
+		case 2:
+			result = CheckInventory("Kingpin_BloodGeneratorZ");
+			break;
+		case 3:
+			result = ((CheckInventory("Kingpin_BloodGeneratorBleedAngle") - 65536)/182);
+			break;
+	}
+	SetResultValue(result);
+}
+
+Script "Kingpin_BloodPool" (void)
+{
+	int ownerTid = uniqueTid();
+	SpawnForced("Kingpin_BloodPool",GetActorX(0),GetActorY(0),GetActorFloorZ(0),ownerTid);
+	Thing_SetTranslation(ownerTid,-1);
+	SetActivator(0,AAPTR_MASTER);
+	SetPointerExt(AAPTR_MASTER,0,ownerTid);
+	SetActorProperty(ownerTid,APROP_ScaleX,GetActorProperty(0,APROP_Radius)/20);
+	Thing_ChangeTid(ownerTid,0);
+}
+
+#DEFINE MAXTRAILS 64
+
+Script "Kingpin_TrailLimiter" (void)
+{
+	int actorCount = ThingCountName(GetActorClass(0),0);
+	if(actorCount > MAXTRAILS)
+		GiveInventory("Kingpin_TrailLimiter",actorCount > MAXTRAILS * 2 ? 2 : 1);
+
+}
+
+Script "Kingpin_GibTransfer" (void)
+{
+	int gibTid = uniqueTid();
+	int timerValue = CheckInventory("Kingpin_GibLifeSpan");
+	int frame = CheckInventory("Kingpin_GibFrame");
+	SpawnForced("Kingpin_GibStay",GetActorX(0),GetActorY(0),GetActorZ(0),gibTid);
+	SetActorProperty(gibTid,APROP_ScaleX,GetActorProperty(0,APROP_ScaleX));
+	SetActorProperty(gibTid,APROP_ScaleY,GetActorProperty(0,APROP_ScaleY));
+	GiveActorInventory(gibTid,"Kingpin_GibLifeSpan",timerValue);
+	GiveActorInventory(gibTid,"Kingpin_GibFrame",frame);
+	Thing_SetTranslation(gibTid,-1);
+	Thing_ChangeTid(gibTid,0);
+}
+
+Script "Kingpin_GibSpawner" (void)
+{
+	int gibTid = uniqueTid();
+	int thisTid = uniqueTid();
+	Thing_ChangeTid(0,thisTid);
+	SetActivator(0,AAPTR_Master);
+	int height = GetActorProperty(0,APROP_Height)*4;
+	int radius = GetActorProperty(0,APROP_Radius);
+	SetActivator(thisTid);
+	Thing_ChangeTid(thisTid,0);
+	int gibScale = (((height>>16)*(radius>>16))<<16)/1120;
+	int throwAngle, throwPitch, horzVelocity;
+	for(int a = 0; a < radius/65536; a++)
+	{
+		throwAngle = random(0,1.0);
+		throwPitch = random(-0.25,0.25);
+		horzVelocity = 12*cos(throwPitch);
+		SpawnForced("Kingpin_Gib",GetActorX(0)+random(-radius/2,radius/2),GetActorY(0)+random(-radius/2,radius/2),GetActorZ(0)+random(height/10,height-(height/10)),gibTid);
+		SetActorVelocity(gibTid,FixedMul(horzVelocity,cos(throwAngle)),FixedMul(horzVelocity,sin(throwAngle)),12*sin(throwPitch),0,0);
+		SetActorProperty(gibTid,APROP_ScaleX,gibScale);
+		SetActorProperty(gibTid,APROP_ScaleY,gibScale);
+		Thing_SetTranslation(gibTid,-1);
+		Thing_ChangeTid(gibTid,0);
+	}
+}
+
+Script "Kingpin_Player" Enter
+{
+	while(true)
+	{
+		SetAmmoCapacity("Kingpin_TommyGunMagazine",50*(1+CheckInventory("Kingpin_TommyGun_MagazineCapacity")));
+		SetAmmoCapacity("Kingpin_GrenadeLauncherMagazine",3*(1+CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacity")));
+		Delay(1);
+	}
+}

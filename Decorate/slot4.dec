@@ -1,0 +1,123 @@
+Actor Kingpin_TommyGun : Kingpin_Weapon
+{
+	Weapon.SlotNumber 4
+	Weapon.SelectionOrder 500
+	Weapon.AmmoUse1 0
+	Weapon.AmmoGive1 50
+	Weapon.AmmoType1 "Kingpin_TommyGunMagazine"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 50
+	Weapon.AmmoType2 "Clip"
+	Obituary "%o was pumped full of lead by %k's tommy gun."
+	Inventory.Pickupmessage "Copped a Tommy gun."
+	Tag "Tommy Gun"
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.NOALERT
+	States
+	{
+		Ready:
+			TNT1 A 0
+			KP00 ABCD 3
+			Goto ReadyLoop
+		ReadyLoop:
+			KP01 BCDEFGHIJKL 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		Deselect:
+			KP01 MNOPQR 3
+			Goto DeselectLoop
+		Fire:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",1,1)
+			Goto Reload
+			KP00 E 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 E 0 A_AlertMonsters
+			KP00 E 0 A_PlaySound("Kingpin/TommyGun/Fire",CHAN_WEAPON)
+			KP00 E 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+			KP00 E 0 A_TakeInventory("Kingpin_TommyGunMagazine",1)
+			KP00 E 0 A_JumpIfInventory("Kingpin_TommyGun_Damage",1,"FireDamage")
+		FireNormal:
+			KP00 E 0 A_JumpIfInventory("Kingpin_TommyGun_Accuracy",1,"FireNormalAccuracy")
+			KP00 E 0 A_FireBullets(4,4,-1,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			Goto FireFinish
+		FireNormalAccuracy:
+			KP00 E 0 A_FireBullets(1,1,-1,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			Goto FireFinish
+		FireDamage:
+			KP00 E 0 A_JumpIfInventory("Kingpin_TommyGun_Accuracy",1,"FireDamageAccuracy")
+			KP00 E 0 A_FireBullets(4,4,-1,30,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			Goto FireFinish
+		FireDamageAccuracy:
+			KP00 E 0 A_FireBullets(1,1,-1,30,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			Goto FireFinish
+		FireFinish:
+			KP00 E 0 A_Quake(1,2,0,32,"")
+			KP00 E 0 A_JumpIfInventory("Kingpin_TommyGun_Buzzsaw",1,"FireFinishBuzzsaw")
+			KP00 E 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,32)
+			KP00 EF 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 G 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 G 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireFinishBuzzsaw:
+			KP00 E 0 A_Recoil(0.1)
+			KP00 E 0 A_Quake(2,2,0,32,"")
+			KP00 E 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,64,1)
+			KP00 EF 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 G 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 G 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",1,"ReadyLoop")
+			Goto Reload
+		Flash:
+			KP00 E 0 A_JumpIfInventory("Kingpin_TommyGun_Buzzsaw",1,"FlashBuzzsaw")
+			KP99 A 0 A_Jump(256,"Flash1","Flash2","Flash3")
+		Flash1:
+			KP99 A 2 Bright
+			Stop
+		Flash2:
+			KP99 B 2 Bright
+			Stop
+		Flash3:
+			KP99 C 2 Bright
+			Stop
+		FlashBuzzsaw:
+			KP99 A 0 A_Jump(256,"FlashBuzzsaw1","FlashBuzzsaw2","FlashBuzzsaw3")
+		FlashBuzzsaw1:
+			KP99 A 1 Bright
+			Stop
+		FlashBuzzsaw2:
+			KP99 B 1 Bright
+			Stop
+		FlashBuzzsaw3:
+			KP99 C 1 Bright
+			Stop
+		Reload:
+			KP00 G 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",0,"ReadyLoop")
+			KP00 G 0 A_JumpIfInventory("Clip",1,1)
+			Goto DryFire
+			KP00 G 0 A_PlaySound("Kingpin/TommyGun/Reload",CHAN_5)
+			KP00 "GHIJKLMNOPQRSTU" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		ReloadBegin:
+			KP00 V 0 A_JumpIfInventory("Clip",1,1)
+			Goto ReloadFinish
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGunMagazine",1)
+			TNT1 A 0 A_TakeInventory("Clip",1,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",00,"ReloadFinish")	
+			Loop
+		ReloadFinish:
+			KP00 "VWXYZ[\]" 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 A 4
+			Goto ReadyLoop
+		DryFire:
+			KP01 M 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP01 M 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+	}
+}
+
+Actor Kingpin_TommyGunMagazine : Ammo
+{
+	Inventory.Amount 50
+	Inventory.MaxAmount 50
+}
+
+Actor Kingpin_TommyGun_MagazineCapacity : Boolean {}
+Actor Kingpin_TommyGun_Damage : Boolean {}
+Actor Kingpin_TommyGun_Accuracy : Boolean {}
+Actor Kingpin_TommyGun_Buzzsaw : Boolean {}

@@ -1,0 +1,269 @@
+Actor Kingpin_Pistol : Kingpin_Weapon
+{
+	Weapon.SlotNumber 2
+	Weapon.SelectionOrder 1900
+	Weapon.AmmoUse1 0
+	Weapon.AmmoGive1 10
+	Weapon.AmmoType1 "Kingpin_PistolMagazine"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 10
+	Weapon.AmmoType2 "Clip"
+	Obituary "%o was capped by %k's pistol."
+	Inventory.Pickupmessage "Copped a pistol."
+	Tag "Pistol"
+	States
+	{
+		Ready:
+			TNT1 A 0
+			KP00 A 0 A_PlaySound("Kingpin/Pistol/Holster",CHAN_WEAPON)
+			KP00 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyMagnum")
+			KP00 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadySilencer")
+			KP00 ABCDEF 3
+			Goto ReadyLoop
+		ReadySilencer:
+			KP20 ABCDEFGHIJKLMNOPQRSTU 3
+			KP21 V 0
+			Goto ReadyLoop
+		ReadyMagnum:
+			KP10 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyMagnumSilencer")
+			KP10 ABCDEF 3
+			Goto ReadyLoop		
+		ReadyMagnumSilencer:
+			KP30 ABCDEFGHIJKLMNOPQRSTU 3
+			KP31 V 0
+			Goto ReadyLoop
+		ReadyLoop:
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyLoopSilencer")
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyLoopMagnum")
+			KP01 ABCDEFGH 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyLoopSilencer")
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyLoopMagnum")
+			KP01 IJKLMNOP 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		ReadyLoopSilencer:
+			KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,1)
+			Goto ReadyLoop
+			KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyLoopMagnum")
+			KP21 "VWXYZ[\]" 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP22 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,1)
+			Goto ReadyLoop
+			KP22 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyLoopMagnum")
+			KP22 ABCDEFGH 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		ReadyLoopMagnum:
+			KP11 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyLoopMagnumSilencer")
+			KP11 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,1)
+			Goto ReadyLoop
+			KP11 ABCDEFGH 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP11 I 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyLoopMagnumSilencer")
+			KP11 I 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,1)
+			Goto ReadyLoop
+			KP11 IJKLMNOP 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		ReadyLoopMagnumSilencer:
+			KP31 V 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,1)
+			Goto ReadyLoop
+			KP31 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,1)
+			Goto ReadyLoop
+			KP31 "VWXYZ[\]" 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP32 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,1)
+			Goto ReadyLoop
+			KP32 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,1)
+			Goto ReadyLoop
+			KP32 ABCDEFGH 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		Deselect:
+			KP01 Q 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"DeselectMagnum")
+			KP01 Q 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"DeselectSilencer")	
+			KP01 QRSTU 3
+			Goto DeselectLoop
+		DeselectSilencer:
+			KP22 IJKLM 3
+			Goto DeselectLoop
+		DeselectMagnum:
+			KP11 Q 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"DeselectMagnumSilencer")
+			KP11 QRSTU 3
+			Goto DeselectLoop	
+		DeselectMagnumSilencer:
+			KP32 IJKLM 3
+			Goto DeselectLoop
+		Fire:
+			KP00 G 0 A_JumpIfInventory("Kingpin_PistolMagazine",1,1)
+			Goto Reload
+			KP00 G 0 A_TakeInventory("Kingpin_PistolMagazine",1)
+			KP00 G 0 ACS_NamedExecuteWithResult("GlobalRecoil",3,96)
+			KP00 G 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 G 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"FireMagnum")	
+			KP00 G 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"FireSilencer")
+			KP00 G 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 G 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+			KP00 G 0 A_AlertMonsters
+			KP00 G 0 A_PlaySound("Kingpin/Pistol/Fire",CHAN_WEAPON)
+			KP00 G 0 A_FireBullets(4,4,-1,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 GHIJ 3	A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_RateOfFire",1,2)
+			KP01 AA 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 A 0 A_JumpIfInventory("Kingpin_PistolMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireMagnum:
+			KP10 G 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"FireMagnumSilencer")
+			KP10 G 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 G 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+			KP10 G 0 A_AlertMonsters
+			KP10 G 0 A_PlaySound("Kingpin/Magnum/Fire",CHAN_WEAPON)
+			KP10 G 0 A_FireBullets(4,4,-1,30,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 GHIJ 3	A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 A 0 A_JumpIfInventory("Kingpin_Pistol_RateOfFire",1,2)
+			KP11 AA 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 A 0 A_JumpIfInventory("Kingpin_PistolMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireSilencer:
+			KP20 V 0 A_PlaySound("Kingpin/Silencer/Fire",CHAN_WEAPON)
+			KP20 V 0 A_FireBullets(4,4,-1,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP20 VWXY 3	A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_RateOfFire",1,2)
+			KP21 VV 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 V 0 A_JumpIfInventory("Kingpin_PistolMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireMagnumSilencer:
+			KP30 V 0 A_PlaySound("Kingpin/Silencer/Fire",CHAN_WEAPON)
+			KP30 V 0 A_FireBullets(4,4,-1,30,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP30 VWXY 3	A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 V 0 A_JumpIfInventory("Kingpin_Pistol_RateOfFire",1,2)
+			KP31 VV 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 V 0 A_JumpIfInventory("Kingpin_PistolMagazine",1,"ReadyLoop")
+			Goto Reload
+		AltFire:
+			KP22 N 0 A_JumpIfInventory("Kingpin_Pistol_Silencer",1,1)
+			Goto DryFire+1
+			KP22 N 0 A_PlaySound("Kingpin/Pistol/SilencerAttach",CHAN_6)
+			KP22 N 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"Detach")
+		Attach:
+			KP22 N 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"AttachMagnum")
+			KP22 NO 3
+			KP20 ABCDEFGHIJKLMNOPQRSTU 3
+			KP21 V 0 A_GiveInventory("Kingpin_Pistol_SilencerActive",1)
+			Goto ReadyLoopSilencer
+		AttachMagnum:
+			KP32 NO 3
+			KP30 ABCDEFGHIJKLMNOPQRSTU 3
+			KP31 V 0 A_GiveInventory("Kingpin_Pistol_SilencerActive",1)
+			Goto ReadyLoopMagnumSilencer
+		Detach:
+			KP20 U 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"DetachMagnum")
+			KP20 UTSRQPONMLKJIHGFE 3
+			TNT1 A 0
+			KP00 DEF 3
+			KP01 A 0 A_TakeInventory("Kingpin_Pistol_SilencerActive",1)
+			Goto ReadyLoop
+		DetachMagnum:
+			KP30 UTSRQPONMLKJIHGFE 3
+			TNT1 A 0
+			KP10 DEF 3
+			KP11 A 0 A_TakeInventory("Kingpin_Pistol_SilencerActive",1)
+			Goto ReadyLoop
+		Flash:
+			KP99 GH 3 Bright
+			Stop
+		Reload:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_PistolMagazine",0,"ReadyLoop")
+			KP11 A 0 A_JumpIfInventory("Clip",1,1)
+			Goto DryFire
+		ReloadBegin:
+			TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+			Goto ReloadFinish
+			TNT1 A 0 A_GiveInventory("Kingpin_PistolMagazine",1)
+			TNT1 A 0 A_TakeInventory("Clip",1,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_PistolMagazine",0,"ReloadFinish")
+			Loop
+		ReloadFinish:
+			KP00 K 0 A_PlaySound("Kingpin/Pistol/ReloadOut",CHAN_5)
+			KP00 K 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReloadFinishMagnum")
+			KP00 K 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReloadFinishSilencer")
+			KP00 K 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishFast")
+			KP00 KLMNOPQRST 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 U 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP00 UVWXY 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 // I can't do anything about this except kill the interpolation here, which works just fine
+			KP00 "Z[\]" 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		ReloadFinishFast:
+			KP00 KLMNOPQRSTU 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 V 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP01 A 0 
+			Goto ReadyLoop
+		ReloadFinishMagnum:
+			KP10 K 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReloadFinishMagnumSilencer")
+			KP10 K 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishFastMagnum")
+			KP10 KLMNOPQRST 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 U 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP10 UVWXY 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0
+			KP10 "Z[\]" 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		ReloadFinishFastMagnum:
+			KP10 KLMNOPQRSTU 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 V 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP11 A 0 
+			Goto ReadyLoop
+		ReloadFinishSilencer:
+			KP20 "Z[\]" 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 ABCDEF 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 G 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP21 GHIJK 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0
+			KP21 LMNO 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 V 0
+			Goto ReadyLoop
+		ReloadFinishFastSilencer:
+			KP20 "Z[\]" 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 ABCDEFG 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 H 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP21 V 0
+			Goto ReadyLoop
+		ReloadFinishMagnumSilencer:
+			KP30 Z 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishFastMagnumSilencer")
+			KP30 "Z[\]" 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 ABCDEF 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 G 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP31 GHIJK 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0
+			KP31 LMNO 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 V 0
+			Goto ReadyLoop
+		ReloadFinishFastMagnumSilencer:
+			KP30 "Z[\]" 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 ABCDEFG 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 H 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
+			KP31 V 0 
+			Goto ReadyLoop
+		DryFire:
+			KP01 A 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"DryFireMagnum")
+			KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"DryFireSilencer")
+			KP01 A 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireSilencer:
+			KP21 A 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireMagnum:
+			KP11 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"DryFireMagnumSilencer")
+			KP11 A 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireMagnumSilencer:
+			KP31 A 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+	}
+}
+
+Actor Kingpin_PistolMagazine : Ammo
+{
+	Inventory.Amount 10
+	Inventory.MaxAmount 10
+}
+
+Actor Kingpin_Pistol_Magnum : Boolean {}
+Actor Kingpin_Pistol_Reload : Boolean {}
+Actor Kingpin_Pistol_RateOfFire : Boolean {}
+Actor Kingpin_Pistol_Silencer : Boolean {}
+Actor Kingpin_Pistol_SilencerActive : Boolean {}

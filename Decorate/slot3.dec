@@ -1,0 +1,196 @@
+Actor Kingpin_GrenadeLauncher : Kingpin_Weapon
+{
+	Weapon.SlotNumber 6
+	Weapon.SelectionOrder 1000
+	Weapon.AmmoUse1 0
+	Weapon.AmmoGive1 6
+	Weapon.AmmoType1 "Kingpin_GrenadeLauncherMagazine"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 3
+	Weapon.AmmoType2 "RocketAmmo"
+	Obituary "%o was blasted by %k's grenade launcher."
+	Inventory.Pickupmessage "Copped a Grenade Launcher."
+	Tag "Grenade Launcher"
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.NOALERT
+	States
+	{
+		Ready:
+			TNT1 A 0
+			KP00 ABCDE 3
+			Goto ReadyLoop
+		ReadyLoop:
+			KP01 EFGHIJKL 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		Deselect:
+			KP01 MNOPQ 3
+			Goto DeselectLoop
+		Fire:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_GrenadeLauncherMagazine",1,1)
+			Goto Reload
+			KP00 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,96)
+			KP00 F 0 A_AlertMonsters
+			KP00 F 0 A_PlaySound("Kingpin/GrenadeLauncher/Fire",CHAN_WEAPON)
+			KP00 F 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+			KP00 F 0 A_TakeInventory("Kingpin_GrenadeLauncherMagazine",1)
+			KP00 F 0 A_FireCustomMissile("Kingpin_Grenade",0,0,8)
+			KP00 F 0 A_JumpIfInventory("Kingpin_GrenadeLauncherMagazine",1,"Cycle")
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 R 0 A_FireCustomMissile("Kingpin_GrenadeCasing",-90,0,4,4)
+			Goto Reload
+		Cycle:
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 J 0 A_FireCustomMissile("Kingpin_GrenadeCasing",-90,0,4,4)
+			KP00 JKLMNOPQ 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 E 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		Flash:
+			KP99 FG 3 Bright
+			Stop
+		Reload:
+			KP00 R 0 A_JumpIfInventory("Kingpin_GrenadeLauncherMagazine",0,"ReadyLoop")
+			KP00 R 0 A_JumpIfInventory("RocketAmmo",1,1)
+			Goto DryFire
+			KP00 R 0 A_PlaySound("Kingpin/GrenadeLauncher/Reload",CHAN_WEAPON)
+			KP00 "RSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		ReloadBegin:
+			KP01 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+			Goto ReloadFinish
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncherMagazine",1)
+			TNT1 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_GrenadeLauncherMagazine",0,"ReloadFinish")	
+			Loop
+		ReloadFinish:
+			KP01 ABCD 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		DryFire:
+			KP01 E 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP01 E 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+	}
+}
+
+Actor Kingpin_Grenade
+{
+	BounceType Hexen
+	BounceSound "Kingpin/Grenade/Bounce"
+	Gravity 0.33
+	Damage (0)
+	Height 12
+	Radius 6
+	Projectile
+	Speed 20
+	ReactionTime 0
+	DamageType "KingpinExplosive"
+	-NOGRAVITY
+	+SKYEXPLODE
+	+FORCERADIUSDMG
+	+BOUNCEONACTORS
+	+BLOODLESSIMPACT
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_GrenadeFuse")
+			TNT1 A 0 ThrustThingZ(0,20,0,1)
+			TNT1 A 0 A_SetGravity(frandom(0.65,0.75))
+			TNT1 A 0 A_JumpIfInventory("Kingpin_GrenadeLauncher_ConcussionGrenades",1,"SetConcussion",AAPTR_Target)
+			Goto SpawnLoop
+		SetConcussion:
+			TNT1 A 0 A_ChangeFlag("BOUNCEONACTORS",0)
+		SpawnLoop:
+			KP00 A 0 A_SpawnItemEx("Kingpin_SmokeTrail",frandom(-2.0,2.0),frandom(-2.0,2.0),frandom(0,2.0))
+			KP00 A 1 A_JumpIf(abs(sqrt(velx*velx+vely*vely+velz*velz)) < 4,"Stay")
+			KP00 A 0 A_JumpIfInventory("Kingpin_GrenadeFuse",1,"SpawnLoop")
+			KP00 A -1 A_CountDown
+			Wait
+		Stay:
+			KP00 B 0 A_ChangeVelocity(0,0,velz,CVF_REPLACE)
+		StayLoop:
+			KP00 B 0 A_ChangeFlag("HEXENBOUNCE",0)
+			KP00 B 0 A_ChangeFlag("MISSILE",0)
+			KP00 B 1 A_JumpIf(abs(sqrt(velx*velx+vely*vely+velz*velz)) >= 4,"SpawnLoop")
+			KP00 B 0 A_JumpIfInventory("Kingpin_GrenadeFuse",1,"SpawnLoop")
+			KP00 B -1 A_CountDown
+			Wait
+		Death:
+			TNT1 A 0 A_ChangeFlag("MISSILE",1)
+			TNT1 A 0 A_Explode(120,120)
+			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",512,RGF_PLAYERS,1)
+			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
+			TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",20,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,32)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_GrenadeLauncher_ClusterBombs",1,"Cluster",AAPTR_Target)
+			TNT1 A 1 A_JumpIfInventory("Kingpin_GrenadeLauncher_Fragmentation",1,"FireFragments",AAPTR_Target)
+			Stop
+		Cluster:
+			TNT1 AAAAAA 0 A_CustomMissile("Kingpin_ClusterGrenade",0,0,random(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 1 A_JumpIfInventory("Kingpin_GrenadeLauncher_Fragmentation",1,"FireFragments",AAPTR_Target)
+			Stop
+		FireFragments:
+			TNT1 AAAAAAAAAAAAAAAA 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),16,30,"Kingpin_BulletSmoke",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor Kingpin_ClusterGrenade : Kingpin_Grenade
+{
+	Speed 10
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_GrenadeFuse")
+			TNT1 A 0 A_TakeInventory("Kingpin_GrenadeFuse",70)
+			TNT1 A 0 ThrustThingZ(0,8,0,1)
+			TNT1 A 0 A_SetGravity(frandom(0.65,0.75))
+			TNT1 A 0 A_JumpIfInventory("Kingpin_GrenadeLauncher_ConcussionGrenades",1,"SetConcussion",AAPTR_Target)
+			Goto SpawnLoop
+		SetConcussion:
+			TNT1 A 0 A_ChangeFlag("BOUNCEONACTORS",0)
+		SpawnLoop:
+			KP00 A 1 A_JumpIf(abs(sqrt(velx*velx+vely*vely+velz*velz)) < 4,"Stay")
+			KP00 A 0 A_JumpIfInventory("Kingpin_GrenadeFuse",1,"SpawnLoop")
+			KP00 A -1 A_CountDown
+			Wait
+		Stay:
+			KP00 B 0 A_ChangeVelocity(0,0,velz,CVF_REPLACE)
+		StayLoop:
+			KP00 B 0 A_ChangeFlag("HEXENBOUNCE",0)
+			KP00 B 0 A_ChangeFlag("MISSILE",0)
+			KP00 B 1 A_JumpIf(abs(sqrt(velx*velx+vely*vely+velz*velz)) >= 4,"SpawnLoop")
+			KP00 B 0 A_JumpIfInventory("Kingpin_GrenadeFuse",1,"SpawnLoop")
+			KP00 B -1 A_CountDown
+			Wait
+		Death:
+			TNT1 A 0 A_ChangeFlag("MISSILE",1)
+			TNT1 A 0 A_Explode(60,60)
+			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",256,RGF_PLAYERS,1)
+			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
+			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",20,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmokeSmall",0,0,8)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffectSmall",0,0,8)
+			TNT1 A 1 A_JumpIfInventory("Kingpin_GrenadeLauncher_Fragmentation",1,"FireFragments",AAPTR_Target)
+			Stop
+		FireFragments:
+			TNT1 AAA 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),2,30,"Kingpin_BulletSmoke",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor Kingpin_GrenadeLauncherMagazine : Ammo
+{
+	Inventory.Amount 6
+	Inventory.MaxAmount 6
+}
+
+Actor Kingpin_GrenadeFuse : Counter { Inventory.MaxAmount 105 }
+
+Actor Kingpin_GrenadeLauncher_ConcussionGrenades : Boolean {}
+Actor Kingpin_GrenadeLauncher_MagazineCapacity : Boolean {}
+Actor Kingpin_GrenadeLauncher_Fragmentation : Boolean {}
+Actor Kingpin_GrenadeLauncher_ClusterBombs : Boolean {}

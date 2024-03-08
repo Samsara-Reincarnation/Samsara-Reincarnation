@@ -1,0 +1,203 @@
+Actor Kingpin_Shotgun : Kingpin_Weapon
+{
+	Weapon.SlotNumber 3
+	Weapon.SelectionOrder 800
+	Weapon.AmmoUse1 0
+	Weapon.AmmoGive1 8
+	Weapon.AmmoType1 "Kingpin_ShotgunMagazine"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 10
+	Weapon.AmmoType2 "Shell"
+	Obituary "%o was filled with lead by %k's shotgun."
+	Inventory.Pickupmessage "Copped a Shotgun."
+	Tag "Shotgun"
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.NOALERT
+	States
+	{
+		Ready:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"ReadyMagazine")
+			KP00 ABCDE 3
+			Goto ReadyLoop
+		ReadyMagazine:
+			KP10 ABCDE 3
+			Goto ReadyLoop
+		ReadyLoop:
+			KP01 E 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"ReadyLoopMagazine")
+			KP01 EFGHIJKL 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		ReadyLoopMagazine:
+			KP01 E 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,1)
+			Goto ReadyLoop
+			KP11 EFGHIJKL 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		Deselect:
+			KP01 M 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"DeselectMagazine")
+			KP01 MNOPQ 3
+			Goto DeselectLoop
+		DeselectMagazine:
+			KP11 MNOPQ 3
+			Goto DeselectLoop
+		Fire:
+			KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,1)
+			Goto Reload
+			KP00 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,128)
+			KP00 F 0 A_AlertMonsters
+			KP00 F 0 A_PlaySound("Kingpin/Shotgun/Fire",CHAN_WEAPON)
+			KP00 F 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+			KP00 F 0 A_TakeInventory("Kingpin_ShotgunMagazine",1)
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_BleedShot",1,"FireBleedShot")
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_BigBore",1,"FireBigBore")
+			KP00 F 0 A_FireBullets(5,5,6,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"FireMagazine")
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP00 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		FireBigBore:
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_BigBore",1,"FireBigBoreMagazine")
+			KP00 F 0 A_FireBullets(5,5,12,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP00 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		FireSelect:
+			KP00 F 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP00 FGH 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 I 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 E 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireMagazine:
+			KP10 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP10 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP10 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP10 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		FireBigBoreMagazine:
+			KP10 F 0 A_FireBullets(5,5,12,15,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP10 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP10 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP10 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		FireSelectMagazine:
+			KP10 F 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP10 FGH 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 I 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 E 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireBleedShot:
+			KP00 F 0 A_FireBullets(5,5,6,15,"Kingpin_BulletSmokeBleed",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"FireMagazine")
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP00 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		FireBigBoreBleedShot:
+			KP00 F 0 A_FireBullets(5,5,12,15,"Kingpin_BulletSmokeBleed",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_BigBore",1,"FireBigBoreMagazine")
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP00 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		FireBigBoreMagazineBleedShot:
+			KP10 F 0 A_FireBullets(5,5,12,15,"Kingpin_BulletSmokeBleed",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireSelect")
+			KP10 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"Pump")
+			KP10 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP10 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			Goto Reload
+		Flash:
+			KP99 FG 3 Bright
+			Stop
+		Pump:
+			KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"PumpMagazine")
+			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 J 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP00 J 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			KP00 JKLMNOPQ 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 E 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		PumpMagazine:
+			KP10 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 J 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+			KP10 J 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
+			KP10 JKLMNOPQ 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 E 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		Reload:
+			KP00 R 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"ReloadMagazine")
+			KP00 R 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",0,"ReadyLoop")
+			KP00 R 0 A_JumpIfInventory("Shell",1,1)
+			Goto DryFire
+			KP00 RSTU 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		ReloadBegin:
+			TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+			Goto ReloadFinish
+			KP00 V 0 A_PlaySound("Kingpin/Shotgun/Reload",CHAN_WEAPON)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"ReloadInterruptable")	
+			KP00 "VWXYZ[\]" 3
+			KP01 A 0 A_GiveInventory("Kingpin_ShotgunMagazine",1)
+			TNT1 A 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",0,"ReloadFinish")	
+			Loop
+		ReloadInterruptable:
+			KP00 "VWXYZ[\]" 3 A_WeaponReady(WRF_NOSWITCH)
+			KP01 A 0 A_GiveInventory("Kingpin_ShotgunMagazine",1)
+			TNT1 A 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",0,"ReloadFinish")	
+			Goto ReloadBegin
+		ReloadFinish:
+			KP01 ABCD 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		ReloadMagazine:
+			KP10 R 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",0,"ReadyLoop")
+			KP10 R 0 A_JumpIfInventory("Shell",1,1)
+			Goto DryFire
+			KP10 R 0 A_PlaySound("Kingpin/GrenadeLauncher/Reload",CHAN_WEAPON)
+			KP10 "RSTUVWXYZ[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		ReloadBeginMagazine:
+			KP11 A 0 A_JumpIfInventory("Shell",1,1)
+			Goto ReloadFinishMagazine
+			TNT1 A 0 A_GiveInventory("Kingpin_ShotgunMagazine",1)
+			TNT1 A 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",0,"ReloadFinishMagazine")	
+			Loop
+		ReloadFinishMagazine:
+			KP11 ABCD 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		DryFire:
+			KP01 E 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"DryFireMagazine")
+			KP01 E 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP01 E 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryMagazine:
+			KP11 E 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP11 E 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+	}
+}
+
+Actor Kingpin_ShotgunMagazine : Ammo
+{
+	Inventory.Amount 8
+	Inventory.MaxAmount 8
+}
+
+Actor Kingpin_Shotgun_Magazine : Boolean {}
+Actor Kingpin_Shotgun_BigBore : Boolean {}
+Actor Kingpin_Shotgun_SelectFire : Boolean {}
+Actor Kingpin_Shotgun_BleedShot : Boolean {}
