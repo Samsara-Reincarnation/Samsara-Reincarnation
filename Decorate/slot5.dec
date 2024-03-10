@@ -16,44 +16,59 @@ Actor Kingpin_RocketLauncher : Kingpin_Weapon
 	States
 	{
 		Ready:
-			TNT1 A 0
-			KP00 ABCDE 3
+			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReadyLaser")
+			KP00 ABCDEF 3
+			Goto ReadyLoop
+		ReadyLaser:
+			KP10 ABCDEF 3
 			Goto ReadyLoop
 		ReadyLoop:
-			KP01 EFGHIJKL 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP01 B 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReadyLoopLaser")
+			KP01 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		ReadyLoopLaser:
+			KP11 B 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,1)
+			Goto ReadyLoop
+			KP11 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
 			Loop
 		Deselect:
-			KP01 MNOPQ 3
+			KP01 N 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"DeselectLaser")
+			KP01 NOPQRS 3
+			Goto DeselectLoop
+		DeselectLaser:
+			KP01 NOPQRS 3
 			Goto DeselectLoop
 		Fire:
 			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,1)
 			Goto Reload
-			KP00 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
-			KP00 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,96)
-			KP00 F 0 A_AlertMonsters
-			KP00 F 0 A_PlaySound("Kingpin/RocketLauncher/Fire",CHAN_WEAPON)
-			KP00 F 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
-			KP00 F 0 A_TakeInventory("Kingpin_RocketLauncherMagazine",1)
-			KP00 F 0 A_FireCustomMissile("Kingpin_Grenade",0,0,8)
-			KP00 F 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,"Cycle")
-			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			KP00 R 0 A_FireCustomMissile("Kingpin_GrenadeCasing",-90,0,4,4)
+			KP00 G 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 G 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,96)
+			KP00 G 0 A_AlertMonsters
+			KP00 G 0 A_PlaySound("Kingpin/RocketLauncher/Fire",CHAN_WEAPON)
+			KP00 G 0 A_TakeInventory("Kingpin_RocketLauncherMagazine",1)
+			KP00 G 0 A_JumpIfInventory("Kingpin_RocketLauncher_FastRockets",1,"FireFastRocket")
+		FireNormalRocket:
+			KP00 G 0 A_FireCustomMissile("Kingpin_Rocket",0,0,8,4)
+			Goto FireFinish
+		FireFastRocket:
+			KP00 G 0 A_FireCustomMissile("Kingpin_RocketFast",0,0,8,4)
+			Goto FireFinish
+		FireFinish:
+			KP00 G 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"FireFinishLaser")
+			KP00 GHIJKLMN 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 B 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,"ReadyLoop")
 			Goto Reload
-		Cycle:
-			KP00 FGHI 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			KP00 J 0 A_FireCustomMissile("Kingpin_GrenadeCasing",-90,0,4,4)
-			KP00 JKLMNOPQ 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			KP01 E 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto ReadyLoop
-		Flash:
-			KP99 FG 3 Bright
-			Stop
+		FireFinishLaser:
+			KP10 GHIJKLMN 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 B 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,"ReadyLoop")
+			Goto Reload
 		Reload:
-			KP00 R 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",0,"ReadyLoop")
-			KP00 R 0 A_JumpIfInventory("RocketAmmo",1,1)
+			KP00 O 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",0,"ReadyLoop")
+			KP00 O 0 A_JumpIfInventory("RocketAmmo",1,1)
 			Goto DryFire
-			KP00 R 0 A_PlaySound("Kingpin/GrenadeLauncher/Reload",CHAN_WEAPON)
-			KP00 "RSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP00 O 0 A_PlaySound("Kingpin/RocketLauncher/Reload",CHAN_WEAPON)
+			KP00 O 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReloadLaser")
+			KP00 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 		ReloadBegin:
 			KP01 A 0 A_JumpIfInventory("RocketAmmo",1,1)
 			Goto ReloadFinish
@@ -62,11 +77,23 @@ Actor Kingpin_RocketLauncher : Kingpin_Weapon
 			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",0,"ReloadFinish")	
 			Loop
 		ReloadFinish:
-			KP01 ABCD 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 A 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReloadFinishLaser")
+			KP01 A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		ReloadLaser:
+			KP10 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Goto ReloadBegin
+		ReloadFinishLaser:
+			KP11 A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 			Goto ReadyLoop
 		DryFire:
-			KP01 E 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
-			KP01 E 15 A_WeaponReady(WRF_NOFIRE)
+			KP01 B 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"DryFireLaser")
+			KP01 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP01 B 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireLaser:
+			KP11 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP11 B 15 A_WeaponReady(WRF_NOFIRE)
 			Goto ReadyLoop
 	}
 }
@@ -79,39 +106,126 @@ Actor Kingpin_Rocket
 	Projectile
 	Speed 20
 	DamageType "KingpinExplosive"
-	-NOGRAVITY
 	+SKYEXPLODE
 	+FORCERADIUSDMG
+	var int user_nukeCounter1;
 	States
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_GrenadeFuse")
-			TNT1 A 0 ThrustThingZ(0,20,0,1)
-			TNT1 A 0 A_SetGravity(frandom(0.65,0.75))
+			TNT1 A 0 A_SetUserVar(user_nukeCounter1,0)
+			TNT1 A 0 A_PlaySound("Kingpin/Rocket/Fly",CHAN_BODY)
 		SpawnLoop:
-			KP00 A 0 A_SpawnItemEx("Kingpin_SmokeTrail",frandom(-2.0,2.0),frandom(-2.0,2.0),frandom(0,2.0))
-			KP00 A 1 A_JumpIf(abs(sqrt(velx*velx+vely*vely+velz*velz)) < 4,"Stay")
-			KP00 A 0 A_JumpIfInventory("Kingpin_GrenadeFuse",1,"SpawnLoop")
-			KP00 A -1 A_CountDown
-			Wait
-		Stay:
-			KP00 B 0 A_ChangeVelocity(0,0,velz,CVF_REPLACE)
-		StayLoop:
-			KP00 B 0 A_ChangeFlag("HEXENBOUNCE",0)
-			KP00 B 0 A_ChangeFlag("MISSILE",0)
-			KP00 B 1 A_JumpIf(abs(sqrt(velx*velx+vely*vely+velz*velz)) >= 4,"SpawnLoop")
-			KP00 B 0 A_JumpIfInventory("Kingpin_GrenadeFuse",1,"SpawnLoop")
-			KP00 B -1 A_CountDown
-			Wait
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*4,0,(velz/20)*4,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*8,0,(velz/20)*8,0,0,0,0,0,0,25001)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*12,0,(velz/20)*12,0,0,0,0,0,0,25001)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*16,0,(velz/20)*16,0,0,0,0,0,0,25002)
+			KP00 A 1 A_SpawnItemEx("Kingpin_RocketTrail",0,0,0,0,0,0,0,0,0,25000)
+			Loop
 		Death:
-			TNT1 A 0 A_ChangeFlag("MISSILE",1)
-			TNT1 A 0 A_Explode(200,200)
-			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",256,RGF_PLAYERS,1)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncher_UraniumRockets",1,"Nuke",AAPTR_Target)
+			TNT1 A 0 A_Explode(100,100)
+			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",512,RGF_PLAYERS,1)
 			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
-			TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",0,0,frandom(0,360),CMF_AIMDIRECTION,frandom(0,360))
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect")
-			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionSmoke")
+			TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",20,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32)
+			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,32)
+			Stop
+		Nuke:
+			TNT1 A 0 A_Explode(1000,150)
+			TNT1 A 0 A_PlaySound("Kingpin/Nuke/Explosion",CHAN_5,1.0,0,0.1)
+			TNT1 A 0 A_Quake(5,90,0,1024,"")
+		NukeLoop:
+			TNT1 A 0 A_JumpIf(user_nukeCounter1 >= 90,"NukeFinish")
+			TNT1 A 0 A_SetUserVar(user_nukeCounter1,user_nukeCounter1+1)
+			TNT1 A 0 A_Explode(25,300)
+			TNT1 A 0 A_JumpIf((user_nukeCounter1 % 6) < 5,4)
+			TNT1 A 0 A_JumpIf(ceilingz-z < 100,2)
+			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",100,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			Goto NukeCloud
+			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",(ceilingz-z)/2,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+		NukeCloud:
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,0)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,30)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,60)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,90)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,120)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,150)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,180)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,210)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,240)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,270)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,300)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,330)
+			TNT1 A 0 A_JumpIf((user_nukeCounter1 % 6) == 5,13)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,0)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,30)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,60)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,90)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,120)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,150)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,180)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,210)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,240)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,270)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,300)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,330)
+			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32,0,0,3)
+			Goto NukeLoop
+		NukeFinish:
+			//End
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,32)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor Kingpin_RocketFast : Kingpin_Rocket
+{
+	Speed 40
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_PlaySound("Kingpin/Rocket/Fly",CHAN_BODY)
+		SpawnLoop:
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*4,0,(velz/40)*4,0,0,0,0,0,0,25003)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*8,0,(velz/40)*8,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*12,0,(velz/40)*12,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*16,0,(velz/40)*16,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*20,0,(velz/40)*20,0,0,0,0,0,0,25001)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*24,0,(velz/40)*24,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*28,0,(velz/40)*28,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*32,0,(velz/40)*32,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*36,0,(velz/40)*36,0,0,0,0,0,0,25003)
+			KP00 A 1 A_SpawnItemEx("Kingpin_RocketTrail",0,0,0,0,0,0,0,0,0,25000)
+			Loop
+	}
+}
+
+Actor Kingpin_RocketTrail
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	-SOLID
+	+FORCEXYBILLBOARD
+	Height 4
+	Radius 2
+	Renderstyle Add
+	Scale 0.25
+	States
+	{
+		Spawn:
+			KP01 ABCD 2 Bright A_SetScale(scaleX+0.025)
+			KP01 E 0 A_JumpIf(tid > 25002,"Quit")
+			KP01 EFGH 3 Bright A_SetScale(scaleX+0.025)
+			KP01 I 0 A_JumpIf(tid > 25001,"Quit")
+			KP01 IJK 3 Bright A_SetScale(scaleX+0.025)
+			KP01 L 0 A_JumpIf(tid > 25000,"Quit")
+			KP01 LMN 3 Bright A_SetScale(scaleX+0.025)
+			Stop
+		Quit:
+			TNT1 A 1
 			Stop
 	}
 }
@@ -121,3 +235,7 @@ Actor Kingpin_RocketLauncherMagazine : Ammo
 	Inventory.Amount 5
 	Inventory.MaxAmount 5
 }
+
+Actor Kingpin_RocketLauncher_LaserSystem : Boolean {}
+Actor Kingpin_RocketLauncher_FastRockets : Boolean {}
+Actor Kingpin_RocketLauncher_UraniumRockets : Boolean {}

@@ -286,6 +286,26 @@ Actor Kingpin_ExplosionEffectSmall : Kingpin_ExplosionEffect
 	}
 }
 
+Actor Kingpin_ExplosionNukeEffect
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	-SOLID
+	+FORCEXYBILLBOARD
+	Height 4
+	Radius 2
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			TNT1 A 5
+			TNT1 A 0 A_ChangeVelocity(3,0,0,CVF_RELATIVE|CVF_REPLACE)
+			KP01 A 0 ACS_NamedExecuteWithResult("Kingpin_FX",2,28,2.0*65536)
+			KP01 ABCDEFGHIJKLMN 2 Bright
+			Stop
+	}
+}
+
 Actor Kingpin_ExplosionSmoke
 {
 	+NOINTERACTION
