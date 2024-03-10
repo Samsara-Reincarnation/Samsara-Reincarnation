@@ -166,6 +166,52 @@ Script "Kingpin_Player" Enter
 	{
 		SetAmmoCapacity("Kingpin_TommyGunMagazine",50*(1+CheckInventory("Kingpin_TommyGun_MagazineCapacity")));
 		SetAmmoCapacity("Kingpin_GrenadeLauncherMagazine",3*(1+CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacity")));
+		
+		if(CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
+			GiveInventory("Kingpin_Bazooka_LaserSight",1);
+		
 		Delay(1);
 	}
+}
+
+Script "Kingpin_RocketFlare" (void)
+{
+	int flareTid = uniqueTid();
+	SpawnForced("Kingpin_RocketFlare",0,0,0,flareTid);
+	SetPointerExt(AAPTR_MASTER,0,flareTid);
+	Thing_ChangeTid(flareTid,0);
+}
+
+Script "Kingpin_NukeFlash" (void)
+{
+	FadeRange(255,255,255,1.0,0,0,0,0,1.0);
+}
+
+Script "Kingpin_Bazooka" (int type, int arg1, int arg2)
+{
+	int lTid;
+	switch(type)
+	{
+		case 0:
+			SetPointer(AAPTR_TRACER,arg1);
+			break;
+		case 1:
+			int myTid = ActivatorTid();
+			int missileTid = uniqueTid();
+			Thing_ChangeTid(0,missileTid);
+			SetActivator(0,AAPTR_Target);
+			lTid = abs(CheckInventory("Kingpin_Bazooka_LaserTiD"));
+			SetActivator(missileTid);
+			Thing_ChangeTid(missileTid,0);
+			ACS_NamedExecuteWithResult("Kingpin_Bazooka",0,lTid);
+			break;
+		case 2:
+			lTid = uniqueTid();
+			SpawnForced("Kingpin_Bazooka_Seeker",GetActorX(0),GetActorY(0),GetActorZ(0),lTid);
+			SetActivator(0,AAPTR_Target);
+			SetInventory("Kingpin_Bazooka_LaserTiD",0);
+			GiveInventory("Kingpin_Bazooka_LaserTiD",lTid);
+			break;	
+	}
+	
 }

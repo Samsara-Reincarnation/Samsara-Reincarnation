@@ -1,52 +1,112 @@
-Actor Kingpin_RocketLauncher : Kingpin_Weapon
+Actor Kingpin_Bazooka : Kingpin_Weapon
 {
 	Weapon.SlotNumber 7
 	Weapon.SelectionOrder 750
 	Weapon.AmmoUse1 0
 	Weapon.AmmoGive1 5
-	Weapon.AmmoType1 "Kingpin_RocketLauncherMagazine"
+	Weapon.AmmoType1 "Kingpin_BazookaMagazine"
 	Weapon.AmmoUse2 0
 	Weapon.AmmoGive2 5
 	Weapon.AmmoType2 "RocketAmmo"
-	Obituary "%o was blown to shit by %k's rocket launcher."
-	Inventory.Pickupmessage "Copped a Rocket Launcher."
-	Tag "Rocket Launcher"
+	Obituary "%o was blown to shit by %k's Bazooka."
+	Inventory.Pickupmessage "Copped a Bazooka."
+	Tag "Bazooka"
 	+WEAPON.AMMO_OPTIONAL
 	+WEAPON.NOALERT
 	States
 	{
 		Ready:
-			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReadyLaser")
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
+			Goto ReadyEmpty
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"ReadyBigBubba")
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyLaser")
 			KP00 ABCDEF 3
+			KP01 B 0
 			Goto ReadyLoop
 		ReadyLaser:
 			KP10 ABCDEF 3
+			KP11 B 0
+			Goto ReadyLoop
+		ReadyBigBubba:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyBigBubbaLaser")
+			KP20 ABCDEF 3
+			KP21 B 0
+			Goto ReadyLoop
+		ReadyBigBubbaLaser:
+			KP30 ABCDEF 3
+			KP31 B 0
+			Goto ReadyLoop
+		ReadyEmpty:
+			KP40 ABCDEF 3
+			KP41 B 0
+			Goto ReadyLoop
+		ReadyLaserEmpty:
+			KP50 ABCDEF 3
+			KP51 B 0
+			Goto ReadyLoop
+		ReadyBigBubbaEmpty:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyBigBubbaLaserEmpty")
+			KP60 ABCDEF 3
+			KP61 B 0
+			Goto ReadyLoop
+		ReadyBigBubbaLaserEmpty:
+			KP70 ABCDEF 3
+			KP71 B 0
 			Goto ReadyLoop
 		ReadyLoop:
-			KP01 B 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReadyLoopLaser")
+			KP01 B 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
+			Goto ReadyLoopEmpty
+			KP01 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"ReadyLoopBigBubba")
+			KP01 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyLoopLaser")
 			KP01 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
 			Loop
 		ReadyLoopLaser:
-			KP11 B 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,1)
-			Goto ReadyLoop
 			KP11 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP11 B 0
+			Goto ReadyLoop
+		ReadyLoopBigBubba:
+			KP21 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyLoopBigBubbaLaser")
+			KP21 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP21 B 0
+			Goto ReadyLoop
+		ReadyLoopBigBubbaLaser:
+			KP31 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP31 B 0
+			Goto ReadyLoop
+		ReadyLoopEmpty:
+			KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"ReadyLoopBigBubbaEmpty")
+			KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyLoopLaserEmpty")
+			KP41 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
 			Loop
+		ReadyLoopLaserEmpty:
+			KP51 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP51 B 0
+			Goto ReadyLoop
+		ReadyLoopBigBubbaEmpty:
+			KP61 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReadyLoopBigBubbaLaserEmpty")
+			KP61 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP61 B 0
+			Goto ReadyLoop
+		ReadyLoopBigBubbaLaserEmpty:
+			KP71 BCDEFGHIJKLM 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP71 B 0
+			Goto ReadyLoop
 		Deselect:
-			KP01 N 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"DeselectLaser")
+			KP01 N 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"DeselectLaser")
 			KP01 NOPQRS 3
 			Goto DeselectLoop
 		DeselectLaser:
 			KP01 NOPQRS 3
 			Goto DeselectLoop
 		Fire:
-			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,1)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
 			Goto Reload
 			KP00 G 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
 			KP00 G 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,96)
 			KP00 G 0 A_AlertMonsters
-			KP00 G 0 A_PlaySound("Kingpin/RocketLauncher/Fire",CHAN_WEAPON)
-			KP00 G 0 A_TakeInventory("Kingpin_RocketLauncherMagazine",1)
-			KP00 G 0 A_JumpIfInventory("Kingpin_RocketLauncher_FastRockets",1,"FireFastRocket")
+			KP00 G 0 A_PlaySound("Kingpin/Bazooka/Fire",CHAN_WEAPON)
+			KP00 G 0 A_TakeInventory("Kingpin_BazookaMagazine",1)
+			KP00 G 0 A_JumpIfInventory("Kingpin_Bazooka_FastRockets",1,"FireFastRocket")
 		FireNormalRocket:
 			KP00 G 0 A_FireCustomMissile("Kingpin_Rocket",0,0,8,4)
 			Goto FireFinish
@@ -54,46 +114,216 @@ Actor Kingpin_RocketLauncher : Kingpin_Weapon
 			KP00 G 0 A_FireCustomMissile("Kingpin_RocketFast",0,0,8,4)
 			Goto FireFinish
 		FireFinish:
-			KP00 G 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"FireFinishLaser")
-			KP00 GHIJKLMN 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			KP01 B 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,"ReadyLoop")
+			KP00 G 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"FireFinishBigBubba")
+			KP00 G 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireFinishLaser")
+			KP00 GHIJKL 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 M 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"FireFinishResolve")
+			Goto FireFinishResolveLast
+		FireFinishResolve:
+			KP00 MN 4
+			KP01 B 0
+			Goto ReadyLoop
+		FireFinishResolveLast:
+			KP40 MN 4
+			KP41 B 0
 			Goto Reload
 		FireFinishLaser:
-			KP10 GHIJKLMN 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			KP11 B 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",1,"ReadyLoop")
+			KP10 GHIJKL 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 M 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"FireFinishLaserResolve")
+			Goto FireFinishLaserResolveLast
+		FireFinishLaserResolve:
+			KP10 MN 4
+			KP11 B 0
+			Goto ReadyLoop
+		FireFinishLaserResolveLast:
+			KP50 MN 4
+			KP51 B 0
 			Goto Reload
+		FireFinishBigBubba:
+			KP20 G 0 A_TakeInventory("Kingpin_BazookaMagazine")
+			KP20 G 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireFinishLaserBigBubba")
+			KP20 GHIJKL 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP20 M 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"FireFinishBigBubbaResolve")
+			Goto FireFinishBigBubbaResolveLast
+		FireFinishBigBubbaResolve:
+			KP20 MN 4
+			KP21 B 0
+			Goto ReadyLoop
+		FireFinishBigBubbaResolveLast:
+			KP60 MN 4
+			KP61 B 0
+			Goto Reload
+		FireFinishLaserBigBubba:
+			KP30 GHIJKL 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP30 M 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"FireFinishBigBubbaLaserResolve")
+			Goto FireFinishBigBubbaLaserResolveLast
+		FireFinishBigBubbaLaserResolve:
+			KP30 MN 4
+			KP31 B 0
+			Goto ReadyLoop
+		FireFinishBigBubbaLaserResolveLast:
+			KP70 MN 4
+			KP71 B 0
+			Goto Reload
+		AltFire:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubba",1,1)
+			Goto ReadyLoop
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"SelectRockets")
+			Goto AltFireNukeAmmoChecker	
+		SelectRockets:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
+			Goto SelectRocketsEmpty
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"SelectRocketsLaser")
+			KP21 B 4
+			KP20 "]\[ZYXWVU" 4
+			KP00 TSRQPO 4
+			KP01 A 4
+			KP01 B 0 A_TakeInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveRocketAmmo
+		AltFireNukeAmmoChecker:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",0,"SelectNukeStarter")
+			TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+			Goto ReadyLoop
+			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",1)
+			TNT1 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
+			Loop
+		SelectNukeStarter:
+			TNT1 A 0 A_TakeInventory("Kingpin_BazookaMagazine")
+			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",1)
+		SelectNuke:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
+			Goto SelectNukeEmpty
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"SelectNukeLaser")
+			KP01 B 4
+			KP00 "]\[ZYXWVU" 4
+			KP20 TSRQPO 4
+			KP21 A 4
+			KP21 B 0 A_GiveInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveNukeAmmo
+		SelectRocketsLaser:
+			KP11 B 4
+			KP10 "]\[ZYXWVU" 4
+			KP30 TSRQPO 4
+			KP31 A 4
+			KP31 B 0 A_TakeInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveRocketAmmo
+		SelectNukeLaser:
+			KP11 B 4
+			KP10 "]\[ZYXWVU" 4
+			KP30 TSRQPO 4
+			KP31 A 4
+			KP31 B 0 A_GiveInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveNukeAmmo
+		ResolveRocketAmmo:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
+			Goto ReadyLoop
+			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",5)
+			Goto ReadyLoop
+		ResolveNukeAmmo:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
+			Goto ResolveNukeAmmo+3
+			TNT1 A 0 A_TakeInventory("Kingpin_BazookaMagazine",1)
+			TNT1 A 0 A_GiveInventory("RocketAmmo",1)
+			Goto ResolveNukeAmmo
+			TNT1 A 0 A_TakeInventory("RocketAmmo",5,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",1)
+			Goto ReadyLoop
+		SelectRocketsEmpty:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"SelectRocketsLaserEmpty")
+			KP61 B 4
+			KP60 "]\[ZYXWVU" 4
+			KP40 TSRQPO 4
+			KP41 A 4
+			KP41 B 0 A_TakeInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveRocketAmmo
+		SelectNukeEmpty:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"SelectNukeLaserEmpty")
+			KP41 B 4
+			KP40 "]\[ZYXWVU" 4
+			KP60 TSRQPO 4
+			KP61 A 4
+			KP61 B 0 A_GiveInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveNukeAmmo
+		SelectRocketsLaserEmpty:
+			KP51 B 4
+			KP50 "]\[ZYXWVU" 4
+			KP70 TSRQPO 4
+			KP71 A 4
+			KP71 B 0 A_TakeInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveRocketAmmo
+		SelectNukeLaserEmpty:
+			KP51 B 4
+			KP50 "]\[ZYXWVU" 4
+			KP70 TSRQPO 4
+			KP71 A 4
+			KP71 B 0 A_GiveInventory("Kingpin_Bazooka_BigBubbaActive",1)
+			Goto ResolveNukeAmmo
 		Reload:
-			KP00 O 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",0,"ReadyLoop")
+			KP00 O 0 A_JumpIfInventory("Kingpin_BazookaMagazine",0,"ReadyLoop")
+			KP00 O 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"ReloadBigBubba")
 			KP00 O 0 A_JumpIfInventory("RocketAmmo",1,1)
 			Goto DryFire
-			KP00 O 0 A_PlaySound("Kingpin/RocketLauncher/Reload",CHAN_WEAPON)
-			KP00 O 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReloadLaser")
-			KP00 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP00 O 0 A_PlaySound("Kingpin/Bazooka/Reload",CHAN_WEAPON)
+			KP00 O 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReloadLaser")
+			KP00 "OPQRSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 		ReloadBegin:
 			KP01 A 0 A_JumpIfInventory("RocketAmmo",1,1)
 			Goto ReloadFinish
-			TNT1 A 0 A_GiveInventory("Kingpin_RocketLauncherMagazine",1)
+			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",1)
 			TNT1 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
-			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncherMagazine",0,"ReloadFinish")	
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",0,"ReloadFinish")	
 			Loop
 		ReloadFinish:
-			KP01 A 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"ReloadFinishLaser")
+			KP01 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"ReloadFinishBigBubba")
+			KP01 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReloadFinishLaser")
 			KP01 A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 			Goto ReadyLoop
 		ReloadLaser:
-			KP10 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP10 "OPQRSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 			Goto ReloadBegin
 		ReloadFinishLaser:
 			KP11 A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 			Goto ReadyLoop
+		ReloadBigBubba:
+			KP20 O 0 A_JumpIfInventory("RocketAmmo",5,1)
+			Goto DryFire
+			KP20 O 0 A_PlaySound("Kingpin/Bazooka/Reload",CHAN_WEAPON)
+			KP20 O 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReloadBigBubbaLaser")
+			KP20 "OPQRSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Goto ReloadBeginBigBubba
+		ReloadBigBubbaLaser:
+			KP30 "OPQRSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Goto ReloadBegin
+		ReloadBeginBigBubba:
+			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",1)
+			TNT1 A 0 A_TakeInventory("RocketAmmo",5,TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"ReloadFinish")	
+			Goto ReloadFinishBigBubba
+		ReloadFinishBigBubba:
+			KP21 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReloadFinishBigBubbaLaser")
+			KP21 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+		ReloadFinishBigBubbaLaser:
+			KP31 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
 		DryFire:
-			KP01 B 0 A_JumpIfInventory("Kingpin_RocketLauncher_LaserSystem",1,"DryFireLaser")
-			KP01 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
-			KP01 B 15 A_WeaponReady(WRF_NOFIRE)
+			KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"DryFireBigBubba")
+			KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"DryFireLaser")
+			KP41 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP41 B 15 A_WeaponReady(WRF_NOFIRE)
 			Goto ReadyLoop
 		DryFireLaser:
-			KP11 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
-			KP11 B 15 A_WeaponReady(WRF_NOFIRE)
+			KP51 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP51 B 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireBigBubba:
+			KP61 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"DryFireBigBubbaLaser")
+			KP61 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP61 B 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireBigBubbaLaser:
+			KP71 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP71 B 15 A_WeaponReady(WRF_NOFIRE)
 			Goto ReadyLoop
 	}
 }
@@ -113,50 +343,65 @@ Actor Kingpin_Rocket
 	{
 		Spawn:
 			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_RocketFlare")
 			TNT1 A 0 A_SetUserVar(user_nukeCounter1,0)
 			TNT1 A 0 A_PlaySound("Kingpin/Rocket/Fly",CHAN_BODY)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"LaserActive",AAPTR_Target)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_HighExplosives",1,"HighExplosives",AAPTR_Target)
 		SpawnLoop:
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*4,0,(velz/20)*4,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*8,0,(velz/20)*8,0,0,0,0,0,0,25001)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*12,0,(velz/20)*12,0,0,0,0,0,0,25001)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*16,0,(velz/20)*16,0,0,0,0,0,0,25002)
-			KP00 A 1 A_SpawnItemEx("Kingpin_RocketTrail",0,0,0,0,0,0,0,0,0,25000)
+			TNT1 A 0 A_CheckFlag("SEEKERMISSILE",1)
+			Goto SpawnLoop+3
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_Bazooka",1)
+			TNT1 A 0 A_SeekerMissile(0,15,SMF_PRECISE|SMF_LOOK,0,10)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*-4,0,(velz/20)*-4,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*-8,0,(velz/20)*-8,0,0,0,0,0,0,25001)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*-12,0,(velz/20)*-12,0,0,0,0,0,0,25001)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*-16,0,(velz/20)*-16,0,0,0,0,0,0,25002)
+			KP00 A 1 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/20)*-20,0,(velz/20)*-20,0,0,0,0,0,0,25000)
 			Loop
+		HighExplosives:
+			TNT1 A 0 A_SetScale(1.5)
+			Goto SpawnLoop
+		LaserActive:
+			TNT1 A 0 A_ChangeFlag("SEEKERMISSILE",1)
+			Goto Spawn+5
 		Death:
-			TNT1 A 0 A_JumpIfInventory("Kingpin_RocketLauncher_UraniumRockets",1,"Nuke",AAPTR_Target)
-			TNT1 A 0 A_Explode(100,100)
+			TNT1 A 0 A_RemoveChildren(1)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"Nuke",AAPTR_Target)
+			TNT1 A 0 A_Explode(100+(100*(scaleX-1.0)*2),100+(100*(scaleX-1.0)))
 			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",512,RGF_PLAYERS,1)
 			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
 			TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",20,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32)
-			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,32)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32*scaleX,0,0,0,0,SXF_TRANSFERSCALE)
+			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,32*scaleX,0,0,0,0,SXF_TRANSFERSCALE)
 			Stop
 		Nuke:
-			TNT1 A 0 A_Explode(1000,150)
+			TNT1 A 0 A_Explode(500+(500*(scaleX-1.0)*2),100+(100*(scaleX-1.0)))
 			TNT1 A 0 A_PlaySound("Kingpin/Nuke/Explosion",CHAN_5,1.0,0,0.1)
 			TNT1 A 0 A_Quake(5,90,0,1024,"")
+			TNT1 A 0 A_RadiusGive("Kingpin_NukeFlash",1024,RGF_PLAYERS,1)
 		NukeLoop:
 			TNT1 A 0 A_JumpIf(user_nukeCounter1 >= 90,"NukeFinish")
 			TNT1 A 0 A_SetUserVar(user_nukeCounter1,user_nukeCounter1+1)
-			TNT1 A 0 A_Explode(25,300)
+			TNT1 A 0 A_Explode(10+(10*(scaleX-1.0)*2),200+(200*(scaleX-1.0)))
 			TNT1 A 0 A_JumpIf((user_nukeCounter1 % 6) < 5,4)
-			TNT1 A 0 A_JumpIf(ceilingz-z < 100,2)
-			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",100,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 0 A_JumpIf(ceilingz-z < 100*scaleX,2)
+			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",100*scaleX,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
 			Goto NukeCloud
 			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",(ceilingz-z)/2,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
 		NukeCloud:
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,0)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,30)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,60)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,90)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,120)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,150)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,180)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,210)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,240)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,270)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,300)
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25,330)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,0,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,30,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,60,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,90,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,120,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,150,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,180,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,210,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,240,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,270,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,300,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionNukeEffect",0,0,0,0,0,25*scaleX,330,SXF_TRANSFERSCALE)
 			TNT1 A 0 A_JumpIf((user_nukeCounter1 % 6) == 5,13)
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,0)
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,30)
@@ -170,11 +415,9 @@ Actor Kingpin_Rocket
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,270)
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,300)
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,0,5,0,0,330)
-			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32,0,0,3)
+			TNT1 A 1 A_SpawnItemEX("Kingpin_ExplosionEffect",0,0,32*scaleX,0,0,3)
 			Goto NukeLoop
 		NukeFinish:
-			//End
-			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke",0,0,32)
 			TNT1 A 1
 			Stop
 	}
@@ -187,19 +430,33 @@ Actor Kingpin_RocketFast : Kingpin_Rocket
 	{
 		Spawn:
 			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_RocketFlare")
+			TNT1 A 0 A_SetUserVar(user_nukeCounter1,0)
 			TNT1 A 0 A_PlaySound("Kingpin/Rocket/Fly",CHAN_BODY)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"LaserActive",AAPTR_Target)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_HighExplosives",1,"HighExplosives",AAPTR_Target)
 		SpawnLoop:
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*4,0,(velz/40)*4,0,0,0,0,0,0,25003)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*8,0,(velz/40)*8,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*12,0,(velz/40)*12,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*16,0,(velz/40)*16,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*20,0,(velz/40)*20,0,0,0,0,0,0,25001)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*24,0,(velz/40)*24,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*28,0,(velz/40)*28,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*32,0,(velz/40)*32,0,0,0,0,0,0,25002)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*36,0,(velz/40)*36,0,0,0,0,0,0,25003)
-			KP00 A 1 A_SpawnItemEx("Kingpin_RocketTrail",0,0,0,0,0,0,0,0,0,25000)
+			TNT1 A 0 A_CheckFlag("SEEKERMISSILE",1)
+			Goto SpawnLoop+3
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_Bazooka",1)
+			TNT1 A 0 A_SeekerMissile(0,15,SMF_PRECISE|SMF_LOOK,0,10)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-4,0,(velz/40)*-4,0,0,0,0,0,0,25003)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-8,0,(velz/40)*-8,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-12,0,(velz/40)*-12,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-16,0,(velz/40)*-16,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-20,0,(velz/40)*-20,0,0,0,0,0,0,25001)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-24,0,(velz/40)*-24,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-28,0,(velz/40)*-28,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-32,0,(velz/40)*-32,0,0,0,0,0,0,25002)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-36,0,(velz/40)*-36,0,0,0,0,0,0,25003)
+			KP00 A 1 A_SpawnItemEx("Kingpin_RocketTrail",(sqrt(velx*velx+vely*vely)/40)*-40,0,(velz/40)*-40,0,0,0,0,0,0,25000)
 			Loop
+		HighExplosives:
+			TNT1 A 0 A_SetScale(1.5)
+			Goto SpawnLoop
+		LaserActive:
+			TNT1 A 0 A_ChangeFlag("SEEKERMISSILE",1)
+			Goto Spawn+5
 	}
 }
 
@@ -216,13 +473,13 @@ Actor Kingpin_RocketTrail
 	States
 	{
 		Spawn:
-			KP01 ABCD 2 Bright A_SetScale(scaleX+0.025)
+			KP01 ABCD 2 Bright A_SetScale(scaleX*1.05)
 			KP01 E 0 A_JumpIf(tid > 25002,"Quit")
-			KP01 EFGH 3 Bright A_SetScale(scaleX+0.025)
+			KP01 EFGH 3 Bright A_SetScale(scaleX*1.055)
 			KP01 I 0 A_JumpIf(tid > 25001,"Quit")
-			KP01 IJK 3 Bright A_SetScale(scaleX+0.025)
+			KP01 IJK 3 Bright A_SetScale(scaleX*1.05)
 			KP01 L 0 A_JumpIf(tid > 25000,"Quit")
-			KP01 LMN 3 Bright A_SetScale(scaleX+0.025)
+			KP01 LMN 3 Bright A_SetScale(scaleX*1.05)
 			Stop
 		Quit:
 			TNT1 A 1
@@ -230,12 +487,70 @@ Actor Kingpin_RocketTrail
 	}
 }
 
-Actor Kingpin_RocketLauncherMagazine : Ammo
+Actor Kingpin_Bazooka_LaserSight : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_FireBullets(0,0,-1,0,"Kingpin_Bazooka_LaserPuff",FBF_NORANDOMPUFFZ,8192)
+			Stop
+	}
+}
+
+Actor Kingpin_Bazooka_LaserPuff
+{
+	Height 4
+	Radius 2
+	Scale 0.5
+	VSpeed 0
+	+BLOODLESSIMPACT
+	+NOTRIGGER
+	+NOINTERACTION
+	+PUFFGETSOWNER
+	+SKYEXPLODE
+	+ALWAYSPUFF
+	+PUFFONACTORS
+	+FORCEXYBILLBOARD
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			KP04 B 1 Bright ACS_NamedExecuteWithResult("Kingpin_Bazooka",2)
+			Stop
+	}
+}
+
+Actor Kingpin_Bazooka_Seeker
+{
+	Height 1
+	Radius 1
+	Species "KPBazooka"
+	-SOLID
+	+SHOOTABLE
+	+NODAMAGE
+	+NOBLOOD
+	+THRUACTORS
+	+NOBLOCKMAP
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 2
+			Stop
+	}
+}
+
+Actor Kingpin_Bazooka_LaserTiD : Counter {}
+
+Actor Kingpin_BazookaMagazine : Ammo
 {
 	Inventory.Amount 5
 	Inventory.MaxAmount 5
 }
 
-Actor Kingpin_RocketLauncher_LaserSystem : Boolean {}
-Actor Kingpin_RocketLauncher_FastRockets : Boolean {}
-Actor Kingpin_RocketLauncher_UraniumRockets : Boolean {}
+Actor Kingpin_Bazooka_LaserSystem : Boolean {}
+Actor Kingpin_Bazooka_FastRockets : Boolean {}
+Actor Kingpin_Bazooka_BigBubba : Boolean {}
+Actor Kingpin_Bazooka_HighExplosives : Boolean {}
+Actor Kingpin_Bazooka_BigBubbaActive : Boolean {}
