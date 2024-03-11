@@ -726,3 +726,126 @@ Actor Kingpin_BloodPoolSpawner
 			Stop
 	}
 }
+
+Actor Kingpin_CashPickup
+{
+	-SOLID
+	-NOGRAVITY
+	+VULNERABLE
+	+NODAMAGE
+	Radius 4
+	Height 2
+	States
+	{
+		Spawn:
+			KP00 A 0 NoDelay A_SetArg(0,tid)
+			KP00 A 0 Thing_ChangeTid(tid,0)
+		SpawnLoop:
+			KP00 A 1 A_RadiusGive("Kingpin_CashPickupSignal",40,RGF_PLAYERS|RGF_NOSIGHT,1,"Thug")
+			Loop
+	}
+}
+
+Actor Kingpin_CashPickupBagS : Kingpin_CashPickup
+{
+	States
+	{
+		Spawn:
+			KP00 A 0 NoDelay A_SetArg(0,tid)
+			KP00 A 0 Thing_ChangeTid(tid,0)
+		SpawnLoop:
+			KP00 A 1 A_RadiusGive("Kingpin_CashPickupSignalBagS",40,RGF_PLAYERS|RGF_NOSIGHT,1,"Thug")
+			Loop
+	}
+}
+
+Actor Kingpin_CashPickupBagL : Kingpin_CashPickup
+{
+	States
+	{
+		Spawn:
+			KP00 A 0 NoDelay A_SetArg(0,tid)
+			KP00 A 0 Thing_ChangeTid(tid,0)
+		SpawnLoop:
+			KP00 A 1 A_RadiusGive("Kingpin_CashPickupSignalBagL",40,RGF_PLAYERS|RGF_NOSIGHT,1,"Thug")
+			Loop
+	}
+}
+
+Actor Kingpin_CashPickupSignal : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("Kingpin_CashPickupSignal2",40,RGF_OBJECTS|RGF_NOSIGHT,1,"Kingpin_CashPickup")
+			Stop
+	}
+}
+
+Actor Kingpin_CashPickupSignal2 : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("Kingpin_CashSound",40,RGF_PLAYERS|RGF_NOSIGHT,1,"Thug")
+			TNT1 A 0 A_RadiusGive("Kingpin_Cash",40,RGF_PLAYERS|RGF_NOSIGHT,args[0],"Thug")
+			TNT1 A 0 Thing_Remove(0)
+			Stop
+	}
+}
+
+Actor Kingpin_CashPickupSignalBagS : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("Kingpin_CashPickupSignal2BagS",40,RGF_OBJECTS|RGF_NOSIGHT,1,"Kingpin_CashPickupBagS")
+			Stop
+	}
+}
+
+Actor Kingpin_CashPickupSignal2BagS : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("Kingpin_CashSound",40,RGF_PLAYERS|RGF_NOSIGHT,1,"Thug")
+			TNT1 A 0 A_RadiusGive("Kingpin_Cash",40,RGF_PLAYERS|RGF_NOSIGHT,args[0],"Thug")
+			TNT1 A 0 Thing_Remove(0)
+			Stop
+	}
+}
+
+Actor Kingpin_CashPickupSignalBagL : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("Kingpin_CashPickupSignal2BagS",40,RGF_OBJECTS|RGF_NOSIGHT,1,"Kingpin_CashPickupBagL")
+			Stop
+	}
+}
+
+Actor Kingpin_CashPickupSignal2BagL : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("Kingpin_CashSound",40,RGF_PLAYERS|RGF_NOSIGHT,1,"Thug")
+			TNT1 A 0 A_RadiusGive("Kingpin_Cash",40,RGF_PLAYERS|RGF_NOSIGHT,args[0],"Thug")
+			TNT1 A 0 Thing_Remove(0)
+			Stop
+	}
+}
+
+Actor Kingpin_CashSound : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_PlaySound("Kingpin/Pickup/Cash",CHAN_ITEM)
+			Stop
+	}
+}
+
+Actor Kingpin_Cash : Counter {}

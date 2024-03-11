@@ -170,6 +170,8 @@ Script "Kingpin_Player" Enter
 		if(CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
 			GiveInventory("Kingpin_Bazooka_LaserSight",1);
 		
+		HudMessage(d:CheckInventory("Kingpin_Cash");HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,5,CR_UNTRANSLATED,0.1,0.9,0.0);
+		
 		Delay(1);
 	}
 }
@@ -213,5 +215,17 @@ Script "Kingpin_Bazooka" (int type, int arg1, int arg2)
 			GiveInventory("Kingpin_Bazooka_LaserTiD",lTid);
 			break;	
 	}
-	
+}
+
+Script "Kingpin_ThrowMoney" (void)
+{
+	int moneyTid = UniqueTid();
+	int monsterHealth = GetActorProperty(0,APROP_SpawnHealth);
+	str moneyActor = "Kingpin_CashPickup";
+	if(monsterHealth >= 1000) moneyActor = "Kingpin_CashPickupBagS";
+	else if(monsterHealth >= 500) moneyActor = "Kingpin_CashPickupBagS";
+	SpawnForced(moneyActor,GetActorX(0),GetActorY(0),GetActorZ(0)+(GetActorProperty(0,APROP_Height)*2),moneyTid);
+	SetActorAngle(moneyTid,random(0,1.0));
+	SetActorVelocity(moneyTid,4*cos(GetActorAngle(moneyTid)),4*sin(GetActorAngle(moneyTid)),random(0,4.0),0,0);
+	Thing_ChangeTid(moneyTid,random(1,monsterHealth/10));
 }
