@@ -229,3 +229,12 @@ Script "Kingpin_ThrowMoney" (void)
 	SetActorVelocity(moneyTid,4*cos(GetActorAngle(moneyTid)),4*sin(GetActorAngle(moneyTid)),random(0,4.0),0,0);
 	Thing_ChangeTid(moneyTid,random(1,monsterHealth/10));
 }
+
+Script "Kingpin_Flamethrower" (void)
+{
+	While(CheckInventory("Kingpin_Flamethrower_Hold"))
+	{
+		GiveInventory("Kingpin_Flamethrower_FireTrigger",1);
+		Delay(1);
+	}
+}
