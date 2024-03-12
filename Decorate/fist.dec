@@ -1,0 +1,35 @@
+Actor Kingpin_Pipe : Kingpin_Weapon
+{
+	Weapon.SlotNumber 1
+	Weapon.SelectionOrder 2500
+	Obituary "%o was mashed by %k"
+	Inventory.Pickupmessage "Copped a pipe."
+	Tag "Pipe"
+	+WEAPON.MELEEWEAPON
+	States
+	{
+		Ready:
+			TNT1 A 0
+			KP00 ABCDEF 3
+			Goto ReadyLoop
+		ReadyLoop:
+			KP00 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP01 ABC 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			Loop
+		Deselect:	
+			KP01 DEFGH 3
+			Goto DeselectLoop
+		Fire:
+			KP00 G 0 A_FireBullets(0,0,-1,10,"Kingpin_MeleeSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ,48)
+			KP00 G 0 A_PlaySound("Kingpin/Pipe/Swing",CHAN_WEAPON)
+			KP00 GHIJ 3	A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 O 0 A_Refire("AttackL")
+			Goto ReadyLoop
+		AttackL:
+			KP00 L 0 A_FireBullets(0,0,-1,10,"Kingpin_MeleeSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ,48)
+			KP00 L 0 A_PlaySound("Kingpin/Pipe/Swing",CHAN_WEAPON)
+			KP00 KLMN 3	A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 O 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto ReadyLoop
+	}
+}
