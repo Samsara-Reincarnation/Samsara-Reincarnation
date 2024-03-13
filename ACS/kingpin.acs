@@ -234,7 +234,174 @@ Script "Kingpin_Flamethrower" (void)
 {
 	While(CheckInventory("Kingpin_Flamethrower_Hold"))
 	{
+		Playsound(0,strparam(s:"Kingpin/Flamethrower/Flame",d:((timer()%3))+1),CHAN_AUTO,1.0,0,ATTN_NORM);
 		GiveInventory("Kingpin_Flamethrower_FireTrigger",1);
 		Delay(1);
 	}
+}
+
+Script "Kingpin_FlamethrowerDistance" (int px, int py, int pz)
+{
+	int rX = GetActorX(0)/65536 - px;
+	int rY = GetActorY(0)/65536 - py;
+	int rZ = GetActorZ(0)/65536 - pz;
+	int result = sqrt(rX*rX + rY*rY + rZ*rZ);
+	//PrintBold(s:"Trail Start X: ",d:px,s:"Trail Start Y: ",d:py,s:"Trail Start Z: ",d:pz,s:"\n",s:"Trail End X: ",d:GetActorX(0)>>16,s:"Trail End Y: ",d:GetActorY(0)>>16,s:"Trail End Z: ",d:GetActorZ(0)>>16);
+	SetResultValue(result);
+}
+
+Script "Kingpin_ReturnUpgrade" (int upgrade)
+{
+	SetActivator(0,AAPTR_Target);
+	switch(upgrade)
+	{
+		case 21:
+			SetResultValue(CheckInventory("Kingpin_Flamethrower_Range"));
+			break;
+	}
+}
+
+Script "Kingpin_FlamethrowerTracer" (void)
+{
+	int myOldTid = ActivatorTid();
+	int myTid = UniqueTid();
+	Thing_ChangeTid(0, myTid);
+
+	SetActivator(0,AAPTR_Tracer);
+
+	int requiredIgnition = ClassifyActor(0) & ACTOR_Player || ClassifyActor(0) & ACTOR_Bot ? 6 : CheckFlag(0,"NOBLOOD") ? 18 : 9;
+
+	int actorClass = ClassifyActor(0);
+	if(!(actorClass & ACTOR_ALIVE) && !(actorClass & ACTOR_MONSTER || (!isSinglePlayer() && !isCoop() && (isPlayerOrBot(0) || GetActorProperty(0, APROP_FRIENDLY)))))
+		terminate;
+
+	if(!CheckInventory("Kingpin_FlamethrowerHitTarget"))
+	{
+		if(!CheckInventory("Kingpin_FlamethrowerBurnt"))
+		{
+			GiveInventory("Kingpin_FlamethrowerHitTarget",1);
+			GiveInventory("Kingpin_FlamethrowerIgnition",1);
+
+			if(CheckInventory("Kingpin_FlamethrowerIgnition") >= requiredIgnition && !CheckInventory("Kingpin_FlamethrowerBurnt"))
+			{
+				TakeInventory("Kingpin_FlamethrowerHitTarget",1);
+				TakeInventory("Kingpin_FlamethrowerIgnition",50);
+				GiveInventory("Kingpin_FlamethrowerBurnt",1);
+				GiveInventory("Kingpin_FlamethrowerStacker",1);
+				int burnerTid = UniqueTid();
+				SpawnForced("Kingpin_FlamethrowerBurner",GetActorX(0),GetActorY(0),GetActorZ(0),burnerTid);
+				SetActivator(myTid,AAPTR_Target);
+				SetPointerExt(AAPTR_Target,0,burnerTid);
+				SetActivator(myTid,AAPTR_Tracer);
+				SetPointerExt(AAPTR_Tracer,0,burnerTid);
+				Thing_ChangeTid(myTid, myOldTid);
+				terminate;
+			}
+
+			Thing_ChangeTid(myTid, myOldTid);
+			Delay(1);
+			TakeInventory("Kingpin_FlamethrowerHitTarget",1);
+
+			Delay(105);
+			if(!CheckInventory("Kingpin_FlamethrowerBurnt")) TakeInventory("Kingpin_FlamethrowerIgnition",1);
+		}
+		else
+		{
+			GiveInventory("Kingpin_FlamethrowerHitTarget",1);
+			GiveInventory("Kingpin_FlamethrowerIgnition",1);
+			if(CheckInventory("Kingpin_FlamethrowerIgnition") >= requiredIgnition)
+			{
+				TakeInventory("Kingpin_FlamethrowerHitTarget",1);
+				TakeInventory("Kingpin_FlamethrowerIgnition",50);
+				GiveInventory("Kingpin_FlamethrowerStacker",1);
+				Thing_ChangeTid(myTid, myOldTid);
+				terminate;
+			}
+
+			Thing_ChangeTid(myTid, myOldTid);
+			Delay(1);
+			TakeInventory("Kingpin_FlamethrowerHitTarget",1);
+
+			Delay(105);
+			if(!CheckInventory("Kingpin_FlamethrowerBurnt")) TakeInventory("Kingpin_FlamethrowerIgnition",1);
+		}
+	}
+	else
+		Thing_ChangeTid(myTid, myOldTid);
+}
+
+Script "Kingpin_EnemyBurn" (void)
+{
+	int radius = GetActorProperty(0,APROP_Radius)/4;
+	int height = GetActorProperty(0,APROP_Height);
+	While(CheckInventory("Kingpin_OnFire"))
+	{
+		SpawnForced("Kingpin_FlamethrowerFireVisual",GetActorX(0)+randSign()*radius,GetActorY(0)+randSign()*radius,GetActorZ(0)+random(0,height*4),0);
+		Delay(2);
+	}
+}
+
+Script "Kingpin_BurnHandler" (void)
+{
+	int burnAmount;
+	if(ACS_NamedExecuteWithResult("Kingpin_BurningOnPlayer"))
+	{
+		while(ACS_NamedExecuteWithResult("Kingpin_BurningPlayerIsAlive") && ClassifyActor(0) > 1)
+		{
+			if(burnAmount == 32)
+			{
+				SetActorState(0,"Remove",1);
+			}
+
+			burnAmount++;
+			Delay(2);
+		}
+	}
+}
+
+Script "Kingpin_BurningPlayerIsAlive" (void)
+{
+	SetActivator(0,AAPTR_Tracer);
+	if(ClassifyActor(0) & ACTOR_Alive)
+		SetResultValue(1);
+	else
+		SetResultValue(0);
+}
+
+Script "Kingpin_BurningOnPlayer" (void)
+{
+	SetActivator(0,AAPTR_Tracer);
+	if(ClassifyActor(0) & ACTOR_Player || ClassifyActor(0) & ACTOR_Bot)
+	{
+		//ACS_NamedExecuteWithResult("Kingpin_ScreenBurn");
+		SetResultValue(1);
+	}
+	else
+	{
+		SetResultValue(0);
+	}
+}
+
+Script "Kingpin_Decorate" (int type, int arg1, int arg2)
+{
+	switch(type)
+	{
+		case 9: //Flamethrower burn visuals
+			SetActivator(0,AAPTR_Tracer);
+			if(arg1 == 0)
+				SetResultValue(GetActorProperty(0,APROP_Radius)>>16);
+			else
+				SetResultValue(GetActorProperty(0,APROP_Height)>>16);
+			break;
+		case 10:
+			SetActivator(0,AAPTR_Tracer);
+			SetResultValue(CheckInventory("Kingpin_FlamethrowerStacker"));
+			break;
+	}
+}
+
+Script "Kingpin_PrintTarget" (void)
+{
+	SetActivator(0,AAPTR_Target);
+	PrintBold(s:GetACtorClass(0));
 }

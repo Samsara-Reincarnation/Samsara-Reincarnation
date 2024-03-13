@@ -13,30 +13,38 @@ Actor Kingpin_Flamethrower : Kingpin_Weapon
 	States
 	{
 		Ready:
-			TNT1 A 0
+			KP00 A 0 A_GunFlash("ReadyFlash",GFF_NOEXTCHANGE)
 			KP00 ABCDEF 3
 			Goto ReadyLoop
+		ReadyFlash:
+			KP90 ABCDEF 3
+			Goto ReadyLoop
 		ReadyLoop:
+			KP00 O 0 A_PlaySound("Kingpin/Flamethrower/Twitch",CHAN_5,1.0,1)
 			KP00 O 0 A_GunFlash("ReadyLoopFlash",GFF_NOEXTCHANGE)
 			KP00 OPQRSTUVWXYZ 5 A_WeaponReady(WRF_ALLOWRELOAD)
 			Loop
 		ReadyLoopFlash:
-			KP90 OPQRSTUVWXYZ 5 Bright
+			KP91 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 Bright
+			KP92 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 Bright
+			KP93 AB 1 Bright
 			Stop
 		Deselect:
+			KP00 "[" 0 A_StopSound(CHAN_5)
 			KP00 "[" 0 A_GunFlash("DeselectFlash",GFF_NOEXTCHANGE)
 			KP00 "[\]" 3
 			KP01 ABC 3
 			TNT1 A 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
 			Goto DeselectLoop
 		DeselectFlash:
-			KP90 "[\]" 3 Bright
-			KP91 ABC 3 Bright
+			KP94 ABCDE 3 Bright
 			Stop
 		Fire:
 			"####" "#" 3 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
+			KP00 G 0 A_StopSound(CHAN_5)
 			KP00 G 0 A_GiveInventory("Kingpin_Flamethrower_Hold")
 			KP00 G 0 ACS_NamedExecuteWithResult("Kingpin_Flamethrower")
+		FireLoop:
 			KP00 G 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 			KP00 H 0 A_Refire(1)
 			Goto FireResolve
@@ -59,10 +67,11 @@ Actor Kingpin_Flamethrower : Kingpin_Weapon
 			KP00 N 0 A_Refire(1)
 			Goto FireResolve
 			KP00 N 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			KP00 G 0 A_Refire("Fire")
+			KP00 G 0 A_Refire("FireLoop")
 			Goto FireResolve
 		FireResolve:
 			KP00 G 3 A_TakeInventory("Kingpin_Flamethrower_Hold")
+			KP00 O 0 A_PlaySound("Kingpin/Flamethrower/End",CHAN_AUTO)
 			KP00 O 0
 			Goto ReadyLoop
 		DryFire:
@@ -82,8 +91,8 @@ Actor Kingpin_Flamethrower_FireTrigger : Trigger
 	States
 	{
 		Pickup:
-			TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStream",0,0,6,4)
-			TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFire",0,0,6,4)
+			TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStream",0,0,6,2)
+			TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFire",0,0,16,4)
 			Stop
 	}
 }
@@ -95,7 +104,8 @@ Actor Kingpin_FlamethrowerFire
 	Height 4
 	Radius 2
 	Projectile
-	Speed 128
+	Speed 24
+	Scale 0.5
 	+THRUACTORS
 	+BLOODLESSIMPACT
 	+NOTRIGGER
@@ -105,8 +115,10 @@ Actor Kingpin_FlamethrowerFire
 			TNT1 A 0
 			TNT1 A 1	
 		Death:
-			TNT1 A 0 A_Stop
-			TNT1 A 1 A_SpawnItemEx("Kingpin_FlamethrowerFireEffect",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1))
+			TNT1 A 0 A_SetArg(0,1+CallACS("Kingpin_ReturnUpgrade",21))
+			TNT1 A 0 A_SetScale(scaleX+(0.25*(args[0]-1)))
+			TNT1 A 0 A_ChangeVelocity(12*(sqrt(velx*velx+vely*vely)/24)*args[0],0,12*(velz/24)*args[0],CVF_RELATIVE|CVF_REPLACE)
+			TNT1 A 1 A_SpawnItemEx("Kingpin_FlamethrowerFireEffect",0,0,0,velx+frandom(-1,1),vely+frandom(-1,1),velz+frandom(-1,1),0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS)
 			Stop
 	}
 }
@@ -121,37 +133,46 @@ Actor Kingpin_FlamethrowerFireEffect
 	Radius 2
 	VSpeed 0.5
 	Renderstyle Add
-	Scale 1.0
+	Scale 0.5
 	States
 	{
 		Spawn:
 			KP01 A 0 NoDelay ACS_NamedExecuteWithResult("Kingpin_FX",2,28,1.0*65536)
-			KP01 ABCDEFGHIJKLMN 2 Bright
+			KP01 ABCDEFGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
 			Stop
 	}
 }
 
-Actor Kingpin_FlamethrowerFireStream : FastProjectile
+Actor Kingpin_FlamethrowerFireStream
 {
-	Gravity 0.33
 	Damage (0)
 	Height 4
 	Radius 2
-	Projectile
-	Speed 128
-	Renderstyle Add
-	MissileType "Kingpin_FlamethrowerStream"
-	MissileHeight 0
-	+THRUACTORS
+	Speed 48
+	Scale 0.1
 	+BLOODLESSIMPACT
 	+NOTRIGGER
 	States
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 1	
+			TNT1 A 0 A_SetArg(0,x)
+			TNT1 A 0 A_SetArg(1,y)
+			TNT1 A 0 A_SetArg(2,z)
+			TNT1 A 1
+			TNT1 A 0 A_SetArg(3,CallACS("Kingpin_FlamethrowerDistance",args[0],args[1],args[2]))
+			TNT1 A 0 A_GiveInventory("Kingpin_StreamDistance",args[3])
+			TNT1 A 0 A_SetArg(3,args[3]*-2)
+		SpawnTrailLoop:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_StreamDistance",4,1)
+			Goto Death
+			TNT1 A 0 A_SetScale(scaleX*1.1)
+			TNT1 AA 0 A_SpawnItemEx("Kingpin_FlamethrowerStream",args[3]*(sqrt(velx*velx+vely*vely)/48),0,args[3]*(velz/48),0,0,0,0,SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SetArg(3,args[3]+4)
+			TNT1 A 0 A_TakeInventory("Kingpin_StreamDistance",4)
+			Loop
 		Death:
-			TNT1 A 1 A_Stop
+			TNT1 A 1
 			Stop
 	}
 }
@@ -162,9 +183,9 @@ Actor Kingpin_FlamethrowerStream
 	+NOGRAVITY
 	-SOLID
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Height 4
-	Radius 2
-	Scale 0.25
+	Radius 1
 	Renderstyle Add
 	States
 	{
@@ -174,3 +195,131 @@ Actor Kingpin_FlamethrowerStream
 			Stop
 	}
 }
+
+Actor Kingpin_FlamethrowerIgniteShooter : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_SetAngle(5*random(0,6))
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+			stop
+	}
+}
+
+Actor Kingpin_FlamethrowerIgniteTracer
+{
+	Height 64
+	Radius 32
+	Speed 32
+	Projectile
+	+HITTRACER
+    +DONTBLAST
+    +DONTREFLECT
+	States
+	{
+		Spawn:
+			TNT1 A 2 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Target,AAPTR_Target)
+			Stop
+		Death:
+			TNT1 A 1 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Target,AAPTR_Target)
+			Stop
+		Crash:
+		XDeath:
+			TNT1 A 0 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Target,AAPTR_Target)
+			TNT1 A 2 ACS_NamedExecuteWithResult("Kingpin_FlamethrowerTracer")
+			Stop
+	}
+}
+
+Actor Kingpin_FlamethrowerIgnition : Counter { Inventory.MaxAmount 50 }
+Actor Kingpin_FlamethrowerStacker : Counter { Inventory.MaxAmount 32 }
+Actor Kingpin_FlamethrowerHitTarget : Boolean {}
+Actor Kingpin_FlamethrowerBurnt : Boolean {}
+
+Actor Kingpin_FlamethrowerBurner
+{
+	Height 4
+	Radius 2
+	Speed 0
+	Damage (0)
+	Projectile
+	DamageType "RTCWFire"
+	+THRUACTORS
+	+NODAMAGETHRUST
+	+FORCEPAIN
+    +DONTBLAST
+    +DONTREFLECT
+	var int user_radius;
+	var int user_height;
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_BurnHandler")
+		Death:
+			TNT1 A 0 A_SetUserVar("user_radius",CallACS("Kingpin_Decorate",9))
+			TNT1 A 0 A_SetUserVar("user_height",CallACS("Kingpin_Decorate",9,1))
+			TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
+			TNT1 A 0 A_ChangeFlag("PAINLESS",1)
+			TNT1 A 0 A_ChangeFlag("FORCEPAIN",0)
+		SpawnLoop:
+			TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
+			Goto Remove
+			TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireVisual",random(-user_radius/2,user_radius/2),random(-user_radius/2,user_radius/2),random(0,user_height),0,0,0,0,SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
+			TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
+			TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
+			Goto Remove
+			TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
+			TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
+			TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
+			Goto Remove
+			TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
+			TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
+			TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
+			Goto Remove
+			TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
+			TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
+			Loop
+		Remove:
+			TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerIgnition",65536,0,AAPTR_Tracer)
+			TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerHitTarget",1,0,AAPTR_Tracer)
+			TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerBurnt",1,0,AAPTR_Tracer)
+			Stop
+	}
+}
+
+Actor Kingpin_FlamethrowerFireVisual
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	-SOLID
+	+FORCEXYBILLBOARD
+	Height 4
+	Radius 2
+	VSpeed 0.5
+	Renderstyle Add
+	Scale 0.1
+	States
+	{
+		Spawn:
+			KP01 A 0 NoDelay ACS_NamedExecuteWithResult("Kingpin_FX",2,28,0.25*65536)
+			KP01 ABCDEFGHIJKLMN 2 Bright
+			Stop
+	}
+}
+
+Actor Kingpin_StreamDistance : Counter {}
+Actor Kingpin_Flamethrower_Range : Boolean {}
