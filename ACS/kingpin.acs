@@ -261,7 +261,7 @@ Script "Kingpin_ReturnUpgrade" (int upgrade)
 	}
 }
 
-Script "Kingpin_FlamethrowerTracer" (void)
+Script "Kingpin_FlamethrowerTracer" (int upgrade)
 {
 	int myOldTid = ActivatorTid();
 	int myTid = UniqueTid();
@@ -269,7 +269,7 @@ Script "Kingpin_FlamethrowerTracer" (void)
 
 	SetActivator(0,AAPTR_Tracer);
 
-	int requiredIgnition = ClassifyActor(0) & ACTOR_Player || ClassifyActor(0) & ACTOR_Bot ? 6 : CheckFlag(0,"NOBLOOD") ? 18 : 9;
+	int requiredIgnition = (ClassifyActor(0) & ACTOR_Player || ClassifyActor(0) & ACTOR_Bot ? 6 : CheckFlag(0,"NOBLOOD") ? 72 : 36)/upgrade;
 
 	int actorClass = ClassifyActor(0);
 	if(!(actorClass & ACTOR_ALIVE) && !(actorClass & ACTOR_MONSTER || (!isSinglePlayer() && !isCoop() && (isPlayerOrBot(0) || GetActorProperty(0, APROP_FRIENDLY)))))
@@ -288,6 +288,7 @@ Script "Kingpin_FlamethrowerTracer" (void)
 				TakeInventory("Kingpin_FlamethrowerIgnition",50);
 				GiveInventory("Kingpin_FlamethrowerBurnt",1);
 				GiveInventory("Kingpin_FlamethrowerStacker",1);
+				ACS_NamedExecuteWithResult("Kingpin_Decorate",8);
 				int burnerTid = UniqueTid();
 				SpawnForced("Kingpin_FlamethrowerBurner",GetActorX(0),GetActorY(0),GetActorZ(0),burnerTid);
 				SetActivator(myTid,AAPTR_Target);
@@ -306,7 +307,7 @@ Script "Kingpin_FlamethrowerTracer" (void)
 			if(!CheckInventory("Kingpin_FlamethrowerBurnt")) TakeInventory("Kingpin_FlamethrowerIgnition",1);
 		}
 		else
-		{
+		{		
 			GiveInventory("Kingpin_FlamethrowerHitTarget",1);
 			GiveInventory("Kingpin_FlamethrowerIgnition",1);
 			if(CheckInventory("Kingpin_FlamethrowerIgnition") >= requiredIgnition)
@@ -315,6 +316,7 @@ Script "Kingpin_FlamethrowerTracer" (void)
 				TakeInventory("Kingpin_FlamethrowerIgnition",50);
 				GiveInventory("Kingpin_FlamethrowerStacker",1);
 				Thing_ChangeTid(myTid, myOldTid);
+				ACS_NamedExecuteWithResult("Kingpin_Decorate",8);
 				terminate;
 			}
 
@@ -343,17 +345,27 @@ Script "Kingpin_EnemyBurn" (void)
 
 Script "Kingpin_BurnHandler" (void)
 {
-	int burnAmount;
 	if(ACS_NamedExecuteWithResult("Kingpin_BurningOnPlayer"))
 	{
 		while(ACS_NamedExecuteWithResult("Kingpin_BurningPlayerIsAlive") && ClassifyActor(0) > 1)
 		{
-			if(burnAmount == 32)
+			if(ACS_NamedExecuteWithResult("Kingpin_Decorate",10) <= 0)
 			{
 				SetActorState(0,"Remove",1);
+				terminate;
 			}
-
-			burnAmount++;
+			Delay(2);
+		}
+	}
+	else
+	{
+		while(ACS_NamedExecuteWithResult("Kingpin_BurningPlayerIsAlive") && ClassifyActor(0) > 1)
+		{
+			if(ACS_NamedExecuteWithResult("Kingpin_Decorate",10) <= 0)
+			{
+				SetActorState(0,"Remove",1);
+				terminate;
+			}
 			Delay(2);
 		}
 	}
@@ -386,6 +398,17 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 {
 	switch(type)
 	{
+		case 1:
+			SetResultValue(2-CheckInventory("Kingpin_Flamethrower_FuelPump"));
+			break;
+		case 2:
+			SetActivator(0,AAPTR_Target);
+			SetResultValue(1+(2*CheckInventory("Kingpin_Flamethrower_HotterFlame")));
+			break;
+		case 8:
+			Delay(105);
+			TakeInventory("Kingpin_FlamethrowerStacker",1);
+			break;
 		case 9: //Flamethrower burn visuals
 			SetActivator(0,AAPTR_Tracer);
 			if(arg1 == 0)
@@ -398,10 +421,4 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 			SetResultValue(CheckInventory("Kingpin_FlamethrowerStacker"));
 			break;
 	}
-}
-
-Script "Kingpin_PrintTarget" (void)
-{
-	SetActivator(0,AAPTR_Target);
-	PrintBold(s:GetACtorClass(0));
 }
