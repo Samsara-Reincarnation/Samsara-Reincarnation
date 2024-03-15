@@ -142,6 +142,7 @@ Script "Kingpin_GibSpawner" (void)
 	SetActivator(0,AAPTR_Master);
 	int height = GetActorProperty(0,APROP_Height)*4;
 	int radius = GetActorProperty(0,APROP_Radius);
+	Thing_Remove(0);
 	SetActivator(thisTid);
 	Thing_ChangeTid(thisTid,0);
 	int gibScale = (((height>>16)*(radius>>16))<<16)/1120;
@@ -290,6 +291,7 @@ Script "Kingpin_FlamethrowerTracer" (int upgrade)
 				GiveInventory("Kingpin_FlamethrowerStacker",1);
 				ACS_NamedExecuteWithResult("Kingpin_Decorate",8);
 				int burnerTid = UniqueTid();
+				if(CheckInventory("Kingpin_IsMale")) PlaySound(0,"Kingpin/Flamethrower/Burn",CHAN_AUTO,1.0,0,ATTN_NORM);
 				SpawnForced("Kingpin_FlamethrowerBurner",GetActorX(0),GetActorY(0),GetActorZ(0),burnerTid);
 				SetActivator(myTid,AAPTR_Target);
 				SetPointerExt(AAPTR_Target,0,burnerTid);
@@ -405,6 +407,12 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 			SetActivator(0,AAPTR_Target);
 			SetResultValue(1+(2*CheckInventory("Kingpin_Flamethrower_HotterFlame")));
 			break;
+		case 3:
+			SetResultValue(1+(2*CheckInventory("Kingpin_HMG_SelectFire")));
+			break;
+		case 4:
+			SetResultValue(CheckInventory("Kingpin_HMG_ScopeActive"));
+			break;
 		case 8:
 			Delay(105);
 			TakeInventory("Kingpin_FlamethrowerStacker",1);
@@ -421,4 +429,22 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 			SetResultValue(CheckInventory("Kingpin_FlamethrowerStacker"));
 			break;
 	}
+}
+
+Script "Kingpin_ScopeClient" (void) clientside
+{
+	FadeTo(0.0,0.0,0.0,1.0,0);
+	FadeTo(0.0,0.0,0.0,0.0,0.5);
+	While(CheckInventory("Kingpin_HMG_ScopeActive"))
+	{
+		SetHudSize(256,256,0);
+		SetFont("KPSCOPE");
+
+		HudMessage(s:"a"; HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 1600, CR_UNTRANSLATED, 128.0, 128.0, 0, 1.0);
+
+		Delay(1);
+	}
+	FadeTo(0.0,0.0,0.0,1.0,0);
+	FadeTo(0.0,0.0,0.0,0.0,0.5);
+	HudMessage(s:""; HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 1600, CR_UNTRANSLATED, 128.0, 128.0, 0.1, 0.0);
 }

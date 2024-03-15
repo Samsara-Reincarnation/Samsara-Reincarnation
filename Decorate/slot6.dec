@@ -200,6 +200,7 @@ Actor Kingpin_Flamethrower_FireTrigger : Trigger
 	States
 	{
 		Pickup:
+			TNT1 A 0 A_AlertMonsters
 			TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStream",0,0,10,8)
 			TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFire",0,0,16,4)
 			Stop
@@ -457,6 +458,34 @@ Actor Kingpin_FlamethrowerStacker : Counter { Inventory.MaxAmount 32 }
 Actor Kingpin_FlamethrowerHitTarget : Boolean {}
 Actor Kingpin_FlamethrowerBurnt : Boolean {}
 
+Actor Kingpin_FlamethrowerSetFear : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_CheckFlag("BOSS","Ignore")
+			TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+			Stop
+		Ignore:
+			TNT1 A 1
+			fail
+	}
+}
+
+Actor Kingpin_FlamethrowerUnSetFear : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_CheckFlag("BOSS","Ignore")
+			TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+			Stop
+		Ignore:
+			TNT1 A 1
+			fail
+	}
+}
+
 Actor Kingpin_FlamethrowerBurner
 {
 	Height 4
@@ -464,7 +493,7 @@ Actor Kingpin_FlamethrowerBurner
 	Speed 0
 	Damage (0)
 	Projectile
-	DamageType "RTCWFire"
+	DamageType "KingpinFire"
 	+THRUACTORS
 	+NODAMAGETHRUST
 	+FORCEPAIN
@@ -484,6 +513,7 @@ Actor Kingpin_FlamethrowerBurner
 			TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
 			TNT1 A 0 A_ChangeFlag("PAINLESS",1)
 			TNT1 A 0 A_ChangeFlag("FORCEPAIN",0)
+			TNT1 A 0 A_GiveInventory("Kingpin_FlamethrowerSetFear",1,AAPTR_TRACER)
 		SpawnLoop:
 			TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
 			Goto Remove
@@ -509,6 +539,7 @@ Actor Kingpin_FlamethrowerBurner
 			TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
 			Loop
 		Remove:
+			TNT1 A 0 A_GiveInventory("Kingpin_FlamethrowerUnSetFear",1,AAPTR_TRACER)
 			TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerIgnition",65536,0,AAPTR_Tracer)
 			TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerStacker",65536,0,AAPTR_Tracer)
 			TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerHitTarget",999,0,AAPTR_Tracer)

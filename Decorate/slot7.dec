@@ -1,0 +1,464 @@
+Actor Kingpin_HMG : Kingpin_Weapon
+{
+	Weapon.SlotNumber 5
+	Weapon.SelectionOrder 250
+	Weapon.AmmoUse1 0
+	Weapon.AmmoGive1 30
+	Weapon.AmmoType1 "Kingpin_HMGMagazine"
+	Weapon.AmmoUse2 0
+	Weapon.AmmoGive2 60
+	Weapon.AmmoType2 "Cell"
+	Obituary "%o was maimed by %k's H.M.G."
+	Inventory.Pickupmessage "Copped a HMG."
+	Tag "HMG"
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.NOALERT
+	States
+	{
+		Ready:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"ReadyCoolingRod")
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"ReadyScope")
+			KP00 ABCDE 3
+			KP01 O 0
+			Goto ReadyLoop
+		ReadyCoolingRod:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"ReadyCoolingRodScope")
+			KP10 ABCDE 3
+			KP11 O 0
+			Goto ReadyLoop
+		ReadyScope:
+			KP20 ABCDE 3
+			KP21 O 0
+			Goto ReadyLoop
+		ReadyCoolingRodScope:
+			KP30 ABCDE 3
+			KP31 O 0
+			Goto ReadyLoop
+		ReadyLoop:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"ReadyLoopCoolingRod")
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"ReadyLoopScope")
+			KP01 OPQRSTUVWXY 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP01 O 0
+			Loop
+		ReadyLoopScope:
+			KP21 OPQRSTUVWXY 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP21 O 0
+			Goto ReadyLoop
+		ReadyLoopCoolingRod:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"ReadyLoopCoolingRodScope")
+			KP11 OPQRSTUVWXY 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP11 O 0
+			Goto ReadyLoop
+		ReadyLoopCoolingRodScope:
+			KP31 OPQRSTUVWXY 5 A_WeaponReady(WRF_ALLOWRELOAD)
+			KP31 O 0
+			Goto ReadyLoop
+		Deselect:
+			"####" "#" 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"DeselectZoomOut")
+			KP01 Z 0 A_TakeInventory("Kingpin_HMG_ScopeActive",1)
+			KP01 Z 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"DeselectCoolingRod")
+			KP01 Z 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"DeselectScope")
+			KP01 "Z[\]" 3
+			KP02 AB 3
+			Goto DeselectLoop
+		DeselectScope:
+			KP21 "Z[\]" 3
+			KP22 AB 3
+			Goto DeselectLoop
+		DeselectCoolingRod:
+			KP11 Z 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"DeselectCoolingRodScope")
+			KP11 "Z[\]" 3
+			KP12 AB 3
+			Goto DeselectLoop
+		DeselectCoolingRodScope:
+			KP31 "Z[\]" 3
+			KP32 AB 3
+			Goto DeselectLoop
+		DeselectZoomOut:
+			"####" "#" 0 A_ZoomFactor(1.0)
+			"####" "#" 0 A_TakeInventory("Kingpin_HMG_ScopeActive",1)
+			"####" "#" 5
+			Goto Deselect+1
+		Fire:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",3/CallACS("Kingpin_Decorate",3),1)
+			Goto Reload
+			KP00 E 0 A_PlaySound("Kingpin/HMG/Fire",CHAN_WEAPON)
+			KP00 E 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"FireTacticalScope")
+			KP00 E 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"FireCoolingRod")
+			KP00 E 0 A_JumpIfInventory("Kingpin_HMG_SelectFire",1,"FireSelect")
+		FireBurst:
+			KP00 F 0 A_AlertMonsters
+			KP00 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP00 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP00 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP00 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 H 0 A_AlertMonsters
+			KP00 H 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 H 0 A_GunFlash("FlashB",GFF_NOEXTCHANGE)
+			KP00 H 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP00 H 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 H 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 H 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP00 HI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP00 J 0 A_AlertMonsters
+			KP00 J 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 J 0 A_GunFlash("FlashC",GFF_NOEXTCHANGE)
+			KP00 J 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP00 J 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 J 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 J 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP00 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Cool:
+			KP01 KLMNOPQRST 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 O 0 A_JumpIfInventory("Kingpin_HMGMagazine",3,"ReadyLoop")
+			Goto Reload
+		FireSelect:
+			KP00 E 0 A_PlaySound("Kingpin/HMG/FireSingle",CHAN_WEAPON)
+			KP00 F 0 A_AlertMonsters
+			KP00 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP00 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP00 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP00 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP00 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP00 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP00 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolSelect:
+			KP01 KNQT 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 O 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireCoolingRod:
+			KP10 E 0 A_JumpIfInventory("Kingpin_HMG_SelectFire",1,"FireCoolingRodSelect")
+		FireBurstCoolingRod:
+			KP10 F 0 A_AlertMonsters
+			KP10 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP10 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP10 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP10 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP10 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP10 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 H 0 A_AlertMonsters
+			KP10 H 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP10 H 0 A_GunFlash("FlashB",GFF_NOEXTCHANGE)
+			KP10 H 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP10 H 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 H 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP10 H 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP10 HI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP10 J 0 A_AlertMonsters
+			KP10 J 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP10 J 0 A_GunFlash("FlashC",GFF_NOEXTCHANGE)
+			KP10 J 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP10 J 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 J 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP10 J 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP10 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolCoolingRod:
+			KP11 KMOQS 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 O 0 A_JumpIfInventory("Kingpin_HMGMagazine",3,"ReadyLoop")
+			Goto Reload
+		FireCoolingRodSelect:
+			KP10 E 0 A_PlaySound("Kingpin/HMG/FireSingle",CHAN_WEAPON)
+			KP10 F 0 A_AlertMonsters
+			KP10 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP10 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP10 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP10 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP10 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP10 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP10 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolCoolingRodSelect:
+			KP11 K 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 T 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireTacticalScope:
+			KP20 E 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"FireCoolingRodTacticalScope")
+			KP20 E 0 A_JumpIfInventory("Kingpin_HMG_SelectFire",1,"FireSelectTacticalScope")
+		FireBurstTacticalScope:
+			KP20 F 0 A_AlertMonsters
+			KP20 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP20 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP20 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP20 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP20 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP20 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP20 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP20 H 0 A_AlertMonsters
+			KP20 H 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP20 H 0 A_GunFlash("FlashB",GFF_NOEXTCHANGE)
+			KP20 H 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP20 H 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP20 H 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP20 H 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP20 HI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP20 J 0 A_AlertMonsters
+			KP20 J 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP20 J 0 A_GunFlash("FlashC",GFF_NOEXTCHANGE)
+			KP20 J 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP20 J 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP20 J 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP20 J 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP20 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolTacticalScope:
+			KP21 KLMNOPQRST 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 O 0 A_JumpIfInventory("Kingpin_HMGMagazine",3,"ReadyLoop")
+			Goto Reload
+		FireSelectTacticalScope:
+			KP20 E 0 A_PlaySound("Kingpin/HMG/FireSingle",CHAN_WEAPON)
+			KP20 F 0 A_AlertMonsters
+			KP20 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP20 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP20 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP20 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP20 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP20 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP20 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolSelectTacticalScope:
+			KP21 KNQT 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 O 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"ReadyLoop")
+			Goto Reload
+		FireCoolingRodTacticalScope:
+			KP30 E 0 A_JumpIfInventory("Kingpin_HMG_SelectFire",1,"FireCoolingRodSelectTacticalScope")
+		FireBurstCoolingRodTacticalScope:
+			KP30 F 0 A_AlertMonsters
+			KP30 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP30 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP30 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP30 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP30 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP30 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP30 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP30 H 0 A_AlertMonsters
+			KP30 H 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP30 H 0 A_GunFlash("FlashB",GFF_NOEXTCHANGE)
+			KP30 H 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP30 H 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP30 H 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP30 H 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP30 HI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP30 J 0 A_AlertMonsters
+			KP30 J 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP30 J 0 A_GunFlash("FlashC",GFF_NOEXTCHANGE)
+			KP30 J 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP30 J 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP30 J 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP30 J 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP30 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolCoolingRodTacticalScope:
+			KP31 KMOQS 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 O 0 A_JumpIfInventory("Kingpin_HMGMagazine",3,"ReadyLoop")
+			Goto Reload
+		FireCoolingRodSelectTacticalScope:
+			KP30 E 0 A_PlaySound("Kingpin/HMG/FireSingle",CHAN_WEAPON)
+			KP30 F 0 A_AlertMonsters
+			KP30 F 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
+			KP30 F 0 A_GunFlash("FlashA",GFF_NOEXTCHANGE)
+			KP30 F 0 A_TakeInventory("Kingpin_HMGMagazine",1)
+			KP30 F 0 A_FireBullets(1-CallACS("Kingpin_Decorate",4),1-CallACS("Kingpin_Decorate",4),-1,150,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+			KP30 F 0 A_FireCustomMissile("Kingpin_Casing",-90,0,4,4)
+			KP30 F 0 ACS_NamedExecuteWithResult("GlobalRecoil",2,56)
+			KP30 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CoolCoolingRodSelectTacticalScope:
+			KP31 K 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 T 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"ReadyLoop")
+			Goto Reload
+		FlashA:
+			KP99 A 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"StopFlash")
+			KP99 A 0 A_Jump(256,"FlashA_1","FlashA_2","FlashA_3")
+		FlashA_1:
+			KP99 A 2 Bright
+			Stop
+		FlashA_2:
+			KP99 B 2 Bright
+			Stop
+		FlashA_3:
+			KP99 C 2 Bright
+			Stop
+		FlashB:
+			KP99 A 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"StopFlash")
+			KP99 A 0 A_Jump(256,"FlashB_1","FlashB_2","FlashB_3")
+		FlashB_1:
+			KP99 D 2 Bright
+			Stop
+		FlashB_2:
+			KP99 E 2 Bright
+			Stop
+		FlashB_3:
+			KP99 F 2 Bright
+			Stop
+		FlashC:
+			KP99 A 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"StopFlash")
+			KP99 A 0 A_Jump(256,"FlashC_1","FlashC_2","FlashC_3")
+		FlashC_1:
+			KP99 G 2 Bright
+			Stop
+		FlashC_2:
+			KP99 H 2 Bright
+			Stop
+		FlashC_3:
+			KP99 I 2 Bright
+			Stop
+		StopFlash:
+			TNT1 A 1
+			Stop
+		AltFire:
+			"####" "#" 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"ZoomOut")
+			"####" "#" 0 A_ZoomFactor(3.0)
+			"####" "#" 0 A_GiveInventory("Kingpin_HMG_ScopeActive",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("Kingpin_ScopeClient")
+			"####" "#" 5
+			Goto ReadyLoop
+		ZoomOut:
+			"####" "#" 0 A_ZoomFactor(1.0)
+			"####" "#" 0 A_TakeInventory("Kingpin_HMG_ScopeActive",1)
+			"####" "#" 5
+			Goto ReadyLoop
+		Reload:
+			"####" U 0 A_JumpIfInventory("Kingpin_HMGMagazine",0,"ReadyLoop")
+			KP00 U 0 A_JumpIfInventory("Cell",6/CallACS("Kingpin_Decorate",3),1)
+			Goto DryFire
+			KP00 U 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"ReloadZoomOut")
+			KP00 U 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"ReloadTacticalScope")
+			KP00 U 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"ReloadCoolingRod")
+			KP00 U 0 A_PlaySound("Kingpin/HMG/Reload",CHAN_5)
+			KP00 "UVWXYZ[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP01 AB 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		ReloadBegin:
+			"####" C 0 A_JumpIfInventory("Cell",6/CallACS("Kingpin_Decorate",3),1)
+			Goto ReloadFinish
+			TNT1 A 0 A_GiveInventory("Kingpin_HMGMagazine",3/CallACS("Kingpin_Decorate",3))
+			TNT1 A 0 A_TakeInventory("Cell",6/CallACS("Kingpin_Decorate",3),TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",0,"ReloadFinish")	
+			Loop
+		ReloadFinish:
+			KP01 C 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"ReloadFinishTacticalScope")
+			KP01 C 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"ReloadFinishCoolingRod")
+			KP01 CDEFGHIJKLMN 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP01 O 0
+			Goto ReadyLoop
+		ReloadTacticalScope:
+			KP20 U 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"ReloadCoolingRodTacticalScope")
+			KP20 U 0 A_PlaySound("Kingpin/HMG/Reload",CHAN_5)
+			KP20 "UVWXYZ[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP21 AB 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Goto ReloadBegin
+		ReloadFinishTacticalScope:
+			KP21 C 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"ReloadFinishCoolingRodTacticalScope")
+			KP21 CDEFGHIJKLMN 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP21 O 0
+			Goto ReadyLoop
+		ReloadCoolingRod:
+			KP10 U 0 A_PlaySound("Kingpin/HMG/Reload",CHAN_5)
+			KP10 "UVWXYZ[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP11 AB 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Goto ReloadBegin
+		ReloadFinishCoolingRod:
+			KP11 CDEFGHIJKLMN 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP11 O 0
+			Goto ReadyLoop
+		ReloadCoolingRodTacticalScope:
+			KP30 U 0 A_PlaySound("Kingpin/HMG/Reload",CHAN_5)
+			KP30 "UVWXYZ[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			KP31 AB 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Goto ReloadBegin
+		ReloadFinishCoolingRodTacticalScope:
+			KP31 CDEFGHIJKLMN 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			KP31 O 0
+			Goto ReadyLoop
+		ReloadZoomOut:
+			"####" "#" 0 A_ZoomFactor(1.0)
+			"####" "#" 0 A_TakeInventory("Kingpin_HMG_ScopeActive",1)
+			"####" "#" 5
+			Goto Reload+3
+		DryFire:
+			"####" O 0 A_JumpIfInventory("Kingpin_HMG_TacticalScope",1,"DryFireTacticalScope")
+			KP01 O 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"DryFireCoolingRod")
+			KP01 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP01 O 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireTacticalScope:
+			KP21 O 0 A_JumpIfInventory("Kingpin_HMG_CoolingRod",1,"DryFireCoolingRodTacticalScope")
+			KP21 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP21 O 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireCoolingRod:
+			KP11 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP11 O 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+		DryFireCoolingRodTacticalScope:
+			KP31 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+			KP31 O 15 A_WeaponReady(WRF_NOFIRE)
+			Goto ReadyLoop
+	}
+}
+
+Actor Kingpin_HMGMagazine : Ammo
+{
+	Inventory.Amount 30
+	Inventory.MaxAmount 30
+}
+
+Actor Kingpin_HMGBulletSmoke
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+PUFFGETSOWNER
+	+HITTRACER
+	+BLOODLESSIMPACT
+	+PUFFONACTORS
+	+FORCEXYBILLBOARD
+	Renderstyle Add
+	Radius 4
+	Height 2
+	Scale 0.25
+	Decal KingpinBulletHole
+	DamageType "KingpinBullet"
+	States
+	{
+		Spawn:
+		Melee:
+		Crash:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_AntiMaterial",1,"AntiMaterialWall",AAPTR_Target)
+			TNT1 A 0 A_Jump(192,2)
+			TNT1 A 0 A_PlaySound("Kingpin/Ricochet",CHAN_5)
+			KP00 A -1 ACS_NamedExecuteWithResult("Kingpin_FX",1,10,0.75*65536)
+			Stop
+		AntiMaterialWall:
+			TNT1 A 0 A_SetDamageType("KingpinExplosive")
+			TNT1 A 0 A_Explode(25,40)
+			TNT1 A 0 A_Explode(125,40,!XF_HURTSOURCE)
+			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
+			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",10,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmokeSmall",0,0,8)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffectSmall",0,0,8)
+			TNT1 A 1 A_PlaySound("Kingpin/Ricochet",CHAN_5)
+			Stop
+		XDeath:
+			TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_AntiMaterial",1,"AntiMaterialTarget",AAPTR_Target)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_BloodGenerator_Offsets")
+			TNT1 A 1 A_GiveInventory("Kingpin_BloodGenerator",1,AAPTR_TRACER)
+			Stop
+		AntiMaterialTarget:
+			TNT1 A 0 A_SetDamageType("KingpinExplosive")
+			TNT1 A 0 A_Explode(25,40)
+			TNT1 A 0 A_Explode(125,40,!XF_HURTSOURCE)
+			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
+			TNT1 A 0 A_CustomMissile("Kingpin_ExplosionTrail",10,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmokeSmall",0,0,8)
+			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffectSmall",0,0,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_BloodGenerator_Offsets")
+			TNT1 A 1 A_GiveInventory("Kingpin_BloodGenerator",1,AAPTR_TRACER)
+			Stop
+	}
+}
+
+Actor Kingpin_HMG_SelectFire : Boolean {}
+Actor Kingpin_HMG_AntiMaterial : Boolean {}
+Actor Kingpin_HMG_CoolingRod : Boolean {}
+Actor Kingpin_HMG_TacticalScope : Boolean {}
+Actor Kingpin_HMG_ScopeActive : TemporaryBoolean {}

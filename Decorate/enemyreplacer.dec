@@ -2,6 +2,9 @@ Actor KPZombieman : Zombieman replaces Zombieman
 {
 	States
 	{
+		Spawn:
+			TNT1 A 0 NoDelay A_GiveInventory("Kingpin_IsMale",1)
+			Goto Super::Spawn
 		Death.KingpinBullet:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -10,6 +13,9 @@ Actor KPZombieman : Zombieman replaces Zombieman
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			Goto Super::XDeath
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -17,6 +23,9 @@ Actor KPShotgunguy : Shotgunguy replaces Shotgunguy
 {
 	States
 	{
+		Spawn:
+			TNT1 A 0 NoDelay A_GiveInventory("Kingpin_IsMale",1)
+			Goto Super::Spawn
 		Death.KingpinBullet:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -25,6 +34,9 @@ Actor KPShotgunguy : Shotgunguy replaces Shotgunguy
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			Goto Super::XDeath
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -40,6 +52,9 @@ Actor KPDoomImp : DoomImp replaces DoomImp
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			Goto Super::XDeath
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -47,6 +62,9 @@ Actor KPChaingunGuy : ChaingunGuy replaces ChaingunGuy
 {
 	States
 	{
+		Spawn:
+			TNT1 A 0 NoDelay A_GiveInventory("Kingpin_IsMale",1)
+			Goto Super::Spawn
 		Death.KingpinBullet:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -55,6 +73,9 @@ Actor KPChaingunGuy : ChaingunGuy replaces ChaingunGuy
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			Goto Super::XDeath
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -62,6 +83,9 @@ Actor KPNazi : WolfensteinSS replaces WolfensteinSS
 {
 	States
 	{
+		Spawn:
+			TNT1 A 0 NoDelay A_GiveInventory("Kingpin_IsMale",1)
+			Goto Super::Spawn
 		Death.KingpinBullet:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -70,6 +94,9 @@ Actor KPNazi : WolfensteinSS replaces WolfensteinSS
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			Goto Super::XDeath
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -83,8 +110,12 @@ Actor KPDemon : Demon replaces Demon
 			Goto Super::Death
 		Death.KingpinExplosive:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -98,8 +129,12 @@ Actor KPSpectre : Spectre replaces Spectre
 			Goto Super::Death
 		Death.KingpinExplosive:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
@@ -113,116 +148,12 @@ Actor KPRevenant : Revenant replaces Revenant
 			Goto Super::Death
 		Death.KingpinExplosive:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
-	}
-}
-
-Actor KPPainElemental : PainElemental replaces PainElemental
-{
-	States
-	{
-		Death.KingpinBullet:
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
-	}
-}
-
-Actor KPLostSoul : LostSoul replaces LostSoul
-{
-	States
-	{
-		Death.KingpinBullet:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
-	}
-}
-
-Actor KPHellKnight : HellKnight replaces HellKnight
-{
-	BloodColor "Green"
-	States
-	{
-		Death.KingpinBullet:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
-	}
-}
-
-Actor KPBaronofHell : BaronofHell replaces BaronofHell
-{
-	BloodColor "Green"
-	States
-	{
-		Death.KingpinBullet:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_BossDeath
-			Stop
-	}
-}
-
-Actor KPArachnotron : Arachnotron replaces Arachnotron
-{
-	States
-	{
-		Death.KingpinBullet:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_BossDeath
-			Stop
-	}
-}
-
-Actor KPMancubus : Fatso replaces Fatso
-{
-	States
-	{
-		Death.KingpinBullet:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_BossDeath
-			Stop
-	}
-}
-
-Actor KPArchvile : Archvile replaces Archvile
-{
-	States
-	{
-		Death.KingpinBullet:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Goto Super::Death
-		Death.KingpinExplosive:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
 	}
 }
 
@@ -237,8 +168,143 @@ Actor KPCacodemon : Cacodemon replaces Cacodemon
 			Goto Super::Death
 		Death.KingpinExplosive:
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
-			TNT1 A 1 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			Stop
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPPainElemental : PainElemental replaces PainElemental
+{
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPLostSoul : LostSoul replaces LostSoul
+{
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPHellKnight : HellKnight replaces HellKnight
+{
+	BloodColor "Green"
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPBaronofHell : BaronofHell replaces BaronofHell
+{
+	BloodColor "Green"
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPArachnotron : Arachnotron replaces Arachnotron
+{
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPMancubus : Fatso replaces Fatso
+{
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
+	}
+}
+
+Actor KPArchvile : Archvile replaces Archvile
+{
+	States
+	{
+		Death.KingpinBullet:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			Goto Super::Death
+		Death.KingpinExplosive:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 1
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			Goto Super::Death
 	}
 }
 
