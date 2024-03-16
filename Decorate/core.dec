@@ -64,6 +64,11 @@ Actor Kingpin_BulletSmoke
 	States
 	{
 		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_PlaySound("Kingpin/HitMetal",CHAN_5)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,!XF_HURTSOURCE,0,8)
+			KP00 A -1 ACS_NamedExecuteWithResult("Kingpin_FX",1,10,0.75*65536)
+			Stop
 		Melee:
 		Crash:
 			TNT1 A 0
@@ -89,6 +94,11 @@ Actor Kingpin_BulletSmokeBleed : Kingpin_BulletSmoke
 	States
 	{
 		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_PlaySound("Kingpin/HitMetal",CHAN_5)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,!XF_HURTSOURCE,0,8)
+			KP00 A -1 ACS_NamedExecuteWithResult("Kingpin_FX",1,10,0.75*65536)
+			Stop
 		Melee:
 		Crash:
 			TNT1 A 0
@@ -145,10 +155,11 @@ Actor Kingpin_Weapon : Weapon
 {
 	+WEAPON.AMMO_OPTIONAL
 	+WEAPON.NOALERT
+	Inventory.PickupSound "Kingpin/Pickup/Weapon"
 	States
 	{
 		Spawn:
-			KP98 A -1
+			KPPU A -1
 			Stop
 		Ready:
 		ReadyLoop:
@@ -200,6 +211,7 @@ Actor Kingpin_Casing
 
 Actor Kingpin_ShellCasing : Kingpin_Casing {}
 Actor Kingpin_GrenadeCasing : Kingpin_Casing {}
+Actor Kingpin_HMGCasing : Kingpin_Casing {}
 
 Actor Kingpin_Explosion
 {
@@ -288,6 +300,7 @@ Actor Kingpin_ExplosionTrailEffect
 	+NOGRAVITY
 	-SOLID
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Height 4
 	Radius 2
 	VSpeed 0.5
@@ -314,6 +327,7 @@ Actor Kingpin_ExplosionEffect
 	+NOGRAVITY
 	-SOLID
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Height 4
 	Radius 2
 	VSpeed 0.5
@@ -362,6 +376,7 @@ Actor Kingpin_ExplosionNukeEffect
 	+NOGRAVITY
 	-SOLID
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Height 4
 	Radius 2
 	Renderstyle Add
@@ -382,6 +397,7 @@ Actor Kingpin_ExplosionSmoke
 	+NOGRAVITY
 	-SOLID
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Height 4
 	Radius 2
 	VSpeed 0.5
@@ -411,6 +427,7 @@ Actor Kingpin_SmokeTrail
 	+NOGRAVITY
 	-SOLID
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Height 4
 	Radius 2
 	Scale 0.25
@@ -442,7 +459,7 @@ Actor Kingpin_BloodChunkGenerator : Trigger
 		Pickup:
 			TNT1 A 0 A_CheckFlag("NOBLOOD","PickupStop")
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodShot",(radius-16)*cos(CallACS("Kingpin_BloodGenerator_Return",1)),(radius-16)*sin(CallACS("Kingpin_BloodGenerator_Return",1)),CallACS("Kingpin_BloodGenerator_Return",2),frandom(0.25,0.5)*sin(CallACS("Kingpin_BloodGenerator_Return",3)),frandom(-0.5,0.5)*cos(CallACS("Kingpin_BloodGenerator_Return",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
-			TNT1 A 0 A_SpawnItemEx("Kingpin_Gib",(radius-16)*cos(CallACS("Kingpin_BloodGenerator_Return",1)),(radius-16)*sin(CallACS("Kingpin_BloodGenerator_Return",1)),CallACS("Kingpin_BloodGenerator_Return",2),frandom(0.25,0.5)*sin(CallACS("Kingpin_BloodGenerator_Return",3)),frandom(-0.5,0.5)*cos(CallACS("Kingpin_BloodGenerator_Return",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
+			TNT1 A 0 A_SpawnItemEx("Kingpin_Gib",frandom(-8,8)+(radius-16)*cos(CallACS("Kingpin_BloodGenerator_Return",1)),frandom(-8,8)+(radius-16)*sin(CallACS("Kingpin_BloodGenerator_Return",1)),CallACS("Kingpin_BloodGenerator_Return",2),frandom(0.25,0.5)*sin(CallACS("Kingpin_BloodGenerator_Return",3)),frandom(-0.5,0.5)*cos(CallACS("Kingpin_BloodGenerator_Return",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
 			stop
 	}
 }
@@ -487,6 +504,7 @@ Actor Kingpin_BloodDrop
 	-SOLID
 	+THRUACTORS
 	+FORCEXYBILLBOARD
+	+NOBLOCKMAP
 	Gravity 0.8
 	Height 4
 	Radius 2
@@ -909,3 +927,177 @@ Actor Kingpin_IsMale : Boolean {}
 Actor Kingpin_SetGib : TemporaryBoolean {}
 Actor IsFatButBiped : Boolean {}
 Actor NoHeadShots : Boolean {}
+
+Actor AllUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_Magnum")
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_Reload")
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_RateOfFire")
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_Silencer")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_Magazine")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_BigBore")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_SelectFire")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_BleedShot")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_ConcussionGrenades")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_MagazineCapacity")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_Fragmentation")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_ClusterBombs")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_MagazineCapacity")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_Damage")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_Accuracy")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_Buzzsaw")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_LaserSystem")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_FastRockets")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_BigBubba")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_HighExplosives")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_Range")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_FuelPump")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_HotterFlame")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_Napalmer")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_SelectFire")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_CoolingRod")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_TacticalScope")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_AntiMaterial")
+			Stop
+	}
+}
+
+Actor PistolUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_Magnum")
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_Reload")
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_RateOfFire")
+			TNT1 A 0 A_GiveInventory("Kingpin_Pistol_Silencer")
+			Stop
+	}
+}
+
+Actor ShotgunUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_Magazine")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_BigBore")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_SelectFire")
+			TNT1 A 0 A_GiveInventory("Kingpin_Shotgun_BleedShot")
+			Stop
+	}
+}
+
+Actor GrenadeLauncherUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_ConcussionGrenades")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_MagazineCapacity")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_Fragmentation")
+			TNT1 A 0 A_GiveInventory("Kingpin_GrenadeLauncher_ClusterBombs")
+			Stop
+	}
+}
+
+Actor TommygunUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_MagazineCapacity")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_Damage")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_Accuracy")
+			TNT1 A 0 A_GiveInventory("Kingpin_TommyGun_Buzzsaw")
+			Stop
+	}
+}
+
+Actor RocketLauncherUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_LaserSystem")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_FastRockets")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_BigBubba")
+			TNT1 A 0 A_GiveInventory("Kingpin_Bazooka_HighExplosives")
+			Stop
+	}
+}
+
+Actor FlamethrowerUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_Range")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_FuelPump")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_HotterFlame")
+			TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_Napalmer")
+			Stop
+	}
+}
+
+Actor HMGUpgrades : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_SelectFire")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_CoolingRod")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_TacticalScope")
+			TNT1 A 0 A_GiveInventory("Kingpin_HMG_AntiMaterial")
+			Stop
+	}
+}
+
+Actor Kingpin_FistReplacer : RandomSpawner replaces Fist
+{
+	DropItem "Kingpin_Pipe"
+}
+
+Actor Kingpin_PistolReplacer : RandomSpawner replaces Pistol
+{
+	DropItem "Kingpin_Pistol"
+}
+
+Actor Kingpin_ChainsawReplacer : RandomSpawner replaces Chainsaw
+{
+	DropItem "Kingpin_Crowbar"
+}
+
+Actor Kingpin_ShotgunReplacer : RandomSpawner replaces Shotgun
+{
+	DropItem "Kingpin_Shotgun"
+}
+
+Actor Kingpin_SuperShotgunReplacer : RandomSpawner replaces SuperShotgun
+{
+	DropItem "Kingpin_GrenadeLauncher"
+}
+
+Actor Kingpin_ChaingunReplacer : RandomSpawner replaces Chaingun
+{
+	DropItem "Kingpin_Tommygun"
+}
+
+Actor Kingpin_RocketLauncherReplacer : RandomSpawner replaces RocketLauncher
+{
+	DropItem "Kingpin_Bazooka"
+}
+
+Actor Kingpin_PlasmaRifleReplacer : RandomSpawner replaces PlasmaRifle
+{
+	DropItem "Kingpin_Flamethrower"
+}
+
+Actor Kingpin_BFG9000Replacer : RandomSpawner replaces BFG9000
+{
+	DropItem "Kingpin_HMG"
+}

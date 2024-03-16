@@ -24,14 +24,15 @@ Actor Kingpin_Flamethrower : Kingpin_Weapon
 			KP90 ABCDEF 3
 			Goto ReadyLoop
 		ReadyLoop:
-			KP00 O 0 A_GunFlash("ReadyLoopFlash",GFF_NOEXTCHANGE)
 			KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"ReadyLoopFuelPump")
+			KP00 O 0 A_GunFlash("ReadyLoopFlash",GFF_NOEXTCHANGE)
 			KP00 O 0 A_PlaySound("Kingpin/Flamethrower/Twitch",CHAN_5,1.0,1)
 			KP00 OPQRSTUVWXYZ 5 A_WeaponReady(WRF_ALLOWRELOAD)
 			Loop
 		ReadyLoopFuelPump:
 			KP10 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,1)
 			Goto ReadyLoop
+			KP10 O 0 A_GunFlash("ReadyLoopFlash",GFF_NOEXTCHANGE)
 			KP10 O 0 A_PlaySound("Kingpin/Flamethrower/Twitch",CHAN_5,1.0,1)
 			KP10 OPQRSTUVWXYZ 5 A_WeaponReady(WRF_ALLOWRELOAD)
 			Loop
@@ -49,10 +50,10 @@ Actor Kingpin_Flamethrower : Kingpin_Weapon
 			TNT1 A 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
 			Goto DeselectLoop
 		DeselectFuelPump:
-			KP00 "[" 0 A_StopSound(CHAN_5)
-			KP00 "[" 0 A_GunFlash("DeselectFlash",GFF_NOEXTCHANGE)
-			KP00 "[\]" 3
-			KP01 ABC 3
+			KP10 "[" 0 A_StopSound(CHAN_5)
+			KP10 "[" 0 A_GunFlash("DeselectFlash",GFF_NOEXTCHANGE)
+			KP10 "[\]" 3
+			KP11 ABC 3
 			TNT1 A 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
 			Goto DeselectLoop
 		DeselectFlash:
@@ -241,6 +242,7 @@ Actor Kingpin_FlamethrowerFireEffect
 	+THRUACTORS
 	+NOTRIGGER
 	+BLOODLESSIMPACT
+	+SKYEXPLODE
 	Projectile
 	Height 20
 	Radius 10
@@ -638,7 +640,6 @@ Actor Kingpin_FlamethrowerFireNapalmEffect2 : Kingpin_FlamethrowerFireNapalmEffe
 	}
 }
 
-Actor Kingpin_StreamDistance : Counter {}
 Actor Kingpin_Flamethrower_Range : Boolean {}
 Actor Kingpin_Flamethrower_FuelPump : Boolean {}
 Actor Kingpin_Flamethrower_HotterFlame : Boolean {}
