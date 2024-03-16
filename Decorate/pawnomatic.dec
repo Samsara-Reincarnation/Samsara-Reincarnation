@@ -1,0 +1,97 @@
+Actor Kingpin_PawnoMaticBase
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	+NOBLOCKMAP
+	Height 56
+	Radius 288
+	States
+	{
+		Spawn:
+			KP00 A 1
+			Loop
+	}
+}
+
+Actor Kingpin_PawnoMaticGlass
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	+NOBLOCKMAP
+	Height 4
+	Radius 4
+	Alpha 0.5
+	Renderstyle Translucent
+	States
+	{
+		Spawn:
+			KP00 A -1
+			Stop
+	}
+}
+
+Actor Kingpin_PawnoMaticSoundController
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	+NOBLOCKMAP
+	Height 4
+	Radius 4
+	States
+	{
+		Spawn:
+			TNT1 A -1
+			Stop
+	}
+}
+
+Actor Kingpin_PawnoMaticCamera
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	+NOBLOCKMAP
+	Height 4
+	Radius 2
+	States
+	{
+		Spawn:
+			TNT1 A 0 
+			TNT1 A 1 ACS_NamedExecuteWithResult("Kingpin_Decorate",7)
+			Wait
+		Light1:
+			TNT1 A 1 Light("PawnOMatic1")
+			Loop
+		Light2:
+			TNT1 A 1 Light("PawnOMatic2")
+			Loop
+		Light3:
+			TNT1 A 1 Light("PawnOMatic3")
+			Loop
+		Light4:
+			TNT1 A 1 Light("PawnOMatic4")
+			Loop
+	}
+}
+
+Actor Kingpin_Sharky
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	+NOBLOCKMAP
+	Height 4
+	Radius 4
+	States
+	{
+		Spawn:
+			KP00 ABCDEFGHIJKLMNOPQRST 5
+			Loop
+	}
+}
+
+Actor Kingpin_PawnOMaticOpen : TemporaryBoolean {}
+Actor Kingpin_PawnOMaticStoreTid : TemporaryCounter {}
+Actor Kingpin_PawnOMaticCameraTid : TemporaryCounter {}
+Actor Kingpin_PawnOMaticSoundTid : TemporaryCounter {}
+Actor Kingpin_PawnOMaticSharkyTid : TemporaryCounter {}
+Actor Kingpin_PawnOMaticBoard1Tid : TemporaryCounter {}
+Actor Kingpin_PawnOMaticBoard2Tid : TemporaryCounter {}
