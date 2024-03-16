@@ -413,6 +413,14 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 		case 4:
 			SetResultValue(CheckInventory("Kingpin_HMG_ScopeActive"));
 			break;
+		case 5:
+			if(GetActorProperty(0,APROP_Health) < -GetActorProperty(0,APROP_SpawnHealth)/((random(0,2)+(2+(GetActorProperty(0,APROP_SpawnHealth)/200)))))
+				GiveInventory("Kingpin_SetGib",1);			
+			SetResultValue(1);
+			break;
+		case 6:
+			SetResultValue(!CheckInventory("Kingpin_HMG_AntiMaterial"));
+			break;
 		case 8:
 			Delay(105);
 			TakeInventory("Kingpin_FlamethrowerStacker",1);
@@ -447,4 +455,85 @@ Script "Kingpin_ScopeClient" (void) clientside
 	FadeTo(0.0,0.0,0.0,1.0,0);
 	FadeTo(0.0,0.0,0.0,0.0,0.5);
 	HudMessage(s:""; HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 1600, CR_UNTRANSLATED, 128.0, 128.0, 0.1, 0.0);
+}
+
+Script "Kingpin_BulletDamage" (void)
+{
+	int bulletX = GetActorX(0);
+	int bulletY = GetActorY(0);
+	int bulletZ = GetActorZ(0);
+	int damage = ACS_NamedExecuteWithResult("Kingpin_DetermineBulletDamage");
+	SetActivator(0,AAPTR_Tracer);
+	int monsterX = GetActorX(0);
+	int monsterY = GetActorY(0);
+	int monsterZ = GetActorZ(0);
+	int monsterHealth = GetActorProperty(0,APROP_Health);
+	int monsterHeight = GetActorProperty(0,APROP_Height);
+	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
+
+	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
+	/*if(CheckInventory("RTCW_MetalMonster"))
+	{
+		PlaySound(0,"RTCW/BulletHitMetal",CHAN_6,0.5,0,ATTN_NORM);
+	}
+	else
+		PlaySound(0,"RTCW/BulletHitFlesh",CHAN_6,0.5,0,ATTN_NORM);*/
+
+	if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
+	{
+		int monsterAngle = GetActorAngle(0);
+		int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
+		int angle = vang % 1.0;
+				
+		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
+		{
+			if(monsterHealth - (damage*3) <= -damage*2)
+				GiveInventory("Kingpin_BloodHeadshotGenerator",1);
+		
+			SetResultValue(damage*3);
+		}
+		else
+			SetResultValue(damage);
+	}
+	else
+	{
+		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
+		{
+			if(monsterHealth - (damage*3) <= -damage*2)
+				GiveInventory("Kingpin_BloodHeadshotGenerator",1);
+		
+			int result;
+			if(GetCvar("samsara_mixerloaded"))
+				result = ACS_NamedExecuteWithResult("Goldeneye_HatShot",0,0,0,0);
+			else
+				result = 0;
+
+			if(result == -1)
+			{
+				SetResultValue(-1);
+				terminate;
+			}
+			//if(StrLeft(GetActorClass(0),4)=="RTCW" && GetCvar("samsara_mixerloaded"))
+				//GiveInventory("RTCW_RemoveHat",1);
+				
+
+			SetResultValue(damage*3);
+		}
+		else
+			SetResultValue(damage);
+	}
+}
+
+Script "Kingpin_DetermineBulletDamage" (void)
+{
+	SetActivator(0,AAPTR_Target);
+	int damage;
+	if(CheckWeapon("Kingpin_Pipe")) damage = 10;
+	if(CheckWeapon("Kingpin_Crowbar")) damage = 50;
+	if(CheckWeapon("Kingpin_Pistol")) damage = CheckInventory("Kingpin_Pistol_Magnum") ? 30 : 15;
+	if(CheckWeapon("Kingpin_Shotgun")) damage = 15;
+	if(CheckWeapon("Kingpin_Tommygun")) damage = CheckInventory("Kingpin_Tommygun_Damage") ? 30 : 15;
+	if(CheckWeapon("Kingpin_HMG")) damage = 150;
+		
+	SetResultValue(damage);
 }
