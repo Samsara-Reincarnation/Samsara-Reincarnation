@@ -398,6 +398,7 @@ Script "Kingpin_BurningOnPlayer" (void)
 
 Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 {
+	int result;
 	switch(type)
 	{
 		case 1:
@@ -441,6 +442,23 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 		case 10:
 			SetActivator(0,AAPTR_Tracer);
 			SetResultValue(CheckInventory("Kingpin_FlamethrowerStacker"));
+			break;
+		case 11:
+			switch(arg1)
+			{
+				case 1:
+					if(GetActorClass(0) == "Thug") SetActorState(0,"Next",1);
+					break;
+				case 2:
+					if(GetActorClass(0) == "Kingpin_CashPickup") SetActorState(0,"Next",1);
+					break;
+				case 3:
+					if(GetActorClass(0) == "Kingpin_CashPickupBagS") SetActorState(0,"Next",1);
+					break;
+				case 4:
+					if(GetActorClass(0) == "Kingpin_CashPickupBagL") SetActorState(0,"Next",1);
+					break;
+			}
 			break;
 	}
 }
