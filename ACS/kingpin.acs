@@ -565,9 +565,31 @@ Script "Kingpin_DetermineBulletDamage" (void)
 	SetResultValue(damage);
 }
 
-Script "Kingpin_PawnOMatic" (void) clientside
+Script "Kingpin_PawnOMatic_Initiate" (void) Net
 {
-	int sTid = uniqueTid();
+	if(!CheckInventory("Kingpin_PawnOMaticOpen"))
+	{
+		int sTid = uniqueTid();
+		GiveInventory("Kingpin_PawnOMaticOpen",1);
+		SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
+		SpawnForced("Kingpin_PawnOMaticSoundController",0,0,0,sTid);
+		SetInventory("Kingpin_PawnOMaticSoundTid",sTid);
+		PlaySound(sTid,"PawnoMatic/Welcome",CHAN_VOICE,1.0,0,ATTN_NONE);
+		
+		ACS_NamedExecuteWithResult("Kingpin_PawnOMatic",PlayerNumber(),sTid);
+	}
+	else
+	{
+		TakeInventory("Kingpin_PawnOMaticOpen",1);
+		SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
+	}
+}
+
+Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
+{
+	if(playerNum != ConsolePlayerNumber())
+		terminate;
+
 	int breakloop;
 	int pawnOpen;
 	int simTimer;
@@ -582,136 +604,123 @@ Script "Kingpin_PawnOMatic" (void) clientside
 	int selectedItemOpen;
 	int scrollingItem;
 	int a;
-	if(!CheckInventory("Kingpin_PawnOMaticOpen"))
+	while(CheckInventory("Kingpin_PawnOMaticOpen"))
 	{
-		SpawnForced("Kingpin_PawnOMaticSoundController",0,0,0,sTid);
-		SetInventory("Kingpin_PawnOMaticSoundTid",sTid);
-		PlaySound(sTid,"PawnoMatic/Welcome",CHAN_VOICE,1.0,0,ATTN_NONE);
-		GiveInventory("Kingpin_PawnOMaticOpen",1);
-		SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
+		int playerInputX = GetPlayerInput(-1,INPUT_SIDEMOVE);
+		int playerInputY = -GetPlayerInput(-1,INPUT_FORWARDMOVE);
+		int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
+		int useKey = buttons & BT_USE;
+		simTimer = timer();
+		SetFont(strparam(s:"KPSTOR",d:((simTimer%100)/5)+1));
+		SetHudSize(1200,800,1);
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,60,CR_UNTRANSLATED,600.0,400.0,0.0);
+		SetFont("KPLITOFF");
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,59,CR_UNTRANSLATED,600.0,400.0,0.0);
+		lastMenu = currentMenu;
 		
-		while(CheckInventory("Kingpin_PawnOMaticOpen"))
-		{
-			int playerInputX = GetPlayerInput(-1,INPUT_SIDEMOVE);
-			int playerInputY = -GetPlayerInput(-1,INPUT_FORWARDMOVE);
-			int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
-			int useKey = buttons & BT_USE;
-			simTimer = timer();
-			SetFont(strparam(s:"KPSTOR",d:((simTimer%100)/5)+1));
-			SetHudSize(1200,800,1);
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,60,CR_UNTRANSLATED,600.0,400.0,0.0);
-			SetFont("KPLITOFF");
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,59,CR_UNTRANSLATED,600.0,400.0,0.0);
-			lastMenu = currentMenu;
-			
-			if(lastInputTimer >= maxInputDelay && !scrollingItem)
-			{		
-				if(playerInputY != 0)
-				{
-					if(!triggerItems)
-					{
-						PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
-						if(playerInputY > 0) currentMenu++;
-						else if(playerInputY < 0) currentMenu--;
-					}
-					else
-					{
-						PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
-						if(playerInputY > 0) currentMenuItem++;
-						else if(playerInputY < 0) currentMenuItem--;
-						
-						if(currentMenuItem < 1) currentMenuItem = 8;
-						if(currentMenuItem > 8) currentMenuItem = 1;
-					}			
-				}
-				
-				if(playerInputX != 0 || useKey)
+		if(lastInputTimer >= maxInputDelay && !scrollingItem)
+		{		
+			if(playerInputY != 0)
+			{
+				if(!triggerItems)
 				{
 					PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
-					if((playerInputX > 0 || useKey) && !triggerItems)
-					{
-						if(currentMenu == 8) 
-						{
-							ACS_NamedExecuteWithResult("Kingpin_PawnOMatic");
-							terminate;
-						}
+					if(playerInputY > 0) currentMenu++;
+					else if(playerInputY < 0) currentMenu--;
+				}
+				else
+				{
+					PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
+					if(playerInputY > 0) currentMenuItem++;
+					else if(playerInputY < 0) currentMenuItem--;
 					
-						triggerItems = 1;
-						
-						selectedItemOpen = currentMenu;
-						
-						intendedItem = 1+(4*currentMenu);
-							if(intendedItem >= 32)
-								intendedItem = 1;
-								
-						scrollingItem = 1;
-						
-						currentMenuItem = 1;
-						
-					}
-					else if(triggerItems && playerInputX < 0)
+					if(currentMenuItem < 1) currentMenuItem = 8;
+					if(currentMenuItem > 8) currentMenuItem = 1;
+				}			
+			}
+			
+			if(playerInputX != 0 || useKey)
+			{
+				PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
+				if((playerInputX > 0 || useKey) && !triggerItems)
+				{
+					if(currentMenu == 8) 
 					{
-						triggerItems = 0;
-						selectedItemOpen = 0;
-						
-						intendedItem = 1;
-						
-						scrollingItem = 1;
-						
-						currentMenuItem = 0;
+						ACS_NamedExecuteWithResult("Kingpin_PawnOMatic");
+						terminate;
 					}
+				
+					triggerItems = 1;
 					
-					PlaySound(sTid,"PawnOMatic/Scrollers",CHAN_6,1.0,1,ATTN_NONE);
+					selectedItemOpen = currentMenu;
+					
+					intendedItem = 1+(4*currentMenu);
+						if(intendedItem >= 32)
+							intendedItem = 1;
+							
+					scrollingItem = 1;
+					
+					currentMenuItem = 1;
+					
+				}
+				else if(triggerItems && playerInputX < 0)
+				{
+					triggerItems = 0;
+					selectedItemOpen = 0;
+					
+					intendedItem = 1;
+					
+					scrollingItem = 1;
+					
+					currentMenuItem = 0;
 				}
 				
-				if(currentMenu < 1) currentMenu = 8;
-				if(currentMenu > 8) currentMenu = 1;
-				lastInputTimer = 0;
+				PlaySound(sTid,"PawnOMatic/Scrollers",CHAN_6,1.0,1,ATTN_NONE);
 			}
 			
-			if(currentItem != intendedItem)
-			{
-				if(timer()%2 == 0)
-				{
-					currentItem++;
-					if(currentItem >= 32)
-						currentItem = 1;
-				}
-			}
-			else
-			{
-				scrollingItem = 0;
-				StopSound(sTid,CHAN_6);
-			}
-			
-			
-			SetFont(strparam(s:"KPITEM",d:currentItem));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);
-			
-			SetFont(strparam(s:"KPSELE",d:currentItem));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,55,CR_UNTRANSLATED,600.0,400.0,0.0);
-			
-			SetFont(strparam(s:"KPSTLT1",d:currentMenu));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,58,CR_UNTRANSLATED,600.0,400.0,0.0);
-			
-			if(currentMenuItem > 0)
-			{
-				SetFont(strparam(s:"KPSTLT2",d:currentMenuItem));
-				HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,57,CR_UNTRANSLATED,600.0,400.0,0.0);
-			}
-			else RemoveMessages(57,57);
-			
-			lastInputTimer++;
-			
-			Delay(1);
+			if(currentMenu < 1) currentMenu = 8;
+			if(currentMenu > 8) currentMenu = 1;
+			lastInputTimer = 0;
 		}
+		
+		if(currentItem != intendedItem)
+		{
+			if(timer()%2 == 0)
+			{
+				currentItem++;
+				if(currentItem >= 32)
+					currentItem = 1;
+			}
+		}
+		else
+		{
+			scrollingItem = 0;
+			StopSound(sTid,CHAN_6);
+		}
+		
+		
+		SetFont(strparam(s:"KPITEM",d:currentItem));
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);
+		
+		SetFont(strparam(s:"KPSELE",d:currentItem));
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,55,CR_UNTRANSLATED,600.0,400.0,0.0);
+		
+		SetFont(strparam(s:"KPSTLT1",d:currentMenu));
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,58,CR_UNTRANSLATED,600.0,400.0,0.0);
+		
+		if(currentMenuItem > 0)
+		{
+			SetFont(strparam(s:"KPSTLT2",d:currentMenuItem));
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,57,CR_UNTRANSLATED,600.0,400.0,0.0);
+		}
+		else RemoveMessages(57,57);
+		
+		lastInputTimer++;
+		
+		Delay(1);
 	}
-	else
-	{
-		SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
-		Thing_Remove(sTid);
-		SetInventory("Kingpin_PawnOMaticSoundTid",0);
-		TakeInventory("Kingpin_PawnOMaticOpen",1);
-		RemoveMessages(50,60);
-	}
+	
+	Thing_Remove(sTid);
+	SetInventory("Kingpin_PawnOMaticSoundTid",0);
+	RemoveMessages(50,60);
 }
