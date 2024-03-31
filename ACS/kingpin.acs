@@ -585,6 +585,19 @@ Script "Kingpin_PawnOMatic_Initiate" (void) Net
 	}
 }
 
+int pawnOMaticUpgradePrices [7][4][3] =
+{
+	{ {25, "Kingpin_Pistol_Reload", "PawnOMAtic/Mod1/Reload"}, {50, "Kingpin_Pistol_RateOfFire", "PawnOMAtic/Mod1/RateOfFire"}, {100, "Kingpin_Pistol_Magnum", "PawnOMAtic/Mod1/Magnum"}, {50, "Kingpin_Pistol_Silencer", "PawnOMAtic/Mod1/Silencer"} },
+	{ {200, "Kingpin_Shotgun_DoubleBarrel", ""}, {100, "Kingpin_Shotgun_BleedShot", ""}, {150, "Kingpin_Shotgun_Magazine", ""}, {250, "Kingpin_Shotgun_SelectFire", ""} },
+	{ {50, "Kingpin_GrenadeLauncher_Fragmentation", ""}, {200, "Kingpin_GrenadeLauncher_ClusterBombs", ""}, {100, "Kingpin_GrenadeLauncher_ConcussionGrenades", ""}, {50, "Kingpin_GrenadeLauncher_MagazineCapacity", ""} },
+	{ {100, "Kingpin_TommyGun_MagazineCapacity", ""}, {200, "Kingpin_TommyGun_Damage", ""}, {100, "Kingpin_TommyGun_Accuracy", ""}, {300, "Kingpin_TommyGun_Buzzsaw", ""} },
+	{ {50, "Kingpin_Bazooka_FastRockets", ""}, {150, "Kingpin_Bazooka_LaserSystem", ""}, {250, "Kingpin_Bazooka_HighExplosives", ""}, {500, "Kingpin_Bazooka_BigBubba", ""} },
+	{ {100, "Kingpin_Flamethrower_Range", ""}, {200, "Kingpin_Flamethrower_HotterFlame", ""}, {100, "Kingpin_Flamethrower_FuelPump", ""}, {250, "Kingpin_Flamethrower_Napalmer", ""} },
+	{ {100, "Kingpin_HMG_TacticalScope", ""}, {150, "Kingpin_HMG_CoolingRod", ""}, {350, "Kingpin_HMG_SelectFire", ""}, {500, "Kingpin_HMG_AntiMaterial", ""} },
+};
+
+str KingpinWeapons[7] = { "Kingpin_Pistol", "Kingpin_Shotgun", "Kingpin_GrenadeLauncher", "Kingpin_TommyGun", "Kingpin_Bazooka", "Kingpin_Flamethrower", "Kingpin_HMG" };
+
 Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 {
 	if(playerNum != ConsolePlayerNumber())
@@ -603,13 +616,15 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 	int intendedItem = 1;
 	int selectedItemOpen;
 	int scrollingItem;
+	int modSelected;
 	int a;
 	while(CheckInventory("Kingpin_PawnOMaticOpen"))
 	{
 		int playerInputX = GetPlayerInput(-1,INPUT_SIDEMOVE);
 		int playerInputY = -GetPlayerInput(-1,INPUT_FORWARDMOVE);
 		int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
-		int useKey = buttons & BT_USE;
+		int oldbuttons = GetPlayerInput(-1,INPUT_OLDBUTTONS);
+		int useKey = (buttons & BT_USE) && !(oldbuttons & BT_USE);
 		simTimer = timer();
 		SetFont(strparam(s:"KPSTOR",d:((simTimer%100)/5)+1));
 		SetHudSize(1200,800,1);
@@ -626,7 +641,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 				{
 					PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
 					if(playerInputY > 0) currentMenu++;
-					else if(playerInputY < 0) currentMenu--;
+					else if(playerInputY < 0) currentMenu--;			
 				}
 				else
 				{
@@ -636,10 +651,16 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 					
 					if(currentMenuItem < 1) currentMenuItem = 8;
 					if(currentMenuItem > 8) currentMenuItem = 1;
-				}			
+				}	
+				lastInputTimer = 0;
+				if(modSelected > 0)
+				{
+					modSelected = 0;
+					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
+				}
 			}
 			
-			if(playerInputX != 0 || useKey)
+			if(playerInputX != 0 || (useKey && currentMenuItem == 0))
 			{
 				PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
 				if((playerInputX > 0 || useKey) && !triggerItems)
@@ -648,39 +669,39 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 					{
 						ACS_NamedExecuteWithResult("Kingpin_PawnOMatic");
 						terminate;
-					}
-				
-					triggerItems = 1;
+					}		
 					
-					selectedItemOpen = currentMenu;
-					
+					triggerItems = 1;					
+					selectedItemOpen = currentMenu;			
 					intendedItem = 1+(4*currentMenu);
 						if(intendedItem >= 32)
 							intendedItem = 1;
 							
 					scrollingItem = 1;
-					
 					currentMenuItem = 1;
 					
 				}
 				else if(triggerItems && playerInputX < 0)
 				{
 					triggerItems = 0;
-					selectedItemOpen = 0;
-					
-					intendedItem = 1;
-					
-					scrollingItem = 1;
-					
+					selectedItemOpen = 0;	
+					intendedItem = 1;	
+					scrollingItem = 1;			
 					currentMenuItem = 0;
 				}
 				
+				lastInputTimer = 0;
 				PlaySound(sTid,"PawnOMatic/Scrollers",CHAN_6,1.0,1,ATTN_NONE);
+				
+				if(modSelected > 0)
+				{
+					modSelected = 0;
+					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
+				}
 			}
 			
 			if(currentMenu < 1) currentMenu = 8;
 			if(currentMenu > 8) currentMenu = 1;
-			lastInputTimer = 0;
 		}
 		
 		if(currentItem != intendedItem)
@@ -698,7 +719,6 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 			StopSound(sTid,CHAN_6);
 		}
 		
-		
 		SetFont(strparam(s:"KPITEM",d:currentItem));
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);
 		
@@ -712,14 +732,65 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 		{
 			SetFont(strparam(s:"KPSTLT2",d:currentMenuItem));
 			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,57,CR_UNTRANSLATED,600.0,400.0,0.0);
+			
+			SetFont(strparam(s:"KPDIGT",d:(pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][0]/100)%10));
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,54,CR_UNTRANSLATED,574.0,400.0,0.0);
+		
+			SetFont(strparam(s:"KPDIGT",d:(pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][0]/10)%10));
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,53,CR_UNTRANSLATED,600.0,400.0,0.0);
+			
+			SetFont(strparam(s:"KPDIGT",d:pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][0]%10));
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,52,CR_UNTRANSLATED,626.0,400.0,0.0);
+												
+			if(lastInputTimer >= maxInputDelay && !scrollingItem && useKey && currentMenuItem < 5)
+			{
+				lastInputTimer = 0;
+				if(!CheckInventory(KingpinWeapons[currentMenu-1]))
+				{
+					PlaySound(sTid,"PawnOMatic/NoWeapon",CHAN_VOICE,1.0,0,ATTN_NONE);
+				}
+				else if(CheckInventory(pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][1]))
+				{
+					PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
+				}
+				else if(CheckInventory("Kingpin_Cash") < pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][0])
+				{
+					PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
+				}					
+				else
+				{
+					lastInputTimer = -4;
+					if(modSelected == 0)
+					{
+						PlaySound(sTid,pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][2],CHAN_VOICE,1.0,0,ATTN_NONE);
+						modSelected = currentMenu;
+					}
+					else
+					{
+						PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
+						PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
+						TakeInventory("Kingpin_Cash",pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][0]);
+						GiveInventory(pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1][1],1);
+						modSelected = 0;
+					}
+				}
+			}
 		}
-		else RemoveMessages(57,57);
+		else
+		{
+			RemoveMessages(57,57);
+			SetFont("KPDIGT0");
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,54,CR_UNTRANSLATED,574.0,400.0,0.0);	
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,53,CR_UNTRANSLATED,600.0,400.0,0.0);	
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,52,CR_UNTRANSLATED,626.0,400.0,0.0);
+		}
 		
 		lastInputTimer++;
 		
 		Delay(1);
 	}
 	
+	PlaySound(sTid,"PawnOMAtic/Exit",CHAN_VOICE,1.0,0,ATTN_NONE);
 	Thing_Remove(sTid);
 	SetInventory("Kingpin_PawnOMaticSoundTid",0);
 	RemoveMessages(50,60);
