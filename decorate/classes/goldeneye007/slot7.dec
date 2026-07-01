@@ -12,9 +12,6 @@ actor Goldeneye_Moonraker : SamsaraGoldenEyeWeapon
     Weapon.SlotNumber 7
     Weapon.SlotPriority 0
     Weapon.SelectionOrder 3
-    /*Weapon.AmmoType "Cell"
-    Weapon.AmmoGive 40
-    Weapon.AmmoUse 4*/
     Obituary "%o was raked by %k's Moonraker."
     Tag "Military Laser"
     +BFG
@@ -92,21 +89,9 @@ actor Goldeneye_Moonraker : SamsaraGoldenEyeWeapon
         GE01 A 0 A_JumpIfInventory("BondAltToggle",1,"DualWieldFire")
       FireCheckDualOrder:
         GE01 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
-        goto FireStart //FireAmmoCheck
+        goto FireStart
         GE01 A 0 A_JumpIfInventory("BondAlternateFire",1,"Ready")
-        goto FireStart //FireAmmoCheck
-
-      /*FireAmmoCheck:
-        GE01 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        GE01 A 0 A_JumpIfInventory("Cell",4,"FireStart")
-        goto FireDry
-
-      FireDry:
-        GE00 A 0 A_JumpIfInventory("BondDryFireSpamProtector1",1,"FireSetDualOrder")
-        GE00 A 0 A_GiveInventory("SamsaraGoldenEyeWeaponDrySoundPlayer")
-        GE00 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Primary")
-        GE00 A 0 A_GiveInventory("BondDryFireSpamProtector1")
-        goto FireSetDualOrder*/
+        goto FireStart
 
       FireStart:
         GE01 A 0 A_GiveInventory("BondFiringToken")
@@ -227,20 +212,8 @@ actor Goldeneye_Moonraker : SamsaraGoldenEyeWeapon
         goto ReadyStartDual
 
       FireDual:
-        GE11 A 0 A_JumpIfInventory("BondAlternateFire",1,"FireStartDual") // FireAmmoCheckDual
+        GE11 A 0 A_JumpIfInventory("BondAlternateFire",1,"FireStartDual")
         goto ReadyDual
-
-      /*FireAmmoCheckDual:
-        GE11 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStartDual")
-        GE11 A 0 A_JumpIfInventory("Cell",4,"FireStartDual")
-        goto FireDryDual
-
-      FireDryDual:
-        GE10 A 0 A_JumpIfInventory("BondDryFireSpamProtector2",1,"FireSetDualOrderDual")
-        GE10 A 0 A_GiveInventory("SamsaraGoldenEyeWeaponDrySoundPlayer")
-        GE10 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Secondary")
-        GE10 A 0 A_GiveInventory("BondDryFireSpamProtector2")
-        goto FireSetDualOrderDual*/
 
       FireStartDual:
         GE11 A 0 A_GiveInventory("BondFiringToken")
@@ -276,45 +249,37 @@ actor SamsaraGoldenEyeMoonrakerLaserSingleAttackHandler : Trigger
 {
     States
     {
-      // Ammo checking/taking stuff
-      Pickup:
-        /*TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
-        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
-        stop
-        TNT1 A 0 A_TakeInventory("Cell",4)
-        goto PickupAttack*/
-
       // Attack stuff
-      PickupAttack:
+      Pickup:
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40)
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40, 1)
-        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackSource")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupSource")
       // Original sounds
-      PickupAttackN64:
+      PickupN64:
         TNT1 A 0 A_PlaySound("Goldeneye/MoonrakerFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackN64Coop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackN64Coop")
-      PickupAttackN64DM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupN64Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupN64Coop")
+      PickupN64DM:
         TNT1 A 0 A_RailAttack(0,6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuff",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRay",((CallACS("BondAccuracy")-20)/100.0),false,6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
-      PickupAttackN64Coop:
+      PickupN64Coop:
         TNT1 A 0 A_RailAttack(0,6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuffCoop",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRayCoop",((CallACS("BondAccuracy")-20)/100.0),false,6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
       // Source sounds
-      PickupAttackSource:
+      PickupSource:
         TNT1 A 0 A_PlaySound("GoldeneyeSource/MoonrakerFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackSourceCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackSourceCoop")
-      PickupAttackSourceDM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupSourceCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupSourceCoop")
+      PickupSourceDM:
         TNT1 A 0 A_RailAttack(0,6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuff",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRaySoundSource",((CallACS("BondAccuracy")-20)/100.0),false,6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
-      PickupAttackSourceCoop:
+      PickupSourceCoop:
         TNT1 A 0 A_RailAttack(0,6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuffCoop",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRayCoopSoundSource",((CallACS("BondAccuracy")-20)/100.0),false,6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
@@ -331,45 +296,37 @@ actor SamsaraGoldenEyeMoonrakerLaserDualAttackHandler : Trigger
 {
     States
     {
-      // Ammo checking/taking stuff
-      Pickup:
-        /*TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
-        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
-        stop
-        TNT1 A 0 A_TakeInventory("Cell",4)
-        goto PickupAttack*/
-
       // Attack stuff
-      PickupAttack:
+      Pickup:
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40)
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40, 1)
-        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackSource")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupSource")
       // Original sounds
-      PickupAttackN64:
+      PickupN64:
         TNT1 A 0 A_PlaySound("Goldeneye/MoonrakerFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackN64Coop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackN64Coop")
-      PickupAttackN64DM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupN64Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupN64Coop")
+      PickupN64DM:
         TNT1 A 0 A_RailAttack(0,-6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuff",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRay",((CallACS("BondAccuracy")-20)/100.0),false,-6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
-      PickupAttackN64Coop:
+      PickupN64Coop:
         TNT1 A 0 A_RailAttack(0,-6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuffCoop",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRayCoop",((CallACS("BondAccuracy")-20)/100.0),false,-6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
       // Source sounds
-      PickupAttackSource:
+      PickupSource:
         TNT1 A 0 A_PlaySound("GoldeneyeSource/MoonrakerFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackSourceCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackSourceCoop")
-      PickupAttackSourceDM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupSourceCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupSourceCoop")
+      PickupSourceDM:
         TNT1 A 0 A_RailAttack(0,-6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuff",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRaySoundSource",((CallACS("BondAccuracy")-20)/100.0),false,-6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
-      PickupAttackSourceCoop:
+      PickupSourceCoop:
         TNT1 A 0 A_RailAttack(0,-6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuffCoop",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldeneye_MoonrakerRayCoopSoundSource",((CallACS("BondAccuracy")-20)/100.0),false,-6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
@@ -500,9 +457,6 @@ actor Goldfinger_Laser : SamsaraGoldenEyeWeapon
     Weapon.SlotNumber 7
     Weapon.SlotPriority 0
     Weapon.SelectionOrder 3
-    /*Weapon.AmmoType "Cell"
-    Weapon.AmmoGive 40
-    Weapon.AmmoUse 4*/
     Obituary "%k expected %o to die."
     Tag "Portable Laser"
     +BFG
@@ -580,21 +534,9 @@ actor Goldfinger_Laser : SamsaraGoldenEyeWeapon
         GE01 A 0 A_JumpIfInventory("BondAltToggle",1,"DualWieldFire")
       FireCheckDualOrder:
         GE01 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
-        goto FireStart //FireAmmoCheck
+        goto FireStart
         GE01 A 0 A_JumpIfInventory("BondAlternateFire",1,"Ready")
-        goto FireStart //FireAmmoCheck
-
-      /*FireAmmoCheck:
-        GE01 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        GE01 A 0 A_JumpIfInventory("Cell",4,"FireStart")
-        goto FireDry
-
-      FireDry:
-        GE00 A 0 A_JumpIfInventory("BondDryFireSpamProtector1",1,"FireSetDualOrder")
-        GE00 A 0 A_PlaySound("Goldfinger/DryFire",CHAN_6)
-        GE00 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Primary")
-        GE00 A 0 A_GiveInventory("BondDryFireSpamProtector1")
-        goto FireSetDualOrder*/
+        goto FireStart
 
       FireStart:
         GE01 A 0 A_GiveInventory("BondFiringToken")
@@ -715,20 +657,8 @@ actor Goldfinger_Laser : SamsaraGoldenEyeWeapon
         goto ReadyStartDual
 
       FireDual:
-        GE11 A 0 A_JumpIfInventory("BondAlternateFire",1,"FireStartDual") // FireAmmoCheckDual
+        GE11 A 0 A_JumpIfInventory("BondAlternateFire",1,"FireStartDual")
         goto ReadyDual
-
-      /*FireAmmoCheckDual:
-        GE11 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStartDual")
-        GE11 A 0 A_JumpIfInventory("Cell",4,"FireStartDual")
-        goto FireDryDual
-
-      FireDryDual:
-        GE10 A 0 A_JumpIfInventory("BondDryFireSpamProtector2",1,"FireSetDualOrderDual")
-        GE10 A 0 A_PlaySound("Goldfinger/DryFire",CHAN_6)
-        GE10 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Secondary")
-        GE10 A 0 A_GiveInventory("BondDryFireSpamProtector2")
-        goto FireSetDualOrderDual*/
 
       FireStartDual:
         GE11 A 0 A_GiveInventory("BondFiringToken")
@@ -764,27 +694,19 @@ actor SamsaraGoldfingerLaserSingleAttackHandler : Trigger
 {
     States
     {
-      // Ammo checking/taking stuff
-      Pickup:
-        /*TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
-        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
-        stop
-        TNT1 A 0 A_TakeInventory("Cell",4)
-        goto PickupAttack*/
-
       // Attack stuff
-      PickupAttack:
+      Pickup:
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40)
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40, 1)
         TNT1 A 0 A_PlaySound("Goldeneye/MoonrakerFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
-      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
         TNT1 A 0 A_RailAttack(0,6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuff",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldfinger_LaserRay",((CallACS("BondAccuracy")-20)/100.0),false,6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
-      PickupAttackCoop:
+      PickupCoop:
         TNT1 A 0 A_RailAttack(0,6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuffCoop",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldfinger_LaserRayCoop",((CallACS("BondAccuracy")-20)/100.0),false,6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
@@ -801,27 +723,19 @@ actor SamsaraGoldfingerLaserDualAttackHandler : Trigger
 {
     States
     {
-      // Ammo checking/taking stuff
-      Pickup:
-        /*TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
-        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
-        stop
-        TNT1 A 0 A_TakeInventory("Cell",4)
-        goto PickupAttack*/
-
       // Attack stuff
-      PickupAttack:
+      Pickup:
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40)
         TNT1 A 0 ACS_NamedExecuteWithResult("BondAccuracySet", 0, 40, 1)
         TNT1 A 0 A_PlaySound("Goldeneye/MoonrakerFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
-      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
         TNT1 A 0 A_RailAttack(0,-6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuff",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldfinger_LaserRay",((CallACS("BondAccuracy")-20)/100.0),false,-6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish
 
-      PickupAttackCoop:
+      PickupCoop:
         TNT1 A 0 A_RailAttack(0,-6,false,"None","None",RGF_SILENT|RGF_EXPLICITANGLE|32,0,"Goldeneye_MoonrakerPuffCoop",((CallACS("BondAccuracy")-20)/100.0),((CallACS("BondAccuracy", 1)-20)/100.0),4096)
         TNT1 A 0 A_FireCustomMissile("Goldfinger_LaserRayCoop",((CallACS("BondAccuracy")-20)/100.0),false,-6,0,0,-((CallACS("BondAccuracy", 1)-20)/100.0))
         goto PickupFinish

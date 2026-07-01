@@ -22,16 +22,18 @@ script "TomeOfPowerCooldownReduction" (void)
 
 script "HereticTomeChargeRate" (void)
 {
-	int weaponCount = CheckInventory("GotWeapon0") + CheckInventory("GotWeapon2") + CheckInventory("GotWeapon3") + CheckInventory("GotWeapon4") + CheckInventory("GotWeapon5") + CheckInventory("GotWeapon6") + CheckInventory("CorvusTempestWand") + CheckInventory("GotWeapon7");
-	int result = 1800;
+    int weaponCount = CheckInventory("GotWeapon0") + CheckInventory("GotWeapon2") + CheckInventory("GotWeapon3") +
+                      CheckInventory("GotWeapon4") + CheckInventory("GotWeapon5") + CheckInventory("GotWeapon6") +
+                      CheckInventory("CorvusTempestWand") + CheckInventory("GotWeapon7") + CheckInventory("Grim Ballista");
+    int result = 1800;
 
-	until(weaponCount == 0)
-	{
-		weaponCount--;
-		result = (result * 2)/3;
-	}
+    until (weaponCount == 0)
+    {
+        weaponCount--;
+        result = (result * 2) / 3;
+    }
 
-	SetResultValue(result);
+    SetResultValue(result);
 }
 
 script "CorvusFaceTarget" (void)
