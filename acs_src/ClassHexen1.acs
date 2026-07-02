@@ -343,9 +343,12 @@ Script "HexenGrapplePull" (void)
 		int angle = VectorAngle(vecX, vecY);
 		int pitch = VectorAngle(VectorLength(vecX, vecY), vecZ);
 		int velocity = -80; //Negative as we want it to move closer to player
+		int velX = FixedMul(velocity * cos(angle), cos(pitch));
+		int velY = FixedMul(velocity * sin(angle), cos(pitch));
+		int velZ = velocity * sin(pitch);
 		
 		//Finally, set velocity
-		SetActorVelocity(0, velocity * cos(angle), velocity * sin(angle), velocity * sin(pitch), 0, 0);
+		SetActorVelocity(0, velX, velY, velZ, false, false);
 		
 		//Play winch sound on player if it hit an enemy
 		if(normalEnemy) SetActivator(newTid,AAPTR_Target);
@@ -374,4 +377,52 @@ script "HexenFrostShardsRaySound" (void)
     }
 
     SetInventory("SamsaraHexenFrostShardsPoweredSoundPlaying", 0);
+}
+
+//This script will handle the behavior of the Bishop's short sword. Just pretend we're working with the constraints!
+Script "HexenBishopSwordReturn" (void)
+{
+	//First we need to store this projectile for future reference
+	int myTid = ActivatorTid();
+	int newTid = UniqueTid();
+	Thing_ChangeTid(0,newTid);
+	
+	//Get the projectile's coordinates
+	int myX = GetActorX(0);
+	int myY = GetActorY(0);
+	int myZ = GetActorZ(0) + GetActorProperty(0,APROP_Height)/2;
+	
+	//Now get the player's
+	SetActivator(0,AAPTR_Target);
+	int destX = GetActorX(0);
+	int destY = GetActorY(0);
+	int destZ = GetActorZ(0) + GetActorViewHeight(0);
+	
+	//Calculate vectors here
+	int vecX = myX - destX;
+	int vecY = myY - destY;
+	int vecZ = myZ - destZ;
+	int angle = VectorAngle(vecX, vecY);
+	int pitch = VectorAngle(VectorLength(vecX, vecY), vecZ);
+	int velocity = -24; //Negative, moves toward the source
+	
+	//Now go back to the sword
+	SetActivator(newtid);
+	Thing_ChangeTid(newTid,myTid);
+	int distance = magnitudethree_f(vecX, vecY, vecZ)>>16;
+	int velX = FixedMul(velocity * cos(angle), cos(pitch));
+	int velY = FixedMul(velocity * sin(angle), cos(pitch));
+	int velZ = velocity * sin(pitch);
+	int velVector = magnitudethree_f(velX, velY, velZ)>>16;
+	
+	//This loop handles the velocity and removes it when it should get 'close' to the player. This is fine.
+	While(ClassifyActor(0) > 1 && distance > 0)
+	{
+		SetActorVelocity(0, velX, velY, velZ, false, false);
+		distance -= velVector*2; //Why do I need to double this?
+		Delay(2);
+	}
+	
+	//Finally, remove it.
+	Thing_Remove(0);
 }
