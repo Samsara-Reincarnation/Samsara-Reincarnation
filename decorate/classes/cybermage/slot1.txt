@@ -1,103 +1,108 @@
-actor CMDarklightFoil : Weapon
+actor CMDarklightFoil : CMWeapon
 {
-    //+WEAPON.WIMPY_WEAPON
-    +WEAPON.MELEEWEAPON
-    +WEAPON.NOALERT
-    +Inventory.UNDROPPABLE
-    Inventory.PickupSound "%o was slashed by %k's darklight foil." 
-    Inventory.PickupMessage "Picked up the Darklight Foil!"
-    Weapon.ReadySound "CM/DFoil1"
-    Weapon.SlotNumber 1
-    Weapon.BobStyle InverseAlpha
-    Weapon.BobRangeX 0.5
-    Weapon.BobRangeY 0.6
-    Weapon.BobSpeed 2.3    
-    Tag "Darklight Foil"    
-    Weapon.SelectionOrder 3600
-    Inventory.RestrictedTo "CMPlayer"    
-    States
-    {
-    Select:
-        TNT1 A 0 A_Raise
-        CMLW O 1 bright A_Raise
-        Loop
-    Deselect:
-        TNT1 A 0 A_Lower
-        CMLW O 1 bright A_Lower
-        Loop
-    Ready:
-        CMLW N 1 bright A_WeaponReady
-        Loop
-    Fire:
-        TNT1 A 0 A_Jump(256,"Fire1","Fire2","Fire3")
-    Fire1:
-        CMLW PF 4 bright
-        CMLW G 4 bright A_PlaySound("CM/DFoilSwing")
-        CMLW HHHH 1 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
-        CMLW I 4 bright
-        TNT1 A 0 A_ReFire
-        Goto Ready
-    Fire2:
-        CMLW J 4 bright A_PlaySound("CM/DFoilSwing")
-        CMLW KKKK 1 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
-        CMLW K 4 bright offset(-5,0)    
-        TNT1 A 0 A_ReFire
-        Goto Ready
-    Fire3:
-        CMLW L 4 bright A_PlaySound("CM/DFoilSwing")
-        CMLW MMMM 1 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
-        CMLW M 4 bright offset(5,0)
-        TNT1 A 0 A_ReFire
-        Goto Ready
-    Spawn:
-        CMLW Z -1
-        Stop
+	Inventory.PickupMessage "Picked up the Darklight Foil!"
+	Weapon.SlotNumber 1 
+	Weapon.SelectionOrder 3600
+	Obituary "%o was slashed by %k's darklight foil." 
+	Tag "Darklight Foil" 
+	+WEAPON.MELEEWEAPON
+	+WEAPON.NOALERT
+	States
+	{
+	Ready:
+		CMLW N 1 bright A_WeaponReady
+		Loop
+	Fire:
+		TNT1 A 0 A_Jump(256,"Fire1","Fire2","Fire3")
+	Fire1:
+		CMLW PF 4 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW G 0 bright A_PlaySound("CM/DFoilSwing")
+		CMLW G 4 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW H 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW H 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW H 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW H 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW H 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW H 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW H 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW H 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW I 4 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW A 0 A_ReFire
+		Goto Ready
+	Fire2:
+		CMLW J 0 bright A_PlaySound("CM/DFoilSwing")
+		CMLW J 4 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW K 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW K 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW K 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW K 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW K 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW K 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW K 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW K 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW K 4 bright offset(-5,0) A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)  
+		CMLW A 0 A_ReFire
+		Goto Ready
+	Fire3:
+		CMLW L 0 bright A_PlaySound("CM/DFoilSwing")
+		CMLW L 4 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW M 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW M 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW M 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW M 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW M 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW M 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW M 0 bright A_GiveInventory("SamsaraCyberMageDarklightFoilAttackHandler")
+		CMLW M 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW M 4 bright offset(5,0) A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		CMLW A 0 A_ReFire
+		Goto Ready
+	Spawn:
+		CMLW Z -1
+		Stop
     }    
 }
 
 actor SamsaraCyberMageDarklightFoilAttackHandler : Trigger
 {
-    States
-    {
-      // Attack stuff
-      Pickup:
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
-      PickupDM:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
-        TNT1 A 0 A_CustomPunch(random(6,8)*6,true,0,"CyberSaberPuff",112)
-        stop
-
-      PickupDMSpread:
-        TNT1 A 0 A_CustomPunch((random(6,8)*6)*3,true,0,"CyberSaberPuff",112)
-        stop
-
-      PickupCoop:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
-        TNT1 A 0 A_CustomPunch(random(6,8)*6,true,0,"CyberSaberPuffCoop",128)
-        stop
-
-      PickupCoopSpread:
-        TNT1 A 0 A_CustomPunch((random(6,8)*6)*3,true,0,"CyberSaberPuffCoop",128)
-        stop
-    }
+	States
+	{
+	// Attack stuff
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+	PickupDM:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+		TNT1 A 0 A_CustomPunch(random(6,8)*6,true,0,"CyberSaberPuff",112)
+		stop
+	PickupDMSpread:
+		TNT1 A 0 A_CustomPunch((random(6,8)*6)*3,true,0,"CyberSaberPuff",112)
+		stop
+	PickupCoop:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+		TNT1 A 0 A_CustomPunch(random(6,8)*6,true,0,"CyberSaberPuffCoop",128)
+		stop
+	PickupCoopSpread:
+		TNT1 A 0 A_CustomPunch((random(6,8)*6)*3,true,0,"CyberSaberPuffCoop",128)
+		stop
+	}
 }
 
 actor CyberSaberPuff
 {
-    Scale 0.5
-    SeeSound "CM/DFoilHit"
-    AttackSound "CM/DFoilHit"
-    +CLIENTSIDEONLY
-    +FORCEXYBILLBOARD
-    +NOINTERACTION
-    +PUFFONACTORS
-    States
-    {
-      Spawn:
-        CMLW ABCD 1 bright A_FadeOut
-        stop
-    }
+	Scale 0.5
+	SeeSound "CM/DFoilHit"
+	AttackSound "CM/DFoilHit"
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	+NOINTERACTION
+	+PUFFONACTORS
+	States
+	{
+	Spawn:
+		CMLW ABCD 1 bright A_FadeOut
+		stop
+	}
 }
 
 actor CyberSaberPuffCoop : CyberSaberPuff { +MTHRUSPECIES }

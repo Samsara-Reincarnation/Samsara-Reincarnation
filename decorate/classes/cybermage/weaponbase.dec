@@ -1,0 +1,21 @@
+Actor CMWeapon : InstantSwitchWeapon
+{
+	Inventory.RestrictedTo "CMPlayer"
+	Inventory.PickupSound "CM/WeaponUp"
+	Weapon.BobStyle InverseAlpha
+	Weapon.BobRangeX 0.5
+	Weapon.BobRangeY 0.6
+	Weapon.BobSpeed 2.3	
+	+Inventory.UNDROPPABLE
+	+FLOORCLIP
+	States
+	{
+		Ready:
+			TNT1 A 0 A_TakeInventory("CMWeapon")
+			TNT1 A 1 A_WeaponReady
+			loop
+		Fire:
+			TNT1 A 1
+			goto Ready
+	}
+}

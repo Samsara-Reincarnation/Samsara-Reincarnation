@@ -1,64 +1,18 @@
 //// CYBER-ARM
-Actor MagicFist : Weapon
+actor MagicFist : CMWeapon
 {
 	Weapon.SlotNumber 0
 	Weapon.SelectionOrder 4000
-	Weapon.BobStyle InverseAlpha
-	Weapon.BobRangeX 0.5
-	Weapon.BobRangeY 0.6
-	Weapon.BobSpeed 2.3
-	+IGNORESKILL
-	+NOAUTOFIRE
-	+UNDROPPABLE
-	+NOALERT
-	+WIMPY_WEAPON
 	Tag "Magical Fist"	
-	Inventory.RestrictedTo "CMPlayer"	
+	+IGNORESKILL
+	+WEAPON.NOAUTOFIRE
+	+WEAPON.NOALERT
+	+WEAPON.WIMPY_WEAPON
 	States
 	{
 		Spawn:
 			NULL A -1
 			Stop	
-		Select:
-            TNT1 A 0 A_Raise
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",0,"CellSelect")
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",3,"RocketSelect")
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",2,"ShellSelect")
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",1,"ClipSelect")
-			CMFI Z 1 A_Raise
-			loop
-		ClipSelect:
-			CMFI P 1 bright A_Raise
-			goto Select
-		ShellSelect:
-			CMFI J 1 bright A_Raise
-			goto Select
-		RocketSelect:
-			CMFI G 1 bright A_Raise
-			goto Select
-		CellSelect:
-			CMFI M 1 bright A_Raise
-			goto Select
-		Deselect:
-            TNT1 A 0 A_Lower
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",0,"CellDeselect")
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",3,"RocketDeselect")
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",2,"ShellDeselect")
-			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",1,"ClipDeselect")
-			CMFI Z 1 A_Lower
-			loop
-		ClipDeselect:
-			CMFI P 1 bright A_Lower
-			goto Deselect
-		ShellDeselect:
-			CMFI J 1 bright A_Lower
-			goto Deselect
-		RocketDeselect:
-			CMFI G 1 bright A_Lower
-			goto Deselect
-		CellDeselect:
-			CMFI M 1 bright A_Lower
-			goto Deselect
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",0,"CellReady")
 			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",3,"RocketReady")

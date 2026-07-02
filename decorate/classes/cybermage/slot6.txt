@@ -1,20 +1,12 @@
-ACTOR CMHVBMG : Weapon
+actor CMHVBMG : CMWeapon
 { 
+	Inventory.PickupMessage "You got the Heavy Blaster MG!"
+	Weapon.SlotNumber 6
+	Weapon.SelectionOrder 3000
 	Weapon.AmmoType "Cell"
 	Weapon.AmmoGive 40
 	Weapon.AmmoUse 1
-	Weapon.SelectionOrder 3000
-	Weapon.SlotNumber 6
-	Weapon.BobStyle InverseAlpha
-	Weapon.BobRangeX 0.5
-	Weapon.BobRangeY 0.6
-	Weapon.BobSpeed 2.3	
-	+FLOORCLIP
-	+Inventory.UNDROPPABLE
-	Inventory.PickupSound "misc/w_pkup" 
-	Inventory.PickupMessage "You got the Heavy Blaster MG!"
 	Obituary "%o was incinerated by %k's Heavy Blaster MG."
-	Inventory.RestrictedTo "CMPlayer"	
 	Tag "Heavy Blaster MG"	
 	States 
 	{ 
@@ -24,36 +16,20 @@ ACTOR CMHVBMG : Weapon
 	Ready: 
 		CMHV A 1 A_WeaponReady 
 		Loop 
-	Deselect: 
-	    TNT1 A 0 A_Lower
-		CMHV B 1 A_Lower 
-		Loop 
-	Select: 
-	    TNT1 A 0 A_Raise
-		CMHV B 1 A_Raise 
-		Loop 
 	Fire: 
-		CMHV A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopFire")
-		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopFire")		
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
+		CMHV C 0 A_GiveInventory("SamsaraCyberMageHVBMGAttackHandler")
 		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
+		CMHV C 0 A_JumpIfNoAmmo("A")
+		CMHV C 0 A_GiveInventory("SamsaraCyberMageHVBMGAttackHandler")
 		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
+		CMHV C 0 A_JumpIfNoAmmo("A")
+		CMHV C 0 A_GiveInventory("SamsaraCyberMageHVBMGAttackHandler")
 		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
+		CMHV D 0 A_JumpIfNoAmmo("A")
+		CMHV D 0 A_GiveInventory("SamsaraCyberMageHVBMGAttackHandler")
 		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
+		CMHV D 0 A_JumpIfNoAmmo("A")
+		CMHV D 0 A_GiveInventory("SamsaraCyberMageHVBMGAttackHandler")
 		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 	A:	
 		CMHV G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -61,74 +37,69 @@ ACTOR CMHVBMG : Weapon
 		CMHV H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		CMHV E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		CMHV G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_ReFire
+		CMHV A 0 A_ReFire
 		CMHV A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		goto Ready 
-	CoopFire:
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)		
-		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)		
-		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)		
-		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)		
-		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfNoAmmo("A")
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)		
-		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		Goto A 
 	Hold:
-		CMHV A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopHold")
-		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopHold")		
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
-		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)		
+		CMHV C 0 A_GiveInventory("SamsaraCyberMageHVBMGAttackHandler")
+		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		CMHV G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		CMHV A 0 A_Refire
 		CMHV A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		Goto Ready
-	CoopHold:
-		TNT1 A 0 A_PlaySound("CM/HVFire")	
-		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)
-		CMHV C 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)		
-		CMHV D 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMHV G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMHV A 0 A_Refire
-		CMHV A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		Goto Ready	
 	}
 } 
+
+actor SamsaraCyberMageHVBMGAttackHandler : Trigger
+{
+	States
+	{
+	// Ammo checking/taking stuff
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
+		TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+		stop
+		TNT1 A 0 A_TakeInventory("Cell",1)
+		goto PickupPlaySound
+	// Sound stuff
+	PickupPlaySound:
+		TNT1 A 0 A_PlaySound("CM/HVFire",CHAN_WEAPON)
+	// Attack stuff
+	Pickup2:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+	PickupDM:
+		TNT1 A 0 A_FireCustomMissile("CMHVBall", 0, 1, 0, 0)
+		goto PickupFinish
+	PickupCoop:
+		TNT1 A 0 A_FireCustomMissile("CMHVBall_2", 0, 1, 0, 0)
+	PickupFinish:
+		TNT1 A 0 //A_SetBlend("f38210",0.2,5)
+		stop
+	}
+}
 
 actor CMHVBall
 {
 	Radius 13
 	Height 8
-    Speed 29
-    Damage (Random(25,35))//(random(7,8) * random(1,8))
-    PROJECTILE
+	Speed 29
+	Damage (Random(25,35))
+	PROJECTILE
 	RenderStyle Add
-    ALPHA 0.95
-    DeathSound "CM/FGExp"
-    MISSILEHEIGHT 0
-    States
-    {
-    Spawn:
-        CMBL AB 2 Bright
-        Loop
-    Death:
-        TNT1 A 5 bright A_SpawnItemEx("CMHVBallFake",0,0,0,0)
-        Stop
-    }
+	Alpha 0.95
+	DeathSound "CM/FGExp"
+	MISSILEHEIGHT 0
+	States
+	{
+	Spawn:
+		CMBL AB 2 Bright
+		Loop
+	Death:
+		TNT1 A 5 bright A_SpawnItemEx("CMHVBallFake",0,0,0,0)
+		Stop
+	}
 }
 
 Actor CMHVBallFake
@@ -139,10 +110,10 @@ Actor CMHVBallFake
 	Scale 0.90
 	States
 	{
-	  Spawn:
-	    CMX3 ABCDE 3 BRIGHT
-        Stop
-    }
+	Spawn:
+		CMX3 ABCDE 3 BRIGHT
+		Stop
+	}
 }
 
 actor CMHVBall_2 : CMHVBall { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }

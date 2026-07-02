@@ -1,98 +1,85 @@
-ACTOR CMBlastRifle : Weapon
+actor CMBlastRifle : CMWeapon
 {
+	Inventory.PickupMessage "You got the Blast Rifle!"
+	Weapon.SlotNumber 3
+	Weapon.SelectionOrder 3300
 	Weapon.AmmoType "Shell"
 	Weapon.AmmoGive 15
 	Weapon.AmmoUse 1
-	Weapon.SlotNumber 3
-	Weapon.BobStyle InverseAlpha
-	Weapon.BobRangeX 0.5
-	Weapon.BobRangeY 0.6
-	Weapon.BobSpeed 2.3	
-	+FLOORCLIP
-	+WEAPON.NOAUTOFIRE
-	Weapon.SelectionOrder 3300
-	+Inventory.UNDROPPABLE
-	Inventory.PickupSound "misc/w_pkup" 
-	Inventory.PickupMessage "You got the Blast Rifle!"
 	Obituary "%o was torn to shreds by %k's Blast Rifle."
-	Inventory.RestrictedTo "CMPlayer"	
-	Tag "Blast Rifle"	
+	Tag "Blast Rifle"
+	+WEAPON.NOAUTOFIRE
 	States
 	{
 	Spawn:
 		CMBR I -1
 		Loop  
-	Select:
-		TNT1 A 0 A_Raise
-		CMBR E 1 A_Raise
-		Loop
 	Ready:
 		CMBR A 1 A_WeaponReady
 		Loop
-	Deselect:
-		TNT1 A 0 A_Lower
-		CMBR E 1 A_Lower
-		Loop
 	Fire:
 		CMBR B 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		TNT1 A 0 A_PlaySound("CM/BRFire", CHAN_WEAPON)
-		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"X")
-		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"X")
-		TNT1 AA 0 A_FireCustomMissile("CMBLASTRTRACER_2",frandom(3.00,-3.00),0,0,frandom(3.00,-3.00))
-		TNT1 A 0 A_FireBullets (3, 3, 2, Random(12,20), "CMBRPuff", FBF_NORANDOM |FBF_USEAMMO)
-		Goto A
-	X:	
-		TNT1 AA 0 A_FireCustomMissile("CMBLASTRTRACER_2",frandom(3.00,-3.00),0,0,frandom(3.00,-3.00))		
-		TNT1 A 0 A_FireBullets (3, 3, 2, Random(12,20), "CMBRPuffCoop", FBF_NORANDOM |FBF_USEAMMO)
-	A:	
+		CMBR C 0 BRIGHT A_GiveInventory("SamsaraCyberMageBlastRifleAttackHandler")
 		CMBR C 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		CMBR DB 2 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-/*		TNT1 A 0 A_CheckReload
-		CMBR P 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR Q 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR A 0 A_PlaySound("CM/BRReload1", CHAN_BODY)
-		CMBR J 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR K 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR L 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR M 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR L 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR K 12 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR L 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR A 0 A_PlaySound("CM/BRReload2", CHAN_BODY)
-		CMBR K 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR J 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR Q 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMBR P 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)*/
-		TNT1 A 0 A_ReFire("Ready")
 		CMBR A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		Goto Ready
 	}
 }
 
+actor SamsaraCyberMageBlastRifleAttackHandler : Trigger
+{
+	States
+	{
+	// Ammo checking/taking stuff
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+		stop
+		TNT1 A 0 A_TakeInventory("Shell",1)
+		goto PickupPlaySound
+	// Sound stuff
+	PickupPlaySound:
+		TNT1 A 0 A_PlaySound("CM/BRFire",CHAN_WEAPON)
+	// Attack stuff
+	Pickup2:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+	PickupDM:
+		TNT1 AA 0 A_FireCustomMissile("CMBLASTRTRACER_2",frandom(3.00,-3.00),0,0,frandom(3.00,-3.00))
+		TNT1 A 0 A_FireBullets (3, 3, 2, Random(12,20), "CMBRPuff", FBF_NORANDOM |FBF_USEAMMO)
+		stop
+	PickupCoop:
+		TNT1 AA 0 A_FireCustomMissile("CMBLASTRTRACER_2",frandom(3.00,-3.00),0,0,frandom(3.00,-3.00))		
+		TNT1 A 0 A_FireBullets (3, 3, 2, Random(12,20), "CMBRPuffCoop", FBF_NORANDOM |FBF_USEAMMO)
+		stop
+	}
+}
+
 Actor CMCoopBullet3 : FastProjectile
 {
-  Speed 300
-  Damage (Random(12,20))
-  Radius 1
-  Height 1
-  Projectile
-  Species "Player"
-  +THRUSPECIES
-  +DONTHARMCLASS
-  +DONTHARMSPECIES
-  +MTHRUSPECIES
-  +BLOODSPLATTER
-  +NOTIMEFREEZE
-  +THRUGHOST
-  States
-  {
-  Spawn:
-    TNT1 A 1
-    Loop
-  Death:
-  XDeath:
-  Crash:  
-    TNT1 A 1 A_SpawnItemEx("CMBRPuff",0,0,0,0,0,0,0,128,0)
-    stop
+	Speed 300
+	Damage (Random(12,20))
+	Radius 1
+	Height 1
+	Projectile
+	Species "Player"
+	+THRUSPECIES
+	+DONTHARMCLASS
+	+DONTHARMSPECIES
+	+MTHRUSPECIES
+	+BLOODSPLATTER
+	+NOTIMEFREEZE
+	+THRUGHOST
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		Loop
+	Death:
+	XDeath:
+	Crash:  
+		TNT1 A 1 A_SpawnItemEx("CMBRPuff",0,0,0,0,0,0,0,128,0)
+		stop
     }
 }
