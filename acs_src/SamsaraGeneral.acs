@@ -13265,21 +13265,12 @@ Script "SamsaraDeathEffects" (int type)
 			break;
 		// Stone Break Effect
 		case 17:
-			numChunks = random(5, 10);
+			numChunks = numChunks*4;
 			while(numChunks >= 0)
 			{
-				SpawnForced("HexenStoneShard", xPosition, yPosition+random(0,3)*1.0, zPosition+random(20,40)*1.0, 0);
+				SpawnForced("HexenStoneShard", xPosition, yPosition+random(0,3)*1.0, zPosition+random(0,GetActorProperty(0,APROP_Height)*4), 0);
 				numChunks--;
 			}
-			break;
-		// Stone Boss Break Effect
-		case 18:
-			numChunks = random(96, 144);
-			while(numChunks >= 0)
-			{
-				SpawnForced("HexenStoneShard", xPosition, yPosition+random(0,3)*1.0, zPosition+random(-3,3)*1.0, 0);
-				numChunks--;
-			}				
 			break;
 		// General Ice Translation
 		case 100:

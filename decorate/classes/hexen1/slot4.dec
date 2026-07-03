@@ -319,10 +319,10 @@ actor SamsaraHexenMedusaRay : FastProjectile
     MissileType "SamsaraHexenMedusaRayParticle"
     RenderStyle "Add"
     DeathSound "ClericCStaffExplode"
-    Decal "DoomImpScorch"
     Obituary "$SAMSARA_HEXEN_OB_SLOT4_2"
-    +BLOODSPLATTER
+    -BLOODSPLATTER
     +NODAMAGETHRUST
+	+BLOODLESSIMPACT
     States
     {
       Spawn:
@@ -470,9 +470,18 @@ actor "Blight Shock" : SamsaraHexenWeapon
         loop
 
       Fire:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
         H110 B 4 Bright A_GiveInventory("SamsaraHexenBlightShockAttackHandler")
         H110 CDEFGH 3 Bright
         H110 A 6
+        TNT1 A 0 A_ReFire
+        goto Ready
+		
+	  FirePowered:
+		H110 B 2 Bright A_GiveInventory("SamsaraHexenBlightShockAttackHandler")
+        H110 CDEFGH 2 Bright
+        H110 A 3
         TNT1 A 0 A_ReFire
         goto Ready
     }
@@ -539,6 +548,13 @@ actor BlightShockShot1
     States
     {
       Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"EnableBounce",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"EnableBounce",AAPTR_TARGET)
+	    Goto SpawnLoop
+	  EnableBounce:
+		H111 A 0 A_ChangeFlag("USEBOUNCESTATE",true)
+	  SpawnLoop:
         H111 A 1 Bright Light("MBLIGHTSHOCKSHOT") A_SpawnItemEx("BlightShockTrail1") TNT1 AAA 0 A_CStaffMissileSlither
         H111 A 1 Bright Light("MBLIGHTSHOCKSHOT") A_SpawnItemEx("BlightShockTrail1") TNT1 AAA 0 A_CStaffMissileSlither
         H111 A 1 Bright Light("MBLIGHTSHOCKSHOT") A_SpawnItemEx("BlightShockTrail1") TNT1 AAA 0 A_CStaffMissileSlither
@@ -552,7 +568,13 @@ actor BlightShockShot1
         H111 D 1 Bright Light("MBLIGHTSHOCKSHOT") A_SpawnItemEx("BlightShockTrail1") TNT1 AAA 0 A_CStaffMissileSlither
         H111 D 1 Bright Light("MBLIGHTSHOCKSHOT") A_SpawnItemEx("BlightShockTrail1") TNT1 AAA 0 A_CStaffMissileSlither
         loop
-
+	  Bounce:
+		H111 A 1 Bright Light("MBLIGHTSHOCKSHOT") A_SpawnItemEx("BlightShockGasCloud",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+		H111 A 0 A_SpawnItemEx("BlightShockTrail1")
+		TNT1 AAA 0 A_CStaffMissileSlither
+		Goto SpawnLoop
+	  XDeath:
+		TNT1 A 0 A_SpawnItemEx("BlightShockGasCloud",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
       Death:
         H111 E 8 Bright Light("MBLIGHTSHOCKSHOT_X1")
         H111 F 6 Bright
@@ -586,6 +608,50 @@ actor BlightShockShot1Coop : BlightShockShot1
 }
 
 actor BlightShockShot1CoopImproved : BlightShockShot1Coop { Damage 1 }
+
+actor BlightShockGasCloud
+{
+	Projectile
+	Height 8
+	Radius 4
+	Damage (0)
+	Scale 0.75
+	Renderstyle Add
+	+BLOODLESSIMPACT
+	+NODAMAGETHRUST
+	+THRUACTORS
+	States
+	{
+		Spawn:
+			PSBG E 0
+			PSBG E 4 A_Explode(5,32,0,false)
+			PSBG F 0 A_Fadeout(0.083)
+			PSBG F 4 A_Explode(5,32,0,false)
+			PSBG G 0 A_Fadeout(0.083)
+			PSBG G 4 A_Explode(5,32,0,false)
+			PSBG H 0 A_Fadeout(0.083)
+			PSBG H 4 A_Explode(5,32,0,false)
+			PSBG I 0 A_Fadeout(0.083)
+			PSBG I 4 A_Explode(5,32,0,false)
+			PSBG F 0 A_Fadeout(0.083)
+			PSBG F 4 A_Explode(5,32,0,false)
+			PSBG G 0 A_Fadeout(0.083)
+			PSBG G 4 A_Explode(5,32,0,false)
+			PSBG H 0 A_Fadeout(0.083)
+			PSBG H 4 A_Explode(5,32,0,false)
+			PSBG I 0 A_Fadeout(0.083)
+			PSBG I 4 A_Explode(5,32,0,false)
+			PSBG F 0 A_Fadeout(0.083)
+			PSBG F 4 A_Explode(5,32,0,false)
+			PSBG G 0 A_Fadeout(0.083)
+			PSBG G 4 A_Explode(5,32,0,false)
+			PSBG H 0 A_Fadeout(0.083)
+			PSBG H 4 A_Explode(5,32,0,false)
+			PSBG I 0 A_Fadeout(0.083)
+			PSBG I 4 A_Explode(5,32,0,false)
+			Stop
+	}
+}
 
 // Baratus
 
