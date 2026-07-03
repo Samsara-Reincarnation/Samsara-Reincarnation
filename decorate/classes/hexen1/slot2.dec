@@ -302,21 +302,21 @@ actor "Frost Shards" : SamsaraHexenWeapon
         TNT1 A 0 A_JumpIfInventory("HexenClassMode",2,"HoldPoweredMage")
       HoldPoweredClericClassic:
         CONE D 3
-        goto HoldPoweredLoopClericClassic
+        goto HoldLoopPoweredClericClassic
 
-      HoldPoweredLoopInit:
+      HoldLoopInitPowered:
         TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 A_JumpIfInventory("HexenClassMode",2,"HoldPoweredLoopMage")
-      HoldPoweredLoopClericClassic:
+        TNT1 A 0 A_JumpIfInventory("HexenClassMode",2,"HoldLoopPoweredMage")
+      HoldLoopPoweredClericClassic:
         CONE E 2 Bright A_GiveInventory("SamsaraHexenFrostShardsPoweredAttackHandler")
         TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,3)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,2)
         TNT1 A 0 A_CheckReload
-        goto HoldPoweredFinishClericClassic
-        TNT1 A 0 A_ReFire("HoldPoweredLoopInit")
-        goto HoldPoweredFinishClericClassic
+        goto HoldFinishPoweredClericClassic
+        TNT1 A 0 A_ReFire("HoldLoopInitPowered")
+        goto HoldFinishPoweredClericClassic
 
-      HoldPoweredFinishClericClassic:
+      HoldFinishPoweredClericClassic:
         CONE F 4 Bright A_TakeInventory("SamsaraHexenFrostShardsPoweredSoundPlaying")
         CONE G 4
         CONE A 5
@@ -357,16 +357,16 @@ actor "Frost Shards" : SamsaraHexenWeapon
         CONE J 4
       HoldPoweredMage:
         CONE K 3
-      HoldPoweredLoopMage:
+      HoldLoopPoweredMage:
         CONE L 2 Bright A_GiveInventory("SamsaraHexenFrostShardsPoweredAttackHandler")
         TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,3)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,2)
         TNT1 A 0 A_CheckReload
-        goto HoldPoweredFinishMage
-        TNT1 A 0 A_ReFire("HoldPoweredLoopInit")
-        goto HoldPoweredFinishMage
+        goto HoldFinishPoweredMage
+        TNT1 A 0 A_ReFire("HoldLoopInitPowered")
+        goto HoldFinishPoweredMage
 
-      HoldPoweredFinishMage:
+      HoldFinishPoweredMage:
         CONE M 4 Bright A_TakeInventory("SamsaraHexenFrostShardsPoweredSoundPlaying")
         CONE N 4
         CONE H 5
@@ -633,12 +633,12 @@ actor HexenFrostRayDM : FastProjectile
     Damage (random(5,10))
     DamageType "HexenIce"
     MissileType "HexenFrostRayParticle"
+    Scale 0.5
     DeathSound "MageShardsExplode"
     Obituary "$SAMSARA_HEXEN_OB_SLOT2"
-	Scale 0.5
     +BLOODLESSIMPACT
+    +NODAMAGETHRUST
     +THRUGHOST
-	+NODAMAGETHRUST
     States
     {
       Spawn:
@@ -646,23 +646,11 @@ actor HexenFrostRayDM : FastProjectile
         stop
 
       Death:
-		TNT1 A 0 A_SpawnItemEx("HexenFrostRayCloud",0,0,0,random(-1,1),random(-1,1),random(-1,1))
-		TNT1 A 0 A_SpawnItemEx("IceChunk",random(-4,4),random(-4,4),random(-4,4),random(-1,1),random(-1,1),random(1,2),0,SXF_TRANSFERSCALE)
-		TNT1 A 1 A_Explode(10,32)
+        TNT1 A 0 A_SpawnItemEx("HexenFrostRayCloud",0,0,0,random(-1,1),random(-1,1),random(-1,1))
+        TNT1 A 0 A_SpawnItemEx("IceChunk",random(-4,4),random(-4,4),random(-4,4),random(-1,1),random(-1,1),random(1,2),0,SXF_TRANSFERSCALE)
+        TNT1 A 1 A_Explode(10,32)
         stop
     }
-}
-
-Actor HexenFrostRayCloud
-{
-	Renderstyle Add
-	+NOINTERACTION
-	States
-	{
-		Spawn:
-			H136 EFGHIJ 2 Bright Light("MFROSTSHARD_X1") A_Fadeout(0.15)
-			stop
-	}
 }
 
 actor HexenFrostRayCoop : HexenFrostRayDM
@@ -687,6 +675,18 @@ actor HexenFrostRayParticle
         SHEX E 3 Bright Light("MFROSTSHARD_X2")
         SHEX F 3 Bright Light("MFROSTSHARD_X3")
         SHEX G 3 Bright Light("MFROSTSHARD_X4")
+        stop
+    }
+}
+
+actor HexenFrostRayCloud
+{
+    Renderstyle Add
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        H136 EFGHIJ 2 Bright Light("MFROSTSHARD_X1") A_FadeOut(0.15)
         stop
     }
 }
@@ -1313,11 +1313,11 @@ actor Hexen_SpearSpike
     Mass 10000000
     +MISSILE
     +NODAMAGETHRUST
-	+THRUACTORS
+    +THRUACTORS
     States
     {
       Spawn:
-	  Death:
+      Death:
         TSPK E 0 NoDelay A_SetSolid
         TNT1 A 0 A_SpawnItemEx("HexenDirtClump")
         TNT1 A 0 A_JumpIfTracerCloser(512,1)
