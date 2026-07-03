@@ -635,8 +635,10 @@ actor HexenFrostRayDM : FastProjectile
     MissileType "HexenFrostRayParticle"
     DeathSound "MageShardsExplode"
     Obituary "$SAMSARA_HEXEN_OB_SLOT2"
+	Scale 0.5
     +BLOODLESSIMPACT
     +THRUGHOST
+	+NODAMAGETHRUST
     States
     {
       Spawn:
@@ -644,9 +646,23 @@ actor HexenFrostRayDM : FastProjectile
         stop
 
       Death:
-        TNT1 A 1
+		TNT1 A 0 A_SpawnItemEx("HexenFrostRayCloud",0,0,0,random(-1,1),random(-1,1),random(-1,1))
+		TNT1 A 0 A_SpawnItemEx("IceChunk",random(-4,4),random(-4,4),random(-4,4),random(-1,1),random(-1,1),random(1,2),0,SXF_TRANSFERSCALE)
+		TNT1 A 1 A_Explode(10,32)
         stop
     }
+}
+
+Actor HexenFrostRayCloud
+{
+	Renderstyle Add
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			H136 EFGHIJ 2 Bright Light("MFROSTSHARD_X1") A_Fadeout(0.15)
+			stop
+	}
 }
 
 actor HexenFrostRayCoop : HexenFrostRayDM
@@ -660,7 +676,7 @@ actor HexenFrostRayParticle
     Radius 2
     Height 4
     RenderStyle "Add"
-    Scale 0.5
+    Scale 0.25
     +CLIENTSIDEONLY
     +NOINTERACTION
     States
@@ -1232,7 +1248,7 @@ actor Hexen_FSpearSpiker : Hexen_FSpearFX2
         goto Super::Death
 
       XDeath:
-        TNT1 A 0 A_SpawnItemEx("Hexen_SpearSpike",0,0,0,0,0,-100,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("Hexen_SpearSpike",0,0,0,0,0,floorz,0,SXF_ABSOLUTEPOSITION|SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
         goto Super::Death
     }
 }
@@ -1244,7 +1260,7 @@ actor Hexen_FSpearSpikerCoop : Hexen_FSpearSpiker
     States
     {
       XDeath:
-        TNT1 A 0 A_SpawnItemEx("Hexen_SpearSpikeCoop",0,0,0,0,0,-100,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("Hexen_SpearSpikeCoop",0,0,0,0,0,floorz,0,SXF_ABSOLUTEPOSITION|SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
         goto Hexen_FSpearFX2::Death
     }
 }
@@ -1295,18 +1311,15 @@ actor Hexen_SpearSpike
     Height 64
     DamageType "HexenJavelinSpike"
     Mass 10000000
-    +ISMONSTER
-    +NODAMAGE
+    +MISSILE
     +NODAMAGETHRUST
+	+THRUACTORS
     States
     {
       Spawn:
+	  Death:
         TSPK E 0 NoDelay A_SetSolid
         TNT1 A 0 A_SpawnItemEx("HexenDirtClump")
-        TNT1 A 0 A_RearrangePointers(AAPTR_NULL,AAPTR_TARGET,AAPTR_DEFAULT)
-        TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_FRIENDPLAYER,AAPTR_MASTER)
-        TNT1 A 0 A_CopyFriendliness(AAPTR_MASTER) // doesn't seem to prevent team damage
-        //TODO - this isn't working as expected with flying enemies, we need a better way to check if they reached the floor
         TNT1 A 0 A_JumpIfTracerCloser(512,1)
         goto SpawnFinish
         TNT1 A 0 A_GiveInventory("Hexen_SpearSpikeGravitySwitchOff",1,AAPTR_TRACER)
@@ -1316,7 +1329,7 @@ actor Hexen_SpearSpike
       SpawnFinish:
         TNT1 A 0 A_GiveInventory("Hexen_SpearSpikeGravitySwitchOn",1,AAPTR_TRACER)
         TNT1 A 0 A_PlaySound("Hexen/Spike3",CHAN_VOICE)
-        TSPK EFGHIJKLMN 3 A_Explode(30,32,XF_NOTMISSILE,false) //We only really need to hurt enemies here
+        TSPK EFGHIJKLMN 3 A_Explode(30,32,0,false) //We only really need to hurt enemies here
         TSPK A 3 A_PlaySound("Hexen/Spike2")
         TSPK NMLKJIHGFE 3
         stop
