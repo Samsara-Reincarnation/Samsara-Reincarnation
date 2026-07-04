@@ -202,8 +202,6 @@ actor CircleFlame2 : CircleFlame1
 
 // Daedolon
 
-actor SamsaraHexenArcOfDeathAttackSuccess : Boolean {}
-
 actor "Arc of Death" : MWeapLightning // lmao hardcoded
 {
     Inventory.PickupMessage "Arc of Death"
@@ -243,9 +241,11 @@ actor "Arc of Death" : MWeapLightning // lmao hardcoded
         H109 E 3 Bright
       // start attack handler code
       FireAmmoCheck:
-        TNT1 A 0 A_GiveInventory("SamsaraHexenArcOfDeathAttackChecker")
-        TNT1 A 0 A_JumpIfInventory("SamsaraHexenArcOfDeathAttackSuccess",1,"FireAttack")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
         goto FireContinue
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        goto FireAttack
 
       FireAttack:
         //TNT1 A 0 A_PlaySound("MageLightningFire") // already called in A_MLightningAttack
@@ -275,29 +275,6 @@ actor "Arc of Death" : MWeapLightning // lmao hardcoded
         TNT1 A 0 A_ClearReFire
         TNT1 A 0 A_SelectWeapon("Sapphire Wand")
         goto Deselect
-    }
-}
-
-actor SamsaraHexenArcOfDeathAttackChecker : Trigger
-{
-    States
-    {
-      // Ammo checking/taking stuff
-      Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupSuccess")
-        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
-        goto PickupFail
-        TNT1 A 0 A_TakeInventory("Cell",5)
-        goto PickupSuccess
-
-      // Token adjustment stuff
-      PickupSuccess:
-        TNT1 A 0 A_GiveInventory("SamsaraHexenArcOfDeathAttackSuccess")
-        stop
-
-      PickupFail:
-        TNT1 A 0 A_TakeInventory("SamsaraHexenArcOfDeathAttackSuccess")
-        stop
     }
 }
 
