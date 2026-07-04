@@ -69,6 +69,8 @@ actor SamsaraHexenFrostFangAttackHandler : Trigger
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_PlaySound("Hexen/FrostFang/Fire",CHAN_WEAPON)
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
@@ -79,6 +81,27 @@ actor SamsaraHexenFrostFangAttackHandler : Trigger
       PickupAttackCoop:
         TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangBallCoop",0,false,-4)
         TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangBallCoop",0,false,4)
+        stop
+	
+	  //Powered
+	  PickupAttackPowered:
+        TNT1 A 0 A_PlaySound("Hexen/FrostFang/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,-8,-10)
+		TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,8,-10)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,10,0)
+		TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,-10,0)
+		TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,0,8)
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,-8,-10)
+		TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,8,-10)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,10,0)
+		TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,-10,0)
+		TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,0,8)
         stop
     }
 }
@@ -158,6 +181,98 @@ actor SamsaraHexenFrostFangBallCoop : SamsaraHexenFrostFangBall
 actor SamsaraHexenFrostFangShard : FrostMissileDM { Damage (random(1,4)) }
 
 actor SamsaraHexenFrostFangShardCoop : FrostMissile2 { Damage (random(1,4)) }
+
+actor SamsaraHexenFrostFangTwisterBall : IceGuyFX
+{
+    Speed 20
+    Damage 5
+    DamageType "HexenIce"
+    DeathSound "Hexen/FrostFang/Hit"
+    +ACTIVATEIMPACT
+    +ACTIVATEPCROSS
+    +BLOODSPLATTER
+    States
+    {
+      Spawn:
+        ICPR ABC 3 Bright Light("ICEFANGBALL") A_SpawnItemEx("IceFXPuff",0,0,2)
+        loop
+
+      Death:
+        ICPR D 4 Bright Light("ICEFANGBALL_X1") A_Explode(80,128,0)
+		ICPR D 0 A_SpawnItemEx("SamsaraHexenFrostFangTwister",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        //Do Stuff here
+      DeathFinish:
+        ICPR E 4 Bright Light("ICEFANGBALL_X2")
+        ICPR F 4 Bright Light("ICEFANGBALL_X3")
+        ICPR G 4 Bright Light("ICEFANGBALL_X4")
+        ICPR H 3 Bright
+        stop
+    }
+}
+
+actor SamsaraHexenFrostFangTwisterBallCoop : SamsaraHexenFrostFangTwisterBall
+{
+	Species "Player"
+    +THRUSPECIES
+	States
+	{
+		Death:
+			ICPR D 4 Bright Light("ICEFANGBALL_X1") A_Explode(80,128,0)
+			ICPR D 0 A_SpawnItemEx("SamsaraHexenFrostFangTwisterCoop",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+			Goto DeathFinish
+	}
+}
+
+actor SamsaraHexenFrostFangTwister
+{
+	Projectile
+	Speed 4
+	Radius 24
+	Height 24
+	RenderStyle Translucent
+	Alpha 0.85
+	MaxStepHeight 32
+	BounceType "Hexen"
+	BounceFactor 0.0
+	args 25
+	DamageType "HexenIce"
+	+STEPMISSILE
+	+NOEXPLODEFLOOR
+	+THRUACTORS
+	-NOGRAVITY
+	+SEEKERMISSILE
+	States
+	{
+		Spawn:
+			H117 I 0 NoDelay A_PlaySound("Hexen/Blizzard",CHAN_BODY,1.0,true,0.5)
+			H117 IJKL 3 Bright Light("ICEFANGBALL_X1")
+		SpawnLoop:
+			H117 F 0 A_JumpIf(args[0] <= 0,"Death")
+			H117 F 0 A_SetArg(0,args[0]-1)
+			H117 F 0 ThrustThing(random(0,256),1)
+			H117 F 0 A_SeekerMissile(0,30,SMF_LOOK,256,1)
+			H117 F 3 Bright Light("ICEFANGBALL_X2") A_Explode(2,32,0,false)
+			H117 G 0 ThrustThing(random(0,256),1)
+			H117 G 0 A_SeekerMissile(0,30,SMF_LOOK,256,1)
+			H117 G 3 Bright Light("ICEFANGBALL_X2") A_Explode(2,32,0,false)
+			H117 H 0 ThrustThing(random(0,256),1)
+			H117 H 0 A_SeekerMissile(0,30,SMF_LOOK,256,1)
+			H117 H 3 Bright Light("ICEFANGBALL_X2") A_Explode(2,32,0,false)
+			Loop
+		Death:
+			H117 L 0 A_Stop
+			H117 L 0 A_PlaySound("Hexen/FreezeRay",CHAN_5)
+			H117 LKJI 3 Bright Light("ICEFANGBALL_X1")
+			H117 L 0 A_StopSound(CHAN_BODY)
+			Stop
+	}
+}
+
+Actor SamsaraHexenFrostFangTwisterCoop : SamsaraHexenFrostFangTwister
+{
+	Species "Player"
+    +THRUSPECIES
+}
 
 // Parias (Classic)/Baratus
 
