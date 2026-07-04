@@ -1,7 +1,6 @@
 actor SamsaraDukeX3000Fire : Boolean {}
 actor SamsaraDukeHasX3000 : Boolean {}
 actor SamsaraDukeX3000LoopSoundCheck : Boolean {}
-actor SamsaraDukeX3000IdleSoundCheck : Boolean {}
 
 actor Duke3D_X3000 : DukeWeapon
 {
@@ -32,14 +31,8 @@ actor Duke3D_X3000 : DukeWeapon
 		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
 		TNT1 A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
 		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
-        TNT1 A 0 A_TakeInventory("SamsaraDukeX3000LoopSoundCheck")
-		TNT1 A 0 A_TakeInventory("SamsaraDukeX3000IdleSoundCheck")
-		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, 4)
-		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 2)
 		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStarter")
-		TNT1 A 0 A_Jump(1,"ReadyIdleSound")
-		DU3X A 0 A_WeaponReady 
-	ReadyLoop:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000IdleSoundPlayer")
 		DU3X A 5 A_WeaponReady
 			TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
 			TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
@@ -101,33 +94,25 @@ actor Duke3D_X3000 : DukeWeapon
 			TNT1 A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
 			TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
 		DU3X P 5 A_WeaponReady
-		Goto Ready
-	ReadyIdleSound:
-		TNT1 A 0 A_Jump(200,"Ready")
-		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000IdleSoundStarter")
-		goto Ready
+		loop
 	Deselect:
 		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
 		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStopper")
-		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000IdleSoundStopper")
 		DU3X A 0 //A_JumpIfInventory("DukeClassMode", 1, "DeselectLAB")
 		Goto Super::Deselect
-
 
 	Select:
 		DU3X A 0 //A_JumpIfInventory("DukeClassMode", 1, "SelectLAB")
 		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt1")
 		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
-		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStarter")
-		DU3X A 0 A_PlayWeaponSound("duke/weaponget")
+		TNT1 A 0 A_PlayWeaponSound("duke/weaponget")
+		DU3X A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStarter")
 		Goto Super::Select
 		
 	Fire:
 		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
 		TNT1 A 0 A_GiveInventory("DBSHOT",40)
 		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
-		TNT1 A 0 A_TakeInventory("SamsaraDukeX3000IdleSoundCheck")
-		TNT1 A 0 A_TakeInventory("SamsaraDukeX3000IdleSoundStarter")
 		Goto ReadyA
 
 	Flash:
@@ -175,16 +160,20 @@ actor Duke3D_X3000 : DukeWeapon
 		stop
 	TauntWeaponSound:
 		TNT1 A 0 A_PlayWeaponSound("duke/weaponget")
+		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStarter")
 		Goto Select
 	IntroTaunt:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStopper")
 		DU3X A 0 //A_JumpIfInventory("DukeClassMode", 1, "IntroTauntLAB")
 		Goto Super::IntroTaunt
 
 	WaitingTaunt:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStopper")
 		DU3X A 0 //A_JumpIfInventory("DukeClassMode", 1, "WaitingTauntLAB")
 		Goto Super::WaitingTaunt
 
 	GiveMoney:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundStopper")
 		DU3X A 0 //A_JumpIfInventory("DukeClassMode", 1, "GiveMoneyLAB")
 		Goto Super::GiveMoney
 
@@ -353,24 +342,26 @@ actor SamsaraDukeX3000LoopSoundStarter : Trigger
     {
       // Sound starting stuff
       Pickup:
-        TNT1 A 0 A_PlaySound("duke/x3000loop",CHAN_6,1,true)
+        TNT1 A 0 A_PlaySound("duke/x3000loop",CHAN_5,1,true)
         TNT1 A 0 A_GiveInventory("SamsaraDukeX3000LoopSoundCheck")
         stop
     }
 }
 
-actor SamsaraDukeX3000IdleSoundStarter : Trigger
+actor SamsaraDukeX3000IdleSoundPlayer : Trigger
 {
     States
     {
       // Sound starting stuff
       Pickup:
-        TNT1 A 0 A_PlayWeaponSound("duke/x3000idle")
-        TNT1 A 0 A_GiveInventory("SamsaraDukeX3000IdleSoundCheck")
+        TNT1 A 0 A_Jump(1,1)
+        goto PickupStop
+        TNT1 A 0 A_Jump(56,1)
+        goto PickupStop
+        TNT1 A 0 A_PlaySound("duke/x3000idle",CHAN_6)
         stop
     }
 }
-
 
 actor SamsaraDukeX3000LoopSoundStopper : Trigger
 {
@@ -380,24 +371,9 @@ actor SamsaraDukeX3000LoopSoundStopper : Trigger
       Pickup:
         TNT1 A 0 A_JumpIfInventory("SamsaraDukeX3000LoopSoundCheck",1,1)
         stop
-        TNT1 A 0 A_PlaySound("silence",CHAN_6)
-        TNT1 A 0 A_StopSound(CHAN_6)
+        TNT1 A 0 A_PlaySound("silence",CHAN_5)
+        TNT1 A 0 A_StopSound(CHAN_5)
         TNT1 A 0 A_TakeInventory("SamsaraDukeX3000LoopSoundCheck")
-        stop
-    }
-}
-
-actor SamsaraDukeX3000IdleSoundStopper : Trigger
-{
-    States
-    {
-      // Sound stopping stuff
-      Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraDukeX3000IdleSoundCheck",1,1)
-        stop
-        TNT1 A 0 A_PlaySound("silence",CHAN_6)
-        TNT1 A 0 A_StopSound(CHAN_6)
-        TNT1 A 0 A_TakeInventory("SamsaraDukeX3000IdleSoundCheck")
         stop
     }
 }
