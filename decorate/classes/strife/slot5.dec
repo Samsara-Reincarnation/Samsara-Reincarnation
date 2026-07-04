@@ -1,5 +1,7 @@
 // High explosive grenades
 
+actor SamsaraStrifeGrenadeLauncherAttackSuccess : Boolean {}
+
 actor " Grenade Launcher " : StrifeGrenadeLauncher // lmao hardcoded
 {
     Inventory.PickupMessage "You picked up the Grenade launcher."
@@ -46,11 +48,9 @@ actor " Grenade Launcher " : StrifeGrenadeLauncher // lmao hardcoded
         TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE) // netplay hack
       // start attack handler code
       FireAmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherAttackChecker")
+        TNT1 A 0 A_JumpIfInventory("SamsaraStrifeGrenadeLauncherAttackSuccess",1,"FireAttack")
         goto FireContinue
-        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
-        goto FireAttack
 
       FireAttack:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"FireAttackCoop")
@@ -84,11 +84,9 @@ actor " Grenade Launcher " : StrifeGrenadeLauncher // lmao hardcoded
       Fire2:
       // start attack handler code
       Fire2AmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2Attack")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherAttackChecker")
+        TNT1 A 0 A_JumpIfInventory("SamsaraStrifeGrenadeLauncherAttackSuccess",1,"Fire2Attack")
         goto Fire2Continue
-        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
-        goto Fire2Attack
 
       Fire2Attack:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"Fire2AttackCoop")
@@ -139,6 +137,29 @@ actor " Grenade Launcher " : StrifeGrenadeLauncher // lmao hardcoded
         TNT1 A 0 A_ClearReFire
         TNT1 A 0 A_SelectWeapon("   Pistol   ")
         goto Deselect
+    }
+}
+
+actor SamsaraStrifeGrenadeLauncherAttackChecker : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupSuccess")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto PickupFail
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupSuccess
+
+      // Token adjustment stuff
+      PickupSuccess:
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherAttackSuccess")
+        stop
+
+      PickupFail:
+        TNT1 A 0 A_TakeInventory("SamsaraStrifeGrenadeLauncherAttackSuccess")
+        stop
     }
 }
 
@@ -251,11 +272,9 @@ actor " Grenade Launcher WP " : " Grenade Launcher "
         TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE) // netplay hack
       // start attack handler code
       FireAmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
-        TNT1 A 0 A_JumpIfInventory("WhitePhosGrenade",1,1)
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherWhitePhosphorusAttackChecker")
+        TNT1 A 0 A_JumpIfInventory("SamsaraStrifeGrenadeLauncherAttackSuccess",1,"FireAttack")
         goto FireContinue
-        TNT1 A 0 A_TakeInventory("WhitePhosGrenade",1)
-        goto FireAttack
 
       FireAttack:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"FireAttackCoop")
@@ -289,11 +308,9 @@ actor " Grenade Launcher WP " : " Grenade Launcher "
       Fire2:
       // start attack handler code
       Fire2AmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2Attack")
-        TNT1 A 0 A_JumpIfInventory("WhitePhosGrenade",1,1)
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherWhitePhosphorusAttackChecker")
+        TNT1 A 0 A_JumpIfInventory("SamsaraStrifeGrenadeLauncherAttackSuccess",1,"Fire2Attack")
         goto Fire2Continue
-        TNT1 A 0 A_TakeInventory("WhitePhosGrenade",1)
-        goto Fire2Attack
 
       Fire2Attack:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"Fire2AttackCoop")
@@ -353,6 +370,20 @@ actor " Grenade Launcher WP " : " Grenade Launcher "
         goto NoAmmoSwitchToWeapon
         TNT1 A 0 A_SelectWeapon(" Grenade Launcher ")
         goto Deselect
+    }
+}
+
+actor SamsaraStrifeGrenadeLauncherWhitePhosphorusAttackChecker : SamsaraStrifeGrenadeLauncherAttackChecker
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupSuccess")
+        TNT1 A 0 A_JumpIfInventory("WhitePhosGrenade",1,1)
+        goto PickupFail
+        TNT1 A 0 A_TakeInventory("WhitePhosGrenade",1)
+        goto PickupSuccess
     }
 }
 
@@ -614,11 +645,9 @@ actor " Grenade Launcher Gas " : " Grenade Launcher "
         TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE) // netplay hack
       // start attack handler code
       FireAmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
-        TNT1 A 0 A_JumpIfInventory("StrifeGasGrenadeAmmo",1,1)
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherGasAttackChecker")
+        TNT1 A 0 A_JumpIfInventory("SamsaraStrifeGrenadeLauncherAttackSuccess",1,"FireAttack")
         goto FireContinue
-        TNT1 A 0 A_TakeInventory("StrifeGasGrenadeAmmo",1)
-        goto FireAttack
 
       FireAttack:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"FireAttackCoop")
@@ -652,11 +681,9 @@ actor " Grenade Launcher Gas " : " Grenade Launcher "
       Fire2:
       // start attack handler code
       Fire2AmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2Attack")
-        TNT1 A 0 A_JumpIfInventory("StrifeGasGrenadeAmmo",1,1)
+        TNT1 A 0 A_GiveInventory("SamsaraStrifeGrenadeLauncherGasAttackChecker")
+        TNT1 A 0 A_JumpIfInventory("SamsaraStrifeGrenadeLauncherAttackSuccess",1,"Fire2Attack")
         goto Fire2Continue
-        TNT1 A 0 A_TakeInventory("StrifeGasGrenadeAmmo",1)
-        goto Fire2Attack
 
       Fire2Attack:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"Fire2AttackCoop")
@@ -726,6 +753,20 @@ actor " Grenade Launcher Gas " : " Grenade Launcher "
         goto NoAmmoSwitchToWeapon
         TNT1 A 0 A_SelectWeapon(" Grenade Launcher ")
         goto Deselect
+    }
+}
+
+actor SamsaraStrifeGrenadeLauncherGasAttackChecker : SamsaraStrifeGrenadeLauncherAttackChecker
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupSuccess")
+        TNT1 A 0 A_JumpIfInventory("StrifeGasGrenadeAmmo",1,1)
+        goto PickupFail
+        TNT1 A 0 A_TakeInventory("StrifeGasGrenadeAmmo",1)
+        goto PickupSuccess
     }
 }
 
