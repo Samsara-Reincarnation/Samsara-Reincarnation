@@ -1208,6 +1208,7 @@ actor HexenBoulderOfJotunn
     Speed 16
     Damage (50)
     Gravity 0.5
+    //ReactionTime 64
     MaxStepHeight 16
     +BLOODLESSIMPACT
     +NOEXPLODEFLOOR
@@ -1221,18 +1222,31 @@ actor HexenBoulderOfJotunn
         TNT1 A 0 A_JumpIfInventory("HexenBoulderRollSound",1,2)
         TNT1 A 0 A_CheckFloor("StartFloorSound")
         H122 XW 2 Bright Light("MFROSTSHARD") A_CustomMissile("FlailIceSpikeMissile",0,0,random(0,359),CMF_AIMDIRECTION|CMF_TRACKOWNER|CMF_SAVEPITCH,random(-45,90))
+        //TNT1 A 0 A_JumpIf(velx != 0 || vely != 0 || velz != 0, "Spawn2")
+        //TNT1 A 0 A_Log("DEBUG: NOT MOVING 1")
+        //TNT1 A 0 A_Countdown
+        goto Spawn2
+
       Spawn2:
         TNT1 A 0 A_TakeInventory("HexenBoulderSpawnState") // reset
         TNT1 A 0 A_GiveInventory("HexenBoulderSpawnState")
         TNT1 A 0 A_JumpIfInventory("HexenBoulderRollSound",1,2)
         TNT1 A 0 A_CheckFloor("StartFloorSound")
         H122 VU 2 Bright Light("MFROSTSHARD") A_CustomMissile("FlailIceSpikeMissile",0,0,random(0,359),CMF_AIMDIRECTION|CMF_TRACKOWNER|CMF_SAVEPITCH,random(-45,90))
+        //TNT1 A 0 A_JumpIf(velx != 0 || vely != 0 || velz != 0, "Spawn3")
+        //TNT1 A 0 A_Log("DEBUG: NOT MOVING 2")
+        //TNT1 A 0 A_Countdown
+        goto Spawn3
+
       Spawn3:
         TNT1 A 0 A_TakeInventory("HexenBoulderSpawnState") // reset
         TNT1 A 0 A_GiveInventory("HexenBoulderSpawnState",2)
         TNT1 A 0 A_JumpIfInventory("HexenBoulderRollSound",1,2)
         TNT1 A 0 A_CheckFloor("StartFloorSound")
         H122 TS 2 Bright Light("MFROSTSHARD") A_CustomMissile("FlailIceSpikeMissile",0,0,random(0,359),CMF_AIMDIRECTION|CMF_TRACKOWNER|CMF_SAVEPITCH,random(-45,90))
+        //TNT1 A 0 A_JumpIf(velx != 0 || vely != 0 || velz != 0, "Spawn")
+        //TNT1 A 0 A_Log("DEBUG: NOT MOVING 3")
+        //TNT1 A 0 A_Countdown
         goto Spawn
 
       StartFloorSound:
