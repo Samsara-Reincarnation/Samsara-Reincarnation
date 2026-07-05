@@ -259,8 +259,6 @@ actor SamsaraHexenCStaffMissile : CStaffMissile
     }
 }
 
-actor SamsaraHexenCStaffMissile2 : SamsaraHexenCStaffMissile { WeaveIndexXY 0 }
-
 actor SamsaraHexenCStaffMissileCoop : SamsaraHexenCStaffMissile
 {
     Damage (random(1,5)*6) // 5
@@ -269,6 +267,8 @@ actor SamsaraHexenCStaffMissileCoop : SamsaraHexenCStaffMissile
 }
 
 actor SamsaraHexenCStaffMissileCoopImproved : SamsaraHexenCStaffMissileCoop { Damage (random(1,7)*5) }
+
+actor SamsaraHexenCStaffMissile2 : SamsaraHexenCStaffMissile { WeaveIndexXY 0 }
 
 actor SamsaraHexenCStaffMissile2Coop : SamsaraHexenCStaffMissile2
 {
@@ -575,6 +575,14 @@ actor BlightShockShot1
     }
 }
 
+actor BlightShockShot1Coop : BlightShockShot1
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor BlightShockShot1CoopImproved : BlightShockShot1Coop { Damage 1 }
+
 actor BlightShockTrail1
 {
     RenderStyle "Add"
@@ -586,19 +594,12 @@ actor BlightShockTrail1
     States
     {
       Spawn:
-        H112 A 0 Bright
-        H112 AABBCCDDEE 1 Bright //A_FadeOut(0.05)
+        /*H112 A 0 Bright
+        H112 AABBCCDDEE 1 Bright A_FadeOut(0.05)*/
+        H112 ABCDE 2 Bright
         stop
     }
 }
-
-actor BlightShockShot1Coop : BlightShockShot1
-{
-    Species "Player"
-    +THRUSPECIES
-}
-
-actor BlightShockShot1CoopImproved : BlightShockShot1Coop { Damage 1 }
 
 // Powered
 
@@ -811,16 +812,16 @@ actor "Jotunn's Flail" : SamsaraHexenWeapon
 
       FireContinue1NoAmmo:
         H122 D 1 Offset(-5,70)
-		H122 D 1 Offset(-10,79)
-		H122 D 1 Offset(-15,90)
-		H122 D 1 Offset(-20,98)
+        H122 D 1 Offset(-10,79)
+        H122 D 1 Offset(-15,90)
+        H122 D 1 Offset(-20,98)
         goto FireContinue2
 
       FireContinue1Ammo:
         H122 L 1 Bright Offset(-5,70)
-		H122 L 1 Bright Offset(-10,79)
-		H122 L 1 Bright Offset(-15,90)
-		H122 L 1 Bright Offset(-20,98)
+        H122 L 1 Bright Offset(-10,79)
+        H122 L 1 Bright Offset(-15,90)
+        H122 L 1 Bright Offset(-20,98)
         goto FireContinue2
 
       FireContinue2:
@@ -830,17 +831,17 @@ actor "Jotunn's Flail" : SamsaraHexenWeapon
         goto FireContinue2NoAmmo
 
       FireContinue2NoAmmo:
-		H122 E 1 Offset(-8,45)
+        H122 E 1 Offset(-8,45)
         H122 E 1 Offset(-12,52)
-		H122 E 1 Offset(-17,65)
-		H122 E 1 Offset(-22,88)
+        H122 E 1 Offset(-17,65)
+        H122 E 1 Offset(-22,88)
         goto FireFinishAttack
 
       FireContinue2Ammo:
         H122 M 1 Bright Offset(-8,45)
-		H122 M 1 Bright Offset(-12,52)
+        H122 M 1 Bright Offset(-12,52)
         H122 M 1 Bright Offset(-17,65)
-		H122 M 1 Bright Offset(-22,88)
+        H122 M 1 Bright Offset(-22,88)
         goto FireFinishAttack
 
       FireFinishAttack:

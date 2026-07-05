@@ -742,16 +742,6 @@ actor SamsaraHexenViscerelaghBall
     }
 }
 
-actor SamsaraHexenViscerelaghBallHealthDrain : Trigger
-{
-    States
-    {
-      Pickup:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", random(2,4), 200)
-        stop
-    }
-}
-
 actor SamsaraHexenViscerelaghBallCoop : SamsaraHexenViscerelaghBall
 {
     Species "Player"
@@ -768,6 +758,16 @@ actor SamsaraHexenViscerelaghBallCoop : SamsaraHexenViscerelaghBall
         TNT1 A 0 A_PlaySound("ClericCStaffHitThing")
         TNT1 A 0 A_GiveInventory("SamsaraHexenViscerelaghBallHealthDrain",1,AAPTR_TARGET)
         goto Crash
+    }
+}
+
+actor SamsaraHexenViscerelaghBallHealthDrain : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", random(2,4), 200)
+        stop
     }
 }
 
@@ -845,18 +845,6 @@ actor SamsaraHexenViscerelaghMiniBall : SamsaraHexenViscerelaghBall
     }
 }
 
-actor SamsaraHexenViscerelaghMiniBallDeath : SamsaraHexenViscerelaghBallDeath
-{
-    Scale 0.33
-    States
-    {
-      Spawn:
-        H108 GHIJKL 2 Bright Light("BLOODSCEPTERBALLMINI")
-        H108 L 1 Bright Light("BLOODSCEPTERBALLMINI") A_FadeOut(0.1)
-        wait
-    }
-}
-
 actor SamsaraHexenViscerelaghMiniBallCoop : SamsaraHexenViscerelaghMiniBall
 {
     Species "Player"
@@ -873,5 +861,17 @@ actor SamsaraHexenViscerelaghMiniBallCoop : SamsaraHexenViscerelaghMiniBall
         TNT1 A 0 A_PlaySound("ClericCStaffHitThing")
         TNT1 A 0 A_GiveInventory("SamsaraHexenViscerelaghBallHealthDrain",1,AAPTR_TARGET)
         goto Crash
+    }
+}
+
+actor SamsaraHexenViscerelaghMiniBallDeath : SamsaraHexenViscerelaghBallDeath
+{
+    Scale 0.33
+    States
+    {
+      Spawn:
+        H108 GHIJKL 2 Bright Light("BLOODSCEPTERBALLMINI")
+        H108 L 1 Bright Light("BLOODSCEPTERBALLMINI") A_FadeOut(0.1)
+        wait
     }
 }
