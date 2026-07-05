@@ -435,7 +435,7 @@ actor ClericSwordThrow
         TNT1 A 0 ACS_NamedExecuteWithResult("HexenBishopSwordReturn")
       DeathLoop:
         TNT1 A 0 A_PlaySound("Hexen/SwordSwing")
-        H133 AABBCCDDEEFFGGHH 1 Bright Light("CBISHOPSWORD") A_Explode(50,32,0,false,32) // was A_Explode every 2 tics; is this too much?
+        H133 AABBCCDDEEFFGGHH 1 Bright Light("CBISHOPSWORD") A_Explode(30,32,0,false,32) // was A_Explode every 2 tics; is this too much?
         loop
     }
 }
@@ -535,14 +535,16 @@ actor SamsaraHexenWandOfEmbersAttackHandler : Trigger
       PickupAttack:
         TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
         TNT1 A 0 A_PlaySound("Hexen/WandOfEmbers/Fire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
-      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+      PickupAttackUnpoweredDM:
         TNT1 A 0 A_FireCustomMissile("SamsaraHexenWandOfEmbersBall",0,false)
         stop
 
-      PickupAttackCoop:
+      PickupAttackUnpoweredCoop:
         TNT1 A 0 A_FireCustomMissile("SamsaraHexenWandOfEmbersBallCoop",0,false)
         stop
 
@@ -560,6 +562,8 @@ actor SamsaraHexenWandOfEmbersAttackHandler : Trigger
         stop
     }
 }
+
+// Unpowered
 
 actor SamsaraHexenWandOfEmbersBall
 {
@@ -659,6 +663,8 @@ actor SamsaraHexenEmberGemCoop : SamsaraHexenEmberGem
     +THRUSPECIES
 }
 
+// Powered
+
 actor SamsaraHexenWandOfEmbersBallPowered : SamsaraHexenWandOfEmbersBall
 {
     Speed 48
@@ -667,6 +673,7 @@ actor SamsaraHexenWandOfEmbersBallPowered : SamsaraHexenWandOfEmbersBall
     States
     {
       Death:
+        TNT1 A 0 A_NoGravity
         TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,-8,0,6,0,SXF_TRANSFERPOINTERS)
         TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,-8,8,6,0,SXF_TRANSFERPOINTERS)
         TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,0,8,6,-0,SXF_TRANSFERPOINTERS)
@@ -675,13 +682,28 @@ actor SamsaraHexenWandOfEmbersBallPowered : SamsaraHexenWandOfEmbersBall
         TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,8,-8,6,0,SXF_TRANSFERPOINTERS)
         TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,0,-8,6,0,SXF_TRANSFERPOINTERS)
         TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,-8,-8,6,0,SXF_TRANSFERPOINTERS)
-      DeathFinish:
-        H121 C 3 Bright Light("CEMBERWANDBALL2")
-        H121 D 3 Bright Light("CEMBERWANDBALL3")
-        H121 E 3 Bright Light("CEMBERWANDBALL4")
-        H121 F 3 Bright Light("CEMBERWANDBALL5")
-        H121 G 3 Bright Light("CEMBERWANDBALL6")
-        stop
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenWandOfEmbersBallPoweredCoop : SamsaraHexenWandOfEmbersBallCoop
+{
+    Speed 48
+    Damage (random(4,8)*20)
+    Gravity 0.9
+    States
+    {
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,0,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,0,8,6,-0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,8,6,-0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,0,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,-8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,0,-8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,-8,6,0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
     }
 }
 
@@ -699,43 +721,7 @@ actor SamsaraHexenWandOfEmbersBallPoweredSmall : SamsaraHexenWandOfEmbersBall
       Death:
         TNT1 A 0 A_NoGravity
         TNT1 A 0 A_CustomMissile("SamsaraHexenEmberGemPowered",0,0,0,CMF_TRACKOWNER)
-      DeathFinish:
-        H121 C 3 Bright Light("CEMBERWANDBALL2")
-        H121 D 3 Bright Light("CEMBERWANDBALL3")
-        H121 E 3 Bright Light("CEMBERWANDBALL4")
-        H121 F 3 Bright Light("CEMBERWANDBALL5")
-        H121 G 3 Bright Light("CEMBERWANDBALL6")
-        stop
-    }
-}
-
-actor SamsaraHexenWandOfEmbersTrailPowered : SamsaraHexenWandOfEmbersTrail { Scale 1.25 }
-
-actor SamsaraHexenEmberGemPowered : SamsaraHexenEmberGem { Scale 1.25 }
-
-actor SamsaraHexenWandOfEmbersBallPoweredCoop : SamsaraHexenWandOfEmbersBallCoop
-{
-    Speed 48
-    Damage (random(4,8)*20)
-    Gravity 0.9
-    States
-    {
-      Death:
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,0,6,0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,8,6,0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,0,8,6,-0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,8,6,-0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,0,6,0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,-8,6,0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,0,-8,6,0,SXF_TRANSFERPOINTERS)
-        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,-8,6,0,SXF_TRANSFERPOINTERS)
-      DeathFinish:
-        H121 C 3 Bright Light("CEMBERWANDBALL2")
-        H121 D 3 Bright Light("CEMBERWANDBALL3")
-        H121 E 3 Bright Light("CEMBERWANDBALL4")
-        H121 F 3 Bright Light("CEMBERWANDBALL5")
-        H121 G 3 Bright Light("CEMBERWANDBALL6")
-        stop
+        goto DeathFinish
     }
 }
 
@@ -753,15 +739,13 @@ actor SamsaraHexenWandOfEmbersBallPoweredSmallCoop : SamsaraHexenWandOfEmbersBal
       Death:
         TNT1 A 0 A_NoGravity
         TNT1 A 0 A_CustomMissile("SamsaraHexenEmberGemPoweredCoop",0,0,0,CMF_TRACKOWNER)
-      DeathFinish:
-        H121 C 3 Bright Light("CEMBERWANDBALL2")
-        H121 D 3 Bright Light("CEMBERWANDBALL3")
-        H121 E 3 Bright Light("CEMBERWANDBALL4")
-        H121 F 3 Bright Light("CEMBERWANDBALL5")
-        H121 G 3 Bright Light("CEMBERWANDBALL6")
-        stop
+        goto DeathFinish
     }
 }
+
+actor SamsaraHexenWandOfEmbersTrailPowered : SamsaraHexenWandOfEmbersTrail { Scale 1.25 }
+
+actor SamsaraHexenEmberGemPowered : SamsaraHexenEmberGem { Scale 1.25 }
 
 actor SamsaraHexenEmberGemPoweredCoop : SamsaraHexenEmberGemCoop { Scale 1.25 }
 
