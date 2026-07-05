@@ -509,16 +509,36 @@ actor "Wand of Embers" : SamsaraHexenWeapon
         H119 R 1 A_Raise
         loop
 
+      // Unpowered
       Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
         H119 S 2 A_PlaySound("Hexen/WandOfEmbers/Open")
         H119 T 2
         H119 U 2 Bright
       Hold:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"HoldPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"HoldPowered")
+      HoldUnpowered:
         H119 V 6 Bright A_GiveInventory("SamsaraHexenWandOfEmbersAttackHandler")
         H119 W 6 Bright
         H119 T 11
         H119 S 5 A_ReFire
         H119 R 6
+        goto Ready
+
+      // Powered
+      FirePowered:
+        H119 S 2 A_PlaySound("Hexen/WandOfEmbers/Open") // placeholder sound
+        H119 T 2
+        H119 U 2 Bright
+      HoldPowered:
+        H119 V 4 Bright A_GiveInventory("SamsaraHexenWandOfEmbersAttackHandler")
+        H119 W 4 Bright
+        H119 T 8
+        H119 S 4 A_ReFire
+        H119 R 4
         goto Ready
     }
 }
