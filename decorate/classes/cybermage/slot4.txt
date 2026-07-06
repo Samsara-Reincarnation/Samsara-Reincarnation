@@ -19,25 +19,51 @@ actor CMSMG : CMWeapon
 		CMMG A 1 A_WeaponReady
 		loop
 	Fire:
-		CMMG A 0 A_Jump(128,"Fire2") 
-		CMMG A 0 A_PlaySound("CM/SMGFire",CHAN_WEAPON)
-		CMMG C 0 bright A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
+		TNT1 A 0 A_GunFlash
+		TNT1 A 0 A_PlaySound("CM/SMGFire",CHAN_WEAPON)
+		TNT1 A 0 A_Jump(256,"Fire1","Fire2")
+	Fire1:
+		TNT1 A 0 A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
 		CMMG C 3 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMMG D 0 bright A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Fire1B
+        TNT1 A 0 A_GunFlash
+        goto Fire1B
+    Fire1B:
+		TNT1 A 0 A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
 		CMMG D 3 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMMG E 0 bright A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Fire1C
+        TNT1 A 0 A_GunFlash
+        goto Fire1C
+    Fire1C:
+		TNT1 A 0 A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
 		CMMG E 3 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMMG E 0 A_ReFire
-		goto Ready
+		goto FireFinish
 	Fire2:	
-		CMMG A 0 A_PlaySound("CM/SMGFire",CHAN_WEAPON)	
-		CMMG H 0 bright A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
+		TNT1 A 0 A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
 		CMMG H 3 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMMG I 0 bright A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Fire2B
+        TNT1 A 0 A_GunFlash
+        goto Fire2B
+    Fire2B:
+		TNT1 A 0 A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
 		CMMG I 3 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMMG J 0 bright A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Fire2C
+        TNT1 A 0 A_GunFlash
+        goto Fire2C
+    Fire2C:
+		TNT1 A 0 A_GiveInventory("SamsaraCyberMageSMGAttackHandler")
 		CMMG J 3 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		CMMG J 0 A_ReFire
+		goto FireFinish
+    FireFinish:
+		TNT1 A 0 A_ReFire
 		goto Ready 
 	}
 }
