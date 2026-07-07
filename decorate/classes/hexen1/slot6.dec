@@ -456,6 +456,7 @@ actor "Quickspell Gauntlets" : SamsaraHexenWeapon
     Weapon.AmmoType "Cell"
     Weapon.AmmoGive 25
     Weapon.AmmoUse 1
+    Decal "HexenGauntletPlasmaLightning"
     Obituary "$SAMSARA_HEXEN_OB_SLOT6"
     Tag "Quickspell Gauntlets"
     States
@@ -809,7 +810,7 @@ actor SamsaraHexenQuickspellGauntletsRangedAttackHandler : Trigger
         goto PickupFinishLeft
 
       PickupAttackLeftPoweredCoop:
-        TNT1 A 0 A_RailAttack(30,-8,false,null,null,RGF_NOPIERCING|RGF_SILENT|RGF_NORANDOMPUFFZ|RGF_FULLBRIGHT,8.0,"HexenGauntletLightningPuff",2,2,2048,17,20.0,0.1,"HexenGauntletLightningParticle",5)
+        TNT1 A 0 A_RailAttack(30,-8,false,None,None,RGF_SILENT|RGF_NOPIERCING|RGF_FULLBRIGHT|32,8.0,"HexenGauntletLightningPuff",2,2,2048,17,20.0,0.1,"HexenGauntletLightningParticle",5)
         goto PickupFinishLeft
 
       // Right
@@ -821,7 +822,7 @@ actor SamsaraHexenQuickspellGauntletsRangedAttackHandler : Trigger
         goto PickupFinishRight
 
       PickupAttackRightPoweredCoop:
-        TNT1 A 0 A_RailAttack(30,8,false,null,null,RGF_NOPIERCING|RGF_SILENT|RGF_NORANDOMPUFFZ|RGF_FULLBRIGHT,8.0,"HexenGauntletLightningPuff",2,2,2048,17,20.0,0.1,"HexenGauntletLightningParticle",5)
+        TNT1 A 0 A_RailAttack(30,8,false,None,None,RGF_SILENT|RGF_NOPIERCING|RGF_FULLBRIGHT|32,8.0,"HexenGauntletLightningPuff",2,2,2048,17,20.0,0.1,"HexenGauntletLightningParticle",5)
         goto PickupFinishRight
     }
 }
@@ -881,7 +882,6 @@ Actor HexenGauntletLightningPuff
 	Radius 1
 	RenderStyle "Add"
     DeathSound "hexen/weapons/gauntlethit"
-    Decal "HexenGauntletPlasmaLightning"
     +BLOODSPLATTER
 	+ALWAYSPUFF
 	+PUFFONACTORS
