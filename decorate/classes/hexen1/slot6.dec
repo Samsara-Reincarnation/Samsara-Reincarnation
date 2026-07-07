@@ -575,6 +575,8 @@ actor "Quickspell Gauntlets" : SamsaraHexenWeapon
         H105 F 2 Bright A_PlaySound("heretic/gauntletsactivate")
         H105 I 5 Bright
       Hold:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
         TNT1 A 0 A_JumpIfCloser(65,"HoldMelee")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"HoldRanged")
         TNT1 A 0 A_JumpIfInventory("Cell",2,"HoldRanged")
@@ -606,6 +608,39 @@ actor "Quickspell Gauntlets" : SamsaraHexenWeapon
         H105 J 4 Bright A_ReFire
         H105 I 3 Bright A_Light0
         goto Ready
+		
+	  FirePowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"HoldRangedPowered")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"HoldRangedPowered")
+		Goto HoldMelee
+
+      HoldRangedPowered:
+        H105 J 2 Bright
+        H120 G 2 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenQuickspellGauntletsRangedFrame",1,"HoldRangedRightPowered")
+      HoldRangedLeftPowered:
+        H105 Y 2 Bright A_GiveInventory("SamsaraHexenQuickspellGauntletsRangedAttackHandler")
+        H120 W 2 Bright
+        goto HoldFinishAmmoCheckPowered
+
+      HoldRangedRightPowered:
+        H105 Z 2 Bright A_GiveInventory("SamsaraHexenQuickspellGauntletsRangedAttackHandler")
+        H120 P 2 Bright
+        goto HoldFinishAmmoCheckPowered
+
+      HoldFinishAmmoCheckPowered:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,1)
+		Goto HoldFinishAmmoCheckPowered+6
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+		Goto HoldFinishAmmoCheckPowered+6
+		TNT1 A 0 A_Refire(1)
+		Goto HoldFinishAmmoCheckPowered+6
+		TNT1 A 0 A_JumpIfInventory("SamsaraHexenQuickspellGauntletsRangedFrame",1,"HoldRangedRightPowered")
+		Goto HoldRangedLeftPowered
+        TNT1 A 0 A_Light0 // basically switching weapons at this point
+        goto HoldFinish
     }
 }
 
@@ -722,6 +757,8 @@ actor SamsaraHexenQuickspellGauntletsRangedAttackHandler : Trigger
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_PlaySound("hexen/weapons/gauntletlightning",CHAN_WEAPON)
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
         TNT1 A 0 A_JumpIfInventory("SamsaraHexenQuickspellGauntletsRangedFrame",1,"PickupAttackRight")
       // Left
       PickupAttackLeft:
@@ -759,6 +796,33 @@ actor SamsaraHexenQuickspellGauntletsRangedAttackHandler : Trigger
       PickupFinishRight:
         TNT1 A 0 A_TakeInventory("SamsaraHexenQuickspellGauntletsRangedFrame")
         stop
+		
+	  //Powered!
+	  PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenQuickspellGauntletsRangedFrame",1,"PickupAttackRightPowered")
+      // Left
+      PickupAttackLeftPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLeftPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLeftPoweredCoop")
+      PickupAttackLeftPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("HexenGauntletPlasma",random(-5,5),false,-5)
+        goto PickupFinishLeft
+
+      PickupAttackLeftPoweredCoop:
+        TNT1 A 0 A_RailAttack(30,-8,false,null,null,RGF_NOPIERCING|RGF_SILENT|RGF_NORANDOMPUFFZ|RGF_FULLBRIGHT,8.0,"HexenGauntletLightningPuff",2,2,2048,17,20.0,0.1,"HexenGauntletLightningParticle",5)
+        goto PickupFinishLeft
+
+      // Right
+      PickupAttackRightPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightPoweredCoop")
+      PickupAttackRightPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("HexenGauntletPlasma",random(-5,5),false,5)
+        goto PickupFinishRight
+
+      PickupAttackRightPoweredCoop:
+        TNT1 A 0 A_RailAttack(30,8,false,null,null,RGF_NOPIERCING|RGF_SILENT|RGF_NORANDOMPUFFZ|RGF_FULLBRIGHT,8.0,"HexenGauntletLightningPuff",2,2,2048,17,20.0,0.1,"HexenGauntletLightningParticle",5)
+        goto PickupFinishRight
     }
 }
 
@@ -796,4 +860,41 @@ actor HexenGauntletPlasmaCoop : HexenGauntletPlasma
 {
     Species "Player"
     +THRUSPECIES
+}
+
+Actor HexenGauntletLightningParticle
+{
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	Scale 0.275
+	States
+	{
+		Spawn:
+			H137 EFGHIJK 2 Bright Light("FGAUNTLETPLASMA_X1")
+			Stop
+	}
+}
+
+Actor HexenGauntletLightningPuff
+{
+	Height 2
+	Radius 1
+	RenderStyle "Add"
+    DeathSound "hexen/weapons/gauntlethit"
+    Decal "HexenGauntletPlasmaLightning"
+    +BLOODSPLATTER
+	+ALWAYSPUFF
+	+PUFFONACTORS
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			H105 S 0 NoDelay A_Quake(1,17,0,128,"nosoundforyoubitch")
+			H105 S 5 Bright Light("FGAUNTLETPLASMA_X1") A_Explode(50,112,0)
+			H105 T 5 Bright Light("FGAUNTLETPLASMA_X2")
+			H105 U 5 Bright Light("FGAUNTLETPLASMA_X3")
+			H105 V 5 Bright Light("FGAUNTLETPLASMA_X4")
+			H105 WX 5 Bright Light("FGAUNTLETPLASMA_X5")
+			stop
+	}
 }
