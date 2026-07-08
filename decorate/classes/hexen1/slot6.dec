@@ -655,14 +655,14 @@ actor SamsaraHexenArcOfDeathPoweredAttackHandler : Trigger
     }
 }
 
-Actor HexenArcOfDeathDrawer : TemporaryBoolean {}
+actor HexenArcOfDeathDrawer : Boolean {}
 
 actor HexenArcOfDeathPoweredProjectile
 {
     Projectile
     Radius 16
     Height 20
-	Speed 32
+    Speed 32
     Damage (100*random(1,2))
     DamageType "Electric"
     DeathSound "Hexen/AxeThunder"
@@ -670,12 +670,13 @@ actor HexenArcOfDeathPoweredProjectile
     States
     {
       Spawn:
-        TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered")
+        TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 0)
         stop
 
       Death:
-		TNT1 A 0 A_JumpIfInventory("HexenArcOfDeathDrawer",1,2)
-		TNT1 A 0 ACS_NamedExecuteWithResult("HexenArcOfDeathPowered")
+        TNT1 A 0 A_JumpIfInventory("HexenArcOfDeathDrawer",1,"DeathFinish")
+        TNT1 A 0 ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 0)
+      DeathFinish:
         TNT1 A 0 A_Explode(200,100)
         TNT1 A 1 A_GiveToChildren("HexenArcOfDeathDetonationToken")
         stop
@@ -691,6 +692,11 @@ actor HexenArcOfDeathPoweredProjectileCoop : HexenArcOfDeathPoweredProjectile
       Spawn:
         TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 1)
         stop
+
+      Death:
+        TNT1 A 0 A_JumpIfInventory("HexenArcOfDeathDrawer",1,"DeathFinish")
+        TNT1 A 0 ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 1)
+        goto DeathFinish
     }
 }
 
@@ -756,6 +762,34 @@ actor HexenArcOfDeathPoweredProjectileCosmeticCoop : HexenArcOfDeathPoweredProje
 
       Spawn2Lightning:
         TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        goto Spawn2Visual
+    }
+}
+
+actor HexenArcOfDeathPoweredProjectileCosmeticZan : HexenArcOfDeathPoweredProjectileCosmetic
+{
+    States
+    {
+      Spawn1Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
+        goto Spawn1Visual
+
+      Spawn2Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
+        goto Spawn2Visual
+    }
+}
+
+actor HexenArcOfDeathPoweredProjectileCosmeticZanCoop : HexenArcOfDeathPoweredProjectileCosmetic
+{
+    States
+    {
+      Spawn1Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
+        goto Spawn1Visual
+
+      Spawn2Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
         goto Spawn2Visual
     }
 }

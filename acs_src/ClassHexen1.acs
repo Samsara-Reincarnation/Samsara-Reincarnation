@@ -452,7 +452,8 @@ Script "HexenArcOfDeathPowered" (int pve)
 		SetActivator(myTid);
 		
 		//We need to spawn the cosmetic actor
-		SpawnForced(pve ? "HexenArcOfDeathPoweredProjectileCosmeticCoop" : "HexenArcOfDeathPoweredProjectileCosmetic", GetActorX(0) + offsetX, GetActorY(0) + offsetY, GetActorZ(0) + offsetZ, newTid);
+        if (isZDoom()) { SpawnForced(pve ? "HexenArcOfDeathPoweredProjectileCosmeticCoop" : "HexenArcOfDeathPoweredProjectileCosmetic", GetActorX(0) + offsetX, GetActorY(0) + offsetY, GetActorZ(0) + offsetZ, newTid); }
+        else { SpawnForced(pve ? "HexenArcOfDeathPoweredProjectileCosmeticZanCoop" : "HexenArcOfDeathPoweredProjectileCosmeticZan", GetActorX(0) + offsetX, GetActorY(0) + offsetY, GetActorZ(0) + offsetZ, newTid); }
 		
 		//Assign player to the target
 		SetActivator(0,AAPTR_TARGET);
