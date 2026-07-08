@@ -58,6 +58,8 @@ actor SamsaraHexenFirestormAttackHandler : Trigger
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_PlaySound("ClericFlameFire",CHAN_WEAPON)
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
@@ -66,6 +68,18 @@ actor SamsaraHexenFirestormAttackHandler : Trigger
 
       PickupAttackCoop:
         TNT1 A 0 A_FireCustomMissile("CFlameMissile2",0,false)
+        stop
+		
+	  //Powered!
+	  PickupAttackPowered:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("HexenFireStormVolcanoProjectile",0,false,0,0,0,8)
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("HexenFireStormVolcanoProjectileCoop",0,false,0,0,0,8)
         stop
     }
 }
@@ -197,6 +211,168 @@ actor CircleFlame2 : CircleFlame1
         CFCF QR 3 Bright
         TNT1 A 0 A_Explode(32,64,0)
         goto DeathFinish
+    }
+}
+
+Actor HexenFireStormVolcanoProjectile
+{
+	Projectile
+	Height 16
+	Radius 8
+	Speed 32
+	Gravity 0.5
+	Damage (50*random(1,2))
+	DamageType "FireExplosive"
+	DeathSound "hexen/volcanofireblast"
+	+BLOODLESSIMPACT
+	-NOGRAVITY
+	States
+	{
+		Spawn:
+			H138 ABCD 3 Bright Light("CFLAME1") A_SpawnItemEx("HammerMissileTrail") //We can probably reuse this
+			Loop
+		Death:
+			MSP1 G 0 A_Stop
+			MSP1 G 0 A_NoGravity
+			MSP1 G 0 A_Explode(100,128)
+			MSP1 G 0 A_JumpIf(abs(z - floorz) <= 48, "SpawnVolcano")
+			MSP1 G 0 A_CheckFloor("SpawnVolcano")
+		VolcanoBlast:
+			MSP1 GHIJKLMNOP 3 Bright Light("BSBALL")
+			Stop
+		SpawnVolcano:
+			MSP1 G 0 A_SpawnItemEx("HexenFireStormVolcano",0,0,floorz,0,0,0,0,SXF_TRANSFERPOINTERS)
+			Goto VolcanoBlast
+	}
+}
+
+Actor HexenFireStormVolcanoProjectileCoop : HexenFireStormVolcanoProjectile
+{
+	Species "Player"
+    +THRUSPECIES
+	States
+	{
+		SpawnVolcano:
+			MSP1 G 0 A_SpawnItemEx("HexenFireStormVolcanoCoop",0,0,floorz,0,0,0,0,SXF_TRANSFERPOINTERS)
+			Goto VolcanoBlast
+	}
+}
+
+Actor HexenFireStormVolcano
+{
+	Projectile
+	Height 24
+	Radius 24
+	Speed 0
+	ReactionTime 64
+	+THRUACTORS
+	+NOEXPLODEFLOOR
+	-NOGRAVITY
+	States
+	{
+		Spawn:
+			TNT1 A 0 NoDelay A_RadiusThrust(50,64,RTF_AFFECTSOURCE|RTF_NOIMPACTDAMAGE|8) //It's bullshit that THRUSTZ isn't added in Zandronum, yet
+			H137 T 0 A_PlaySound("Hexen/Spike2",CHAN_VOICE)
+			H137 T 0 A_SpawnItemEx("HexenVolcanoDirtClump",-12,12,0)
+			H137 T 0 A_SpawnItemEx("HexenVolcanoDirtClump",12,12,0)
+			H137 T 0 A_SpawnItemEx("HexenVolcanoDirtClump",12,-12,0)
+			H137 T 0 A_SpawnItemEx("HexenVolcanoDirtClump",-12,-12,0)
+			H137 TSRQ 3 //Rise, then shake it, baby
+			H137 LMN 4
+			H137 LMNLMN 3
+			H137 L -1 A_Jump(256,"Krakatoa")
+			Wait
+		Krakatoa:
+			H137 L 3 Bright A_SetScale(1.0,1.1)
+			H137 L 3 Bright A_SetScale(1.1,1.2)
+			H137 L 3 Bright A_SetScale(1.15,1.3)
+			H137 L 3 Bright A_SetScale(1.1,1.2)
+			H137 P 3 Bright A_SetScale(1.0,1.1)
+			H137 P 0 A_PlaySound("hexen/volcano",CHAN_BODY)
+			H137 P 0 A_SpawnItemEx("HexenFireStormVolcanoChunk",0,0,28,frandom(0,12),0,frandom(6,12),random(0,360),SXF_TRANSFERPOINTERS)
+		EruptionLoop:
+			H137 L 2 Bright Light("CFLAME1") A_CountDown
+			H137 P 0 A_SetScale(frandom(1.05,1.15),frandom(1.15,1.3))
+			H137 P 0 A_PlaySound("hexen/volcanofireball",random(5,7))
+			H137 P 0 A_SetScale(frandom(1.05,1.15),frandom(1.15,1.3))
+			H137 P 2 Bright Light("CFLAME1") A_SpawnItemEx("HexenFireStormVolcanoChunk",0,0,28,frandom(0,12),0,frandom(6,12),random(0,360),SXF_TRANSFERPOINTERS)
+			Loop
+		Death:
+			H137 L 0 A_PlaySound("Hexen/Spike2",CHAN_VOICE,0.5)
+			H137 LQRST 3 //Lower back into the ground
+			Stop
+			
+	}
+}
+
+Actor HexenFireStormVolcanoCoop : HexenFireStormVolcano
+{
+	Species "Player"
+    +THRUSPECIES
+	States
+	{
+		Krakatoa:
+			H137 L 3 Bright A_SetScale(1.0,1.1)
+			H137 L 3 Bright A_SetScale(1.1,1.2)
+			H137 L 3 Bright A_SetScale(1.15,1.3)
+			H137 L 3 Bright A_SetScale(1.1,1.2)
+			H137 P 3 Bright A_SetScale(1.0,1.1)
+			H137 P 0 A_PlaySound("hexen/volcano",CHAN_BODY)
+			H137 P 0 A_SpawnItemEx("HexenFireStormVolcanoChunkCoop",0,0,28,frandom(0,12),0,frandom(6,12),random(0,360),SXF_TRANSFERPOINTERS)
+		EruptionLoop:
+			H137 L 2 Bright Light("CFLAME1") A_CountDown
+			H137 P 0 A_SetScale(frandom(1.05,1.15),frandom(1.15,1.3))
+			H137 P 0 A_PlaySound("hexen/volcanofireball",random(5,7))
+			H137 P 0 A_SetScale(frandom(1.05,1.15),frandom(1.15,1.3))
+			H137 P 2 Bright Light("CFLAME1") A_SpawnItemEx("HexenFireStormVolcanoChunkCoop",0,0,28,frandom(0,12),0,frandom(6,12),random(0,360),SXF_TRANSFERPOINTERS)
+			Loop
+			
+	}
+}
+
+Actor HexenFireStormVolcanoChunk : VolcanoBlast
+{
+	Radius 8
+	Height 8
+	DamageType "FireExplosive"
+	Damage 2
+	DamageType Fire
+	Gravity 0.5
+	Scale 0.5
+	+NOBLOCKMAP
+	+MISSILE
+	+DROPOFF
+	+NOTELEPORT
+	DeathSound "hexen/volcanofireblast"
+	States
+	{
+		Spawn:
+			H138 EF 4 BRIGHT A_SpawnItemEx("HammerPuff",0,0,0,0,0,0,0,SXF_ABSOLUTEPOSITION,64)
+			Loop
+		Death:
+			H138 G 0 A_Stop
+			H138 G 0 A_SetScale(1.0)
+			H138 G 0 A_NoGravity
+			H138 G 4 BRIGHT A_Explode(25,25,XF_HURTSOURCE)
+			H138 GHIJKL 4 BRIGHT
+			Stop
+	}
+}
+
+Actor HexenFireStormVolcanoChunkCoop : HexenFireStormVolcanoChunk
+{
+	Species "Player"
+    +THRUSPECIES
+}
+
+actor HexenVolcanoDirtClump : DirtClump
+{
+    States
+    {
+      Spawn:
+        TSPK C 350
+        TSPK C 2 A_Fadeout(0.1)
+        wait
     }
 }
 
