@@ -655,11 +655,14 @@ actor SamsaraHexenArcOfDeathPoweredAttackHandler : Trigger
     }
 }
 
+Actor HexenArcOfDeathDrawer : TemporaryBoolean {}
+
 actor HexenArcOfDeathPoweredProjectile
 {
     Projectile
     Radius 16
     Height 20
+	Speed 32
     Damage (100*random(1,2))
     DamageType "Electric"
     DeathSound "Hexen/AxeThunder"
@@ -667,10 +670,12 @@ actor HexenArcOfDeathPoweredProjectile
     States
     {
       Spawn:
-        TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 0)
+        TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered")
         stop
 
       Death:
+		TNT1 A 0 A_JumpIfInventory("HexenArcOfDeathDrawer",1,2)
+		TNT1 A 0 ACS_NamedExecuteWithResult("HexenArcOfDeathPowered")
         TNT1 A 0 A_Explode(200,100)
         TNT1 A 1 A_GiveToChildren("HexenArcOfDeathDetonationToken")
         stop
@@ -790,7 +795,7 @@ actor HexenArcOfDeathLaserParticle
     States
     {
       Spawn:
-        FAXE RSTUVWX 2 Bright
+        FAXE RSTUVWX 1 Bright
         stop
     }
 }
