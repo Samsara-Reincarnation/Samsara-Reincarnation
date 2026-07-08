@@ -407,31 +407,33 @@ actor "Arc of Death" : MWeapLightning // lmao hardcoded
         H109 A 1 Bright A_Raise
         loop
 
+      // Unpowered
       Fire:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Cell",5,1)
         goto NoAmmoSwitch
         H109 D 3 Bright A_AlertMonsters
         H109 E 3 Bright
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
       // start attack handler code
-      FireAmmoCheck:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
+      FireAmmoCheckUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttackUnpowered")
         TNT1 A 0 A_JumpIfInventory("Cell",5,1)
         goto FireContinue
         TNT1 A 0 A_TakeInventory("Cell",5)
-        goto FireAttack
+        goto FireAttackUnpowered
 
-      FireAttack:
-        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireAttackUnpowered:
         //TNT1 A 0 A_PlaySound("MageLightningFire") // already called in A_MLightningAttack
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"FireAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"FireAttackCoop")
-      FireAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"FireAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"FireAttackUnpoweredCoop")
+      FireAttackUnpoweredDM:
         TNT1 A 0 A_MLightningAttack("LightningFloorDM","LightningCeilingDM")
         goto FireContinue
 
-      FireAttackCoop:
+      FireAttackUnpoweredCoop:
         TNT1 A 0 A_MLightningAttack("LightningFloor2","LightningCeiling2")
         goto FireContinue
       // end attack handler code
@@ -446,24 +448,16 @@ actor "Arc of Death" : MWeapLightning // lmao hardcoded
         H109 B 2 Bright Offset(0,40)
         goto Ready
 
+      // Powered
+      FirePowered:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenArcOfDeathPoweredAttackHandler")
+        goto FireContinue
+
       // "No ammo" switch
       NoAmmoSwitch:
         TNT1 A 0 A_ClearReFire
         TNT1 A 0 A_SelectWeapon("Sapphire Wand")
         goto Deselect
-
-      FirePowered:
-        TNT1 A 0 A_PlaySound("MageLightningFire",CHAN_WEAPON)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"FireAttackPoweredCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"FireAttackPoweredCoop")
-
-      FireAttackPoweredDM:
-        TNT1 A 0 A_FireCustomMissile("HexenArcOfDeathPoweredProjectile",0,true)
-        goto FireContinue
-
-      FireAttackPoweredCoop:
-        TNT1 A 0 A_FireCustomMissile("HexenArcOfDeathPoweredProjectile",0,true)
-        goto FireContinue
     }
 }
 
@@ -478,6 +472,8 @@ actor SamsaraHexenArcOfDeathReadySoundPlayer : Trigger
         stop
     }
 }
+
+// Unpowered
 
 actor LightningCeilingDM : LightningCeiling
 {
@@ -630,119 +626,172 @@ actor LightningZap2 : LightningZapDM
     +THRUSPECIES
 }
 
-//Oh boy...
-Actor HexenArcOfDeathPoweredProjectile
+// Powered //Oh boy...
+
+actor SamsaraHexenArcOfDeathPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("MageLightningFire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("HexenArcOfDeathPoweredProjectile",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("HexenArcOfDeathPoweredProjectileCoop",0,false)
+        stop
+    }
+}
+
+actor HexenArcOfDeathPoweredProjectile
 {
     Projectile
-    Height 20
     Radius 16
+    Height 20
     Damage (100*random(1,2))
-    DeathSound "Hexen/AxeThunder"
     DamageType "Electric"
+    DeathSound "Hexen/AxeThunder"
     +SKYEXPLODE
     States
     {
-        Spawn:
-            TNT1 A 0 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered")
-        SpawnLoop:
-            TNT1 A 2
-            Loop
-        Death:
-            TNT1 A 0 A_Explode(200,100)
-            TNT1 A 1 A_GiveToChildren("HexenArcOfDeathDetonationToken")
-            Stop
+      Spawn:
+        TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 0)
+        stop
+
+      Death:
+        TNT1 A 0 A_Explode(200,100)
+        TNT1 A 1 A_GiveToChildren("HexenArcOfDeathDetonationToken")
+        stop
     }
 }
 
-Actor HexenArcOfDeathDetonationToken : TemporaryBoolean {}
-Actor HexenArcOfDeathPoweredProjectileCosmetic
+actor HexenArcOfDeathPoweredProjectileCoop : HexenArcOfDeathPoweredProjectile
 {
-    Height 16
-    Radius 8
-    +MISSILE
-    +THRUACTORS
-    +NOGRAVITY
-    +SEEKERMISSILE
+    Species "Player"
+    +THRUSPECIES
     States
     {
-        Spawn:
-            TNT1 A 0 NoDelay A_Jump(256,"Spawn1","Spawn2")
-        Spawn1:
-            H138 N 0 A_SeekerMissile(0,0,SMF_LOOK,255,8)
-            H138 N 0 A_FaceTracer(0,180)
-            H138 N 0 A_JumpIfTargetInLOS(1,0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP,1024,0)
-            Goto Spawn1Visual
-        DoLightning2:
-            TNT1 A 0 A_JumpIfInTargetInventory("SPModeOn",1,"DoLightning1Coop")
-            TNT1 A 0 A_JumpIfInTargetInventory("CoopModeOn",1,"DoLightning1Coop")
-            H138 N 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
-            Goto Spawn1Visual
-        DoLightning1Coop:
-            H138 N 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
-            Goto Spawn2Visual
-        Spawn1Visual:
-            H138 NP 2 Bright Light("MAGELIGHT") A_JumpIfInventory("HexenArcOfDeathDetonationToken",1,"Death1")
-            Goto Spawn1
-        Spawn2:
-            H138 Q 0 A_SeekerMissile(0,0,SMF_LOOK,255,8)
-            H138 Q 0 A_FaceTracer(0,180)
-            H138 Q 0 A_JumpIfTargetInLOS(1,0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP,1024,0)
-            Goto Spawn2Visual
-        DoLightning2:
-            TNT1 A 0 A_JumpIfInTargetInventory("SPModeOn",1,"DoLightning2Coop")
-            TNT1 A 0 A_JumpIfInTargetInventory("CoopModeOn",1,"DoLightning2Coop")
-            H138 Q 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
-            Goto Spawn2Visual
-        DoLightning2Coop:
-            H138 Q 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
-            Goto Spawn2Visual
-        Spawn2Visual:
-            H138 QS 2 Bright Light("MAGELIGHT") A_JumpIfInventory("HexenArcOfDeathDetonationToken",1,"Death1")
-            Goto Spawn1
-        Death1:
-            H138 O 2 Bright Light("MAGELIGHT")
-            Stop
-        Death2:
-            H138 S 2 Bright Light("MAGELIGHT")
-            Stop
+      Spawn:
+        TNT1 A -1 NoDelay ACS_NamedExecuteWithResult("HexenArcOfDeathPowered", 1)
+        stop
     }
 }
 
-Actor HexenArcOfDeathLaser : FastProjectile
+actor HexenArcOfDeathDetonationToken : Boolean {}
+
+actor HexenArcOfDeathPoweredProjectileCosmetic
 {
-    Speed 256
+    Radius 8
+    Height 16
+    +MISSILE
+    +NOGRAVITY
+    +SEEKERMISSILE
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        TNT1 A 0 NoDelay A_Jump(256,"Spawn1","Spawn2")
+      Spawn1:
+        TNT1 A 0 A_SeekerMissile(0,0,SMF_LOOK,255,8)
+        TNT1 A 0 A_FaceTracer(0,180)
+        TNT1 A 0 A_JumpIfTargetInLOS("Spawn1Lightning",0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP,1024)
+        goto Spawn1Visual
+
+      Spawn1Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        goto Spawn1Visual
+
+      Spawn1Visual:
+        H138 NP 2 Bright Light("MAGELIGHT") A_JumpIfInventory("HexenArcOfDeathDetonationToken",1,"Death1")
+        goto Spawn1
+
+      Spawn2:
+        TNT1 A 0 A_SeekerMissile(0,0,SMF_LOOK,255,8)
+        TNT1 A 0 A_FaceTracer(0,180)
+        TNT1 A 0 A_JumpIfTargetInLOS("Spawn2Lightning",0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP,1024)
+        goto Spawn2Visual
+
+      Spawn2Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        goto Spawn2Visual
+
+      Spawn2Visual:
+        H138 QS 2 Bright Light("MAGELIGHT") A_JumpIfInventory("HexenArcOfDeathDetonationToken",1,"Death2")
+        goto Spawn2
+
+      Death1:
+        H138 O 2 Bright Light("MAGELIGHT")
+        stop
+
+      Death2:
+        H138 S 2 Bright Light("MAGELIGHT")
+        stop
+    }
+}
+
+actor HexenArcOfDeathPoweredProjectileCosmeticCoop : HexenArcOfDeathPoweredProjectileCosmetic
+{
+    States
+    {
+      Spawn1Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        goto Spawn1Visual
+
+      Spawn2Lightning:
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        goto Spawn2Visual
+    }
+}
+
+actor HexenArcOfDeathLaser : FastProjectile
+{
     Radius 4
     Height 2
+    Speed 256
     Damage (10*random(1,2))
     DamageType "Electric"
     MissileType "HexenArcOfDeathLaserParticle"
+    SeeSound "Hexen/ArcBolt"
     States
     {
-        Spawn:
-            TNT1 A 4 NoDelay A_PlaySound("Hexen/ArcBolt",CHAN_VOICE)
-            Stop
-        Death:
-            TNT1 A 1
-            Stop
+      Spawn:
+        TNT1 A 4
+        stop
+
+      Death:
+        TNT1 A 1
+        stop
     }
 }
 
-Actor HexenArcOfDeathLaserCoop : HexenArcOfDeathLaser
+actor HexenArcOfDeathLaserCoop : HexenArcOfDeathLaser
 {
     Species "Player"
     +THRUSPECIES
 }
 
-Actor HexenArcOfDeathLaserParticle
+actor HexenArcOfDeathLaserParticle
 {
+    Scale 0.275
     +CLIENTSIDEONLY
     +NOINTERACTION
-    Scale 0.275
     States
     {
-        Spawn:
-            FAXE RSTUVWX 2 Bright
-            Stop
+      Spawn:
+        FAXE RSTUVWX 2 Bright
+        stop
     }
 }
 
