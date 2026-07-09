@@ -721,7 +721,7 @@ actor HexenArcOfDeathPoweredProjectileCosmetic
         goto Spawn1Visual
 
       Spawn1Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,CallACS("InvertForPort", pitch))
         goto Spawn1Visual
 
       Spawn1Visual:
@@ -735,7 +735,7 @@ actor HexenArcOfDeathPoweredProjectileCosmetic
         goto Spawn2Visual
 
       Spawn2Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,CallACS("InvertForPort", pitch))
         goto Spawn2Visual
 
       Spawn2Visual:
@@ -757,39 +757,11 @@ actor HexenArcOfDeathPoweredProjectileCosmeticCoop : HexenArcOfDeathPoweredProje
     States
     {
       Spawn1Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,CallACS("InvertForPort", pitch))
         goto Spawn1Visual
 
       Spawn2Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,-pitch)
-        goto Spawn2Visual
-    }
-}
-
-actor HexenArcOfDeathPoweredProjectileCosmeticZan : HexenArcOfDeathPoweredProjectileCosmetic
-{
-    States
-    {
-      Spawn1Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
-        goto Spawn1Visual
-
-      Spawn2Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaser",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
-        goto Spawn2Visual
-    }
-}
-
-actor HexenArcOfDeathPoweredProjectileCosmeticZanCoop : HexenArcOfDeathPoweredProjectileCosmetic
-{
-    States
-    {
-      Spawn1Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
-        goto Spawn1Visual
-
-      Spawn2Lightning:
-        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,pitch)
+        TNT1 A 0 A_CustomMissile("HexenArcOfDeathLaserCoop",0,0,0,CMF_AIMDIRECTION|CMF_ABSOLUTEPITCH,CallACS("InvertForPort", pitch))
         goto Spawn2Visual
     }
 }
