@@ -725,6 +725,7 @@ script "getPointerAngle" (int myTid, int pointer)
 	SetResultValue(GetActorAngle(myTid));
 }
 
+//There may be an instance where we need to check the source port
 script "getPointerPitch" (int myTid, int pointer)
 {
 	if(pointer == 0) pointer = AAPTR_Target;
@@ -813,3 +814,9 @@ Script "Samsara_Ceil" (int a) { SetResultValue(ceil(a)); }
 Script "Samsara_Floor" (int a) { SetResultValue(floor(a)); }
 Script "Samsara_Round" (int a) { SetResultValue(round(a)); }
 Script "Samsara_Exp" (int a, int b) { SetResultValue(pow(a, b)); }
+
+//Use for A_CustomMissile when pitch is involved...
+Script "InvertForPort" (int input)
+{
+	SetResultValue(isZDoom() ? -input : input);
+}

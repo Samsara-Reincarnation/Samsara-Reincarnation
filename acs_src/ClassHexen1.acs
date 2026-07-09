@@ -483,3 +483,46 @@ Script "HexenArcOfDeathEffectLife" (int x, int y, int z)
 		Delay(1);
 	}
 }
+
+Script "HexenPurifierDamage" (void)
+{
+	//Get the current tid of the monster and generate a new one
+	int newTid = UniqueTid();
+	int myTid = ActivatorTid();
+	
+	//Generate new tid for the projectile
+	int projTid = UniqueTid();
+	Thing_ChangeTid(0,projTid);
+	
+	//Now assign the monster a new temporary tid
+	SetActivator(0,AAPTR_TRACER);
+	Thing_ChangeTid(0,newTid);
+	int burn = CheckFlag(0,"BOSS") || CheckFlag(0,"NOBLOOD");
+	
+	//Now damage the actor as the projectile
+	SetActivator(projTid,AAPTR_TARGET);
+	Thing_Damage2(newTid,burn ? 200 : 1000,burn ? "Wraithverge" : "HexenPurify");
+	
+	//Revert tids
+	Thing_ChangeTid(newTid,myTid);
+	Thing_ChangeTid(projTid,0);
+}
+
+Script "HexenSpawnAlly" (void)
+{
+	int myAngle = GetActorAngle(0);
+	int newTid = UniqueTid();
+	SpawnForced("HexenWraithVergeAlly",GetActorX(0),GetActorY(0),GetActorZ(0),newTid);
+	SetActivator(0,AAPTR_TARGET);
+	Thing_SetTranslation(newTid,-1);
+	SetPointerExt(AAPTR_FRIENDPLAYER,0,newTid);
+	SetActivator(newTid);
+	ACS_NamedExecuteWithResult("HexenPariasAllyTimer");
+	Thing_ChangeTid(newTid,0);
+}
+
+Script "HexenPariasAllyTimer" (void)
+{
+	Delay(4200);
+	Thing_Damage2(0,500,"RemoveAlly");
+}
