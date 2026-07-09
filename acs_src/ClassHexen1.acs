@@ -311,7 +311,7 @@ Script "HexenGrapplePull" (void)
 	
 	//IF an enemy if too big it should pull the player.
 	SetActivator(newTid,AAPTR_Tracer);
-	int normalEnemy = GetActorProperty(0,APROP_HEIGHT) <= 80.0 && GetActorProperty(0,APROP_RADIUS) <= 24.0;
+	int normalEnemy = GetActorProperty(0,APROP_HEIGHT) <= 80.0 && GetActorProperty(0,APROP_RADIUS) <= 20.0;
 	SetActivator(newtid);
 	
 	//Get the player's coordinates
@@ -516,6 +516,7 @@ Script "HexenSpawnAlly" (void)
 	SetActivator(0,AAPTR_TARGET);
 	Thing_SetTranslation(newTid,-1);
 	SetPointerExt(AAPTR_FRIENDPLAYER,0,newTid);
+	SetPointerExt(AAPTR_MASTER,0,newTid);
 	SetActivator(newTid);
 	ACS_NamedExecuteWithResult("HexenPariasAllyTimer");
 	Thing_ChangeTid(newTid,0);
