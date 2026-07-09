@@ -483,7 +483,7 @@ Script "HexenArcOfDeathEffectLife" (int x, int y, int z)
 	}
 }
 
-Script "HexenPurifierDamage" (void)
+Script "HexenPurifierDamage" (int dmg1, int dmg2)
 {
 	//Get the current tid of the monster and generate a new one
 	int newTid = UniqueTid();
@@ -500,7 +500,7 @@ Script "HexenPurifierDamage" (void)
 	
 	//Now damage the actor as the projectile
 	SetActivator(projTid,AAPTR_TARGET);
-	Thing_Damage2(newTid, burn ? 200 : 1000, burn ? "Wraithverge" : "HexenPurify");
+	Thing_Damage2(newTid, burn ? dmg1 : dmg2, burn ? "Wraithverge" : "HexenPurify");
 	
 	//Revert tids
 	Thing_ChangeTid(newTid,myTid);
