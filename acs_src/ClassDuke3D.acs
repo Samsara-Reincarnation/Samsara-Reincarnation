@@ -317,25 +317,33 @@ Script "DukeEnforcerSpit" (void) CLIENTSIDE //4110
 Script "DukeIncineratorIgnite" (int burn)
 {
 	if (CheckInventory("SamsaraDuke_IsBurning") || CheckFlag(0,"BOSS")) { terminate; }
-	else 
-	{
+
 	GiveInventory("SamsaraDuke_IsBurning",1);
 	GiveInventory("Duke3DIncineratorDamager2Giver",1);
 	CreateTranslation(2950,0:255=%[0,0,0]:[2.0,0.66,0.0]);
 	Thing_SetTranslation(0,2950);
 	int a;
 	int health;
+	int delaycount = 0;
 	for(a = 1; a < 44; a++)
 	{
-		Delay(4);
+        while (delaycount < 4)
+        {
+            if (isDead(0)) { break; }
+
+            delaycount++;
+            Delay(1);
+        }
+
+        if (isDead(0)) { break; }
+
+        delaycount = 0;
+
 		health = GetActorProperty(0,APROP_Health);
-		if (ClassifyActor(0) & ACTOR_DEAD) { break; }
 		if (health <= 10) { GiveInventory("Duke3DIncineratorDamager3Giver",1); }
 		if (random(0,2) == 0) { GiveInventory("Duke3DIncineratorDamagerGiver",1); }
 		GiveInventory("Duke3DIncineratorBurningFX",1);
 	}
 	Thing_SetTranslation(0,0);
 	TakeInventory("SamsaraDuke_IsBurning",1);
-	terminate;
-	}
 }
