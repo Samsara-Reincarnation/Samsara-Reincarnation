@@ -2371,6 +2371,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						{
                             if (CheckInventory("SamsaraDukeHasGoldenDesertEagle")) { SetInventory("Golden Desert Eagle", 1); }
 
+                            if (CheckInventory("SamsaraDukeHasIncinerator"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Duke3D_Incinerator", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
                             if (CheckInventory("SamsaraDukeHasX3000"))
                             {
                                 storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
@@ -2409,6 +2416,15 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Chaingun Cannon", 0);
                             }
 
+                            if (!CheckInventory("SamsaraDukeHasSlot6"))
+                            {
+                                SetInventory("GotWeapon6", 0);
+
+                                if (CheckWeapon("Freezethrower")) { SetWeapon("Duke3D_Incinerator"); }
+
+                                SetInventory("Freezethrower", 0);
+                            }
+
                             if (!CheckInventory("SamsaraDukeHasSlot7"))
                             {
                                 SetInventory("GotWeapon7", 0);
@@ -2437,6 +2453,17 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Chaingun Cannon", 1);
 
                                 if (CheckWeapon("Golden Desert Eagle")) { SetWeapon("Chaingun Cannon"); }
+                            }
+
+                            if (CheckInventory("SamsaraDuke64HasSlot6"))
+                            {
+                                SetInventory("GotWeapon6", 1);
+
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Freezethrower", 1);
+                                SetInventory(storedammopriname, storedammopri);
+
+                                if (CheckWeapon("Duke3D_Incinerator")) { SetWeapon("Freezethrower"); }
                             }
 
                             if (CheckInventory("SamsaraDuke64HasSlot7"))
@@ -2471,6 +2498,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             if (CheckInventory("DukePortSteroids") || CheckInventory("DukePortSteroidsLAB")) { GiveInventory("DukePortSteroids64", 1); }
 
 							TakeInventory("Golden Desert Eagle", 1);
+							TakeInventory("Duke3D_Incinerator", 1);
 							TakeInventory("Duke3D_X3000", 1);
 							SetInventory("DukePortJetpack", 0);
 							TakeInventory("Shrinker", 1);
@@ -2487,6 +2515,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						else
 						{
                             if (CheckInventory("SamsaraDukeHasGoldenDesertEagle")) { SetInventory("Golden Desert Eagle", 1); }
+
+                            if (CheckInventory("SamsaraDukeHasIncinerator"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Duke3D_Incinerator", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
                             if (CheckInventory("SamsaraDukeHasX3000"))
                             {
@@ -2524,6 +2559,15 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 if (CheckWeapon("Chaingun Cannon")) { SetWeapon("Golden Desert Eagle"); }
 
                                 SetInventory("Chaingun Cannon", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot6"))
+                            {
+                                SetInventory("GotWeapon6", 0);
+
+                                if (CheckWeapon("Freezethrower")) { SetWeapon("Duke3D_Incinerator"); }
+
+                                SetInventory("Freezethrower", 0);
                             }
 
                             if (!CheckInventory("SamsaraDukeHasSlot7"))

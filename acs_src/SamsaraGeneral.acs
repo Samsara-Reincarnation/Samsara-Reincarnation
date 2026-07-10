@@ -2428,6 +2428,10 @@ Script "Samsara_ResetInventory" (void)
             SetInventory("SamsaraDukeHasGoldenDesertEagle", 0);
 			TakeInventory("RPG", INTMAX);
 			TakeInventory("Freezethrower", INTMAX);
+			SetInventory("SamsaraDukeHasSlot6", 0);
+			SetInventory("SamsaraDuke64HasSlot6", 0);
+			TakeInventory("Duke3D_Incinerator", INTMAX);
+            SetInventory("SamsaraDukeHasIncinerator", 0);
 			TakeInventory("Devastator Weapon", INTMAX);
 			SetInventory("SamsaraDukeHasSlot7", 0);
 			SetInventory("SamsaraDuke64HasSlot7", 0);
@@ -3777,6 +3781,9 @@ script "Samsara_FillInventory" (void)
 			SetInventory("SamsaraDukeHasSlot4", 1);
 			SetInventory("SamsaraDuke64HasSlot4", 1);
 			SetInventory("SamsaraDukeHasGoldenDesertEagle", 1);
+			SetInventory("SamsaraDukeHasSlot6", 1);
+			SetInventory("SamsaraDuke64HasSlot6", 1);
+			SetInventory("SamsaraDukeHasIncinerator", 1);
 			SetInventory("SamsaraDukeHasSlot7", 1);
 			SetInventory("SamsaraDuke64HasSlot7", 1);
 			SetInventory("SamsaraDukeHasX3000", 1);
@@ -6517,6 +6524,25 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
                 break;
 
+              case SLOT_PLASMARIFLE:
+                if (!CheckInventory("Freezethrower"))
+                {
+                    GiveInventory("Freezethrower", 1);
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Freezethrower", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("SamsaraDukeHasSlot6", 1);
+                    GiveInventory("SamsaraDuke64HasSlot6", 1);
+                }
+                break;
+
               case SLOT_BFG9000:
                 if (!CheckInventory("Devastator Weapon"))
                 {
@@ -6533,6 +6559,25 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 {
                     GiveInventory("SamsaraDukeHasSlot7", 1);
                     GiveInventory("SamsaraDuke64HasSlot7", 1);
+                }
+                break;
+
+              case SLOT_RAILGUN:
+                if (!CheckInventory("Duke3D_Incinerator"))
+                {
+                    GiveInventory("Duke3D_Incinerator", 1);
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Duke3D_Incinerator", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("SamsaraDukeHasIncinerator", 1);
+                    GiveInventory("SamsaraDuke64HasSlot6", 1);
                 }
                 break;
 
@@ -6635,6 +6680,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_PLASMARIFLE:
+              case SLOT_RAILGUN:
                 if (!CheckInventory("Freezethrower"))
                 {
                     GiveInventory("Freezethrower", 1);
@@ -6645,6 +6691,25 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
 
                 if (startmode <= -1 && GetCVar("samsara_lmsuniques")) { GiveInventory("Duke64ShrinkerAmmo", GetAmmoCapacity("Duke64ShrinkerAmmo")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    switch (slot)
+                    {
+                      case SLOT_PLASMARIFLE:
+                        GiveInventory("SamsaraDukeHasSlot6", 1);
+                        break;
+
+                      case SLOT_RAILGUN:
+                        GiveInventory("SamsaraDukeHasIncinerator", 1);
+                        GiveInventory("GotWeapon6", 1);
+                        break;
+                    }
+
+                    GiveInventory("SamsaraDuke64HasSlot6", 1);
+                }
                 break;
 
               case SLOT_BFG9000:

@@ -860,10 +860,12 @@ StatusBar Fullscreen, ForceScaled
 
                 IsSelected RPG { DrawImage "DN5DFNT5", 271, 184; }
 
-                // Slot 6
-                InInventory GotWeapon6 { DrawImage "DN4DFNT6", 275, 184; }
+                // Slot 6 + Slot 6S
+                InInventory GotWeapon6 || Duke3D_Incinerator { DrawImage "DN4DFNT6", 275, 184; }
 
                 IsSelected Freezethrower { DrawImage "DN5DFNT6", 275, 184; }
+
+                IsSelected Duke3D_Incinerator { DrawImage "DN6DFNT6", 275, 184; }
 
                 // Slot 7 + Slot 7S
                 InInventory GotWeapon7 || Duke3D_X3000 { DrawImage "DN4DFNT7", 267, 190; }
@@ -6141,6 +6143,13 @@ StatusBar Fullscreen, ForceScaled
                     } else { // Original/Lost Episodes
                         InInventory GotWeapon6 || Wolf3DLightningGun { DrawImage "STYSNUM6", 176, 10; }
                     }
+                } else InInventory DukeClass {
+                    InInventory DukeClassMode, 2 // Duke Nukem 64
+                    {
+                        InInventory GotWeapon6 { DrawImage "STYSNUM6", 176, 10; }
+                    } else { // Original/Life's A Beach
+                        InInventory GotWeapon6 || Duke3D_Incinerator { DrawImage "STYSNUM6", 176, 10; }
+                        }
                 } else InInventory MarathonClass {
                     InInventory GotWeapon6 || "SPNKR-25 Auto Cannon" { DrawImage "STYSNUM6", 176, 10; }
                 } else InInventory QuakeClass {
@@ -6226,6 +6235,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected "Gigazorcher 2100" { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected CorvusTempestWand { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected Wolf3DLightningGun { DrawImage "STY3NUM6", 176, 10; }
+                IsSelected Duke3D_Incinerator { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected "SPNKR-25 Auto Cannon" { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected "Rocket Powered Impaler" { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected "Split Missile" { DrawImage "STY3NUM6", 176, 10; }
