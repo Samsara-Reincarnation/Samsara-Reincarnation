@@ -1585,6 +1585,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_HEXEN:
+                if (CheckInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck") && !CheckWeapon("Fire Blast"))
+                {
+                    StopSound(0, CHAN_WEAPON);
+
+                    SetInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck", 0);
+                }
+
 				hexmode = GetUserCVar(pln, "samsara_cl_hexclass");
 
                 if (hexmode > 3) { hexmode = 3; }
@@ -2329,6 +2336,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_DUKE:
+                if (CheckInventory("SamsaraDukeX3000LoopSoundCheck") && !CheckWeapon("Duke3D_X3000"))
+                {
+                    StopSound(0, CHAN_5);
+
+                    SetInventory("SamsaraDukeX3000LoopSoundCheck", 0);
+                }
+
 				SetInventory("SamsaraDuke64UsingAltAmmo", (CheckWeapon("Glock 17") && CheckInventory("Duke64UsingDumDums")) ||
                                                           (CheckWeapon("  Shotgun  ") && CheckInventory("Duke64UsingExplosiveShells")) ||
                                                           (CheckWeapon("RPG") && CheckInventory("Duke64UsingHeatSeeking")) ||

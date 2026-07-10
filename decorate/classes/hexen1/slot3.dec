@@ -148,13 +148,19 @@ actor SamsaraHexenBishopsShortswordAttackHandler : Trigger
     {
       // Ammo checking/taking stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrong")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("Clip",4,1)
         goto PickupAttackWeak
         TNT1 A 0 A_TakeInventory("Clip",4)
-        goto PickupAttackStrong
+        goto PickupAttack
 
       // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackStrongPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackStrongPowered")
+        goto PickupAttackStrongUnpowered
+
       // Weak
       PickupAttackWeak:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackWeakCoop")
@@ -176,11 +182,11 @@ actor SamsaraHexenBishopsShortswordAttackHandler : Trigger
         stop
 
       // Strong
-      PickupAttackStrong:
-        TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongCoop")
-      PickupAttackStrongDM:
+      // Unpowered
+      PickupAttackStrongUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongUnpoweredCoop")
+      PickupAttackStrongUnpoweredDM:
         TNT1 A 0 A_FireBullets(-32,-16,-1,10,"ClericSwordPuff",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
         TNT1 A 0 A_FireBullets(-16,-12,-1,10,"ClericSwordPuff",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
         TNT1 A 0 A_FireBullets(0,-8,-1,10,"ClericSwordWallPuff",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
@@ -191,8 +197,8 @@ actor SamsaraHexenBishopsShortswordAttackHandler : Trigger
         TNT1 A 0 A_FireCustomMissile("ClericSwordSlash",0,false,16)
         stop
 
-      PickupAttackStrongCoop:
-        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackStrongCoopImproved")
+      PickupAttackStrongUnpoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackStrongUnpoweredCoopImproved")
         TNT1 A 0 A_FireBullets(-32,-16,-1,10,"ClericSwordPuffCoop",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
         TNT1 A 0 A_FireBullets(-16,-12,-1,10,"ClericSwordPuffCoop",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
         TNT1 A 0 A_FireBullets(0,-8,-1,10,"ClericSwordWallPuffCoop",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
@@ -203,7 +209,7 @@ actor SamsaraHexenBishopsShortswordAttackHandler : Trigger
         TNT1 A 0 A_FireCustomMissile("ClericSwordSlashCoop",0,false,16)
         stop
 
-      PickupAttackStrongCoopImproved:
+      PickupAttackStrongUnpoweredCoopImproved:
         TNT1 A 0 A_FireBullets(-32,-16,-1,13,"ClericSwordPuffCoop",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
         TNT1 A 0 A_FireBullets(-16,-12,-1,13,"ClericSwordPuffCoop",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
         TNT1 A 0 A_FireBullets(0,-8,-1,13,"ClericSwordWallPuffCoop",FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ,120)
@@ -212,6 +218,18 @@ actor SamsaraHexenBishopsShortswordAttackHandler : Trigger
         TNT1 A 0 A_FireCustomMissile("ClericSwordSlashCoopImproved",0,false)
         TNT1 A 0 A_FireCustomMissile("ClericSwordSlashCoopImproved",0,false,-16)
         TNT1 A 0 A_FireCustomMissile("ClericSwordSlashCoopImproved",0,false,16)
+        stop
+
+      // Powered
+      PickupAttackStrongPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongPoweredCoop")
+      PickupAttackStrongPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("ClericSwordThrow",0,false)
+        stop
+
+      PickupAttackStrongPoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("ClericSwordThrowCoop",0,false)
         stop
     }
 }
@@ -222,6 +240,8 @@ actor ClericSwordPuffNormal : AxePuff { ActiveSound "" }
 actor ClericSwordPuffNormalCoop : ClericSwordPuffNormal { +MTHRUSPECIES }
 
 // Strong
+
+// Unpowered
 
 actor ClericSwordWallPuff
 {
@@ -384,6 +404,80 @@ actor ClericSwordSlashTrail9 : ClericSwordSlashTrail { Alpha 0.15 }
 actor ClericSwordSlashTrail10 : ClericSwordSlashTrail { Alpha 0.1 }
 actor ClericSwordSlashTrail11 : ClericSwordSlashTrail { Alpha 0.05 }
 
+// Powered
+
+//actor ClericSwordThrowContinue : Boolean {}
+
+actor ClericSwordThrow
+{
+    Projectile
+    Radius 16
+    Speed 24
+    Damage (8)
+    DamageType "Fire"
+    RenderStyle "Translucent"
+    Alpha 0.67
+    +FORCERADIUSDMG
+    +NODAMAGETHRUST
+    +THRUACTORS //Because this has to work on hellknights
+    States
+    {
+      Spawn:
+        H133 A 0 Bright Light("CBISHOPSWORD") NoDelay A_PlaySound("FighterHammerContinuous")
+        H133 AABBCCDDEEFFGGHH 1 Bright Light("CBISHOPSWORD") A_Explode(30,32,0,false,32)
+        loop
+
+      /*ReturnBlade:
+        TNT1 A 1 A_Die("ReturnBlade")
+        loop*/
+
+      Death:
+        TNT1 A 0 A_SpawnItemEx("ClericSwordWallPowered")
+        TNT1 A 0 A_PlaySound("HolySymbolFire",CHAN_VOICE)
+      //Death.ReturnBlade:
+        TNT1 A 0 A_ChangeFlag("NOINTERACTION",true)
+        TNT1 A 0 ACS_NamedExecuteWithResult("HexenBishopSwordReturn")
+      DeathLoop:
+        TNT1 A 0 A_PlaySound("Hexen/SwordSwing")
+        H133 AABBCCDDEEFFGGHH 1 Bright Light("CBISHOPSWORD") A_Explode(30,32,0,false,32) // was A_Explode every 2 tics; is this too much?
+        loop
+    }
+}
+
+actor ClericSwordThrowCoop : ClericSwordThrow
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor ClericSwordWallPowered
+{
+    Radius 16
+    RenderStyle "Add"
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    +PUFFGETSOWNER
+    +PUFFONACTORS
+    States
+    {
+      Spawn:
+        SPIR P 0 A_FaceTarget
+        goto FadeOut
+
+      Melee:
+        TNT1 A 0 A_PlaySound("SpiritAttack")
+        goto FadeOut
+
+      XDeath:
+        TNT1 A 0 A_PlaySound("FighterAxeHitThing")
+        goto FadeOut
+
+      FadeOut:
+        H128 ABCDEFGHIJKLMNOPQR 3 Bright
+        stop
+    }
+}
+
 // Wand of Embers
 
 actor "Wand of Embers" : SamsaraHexenWeapon
@@ -415,19 +509,57 @@ actor "Wand of Embers" : SamsaraHexenWeapon
         H119 R 1 A_Raise
         loop
 
+      // Unpowered
       Fire:
-        H119 S 2 A_PlaySound("Hexen/WandOfEmbers/Open")
+        H119 S 2 A_GiveInventory("SamsaraHexenWandOfEmbersSoundPlayer")
         H119 T 2
         H119 U 2 Bright
       Hold:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"HoldPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"HoldPowered")
+      HoldUnpowered:
         H119 V 6 Bright A_GiveInventory("SamsaraHexenWandOfEmbersAttackHandler")
         H119 W 6 Bright
         H119 T 11
         H119 S 5 A_ReFire
         H119 R 6
         goto Ready
+
+      // Powered
+      HoldPowered:
+        H119 V 4 Bright A_GiveInventory("SamsaraHexenWandOfEmbersPoweredAttackHandler")
+        H119 W 4 Bright
+        H119 T 8
+        H119 S 4 A_ReFire
+        H119 R 4
+        goto Ready
     }
 }
+
+actor SamsaraHexenWandOfEmbersSoundPlayer : Trigger
+{
+    States
+    {
+      // Ammo checking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupPlaySoundPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupPlaySoundPowered")
+        goto PickupPlaySoundUnpowered
+
+      // Sound stuff
+      // Unpowered
+      PickupPlaySoundUnpowered:
+        TNT1 A 0 A_PlaySound("Hexen/WandOfEmbers/Open")
+        stop
+
+      // Powered
+      PickupPlaySoundPowered:
+        TNT1 A 0 A_PlaySound("Hexen/WandOfEmbers/Open") // placeholder sound
+        stop
+    }
+}
+
+// Unpowered
 
 actor SamsaraHexenWandOfEmbersAttackHandler : Trigger
 {
@@ -554,7 +686,122 @@ actor SamsaraHexenEmberGemCoop : SamsaraHexenEmberGem
     +THRUSPECIES
 }
 
+// Powered
+
+actor SamsaraHexenWandOfEmbersPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Hexen/WandOfEmbers/Fire",CHAN_WEAPON) // placeholder sound
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenWandOfEmbersBallPowered",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenWandOfEmbersBallPoweredCoop",0,false)
+        stop
+    }
+}
+
+actor SamsaraHexenWandOfEmbersBallPowered : SamsaraHexenWandOfEmbersBall
+{
+    Speed 48
+    Damage (random(4,8)*20)
+    Gravity 0.9
+    States
+    {
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,-8,0,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,-8,8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,0,8,6,-0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,8,8,6,-0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,8,0,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,8,-8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,0,-8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmall",0,0,0,-8,-8,6,0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenWandOfEmbersBallPoweredCoop : SamsaraHexenWandOfEmbersBallCoop
+{
+    Speed 48
+    Damage (random(4,8)*20)
+    Gravity 0.9
+    States
+    {
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,0,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,0,8,6,-0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,8,6,-0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,0,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,8,-8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,0,-8,6,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenWandOfEmbersBallPoweredSmallCoop",0,0,0,-8,-8,6,0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenWandOfEmbersBallPoweredSmall : SamsaraHexenWandOfEmbersBall
+{
+    Speed 24
+    Damage (random(3,6)*10)
+    Scale 1.25
+    States
+    {
+      Spawn:
+        H121 AABBB 1 Bright Light("CEMBERWANDBALL1") A_SpawnItemEx("SamsaraHexenWandOfEmbersTrailPowered")
+        loop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_CustomMissile("SamsaraHexenEmberGemPowered",0,0,0,CMF_TRACKOWNER)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenWandOfEmbersBallPoweredSmallCoop : SamsaraHexenWandOfEmbersBallCoop
+{
+    Speed 24
+    Damage (random(3,6)*10)
+    Scale 1.25
+    States
+    {
+      Spawn:
+        H121 AABBB 1 Bright Light("CEMBERWANDBALL1") A_SpawnItemEx("SamsaraHexenWandOfEmbersTrailPowered")
+        loop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_CustomMissile("SamsaraHexenEmberGemPoweredCoop",0,0,0,CMF_TRACKOWNER)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenWandOfEmbersTrailPowered : SamsaraHexenWandOfEmbersTrail { Scale 1.25 }
+
+actor SamsaraHexenEmberGemPowered : SamsaraHexenEmberGem { Scale 1.25 }
+
+actor SamsaraHexenEmberGemPoweredCoop : SamsaraHexenEmberGemCoop { Scale 1.25 }
+
 // Parias (Classic)/Baratus
+
+actor SamsaraHexenTimonsAxeDirectionCounter : Boolean {}
 
 actor "Timon's Axe" : SamsaraHexenWeapon
 {
@@ -579,6 +826,7 @@ actor "Timon's Axe" : SamsaraHexenWeapon
 
       // Parias (Classic)
       Ready:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenTimonsAxeDirectionCounter")
         TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"ReadyFighter")
       ReadyClericClassic:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyClericClassicAmmo")
@@ -614,6 +862,7 @@ actor "Timon's Axe" : SamsaraHexenWeapon
         goto Ready
 
       Deselect:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenTimonsAxeDirectionCounter")
         TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"DeselectFighter")
       DeselectClericClassic:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectClericClassicAmmo")
@@ -629,6 +878,7 @@ actor "Timon's Axe" : SamsaraHexenWeapon
         goto Deselect
 
       Select:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenTimonsAxeDirectionCounter")
         TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"SelectFighter")
       SelectClericClassic:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectClericClassicAmmo")
@@ -654,54 +904,82 @@ actor "Timon's Axe" : SamsaraHexenWeapon
         FAXE B 4 Offset(15,32)
         FAXE C 3 Offset(15,32)
         FAXE D 2 Offset(15,32)
-        goto FireClericClassicContinue
+        goto FireClericClassicContinue1
 
       FireClericClassicAmmo:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,1)
+        goto FireClericClassicAmmo1
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenTimonsAxeDirectionCounter",1,"FireClericClassicAmmo2")
+      FireClericClassicAmmo1:
         FAXE N 4 Bright Offset(15,32)
         FAXE O 3 Bright Offset(15,32)
         FAXE P 2 Bright Offset(15,32)
-        goto FireClericClassicContinue
+        goto FireClericClassicContinue1
 
-      FireClericClassicContinue:
+      FireClericClassicContinue1:
         TNT1 A 0 A_GiveInventory("SamsaraHexenTimonsAxeAttackHandler") // originally jumped a frame if ammo ended up being 0 with this; let's not do that this time
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicContinueAmmo")
-        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireClericClassicContinueAmmo")
-        goto FireClericClassicContinueNoAmmo
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicContinue1Ammo")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireClericClassicContinue1Ammo")
+        goto FireClericClassicContinue1NoAmmo
 
-      FireClericClassicContinueNoAmmo:
+      FireClericClassicContinue1NoAmmo:
         FAXE D 1 Offset(-5,70)
         FAXE D 2 Offset(-25,90)
         FAXE E 1 Offset(15,32)
         FAXE E 2 Offset(10,54)
         FAXE E 7 Offset(10,150)
-        goto FireClericClassicFinish
+        goto FireClericClassicFinish1
 
-      FireClericClassicContinueAmmo:
+      FireClericClassicContinue1Ammo:
         FAXE P 1 Bright Offset(-5,70)
         FAXE P 2 Bright Offset(-25,90)
         FAXE Q 1 Bright Offset(15,32)
         FAXE Q 2 Bright Offset(10,54)
         FAXE Q 7 Bright Offset(10,150)
-        goto FireClericClassicFinish
+        goto FireClericClassicFinish1
 
-      FireClericClassicFinish:
+      FireClericClassicFinish1:
         TNT1 A 0 A_ReFire
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicFinishAmmo")
-        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireClericClassicFinishAmmo")
-        goto FireClericClassicFinishNoAmmo
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicFinish1Ammo")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireClericClassicFinish1Ammo")
+        goto FireClericClassicFinish1NoAmmo
 
-      FireClericClassicFinishNoAmmo:
+      FireClericClassicFinish1NoAmmo:
         FAXE A 1 Offset(0,60)
         FAXE A 1 Offset(0,52)
         FAXE A 1 Offset(0,44)
         FAXE A 2 Offset(0,36)
         goto Ready
 
-      FireClericClassicFinishAmmo:
+      FireClericClassicFinish1Ammo:
         FAXE L 1 Bright Offset(0,60)
         FAXE L 1 Bright Offset(0,52)
         FAXE L 1 Bright Offset(0,44)
         FAXE L 2 Bright Offset(0,36)
+        goto Ready
+
+      FireClericClassicAmmo2:
+        FAXE Y 2 Bright Offset(100,80)
+        FAXE Y 2 Bright Offset(80,75)
+        FAXE Y 2 Bright Offset(60,70)
+        FAXE Z 2 Bright Offset(10,70)
+        goto FireClericClassicContinue2
+
+      FireClericClassicContinue2:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenTimonsAxeAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicContinue2Ammo")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireClericClassicContinue2Ammo")
+        goto FireClericClassicContinue2NoAmmo
+
+      FireClericClassicContinue2NoAmmo: // currently no sprites for ammo ending up being 0
+      FireClericClassicContinue2Ammo:
+        FAXE Z 2 Bright Offset(10,70)
+        FAXE Z 2 Bright Offset(-20,60)
+        FAXE "[" 2 Bright Offset(40,80)
+        FAXE "[" 2 Bright Offset(-20,90)
+        FAXE "]" 2 Bright Offset(-40,130)
+        TNT1 A 10
         goto Ready
 
       // Baratus
@@ -773,61 +1051,83 @@ actor "Timon's Axe" : SamsaraHexenWeapon
         H104 B 4 Offset(15,32)
         H104 C 3 Offset(15,32)
         H104 D 2 Offset(15,32)
-        goto FireFighterContinue
+        goto FireFighterContinue1
 
       FireFighterAmmo:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,1)
+        goto FireFighterAmmo1
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenTimonsAxeDirectionCounter",1,"FireFighterAmmo2")
+      FireFighterAmmo1:
         H104 N 4 Bright Offset(15,32)
         H104 O 3 Bright Offset(15,32)
         H104 P 2 Bright Offset(15,32)
-        goto FireFighterContinue
+        goto FireFighterContinue1
 
-      FireFighterContinue:
+      FireFighterContinue1:
         TNT1 A 0 A_GiveInventory("SamsaraHexenTimonsAxeAttackHandler") // originally jumped a frame if ammo ended up being 0 with this; let's not do that this time
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterContinueAmmo")
-        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireFighterContinueAmmo")
-        goto FireFighterContinueNoAmmo
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterContinue1Ammo")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireFighterContinue1Ammo")
+        goto FireFighterContinue1NoAmmo
 
-      FireFighterContinueNoAmmo:
+      FireFighterContinue1NoAmmo:
         H104 D 1 Offset(-5,70)
         H104 D 2 Offset(-25,90)
         FAXE E 1 Offset(15,32)
         FAXE E 2 Offset(10,54)
         FAXE E 7 Offset(10,150)
-        goto FireFighterFinish
+        goto FireFighterFinish1
 
-      FireFighterContinueAmmo:
+      FireFighterContinue1Ammo:
         H104 P 1 Bright Offset(-5,70)
         H104 P 2 Bright Offset(-25,90)
         FAXE Q 1 Bright Offset(15,32)
         FAXE Q 2 Bright Offset(10,54)
         FAXE Q 7 Bright Offset(10,150)
-        goto FireFighterFinish
+        goto FireFighterFinish1
 
-      FireFighterFinish:
+      FireFighterFinish1:
         TNT1 A 0 A_ReFire
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterFinishAmmo")
-        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireFighterFinishAmmo")
-        goto FireFighterFinishNoAmmo
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterFinish1Ammo")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireFighterFinish1Ammo")
+        goto FireFighterFinish1NoAmmo
 
-      FireFighterFinishNoAmmo:
+      FireFighterFinish1NoAmmo:
         FAXE A 1 Offset(0,60)
         FAXE A 1 Offset(0,52)
         FAXE A 1 Offset(0,44)
         FAXE A 2 Offset(0,36)
         goto Ready
 
-      FireFighterFinishAmmo:
+      FireFighterFinish1Ammo:
         FAXE L 1 Bright Offset(0,60)
         FAXE L 1 Bright Offset(0,52)
         FAXE L 1 Bright Offset(0,44)
         FAXE L 2 Bright Offset(0,36)
         goto Ready
 
-      // "No ammo" switch
-      NoAmmoSwitch:
-        TNT1 A 0 A_ClearReFire
-        TNT1 A 0 ACS_NamedExecuteWithResult("Hexen_SwitchPriority")
-        goto Deselect
+      FireFighterAmmo2:
+        FAXE Y 2 Bright Offset(100,80)
+        FAXE Y 2 Bright Offset(80,75)
+        FAXE Y 2 Bright Offset(60,70)
+        FAXE Z 2 Bright Offset(10,70)
+        goto FireFighterContinue2
+
+      FireFighterContinue2:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenTimonsAxeAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterContinue2Ammo")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireFighterContinue2Ammo")
+        goto FireFighterContinue2NoAmmo
+
+      FireFighterContinue2NoAmmo: // currently no sprites for ammo ending up being 0
+      FireFighterContinue2Ammo:
+        FAXE Z 2 Bright Offset(10,70)
+        FAXE Z 2 Bright Offset(-20,60)
+        FAXE "[" 2 Bright Offset(40,80)
+        FAXE "[" 2 Bright Offset(-20,90)
+        FAXE "]" 2 Bright Offset(-40,130)
+        TNT1 A 10
+        goto Ready
     }
 }
 
@@ -837,11 +1137,21 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
     {
       // Ammo checking stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrong")
-        TNT1 A 0 A_JumpIfInventory("Clip",3,"PickupAttackStrong")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,1)
         goto PickupAttackWeak
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("Clip",3)
+        goto PickupAttack
 
       // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackStrongPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackStrongPowered")
+        goto PickupAttackStrongUnpowered
+
       // Weak
       PickupAttackWeak:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackWeakCoop")
@@ -849,11 +1159,11 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
       PickupAttackWeakDM:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackWeakDMSpread")
         TNT1 A 0 A_CustomPunch(random(50,78),true,0,"AxePuff",144)
-        stop
+        goto PickupFinishGive
 
       PickupAttackWeakDMSpread:
         TNT1 A 0 A_CustomPunch(random(50,78)*3,true,0,"AxePuff",144)
-        stop
+        goto PickupFinishGive
 
       PickupAttackWeakCoop:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackWeakCoopSpread")
@@ -864,7 +1174,7 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
         TNT1 AA 0 A_CustomPunch(5,true,0,"BlankPuffAxeCoop",84) // keeping the order intact
         TNT1 A 0 A_CustomPunch(random(3,6),true,0,"BlankPuffAxeCoop",80)
         TNT1 A 0 A_CustomPunch(random(3,6),true,0,"BlankPuffAxeCoop",64)
-        stop
+        goto PickupFinishGive
 
       PickupAttackWeakCoopSpread:
         TNT1 A 0 A_CustomPunch(random(35,50)*3,true,0,"AxePuffCoop",144)
@@ -874,24 +1184,25 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
         TNT1 AA 0 A_CustomPunch(5*3,true,0,"BlankPuffAxeCoop",84)
         TNT1 A 0 A_CustomPunch(random(3,6)*3,true,0,"BlankPuffAxeCoop",80)
         TNT1 A 0 A_CustomPunch(random(3,6)*3,true,0,"BlankPuffAxeCoop",64)
-        stop
+        goto PickupFinishGive
 
       // Strong
-      PickupAttackStrong:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrongInfinite")
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongCoop")
-      PickupAttackStrongDM:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongDMSpread")
+      // Unpowered
+      PickupAttackStrongUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrongUnpoweredInfinite")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongUnpoweredCoop")
+      PickupAttackStrongUnpoweredDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongUnpoweredDMSpread")
         TNT1 A 0 A_CustomPunch(random(120,195),true,0,"AxePuffGlow2",144)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongDMSpread:
+      PickupAttackStrongUnpoweredDMSpread:
         TNT1 A 0 A_CustomPunch(random(120,195)*3,true,0,"AxePuffGlow2",144)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongCoop:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongCoopSpread")
+      PickupAttackStrongUnpoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongUnpoweredCoopSpread")
         TNT1 A 0 A_CustomPunch(random(80,130),true,0,"AxePuffGlow2Coop",144)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",128)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",112)
@@ -899,9 +1210,9 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
         TNT1 AAA 0 A_CustomPunch(5,true,0,"BlankPuffAxeGlowCoop",84)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",80)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",64)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongCoopSpread:
+      PickupAttackStrongUnpoweredCoopSpread:
         TNT1 A 0 A_CustomPunch(random(80,130)*3,true,0,"AxePuffGlow2Coop",144)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",128)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",112)
@@ -909,22 +1220,22 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
         TNT1 AAA 0 A_CustomPunch(5*3,true,0,"BlankPuffAxeGlowCoop",84)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",80)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",64)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongInfinite:
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongInfiniteCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongInfiniteCoop")
-      PickupAttackStrongInfiniteDM:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongInfiniteDMSpread")
+      PickupAttackStrongUnpoweredInfinite:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongUnpoweredInfiniteCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongUnpoweredInfiniteCoop")
+      PickupAttackStrongUnpoweredInfiniteDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongUnpoweredInfiniteDMSpread")
         TNT1 A 0 A_CustomPunch(random(120,195),true,0,"AxePuffGlow2Infinite",144)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongInfiniteDMSpread:
+      PickupAttackStrongUnpoweredInfiniteDMSpread:
         TNT1 A 0 A_CustomPunch(random(120,195)*3,true,0,"AxePuffGlow2Infinite",144)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongInfiniteCoop:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongInfiniteCoopSpread")
+      PickupAttackStrongUnpoweredInfiniteCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongUnpoweredInfiniteCoopSpread")
         TNT1 A 0 A_CustomPunch(random(80,130),true,0,"AxePuffGlow2InfiniteCoop",144)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",128)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",112)
@@ -932,9 +1243,9 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
         TNT1 AAA 0 A_CustomPunch(5,true,0,"BlankPuffAxeGlowCoop",84)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",80)
         TNT1 A 0 A_CustomPunch(random(8,13),true,0,"BlankPuffAxeGlowCoop",64)
-        stop
+        goto PickupFinishGive
 
-      PickupAttackStrongInfiniteCoopSpread:
+      PickupAttackStrongUnpoweredInfiniteCoopSpread:
         TNT1 A 0 A_CustomPunch(random(80,130)*3,true,0,"AxePuffGlow2InfiniteCoop",144)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",128)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",112)
@@ -942,6 +1253,34 @@ actor SamsaraHexenTimonsAxeAttackHandler : Trigger
         TNT1 AAA 0 A_CustomPunch(5*3,true,0,"BlankPuffAxeGlowCoop",84)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",80)
         TNT1 A 0 A_CustomPunch(random(8,13)*3,true,0,"BlankPuffAxeGlowCoop",64)
+        goto PickupFinishGive
+
+      // Powered
+      PickupAttackStrongPowered:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongPoweredCoop")
+      PickupAttackStrongPoweredDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenTimonsAxeDirectionCounter",1,2)
+        TNT1 A 0 A_FireCustomMissile("HexenAxeThunderWave",0,false,8)
+        goto PickupFinishGive
+        TNT1 A 0 A_FireCustomMissile("HexenAxeThunderWave2",0,false,8)
+        goto PickupFinishTake
+
+      PickupAttackStrongPoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenTimonsAxeDirectionCounter",1,2)
+        TNT1 A 0 A_FireCustomMissile("HexenAxeThunderWaveCoop",0,false,8)
+        goto PickupFinishGive
+        TNT1 A 0 A_FireCustomMissile("HexenAxeThunderWave2Coop",0,false,8)
+        goto PickupFinishTake
+
+      // Finishing stuff
+      PickupFinishGive:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenTimonsAxeDirectionCounter")
+        stop
+
+      PickupFinishTake:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenTimonsAxeDirectionCounter")
         stop
     }
 }
@@ -959,6 +1298,8 @@ actor BlankPuffAxe : BlankPuffBloodless
 actor BlankPuffAxeCoop : BlankPuffAxe { +MTHRUSPECIES }
 
 // Strong
+
+// Unpowered
 
 actor AxePuffGlow2 : AxePuffGlow
 {
@@ -1001,7 +1342,67 @@ actor BlankPuffAxeGlow : BlankPuffAxe
 
 actor BlankPuffAxeGlowCoop : BlankPuffAxeGlow { +MTHRUSPECIES }
 
+// Powered
+
+actor HexenAxeThunderWave
+{
+    Projectile
+    Radius 8
+    Height 32
+    Speed 32
+    Damage (100*random(1,2))
+    DamageType "TimonsAxe"
+    SeeSound "Hexen/AxeLightning"
+    +BLOODLESSIMPACT
+    States
+    {
+      Spawn:
+        H134 AD 2 Bright Light("CAXEPUFF1")
+      SpawnLoop:
+        H134 EF 3 Bright Light("CAXEPUFF1")
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("Hexen/AxeThunder",CHAN_BODY,1,false,0.25)
+        H134 D 2 Bright Light("CAXEPUFF1") A_Explode(100*random(1,2),24,0)
+        H134 CBA 2 Bright Light("CAXEPUFF1")
+        stop
+    }
+}
+
+actor HexenAxeThunderWaveCoop : HexenAxeThunderWave
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor HexenAxeThunderWave2 : HexenAxeThunderWave
+{
+    States
+    {
+      Spawn:
+        H134 GJ 2 Bright Light("CAXEPUFF1")
+      SpawnLoop:
+        H134 KL 3 Bright Light("CAXEPUFF1")
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("Hexen/AxeThunder",CHAN_BODY,1,false,0.25)
+        H134 J 2 Bright Light("CAXEPUFF1") A_Explode(100*random(1,2),80,0)
+        H134 IHG 2 Bright Light("CAXEPUFF1")
+        stop
+    }
+}
+
+actor HexenAxeThunderWave2Coop : HexenAxeThunderWave2
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
 // Daedolon
+
+actor SamsaraHexenFireBlastPoweredFiringSoundCheck : Boolean {}
 
 actor "Fire Blast" : SamsaraHexenWeapon
 {
@@ -1011,9 +1412,10 @@ actor "Fire Blast" : SamsaraHexenWeapon
     Weapon.YAdjust 20
     Weapon.AmmoType "Clip"
     //Weapon.AmmoGive 25
-    Weapon.AmmoUse 3
+    Weapon.AmmoUse 1
     Obituary "$SAMSARA_HEXEN_OB_SLOT3"
     Tag "Fire Blast"
+    +NOALERT
     States
     {
       Spawn:
@@ -1021,28 +1423,76 @@ actor "Fire Blast" : SamsaraHexenWeapon
         loop
 
       Ready:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck")
         H113 AAAABBBBCCCC 1 A_WeaponReady
         loop
 
       Deselect:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenFireBlastPoweredFiringSoundStopper")
         H113 A 1 A_Lower
         loop
 
       Select:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck")
         H113 A 1 A_Raise
         loop
 
+      // Unpowered
       Fire:
-        H113 DEF 3
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",3,1)
+        goto NoAmmoSwitch
+        H113 D 3 A_AlertMonsters
+        H113 EF 3
         H113 G 5
         H113 H 3 Bright
         H113 F 3 Bright A_GiveInventory("SamsaraHexenFireBlastAttackHandler")
         H113 E 3 Bright
         H113 D 3
+        TNT1 A 0 A_CheckReload // normal switch if we have exactly 0 bullets. otherwise, do the alternate switch check
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",3,1)
+        goto NoAmmoSwitch
         H113 A 2 A_ReFire
         goto Ready
+
+      // Powered
+      FirePowered:
+        TNT1 A 0 A_AlertMonsters
+        H113 D 3 A_PlaySound("Hexen/FireLaunch")
+        H113 EF 3
+        H113 G 5
+        goto FireLoopPowered
+
+      FireLoopInitPowered:
+        TNT1 A 0 A_AlertMonsters
+      FireLoopPowered:
+        H113 H 4 Bright A_GiveInventory("SamsaraHexenFireBlastPoweredAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,2)
+        TNT1 A 0 A_CheckReload
+        goto FireFinishPowered
+        TNT1 A 0 A_ReFire("FireLoopInitPowered")
+        goto FireFinishPowered
+
+      FireFinishPowered:
+        H113 F 3 Bright A_GiveInventory("SamsaraHexenFireBlastPoweredFiringSoundStopper")
+        H113 E 3 Bright
+        H113 D 3
+        goto Ready
+
+      // "No ammo" switch
+      NoAmmoSwitch:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Sapphire Wand")
+        goto Deselect
     }
 }
+
+// Unpowered
 
 actor SamsaraHexenFireBlastAttackHandler : Trigger
 {
@@ -1105,6 +1555,102 @@ actor MWeapFire_Missile : FireBall
 }
 
 actor MWeapFire_MissileCoop : MWeapFire_Missile
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+// Powered
+
+actor SamsaraHexenFireBlastPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Hexen/FireLoop",CHAN_WEAPON,1,true)
+        TNT1 A 0 A_GiveInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("MWeapFire_Crawler",random(-10,10),false,-4,8)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("MWeapFire_CrawlerCoop",random(-10,10),false,-4,8)
+        stop
+    }
+}
+
+actor SamsaraHexenFireBlastPoweredFiringSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_WEAPON)
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck")
+        stop
+    }
+}
+
+actor MWeapFire_Crawler : MWeapFire_Missile
+{
+    Speed 16
+    +NODAMAGETHRUST
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        TNT1 A 4 A_SpawnItemEx("MWeapFire_CrawlerFlame",0,0,floorz,0,0,0,0,SXF_ABSOLUTEPOSITION|SXF_TRANSFERPOINTERS)
+        loop
+
+      Death:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor MWeapFire_CrawlerFlame : MWeapFire_Missile
+{
+    Speed 0
+    +FLOORHUGGER
+    +NODAMAGETHRUST
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        H135 A 0 Bright Light("TIMEBOMB_X3") NoDelay A_PlaySound("Hexen/FireBurn",CHAN_BODY,1,true)
+        H135 ABCDEFGHIJKLMNOPQRSTUVWXYZ 3 Bright Light("TIMEBOMB_X3") A_Explode(10,32,0)
+        H136 ABCD 3 Bright Light("TIMEBOMB_X3")
+        stop
+    }
+}
+
+actor MWeapFire_CrawlerCoop : MWeapFire_Crawler
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Spawn:
+        TNT1 A 4 A_SpawnItemEx("MWeapFire_CrawlerFlameCoop",0,0,floorz,0,0,0,0,SXF_ABSOLUTEPOSITION|SXF_TRANSFERPOINTERS)
+        loop
+    }
+}
+
+actor MWeapFire_CrawlerFlameCoop : MWeapFire_CrawlerFlame
 {
     Species "Player"
     +THRUSPECIES

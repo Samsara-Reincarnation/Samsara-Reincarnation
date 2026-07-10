@@ -311,7 +311,7 @@ Script "HexenGrapplePull" (void)
 	
 	//IF an enemy if too big it should pull the player.
 	SetActivator(newTid,AAPTR_Tracer);
-	int normalEnemy = GetActorProperty(0,APROP_HEIGHT) <= 80.0 && GetActorProperty(0,APROP_RADIUS) <= 24.0;
+	int normalEnemy = GetActorProperty(0,APROP_HEIGHT) <= 80.0 && GetActorProperty(0,APROP_RADIUS) <= 20.0;
 	SetActivator(newtid);
 	
 	//Get the player's coordinates
@@ -343,9 +343,12 @@ Script "HexenGrapplePull" (void)
 		int angle = VectorAngle(vecX, vecY);
 		int pitch = VectorAngle(VectorLength(vecX, vecY), vecZ);
 		int velocity = -80; //Negative as we want it to move closer to player
+		int velX = FixedMul(velocity * cos(angle), cos(pitch));
+		int velY = FixedMul(velocity * sin(angle), cos(pitch));
+		int velZ = velocity * sin(pitch);
 		
 		//Finally, set velocity
-		SetActorVelocity(0, velocity * cos(angle), velocity * sin(angle), velocity * sin(pitch), 0, 0);
+		SetActorVelocity(0, velX, velY, velZ, false, false);
 		
 		//Play winch sound on player if it hit an enemy
 		if(normalEnemy) SetActivator(newTid,AAPTR_Target);
@@ -374,4 +377,154 @@ script "HexenFrostShardsRaySound" (void)
     }
 
     SetInventory("SamsaraHexenFrostShardsPoweredSoundPlaying", 0);
+}
+
+//This script will handle the behavior of the Bishop's short sword. Just pretend we're working with the constraints!
+Script "HexenBishopSwordReturn" (void)
+{
+	//First we need to store this projectile for future reference
+	int myTid = ActivatorTid();
+	int newTid = UniqueTid();
+	Thing_ChangeTid(0,newTid);
+	
+	//Get the projectile's coordinates
+	int myX = GetActorX(0);
+	int myY = GetActorY(0);
+	int myZ = GetActorZ(0) + GetActorProperty(0,APROP_Height)/2;
+	
+	//Now get the player's
+	SetActivator(0,AAPTR_Target);
+	int destX = GetActorX(0);
+	int destY = GetActorY(0);
+	int destZ = GetActorZ(0) + GetActorViewHeight(0);
+	
+	//Calculate vectors here
+	int vecX = myX - destX;
+	int vecY = myY - destY;
+	int vecZ = myZ - destZ;
+	int angle = VectorAngle(vecX, vecY);
+	int pitch = VectorAngle(VectorLength(vecX, vecY), vecZ);
+	int velocity = -24; //Negative, moves toward the source
+	
+	//Now go back to the sword
+	SetActivator(newtid);
+	Thing_ChangeTid(newTid,myTid);
+	int distance = magnitudethree_f(vecX, vecY, vecZ)>>16;
+	int velX = FixedMul(velocity * cos(angle), cos(pitch));
+	int velY = FixedMul(velocity * sin(angle), cos(pitch));
+	int velZ = velocity * sin(pitch);
+	int velVector = magnitudethree_f(velX, velY, velZ)>>16;
+	
+	//This loop handles the velocity and removes it when it should get 'close' to the player. This is fine.
+	While(ClassifyActor(0) > 1 && distance > 0)
+	{
+		SetActorVelocity(0, velX, velY, velZ, false, false);
+		distance -= velVector*2; //Why do I need to double this?
+		Delay(2);
+	}
+	
+	//Finally, remove it.
+	Thing_Remove(0);
+}
+
+Script "HexenArcOfDeathPowered" (int pve)
+{
+	//Number of effects to generate
+	int effectActors = 6;
+	int myTid = UniqueTid();
+	Thing_ChangeTid(0,myTid);
+	
+	//Get the player's pitch
+	SetActivator(0,AAPTR_TARGET);
+	int pitch = GetActorPitch(0);
+	int angle = GetActorAngle(0);
+	SetActivator(myTid);
+	while(effectActors > 0)
+	{
+		int spawnX = random(-32,32);
+		int spawnZ = random(-20,20);
+		int offsetX = spawnX*sin(angle);
+		int offsetY = spawnX*cos(angle) + (spawnZ * sin(pitch));
+		int offsetZ = spawnZ * cos(pitch);
+		int newTid = UniqueTid();
+		
+		//Make sure we're referencing the projectile
+		SetActivator(myTid);
+		
+		//We need to spawn the cosmetic actor
+        SpawnForced(pve ? "HexenArcOfDeathPoweredProjectileCosmeticCoop" : "HexenArcOfDeathPoweredProjectileCosmetic", GetActorX(0) + offsetX, GetActorY(0) + offsetY, GetActorZ(0) + offsetZ, newTid);
+		
+		//Assign player to the target
+		SetActivator(0,AAPTR_TARGET);
+		SetPointerExt(AAPTR_TARGET,0,newTid);
+		SetActivator(myTid);
+		
+		//Now we need to assign the cosmetic actor's tracer as this projectile
+		SetPointerExt(AAPTR_MASTER,0,newTid);
+		SetActivator(newTid);
+		Thing_ChangeTid(newTid,0);
+		
+		//Now do the lifespan stuff
+		ACS_NamedExecuteWithResult("HexenArcOfDeathEffectLife",offsetX,offsetY,offsetZ);
+		SetActivator(myTid);
+	
+		effectActors--;
+	}
+	GiveInventory("HexenArcOfDeathDrawer",1);
+	Thing_ChangeTid(myTid,0);
+}
+
+Script "HexenArcOfDeathEffectLife" (int x, int y, int z)
+{
+	while(ClassifyActor(0) > 1)
+	{
+		Warp(AAPTR_MASTER,x,y,z,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_ABSOLUTEOFFSET|WARPF_USEPTR);			
+		Delay(1);
+	}
+}
+
+Script "HexenPurifierDamage" (int dmg1, int dmg2)
+{
+	//Get the current tid of the monster and generate a new one
+	int newTid = UniqueTid();
+	int myTid = ActivatorTid();
+	
+	//Generate new tid for the projectile
+	int projTid = UniqueTid();
+	Thing_ChangeTid(0,projTid);
+	
+	//Now assign the monster a new temporary tid
+	SetActivator(0,AAPTR_TRACER);
+	Thing_ChangeTid(0,newTid);
+	bool burn = GetActorProperty(0, APROP_SpawnHealth) >= 1000 || CheckFlag(0, "BOSS") || CheckFlag(0, "NOBLOOD") || ClassifyActor(0) & ACTOR_PLAYER;
+	
+	//Now damage the actor as the projectile
+	SetActivator(projTid,AAPTR_TARGET);
+	Thing_Damage2(newTid, burn ? dmg1 : dmg2, burn ? "Wraithverge" : "HexenPurify");
+	
+	//Revert tids
+	Thing_ChangeTid(newTid,myTid);
+	Thing_ChangeTid(projTid,0);
+}
+
+Script "HexenSpawnAlly" (void)
+{
+	int myAngle = GetActorAngle(0);
+	int newTid = UniqueTid();
+	bool isPVEGame = isSinglePlayer() || isCoop();
+	SpawnForced(isPVEGame ? "HexenWraithvergeAllyCoop" : "HexenWraithvergeAlly", GetActorX(0), GetActorY(0), GetActorZ(0), newTid);
+	SetActivator(0,AAPTR_TARGET);
+	Thing_SetTranslation(newTid,-1);
+	SetPointerExt(AAPTR_FRIENDPLAYER,0,newTid);
+	SetPointerExt(AAPTR_MASTER,0,newTid);
+	SetActivator(newTid);
+	GiveInventory("SamsaraCopyFriendliness", 1);
+	ACS_NamedExecuteWithResult("HexenPariasAllyTimer");
+	Thing_ChangeTid(newTid,0);
+}
+
+Script "HexenPariasAllyTimer" (void)
+{
+	Delay(4200);
+	Thing_Damage2(0,500,"RemoveAlly");
 }

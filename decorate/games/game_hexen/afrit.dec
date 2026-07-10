@@ -100,6 +100,13 @@ actor FireDemon2 : SamsaraMonsterReincAfrit replaces FireDemon
 			TNT1 A 5 A_NoBlocking
 			TNT1 A -1
 			Stop
+		Crash.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 5 A_NoBlocking
+			TNT1 A -1
+			Stop
 		Crash.DukeIce:
 		Crash.HexenIce:
 		Crash.WTMeleeIce:
@@ -123,13 +130,13 @@ actor FireDemon2 : SamsaraMonsterReincAfrit replaces FireDemon
 			FDMN R 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			FDMN R 0 A_GiveInventory("EnemyZorched",1)
 			FDMN R 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
-			FDMN R 0
+			//FDMN R 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			FDMN R 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			FDMN R 69 A_ChangeFlag("SOLID",false)
 			FDMN R 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
 			TNT1 A 0 A_SetTranslucent(1,0)
-			TNT1 A 0
+			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
 			TNT1 A 0 A_NoBlocking
 			TNT1 A 0 A_Gravity
 			TNT1 A -1
@@ -139,12 +146,12 @@ actor FireDemon2 : SamsaraMonsterReincAfrit replaces FireDemon
 			FDMN R 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			FDMN R 0 A_GiveInventory("EnemyZorched",1)
 			FDMN R 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
-			FDMN R 0
+			//FDMN R 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			FDMN R 0 A_ChangeFlag("SOLID",false)
 			FDMN R 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
 			TNT1 A 0 A_SetTranslucent(1,0)
-			TNT1 A 0
+			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
 			TNT1 A 0 A_NoBlocking
 			TNT1 A 0 A_Gravity
 			TNT1 A -1

@@ -11,6 +11,7 @@ actor CorvusTempestWand : Weapon
     +NOALERT
     Inventory.PickUpSound "heretic/weaponget"
     Inventory.PickupMessage "You got the Tempest Wand!"
+    Decal "PlasmaScorchLower"
     Obituary "$SAMSARA_CORVUS_OB_SLOT6S"
     Inventory.RestrictedTo "CorvusPlayer"
     Tag "Tempest Wand"
@@ -126,8 +127,9 @@ actor CorvusTempestWandPuff
     +PUFFGETSOWNER
     +ALWAYSPUFF
     +SKYEXPLODE
+    //+FORCEDECAL // doesn't work for rails in zan for the time being
     DamageType "Electric"
-    Decal PlasmaScorchLower
+    //Decal "PlasmaScorchLower"
     States
     {
     Spawn:
@@ -139,7 +141,11 @@ actor CorvusTempestWandPuff
     }
 }
 
-actor CorvusTempestWandPuffCoop : CorvusTempestWandPuff { +MTHRUSPECIES }
+actor CorvusTempestWandPuffCoop : CorvusTempestWandPuff
+{
+    //+ALLOWTHRUFLAGS // doesn't exist in zandronum yet
+    +MTHRUSPECIES
+}
 
 // Powered
 

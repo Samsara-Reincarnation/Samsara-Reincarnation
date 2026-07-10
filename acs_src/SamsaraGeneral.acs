@@ -12742,6 +12742,7 @@ Script "Samsara_SpawnItem" (int item, int toss, int cancountitem)
 		case 1: itemtospawn = "HealPack0"; break;
 		case 2: itemtospawn = "HealPack1"; break;
 		case 3: itemtospawn = "ArmorScrap"; break;
+		case 4: itemtospawn = "Ammo4Big"; break;
 	}
 	SpawnSpotFacingForced(itemtospawn,0,newTid);
     if (cancountitem && countitemeligible) { GiveActorInventory(newTid, "SamsaraCountItemEnabler", 1); }
@@ -13088,7 +13089,6 @@ Script "SamsaraDeathEffects" (int type)
 
 	int i;
 	int effectTid = UniqueTid();
-	int iceTid = UniqueTid();
 
 	// Get the pain or death sounds of the killed actor if needed
 	str voice;
@@ -13100,6 +13100,7 @@ Script "SamsaraDeathEffects" (int type)
 	CreateTranslation(7600, 0:255=0:255);	// Untranslated
 	CreateTranslation(7601, 0:255=%[0,0,0]:[0,0,0]);	// Disintegration Translation
 	CreateTranslation(7602, 0:255=%[0.078,0.062,0.140]:[1.16,1.16,1.348]);	// Zandronum Ice Translation
+	CreateTranslation(7603,0:255=%[0,0,0]:[0.67,0.67,0.67]); //Hexen Stone
 
 	// Debug call to ensure the function is called properly
 	//PrintBold(s:"Monster X: ",d:xPosition >> 16,s:" Monster Y: ",d:yPosition >> 16,s:" Monster Z: ",d:zPosition >> 16,s:" TID: ",d:effectTid >> 16,s:" Activator: ",n:0);
@@ -13247,18 +13248,29 @@ Script "SamsaraDeathEffects" (int type)
 			break;
 		// Ice Shatter Effect
 		case 15:
-			for (int iceChunkAmount = random(32, 48); iceChunkAmount >= 0; iceChunkAmount--)
+			numChunks = random(32, 48);
+			while(numChunks >= 0)
 			{
-				iceTid = UniqueTid();
-				SpawnForced("UniversalBloodyHellIceDeathEffect", xPosition, yPosition+random(0,1), zPosition+random(-1,1), iceTid);
+				SpawnForced("UniversalBloodyHellIceDeathEffect", xPosition, yPosition+random(0,1)*1.0, zPosition+random(-1,1)*1.0, 0);
+				numChunks--;
 			}
 			break;
 		// Boss Ice Shatter Effect
 		case 16:
-			for (int iceChunkAmountBoss = random(96, 144); iceChunkAmountBoss >= 0; iceChunkAmountBoss--)
+			numChunks = random(96, 144);
+			while(numChunks >= 0)
 			{
-				iceTid = UniqueTid();
-				SpawnForced("UniversalBloodyHellIceDeathEffectForBosses", xPosition, yPosition+random(0,3), zPosition+random(-3,3), iceTid);
+				SpawnForced("UniversalBloodyHellIceDeathEffectForBosses", xPosition, yPosition+random(0,3)*1.0, zPosition+random(-3,3)*1.0, 0);
+				numChunks--;
+			}				
+			break;
+		// Stone Break Effect
+		case 17:
+			numChunks = numChunks*4;
+			while(numChunks >= 0)
+			{
+				SpawnForced("HexenStoneShard", xPosition, yPosition+random(0,3)*1.0, zPosition+random(0,GetActorProperty(0,APROP_Height)*4), 0);
+				numChunks--;
 			}
 			break;
 		// General Ice Translation
@@ -13266,11 +13278,16 @@ Script "SamsaraDeathEffects" (int type)
 			if (isZDoom()) { Thing_SetTranslation(0, TRANSLATION_ICE); }
 			else { Thing_SetTranslation(0, 7602); }
 			break;
+		// Stone Translation
+		case 101:
+			Thing_SetTranslation(0, 7603);
+			break;
 		// Translation Removal
 		case 9000:
 			Thing_SetTranslation(0, 7600);
 			break;
 	}
+	Thing_ChangeTid(effectTid,0);
 }
 
 script "SamsaraActorStopSound" (int soundhack) // soundhack is for A_ActiveSound/A_Pain/A_Scream
@@ -16225,7 +16242,7 @@ script "SamsaraServerSidePresetSelection" (void)
 
 		// Party Mode Options
 		SetCVar("samsara_pdwtak_damage", 0);
-		SetCVar("samsara_pdwtak_distance", 0);
+		SetCVar("samsara_pdwtak_distance", 1);
 		SetCVar("samsara_pdwtak_fulldamagedistance", 0);
 		SetCVar("samsara_pdwtak_monsters", false);
 		SetCVar("samsara_permaweaponlevel2", false);

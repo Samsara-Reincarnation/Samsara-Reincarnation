@@ -538,6 +538,35 @@ Actor SamsaraMonsterReincPainElemental : SamsaraMonsterDemonicTotalGib
 			TNT1 A -1 A_Jump(256,"Death")
 			Wait
 
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256, "SpawnTheLostSoul")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256, "SpawnTheLostSoul")
+			Stop
 		// Fire/Ice Death states
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
@@ -1165,6 +1194,34 @@ Actor SamsaraMonsterReincHereticImp : HereticImp
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -1944,6 +2001,34 @@ Actor SamsaraMonsterReincHereticImp2 : HereticImpLeader
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -2723,6 +2808,34 @@ Actor SamsaraMonsterReincWizard : Wizard
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -3536,6 +3649,29 @@ Actor SamsaraMonsterReincWizardFriend : Wizard
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A -1 A_Gravity
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -4317,6 +4453,34 @@ Actor SamsaraMonsterReincKnight : Knight
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -5144,6 +5308,34 @@ Actor SamsaraMonsterReincKnight2 : KnightGhost
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -5960,6 +6152,34 @@ Actor SamsaraMonsterReincIronLich : IronLich
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)
@@ -6364,6 +6584,34 @@ Actor SamsaraMonsterReincMaulotaur : Minotaur
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -6728,6 +6976,12 @@ Actor SamsaraMonsterReincDsparil1 : Sorcerer1
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" -1 A_Jump(256, "Death")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" -1 A_Jump(256, "Death")
+			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -6736,7 +6990,6 @@ Actor SamsaraMonsterReincDsparil1 : Sorcerer1
 		Death.WTRangedIce:
 		Death.DoomDamageTypeIce:
 		Death.Ice:
-			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			"####" "#" -1 A_Jump(256, "Death")
 			Wait
 
@@ -7100,6 +7353,40 @@ Actor SamsaraMonsterReincDsparil2 : Sorcerer2
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 Thing_Destroy(0,0,0)
+			Goto Sorcerer2HexenPurifyDeath
+		Sorcerer2HexenPurifyDeath:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 Thing_Destroy(0,0,0)
+			Goto Sorcerer2HexenMedusaDeath
+		Sorcerer2HexenMedusaDeath:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -7580,6 +7867,34 @@ Actor SamsaraMonsterReincChicken : Chicken
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -8359,6 +8674,34 @@ Actor SamsaraMonsterReincAfrit : FireDemon
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -9390,6 +9733,34 @@ Actor SamsaraMonsterReincDragon : Dragon
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -10232,6 +10603,34 @@ Actor SamsaraMonsterReincWraith : Wraith
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -11011,6 +11410,34 @@ Actor SamsaraMonsterReincWraithBuried : WraithBuried
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -11790,6 +12217,34 @@ Actor SamsaraMonsterReincSerpent : Serpent
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -12569,6 +13024,34 @@ Actor SamsaraMonsterReincSerpentLeader : SerpentLeader
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -13235,6 +13718,34 @@ Actor SamsaraMonsterReincFighterBoss : FighterBoss
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -13599,6 +14110,34 @@ Actor SamsaraMonsterReincClericBoss : ClericBoss
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -13963,6 +14502,34 @@ Actor SamsaraMonsterReincMageBoss : MageBoss
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -14327,6 +14894,34 @@ Actor SamsaraMonsterReincHeresiarch : Heresiarch
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -14691,6 +15286,34 @@ Actor SamsaraMonsterReincKorax : Korax
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -15168,6 +15791,34 @@ Actor SamsaraMonsterReincPig : Pig
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -16052,6 +16703,35 @@ Actor SamsaraMonsterReincAcolyte : Acolyte
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256,"KillTheAcolyte")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256,"KillTheAcolyte")
+			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -16887,6 +17567,35 @@ Actor SamsaraMonsterReincAcolyteBlue : AcolyteBlue
 		Death.DeusExPistolFire:
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256,"KillTheAcolyte")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256,"KillTheAcolyte")
 			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
@@ -17726,6 +18435,34 @@ Actor SamsaraMonsterReincStrifeHumanoid : StrifeHumanoid
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
@@ -18392,6 +19129,35 @@ Actor SamsaraMonsterReincMacil : Macil2
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256,"SpawnTheSpectre")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256,"SpawnTheSpectre")
+			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -18747,6 +19513,35 @@ Actor SamsaraMonsterReincStrifeBishop : StrifeBishop
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256,"SpawnTheSpectre")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256,"SpawnTheSpectre")
+			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -19087,6 +19882,35 @@ Actor SamsaraMonsterReincLoremaster : Loremaster
 		Death.DeusExFlamed:
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256,"SpawnTheSpectre")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256,"SpawnTheSpectre")
 			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
@@ -19429,6 +20253,35 @@ Actor SamsaraMonsterReincProgrammer : Programmer
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			TNT1 A -1 A_Jump(256,"GiveTheSigil")
+			Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 A_Jump(256,"GiveTheSigil")
+			Wait
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -19580,7 +20433,7 @@ Actor SamsaraMonsterReincProgrammer : Programmer
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			TNT1 A 0 A_GiveToTarget("Sigil",1)
 			TNT1 A 0 A_SpawnItemEx("GlobalSigil1Giver")
-			TNT1 A -1 bright A_ProgrammerDeath
+			TNT1 A -1 A_ProgrammerDeath
 			Stop
 	}
 }
@@ -19887,6 +20740,34 @@ Actor SamsaraMonsterReincSentinel : Sentinel
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)
@@ -20393,6 +21274,34 @@ Actor SamsaraMonsterReincStalker : Stalker
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)
@@ -20899,6 +21808,34 @@ Actor SamsaraMonsterReincCeilingTurret : CeilingTurret
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)
@@ -21405,6 +22342,34 @@ Actor SamsaraMonsterReincReaver : Reaver
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)
@@ -21796,6 +22761,34 @@ Actor SamsaraMonsterReincInquisitor : Inquisitor
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 209 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_GiveToTarget("DukeBossKillTaunt",1)
 		Ice:
@@ -22248,6 +23241,34 @@ Actor SamsaraMonsterReincCrusader : Crusader
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)
@@ -22754,6 +23775,34 @@ Actor SamsaraMonsterReincTemplar : Templar
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
+		Death.HexenPurify:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_SetSolid
+			"####" "#" 0 A_PlaySound("Hexen/Divine",CHAN_7,0.5,false,0.33)
+			"####" "#" 5 A_SpawnItemEx("SamsaraHexenMinotaurSmoke")
+			TNT1 A 1 ACS_NamedExecuteWithResult("HexenSpawnAlly")
+			Stop
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
 		Death.DukeIce:
 			"####" "#" 0 A_Jump(218,"Ice")
 			"####" "#" 0 A_GiveToTarget("DukeRobotKill",1)

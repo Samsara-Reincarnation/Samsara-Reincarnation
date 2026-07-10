@@ -18,6 +18,7 @@ actor " Sigil " : SamsaraStrifeguyWeapon
     +BFG
     +FLOORCLIP
     +NOALERT
+    +NOAUTOFIRE
     States
     {
       Spawn:
@@ -76,30 +77,34 @@ actor " Sigil " : SamsaraStrifeguyWeapon
         "####" "#" 18 Bright
         "####" "#" 3 Bright A_GunFlash
         "####" "#" 15 A_GiveInventory("SamsaraStrifeSigilMode1AttackHandler")
-        goto Ready
+        goto FireFinish
 
       FireMode2:
         "####" "#" 18 Bright
         "####" "#" 3 Bright A_GunFlash
         "####" "#" 15 A_GiveInventory("SamsaraStrifeSigilMode2AttackHandler")
-        goto Ready
+        goto FireFinish
 
       FireMode3:
         "####" "#" 18 Bright
         "####" "#" 3 Bright A_GunFlash
         "####" "#" 15 A_GiveInventory("SamsaraStrifeSigilMode3AttackHandler")
-        goto Ready
+        goto FireFinish
 
       FireMode4:
         "####" "#" 18 Bright
         "####" "#" 3 Bright A_GunFlash
         "####" "#" 15 A_GiveInventory("SamsaraStrifeSigilMode4AttackHandler")
-        goto Ready
+        goto FireFinish
 
       FireMode5:
         "####" "#" 18 Bright
         "####" "#" 3 Bright A_GunFlash
         "####" "#" 15 A_GiveInventory("SamsaraStrifeSigilMode5AttackHandler")
+        goto FireFinish
+
+      FireFinish:
+        TNT1 A 0 A_ReFire
         goto Ready
 
       Flash:
@@ -155,6 +160,7 @@ actor " Sigil " : SamsaraStrifeguyWeapon
 
       AltFireFinish:
         "####" "#" 15
+        TNT1 A 0 A_ReFire
         goto Ready
     }
 }

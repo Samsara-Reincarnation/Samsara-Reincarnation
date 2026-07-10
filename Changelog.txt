@@ -44,6 +44,8 @@ Corvus (Heretic):
 ! The status bar HUD now shows the tempest wand and the Grim Ballista.
 ! The staff now has a sprite for the Compendium and the alternate HUD.
 + The tempest wand now has hybrid pickup sprites.
+* Fixed the tempest wand (unpowered) not leaving decals (currently player only due to Zandronum limitations).
+* Fixed ally clones' firing pitch being reversed when using the tempest wand.
 + The Grim Ballista now counts towards the Tome of Power's cooldown reduction.
 
 Wolfenstein 3D:
@@ -84,10 +86,13 @@ Hexen I:
 -Baratus-
 
 ! The impaler crossbow now uses the Pistol damage type for both melee and projectile attacks.
+! Jotunn's Flail's sprites have been touched up.
++ To accommodate for Jotunn's Flail's new sprites, its attack animation now lasts a total of 20 tics (decreased from 24).
 
 -All-
 
 * Fixed some sprite name conflicts with the players.
+* Fixed ice death translations being called on being killed by ice attacks.
 + The Tome of Power has been added as the first unique equipment!
 + The porkalator has been added as a loadout choice for the third unique equipment (samsara_cl_[parias/pariasclassic/daedolon/baratus]_unique3 1 (client) or samsara_[parias/pariasclassic/daedolon/baratus]_unique3 2 (server)).
 ! The mystic ambit incant is now given as a side item with all unique pickups.
@@ -113,6 +118,7 @@ Duke Nukem 3D:
 Security Officer (Marathon):
 
 ! Damage received from Original/Lost B.J.'s rocket launcher (splash damage only) and Totenkopf B.J.'s Panzerschreck/flakgun now causes a yellow screen flash.
+! Damage received from Daedolon's blight shock now causes a muck green screen flash.
 ! Damage received from Ranger's Mjolnir (lightning) and thunderbolt now causes a white screen flash.
 ! Damage received from Strifeguy's mauler (both modes) and Strife's templar (ranged) now causes a chartreuse screen flash.
 + The fusion pistol primary fire bolts now deal 45-60 damage (vanilla; increased from 42-56) or 60-80 damage (improved; PVE only; increased from 45-60).
@@ -166,7 +172,9 @@ Strifeguy (Strife):
 * Fixed the burn death sound playing later than intended.
 + The punch dagger and pistol now deal extra damage to Hexen monsters outside of ReMixer (for reference, the DamageFactor amounts from Doomguy's brass knuckles and pistol/rifle, respectively, are used).
 ! When running out of alternate ammo, weapons will now switch to the previous ammo if there is some remaining. Running out of normal ammo will still switch to another weapon, even with any alternate ammo remaining.
+! The mini missile launcher, grenade launcher, and Sigil now have +NOAUTOFIRE to prevent accidental self-damage.
 * Fixed some sprite name conflicts with the grenade launcher and mauler.
+! The mauler now has +NOAUTOFIRE to prevent unintentional ammo use in a similar manner to the B.F.G. 9000.
 * Fixed the mauler (scatter mode) not animating correctly after firing.
 ! When having less than 30 rounds of Ammo 4 for the mauler's torpedo mode, the mauler will now switch to the scatter mode if there is at least 10 rounds remaining.
 
@@ -192,12 +200,29 @@ Half-Life:
 
 * Fixed bullet damage applying when hitting map geometry.
 ! The status bar HUD now shows the Uzi.
+! Added a new hybrid pickup model for the long jump module and barnacle grapple.
 
 Lo Wang (Shadow Warrior):
 
 ! Updated the hybrid pickup sprites for the weapons (sprites done by zax).
 * Fixed the riotgun and grenade launcher hybrid pickup sprites showing outdated slots.
 ! The uniques have had their hybrid pickup sprites split.
+
+CyberMage (CyberMage):
+
+! The difficulty names have been adjusted to better fit the original game.
++ Weapons now raise and lower instantly in a similar manner to the original game.
+! Most weapon attacks have been converted to triggers.
+! The laser pistol projectile now has the CMDamage damage type.
+* The Darklight Foil and SMG now bob properly while firing.
+! The fusion gun and bombardier now have a screen blend effect when firing, like in the original game.
+! The fusion gun's fire rate is now 11 tics (changed from 10 passing refire, 12 failing refire).
+- The blast rifle's fire rate is now 9 tics (decreased from 7 passing refire, but unchanged from 9 failing refire).
+* Fixed the SMG being perfectly accurate on the first burst of three shots.
+! The bombardier now has the +NOAUTOFIRE flag to be consistent with the other weapons.
++ The bombardier's fire rate is now 12 tics (decreased from 13 passing refire, 14 failing refire). It also takes 1 less tic (from 5 to 4) before firing a projectile.
++ The heavy blaster MG now performs its attack upon pressing the fire button for both Fire and Hold states (decreased from 1 tic), bringing the total fire rate down by 1 tic accordingly for both states.
+! Medikits are now referred to as Regen Paks, as per the original game.
 
 Leonard (Redneck Rampage):
 
@@ -283,14 +308,21 @@ Doom:
 Heretic:
 
 ! Renamed some actor names to avoid name conflicts with Terra Incognita.
+* Fixed D'Sparil (first phase) counting for two kills when killed by ice attacks.
 
 Hexen: Beyond Heretic:
 
 ! Renamed an actor name to avoid name conflicts with Terra Incognita.
+* Fixed ice death translations being called on being killed by ice attacks for enemies with frozen sprites.
+* Fixed the death wyvern not having Crash states for being frozen or zorched.
 
 Strife: Quest for the Sigil:
 
 * Fixed bosses not being disintegrated by the Duke Nukem 64 version of Duke Nukem's plasma cannon.
+
+Legacy of Rust/WadFusion:
+
+* Fixed the shocktrooper not having NOPAIN properly removed when going to the missile state.
 
 Chex Quest 1:
 
