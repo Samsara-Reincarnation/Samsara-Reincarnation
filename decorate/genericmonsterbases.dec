@@ -18339,11 +18339,14 @@ Actor Samsara_BossDeath : Trigger
 	}
 }
 
+Actor SamsaraMonsterSpawnedByMaster : Boolean {}
+
 Actor Samsara_KillMaster : Trigger
 {
 	States
 	{
 		Pickup:
+			TNT1 A 0 A_JumpIfInventory("SamsaraMonsterSpawnedByMaster",1,"PickupStop")
 			TNT1 A 0 A_KillMaster
 			Stop
 	}
