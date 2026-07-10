@@ -5,6 +5,7 @@ actor SamsaraDuke_IsBurning : TemporaryBoolean {} // we'll do it like this for n
 actor "Duke3D_Incinerator" : DukeWeapon
 {
 	Weapon.SlotNumber 6
+	Weapon.SlotPriority 1
 	Weapon.SelectionOrder 700
 	Weapon.AmmoUse 0
 	Weapon.AmmoGive 25
@@ -24,56 +25,6 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		DUIN Z -1
 		Stop
 
-	ReadyB:
-		TNT1 A 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSWITCH)
-		TNT1 A 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireA1")
-		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireA2")
-		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireA3")
-		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireA4")
-		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireA5")
-		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireA6")
-		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireA7")
-		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireA8")
-		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireA9")
-		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireA10")
-		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireA11")
-		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireA12")
-		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireA13")
-		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireA14")
-		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireA15")
-		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireA16")
-		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireA17")
-		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireA18")
-		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
-		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
-		Goto ReadyA
-	ReadyA:
-		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireA1")
-		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireA2")
-		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireA3")
-		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireA4")
-		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireA5")
-		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireA6")
-		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireA7")
-		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireA8")
-		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireA9")
-		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireA10")
-		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireA11")
-		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireA12")
-		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireA13")
-		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireA14")
-		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireA15")
-		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireA16")
-		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireA17")
-		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireA18")
-		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
-		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
-		TNT1 A 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSWITCH)
-		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
-		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"ReadyB")
-		TNT1 A 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
-		Goto Ready
 	Ready:
 		DUIN A 0 
 		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
@@ -166,12 +117,11 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
 		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
 		"####" E 1 A_WeaponReady
-		Goto Ready 
+		loop
 	Deselect:
 		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
 		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "DeselectLAB")
 		Goto Super::Deselect
-
 
 	Select:
 		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "SelectLAB")
@@ -181,24 +131,13 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		Goto Super::Select
 		
 	Fire:
-		TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
-		TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireUnderwater")
 		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
 		TNT1 A 0 A_GiveInventory("DBSHOT",40)
 		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
 		Goto ReadyA
 
-	FireUnderwater:
-		DUIN A 0 A_ClearReFire
-		DUIN ABCDEABCDE 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		//TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
-		//TNT1 A 0 A_GiveInventory("DBSHOT",40)
-		//TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
-		Goto Ready
-
 	Flash:
 		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"FlashA")
-		//TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"FlashA")
 		TNT1 A 0 A_JumpIfInventory("BlankFlash",1,"FlashBlank")
 		TNT1 A 0 //A_JumpIfInventory("DukeClassMode", 1, 2)
 		DUIN A 8 A_WeaponReady
@@ -215,6 +154,8 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",5,1)
 		goto OutOfAmmo
+		TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FlashAUnderwater")
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_Light1
 		TNT1 A 0 //A_JumpIfInventory("DukeFreezethrowerHold",1,"FlashHold")
@@ -224,10 +165,14 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		DUIN K 1 Bright
 		DUIN L 1 Bright A_Light0
 		DUIN MNOPQRSTIJKLMN 1 Bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		//TNT1 A 0 A_GiveInventory("DBSHOT1",40)
 		TNT1 A 0 A_TakeInventory("DBSHOT",99)
 		DUIN H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-		Stop  
+		Stop
+	FlashAUnderwater:
+		DUIN AAABBBCCCDDDEE 1
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DUIN E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
 
 	AltFire:
 		TNT1 A 0 //A_JumpIfInventory("DukeClassMode", 2, "NoAltFireForDuke64")
@@ -238,7 +183,6 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		stop
 		DUIN A 8
 		stop
-
 
 	TauntWeaponSound:
 		TNT1 A 0 A_PlayWeaponSound("duke/weaponget")
@@ -260,7 +204,6 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "OutOfAmmoLAB")
 		DUIN AA 1 A_TakeInventory("DBSHOT",99)
 		goto Nothing
-
 
 	Nothing:
         TNT1 A 0 A_ClearReFire
