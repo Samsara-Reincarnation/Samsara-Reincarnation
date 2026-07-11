@@ -1164,9 +1164,11 @@ actor SamsaraHexenQuietusRangedAttackHandler : Trigger
         TNT1 A 0 A_PlaySound("FighterSwordFire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
-      PickupAttackDM:
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+      PickupAttackUnpoweredDM:
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3",11.5,false,0,-10)
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3",5.625,false,0,-5)
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3",0,false)
@@ -1174,7 +1176,7 @@ actor SamsaraHexenQuietusRangedAttackHandler : Trigger
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3",-11.5,false,0,10)
         stop
 
-      PickupAttackCoop:
+      PickupAttackUnpoweredCoop:
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3Coop",11.5,false,0,-10)
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3Coop",5.625,false,0,-5)
         TNT1 A 0 A_FireCustomMissile("FSwordMissile3Coop",0,false)
@@ -1195,6 +1197,8 @@ actor SamsaraHexenQuietusRangedAttackHandler : Trigger
         stop
     }
 }
+
+// Unpowered
 
 actor FSwordMissile3 : FSwordMissile
 {
@@ -1229,34 +1233,37 @@ actor FSwordMissile3Coop : FSwordMissile3
     +THRUSPECIES
 }
 
-Actor FSwordMegaMissile : FSwordMissile
+// Powered
+
+actor FSwordMegaMissile : FSwordMissile3
 {
     Damage (50)
-    Renderstyle Translucent
-    +FORCERADIUSDMG
+    RenderStyle "Translucent"
     States
     {
-        Spawn:
-            H140 IJK 3 Bright Light("SWORDSHOT_X1") A_SpawnItemEx("FSwordMegaMissileTrail")
-            Loop
-        Death:
-            H141 A 0 A_PlaySound("SorcererBallExplode",CHAN_5,1.0,false,0.25)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,0,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,30,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,60,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,90,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,120,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,150,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,180,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,210,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,240,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,270,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,300,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,330,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_Explode(1000,128,!XF_HURTSOURCE,true,128)
-            H141 A 0 A_Quake(8,17,0,512,"nosoundforyoubitch")
-            H141 ABCDEFGHIJKLMNOPQ 3 Bright Light("SWORDSHOT_X2")
-            Stop
+      Spawn:
+        H140 IJK 3 Bright Light("SWORDSHOT_X1") A_SpawnItemEx("FSwordMegaMissileTrail")
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("SorcererBallExplode",CHAN_BODY,1,false,0.25)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,30,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,60,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,90,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,120,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,150,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,180,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,210,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,240,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,270,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,300,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlame",0,0,0,4,0,8,330,SXF_TRANSFERPOINTERS)
+      DeathFinish:
+        TNT1 A 0 A_Explode(1000,128,0,false,128)
+        H141 A 3 Bright Light("SWORDSHOT_X2") A_Quake(8,17,0,512,"nosoundforyoubitch")
+        H141 BCDEFGHIJKLMNOPQ 3 Bright Light("SWORDSHOT_X2")
+        stop
     }
 }
 
@@ -1266,62 +1273,61 @@ actor FSwordMegaMissileCoop : FSwordMegaMissile
     +THRUSPECIES
     States
     {
-        Death:
-            H141 A 0 A_PlaySound("SorcererBallExplode",CHAN_5,1.0,false,0.25)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,0,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,30,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,60,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,90,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,120,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,150,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,180,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,210,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,240,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,270,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,300,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,330,SXF_TRANSFERPOINTERS)
-            H141 A 0 A_Explode(1000,128,!XF_HURTSOURCE,true,128)
-            H141 A 0 A_Quake(8,17,0,512,"nosoundforyoubitch")
-            H141 ABCDEFGHIJKLMNOPQ 3 Bright Light("SWORDSHOT_X2")
-            Stop
+      Death:
+        TNT1 A 0 A_PlaySound("SorcererBallExplode",CHAN_BODY,1,false,0.25)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,30,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,60,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,90,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,120,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,150,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,180,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,210,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,240,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,270,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,300,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("FSwordMegaMissileFlameCoop",0,0,0,4,0,8,330,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
     }
 }
 
-Actor FSwordMegaMissileTrail
+actor FSwordMegaMissileTrail
 {
-    Renderstyle Add
-    +NOINTERACTION
+    RenderStyle "Add"
     +CLIENTSIDEONLY
+    +NOINTERACTION
     States
     {
-        Spawn:
-            H140 ABCDEFGH 3 Bright Light("SWORDSHOT_X1")
-            Stop
+      Spawn:
+        H140 ABCDEFGH 3 Bright Light("SWORDSHOT_X1")
+        stop
     }
 }
 
-Actor FSwordMegaMissileFlame
+actor FSwordMegaMissileFlame
 {
-    Height 4
-    Radius 2
-    Renderstyle Translucent
-    Alpha 0.8
-    Speed 2
     Projectile
+    Radius 2
+    Height 4
+    Speed 2
+    DamageType "HexenQuietusFire"
     Gravity 0.5
+    RenderStyle "Translucent"
+    Alpha 0.8
     -NOGRAVITY
     +THRUACTORS
     States
     {
-        Spawn:
-            H140 Q 3 Bright Light("SWORDSHOT_X1")
-            Wait
-        Death:
-            H140 A 0 A_PlaySound("Hexen/FireBurn",CHAN_5,0.25,true)
-            H140 RSTUVWXYSTUVWXYSTUVWXY 3 Bright Light("SWORDSHOT_X1") A_Explode(5,32,!XF_HURTSOURCE)
-            H140 Z 0 A_StopSound(CHAN_5)
-            H140 "Z[\]" 3 Bright Light("SWORDSHOT_X1")
-            Stop
+      Spawn:
+        H140 Q -1 Bright Light("SWORDSHOT_X1")
+        stop
+
+      Death:
+        TNT1 A 0 A_PlaySound("Hexen/FireBurn",CHAN_VOICE,0.25,true)
+        H140 RSTUVWXYSTUVWXYSTUVWXY 3 Bright Light("SWORDSHOT_X1") A_Explode(5,32,0)
+        H140 Z 3 Bright Light("SWORDSHOT_X1") A_StopSound(CHAN_VOICE)
+        H140 "[\]" 3 Bright Light("SWORDSHOT_X1")
+        stop
     }
 }
 
