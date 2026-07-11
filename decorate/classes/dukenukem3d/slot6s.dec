@@ -567,23 +567,15 @@ actor Duke3DIncineratorPoolDamagerCoop : Duke3DIncineratorPoolDamager
     }
 }
 
-ACTOR Duke3DIncineratorBurningFX : CustomInventory
+actor Duke3DIncineratorBurningFX : Trigger
 {
-	+INVENTORY.ALWAYSPICKUP
-	Inventory.PickupMessage ""
-	Inventory.PickupSound ""
-	States
-	{
-		Spawn:
-			TNT1 A 0
-			TNT1 A 1
-			Stop
-		Pickup:
-			TNT1 A 0
-			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorBurningFlame",0,0,5,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
-			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorSmoke",0,0,15,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
-			stop
-	}
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorBurningFlame",0,0,5,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorSmoke",0,0,15,0,0,0,0,SXF_NOCHECKPOSITION)
+        stop
+    }
 }
 
 Actor Duke3DIncineratorBurning : Trigger

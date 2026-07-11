@@ -353,7 +353,7 @@ script "DukeIncineratorIgnite" (int burn)
 
         if (Random(0, 2) == 0) { GiveInventory("Duke3DIncineratorDamagerGiver", 1); }
 
-        GiveInventory("Duke3DIncineratorBurningFX", 1);
+        ACS_NamedExecuteWithResult("DukeIncineratorBurningFXGiver"); //GiveInventory("Duke3DIncineratorBurningFX", 1);
     }
 
     int oldtid = ActivatorTid();
@@ -371,3 +371,5 @@ script "DukeIncineratorIgnite" (int burn)
     Thing_ChangeTID(dummytid, 0);
     Thing_Remove(0);
 }
+
+script "DukeIncineratorBurningFXGiver" (void) CLIENTSIDE { GiveInventory("Duke3DIncineratorBurningFX", 1); }
