@@ -11156,9 +11156,13 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE1:
             if (!CheckInventory("SamsaraHexenTomeOfPower"))
             {
-                GiveInventory("SamsaraHexenTomeOfPower", 1);
-                result = 1;
-            } else if (CheckInventory("SamsaraHexenTomeOfPowerCooldown")) {
+                // if banhextomeofpower is on, and we're maxed out on lesser tomes, fail the pickup
+                if (!GetCVar("samsara_banhextomeofpower") || CheckInventory("SamsaraLesserTomeInventoryRaven") < 16)
+                {
+                    GiveInventory("SamsaraHexenTomeOfPower", 1);
+                    result = 1;
+                }
+            } else if (CheckInventory("SamsaraHexenTomeOfPowerCooldown") && !GetCVar("samsara_banhextomeofpower")) {
                 GiveInventory("SamsaraHexenTomeOfPower", 1);
                 ACS_NamedExecuteWithResult("SamsaraHexenTomeOfPowerCooldownDecrement");
                 result = 1;
@@ -11285,7 +11289,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
               case SLOT_UNIQUE1:
                 if (!CheckInventory("DukePortJetpack") || CheckInventory("DukeJetpackFuel") < 100)
                 {
-                    if (!GetCVar("samsara_banjetpack") || !CheckInventory(shareditem) || CheckInventory("DukeSteroidsFuel") < 100) // if banjetpack is on, and we have full steroids/hot sauce, fail the pickup
+                    // if banjetpack is on, and we have full steroids/hot sauce, fail the pickup
+                    if (!GetCVar("samsara_banjetpack") || !CheckInventory(shareditem) || CheckInventory("DukeSteroidsFuel") < 100)
                     {
                         GiveInventory("DukeJetpackFuel", 100);
                         GiveInventory("DukePortJetpack", 1);
@@ -11356,7 +11361,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 {
                     if (!CheckInventory("DukePortJetpack64") || CheckInventory("DukeJetpackFuel") < 100)
                     {
-                        if (!GetCVar("samsara_banjetpack") || !CheckInventory(shareditem) || CheckInventory("DukeSteroidsFuel") < 100) // if banjetpack is on, and we have full vitamin x, fail the pickup
+                        // if banjetpack is on, and we have full vitamin x, fail the pickup
+                        if (!GetCVar("samsara_banjetpack") || !CheckInventory(shareditem) || CheckInventory("DukeSteroidsFuel") < 100)
                         {
                             GiveInventory("DukeJetpackFuel", 100);
                             GiveInventory("DukePortJetpack64", 1);
@@ -11458,13 +11464,11 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
             break;
 
           case SLOT_UNIQUE1:
-            int oxyrecmax = 3;
-
             if (CheckInventory("RMRJetPack") < 3)
             {
                 // if banjetpack is on, and we have the max amount of oxygen recyclers (and full health/oxygen, depending on settings), fail the pickup
                 if (!GetCVar("samsara_banjetpack") ||
-                    CheckInventory("RMROxygenRecycler") < oxyrecmax ||
+                    CheckInventory("RMROxygenRecycler") < 3 ||
                     (GetCVar("samsara_cl_maxedinventoryhealthpickup") >= 2 && (GetActorProperty(0, APROP_Health) < ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1) || ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 0, -1, 0))) ||
                     GetCVar("samsara_nohealthcap"))
                 {

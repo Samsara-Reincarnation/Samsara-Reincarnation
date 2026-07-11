@@ -5511,7 +5511,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
         SetInventory("DukeLegacyVoices", GetUserCVar(pln, "samsara_cl_legacydukevoices"));
 
-        SetInventory("SamsaraHasPermaWeaponLevel2", GetCVar("samsara_permaweaponlevel2"));
+        SetInventory("SamsaraHasPermaWeaponLevel2", GetCVar("samsara_permaweaponlevel2") && (samsaraClassNum() != CLASS_HEXEN || (samsaraClassNum() == CLASS_HEXEN && !GetCVar("samsara_banhextomeofpower"))));
 
 		HandleAmmoCapacities(0);
 		HandleBans();
@@ -5552,18 +5552,41 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
             SetInventory("SamsaraCorvusArtiEgg", 0);
         }
 
+        if (GetCVar("samsara_banhextomeofpower") && CheckInventory("SamsaraHexenTomeOfPower"))
+        {
+            for (i = 0; i < CheckInventory("SamsaraHexenTomeOfPower"); i++)
+            {
+                if (CheckInventory("SamsaraLesserTomeInventoryRaven") < 16)
+                {
+                    Print(l:"HEXEN1TOMEOFPOWERDISABLED2");
+                    GiveInventory("SamsaraLesserTomeInventoryRaven", 1);
+                }
+                else { Print(l:"HEXEN1TOMEOFPOWERDISABLED1"); }
+            }
+
+            SetInventory("SamsaraHexenTomeOfPower", 0);
+            SetInventory("SamsaraHexenTomeOfPowerCooldown", 0);
+            SetInventory("PowerSamsaraHexenWeaponLevel2", 0);
+        }
+
         if (!isZDoom() && GetCVar("samsara_banmorphovum") && CheckInventory("SamsaraHexenPorkalator"))
         {
             for (i = 0; i < CheckInventory("SamsaraHexenPorkalator"); i++)
             {
                 if (!CheckInventory("SamsaraHexenDiscOfRepulsion"))
                 {
-                    Print(l:"HEXEN1PORKALATORDISABLED3");
+                    Print(l:"HEXEN1PORKALATORDISABLED4");
                     GiveInventory("SamsaraHexenDiscOfRepulsion", 1);
-                } else if (!CheckInventory("SamsaraHexenTomeOfPower") || (CheckInventory("SamsaraHexenTomeOfPower") && CheckInventory("SamsaraHexenTomeOfPowerCooldown"))) {
-                    Print(l:"HEXEN1PORKALATORDISABLED2");
-                    GiveInventory("SamsaraHexenTomeOfPower", 1);
-                    if (CheckInventory("SamsaraHexenTomeOfPowerCooldown")) { ACS_NamedExecuteWithResult("SamsaraHexenTomeOfPowerCooldownDecrement"); }
+                } else if ((!GetCVar("samsara_banhextomeofpower") && (!CheckInventory("SamsaraHexenTomeOfPower") || (CheckInventory("SamsaraHexenTomeOfPower") && CheckInventory("SamsaraHexenTomeOfPowerCooldown")))) || (GetCVar("samsara_banhextomeofpower") && CheckInventory("SamsaraLesserTomeInventoryRaven") < 16)) {
+                    if (GetCVar("samsara_banhextomeofpower"))
+                    {
+                        Print(l:"HEXEN1PORKALATORDISABLED3");
+                        GiveInventory("SamsaraLesserTomeInventoryRaven", 1);
+                    } else {
+                        Print(l:"HEXEN1PORKALATORDISABLED2");
+                        GiveInventory("SamsaraHexenTomeOfPower", 1);
+                        if (CheckInventory("SamsaraHexenTomeOfPowerCooldown")) { ACS_NamedExecuteWithResult("SamsaraHexenTomeOfPowerCooldownDecrement"); }
+                    }
                 }
                 else { Print(l:"HEXEN1PORKALATORDISABLED1"); }
             }
