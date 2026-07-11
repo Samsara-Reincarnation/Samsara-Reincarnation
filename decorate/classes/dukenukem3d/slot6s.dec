@@ -233,7 +233,7 @@ actor SamsaraDukeIncineratorAttackHandler : Trigger
         stop
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProj",0,false,5,1)
+        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjCoop",0,false,5,1)
         stop
 		
 	  PickupAttackIgnoreWater:
@@ -244,7 +244,7 @@ actor SamsaraDukeIncineratorAttackHandler : Trigger
         stop
 
       PickupAttackCoopIgnoreWater:
-        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjIgnoreWater",0,false,5,1)
+        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjCoopIgnoreWater",0,false,5,1)
         stop
     }
 }
@@ -325,6 +325,26 @@ actor Duke3DIncineratorProj
 	}
 }
 
+actor Duke3DIncineratorProjCoop : Duke3DIncineratorProj
+{
+    Species "Player"
+    +THRUSPECIES
+	States
+	{
+		Death:
+		Crash:
+		XDeath:
+			TNT1 A 0 A_CheckFloor(3)
+			TNT1 A 0 A_RadiusGive("Duke3DIncineratorBurning",72,RGF_MONSTERS|RGF_NOTARGET|RGF_NOSIGHT) 
+			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			stop
+			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorSplash",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorPoolDamagerCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorPool",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			stop
+	}
+}
+
 actor Duke3DIncineratorProjIgnoreWater : Duke3DIncineratorProj
 {
 	States
@@ -355,20 +375,41 @@ actor Duke3DIncineratorProjIgnoreWater : Duke3DIncineratorProj
 			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
 			loop
-		Death:
-		Crash:
-		XDeath:
-			TNT1 A 0 A_CheckFloor(3)
-			TNT1 A 0 A_RadiusGive("Duke3DIncineratorBurning",72,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET|RGF_NOSIGHT) 
-			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
-			stop
-			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorSplash",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
-			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorPoolDamager",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorPool",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
-			stop
 	}
 }
 
+actor Duke3DIncineratorProjCoopIgnoreWater : Duke3DIncineratorProjCoop
+{
+	States
+	{
+		Spawn:
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			loop
+	}
+}
 
 actor Duke3DIncineratorExplosion : RPGExplosion
 {
@@ -510,6 +551,19 @@ actor Duke3DIncineratorPoolDamager
       Death:
         TNT1 A 0
 	stop
+    }
+}
+
+actor Duke3DIncineratorPoolDamagerCoop : Duke3DIncineratorPoolDamager
+{
+    States
+    {
+      Spawn:
+	TNT1 A 0 A_JumpIf(user_lifetime > 110, "Death")
+        TNT1 A 0 A_SetUserVar("user_lifetime",user_lifetime+1)
+        TNT1 A 4 A_RadiusGive("Duke3DIncineratorBurning",48,RGF_MONSTERS|RGF_NOTARGET)
+        //TNT1 A 4 A_Explode(10,40,XF_THRUSTLESS|XF_CIRCULAR,false,40)
+	loop
     }
 }
 
