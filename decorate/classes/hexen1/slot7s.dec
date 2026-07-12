@@ -149,8 +149,13 @@ actor SamsaraHexenClassicBloodscourgeAttackHandler : Trigger
       // Finishing stuff
       PickupFinish:
         TNT1 A 0 A_JumpIfInventory("WeaponFlashesAreDisabled",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenWeaponPaletteBlendCounter",1,"PickupFinishSubsequent") // don't call the script repeatedly
         TNT1 A 0 A_GiveInventory("SamsaraHexenWeaponPaletteBlendCounter",3)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraHexenWeaponPaletteBlend", 1)
+        stop
+
+      PickupFinishSubsequent:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenWeaponPaletteBlendCounter",3)
         stop
     }
 }
@@ -213,8 +218,13 @@ actor SamsaraHexenClassicBloodscourgePoweredAttackHandler : Trigger
       // Finishing stuff
       PickupFinish:
         TNT1 A 0 A_JumpIfInventory("WeaponFlashesAreDisabled",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenWeaponPaletteBlendCounter",1,"PickupFinishSubsequent") // don't call the script repeatedly
         TNT1 A 0 A_GiveInventory("SamsaraHexenWeaponPaletteBlendCounter",3)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraHexenWeaponPaletteBlend", 1)
+        stop
+
+      PickupFinishSubsequent:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenWeaponPaletteBlendCounter",3)
         stop
     }
 }
