@@ -1942,7 +1942,6 @@ actor Ammo4Small : SamsaraAmmoPickup
 
       Pickup:
         TNT1 A 0 A_JumpIfInventory("DoomguyClass",1,"PickupDoom")
-        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupDuke")
         TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupQuake1")
         TNT1 A 0 A_JumpIfInventory("RottClass",1,"PickupROTT")
         TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupCatacomb")
@@ -1964,16 +1963,6 @@ actor Ammo4Small : SamsaraAmmoPickup
         goto PickupDisplay
         TNT1 A 0 A_JumpIfInventory("DoomguyStrGas",0,"PickupFail")
         goto PickupDisplay
-
-      PickupDuke:
-        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupDuke64")
-        TNT1 A 0 A_JumpIfInventory("Cell",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ExpanderAmmo",0,"PickupFail")
-        goto PickupDisplay
-
-      PickupDuke64:
-        goto PickupDefault
 
       PickupQuake1:
         TNT1 A 0 A_JumpIfInventory("QuakeModeOn",1,2)
@@ -2016,7 +2005,6 @@ actor Ammo4Small : SamsaraAmmoPickup
 
       PickupSuccess:
         TNT1 A 0 A_JumpIfInventory("DoomguyClass",1,"PickupSuccessDoom")
-        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupSuccessDuke")
         TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupSuccessQuake1")
         TNT1 A 0 A_JumpIfInventory("RottClass",1,"PickupSuccessROTT")
         TNT1 A 0 A_JumpIfInventory("BlakeClass",1,"PickupSuccessBlake")
@@ -2040,15 +2028,6 @@ actor Ammo4Small : SamsaraAmmoPickup
         TNT1 A 0 A_GiveInventory("Cell",20)
         TNT1 A 0 A_GiveInventory("DoomguyStrGas",12)
         stop
-
-      PickupSuccessDuke:
-        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupSuccessDuke64")
-        TNT1 A 0 A_GiveInventory("Cell",20)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",5)
-        stop
-
-      PickupSuccessDuke64:
-        goto PickupSuccessDefault
 
       PickupSuccessQuake1:
         TNT1 A 0 A_JumpIfInventory("QuakeModeOn",1,2)
@@ -2210,15 +2189,6 @@ actor Ammo4Medium : Ammo4Small
         TNT1 A 0 A_GiveInventory("DoomguyStrGas",24)
         stop
 
-      PickupSuccessDuke:
-        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupSuccessDuke64")
-        TNT1 A 0 A_GiveInventory("Cell",60)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",10)
-        stop
-
-      PickupSuccessDuke64:
-        goto PickupSuccessDefault
-
       PickupSuccessQuake1:
         TNT1 A 0 A_JumpIfInventory("QuakeModeOn",1,2)
         TNT1 A 0 A_GiveInventory("LavaNails",30)
@@ -2299,6 +2269,7 @@ actor Ammo4Big : Ammo4Small
         loop
 
       Pickup:
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupDuke")
         TNT1 A 0 A_JumpIfInventory("BondClass",1,"PickupGoldenEye")
         goto Super::Pickup // all other classes still checked
 
@@ -2306,9 +2277,7 @@ actor Ammo4Big : Ammo4Small
         TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupDuke64")
         TNT1 A 0 A_JumpIfInventory("Cell",0,1)
         goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ExpanderAmmo",0,"PickupFail")
+        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",0,"PickupFail")
         goto PickupDisplay
 
       PickupDuke64:
@@ -2350,6 +2319,7 @@ actor Ammo4Big : Ammo4Small
         goto PickupSuccess
 
       PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupSuccessDuke")
         TNT1 A 0 A_JumpIfInventory("BondClass",1,"PickupSuccessGoldenEye")
         goto Super::PickupSuccess // all other classes still checked
 
@@ -2370,7 +2340,6 @@ actor Ammo4Big : Ammo4Small
         TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupSuccessDuke64")
         TNT1 A 0 A_GiveInventory("Cell",100)
         TNT1 A 0 A_GiveInventory("ShrinkerAmmo",3)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",20)
         stop
 
       PickupSuccessDuke64:
@@ -3210,9 +3179,7 @@ actor Ammo34Small : SamsaraAmmoPickup
         goto PickupDisplay
         TNT1 A 0 A_JumpIfInventory("Cell",0,1)
         goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ExpanderAmmo",0,"PickupFail")
+        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",0,"PickupFail")
         goto PickupDisplay
 
       PickupDuke64:
@@ -3379,7 +3346,6 @@ actor Ammo34Small : SamsaraAmmoPickup
         TNT1 A 0 A_GiveInventory("RocketAmmo",5)
         TNT1 A 0 A_GiveInventory("Cell",10)
         TNT1 A 0 A_GiveInventory("ShrinkerAmmo",1)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",5)
         stop
 
       PickupSuccessDuke64:
@@ -3607,9 +3573,7 @@ actor EverythingAmmo : SamsaraAmmoPickup
         goto PickupDisplay
         TNT1 A 0 A_JumpIfInventory("Cell",0,1)
         goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ExpanderAmmo",0,"PickupFail")
+        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",0,"PickupFail")
         goto PickupDisplay
 
       PickupDuke64:
@@ -3908,7 +3872,6 @@ actor EverythingAmmo : SamsaraAmmoPickup
         TNT1 A 0 A_GiveInventory("RocketAmmo",15)
         TNT1 A 0 A_GiveInventory("Cell",15)
         TNT1 A 0 A_GiveInventory("ShrinkerAmmo",1)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",5)
         stop
 
       PickupSuccessDuke64:
@@ -4183,14 +4146,7 @@ actor AmmoComboSmall : SamsaraAmmoPickup
 
       PickupDuke:
         TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupDuke64")
-        TNT1 A 0 A_JumpIfInventory("Clip",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("Shell",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("Cell",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ExpanderAmmo",0,"PickupFail")
-        goto PickupDisplay
+        goto PickupDefault
 
       PickupDuke64:
         TNT1 A 0 A_JumpIfInventory("Clip",0,1)
@@ -4406,11 +4362,7 @@ actor AmmoComboSmall : SamsaraAmmoPickup
 
       PickupSuccessDuke:
         TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupSuccessDuke64")
-        TNT1 A 0 A_GiveInventory("Clip",5)
-        TNT1 A 0 A_GiveInventory("Shell",2)
-        TNT1 A 0 A_GiveInventory("Cell",4)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",1)
-        stop
+        goto PickupSuccessDefault
 
       PickupSuccessDuke64:
         TNT1 A 0 A_GiveInventory("Clip",5)
@@ -4629,16 +4581,7 @@ actor AmmoComboBig : AmmoComboSmall
 
       PickupDuke:
         TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupDuke64")
-        TNT1 A 0 A_JumpIfInventory("Clip",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("Shell",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("Cell",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("ExpanderAmmo",0,"PickupFail")
-        goto PickupDisplay
+        goto PickupDefault
 
       PickupDuke64:
         TNT1 A 0 A_JumpIfInventory("Clip",0,1)
@@ -4885,12 +4828,7 @@ actor AmmoComboBig : AmmoComboSmall
 
       PickupSuccessDuke:
         TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupSuccessDuke64")
-        TNT1 A 0 A_GiveInventory("Clip",20)
-        TNT1 A 0 A_GiveInventory("Shell",10)
-        TNT1 A 0 A_GiveInventory("RocketAmmo",1)
-        TNT1 A 0 A_GiveInventory("Cell",10)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",2)
-        stop
+        goto PickupSuccessDefault
 
       PickupSuccessDuke64:
         TNT1 A 0 A_GiveInventory("Clip",20)
@@ -6192,15 +6130,6 @@ actor Q2CellPickup : Ammo4Small
         TNT1 A 0 A_GiveInventory("Cell",50)
         TNT1 A 0 A_GiveInventory("DoomguyStrGas",12)
         stop
-
-      PickupSuccessDuke:
-        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupSuccessDuke64")
-        TNT1 A 0 A_GiveInventory("Cell",50)
-        TNT1 A 0 A_GiveInventory("ExpanderAmmo",5)
-        stop
-
-      PickupSuccessDuke64:
-        goto PickupSuccessDefault
 
       PickupSuccessQuake1:
         TNT1 A 0 A_JumpIfInventory("QuakeModeOn",1,2)

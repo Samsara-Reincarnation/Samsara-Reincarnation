@@ -1,0 +1,735 @@
+actor SamsaraDukeIncineratorFire : Boolean {}
+actor SamsaraDukeHasIncinerator : Boolean {}
+actor SamsaraDuke_IsBurning : TemporaryBoolean {} // we'll do it like this for now
+
+actor "Duke3D_Incinerator" : DukeWeapon
+{
+	Weapon.SlotNumber 5
+	Weapon.SlotPriority 1
+	Weapon.SelectionOrder 700
+	Weapon.AmmoUse 0
+	Weapon.AmmoGive 5
+	Weapon.AmmoType "RocketAmmo"
+	Obituary "$SAMSARA_DUKE_OB_SLOT5S"
+	Inventory.Pickupmessage "You got the Incinerator!"
+	Inventory.PickupSound "duke/weaponget"
+	weapon.upsound ""
+	Scale 0.75
+	+NOALERT
+	+INVENTORY.UNDROPPABLE
+	+WEAPON.AMMO_OPTIONAL
+	Tag "Incinerator"
+	States
+	{
+	Spawn:
+		DUIN Z -1
+		Stop
+
+	Ready:
+		DUIN A 0 
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" A 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" A 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" A 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" B 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" B 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" B 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" C 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" C 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" C 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" D 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" D 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" D 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" E 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" E 1 A_WeaponReady
+		"####" A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		"####" A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		"####" A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		"####" A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		"####" A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		"####" E 1 A_WeaponReady
+		loop
+	Deselect:
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "DeselectLAB")
+		Goto Super::Deselect
+
+	Select:
+		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "SelectLAB")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt1")
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		DUIN A 0 A_PlayWeaponSound("duke/weaponget")
+		Goto Super::Select
+		
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_GiveInventory("DBSHOT",40)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		Goto ReadyA
+
+	Flash:
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"FlashA")
+		TNT1 A 0 A_JumpIfInventory("BlankFlash",1,"FlashBlank")
+		TNT1 A 0 //A_JumpIfInventory("DukeClassMode", 1, 2)
+		DUIN A 8 A_WeaponReady
+		Stop
+		DUIN Q 8 A_WeaponReady
+		Stop
+	FlashBlank:
+		TNT1 A 1
+		stop
+	FlashA:
+		TNT1 A 0 A_TakeInventory("DukeWaiting")
+		TNT1 A 0 //A_JumpIfInventory("DukeClassMode",2,"FlashA64")
+		TNT1 A 0 //A_JumpIfInventory("DukeClassMode", 1, "FlashALAB")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		goto OutOfAmmo
+		TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FlashAUnderwater")
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_Light1
+		DUIN I 1 Bright A_PlaySound("duke/incinerator",CHAN_WEAPON)
+		DUIN J 1 Bright A_GiveInventory("SamsaraDukeIncineratorAttackHandler")
+		DUIN K 1 Bright
+		DUIN L 1 Bright A_Light0
+		DUIN MNOPQRSTIJKLMN 1 Bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DUIN H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+	FlashAUnderwater:
+		DUIN AAABBBCCCDDDEE 1
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DUIN E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+
+	AltFire:
+		TNT1 A 0 //A_JumpIfInventory("DukeClassMode", 2, "NoAltFireForDuke64")
+		Goto Super::AltFire
+
+	AltFlash:
+		DUIN A 8 //A_JumpIfInventory("DukeClassMode", 1, 1)
+		stop
+		DUIN A 8
+		stop
+
+	TauntWeaponSound:
+		TNT1 A 0 A_PlayWeaponSound("duke/weaponget")
+		Goto Select
+
+	IntroTaunt:
+		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "IntroTauntLAB")
+		Goto Super::IntroTaunt
+
+	WaitingTaunt:
+		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "WaitingTauntLAB")
+		Goto Super::WaitingTaunt
+
+	GiveMoney:
+		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "GiveMoneyLAB")
+		Goto Super::GiveMoney
+
+	OutOfAmmo:
+		DUIN A 0 //A_JumpIfInventory("DukeClassMode", 1, "OutOfAmmoLAB")
+		DUIN AA 1 A_TakeInventory("DBSHOT",99)
+		goto Nothing
+
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Glock 17")
+        goto Deselect
+	}
+}
+
+actor SamsaraDukeIncineratorAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        //TNT1 A 0 A_PlaySound("duke/incinerator",CHAN_WEAPON)
+		TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"PickupAttackIgnoreWater")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProj",0,false,5,1)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjCoop",0,false,5,1)
+        stop
+		
+	  PickupAttackIgnoreWater:
+	    TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoopIgnoreWater")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoopIgnoreWater")
+	  PickupAttackDMIgnoreWater:
+        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjIgnoreWater",0,false,5,1)
+        stop
+
+      PickupAttackCoopIgnoreWater:
+        TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjCoopIgnoreWater",0,false,5,1)
+        stop
+    }
+}
+
+actor Duke3DIncineratorProj
+{
+	Radius 15
+	Height 10
+	Speed 25
+	Damage (50)
+	DamageType "DukeExplosive"
+	Projectile
+	Obituary "$SAMSARA_DUKE_OB_SLOT6"
+	Scale 0.5
+	Gravity 0.3
+	+SKYEXPLODE
+	+HITTRACER
+	+BLOODLESSIMPACT
+	+FORCEXYBILLBOARD
+	-NOGRAVITY
+	+WINDTHRUST
+	+FORCERADIUSDMG
+	+NODAMAGETHRUST
+	States
+	{
+		Spawn:
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			loop
+		Death:
+		Crash:
+		XDeath:
+			TNT1 A 0 A_CheckFloor(3)
+			TNT1 A 0 A_RadiusGive("Duke3DIncineratorBurning",72,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET|RGF_NOSIGHT) 
+			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			stop
+			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorSplash",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorPoolDamager",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorPool",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			stop
+		FuckWater:
+			TNT1 A 0
+			stop
+	}
+}
+
+actor Duke3DIncineratorProjCoop : Duke3DIncineratorProj
+{
+    Species "Player"
+    +THRUSPECIES
+	States
+	{
+		Death:
+		Crash:
+		XDeath:
+			TNT1 A 0 A_CheckFloor(3)
+			TNT1 A 0 A_RadiusGive("Duke3DIncineratorBurning",72,RGF_MONSTERS|RGF_NOTARGET|RGF_NOSIGHT) 
+			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			stop
+			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorSplash",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorPoolDamagerCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorPool",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			stop
+	}
+}
+
+actor Duke3DIncineratorProjIgnoreWater : Duke3DIncineratorProj
+{
+	States
+	{
+		Spawn:
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			loop
+	}
+}
+
+actor Duke3DIncineratorProjCoopIgnoreWater : Duke3DIncineratorProjCoop
+{
+	States
+	{
+		Spawn:
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF M 0 Bright A_SpawnItemEx("IncineratorTrailM",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF M 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF N 0 Bright A_SpawnItemEx("IncineratorTrailN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF N 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			DUIF O 0 Bright A_SpawnItemEx("IncineratorTrailO",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			DUIF O 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+			loop
+	}
+}
+
+actor Duke3DIncineratorExplosion : RPGExplosion
+{
+    Scale 0.3
+    +CLIENTSIDEONLY
+    States
+    {
+      Spawn:
+	    //TNT1 A 0 A_RadiusGive("Duke3DIncineratorBurning",20,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET) 
+        RPGX B 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+        RPGX C 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X2")
+        RPGX D 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X3")
+        RPGX E 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X4")
+        RPGX F 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X5")
+        RPGX G 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X6")
+        RPGX H 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X7")
+        RPGX I 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X8")
+        RPGX J 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X9")
+        RPGX K 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X10")
+        RPGX L 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X11")
+        RPGX M 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X12")
+        RPGX N 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X13")
+        RPGX O 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X14")
+        RPGX P 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X15")
+        RPGX Q 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X16")
+        RPGX R 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X17")
+        RPGX S 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X18")
+        RPGX T 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X19")
+        RPGX U 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X20")
+        RPGX V 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X21")
+        stop
+    }
+} 
+
+actor Duke3DIncineratorSplash : RPGExplosion
+{
+    Scale 0.35
+    +CLIENTSIDEONLY
+    States
+    {
+      Spawn:
+        DUIB HIJKL 3 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+        stop
+    }
+}
+
+ACTOR IncineratorTrailL
+{
+	+FORCEXYBILLBOARD
+	+BRIGHT
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	Scale 0.5
+	States
+	{
+	Spawn:
+		DUIF LLL 1 A_SetScale(scalex-0.1)
+		DUIF MM 1 A_SetScale(scalex-0.1)
+		Stop 
+	}
+}
+
+ACTOR IncineratorTrailM : IncineratorTrailL
+{
+	States
+	{
+	Spawn:
+		DUIF MMM 1 A_SetScale(scalex-0.1)
+		DUIF NN 1 A_SetScale(scalex-0.1)
+		Stop 
+	}
+}
+
+ACTOR IncineratorTrailN : IncineratorTrailL
+{
+	States
+	{
+	Spawn:
+		DUIF NNN 1 A_SetScale(scalex-0.1)
+		DUIF OO 1 A_SetScale(scalex-0.1)
+		Stop 
+	}
+}
+
+ACTOR IncineratorTrailO : IncineratorTrailL
+{
+	States
+	{
+	Spawn:
+		DUIF OOO 1 A_SetScale(scalex-0.1)
+		DUIF LL 1 A_SetScale(scalex-0.1)
+		Stop 
+	}
+}
+
+Actor Duke3DIncineratorPool
+{
+	+THRUACTORS
+	+FLOORHUGGER
+	+NOGRAVITY
+	-SOLID
+	+MOVEWITHSECTOR
+	Height 2
+	Radius 2
+	Scale 15.0
+	States
+	{
+		Spawn:
+			//TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorPoolDamager",0,0,1,0,0,0,0,SXF_NOCHECKPOSITION)
+			DUIF AAAABBBBCCCCDDDD 1 Bright A_SetScale(scalex+1.0)
+			DUIF AAAABBBB 1 Bright A_SetScale(scalex+1.0)
+			DUIF CDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD 10 Bright A_SpawnItemEx("Duke3DIncineratorBubble",random(-25,25),random(-25,25),0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE) 
+			DUIF AAAABBBBCCCCDDDD 1 Bright A_SetScale(scalex-1.0)
+			DUIF AAAABBBBCCCCDDDD 1 Bright A_SetScale(scalex-1.0)
+			DUIF AAAABB 1 Bright A_SetScale(scalex-1.0)
+			Stop
+	}
+} 
+
+actor Duke3DIncineratorPoolDamager
+{
+    var int user_lifetime;
+    Radius 1
+    Height 1
+    //DamageType "Fire"
+    //PoisonDamageType "Fire"
+    //PoisonDamage 2, 2, 5
+    +NOGRAVITY
+    +FLOORHUGGER
+    +MOVEWITHSECTOR
+    States
+    {
+      Spawn:
+	TNT1 A 0 A_JumpIf(user_lifetime > 110, "Death")
+        TNT1 A 0 A_SetUserVar("user_lifetime",user_lifetime+1)
+        TNT1 A 4 A_RadiusGive("Duke3DIncineratorBurning",48,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET)
+        //TNT1 A 4 A_Explode(10,40,XF_THRUSTLESS|XF_CIRCULAR,false,40)
+	loop
+      Death:
+        TNT1 A 0
+	stop
+    }
+}
+
+actor Duke3DIncineratorPoolDamagerCoop : Duke3DIncineratorPoolDamager
+{
+    States
+    {
+      Spawn:
+	TNT1 A 0 A_JumpIf(user_lifetime > 110, "Death")
+        TNT1 A 0 A_SetUserVar("user_lifetime",user_lifetime+1)
+        TNT1 A 4 A_RadiusGive("Duke3DIncineratorBurning",48,RGF_MONSTERS|RGF_NOTARGET)
+        //TNT1 A 4 A_Explode(10,40,XF_THRUSTLESS|XF_CIRCULAR,false,40)
+	loop
+    }
+}
+
+actor Duke3DIncineratorBurningFX : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorBurningFlame",0,0,5,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorSmoke",0,0,15,0,0,0,0,SXF_NOCHECKPOSITION)
+        stop
+    }
+}
+
+Actor Duke3DIncineratorBurning : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 ACS_NamedExecuteAlways("DukeIncineratorIgnite", 0, 1)
+			stop
+	}
+}
+
+actor Duke3DIncineratorSmoke
+{
+    Scale 0.45
+    +CLIENTSIDEONLY
+	+NOINTERACTION
+    States
+    {
+		Spawn:
+			DUIS ABCDEFGHI 1
+			stop
+    }
+}
+
+actor Duke3DIncineratorBurningFlame
+{
+    Scale 0.4
+    +CLIENTSIDEONLY
+	+NOINTERACTION
+    States
+	{
+		Spawn:
+			DUIF ABCDEFGHIJK 1 Bright
+			stop
+	}
+}
+
+actor Duke3DIncineratorBubble
+{
+    Scale 0.2
+    Radius 0.5
+    Height 1
+    Species "VFX"
+    +CLIENTSIDEONLY
+    +DONTSPLASH
+    +FORCEXYBILLBOARD
+    +NOBLOCKMAP
+    +NOBLOCKMONST
+    +NOINTERACTION
+    //+NOTONAUTOMAP
+    +NOTRIGGER
+    +THRUACTORS
+    States
+	{
+		Spawn:
+			TNT1 A 1
+			TNT1 A 1 A_Jump(256,"Spawn1","Spawn2","Spawn3")
+			TNT1 A 1
+			stop
+		Spawn1:
+			TNT1 A 1
+			DUIB ABCDEFG 3 Bright
+			TNT1 A 1
+			stop
+		Spawn2:
+		Spawn3:
+		Spawn4:
+		Spawn5:
+			TNT1 A 1
+			TNT1 A 1
+			TNT1 A 1
+			stop
+    }
+}
+
+actor Duke3DIncineratorDamagerGiver : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorDamager",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        stop
+    }
+}
+
+actor Duke3DIncineratorDamager
+{
+    DamageType "DukeExplosive"
+	+EXTREMEDEATH
+    +FORCERADIUSDMG
+    +NOBLOCKMAP
+    +NOGRAVITY
+    +NOTIMEFREEZE
+    +OLDRADIUSDMG
+    States
+    {
+      Spawn:
+        TNT1 A 1 NoDelay A_Explode(5,16,0)
+        stop
+    }
+}
+
+actor Duke3DIncineratorDamager2Giver : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorDamager2",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        stop
+    }
+}
+
+actor Duke3DIncineratorDamager2
+{
+    DamageType "DukeExplosive"
+	+EXTREMEDEATH
+    +FORCERADIUSDMG
+    +NOBLOCKMAP
+    +NOGRAVITY
+    +NOTIMEFREEZE
+    +OLDRADIUSDMG
+    States
+    {
+      Spawn:
+        TNT1 A 1 NoDelay A_Explode(10,16,0)
+        stop
+    }
+}
+
+actor Duke3DIncineratorDamager3Giver : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("Duke3DIncineratorDamager3",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+		TNT1 A 1 A_SpawnItemEx("Duke3DIncineratorExplosion",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+        stop
+    }
+}
+
+actor Duke3DIncineratorDamager3
+{
+    DamageType "DukeExplosive"
+	+EXTREMEDEATH
+    +FORCERADIUSDMG
+    +NOBLOCKMAP
+    +NOGRAVITY
+    +NOTIMEFREEZE
+    +OLDRADIUSDMG
+    States
+    {
+      Spawn:
+        TNT1 A 1 NoDelay A_Explode(20,16,0)
+        stop
+    }
+}

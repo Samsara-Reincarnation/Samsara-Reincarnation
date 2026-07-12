@@ -68,7 +68,7 @@ str AccuracyUniques[CLASSCOUNT][UNIQUECOUNT] =
     {"CorvusStrifeUnique1",           "SamsaraCorvusArtiEgg",   ""},
     {"WolfStrifeUnique1",             "WolfStrifeUnique2",      "WolfStrifeUnique3"},
     {"HexenStrifeUnique1",            "HexenStrifeUnique2",     "HexenStrifeUnique3"},
-    {"DukeStrifeUnique1",             "DukeStrifeUnique2",      "DukeStrifeUnique3"},
+    {"DukeStrifeUnique",              "",                       ""},
     {"MarathonStrifeUnique1",         "MarathonStrifeUnique2",  ""},
     {"RangerStrifeUnique",            "",                       ""},
     {"ROTTStrifeUnique1",             "ROTTStrifeUnique2",      ""},
@@ -623,30 +623,6 @@ str AccuracyMessages[CLASSCOUNT][MAXMODES][UNIQUECOUNT][LOADOUTCOUNT][MSGCOUNT] 
                 "What's that? You can only move in two dimensions?",
                 "And fuck you, too, fall damage.",
             }},
-            {{
-                "Shrinker!",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-            }},
-            {{
-                "Expander!",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-            }},
         },
         {
             {{
@@ -661,57 +637,9 @@ str AccuracyMessages[CLASSCOUNT][MAXMODES][UNIQUECOUNT][LOADOUTCOUNT][MSGCOUNT] 
                 "What's that? You can only move in two dimensions?",
                 "And fuck you, too, fall damage.",
             }},
-            {{
-                "Shrinker Voodoo Ring!",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-            }},
-            {{
-                "Expander Voodoo Ring!",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-            }},
         },
         {
             {{
-                "Jetpack",
-                "I believe I can touch the sky.",
-                "Guaranteed to make friends with mappers.",
-                "And this is why Virus will never be in.",
-                "Because you have that on your sprite for a reason.",
-                "Watch your ass, the jet burns.",
-                "The gas mileage is \caterrible\c-.",
-                "Corvus and the Hexen characters want their Wings of Wrath back.",
-                "What's that? You can only move in two dimensions?",
-                "And fuck you, too, fall damage.",
-            }},
-            {{ // x2 due to original/LAB
-                "Jetpack",
-                "I believe I can touch the sky.",
-                "Guaranteed to make friends with mappers.",
-                "And this is why Virus will never be in.",
-                "Because you have that on your sprite for a reason.",
-                "Watch your ass, the jet burns.",
-                "The gas mileage is \caterrible\c-.",
-                "Corvus and the Hexen characters want their Wings of Wrath back.",
-                "What's that? You can only move in two dimensions?",
-                "And fuck you, too, fall damage.",
-            }},
-            {{ // x3 due to original/LAB
                 "Jetpack",
                 "I believe I can touch the sky.",
                 "Guaranteed to make friends with mappers.",
@@ -2296,57 +2224,46 @@ script "SamsaraStrifeAccuracyAmmoFiller" (int ammotype)
         ammoamount = (maxCell * hasBackPack) / 3;
         break;
 
-      // Duke Nukem (Original/Life's A Beach)
-      case 5:
-        ammoname = "ShrinkerAmmo";
-        ammoamount = (maxCell * hasBackPack) / 10;
-        break;
-
-      case 6:
-        ammoname = "ExpanderAmmo";
-        ammoamount = (maxCell * hasBackPack) / 3;
-        break;
-
       // H.U.N.T. Team Members
-      case 7:
+      case 5:
         ammoname = "BMissiles";
         ammoamount = (maxCell + increasingCell) / 30;
         break;
 
-      case 8:
+      case 6:
         ammoname = "DSEnergy";
         ammoamount = (maxCell + increasingCell) / 30;
         break;
 
       // Caleb
-      case 9:
+      case 7:
         ammoname = "SprayCanAmmo";
         ammoamount = ((maxCell * hasBackPack) / 48) * 48;
         break;
 
       // B.J. Blazkowicz (Return To Castle Wolfenstein)
-      case 10:
+      case 8:
         ammoname = "RTCW_AlliedAmmo1";
         ammoamount = (maxClip * hasBackPack) / 2;
         break;
 
-      case 11:
+      case 9:
         ammoname = "RTCW_AlliedAmmo2";
         ammoamount = (maxShell * hasBackPack) / 2;
         break;
 
-      case 12:
+      case 10:
         ammoname = "RTCW_AlliedAmmo3";
         ammoamount = (maxRocket * hasBackPack) / 2;
         break;
 
       // Sarge
-      case 13:
+      case 11:
         ammoname = "Q3ChaingunAmmo";
         ammoamount = (maxClip * hasBackPack / 2) * 3;
         break;
 
-      case 14:
+      case 12:
         ammoname = "Q3GrenadeLauncherAmmo";
         ammoamount = (maxRocket * hasBackPack / 2) * 3;
         break;

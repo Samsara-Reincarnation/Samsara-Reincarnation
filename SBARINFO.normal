@@ -2734,8 +2734,10 @@ StatusBar Normal, ForceScaled
             } else IsSelected Duke3D_M16, "Golden Desert Eagle" {
                 InInventory SamsaraReloadMode, 2 { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 108, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo2, 108, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
+            } else {
+                InInventory SamsaraDukeUsingAltAmmo { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 108, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
+                else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 108, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
             }
-            else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 108, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
 
             DrawNumber 3, DUKEHUDF, BigNukemYellow, Health, 44, 183, 0, BigNukemWhite, 24, BigNukemOrange, 50;
             DrawNumber 3, DUKEHUDF, BigNukemYellow, Armor, 76, 183, 0, BigNukemOrange, 0, BigNukemOrange, 50;
@@ -2837,14 +2839,27 @@ StatusBar Normal, ForceScaled
                 DrawNumber 3, DN3DAMFNT, NukemGreenSomething, AmmoCapacity RocketAmmo, 291, 186;
             }
 
-            WeaponAmmo Cell
+            InInventory SamsaraDukeUsingAltAmmo
             {
-                DrawImage "DUKETHG1", 256, 192;
-                DrawNumber 3, DN3DAMFNT, NukemGreen, Ammo Cell, 274, 192;
-                DrawNumber 3, DN3DAMFNT, NukemGreen, AmmoCapacity Cell, 291, 192;
+                WeaponAmmo ShrinkerAmmo
+                {
+                    DrawImage "DUKETHG1", 256, 192;
+                    DrawNumber 3, DN3DAMFNT, NukemGreen, Ammo ShrinkerAmmo, 274, 192;
+                    DrawNumber 3, DN3DAMFNT, NukemGreen, AmmoCapacity ShrinkerAmmo, 291, 192;
+                } else {
+                    DrawNumber 3, DN3DAMFNT, NukemGreenSomething, Ammo ShrinkerAmmo, 274, 192;
+                    DrawNumber 3, DN3DAMFNT, NukemGreenSomething, AmmoCapacity ShrinkerAmmo, 291, 192;
+                }
             } else {
-                DrawNumber 3, DN3DAMFNT, NukemGreenSomething, Ammo Cell, 274, 192;
-                DrawNumber 3, DN3DAMFNT, NukemGreenSomething, AmmoCapacity Cell, 291, 192;
+                WeaponAmmo Cell
+                {
+                    DrawImage "DUKETHG1", 256, 192;
+                    DrawNumber 3, DN3DAMFNT, NukemGreen, Ammo Cell, 274, 192;
+                    DrawNumber 3, DN3DAMFNT, NukemGreen, AmmoCapacity Cell, 291, 192;
+                } else {
+                    DrawNumber 3, DN3DAMFNT, NukemGreenSomething, Ammo Cell, 274, 192;
+                    DrawNumber 3, DN3DAMFNT, NukemGreenSomething, AmmoCapacity Cell, 291, 192;
+                }
             }
 
             InInventory ChickenModeOn { DrawNumber 3, DUKEHUDF, BigNukemOrange, ChickenKillCount, 140, 183; }
@@ -3024,6 +3039,24 @@ StatusBar Normal, ForceScaled
                     else { DrawImage "WPDUKE5Y", 149, 11; } // Original
                 }
 
+                // Slot 5S
+                InInventory not GotWeapon5
+                {
+                    InInventory Duke3D_Incinerator
+                    {
+                        DrawImage "DN8DFNT5", 158, 3;
+                        InInventory DukeClassMode, 1 { DrawImage "WPDUK25N", 149, 11; } // Life's A Beach
+                        else { DrawImage "WPDUKE5N", 149, 11; } // Original
+                    }
+                }
+
+                IsSelected Duke3D_Incinerator
+                {
+                    DrawImage "DN9DFNT5", 158, 3;
+                    InInventory DukeClassMode, 1 { DrawImage "WPDUK25Y", 149, 11; } // Life's A Beach
+                    else { DrawImage "WPDUKE5Y", 149, 11; } // Original
+                }
+
                 // Slot 6
                 InInventory GotWeapon6
                 {
@@ -3042,19 +3075,27 @@ StatusBar Normal, ForceScaled
                 // Slot 6S
                 InInventory not GotWeapon6
                 {
-                    InInventory Duke3D_Incinerator
+                    InInventory Expander
                     {
                         DrawImage "DN8DFNT6", 191, 3;
-                        InInventory DukeClassMode, 1 { DrawImage "WPDUK26N", 182, 11; } // Life's A Beach
-                        else { DrawImage "WPDUKE6N", 182, 11; } // Original
+                        InInventory DukeClassMode, 1 { DrawImage "DUK2XPN1", 182, 11; } // Life's A Beach
+                        else { DrawImage "DUKEXPN1", 182, 11; } // Original
+                    } else InInventory Shrinker {
+                        DrawImage "DN8DFNT6", 191, 3;
+                        InInventory DukeClassMode, 1 { DrawImage "DUK2SKN1", 182, 11; } // Life's A Beach
+                        else { DrawImage "DUKESKN1", 182, 11; } // Original
                     }
                 }
 
-                IsSelected Duke3D_Incinerator
+                IsSelected Expander
                 {
                     DrawImage "DN9DFNT6", 191, 3;
-                    InInventory DukeClassMode, 1 { DrawImage "WPDUK26Y", 182, 11; } // Life's A Beach
-                    else { DrawImage "WPDUKE6Y", 182, 11; } // Original
+                    InInventory DukeClassMode, 1 { DrawImage "DUK2XPY1", 182, 11; } // Life's A Beach
+                    else { DrawImage "DUKEXPY1", 182, 11; } // Original
+                } else IsSelected Shrinker {
+                    DrawImage "DN9DFNT6", 191, 3;
+                    InInventory DukeClassMode, 1 { DrawImage "DUK2SKY1", 182, 11; } // Life's A Beach
+                    else { DrawImage "DUKESKY1", 182, 11; } // Original
                 }
 
                 // Slot 7
@@ -3088,36 +3129,6 @@ StatusBar Normal, ForceScaled
                     DrawImage "DN9DFNT7", 224, 3;
                     InInventory DukeClassMode, 1 { DrawImage "WPDUK27Y", 215, 11; } // Life's A Beach
                     else { DrawImage "WPDUKE7Y", 215, 11; } // Original
-                }
-
-                // Unique 2
-                InInventory Shrinker
-                {
-                    DrawImage "DN7DFNT8", 257, 3;
-                    InInventory DukeClassMode, 1 { DrawImage "DUK2SKN1", 248, 11; } // Life's A Beach
-                    else { DrawImage "DUKESKN1", 248, 11; } // Original
-                }
-
-                IsSelected Shrinker
-                {
-                    DrawImage "DN8DFNT8", 257, 3;
-                    InInventory DukeClassMode, 1 { DrawImage "DUK2SKY1", 248, 11; } // Life's A Beach
-                    else { DrawImage "DUKESKY1", 248, 11; } // Original
-                }
-
-                // Unique 3
-                InInventory Expander
-                {
-                    DrawImage "DN7DFNT9", 290, 3;
-                    InInventory DukeClassMode, 1 { DrawImage "DUK2XPN1", 281, 11; } // Life's A Beach
-                    else { DrawImage "DUKEXPN1", 281, 11; } // Original
-                }
-
-                IsSelected Expander
-                {
-                    DrawImage "DN8DFNT9", 290, 3;
-                    InInventory DukeClassMode, 1 { DrawImage "DUK2XPY1", 281, 11; } // Life's A Beach
-                    else { DrawImage "DUKEXPY1", 281, 11; } // Original
                 }
             }
         }

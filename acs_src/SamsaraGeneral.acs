@@ -2518,20 +2518,21 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("Golden Desert Eagle", INTMAX);
             SetInventory("SamsaraDukeHasGoldenDesertEagle", 0);
 			TakeInventory("RPG", INTMAX);
+			SetInventory("SamsaraDukeHasSlot5", 0);
+			SetInventory("SamsaraDuke64HasSlot5", 0);
+			TakeInventory("Duke3D_Incinerator", INTMAX);
+            SetInventory("SamsaraDukeHasIncinerator", 0);
 			TakeInventory("Freezethrower", INTMAX);
 			SetInventory("SamsaraDukeHasSlot6", 0);
 			SetInventory("SamsaraDuke64HasSlot6", 0);
-			TakeInventory("Duke3D_Incinerator", INTMAX);
-            SetInventory("SamsaraDukeHasIncinerator", 0);
+			TakeInventory("Expander", INTMAX);
+			TakeInventory("Shrinker", INTMAX);
+            SetInventory("SamsaraDukeHasExpanderShrinker", 0);
 			TakeInventory("Devastator Weapon", INTMAX);
 			SetInventory("SamsaraDukeHasSlot7", 0);
 			SetInventory("SamsaraDuke64HasSlot7", 0);
 			TakeInventory("Duke3D_X3000", INTMAX);
             SetInventory("SamsaraDukeHasX3000", 0);
-			TakeInventory("Shrinker", INTMAX);
-			TakeInventory("DukeHasShrinker", INTMAX);
-			TakeInventory("Expander", INTMAX);
-			TakeInventory("DukeHasExpander", INTMAX);
 			TakeInventory("Duke64UsingDumDums", INTMAX);
 			TakeInventory("Duke64UsingExplosiveShells", INTMAX);
 			TakeInventory("Duke64UsingHeatSeeking", INTMAX);
@@ -3867,14 +3868,15 @@ script "Samsara_FillInventory" (void)
 			SetInventory("DukeSteroidsSpawnRemove", 0);
 			TakeInventory("DukeSteroidsSpeed", 1);
 			TakeInventory("DukeSteroidsDamage", 1);
-			GiveInventory("DukeHasShrinker", 999);
-			GiveInventory("DukeHasExpander", 999);
 			SetInventory("SamsaraDukeHasSlot4", 1);
 			SetInventory("SamsaraDuke64HasSlot4", 1);
 			SetInventory("SamsaraDukeHasGoldenDesertEagle", 1);
+			SetInventory("SamsaraDukeHasSlot5", 1);
+			SetInventory("SamsaraDuke64HasSlot5", 1);
+			SetInventory("SamsaraDukeHasIncinerator", 1);
 			SetInventory("SamsaraDukeHasSlot6", 1);
 			SetInventory("SamsaraDuke64HasSlot6", 1);
-			SetInventory("SamsaraDukeHasIncinerator", 1);
+			SetInventory("SamsaraDukeHasExpanderShrinker", 1);
 			SetInventory("SamsaraDukeHasSlot7", 1);
 			SetInventory("SamsaraDuke64HasSlot7", 1);
 			SetInventory("SamsaraDukeHasX3000", 1);
@@ -6615,6 +6617,25 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
                 break;
 
+              case SLOT_ROCKETLAUNCHER:
+                if (!CheckInventory("RPG"))
+                {
+                    GiveInventory("RPG", 1);
+                    result = 1;
+                } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("RPG", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("SamsaraDukeHasSlot5", 1);
+                    GiveInventory("SamsaraDuke64HasSlot5", 1);
+                }
+                break;
+
               case SLOT_PLASMARIFLE:
                 if (!CheckInventory("Freezethrower"))
                 {
@@ -6653,12 +6674,12 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
                 break;
 
-              case SLOT_RAILGUN:
+              case SLOT_GRENADELAUNCHER:
                 if (!CheckInventory("Duke3D_Incinerator"))
                 {
                     GiveInventory("Duke3D_Incinerator", 1);
                     result = 1;
-                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Duke3D_Incinerator", 1);
                     result = 1;
                 }
@@ -6668,6 +6689,29 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (result == 1)
                 {
                     GiveInventory("SamsaraDukeHasIncinerator", 1);
+                    GiveInventory("SamsaraDuke64HasSlot5", 1);
+                }
+                break;
+
+              case SLOT_RAILGUN:
+                if (!CheckInventory("Expander"))
+                {
+                    GiveInventory("Expander", 1);
+                    GiveInventory("Shrinker", 1);
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Expander", 1);
+                    GiveInventory("Shrinker", 1);
+                    result = 1;
+                }
+
+                if (startmode <= -1) { GiveInventory("ShrinkerAmmo", GetAmmoCapacity("ShrinkerAmmo")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("SamsaraDukeHasExpanderShrinker", 1);
                     GiveInventory("SamsaraDuke64HasSlot6", 1);
                 }
                 break;
@@ -6758,6 +6802,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_ROCKETLAUNCHER:
+              case SLOT_GRENADELAUNCHER:
                 if (!CheckInventory("RPG"))
                 {
                     GiveInventory("RPG", 1);
@@ -6768,6 +6813,25 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
 
                 if (startmode <= -1 && GetCVar("samsara_lmsuniques")) { GiveInventory("Duke64HeatSeekingRockets", GetAmmoCapacity("Duke64HeatSeekingRockets")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    switch (slot)
+                    {
+                      case SLOT_ROCKETLAUNCHER:
+                        GiveInventory("SamsaraDukeHasSlot5", 1);
+                        break;
+
+                      case SLOT_GRENADELAUNCHER:
+                        GiveInventory("SamsaraDukeHasIncinerator", 1);
+                        GiveInventory("GotWeapon5", 1);
+                        break;
+                    }
+
+                    GiveInventory("SamsaraDuke64HasSlot5", 1);
+                }
                 break;
 
               case SLOT_PLASMARIFLE:
@@ -6794,7 +6858,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                         break;
 
                       case SLOT_RAILGUN:
-                        GiveInventory("SamsaraDukeHasIncinerator", 1);
+                        GiveInventory("SamsaraDukeHasExpanderShrinker", 1);
                         GiveInventory("GotWeapon6", 1);
                         break;
                     }
@@ -11365,11 +11429,11 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
             break;
 
           case 0: // Original
-            if (unum == SLOT_UNIQUE1 && !StrCmp(shareditem, "Placeholder")) { shareditem = "DukePortSteroids"; }
+            if (!StrCmp(shareditem, "Placeholder")) { shareditem = "DukePortSteroids"; }
             // Fallthrough
 
           case 1: // Life's a Beach
-            if (unum == SLOT_UNIQUE1 && !StrCmp(shareditem, "Placeholder")) { shareditem = "DukePortSteroidsLAB"; }
+            if (!StrCmp(shareditem, "Placeholder")) { shareditem = "DukePortSteroidsLAB"; }
 
             switch (unum)
             {
@@ -11389,50 +11453,6 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                     }
                 }
                 break;
-
-              case SLOT_UNIQUE2:
-                if (!CheckInventory("Shrinker"))
-                {
-                    GiveInventory("Shrinker", 1);
-                    result = 1;
-                } else if (CheckInventory("ShrinkerAmmo") < GetAmmoCapacity("ShrinkerAmmo")) {
-                    GiveInventory("Shrinker", 1);
-                    result = 1;
-                }
-
-                if (startmode <= -1) { GiveInventory("ShrinkerAmmo", GetAmmoCapacity("ShrinkerAmmo")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DukeHasShrinker", 1);
-
-                    if (startmode == 0) { ACS_NamedExecuteWithResult("SamsaraWeaponTaunt"); }
-                }
-                break;
-
-              case SLOT_UNIQUE3:
-                if (!CheckInventory("Expander"))
-                {
-                    GiveInventory("Expander", 1);
-                    result = 1;
-                } else if (CheckInventory("ExpanderAmmo") < GetAmmoCapacity("ExpanderAmmo")) {
-                    GiveInventory("Expander", 1);
-                    result = 1;
-                }
-
-                if (startmode <= -1) { GiveInventory("ExpanderAmmo", GetAmmoCapacity("ExpanderAmmo")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DukeHasExpander", 1);
-
-                    if (startmode == 0) { ACS_NamedExecuteWithResult("SamsaraWeaponTaunt"); }
-                }
-                break;
             }
             break;
 
@@ -11446,35 +11466,14 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE1:
-              case SLOT_UNIQUE2:
-              case SLOT_UNIQUE3:
-                if (unum == SLOT_UNIQUE1 || startmode == 0 || startmode == 1 || startmode == 3) // do not give again if giving all uniques on spawn
+                if (!CheckInventory("DukePortJetpack64") || CheckInventory("DukeJetpackFuel") < 100)
                 {
-                    if (!CheckInventory("DukePortJetpack64") || CheckInventory("DukeJetpackFuel") < 100)
+                    // if banjetpack is on, and we have full vitamin x, fail the pickup
+                    if (!GetCVar("samsara_banjetpack") || !CheckInventory(shareditem) || CheckInventory("DukeSteroidsFuel") < 100)
                     {
-                        // if banjetpack is on, and we have full vitamin x, fail the pickup
-                        if (!GetCVar("samsara_banjetpack") || !CheckInventory(shareditem) || CheckInventory("DukeSteroidsFuel") < 100)
-                        {
-                            GiveInventory("DukeJetpackFuel", 100);
-                            GiveInventory("DukePortJetpack64", 1);
-                            result = 1;
-                        }
-                    }
-                }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    switch (unum)
-                    {
-                      case SLOT_UNIQUE2:
-                        GiveInventory("DukeHasShrinker", 1);
-                        break;
-
-                      case SLOT_UNIQUE3:
-                        GiveInventory("DukeHasExpander", 1);
-                        break;
+                        GiveInventory("DukeJetpackFuel", 100);
+                        GiveInventory("DukePortJetpack64", 1);
+                        result = 1;
                     }
                 }
                 break;
@@ -12667,11 +12666,9 @@ script "Samsara_GiveBackpack" (int startmode)
 
           case 2: // Duke Nukem 64
             int curshrinkerammo = CheckInventory("ShrinkerAmmo");
-            int curexpanderammo = CheckInventory("ExpanderAmmo");
 
             GiveInventory("Backpack", 1);
             SetInventory("ShrinkerAmmo", curshrinkerammo); // leave our duke 3D shrinker ammo untouched because we cannot use it
-            SetInventory("ExpanderAmmo", curexpanderammo); // ditto with duke 3D expander ammo
 
             if (startmode >= 0) // do not give in LMS
             {

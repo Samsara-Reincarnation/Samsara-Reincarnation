@@ -855,17 +855,20 @@ StatusBar Fullscreen, ForceScaled
 
                 IsSelected "Golden Desert Eagle" { DrawImage "DN6DFNT4", 267, 184; }
 
-                // Slot 5
-                InInventory GotWeapon5 { DrawImage "DN4DFNT5", 271, 184; }
+                // Slot 5 + Slot 5S
+                InInventory GotWeapon5 || Duke3D_Incinerator { DrawImage "DN4DFNT5", 271, 184; }
 
                 IsSelected RPG { DrawImage "DN5DFNT5", 271, 184; }
 
+                IsSelected Duke3D_Incinerator { DrawImage "DN6DFNT5", 271, 184; }
+
                 // Slot 6 + Slot 6S
-                InInventory GotWeapon6 || Duke3D_Incinerator { DrawImage "DN4DFNT6", 275, 184; }
+                InInventory GotWeapon6 || Expander { DrawImage "DN4DFNT6", 275, 184; }
+                else InInventory Shrinker { DrawImage "DN4DFNT6", 275, 184; }
 
                 IsSelected Freezethrower { DrawImage "DN5DFNT6", 275, 184; }
 
-                IsSelected Duke3D_Incinerator { DrawImage "DN6DFNT6", 275, 184; }
+                IsSelected Expander, Shrinker { DrawImage "DN6DFNT6", 275, 184; }
 
                 // Slot 7 + Slot 7S
                 InInventory GotWeapon7 || Duke3D_X3000 { DrawImage "DN4DFNT7", 267, 190; }
@@ -873,16 +876,6 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected "Devastator Weapon" { DrawImage "DN5DFNT7", 267, 190; }
 
                 IsSelected Duke3D_X3000 { DrawImage "DN6DFNT7", 267, 190; }
-
-                // Unique 2 // yes I listed the Uniques as slot 8 & 9, but to be fair those are the numbers they're are bound to so yeah.
-                InInventory Shrinker { DrawImage "DN4DFNT8", 271, 190; }
-
-                IsSelected Shrinker { DrawImage "DN5DFNT8", 271, 190; }
-
-                // Unique 3
-                InInventory Expander { DrawImage "DN4DFNT9", 275, 190; }
-
-                IsSelected Expander { DrawImage "DN5DFNT9", 275, 190; }
             }
 
             // Kills
@@ -3117,6 +3110,7 @@ StatusBar Fullscreen, ForceScaled
                     IsSelected not "Automatic Shotgun", " RailGun " {
                     IsSelected not "Gigazorcher 2100", "Glock 17" {
                     IsSelected not Duke3D_M16, "Golden Desert Eagle" {
+                    IsSelected not Expander, Shrinker {
                     IsSelected not ".44 Magnum Mega Class A1", "KKV-7 SMG Flechette" {
                     IsSelected not "WSTE-M5 Combat Shotgun", "Fusion Pistol" {
                     IsSelected not "MA-75B Assault Rifle", "SPNKR-XP SSM Launcher" {
@@ -3186,7 +3180,7 @@ StatusBar Fullscreen, ForceScaled
                         DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
 
                         DrawImage AmmoIcon1, 238, 185, Center;
-                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
                     // Doom Characters
                     IsSelected "Automatic Shotgun"
@@ -3370,6 +3364,21 @@ StatusBar Fullscreen, ForceScaled
 
                             DrawImage "AMSMQ0", 228, 192, Center;
                         }
+                    }
+
+                    IsSelected Expander, Shrinker
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        DrawBar "HAMBAR", "HEMPTY", Ammo Cell, Horizontal, Reverse, 251, 181;
+                        DrawNumber 4, INDEXFONT, White, Ammo Cell, 298, 185;
+
+                        DrawImage "AMSMD0", 238, 185, Center;
+
+                        DrawImage "HUDBAR", 250, 192;
+                        DrawBar "HAMBAR", "HEMPTY", Ammo ShrinkerAmmo, Horizontal, Reverse, 251, 193;
+                        DrawNumber 4, INDEXFONT, White, Ammo ShrinkerAmmo, 270, 186;
+
+                        DrawImage "AMSMQ0", 228, 192, Center;
                     }
 
                     // Security Officer
@@ -6044,6 +6053,13 @@ StatusBar Fullscreen, ForceScaled
                     InInventory GotWeapon5 || " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
                 } else InInventory ChexClass {
                     InInventory GotWeapon5 || "Zorch Launcher" { DrawImage "STYSNUM5", 166, 10; }
+                } else InInventory DukeClass {
+                    InInventory DukeClassMode, 2 // Duke Nukem 64
+                    {
+                        InInventory GotWeapon5 { DrawImage "STYSNUM5", 166, 10; }
+                    } else { // Original/Life's A Beach
+                        InInventory GotWeapon5 || Duke3D_Incinerator { DrawImage "STYSNUM5", 166, 10; }
+                    }
                 } else InInventory RottClass {
                     InInventory GotWeapon5 || Doomstick { DrawImage "STYSNUM5", 166, 10; }
                 } else InInventory CalebClass {
@@ -6119,6 +6135,7 @@ StatusBar Fullscreen, ForceScaled
 
                 IsSelected " GrenadeLauncher " { DrawImage "STY3NUM5", 166, 10; }
                 IsSelected "Zorch Launcher" { DrawImage "STY3NUM5", 166, 10; }
+                IsSelected Duke3D_Incinerator { DrawImage "STY3NUM5", 166, 10; }
                 IsSelected Doomstick { DrawImage "STY3NUM5", 166, 10; }
                 IsSelected BloodProximityTNT, BloodRemoteTNT { DrawImage "STY3NUM5", 166, 10; }
                 IsSelected "I.M. Mines" { DrawImage "STY3NUM5", 166, 10; }
@@ -6148,7 +6165,8 @@ StatusBar Fullscreen, ForceScaled
                     {
                         InInventory GotWeapon6 { DrawImage "STYSNUM6", 176, 10; }
                     } else { // Original/Life's A Beach
-                        InInventory GotWeapon6 || Duke3D_Incinerator { DrawImage "STYSNUM6", 176, 10; }
+                        InInventory GotWeapon6 || Expander { DrawImage "STYSNUM6", 176, 10; }
+                        else InInventory Shrinker { DrawImage "STYSNUM6", 176, 10; }
                     }
                 } else InInventory MarathonClass {
                     InInventory GotWeapon6 || "SPNKR-25 Auto Cannon" { DrawImage "STYSNUM6", 176, 10; }
@@ -6235,7 +6253,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected "Gigazorcher 2100" { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected CorvusTempestWand { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected Wolf3DLightningGun { DrawImage "STY3NUM6", 176, 10; }
-                IsSelected Duke3D_Incinerator { DrawImage "STY3NUM6", 176, 10; }
+                IsSelected Expander, Shrinker { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected "SPNKR-25 Auto Cannon" { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected "Rocket Powered Impaler" { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected "Split Missile" { DrawImage "STY3NUM6", 176, 10; }

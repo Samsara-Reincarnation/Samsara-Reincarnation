@@ -424,7 +424,7 @@ actor WolfStrifeUnique3 : WolfStrifeUnique2
     }
 }
 
-actor DukeStrifeUnique1 : Trigger
+actor DukeStrifeUnique : Trigger
 {
     States
     {
@@ -440,50 +440,6 @@ actor DukeStrifeUnique1 : Trigger
         TNT1 A 0 A_GiveInventory("DukeJetpackFuel",100)
         TNT1 A 0 A_GiveInventory("DukePortJetpack64")
         stop
-    }
-}
-
-actor DukeStrifeUnique2 : DukeStrifeUnique1
-{
-    States
-    {
-      PickupNotDuke64:
-        TNT1 A 0 A_JumpIfInventory("DukeHasShrinker",1,"PickupNotDuke64Fill")
-        TNT1 A 0 A_GiveInventory("Shrinker")
-        TNT1 A 0 A_GiveInventory("DukeHasShrinker")
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraWeaponTaunt")
-        stop
-
-      PickupNotDuke64Fill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 5)
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraWeaponTaunt")
-        stop
-
-      PickupDuke64:
-        TNT1 A 0 A_GiveInventory("DukeHasShrinker")
-        goto Super::PickupDuke64
-    }
-}
-
-actor DukeStrifeUnique3 : DukeStrifeUnique1
-{
-    States
-    {
-      PickupNotDuke64:
-        TNT1 A 0 A_JumpIfInventory("DukeHasExpander",1,"PickupNotDuke64Fill")
-        TNT1 A 0 A_GiveInventory("Expander")
-        TNT1 A 0 A_GiveInventory("DukeHasExpander")
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraWeaponTaunt")
-        stop
-
-      PickupNotDuke64Fill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 6)
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraWeaponTaunt")
-        stop
-
-      PickupDuke64:
-        TNT1 A 0 A_GiveInventory("DukeHasExpander")
-        goto Super::PickupDuke64
     }
 }
 
@@ -534,7 +490,7 @@ actor ROTTStrifeUnique1 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 7)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 5)
         stop
     }
 }
@@ -549,7 +505,7 @@ actor ROTTStrifeUnique2 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 8)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 6)
         stop
     }
 }
@@ -579,7 +535,7 @@ actor CalebStrifeUnique3 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 9)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 7)
         stop
     }
 }
@@ -1351,7 +1307,7 @@ actor RTCWStrifeUnique2 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 11)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 9)
         stop
     }
 }
@@ -1366,9 +1322,9 @@ actor RTCWStrifeUnique3 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 12)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 10)
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 11)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 8)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 9)
         stop
     }
 }
@@ -1383,7 +1339,7 @@ actor Quake3StrifeUnique1 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 13)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 11)
         stop
     }
 }
@@ -1413,7 +1369,7 @@ actor Quake3StrifeUnique3 : Trigger
         stop
 
       PickupFill:
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 14)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 12)
         stop
     }
 }

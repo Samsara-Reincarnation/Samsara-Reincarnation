@@ -2343,12 +2343,16 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_DUKE:
+                SetInventory("Shrinker", CheckInventory("Expander"));
+
                 if (CheckInventory("SamsaraDukeX3000LoopSoundCheck") && !CheckWeapon("Duke3D_X3000"))
                 {
                     StopSound(0, CHAN_5);
 
                     SetInventory("SamsaraDukeX3000LoopSoundCheck", 0);
                 }
+
+                SetInventory("SamsaraDukeUsingAltAmmo", CheckWeapon("Shrinker"));
 
 				SetInventory("SamsaraDuke64UsingAltAmmo", (CheckWeapon("Glock 17") && CheckInventory("Duke64UsingDumDums")) ||
                                                           (CheckWeapon("  Shotgun  ") && CheckInventory("Duke64UsingExplosiveShells")) ||
@@ -2380,8 +2384,16 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("SamsaraDukeHasIncinerator"))
                             {
-                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Duke3D_Incinerator", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
+                            if (CheckInventory("SamsaraDukeHasExpanderShrinker"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Expander", 1);
+                                SetInventory("Shrinker", 1);
                                 SetInventory(storedammopriname, storedammopri);
                             }
 
@@ -2389,20 +2401,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             {
                                 storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Duke3D_X3000", 1);
-                                SetInventory(storedammopriname, storedammopri);
-                            }
-
-                            if (CheckInventory("DukeHasShrinker"))
-                            {
-                                storedammopriname = "ShrinkerAmmo", storedammopri = CheckInventory(storedammopriname);
-                                SetInventory("Shrinker", 1);
-                                SetInventory(storedammopriname, storedammopri);
-                            }
-
-                            if (CheckInventory("DukeHasExpander"))
-                            {
-                                storedammopriname = "ExpanderAmmo", storedammopri = CheckInventory(storedammopriname);
-                                SetInventory("Expander", 1);
                                 SetInventory(storedammopriname, storedammopri);
                             }
 
@@ -2423,11 +2421,20 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Chaingun Cannon", 0);
                             }
 
+                            if (!CheckInventory("SamsaraDukeHasSlot5"))
+                            {
+                                SetInventory("GotWeapon5", 0);
+
+                                if (CheckWeapon("RPG")) { SetWeapon("Duke3D_Incinerator"); }
+
+                                SetInventory("RPG", 0);
+                            }
+
                             if (!CheckInventory("SamsaraDukeHasSlot6"))
                             {
                                 SetInventory("GotWeapon6", 0);
 
-                                if (CheckWeapon("Freezethrower")) { SetWeapon("Duke3D_Incinerator"); }
+                                if (CheckWeapon("Freezethrower")) { SetWeapon("Expander"); }
 
                                 SetInventory("Freezethrower", 0);
                             }
@@ -2462,6 +2469,17 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 if (CheckWeapon("Golden Desert Eagle")) { SetWeapon("Chaingun Cannon"); }
                             }
 
+                            if (CheckInventory("SamsaraDuke64HasSlot5"))
+                            {
+                                SetInventory("GotWeapon5", 1);
+
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("RPG", 1);
+                                SetInventory(storedammopriname, storedammopri);
+
+                                if (CheckWeapon("Duke3D_Incinerator")) { SetWeapon("RPG"); }
+                            }
+
                             if (CheckInventory("SamsaraDuke64HasSlot6"))
                             {
                                 SetInventory("GotWeapon6", 1);
@@ -2470,7 +2488,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Freezethrower", 1);
                                 SetInventory(storedammopriname, storedammopri);
 
-                                if (CheckWeapon("Duke3D_Incinerator")) { SetWeapon("Freezethrower"); }
+                                if (CheckWeapon("Expander") || CheckWeapon("Shrinker")) { SetWeapon("Freezethrower"); }
                             }
 
                             if (CheckInventory("SamsaraDuke64HasSlot7"))
@@ -2484,18 +2502,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 if (CheckWeapon("Duke3D_X3000")) { SetWeapon("Devastator Weapon"); }
                             }
 
-							if(CheckInventory("DukeHasShrinker"))
-							{
-								if(CheckWeapon("Shrinker"))
-									SetWeapon("Freezethrower");
-							}
-
-							if(CheckInventory("DukeHasExpander"))
-							{
-								if(CheckWeapon("Expander"))
-									SetWeapon("Freezethrower");
-							}
-
                             if (CheckInventory("DukePortJetpack")) { GiveInventory("DukePortJetpack64", 1); }
 
                             if (CheckInventory("ItemHoloduke") || CheckInventory("ItemHolodukeLAB")) { SetInventory("ItemHoloduke64", CheckInventory("ItemHoloduke") + CheckInventory("ItemHolodukeLAB")); }
@@ -2506,10 +2512,10 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							TakeInventory("Golden Desert Eagle", 1);
 							TakeInventory("Duke3D_Incinerator", 1);
+							TakeInventory("Expander", 1);
+							TakeInventory("Shrinker", 1);
 							TakeInventory("Duke3D_X3000", 1);
 							SetInventory("DukePortJetpack", 0);
-							TakeInventory("Shrinker", 1);
-							TakeInventory("Expander", 1);
 							SetInventory("ItemHoloduke", 0);
 							SetInventory("ItemHolodukeLAB", 0);
 							TakeInventory("DukePortNiVi", 1);
@@ -2525,8 +2531,16 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("SamsaraDukeHasIncinerator"))
                             {
-                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Duke3D_Incinerator", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
+                            if (CheckInventory("SamsaraDukeHasExpanderShrinker"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Expander", 1);
+                                SetInventory("Shrinker", 1);
                                 SetInventory(storedammopriname, storedammopri);
                             }
 
@@ -2534,20 +2548,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             {
                                 storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Duke3D_X3000", 1);
-                                SetInventory(storedammopriname, storedammopri);
-                            }
-
-                            if (CheckInventory("DukeHasShrinker"))
-                            {
-                                storedammopriname = "ShrinkerAmmo", storedammopri = CheckInventory(storedammopriname);
-                                SetInventory("Shrinker", 1);
-                                SetInventory(storedammopriname, storedammopri);
-                            }
-
-                            if (CheckInventory("DukeHasExpander"))
-                            {
-                                storedammopriname = "ExpanderAmmo", storedammopri = CheckInventory(storedammopriname);
-                                SetInventory("Expander", 1);
                                 SetInventory(storedammopriname, storedammopri);
                             }
 
@@ -2568,11 +2568,20 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Chaingun Cannon", 0);
                             }
 
+                            if (!CheckInventory("SamsaraDukeHasSlot5"))
+                            {
+                                SetInventory("GotWeapon5", 0);
+
+                                if (CheckWeapon("RPG")) { SetWeapon("Duke3D_Incinerator"); }
+
+                                SetInventory("RPG", 0);
+                            }
+
                             if (!CheckInventory("SamsaraDukeHasSlot6"))
                             {
                                 SetInventory("GotWeapon6", 0);
 
-                                if (CheckWeapon("Freezethrower")) { SetWeapon("Duke3D_Incinerator"); }
+                                if (CheckWeapon("Freezethrower")) { SetWeapon("Expander"); }
 
                                 SetInventory("Freezethrower", 0);
                             }
