@@ -597,247 +597,187 @@ Script "Samsara_AllyBeaconDrops" (void)
 	}
 }
 
-Script "Samsara_AllySwitch" (void)
+script "Samsara_AllySwitch" (void)
 {
-	int activator = ActivatorTid();
-	int playeractivator = ActivatorTid();
-	int newtid = UniqueTid();
-	Thing_ChangeTid(0,newtid);
-	SetActivator(0,AAPTR_Master);
-	int pln = PlayerNumber();
-	int playertid = UniqueTid();
-	int newtid2 = UniqueTid();
-	Thing_ChangeTid(0,playertid);
-	switch(PlayerClass(pln))
-	{
-		case 4:
-			if(GetUserCvar(pln,"samsara_cl_hexclass")==0)
-			{
-				if(CheckActorClass(newtid,"ClericAlly"))
-				{
-					SpawnSpotFacingForced("FighterAlly",newtid,newtid2);
-				}
-				else
-					terminate;
-			}
-			else if(GetUserCvar(pln,"samsara_cl_hexclass")==1)
-			{
-				if(CheckActorClass(newtid,"ClericAlly"))
-				{
-					SpawnSpotFacingForced("FighterAlly",newtid,newtid2);
-				}
-				else
-					terminate;
-			}
-			else if(GetUserCvar(pln,"samsara_cl_hexclass")==2)
-			{
-				if(CheckActorClass(newtid,"MageAlly"))
-				{
-					SpawnSpotFacingForced("ClericAlly",newtid,newtid2);
-				}
-				else
-					terminate;
-			}
-			else if(GetUserCvar(pln,"samsara_cl_hexclass")==3)
-			{
-				if(CheckActorClass(newtid,"FighterAlly"))
-				{
-					SpawnSpotFacingForced("MageAlly",newtid,newtid2);
-				}
-				else
-					terminate;
-			}
-			break;
-		case 8:
-			switch(GetUserCvar(pln,"samsara_cl_rottmode"))
-			{
-				Case 0:
-					if(CheckActorClass(newtid,"IanPaulFreeley"))
-					{
-						SpawnSpotFacingForced("DougWendt",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 1:
-					if(CheckActorClass(newtid,"TaradinoCassatt"))
-					{
-						SpawnSpotFacingForced("IanPaulFreeley",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 2:
-					if(CheckActorClass(newtid,"ThiBarret"))
-					{
-						SpawnSpotFacingForced("TaradinoCassatt",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 3:
-					if(CheckActorClass(newtid,"LoreleiNi"))
-					{
-						SpawnSpotFacingForced("ThiBarret",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 4:
-					if(CheckActorClass(newtid,"DougWendt"))
-					{
-						SpawnSpotFacingForced("LoreleiNi",newtid,newtid2);
-					}
-					else
-						terminate;
-				break;
-			}
-		case 12:
-			switch(GetUserCvar(pln,"samsara_cl_eradmode"))
-			{
-				Case 0:
-					if(CheckActorClass(newtid,"EleenaBrynstaarl"))
-					{
-						SpawnSpotFacingForced("AllianceCommando",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 1:
-					if(CheckActorClass(newtid,"Kamechak"))
-					{
-						SpawnSpotFacingForced("EleenaBrynstaarl",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 2:
-					if(CheckActorClass(newtid,"DanBlaze"))
-					{
-						SpawnSpotFacingForced("Kamechak",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 3:
-					if(CheckActorClass(newtid,"AllianceCommando"))
-					{
-						SpawnSpotFacingForced("DanBlaze",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-			}
-			break;
-		case 16:
-			switch(GetUserCvar(pln,"samsara_cl_ipogmode"))
-			{
-				Case 0:
-					if(CheckActorClass(newtid,"MoomanAlly"))
-					{
-						SpawnSpotFacingForced("DominatrixAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 1:
-					if(CheckActorClass(newtid,"CyborgAlly"))
-					{
-						SpawnSpotFacingForced("MoomanAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 2:
-					if(CheckActorClass(newtid,"LizardAlly"))
-					{
-						SpawnSpotFacingForced("CyborgAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 3:
-					if(CheckActorClass(newtid,"SpecimenAlly"))
-					{
-						SpawnSpotFacingForced("LizardAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 4:
-					if(CheckActorClass(newtid,"DominatrixAlly"))
-					{
-						SpawnSpotFacingForced("SpecimenAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-			}
-	}
-	SetActorAngle(newtid2,GetActorAngle(newtid));
-	Thing_SetTranslation(newtid2,-1);
-	SetActivator(newtid2,AAPTR_DEFAULT);
-	SetPointer(AAPTR_MASTER,playertid);
-	Thing_Remove(newtid);
-	Thing_ChangeTid(playertid,playeractivator);
-	Thing_ChangeTid(0,activator);
+    int activator = ActivatorTID();
+    int playeractivator = ActivatorTID();
+    int newtid = UniqueTID();
+
+    Thing_ChangeTID(0, newtid);
+    SetActivator(0, AAPTR_MASTER);
+
+    int pln = PlayerNumber();
+    int playertid = UniqueTID();
+    int newtid2 = UniqueTID();
+
+    Thing_ChangeTID(0, playertid);
+
+    str allyswitchfrom = "Placeholder", allyswitchto = "Placeholder";
+
+    switch (PlayerClass(pln))
+    {
+      case CLASS_HEXEN:
+        switch (GetUserCVar(pln, "samsara_cl_hexclass"))
+        {
+          case 0:
+          case 1:
+            allyswitchfrom = "ClericAlly";
+            allyswitchto = "FighterAlly";
+            break;
+
+          case 2:
+            allyswitchfrom = "MageAlly";
+            allyswitchto = "ClericAlly";
+            break;
+
+          case 3:
+            allyswitchfrom = "FighterAlly";
+            allyswitchto = "MageAlly";
+            break;
+        }
+        break;
+
+      case CLASS_ROTT:
+        switch (GetUserCVar(pln, "samsara_cl_rottmode"))
+        {
+          case 0:
+            allyswitchfrom = "IanPaulFreeley";
+            allyswitchto = "DougWendt";
+            break;
+
+          case 1:
+            allyswitchfrom = "TaradinoCassatt";
+            allyswitchto = "IanPaulFreeley";
+            break;
+
+          case 2:
+            allyswitchfrom = "ThiBarret";
+            allyswitchto = "TaradinoCassatt";
+            break;
+
+          case 3:
+            allyswitchfrom = "LoreleiNi";
+            allyswitchto = "ThiBarret";
+            break;
+
+          case 4:
+            allyswitchfrom = "DougWendt";
+            allyswitchto = "LoreleiNi";
+            break;
+        }
+        break;
+
+      case CLASS_ERAD:
+        switch (GetUserCVar(pln, "samsara_cl_eradmode"))
+        {
+          case 0:
+            allyswitchfrom = "EleenaBrynstaarl";
+            allyswitchto = "AllianceCommando";
+            break;
+
+          case 1:
+            allyswitchfrom = "Kamechak";
+            allyswitchto = "EleenaBrynstaarl";
+            break;
+
+          case 2:
+            allyswitchfrom = "DanBlaze";
+            allyswitchto = "Kamechak";
+            break;
+
+          case 3:
+            allyswitchfrom = "AllianceCommando";
+            allyswitchto = "DanBlaze";
+            break;
+        }
+        break;
+
+      case CLASS_POGREED:
+        switch (GetUserCVar(pln, "samsara_cl_ipogmode"))
+        {
+          case 0:
+            allyswitchfrom = "MoomanAlly";
+            allyswitchto = "DominatrixAlly";
+            break;
+
+          case 1:
+            allyswitchfrom = "CyborgAlly";
+            allyswitchto = "MoomanAlly";
+            break;
+
+          case 2:
+            allyswitchfrom = "LizardAlly";
+            allyswitchto = "CyborgAlly";
+            break;
+
+          case 3:
+            allyswitchfrom = "SpecimenAlly";
+            allyswitchto = "LizardAlly";
+            break;
+
+          case 4:
+            allyswitchfrom = "DominatrixAlly";
+            allyswitchto = "SpecimenAlly";
+            break;
+        }
+        break;
+    }
+
+    if (CheckActorClass(newtid, allyswitchfrom)) { SpawnSpotFacingForced(allyswitchto, newtid, newtid2); }
+    else { terminate; }
+
+    SetActorAngle(newtid2, GetActorAngle(newtid));
+    Thing_SetTranslation(newtid2, -1);
+
+    SetActivator(newtid2, AAPTR_DEFAULT);
+    SetPointer(AAPTR_MASTER, playertid);
+
+    Thing_Remove(newtid);
+    Thing_ChangeTID(playertid, playeractivator);
+    Thing_ChangeTID(0, activator);
 }
 
-Script "Samsara_BeaconSpawner" (int mode)
+script "Samsara_BeaconSpawner" (int mode)
 {
-	int pln = PlayerNumber();
-	int newtid = UniqueTid();
-	int playertid = UniqueTid();
-	int activator = ActivatorTid();
-	Thing_ChangeTid(0,playertid);
-	switch(PlayerClass(pln))
-	{
-		case 4:
-			switch(mode)
-			{
-				case 0:
-					SpawnForced("StrifeBeaconHexen_Allies",GetActorX(0),GetActorY(0),GetActorZ(0),newtid);
-					Thing_SetTranslation(newtid,-1);
-					SetActivator(newtid,AAPTR_DEFAULT);
-					SetPointer(AAPTR_MASTER,playertid);
-					break;
-				case 1:
-					SpawnForced("StrifeBeaconHexenMage_Allies",GetActorX(0),GetActorY(0),GetActorZ(0),newtid);
-					Thing_SetTranslation(newtid,-1);
-					SetActivator(newtid,AAPTR_DEFAULT);
-					SetPointer(AAPTR_MASTER,playertid);
-					break;
-				case 2:
-					SpawnForced("StrifeBeaconHexenFighter_Allies",GetActorX(0),GetActorY(0),GetActorZ(0),newtid);
-					Thing_SetTranslation(newtid,-1);
-					SetActivator(newtid,AAPTR_DEFAULT);
-					SetPointer(AAPTR_MASTER,playertid);
-					break;
-			}
-			break;
-		case 8:
-			SpawnSpotForced("StrifeBeaconRott_Allies",0,newtid,0);
-			SetActorAngle(newtid,CheckInventory("RottMode")*182);
-			Thing_SetTranslation(newtid,-1);
-			SetActivator(newtid,AAPTR_DEFAULT);
-			SetPointer(AAPTR_MASTER,playertid);
-			break;
-		case 12:
-			SpawnSpotForced("StrifeBeaconErad_Allies",0,newtid,0);
-			SetActorAngle(newtid,CheckInventory("EradMode")*182);
-			Thing_SetTranslation(newtid,-1);
-			SetActivator(newtid,AAPTR_DEFAULT);
-			SetPointer(AAPTR_MASTER,playertid);
-			break;
-		case 16:
-			SpawnSpotForced("StrifeBeaconPOGreed_Allies",0,newtid,0);
-			SetActorAngle(newtid,CheckInventory("IPoGMode")*182);
-			Thing_SetTranslation(newtid,-1);
-			SetActivator(newtid,AAPTR_DEFAULT);
-			SetPointer(AAPTR_MASTER,playertid);
-			break;
-	}
-	Thing_ChangeTid(playertid,activator);
+    int pln = PlayerNumber();
+    int newtid = UniqueTID();
+    int playertid = UniqueTID();
+    int activator = ActivatorTID();
+
+    Thing_ChangeTID(0, playertid);
+
+    switch (PlayerClass(pln))
+    {
+      case CLASS_HEXEN:
+        switch(mode)
+        {
+          case 0: SpawnForced("StrifeBeaconHexen_Allies", GetActorX(0), GetActorY(0), GetActorZ(0), newtid); break;
+          case 1: SpawnForced("StrifeBeaconHexenMage_Allies", GetActorX(0), GetActorY(0), GetActorZ(0), newtid); break;
+          case 2: SpawnForced("StrifeBeaconHexenFighter_Allies", GetActorX(0), GetActorY(0), GetActorZ(0), newtid); break;
+        }
+        break;
+
+      case CLASS_ROTT:
+        SpawnSpotForced("StrifeBeaconRott_Allies", 0, newtid, 0);
+        SetActorAngle(newtid, CheckInventory("RottMode") * 182);
+        break;
+
+      case CLASS_ERAD:
+        SpawnSpotForced("StrifeBeaconErad_Allies", 0, newtid, 0);
+        SetActorAngle(newtid, CheckInventory("EradMode") * 182);
+        break;
+
+      case CLASS_POGREED:
+        SpawnSpotForced("StrifeBeaconPOGreed_Allies", 0, newtid, 0);
+        SetActorAngle(newtid, CheckInventory("IpogMode") * 182);
+        break;
+    }
+
+    Thing_SetTranslation(newtid, -1);
+    SetActivator(newtid, AAPTR_DEFAULT);
+    SetPointer(AAPTR_MASTER, playertid);
+
+    Thing_ChangeTid(playertid,activator);
 }
 
 Script "Samsara_AllyCheckMaster" (void)
