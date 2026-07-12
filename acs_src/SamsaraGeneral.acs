@@ -467,6 +467,10 @@ script "SamsaraDecorate" (int choice, int arg1, int arg2) //215 - SAMSARA_DECORA
                  CheckInventory("PowerFakeInvulnerableFighter") || CheckInventory("QuakePentagram") || CheckInventory("PowerGodProtection") ||
                  CheckInventory("PowerDoggyMorph") || CheckInventory("Painkiller_IronWill_Protection") || CheckInventory("PainkillerDemonMorphInvulnerability");
         break;
+
+	case 71:
+		result = GetCVar("samsara_permaweaponlevel2");
+		break;
 	}
 
 	SetResultValue(result);
@@ -1479,6 +1483,15 @@ Script "Samsara_UniqueKeys" (int key) net
 	int pln = PlayerNumber();
 	switch(PlayerClass(pln))
 	{
+		case CLASS_HERETIC:
+		case CLASS_HEXEN:
+		case CLASS_DEMONESS:
+            if (!isDead(0))
+            {
+                if (CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory")) { TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1); }
+                else { GiveInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1); }
+            }
+			break;
 		case CLASS_CALEB:
             if (!isDead(0))
             {
@@ -2264,6 +2277,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("PortTorch", INTMAX);
 			TakeInventory("PortTome", INTMAX);
 			TakeInventory("TomeOfPowerCooldown", INTMAX);
+			TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", INTMAX);
+			TakeInventory("SamsaraHasPermaWeaponLevel2", INTMAX);
 			TakeInventory("SamsaraFullInvisibilityInventoryHeretic", INTMAX);
 			TakeInventory("SamsaraTimeFreezeInventoryHeretic", INTMAX);
 			TakeInventory("SamsaraDefenseBoosterInventoryHeretic", INTMAX);
@@ -2350,6 +2365,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("PortQuartzFlask", INTMAX);
 			TakeInventory("PortSuperHealth", INTMAX);
 			TakeInventory("SamsaraHexenTomeOfPower", INTMAX);
+			TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", INTMAX);
+			TakeInventory("SamsaraHasPermaWeaponLevel2", INTMAX);
 			TakeInventory("SamsaraHexenDiscOfRepulsion", INTMAX);
 			TakeInventory("SamsaraHexen1AcquiredUnique3", 1);
 			TakeInventory("SamsaraHexenDarkServant", INTMAX);
@@ -3030,6 +3047,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("PortTorch3", INTMAX);
 			TakeInventory("PortKraterOfMight2", INTMAX);
 			TakeInventory("Hexen2TomeOfPower", INTMAX);
+			TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", INTMAX);
+			TakeInventory("SamsaraHasPermaWeaponLevel2", INTMAX);
 			TakeInventory("Hexen2ForceCube", INTMAX);
 
 			if (GetCvar("samsara_pistolstart") >= 2 && CheckInventory("PistolStartEnabled"))
