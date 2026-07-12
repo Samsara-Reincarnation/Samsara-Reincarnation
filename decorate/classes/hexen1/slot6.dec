@@ -241,12 +241,12 @@ actor HexenFirestormVolcanoProjectile
       Death:
         TNT1 A 0 A_NoGravity
         TNT1 A 0 A_Explode(100,128)
-        TNT1 A 0 A_JumpIf(abs(z - floorz) <= 40, "DeathSpawnVolcano")
+        TNT1 A 0 A_JumpIf(abs(z - floorz) <= 64, "DeathSpawnVolcano")
         TNT1 A 0 A_CheckFloor("DeathSpawnVolcano")
         goto DeathFinish
 
       DeathSpawnVolcano:
-        TNT1 A 0 A_SpawnItemEx("HexenFirestormVolcano",0,0,-40,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenFirestormVolcano",0,0,-8192,0,0,0,0,SXF_TRANSFERPOINTERS)
       DeathFinish:
         MSP1 GHIJKLMNOP 3 Bright Light("BSBALL")
         stop
@@ -260,7 +260,7 @@ actor HexenFirestormVolcanoProjectileCoop : HexenFirestormVolcanoProjectile
     States
     {
       DeathSpawnVolcano:
-        TNT1 A 0 A_SpawnItemEx("HexenFirestormVolcanoCoop",0,0,-40,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenFirestormVolcanoCoop",0,0,-8192,0,0,0,0,SXF_TRANSFERPOINTERS)
         goto DeathFinish
     }
 }
