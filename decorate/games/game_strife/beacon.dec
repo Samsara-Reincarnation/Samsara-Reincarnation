@@ -305,11 +305,46 @@ actor AllyCellPhoneHax1 : CustomInventory
 			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
 			Stop
 		UseErad:
+			TNT1 A 0 A_JumpIfInventory("EradMode",3,"UseEradMarine")
+			TNT1 A 0 A_JumpIfInventory("EradMode",2,"UseEradDan")
+			TNT1 A 0 A_JumpIfInventory("EradMode",1,"UseEradKamchak")
 			TNT1 A 0 A_Playsound("Phone/Eleena", CHAN_VOICE)
 			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
 			Stop
+		UseEradKamchak:
+			TNT1 A 0 A_Playsound("Phone/Kamchak", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
+		UseEradDan:
+			TNT1 A 0 A_Playsound("Phone/Dan", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
+		UseEradMarine:
+			TNT1 A 0 A_Playsound("Phone/Marine", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
 		UseGreed:
+			TNT1 A 0 A_JumpIfInventory("IPoGMode",4,"UseGreedDominatrix")
+			TNT1 A 0 A_JumpIfInventory("IPoGMode",3,"UseGreedSpecimen")
+			TNT1 A 0 A_JumpIfInventory("IPoGMode",2,"UseGreedLizard")
+			TNT1 A 0 A_JumpIfInventory("IPoGMode",1,"UseGreedCyborg")
 			TNT1 A 0 A_Playsound("Phone/Mooman", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
+		UseGreedCyborg:
+			TNT1 A 0 A_Playsound("Phone/Cyborg", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
+		UseGreedLizard:
+			TNT1 A 0 A_Playsound("Phone/Lizard", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
+		UseGreedSpecimen:
+			TNT1 A 0 A_Playsound("Phone/Specimen", CHAN_VOICE)
+			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
+			Stop
+		UseGreedDominatrix:
+			TNT1 A 0 A_Playsound("Phone/Dominatrix", CHAN_VOICE)
 			TNT1 A 0 ACS_NamedExecuteAlways("CellPhoneHax", 0, 1)
 			Stop
 		UseRR:
@@ -368,11 +403,19 @@ actor AllyCellPhoneHax2 : CustomInventory
 			TNT1 A 5 A_RailWait
 			Stop
 		UseErad:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Samsara_BeaconSpawner")
+			TNT1 A 5 A_RailWait
+			Stop
+		/*UseErad:
 			TNT1 A 0 A_SpawnItemEx("StrifeBeaconErad_Allies",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			Stop
+			Stop*/
 		UseGreed:
-			TNT1 A 0 A_SpawnItemEx("StrifeBeaconPOGreed_Allies",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Samsara_BeaconSpawner")
+			TNT1 A 5 A_RailWait
 			Stop
+		/*UseGreed:
+			TNT1 A 0 A_SpawnItemEx("StrifeBeaconPOGreed_Allies",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			Stop*/
 		UseRR:
 			TNT1 A 0 A_SpawnItemEx("StrifeBeaconRR_Allies",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 			Stop
@@ -563,18 +606,21 @@ actor StrifeBeaconErad_Allies
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara2999",0,3)
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara2999",0,3,angle*100)
 	Spawn2:
 		HSD9 A 3 bright
 		Loop
 	DropDan:
-		TNT1 A 0 A_SpawnItemEx("DanBlaze",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("DanBlaze",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	DropKamechak:
-		TNT1 A 0 A_SpawnItemEx("Kamechak",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("Kamechak",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	DropMarine:
-		TNT1 A 0 A_SpawnItemEx("AllianceCommando",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("AllianceCommando",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+		Goto Spawn2
+	DropEleena:
+		TNT1 A 0 A_SpawnItemEx("EleenaBrynstaarl",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	Death:
 		TNT1 A 0
@@ -626,21 +672,24 @@ actor StrifeBeaconPOGreed_Allies
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara2999",0,4)
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara2999",0,4,angle*100)
 	Spawn2:
 		BEAC Z 3 bright
 		Loop
 	DropCyborg:
-		TNT1 A 0 A_SpawnItemEx("CyborgAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("CyborgAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	DropLizard:
-		TNT1 A 0 A_SpawnItemEx("LizardAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("LizardAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	DropSpecimen:
-		TNT1 A 0 A_SpawnItemEx("SpecimenAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("SpecimenAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	DropDominatrix:
-		TNT1 A 0 A_SpawnItemEx("DominatrixAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("DominatrixAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+		Goto Spawn2
+	DropMooman:
+		TNT1 A 0 A_SpawnItemEx("MoomanAlly",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 		Goto Spawn2
 	Death:
 		TNT1 A 5
