@@ -326,7 +326,9 @@ Script "Kingpin_FlamethrowerTracer" (int upgrade)
 
 			if(CheckInventory("Kingpin_FlamethrowerIgnition") >= requiredIgnition && !CheckInventory("Kingpin_FlamethrowerBurnt"))
 			{
-				int gender = ACS_NamedExecuteWithResult("GetActorGender");
+				//Gross hack for enemy gender
+				int gender = -GetActorProperty(0,APROP_STAMINA);
+				if(CheckInventory("StrifeClass")) gender = 1;
 				TakeInventory("Kingpin_FlamethrowerHitTarget",1);
 				TakeInventory("Kingpin_FlamethrowerIgnition",50);
 				GiveInventory("Kingpin_FlamethrowerBurnt",1);
