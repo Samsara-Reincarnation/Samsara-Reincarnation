@@ -148,8 +148,11 @@ Script "Kingpin_Player" (void)
 {
 	int currentplayeraction = 0;
 	int playerStillMoving = 0;
+	int actionValue = 0; //I need this to reduce duplicated code
 	while(CheckInventory("Kingpin_ClassToken"))
 	{
+		int velX = GetActorVelX(0)>>16;
+		int velY = GetActorVelY(0)>>16;
 		SetAmmoCapacity("Kingpin_TommyGunMagazine",50*(1+CheckInventory("Kingpin_TommyGun_MagazineCapacity")));
 		SetAmmoCapacity("Kingpin_GrenadeLauncherMagazine",3*(1+CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacity")));
 		
@@ -158,8 +161,30 @@ Script "Kingpin_Player" (void)
 		
 		HudMessage(d:CheckInventory("Kingpin_Cash");HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,5,CR_UNTRANSLATED,0.1,0.9,0.0);
 		
-		if(CheckInventory("Kingpin_ResetPlayerAction")) { currentplayeraction = -1; SetInventory("Kingpin_PlayerJumping",0); SetInventory("Kingpin_LastWeapon",0); SetInventory("Kingpin_ResetPlayerAction",0); continue; }	
-		else if(GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP && !CheckInventory("Kingpin_PlayerJumping"))
+		if(CheckInventory("Kingpin_ResetPlayerAction")) 
+		{ 
+			currentplayeraction = -1; 
+			//SetInventory("Kingpin_ShootToken",0); 
+			SetInventory("Kingpin_PlayerJumping",0); 
+			SetInventory("Kingpin_LastWeapon",0); 
+			SetInventory("Kingpin_ResetPlayerAction",0); 
+			continue; 
+		}	
+		//Dead
+		else if(ClassifyActor(0) & ACTOR_DEAD) 
+		{
+			//Do crouch death
+			if(currentplayeraction >= 8)
+				SetActorState(0,"CrouchDeath",true);
+				
+			//Do nothing, let the controller take over, for the time being
+			currentplayeraction = -1;
+			SetInventory("Kingpin_PlayerJumping",0); 
+			SetInventory("Kingpin_LastWeapon",0); 
+			SetInventory("Kingpin_ResetPlayerAction",0);
+		} 
+		//Jumping
+		else if(!CheckInventory("Kingpin_ShootToken") && (GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP) && !CheckInventory("Kingpin_PlayerJumping"))
 		{
 			if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 4)
 			{
@@ -168,6 +193,39 @@ Script "Kingpin_Player" (void)
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 		}
+		//Crouch Behavior
+		else if(isCrouching(26.0) && !CheckInventory("Kingpin_PlayerJumping"))
+		{
+			if((GetPlayerInput(-1,MODINPUT_SIDEMOVE) != 0 || GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0 || playerStillMoving > 0) ) 
+			{
+				if(GetPlayerInput(-1,MODINPUT_SIDEMOVE) != 0 || GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0)
+				{
+					if(playerStillMoving < 32) 
+						playerStillMoving+=2;
+				}
+				
+				//We will always use this move animation...
+				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 9)
+				{
+					currentplayeraction = 9;
+					SetActorState(0,strparam(s:"CrouchWalk",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+				}
+			}
+			else if(CheckInventory("Kingpin_ShootToken") && currentplayeraction != 10)
+			{
+				currentplayeraction = 10;
+				SetActorState(0,strparam(s:"CrouchShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+			}
+			else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 8) && !CheckInventory("Kingpin_ShootToken"))
+			{
+				currentplayeraction = 8;
+				SetActorState(0,strparam(s:"Crouch",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+			}
+		}
+		//Movement
 		else if((GetPlayerInput(-1,MODINPUT_SIDEMOVE) != 0 || GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0 || playerStillMoving > 0) && !CheckInventory("Kingpin_PlayerJumping")) 
 		{
 			if(GetPlayerInput(-1,MODINPUT_SIDEMOVE) != 0 || GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0)
@@ -176,13 +234,28 @@ Script "Kingpin_Player" (void)
 					playerStillMoving+=2;
 			}
 			
-			if(GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0)
+			//If the player is moving more forward than to the left or right, do this
+			if(GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0 && GetPlayerInput(-1,MODINPUT_FORWARDMOVE) > abs(GetPlayerInput(-1,MODINPUT_SIDEMOVE)))
 			{
-				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 1)
+				if(sqrt(velX*velX + velY*velY)<<16 >= 8.0)
 				{
-					currentplayeraction = 1;
-					SetActorState(0,strparam(s:"See",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
-					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+					actionValue = CheckInventory("Kingpin_ShootToken") ? 7 : 1;
+					if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != actionValue)
+					{
+						currentplayeraction = actionValue;
+						SetActorState(0,strparam(s:actionValue == 1 ? "See" : "RunShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+						SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+					}
+				}
+				else
+				{
+					actionValue = CheckInventory("Kingpin_ShootToken") ? 8 : 5;
+					if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != actionValue)
+					{
+						currentplayeraction = actionValue;
+						SetActorState(0,strparam(s:actionValue == 5 ? "Walk" : "WalkShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+						SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+					}
 				}
 			}
 			//Execute player controller code
@@ -205,7 +278,13 @@ Script "Kingpin_Player" (void)
 				}
 			}
 		}
-		else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 0) && !CheckInventory("Kingpin_PlayerJumping"))
+		else if(CheckInventory("Kingpin_ShootToken") && currentplayeraction != 6)
+		{
+			currentplayeraction = 6;
+			SetActorState(0,strparam(s:"Shoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+			SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
+		}
+		else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 0) && !CheckInventory("Kingpin_PlayerJumping") && !CheckInventory("Kingpin_ShootToken"))
 		{
 			currentplayeraction = 0;
 			SetActorState(0,strparam(s:"Spawn",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);

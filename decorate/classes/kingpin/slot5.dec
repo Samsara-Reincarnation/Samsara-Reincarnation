@@ -56,6 +56,7 @@ Actor Kingpin_Bazooka : Kingpin_Weapon
 			KP71 B 0
 			Goto ReadyLoop
 		ReadyLoop:
+			KP01 B 0 A_TakeInventory("Kingpin_ShootToken")
 			KP01 B 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
 			Goto ReadyLoopEmpty
 			KP01 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"ReadyLoopBigBubba")
@@ -103,6 +104,7 @@ Actor Kingpin_Bazooka : Kingpin_Weapon
 		Fire:
 			TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)
 			Goto Reload
+			KP00 G 0 A_GiveInventory("Kingpin_ShootToken")
 			KP00 G 0 A_SpawnItemEx("Kingpin_MuzzleFlash")
 			KP00 G 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,96)
 			KP00 G 0 A_AlertMonsters
@@ -276,6 +278,7 @@ Actor Kingpin_Bazooka : Kingpin_Weapon
 			KP00 O 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"ReloadLaser")
 			KP00 "OPQRSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 		ReloadBegin:
+			KP01 A 0 A_TakeInventory("Kingpin_ShootToken")
 			KP01 A 0 A_JumpIfInventory("RocketAmmo",1,1)
 			Goto ReloadFinish
 			TNT1 A 0 A_GiveInventory("Kingpin_BazookaMagazine",1)

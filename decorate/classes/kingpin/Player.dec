@@ -1,4 +1,5 @@
 Actor Kingpin_ResetPlayerAction : TemporaryBoolean {}
+Actor Kingpin_ShootToken : TemporaryBoolean {}
 Actor Kingpin_PlayerJumping : TemporaryBoolean {}
 Actor Kingpin_SelectedWeapon : Counter {}
 Actor Kingpin_LastWeapon : TemporaryCounter {}
@@ -24,7 +25,7 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 	States
 	{
 		Spawn:
-			TNT1 A 0
+			TNT1 A 0 A_TakeInventory("Kingpin_PlayerJumping")
 			Goto SpawnPistol
 		SpawnPipe:
 			KA11 ABCDEFGHIJKLMNOPQRS 4
@@ -59,6 +60,33 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 			KI00 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 4
 			KI01 ABC 4
 			Loop
+		WalkPipe:
+			KA0D ABCDEFGHIJ 4
+			Loop
+		WalkPistol:
+			KB0D ABCDEFGHIJ 4
+			Loop
+		WalkCrowbar:
+			KC0D ABCDEFGHIJ 4
+			Loop
+		WalkShotgun:
+			KD08 ABCDEFGHIJ 4
+			Loop
+		WalkGrenadeLauncher:
+			KG08 ABCDEFGHIJ 4
+			Loop
+		WalkTommygun:
+			KF08 ABCDEFGHIJ 4
+			Loop
+		WalkBazooka:
+			KE08 ABCDEFGHIJ 4
+			Loop
+		WalkFlamethrower:
+			KH08 ABCDEFGHIJ 4
+			Loop
+		WalkHMG:
+			KI08 ABCDEFGHIJ 4
+			Loop
 		SeePipe:
 			KA0E ABCDEF 4
 			Loop
@@ -72,7 +100,7 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 			KD0A ABCDEF 4
 			Loop
 		SeeGrenadeLauncher:
-			KG0A ABCDEF 4
+			KE0A ABCDEF 4
 			Loop
 		SeeTommygun:
 			KF0A ABCDEF 4
@@ -139,6 +167,60 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 			Loop
 		StrafeLeftHMG:
 			KI0C ABCDEF 4
+			Loop
+		CrouchPipe:
+			KA1F ABCDEFGHIJKLMNOPQR 6
+			Loop
+		CrouchPistol:
+			KB1F ABCDEFGHIJKLMNOPQR 6
+			Loop
+		CrouchCrowbar:
+			KC1F ABCDEFGHIJKLMNOPQR 6
+			Loop
+		CrouchShotgun:
+			KD1C "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			Loop
+		CrouchGrenadeLauncher:
+			KE1C "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			Loop
+		CrouchTommygun:
+			KF1C "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			Loop
+		CrouchBazooka:
+			KG1C "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			Loop
+		CrouchFlamethrower:
+			KH1C "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			Loop
+		CrouchHMG:
+			KI1C "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			Loop
+		CrouchWalkPipe:
+			KA21 ABCDEF 4
+			Loop
+		CrouchWalkPistol:
+			KB21 ABCDEF 4
+			Loop
+		CrouchWalkCrowbar:
+			KC21 ABCDEF 4
+			Loop
+		CrouchWalkShotgun:
+			KD21 ABCDE 4
+			Loop
+		CrouchWalkGrenadeLauncher:
+			KE21 ABCDE 4
+			Loop
+		CrouchWalkTommygun:
+			KF21 ABCDE 4
+			Loop
+		CrouchWalkBazooka:
+			KG21 ABCDE 4
+			Loop
+		CrouchWalkFlamethrower:
+			KH21 ABCDE 4
+			Loop
+		CrouchWalkHMG:
+			KI21 ABCDE 4
 			Loop
 		JumpPipe:
 			"####" "#" 0 A_GiveInventory("Kingpin_PlayerJumping")
@@ -221,11 +303,135 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 			"####" "#" 0 A_GiveInventory("Kingpin_ResetPlayerAction")
 			"####" "#" 4 A_TakeInventory("Kingpin_PlayerJumping")
 			Goto Spawn
-		Missile:
-		Melee:
+		ShootPipe:
+			KA12 ABCDEFG 3
+			Loop
+		ShootPistol:
+			KB07 ABCD 4
+			Loop
+		ShootCrowbar:
+			KC12 ABCDEFG 3
+			Loop
+		ShootShotgun:
+			KD02 ABCDE 4
+			Loop
+		ShootGrenadeLauncher:
+			KE02 ABCDE 4
+			Loop
+		ShootTommygun:
+			KF02 ABCDE 4
+			Loop
+		ShootBazooka:
+			KG02 ABCDE 4
+			Loop
+		ShootFlamethrower:
+			KH02 ABCDE 4
+			Loop
+		ShootHMG:
+			KI02 ABCDE 4
+			Loop
+		WalkShootPipe:
+		RunShootPipe:
+			KA14 ABCDEF 3
+			Loop
+		RunShootPistol:
+			KB0E ABCDEF 4
+			Loop
+		WalkShootCrowbar:
+		RunShootCrowbar:
+			KC14 ABCDEF 3
+			Loop
+		RunShootShotgun:
+			KD0A ABCDEF 4
+			Loop
+		RunShootGrenadeLauncher:
+			KE0A ABCDEF 4
+			Loop
+		RunShootTommygun:
+			KF0A ABCDEF 4
+			Loop
+		RunShootBazooka:
+			KG0A ABCDEF 4
+			Loop
+		RunShootFlamethrower:
+			KH0A ABCDEF 4
+			Loop
+		RunShootHMG:
+			KI0A ABCDEF 4
+			Loop
+		WalkShootPistol:
+			KB0D ABCDEF 4
+			Loop
+		WalkShootShotgun:
+			KD09 ABCDEFGHIJ 4
+			Loop
+		WalkShootGrenadeLauncher:
+			KE09 ABCDEFGHIJ 4
+			Loop
+		WalkShootTommygun:
+			KF09 ABCDEFGHIJ 4
+			Loop
+		WalkShootBazooka:
+			KG09 ABCDEFGHIJ 4
+			Loop
+		WalkShootFlamethrower:
+			KH09 ABCDEFGHIJ 4
+			Loop
+		WalkShootHMG:
+			KI09 ABCDEFGHIJ 4
+			Loop
+		CrouchShootPipe:
+			KA20 ABCDE 3
+			Loop
+		CrouchShootPistol:
+			KB20 ABCDE 3
+			Loop
+		CrouchShootCrowbar:
+			KC20 ABCDE 3
+			Loop
+		CrouchShootShotgun:
+			KD1D ABCDEF 3
+			Loop
+		CrouchShootGrenadeLauncher:
+			KE1D ABCDEF 3
+			Loop
+		CrouchShootTommygun:
+			KF1D ABCDEF 3
+			Loop
+		CrouchShootBazooka:
+			KG1D ABCDEF 3
+			Loop
+		CrouchShootFlamethrower:
+			KH1D ABCDEF 3
+			Loop
+		CrouchShootHMG:
+			KI1D ABCDEF 3
+			Loop
 		Pain:
 			TNT1 A 0 A_GiveInventory("Kingpin_ResetPlayerAction")
 			Goto Spawn
+		Death:
+			TNT1 A 0 A_Jump(256,"Death1","Death2","Death3","Death4")
+		Death1:
+			KAX8 ABCDEFGHIJKLMNOPQR 4
+			KAX8 S -1
+			Stop
+		Death2:
+			KAX9 ABCDEFGHIJKLMNO 4
+			KAX9 P -1
+			Stop
+		Death3:
+			KAXA "ABCDEFGHIJKLMNOPQRSTUVWXYZ[" 4
+			KAXA "\" -1
+			Stop
+		Death4:
+			KAXB ABCDEFGHIJKL 4
+			KAXB M -1
+			Stop
+		CrouchDeath:
+			KAXC ABCDEFGHIJK 4
+			KAXC L -1
+			Stop
 		Dummy:
 			KA00 A 0 A_Stop KA01 A 0 A_Stop KA02 A 0 A_Stop KA03 A 0 A_Stop
 			KA04 A 0 A_Stop KA05 A 0 A_Stop KA06 A 0 A_Stop KA07 A 0 A_Stop
