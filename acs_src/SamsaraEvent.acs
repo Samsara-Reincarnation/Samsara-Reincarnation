@@ -5516,6 +5516,10 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                                     ((samsaraClassNum() == CLASS_HERETIC || samsaraClassNum() == CLASS_DEMONESS) && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory")) ||
                                                     (samsaraClassNum() == CLASS_HEXEN && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory") && !GetCVar("samsara_banhextomeofpower"))));
 
+        SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHeretic", samsaraClassNum() == CLASS_HERETIC && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerHereticTome"));
+        SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHexen1", samsaraClassNum() == CLASS_HEXEN && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerSamsaraHexenWeaponLevel2"));
+        SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHexen2", samsaraClassNum() == CLASS_DEMONESS && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerHexen2WeaponLevel2"));
+
 		HandleAmmoCapacities(0);
 		HandleBans();
 		HandleBuffCVars();
