@@ -359,26 +359,6 @@ Script "HexenGrapplePull" (void)
 	Thing_ChangeTid(newTid, myTid);
 }
 
-//Yeah, I need to loop the sound on my conditions
-script "HexenFrostShardsRaySound" (void)
-{
-    GiveInventory("SamsaraHexenFrostShardsPoweredSoundPlaying", 1);
-
-    int channelincrement = -1;
-
-    while (CheckWeapon("Frost Shards") && !isDead(0) && CheckInventory("SamsaraHexenFrostShardsPoweredSoundPlaying"))
-    {
-        PlaySound(0, "Hexen/FreezeRay", channelincrement > -1 ? CHAN_5 + channelincrement : CHAN_WEAPON);
-
-        if (channelincrement >= 2) { channelincrement = -1; }
-        else { channelincrement++; }
-
-        Delay(4);
-    }
-
-    SetInventory("SamsaraHexenFrostShardsPoweredSoundPlaying", 0);
-}
-
 //This script will handle the behavior of the Bishop's short sword. Just pretend we're working with the constraints!
 Script "HexenBishopSwordReturn" (void)
 {
