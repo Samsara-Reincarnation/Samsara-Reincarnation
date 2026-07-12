@@ -355,6 +355,7 @@ actor "Hammer of Retribution" : SamsaraHexenWeapon
         goto Select
 
       Fire:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned")
         TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"FireFighter")
       FireClericClassic:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicAmmo")
@@ -362,14 +363,14 @@ actor "Hammer of Retribution" : SamsaraHexenWeapon
         goto FireClericClassicNoAmmo
 
       FireClericClassicNoAmmo:
-        FHMR B 6 Offset(5,0) A_TakeInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned")
+        FHMR B 6 Offset(5,0)
         FHMR C 3 Offset(5,0) A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
         FHMR D 3 Offset(5,0)
         FHMR E 2 Offset(5,0)
         goto FireClericClassicContinue
 
       FireClericClassicAmmo:
-        FHMR H 6 Offset(5,0) Bright A_TakeInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned")
+        FHMR H 6 Offset(5,0) Bright
         FHMR I 3 Offset(5,0) Bright A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
         FHMR J 3 Offset(5,0) Bright
         FHMR K 2 Offset(5,0) Bright
@@ -478,14 +479,14 @@ actor "Hammer of Retribution" : SamsaraHexenWeapon
         goto FireFighterNoAmmo
 
       FireFighterNoAmmo:
-        H105 B 6 Offset(5,0) A_TakeInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned")
+        H105 B 6 Offset(5,0)
         H105 C 3 Offset(5,0) A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
         H105 D 3 Offset(5,0)
         FHMR E 2 Offset(5,0)
         goto FireFighterContinue
 
       FireFighterAmmo:
-        H106 L 6 Offset(5,0) Bright A_TakeInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned")
+        H106 L 6 Offset(5,0) Bright
         H106 M 3 Offset(5,0) Bright A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
         H106 N 3 Offset(5,0) Bright
         FHMR K 2 Offset(5,0) Bright
