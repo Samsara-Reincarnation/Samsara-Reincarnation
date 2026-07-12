@@ -453,8 +453,8 @@ str hexenfighterdropstrings[3] = {"DropCleric","DropClassic","DropMage"};*/
 str hexendropstrings[2] = {"DropFighter","DropMage"};
 str hexenmagedropstrings[2] = {"DropFighter","DropCleric"};
 str hexenfighterdropstrings[2] = {"DropCleric","DropMage"};
-str eradicatordropstrings[4] = {"DropEleena","DropKamechak","DropDan","DropMarine"};
-str ipogdropstrings[5] = {"DropMooman","DropCyborg","DropLizard","DropSpecimen","DropDominatrix"};
+str eradicatordropstrings[3] = {"DropDan","DropKamechak","DropMarine"};
+str ipogdropstrings[4] = {"DropCyborg","DropLizard","DropSpecimen","DropDominatrix"};
 
 Script "Samsara2999" (int class, int mode)
 {
@@ -462,10 +462,7 @@ Script "Samsara2999" (int class, int mode)
 	int maxallies = 2;
 	if(class == 1)
 		mode = ceilZandronum((mode*1.0)/100); //the shit I have to do to cleanup Zandronum's mistakes
-	if(class == 3)
-		mode = ceilZandronum((mode*1.0)/100); //the shit I have to do to cleanup Zandronum's mistakes
-	if(class == 4)
-		mode = ceilZandronum((mode*1.0)/100); //the shit I have to do to cleanup Zandronum's mistakes
+
 	Switch(class)
 	{
 		Case 1:
@@ -531,7 +528,7 @@ Script "Samsara2999" (int class, int mode)
 		}
 		break;
 		Case 3:
-		maxallies = 4;
+		maxallies = 3;
 		For(int c = 0; c < 36; c++)
 		{
 			Delay(1);
@@ -542,20 +539,14 @@ Script "Samsara2999" (int class, int mode)
 					SetActorState(0,"Death",TRUE);
 					terminate;
 				}
-				
-				if(mode != resultcounter)
-				{
-					//PrintBold(d:resultcounter);
-					SetActorState(0,eradicatordropstrings[resultcounter],TRUE);
-				}
-				
+				SetActorState(0,eradicatordropstrings[resultcounter],TRUE);
 				c=0;
 				resultcounter++;
 			}
 		}
 		break;
 		Case 4:
-		maxallies = 5;
+		maxallies = 4;
 		For(int d = 0; d < 36; d++)
 		{
 			Delay(1);
@@ -566,13 +557,7 @@ Script "Samsara2999" (int class, int mode)
 					SetActorState(0,"Death",TRUE);
 					terminate;
 				}
-				
-				if(mode != resultcounter)
-				{
-					//PrintBold(d:resultcounter);
-					SetActorState(0,ipogdropstrings[resultcounter],TRUE);
-				}
-
+				SetActorState(0,ipogdropstrings[resultcounter],TRUE);
 				d=0;
 				resultcounter++;
 			}
@@ -587,12 +572,6 @@ Script "Samsara_AllyBeaconDrops" (void)
 	{
 		case CLASS_ROTT:
 			SetResultValue(CheckInventory("RottMode"));
-			break;
-		case CLASS_ERAD:
-			SetResultValue(CheckInventory("EradMode"));
-			break;
-		case CLASS_POGREED:
-			SetResultValue(CheckInventory("IPoGMode"));
 			break;
 	}
 }
@@ -690,89 +669,9 @@ Script "Samsara_AllySwitch" (void)
 					}
 					else
 						terminate;
-				break;
-			}
-		case 12:
-			switch(GetUserCvar(pln,"samsara_cl_eradmode"))
-			{
-				Case 0:
-					if(CheckActorClass(newtid,"EleenaBrynstaarl"))
-					{
-						SpawnSpotFacingForced("AllianceCommando",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 1:
-					if(CheckActorClass(newtid,"Kamechak"))
-					{
-						SpawnSpotFacingForced("EleenaBrynstaarl",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 2:
-					if(CheckActorClass(newtid,"DanBlaze"))
-					{
-						SpawnSpotFacingForced("Kamechak",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 3:
-					if(CheckActorClass(newtid,"AllianceCommando"))
-					{
-						SpawnSpotFacingForced("DanBlaze",newtid,newtid2);
-					}
-					else
-						terminate;
 					break;
 			}
 			break;
-		case 16:
-			switch(GetUserCvar(pln,"samsara_cl_ipogmode"))
-			{
-				Case 0:
-					if(CheckActorClass(newtid,"MoomanAlly"))
-					{
-						SpawnSpotFacingForced("DominatrixAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 1:
-					if(CheckActorClass(newtid,"CyborgAlly"))
-					{
-						SpawnSpotFacingForced("MoomanAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 2:
-					if(CheckActorClass(newtid,"LizardAlly"))
-					{
-						SpawnSpotFacingForced("CyborgAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 3:
-					if(CheckActorClass(newtid,"SpecimenAlly"))
-					{
-						SpawnSpotFacingForced("LizardAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-				Case 4:
-					if(CheckActorClass(newtid,"DominatrixAlly"))
-					{
-						SpawnSpotFacingForced("SpecimenAlly",newtid,newtid2);
-					}
-					else
-						terminate;
-					break;
-			}
 	}
 	SetActorAngle(newtid2,GetActorAngle(newtid));
 	Thing_SetTranslation(newtid2,-1);
@@ -818,20 +717,6 @@ Script "Samsara_BeaconSpawner" (int mode)
 		case 8:
 			SpawnSpotForced("StrifeBeaconRott_Allies",0,newtid,0);
 			SetActorAngle(newtid,CheckInventory("RottMode")*182);
-			Thing_SetTranslation(newtid,-1);
-			SetActivator(newtid,AAPTR_DEFAULT);
-			SetPointer(AAPTR_MASTER,playertid);
-			break;
-		case 12:
-			SpawnSpotForced("StrifeBeaconErad_Allies",0,newtid,0);
-			SetActorAngle(newtid,CheckInventory("EradMode")*182);
-			Thing_SetTranslation(newtid,-1);
-			SetActivator(newtid,AAPTR_DEFAULT);
-			SetPointer(AAPTR_MASTER,playertid);
-			break;
-		case 16:
-			SpawnSpotForced("StrifeBeaconPOGreed_Allies",0,newtid,0);
-			SetActorAngle(newtid,CheckInventory("IPoGMode")*182);
 			Thing_SetTranslation(newtid,-1);
 			SetActivator(newtid,AAPTR_DEFAULT);
 			SetPointer(AAPTR_MASTER,playertid);
