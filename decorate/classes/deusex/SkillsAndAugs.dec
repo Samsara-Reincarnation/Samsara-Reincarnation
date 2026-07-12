@@ -1,0 +1,1740 @@
+// handles the skills and leveling system.
+actor DeusEx_WeaponSkill : Counter { Inventory.MaxAmount 4 }
+
+actor DeusEx_LowTechSkill : DeusEx_WeaponSkill {} // Handles melee weapons and throwables.
+actor DeusEx_PistolSkill : DeusEx_WeaponSkill {} // Handles handguns and Crossbows.
+actor DeusEx_RifleSkill : DeusEx_WeaponSkill {} // Handles all other Two-Handed small arms. NOTE: Sawed-Off Shotgun is now a pistol.
+//actor DeusEx_DemolitionsSkill : DeusEx_WeaponSkill {} dummied out
+actor DeusEx_HeavyWeaponSkill : DeusEx_WeaponSkill {} // Handles Heavy weapons, obviously. Reduces speed when below 2, then you move normally.
+actor DeusEx_MedicineSkill : DeusEx_WeaponSkill {} // Handles all health items. The higher it is, the more health you gain from picking up health items
+actor DeusEx_EnviroSkill : DeusEx_WeaponSkill {} // Handles Armor and all timed powerups. the more skill, the tankier you get from armor pickups and the longer and more effective your powerups.
+
+actor DeusEx_SkillPoints : Counter {}
+actor DeusEx_PistolPoints : Counter {}
+actor DeusEx_RiflePoints : Counter {}
+actor DeusEx_HeavyWeaponPoints : Counter {}
+actor DeusEx_LowTechPoints : Counter {}
+actor DeusEx_MedicinePoints : Counter {}
+actor DeusEx_EnviroPoints : Counter {}
+
+actor DeusEx_StartingSkills : Counter { Inventory.MaxAmount 4 } // Lets the player choose the amount of skills they start with.
+actor SamsaraDeusExStartingSkillsGiven : Boolean {}
+
+actor DeusEx_DeathTypeIndicator : Counter { Inventory.MaxAmount 5 }
+
+actor DeusEx_BioEnergy : Counter { Inventory.MaxAmount 100 }
+
+Actor DeusEx_AugmentationsMenu : Boolean {}
+Actor DeusEx_Augmentation_AugsActive : TemporaryBoolean {}
+Actor DeusEx_QuickAugmentationsOpen : TemporaryBoolean {}
+Actor DeusEx_QuickAugmentationsSlot : Counter { Inventory.MaxAmount 11 }
+Actor DeusEx_QuickAugmentationsTimer : TemporaryCounter { Inventory.MaxAmount 35 }
+
+actor DeusEx_AugmentationUpgradeCannister : Counter { Inventory.MaxAmount 99 }
+actor DeusEx_AugmentationBioEnergyCell : Counter { Inventory.MaxAmount 99 }
+
+//Arms
+Actor DeusEx_Augmentation_ArmsActive : TemporaryCounter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_ArmsSlot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_CombatStrength : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_MicrofibralMuscle : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_CombatStrengthToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_MicrofibralMuscleToken : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_MicrofibralMuscleTrigger : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_FireBullets(0,0,-1,0,"DeusEx_Augmentation_ObjectGrabber",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ,48)
+			stop
+	}
+}
+
+Actor DeusEx_Augmentation_ObjectGrabber
+{
+	Height 8
+	Radius 8
+	+HITTRACER
+	+PUFFGETSOWNER
+	+PUFFONACTORS
+	+BLOODLESSIMPACT
+	-BLOODSPLATTER
+	+NOTRIGGER
+	+DONTSPLASH
+	States
+	{
+		Spawn:
+		XDeath:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate",12)
+			TNT1 A -1
+			Stop
+		Crash:
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_ObjectGrabbingTimer : Counter { Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_ObjectGrabbingLastUse : TemporaryBoolean {}
+Actor DeusEx_Augmentation_ObjectGrabbing : TemporaryBoolean {}
+Actor DeusEx_Augmentation_GrabbingStop : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_ObjectGrabberEnablePass : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_Changeflag("CANPASS",1)
+			stop
+	}
+}
+Actor DeusEx_Augmentation_ObjectGrabberDisablePass : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_Changeflag("CANPASS",0)
+			stop
+	}
+}
+
+Actor DeusEx_Augmentation_ObjectGrabberEnableBlock : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_Changeflag("NOBLOCKMONST",1)
+			stop
+	}
+}
+Actor DeusEx_Augmentation_ObjectGrabberDisableBlock : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_Changeflag("NOBLOCKMONST",0)
+			stop
+	}
+}
+
+Actor DeusEx_Augmentation_ObjectGrabberEnableDropOff : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_Changeflag("DROPOFF",1)
+			stop
+	}
+}
+Actor DeusEx_Augmentation_ObjectGrabberDisableDropOff : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_Changeflag("DROPOFF",0)
+			stop
+	}
+}
+
+Actor DeusEx_Augmentation_ObjectGrabberDamageNearbyActors
+{
+	Projectile
+	Damage (0)
+	Speed 0
+	ReactionTime 1
+	+THRUACTORS
+	States
+	{
+		Spawn:
+			TNT1 A 1 A_CountDown
+			Loop
+		Death:
+			TNT1 A 1 A_Explode(mass,score,0,0,score)
+			Stop
+	}
+}
+
+//Legs
+Actor DeusEx_Augmentation_LegsActive : TemporaryCounter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_LegsSlot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_SpeedEnhancement : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_RunSilent : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_SpeedEnhancementToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_RunSilentToken : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_SpeedEnhancement1 : PowerSpeedBuffBase { Speed 1.1 }
+Actor DeusEx_Augmentation_SpeedEnhancement2 : PowerSpeedBuffBase { Speed 1.2 }
+Actor DeusEx_Augmentation_SpeedEnhancement3 : PowerSpeedBuffBase { Speed 1.3 }
+Actor DeusEx_Augmentation_SpeedEnhancement4 : PowerSpeedBuffBase { Speed 1.4 }
+
+//Subdermal
+Actor DeusEx_Augmentation_Subdermal1Active : TemporaryCounter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_Subdermal2Active : TemporaryCounter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_Subdermal1Slot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_Subdermal2Slot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_BallisticProtection : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_EMPShield : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_Cloak : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_Repulsor : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_BallisticProtectionToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_EMPShieldToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_CloakToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_RepulsorToken : TemporaryBoolean {}
+
+actor DeusEx_Augmentation_ProtectionBase : PowerProtection
+{
+    // Ballistic damage types
+    DamageFactor "Normal", 1
+    DamageFactor "DoomDamageTypeFist", 1
+    DamageFactor "RottBullet", 1
+    DamageFactor "PunchDagger", 1
+    DamageFactor "CalebBullet", 1
+    DamageFactor "EradShock", 1
+    DamageFactor "EradNova", 1
+    DamageFactor "DukeDamage", 1
+    DamageFactor "DukePistol", 1
+    DamageFactor "MightyBoot", 1
+    DamageFactor "QuakeDamage", 1
+    DamageFactor "QuakePistol", 1
+    DamageFactor "PSBullet", 1
+    DamageFactor "RRBullet", 1
+    DamageFactor "LeonardDamage0", 1
+    DamageFactor "LeonardDamage1", 1
+    DamageFactor "SWFist", 1
+    DamageFactor "SWKatana", 1
+    DamageFactor "SWShuriken", 1
+    DamageFactor "SWBullet", 1
+    DamageFactor "PainkillerBullet", 1
+    DamageFactor "PainkillerShuriken", 1
+    DamageFactor "UnrealRazor", 1
+    DamageFactor "UnrealShredded", 1
+    DamageFactor "RTCWVenomBullet", 1
+    DamageFactor "DeusExMelee", 1
+    DamageFactor "DeusExPistol", 1
+    DamageFactor "DeusExPistolFire", 1
+    DamageFactor "DeusExSabotPistol", 1
+    DamageFactor "DeusExSabot", 1
+    DamageFactor "DeusExRifleShot", 1
+    DamageFactor "BittermanDamage", 1
+    DamageFactor "Pistol", 1
+    DamageFactor "GEBullet", 1
+    DamageFactor "BlakeBullet", 1
+    DamageFactor "Mace", 1
+    DamageFactor "CorvusCrossbow", 1
+    DamageFactor "DisruptorUniversalDamageShit1", 1
+    DamageFactor "EradDisc", 1
+    DamageFactor "RottBullet", 1
+    DamageFactor "HLBullet", 1
+    DamageFactor "HLHornet", 1
+    DamageFactor "HLLaser", 1
+    DamageFactor "WTRanged", 1
+    DamageFactor "WTMeleeIce", 1
+    DamageFactor "MarathonPistol", 1
+    DamageFactor "PGBullet", 1
+    DamageFactor "DescentBullet", 1
+    DamageFactor "RMR-Bullet", 1
+    DamageFactor "Q3Bullet", 1
+    DamageFactor "StrifePistol", 1
+    DamageFactor "UnrealBullet", 1
+    DamageFactor "EradPiercingDart", 1
+    DamageFactor "SWRailgun", 1
+    DamageFactor "SWRailgunCoop", 1
+    DamageFactor "PainkillerStake", 1
+    DamageFactor "Painkiller", 1
+    DamageFactor "GETank", 1
+
+    // EMP damage types
+    DamageFactor "DoomDamageTypeDevastator", 1
+    DamageFactor "Q3Lightning", 1
+    DamageFactor "RTCWTesla", 1
+    DamageFactor "Electric", 1
+    DamageFactor "Shock", 1
+    DamageFactor "StrifeSigil", 1
+    DamageFactor "Spectral", 1
+    DamageFactor "ElectricBolt", 1
+    DamageFactor "TimonsAxe", 1
+    DamageFactor "WolfenElectric", 1
+    DamageFactor "QuakeElectric", 1
+    DamageFactor "Tesla", 1
+    DamageFactor "Hexen2Electric", 1
+    DamageFactor "PSRAPower", 1
+    DamageFactor "PSRAPowerCoop", 1
+    DamageFactor "Hexen2ElectricExtreme", 1
+    DamageFactor "PainkillerElectro", 1
+    DamageFactor "ASMDShockTrace", 1
+
+    // Energy damage types
+    DamageFactor "Explosive", 1
+    DamageFactor "Explosion", 1
+    DamageFactor "Exploded", 1
+    DamageFactor "RottFire", 1
+    DamageFactor "TotenkopfFire", 1
+    DamageFactor "PhosFire", 1
+    DamageFactor "PhosFireCoop", 1
+    DamageFactor "MarathonFire", 1
+    DamageFactor "MarathonPlasmaFire", 1
+    DamageFactor "WolfenFlamethrower", 1
+    DamageFactor "HexGreenFire", 1
+    DamageFactor "HexenQuietusFire", 1
+    DamageFactor "PGFire", 1
+    DamageFactor "QuakeFire", 1
+    DamageFactor "FireExplosive", 1
+    DamageFactor "WTRangedFire", 1
+    DamageFactor "RTCWFire", 1
+    DamageFactor "DoomDamageTypeFire", 1
+    DamageFactor "DoomDamageTypeExplosive", 1
+    DamageFactor "DoomDamageTypePlasma", 1
+    DamageFactor "DoomDamageTypeStunner", 1
+    DamageFactor "DoomDamageTypeBFG", 1
+    DamageFactor "DoomDamageTypeFireExplosive", 1
+    DamageFactor "DoomDamageTypeRepeater", 1
+    DamageFactor "RottExplosive", 1
+    DamageFactor "Flame", 1
+    DamageFactor "Fire", 1
+    DamageFactor "Burn", 1
+    DamageFactor "RottDisintegrate", 1
+    DamageFactor "Disintegrate", 1
+    DamageFactor "StrifeMauler", 1
+    DamageFactor "Nuke", 1
+    DamageFactor "StrifeExplosive", 1
+    DamageFactor "HLExplosive", 1
+    DamageFactor "HLRPGExplosive", 1
+    DamageFactor "HLEgon", 1
+    DamageFactor "LifeLeech", 1
+    DamageFactor "Vodoo", 1
+    DamageFactor "CalebNapalm", 1
+    DamageFactor "VoodooPuff", 1
+    DamageFactor "DynamiteCoop", 1
+    DamageFactor "Dynamite", 1
+    DamageFactor "CalebFire", 1
+    DamageFactor "EradExplosive", 1
+    DamageFactor "EradExplosive2", 1
+    DamageFactor "EradGreenFire", 1
+    DamageFactor "EradCoopGreenFire", 1
+    DamageFactor "DukeExplosive", 1
+    DamageFactor "PSExplosive", 1
+    DamageFactor "PSExplosiveCoop", 1
+    DamageFactor "PSFire", 1
+    DamageFactor "LeonardDamage2", 1
+    DamageFactor "LeonardDamage3", 1
+    DamageFactor "SWSticky", 1
+    DamageFactor "SWStickyCoop", 1
+    DamageFactor "SWGrenade", 1
+    DamageFactor "SWNuke", 1
+    DamageFactor "SWRocket", 1
+    DamageFactor "SWNukeCoop", 1
+    DamageFactor "SWFlame", 1
+    DamageFactor "SWFlame2", 1
+    DamageFactor "SWFlame2Coop", 1
+    DamageFactor "SWFlame3", 1
+    DamageFactor "ZorchPistol", 1
+    DamageFactor "Zorch", 1
+    DamageFactor "ZorchKamikaze", 1
+    DamageFactor "PhasingZorch", 1
+    DamageFactor "ZorchSpectral", 1
+    DamageFactor "NotQuadded", 1
+    DamageFactor "QuakeExplosive", 1
+    DamageFactor "QuakeLaser", 1
+    DamageFactor "BittermanDamage", 1
+    DamageFactor "BittermanFire", 1
+    DamageFactor "BittermanTrap", 1
+    DamageFactor "Hexen2RavenDamage", 1
+    DamageFactor "Hexen2Damage", 1
+    DamageFactor "Hexen2Fire", 1
+    DamageFactor "Hexen2Extreme", 1
+    DamageFactor "PainkillerExplosive", 1
+    DamageFactor "PainkillerDemon", 1
+    DamageFactor "PainkillerFire", 1
+    DamageFactor "UnrealPlasma", 1
+    DamageFactor "UnrealDamage", 1
+    DamageFactor "UnrealExplosive", 1
+    DamageFactor "UnrealExtreme", 1
+    DamageFactor "UnrealRedeemer", 1
+    DamageFactor "RTCWExplosive", 1
+    DamageFactor "Q3Explosive", 1
+    DamageFactor "Q3Energy", 1
+    DamageFactor "Q3BFG", 1
+    DamageFactor "DeusExStunned", 1
+    DamageFactor "DeusExLAM", 1
+    DamageFactor "DeusExRifleExploded", 1
+    DamageFactor "DeusExFlamed", 1
+    DamageFactor "DeusExBurned", 1
+    DamageFactor "DeusExExploded", 1
+    DamageFactor "DeusExDroneExploded", 1
+    DamageFactor "DukePlasma", 1
+    DamageFactor "Laser", 1
+    DamageFactor "DescentLaser", 1
+    DamageFactor "CMDMGSHIT", 1
+    DamageFactor "Disruptoruniversaldamageshit2", 1
+    DamageFactor "Disruptoruniversaldamageshit4", 1
+    DamageFactor "DisruptorWall", 1
+    DamageFactor "FireExplosive", 1
+    DamageFactor "DoomPlasma", 1
+    DamageFactor "BFG", 1
+    DamageFactor "BFGSplash", 1
+    DamageFactor "BFGSpray", 1
+    DamageFactor "PGPlasma", 1
+    DamageFactor "RMR-GreenPlasma", 1
+    DamageFactor "RMR-YellowPlasma", 1
+    DamageFactor "RMR-YellowPlasma2", 1
+    DamageFactor "RMR-CyanPlasma", 1
+    DamageFactor "RMR-DiscoBall", 1
+    DamageFactor "RMR-BigPlasma", 1
+    DamageFactor "DragonClaw", 1
+    DamageFactor "CorvusHellstaff", 1
+    DamageFactor "C7Disintegrate", 1
+    DamageFactor "DCannonProj", 1
+    DamageFactor "BlakePlasma", 1
+    DamageFactor "BJSpear", 1
+    DamageFactor "TotenkopfFlak", 1
+    DamageFactor "TotenkopfRocket", 1
+    DamageFactor "WTRangedFire", 1
+    DamageFactor "RebelMissile", 1
+    DamageFactor "PhosFire", 1
+
+    // Environmental damage types
+    DamageFactor "Poison", 1
+    DamageFactor "PoisonCloud", 1
+    DamageFactor "Slime", 1
+    DamageFactor "Drowning", 1
+    DamageFactor "Ice", 1
+    DamageFactor "WTRangedIce", 1
+    DamageFactor "DoomDamageTypeIce", 1
+    DamageFactor "PoisonBolt", 1
+    DamageFactor "DukeIce", 1
+    DamageFactor "HexenIce", 1
+    DamageFactor "PainkillerIce", 1
+}
+
+Actor DeusEx_Augmentation_BallisticProtection1 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Normal", 0.8
+    DamageFactor "DoomDamageTypeFist", 0.8
+    DamageFactor "RottBullet", 0.8
+    DamageFactor "PunchDagger", 0.8
+    DamageFactor "CalebBullet", 0.8
+    DamageFactor "EradShock", 0.8
+    DamageFactor "EradNova", 0.8
+    DamageFactor "DukeDamage", 0.8
+    DamageFactor "DukePistol", 0.8
+    DamageFactor "MightyBoot", 0.8
+    DamageFactor "QuakeDamage", 0.8
+    DamageFactor "QuakePistol", 0.8
+    DamageFactor "PSBullet", 0.8
+    DamageFactor "RRBullet", 0.8
+    DamageFactor "LeonardDamage0", 0.8
+    DamageFactor "LeonardDamage1", 0.8
+    DamageFactor "SWFist", 0.8
+    DamageFactor "SWKatana", 0.8
+    DamageFactor "SWShuriken", 0.8
+    DamageFactor "SWBullet", 0.8
+    DamageFactor "PainkillerBullet", 0.8
+    DamageFactor "PainkillerShuriken", 0.8
+    DamageFactor "UnrealRazor", 0.8
+    DamageFactor "UnrealShredded", 0.8
+    DamageFactor "RTCWVenomBullet", 0.8
+    DamageFactor "DeusExMelee", 0.8
+    DamageFactor "DeusExPistol", 0.8
+    DamageFactor "DeusExPistolFire", 0.8
+    DamageFactor "DeusExSabotPistol", 0.8
+    DamageFactor "DeusExSabot", 0.8
+    DamageFactor "DeusExRifleShot", 0.8
+    DamageFactor "BittermanDamage", 0.8
+    DamageFactor "Pistol", 0.8
+    DamageFactor "GEBullet", 0.8
+    DamageFactor "BlakeBullet", 0.8
+    DamageFactor "Mace", 0.8
+    DamageFactor "CorvusCrossbow", 0.8
+    DamageFactor "DisruptorUniversalDamageShit1", 0.8
+    DamageFactor "EradDisc", 0.8
+    DamageFactor "RottBullet", 0.8
+    DamageFactor "HLBullet", 0.8
+    DamageFactor "HLHornet", 0.8
+    DamageFactor "HLLaser", 0.8
+    DamageFactor "WTRanged", 0.8
+    DamageFactor "WTMeleeIce", 0.8
+    DamageFactor "MarathonPistol", 0.8
+    DamageFactor "PGBullet", 0.8
+    DamageFactor "DescentBullet", 0.8
+    DamageFactor "RMR-Bullet", 0.8
+    DamageFactor "Q3Bullet", 0.8
+    DamageFactor "StrifePistol", 0.8
+    DamageFactor "UnrealBullet", 0.8
+    DamageFactor "EradPiercingDart", 0.8
+    DamageFactor "SWRailgun", 0.8
+    DamageFactor "SWRailgunCoop", 0.8
+    DamageFactor "PainkillerStake", 0.8
+    DamageFactor "Painkiller", 0.8
+    DamageFactor "GETank", 0.8
+}
+
+Actor DeusEx_Augmentation_BallisticProtection2 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Normal", 0.65
+    DamageFactor "DoomDamageTypeFist", 0.65
+    DamageFactor "RottBullet", 0.65
+    DamageFactor "PunchDagger", 0.65
+    DamageFactor "CalebBullet", 0.65
+    DamageFactor "EradShock", 0.65
+    DamageFactor "EradNova", 0.65
+    DamageFactor "DukeDamage", 0.65
+    DamageFactor "DukePistol", 0.65
+    DamageFactor "MightyBoot", 0.65
+    DamageFactor "QuakeDamage", 0.65
+    DamageFactor "QuakePistol", 0.65
+    DamageFactor "PSBullet", 0.65
+    DamageFactor "RRBullet", 0.65
+    DamageFactor "LeonardDamage0", 0.65
+    DamageFactor "LeonardDamage1", 0.65
+    DamageFactor "SWFist", 0.65
+    DamageFactor "SWKatana", 0.65
+    DamageFactor "SWShuriken", 0.65
+    DamageFactor "SWBullet", 0.65
+    DamageFactor "PainkillerBullet", 0.65
+    DamageFactor "PainkillerShuriken", 0.65
+    DamageFactor "UnrealRazor", 0.65
+    DamageFactor "UnrealShredded", 0.65
+    DamageFactor "RTCWVenomBullet", 0.65
+    DamageFactor "DeusExMelee", 0.65
+    DamageFactor "DeusExPistol", 0.65
+    DamageFactor "DeusExPistolFire", 0.65
+    DamageFactor "DeusExSabotPistol", 0.65
+    DamageFactor "DeusExSabot", 0.65
+    DamageFactor "DeusExRifleShot", 0.65
+    DamageFactor "BittermanDamage", 0.65
+    DamageFactor "Pistol", 0.65
+    DamageFactor "GEBullet", 0.65
+    DamageFactor "BlakeBullet", 0.65
+    DamageFactor "Mace", 0.65
+    DamageFactor "CorvusCrossbow", 0.65
+    DamageFactor "DisruptorUniversalDamageShit1", 0.65
+    DamageFactor "EradDisc", 0.65
+    DamageFactor "RottBullet", 0.65
+    DamageFactor "HLBullet", 0.65
+    DamageFactor "HLHornet", 0.65
+    DamageFactor "HLLaser", 0.65
+    DamageFactor "WTRanged", 0.65
+    DamageFactor "WTMeleeIce", 0.65
+    DamageFactor "MarathonPistol", 0.65
+    DamageFactor "PGBullet", 0.65
+    DamageFactor "DescentBullet", 0.65
+    DamageFactor "RMR-Bullet", 0.65
+    DamageFactor "Q3Bullet", 0.65
+    DamageFactor "StrifePistol", 0.65
+    DamageFactor "UnrealBullet", 0.65
+    DamageFactor "EradPiercingDart", 0.65
+    DamageFactor "SWRailgun", 0.65
+    DamageFactor "SWRailgunCoop", 0.65
+    DamageFactor "PainkillerStake", 0.65
+    DamageFactor "Painkiller", 0.65
+    DamageFactor "GETank", 0.65
+}
+
+Actor DeusEx_Augmentation_BallisticProtection3 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Normal", 0.5
+    DamageFactor "DoomDamageTypeFist", 0.5
+    DamageFactor "RottBullet", 0.5
+    DamageFactor "PunchDagger", 0.5
+    DamageFactor "CalebBullet", 0.5
+    DamageFactor "EradShock", 0.5
+    DamageFactor "EradNova", 0.5
+    DamageFactor "DukeDamage", 0.5
+    DamageFactor "DukePistol", 0.5
+    DamageFactor "MightyBoot", 0.5
+    DamageFactor "QuakeDamage", 0.5
+    DamageFactor "QuakePistol", 0.5
+    DamageFactor "PSBullet", 0.5
+    DamageFactor "RRBullet", 0.5
+    DamageFactor "LeonardDamage0", 0.5
+    DamageFactor "LeonardDamage1", 0.5
+    DamageFactor "SWFist", 0.5
+    DamageFactor "SWKatana", 0.5
+    DamageFactor "SWShuriken", 0.5
+    DamageFactor "SWBullet", 0.5
+    DamageFactor "PainkillerBullet", 0.5
+    DamageFactor "PainkillerShuriken", 0.5
+    DamageFactor "UnrealRazor", 0.5
+    DamageFactor "UnrealShredded", 0.5
+    DamageFactor "RTCWVenomBullet", 0.5
+    DamageFactor "DeusExMelee", 0.5
+    DamageFactor "DeusExPistol", 0.5
+    DamageFactor "DeusExPistolFire", 0.5
+    DamageFactor "DeusExSabotPistol", 0.5
+    DamageFactor "DeusExSabot", 0.5
+    DamageFactor "DeusExRifleShot", 0.5
+    DamageFactor "BittermanDamage", 0.5
+    DamageFactor "Pistol", 0.5
+    DamageFactor "GEBullet", 0.5
+    DamageFactor "BlakeBullet", 0.5
+    DamageFactor "Mace", 0.5
+    DamageFactor "CorvusCrossbow", 0.5
+    DamageFactor "DisruptorUniversalDamageShit1", 0.5
+    DamageFactor "EradDisc", 0.5
+    DamageFactor "RottBullet", 0.5
+    DamageFactor "HLBullet", 0.5
+    DamageFactor "HLHornet", 0.5
+    DamageFactor "HLLaser", 0.5
+    DamageFactor "WTRanged", 0.5
+    DamageFactor "WTMeleeIce", 0.5
+    DamageFactor "MarathonPistol", 0.5
+    DamageFactor "PGBullet", 0.5
+    DamageFactor "DescentBullet", 0.5
+    DamageFactor "RMR-Bullet", 0.5
+    DamageFactor "Q3Bullet", 0.5
+    DamageFactor "StrifePistol", 0.5
+    DamageFactor "UnrealBullet", 0.5
+    DamageFactor "EradPiercingDart", 0.5
+    DamageFactor "SWRailgun", 0.5
+    DamageFactor "SWRailgunCoop", 0.5
+    DamageFactor "PainkillerStake", 0.5
+    DamageFactor "Painkiller", 0.5
+    DamageFactor "GETank", 0.5
+}
+
+Actor DeusEx_Augmentation_BallisticProtection4 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Normal", 0.35
+    DamageFactor "DoomDamageTypeFist", 0.35
+    DamageFactor "RottBullet", 0.35
+    DamageFactor "PunchDagger", 0.35
+    DamageFactor "CalebBullet", 0.35
+    DamageFactor "EradShock", 0.35
+    DamageFactor "EradNova", 0.35
+    DamageFactor "DukeDamage", 0.35
+    DamageFactor "DukePistol", 0.35
+    DamageFactor "MightyBoot", 0.35
+    DamageFactor "QuakeDamage", 0.35
+    DamageFactor "QuakePistol", 0.35
+    DamageFactor "PSBullet", 0.35
+    DamageFactor "RRBullet", 0.35
+    DamageFactor "LeonardDamage0", 0.35
+    DamageFactor "LeonardDamage1", 0.35
+    DamageFactor "SWFist", 0.35
+    DamageFactor "SWKatana", 0.35
+    DamageFactor "SWShuriken", 0.35
+    DamageFactor "SWBullet", 0.35
+    DamageFactor "PainkillerBullet", 0.35
+    DamageFactor "PainkillerShuriken", 0.35
+    DamageFactor "UnrealRazor", 0.35
+    DamageFactor "UnrealShredded", 0.35
+    DamageFactor "RTCWVenomBullet", 0.35
+    DamageFactor "DeusExMelee", 0.35
+    DamageFactor "DeusExPistol", 0.35
+    DamageFactor "DeusExPistolFire", 0.35
+    DamageFactor "DeusExSabotPistol", 0.35
+    DamageFactor "DeusExSabot", 0.35
+    DamageFactor "DeusExRifleShot", 0.35
+    DamageFactor "BittermanDamage", 0.35
+    DamageFactor "Pistol", 0.35
+    DamageFactor "GEBullet", 0.35
+    DamageFactor "BlakeBullet", 0.35
+    DamageFactor "Mace", 0.35
+    DamageFactor "CorvusCrossbow", 0.35
+    DamageFactor "DisruptorUniversalDamageShit1", 0.35
+    DamageFactor "EradDisc", 0.35
+    DamageFactor "RottBullet", 0.35
+    DamageFactor "HLBullet", 0.35
+    DamageFactor "HLHornet", 0.35
+    DamageFactor "HLLaser", 0.35
+    DamageFactor "WTRanged", 0.35
+    DamageFactor "WTMeleeIce", 0.35
+    DamageFactor "MarathonPistol", 0.35
+    DamageFactor "PGBullet", 0.35
+    DamageFactor "DescentBullet", 0.35
+    DamageFactor "RMR-Bullet", 0.35
+    DamageFactor "Q3Bullet", 0.35
+    DamageFactor "StrifePistol", 0.35
+    DamageFactor "UnrealBullet", 0.35
+    DamageFactor "EradPiercingDart", 0.35
+    DamageFactor "SWRailgun", 0.35
+    DamageFactor "SWRailgunCoop", 0.35
+    DamageFactor "PainkillerStake", 0.35
+    DamageFactor "Painkiller", 0.35
+    DamageFactor "GETank", 0.35
+}
+
+Actor DeusEx_Augmentation_EMPProtection1 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "DoomDamageTypeDevastator", 0.8
+    DamageFactor "Q3Lightning", 0.8
+    DamageFactor "RTCWTesla", 0.8
+    DamageFactor "Electric", 0.8
+    DamageFactor "Shock", 0.8
+    DamageFactor "StrifeSigil", 0.8
+    DamageFactor "Spectral", 0.8
+    DamageFactor "ElectricBolt", 0.8
+    DamageFactor "TimonsAxe", 0.8
+    DamageFactor "WolfenElectric", 0.8
+    DamageFactor "QuakeElectric", 0.8
+    DamageFactor "Tesla", 0.8
+    DamageFactor "Hexen2Electric", 0.8
+    DamageFactor "PSRAPower", 0.8
+    DamageFactor "PSRAPowerCoop", 0.8
+    DamageFactor "Hexen2ElectricExtreme", 0.8
+    DamageFactor "PainkillerElectro", 0.8
+    DamageFactor "ASMDShockTrace", 0.8
+}
+
+Actor DeusEx_Augmentation_EMPProtection2 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "DoomDamageTypeDevastator", 0.65
+    DamageFactor "Q3Lightning", 0.65
+    DamageFactor "RTCWTesla", 0.65
+    DamageFactor "Electric", 0.65
+    DamageFactor "Shock", 0.65
+    DamageFactor "StrifeSigil", 0.65
+    DamageFactor "Spectral", 0.65
+    DamageFactor "ElectricBolt", 0.65
+    DamageFactor "TimonsAxe", 0.65
+    DamageFactor "WolfenElectric", 0.65
+    DamageFactor "QuakeElectric", 0.65
+    DamageFactor "Tesla", 0.65
+    DamageFactor "Hexen2Electric", 0.65
+    DamageFactor "PSRAPower", 0.65
+    DamageFactor "PSRAPowerCoop", 0.65
+    DamageFactor "Hexen2ElectricExtreme", 0.65
+    DamageFactor "PainkillerElectro", 0.65
+    DamageFactor "ASMDShockTrace", 0.65
+}
+
+Actor DeusEx_Augmentation_EMPProtection3 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "DoomDamageTypeDevastator", 0.5
+    DamageFactor "Q3Lightning", 0.5
+    DamageFactor "RTCWTesla", 0.5
+    DamageFactor "Electric", 0.5
+    DamageFactor "Shock", 0.5
+    DamageFactor "StrifeSigil", 0.5
+    DamageFactor "Spectral", 0.5
+    DamageFactor "ElectricBolt", 0.5
+    DamageFactor "TimonsAxe", 0.5
+    DamageFactor "WolfenElectric", 0.5
+    DamageFactor "QuakeElectric", 0.5
+    DamageFactor "Tesla", 0.5
+    DamageFactor "Hexen2Electric", 0.5
+    DamageFactor "PSRAPower", 0.5
+    DamageFactor "PSRAPowerCoop", 0.5
+    DamageFactor "Hexen2ElectricExtreme", 0.5
+    DamageFactor "PainkillerElectro", 0.5
+    DamageFactor "ASMDShockTrace", 0.5
+}
+
+Actor DeusEx_Augmentation_EMPProtection4 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "DoomDamageTypeDevastator", 0.35
+    DamageFactor "Q3Lightning", 0.35
+    DamageFactor "RTCWTesla", 0.35
+    DamageFactor "Electric", 0.35
+    DamageFactor "Shock", 0.35
+    DamageFactor "StrifeSigil", 0.35
+    DamageFactor "Spectral", 0.35
+    DamageFactor "ElectricBolt", 0.35
+    DamageFactor "TimonsAxe", 0.35
+    DamageFactor "WolfenElectric", 0.35
+    DamageFactor "QuakeElectric", 0.35
+    DamageFactor "Tesla", 0.35
+    DamageFactor "Hexen2Electric", 0.35
+    DamageFactor "PSRAPower", 0.35
+    DamageFactor "PSRAPowerCoop", 0.35
+    DamageFactor "Hexen2ElectricExtreme", 0.35
+    DamageFactor "PainkillerElectro", 0.35
+    DamageFactor "ASMDShockTrace", 0.35
+}
+
+Actor DeusEx_Augmentation_CloakPower : PowerInvisibility { Powerup.Mode "Translucent" Powerup.Strength 90 Powerup.Duration -5 }
+Actor DeusEx_Augmentation_RepulsorPower : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_FireBullets(0,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(15,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(30,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(45,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(60,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(75,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(90,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(105,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(120,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(135,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(150,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(165,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(180,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(195,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(210,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(225,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(240,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(255,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(270,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(285,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(300,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(315,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(330,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			TNT1 A 0 A_FireBullets(345,0,-1,0,"DeusEx_Augmentation_RepulsorImpact",FBF_NORANDOM|FBF_NOFLASH|FBF_EXPLICITANGLE|FBF_NORANDOMPUFFZ|FBF_NOPITCH,CallACS("DeusEx_Decorate",11))
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_RepulsorImpact
+{
+	Height 64
+	Radius 8
+	+HITTRACER
+	+PUFFGETSOWNER
+	+PUFFONACTORS
+	+BLOODLESSIMPACT
+	-BLOODSPLATTER
+	+NOTRIGGER
+	+DONTSPLASH
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			Goto Crash
+		Crash:
+		XDeath:
+			TNT1 A 1 ACS_NamedExecuteWithResult("DeusEx_Decorate",10)
+			Stop
+	}
+}
+
+//Torso
+Actor DeusEx_Augmentation_Torso1Active : Counter { Inventory.MaxAmount 2 Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_Torso2Active : Counter { Inventory.MaxAmount 2 Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_Torso3Active : Counter { Inventory.MaxAmount 2 Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_Torso1Slot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_Torso2Slot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_Torso3Slot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_EnergyShield : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_EnvironmentalResistance : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_Regeneration : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_Maintenance : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_PowerRecirculator : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_RechargeableBattery : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_EnergyShieldToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_EnvironmentalResistanceToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_RegenerationToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_MaintenanceToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_PowerRecirculatorToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_RechargeableBatteryToken : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_EnergyShield1 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Explosive", 0.8
+    DamageFactor "Explosion", 0.8
+    DamageFactor "Exploded", 0.8
+    DamageFactor "RottFire", 0.8
+    DamageFactor "TotenkopfFire", 0.8
+    DamageFactor "PhosFire", 0.8
+    DamageFactor "PhosFireCoop", 0.8
+    DamageFactor "MarathonFire", 0.8
+    DamageFactor "MarathonPlasmaFire", 0.8
+    DamageFactor "WolfenFlamethrower", 0.8
+    DamageFactor "HexGreenFire", 0.8
+    DamageFactor "HexenQuietusFire", 0.8
+    DamageFactor "PGFire", 0.8
+    DamageFactor "QuakeFire", 0.8
+    DamageFactor "FireExplosive", 0.8
+    DamageFactor "WTRangedFire", 0.8
+    DamageFactor "RTCWFire", 0.8
+    DamageFactor "DoomDamageTypeFire", 0.8
+    DamageFactor "DoomDamageTypeExplosive", 0.8
+    DamageFactor "DoomDamageTypePlasma", 0.8
+    DamageFactor "DoomDamageTypeStunner", 0.8
+    DamageFactor "DoomDamageTypeBFG", 0.8
+    DamageFactor "DoomDamageTypeFireExplosive", 0.8
+    DamageFactor "DoomDamageTypeRepeater", 0.8
+    DamageFactor "RottExplosive", 0.8
+    DamageFactor "Flame", 0.8
+    DamageFactor "Fire", 0.8
+    DamageFactor "Burn", 0.8
+    DamageFactor "RottDisintegrate", 0.8
+    DamageFactor "Disintegrate", 0.8
+    DamageFactor "StrifeMauler", 0.8
+    DamageFactor "Nuke", 0.8
+    DamageFactor "StrifeExplosive", 0.8
+    DamageFactor "HLExplosive", 0.8
+    DamageFactor "HLRPGExplosive", 0.8
+    DamageFactor "HLEgon", 0.8
+    DamageFactor "LifeLeech", 0.8
+    DamageFactor "Vodoo", 0.8
+    DamageFactor "CalebNapalm", 0.8
+    DamageFactor "VoodooPuff", 0.8
+    DamageFactor "DynamiteCoop", 0.8
+    DamageFactor "Dynamite", 0.8
+    DamageFactor "CalebFire", 0.8
+    DamageFactor "EradExplosive", 0.8
+    DamageFactor "EradExplosive2", 0.8
+    DamageFactor "EradGreenFire", 0.8
+    DamageFactor "EradCoopGreenFire", 0.8
+    DamageFactor "DukeExplosive", 0.8
+    DamageFactor "PSExplosive", 0.8
+    DamageFactor "PSExplosiveCoop", 0.8
+    DamageFactor "PSFire", 0.8
+    DamageFactor "LeonardDamage2", 0.8
+    DamageFactor "LeonardDamage3", 0.8
+    DamageFactor "SWSticky", 0.8
+    DamageFactor "SWStickyCoop", 0.8
+    DamageFactor "SWGrenade", 0.8
+    DamageFactor "SWNuke", 0.8
+    DamageFactor "SWRocket", 0.8
+    DamageFactor "SWNukeCoop", 0.8
+    DamageFactor "SWFlame", 0.8
+    DamageFactor "SWFlame2", 0.8
+    DamageFactor "SWFlame2Coop", 0.8
+    DamageFactor "SWFlame3", 0.8
+    DamageFactor "ZorchPistol", 0.8
+    DamageFactor "Zorch", 0.8
+    DamageFactor "ZorchKamikaze", 0.8
+    DamageFactor "PhasingZorch", 0.8
+    DamageFactor "ZorchSpectral", 0.8
+    DamageFactor "NotQuadded", 0.8
+    DamageFactor "QuakeExplosive", 0.8
+    DamageFactor "QuakeLaser", 0.8
+    DamageFactor "BittermanDamage", 0.8
+    DamageFactor "BittermanFire", 0.8
+    DamageFactor "BittermanTrap", 0.8
+    DamageFactor "Hexen2RavenDamage", 0.8
+    DamageFactor "Hexen2Damage", 0.8
+    DamageFactor "Hexen2Fire", 0.8
+    DamageFactor "Hexen2Extreme", 0.8
+    DamageFactor "PainkillerExplosive", 0.8
+    DamageFactor "PainkillerDemon", 0.8
+    DamageFactor "PainkillerFire", 0.8
+    DamageFactor "UnrealPlasma", 0.8
+    DamageFactor "UnrealDamage", 0.8
+    DamageFactor "UnrealExplosive", 0.8
+    DamageFactor "UnrealExtreme", 0.8
+    DamageFactor "UnrealRedeemer", 0.8
+    DamageFactor "RTCWExplosive", 0.8
+    DamageFactor "Q3Explosive", 0.8
+    DamageFactor "Q3Energy", 0.8
+    DamageFactor "Q3BFG", 0.8
+    DamageFactor "DeusExStunned", 0.8
+    DamageFactor "DeusExLAM", 0.8
+    DamageFactor "DeusExRifleExploded", 0.8
+    DamageFactor "DeusExFlamed", 0.8
+    DamageFactor "DeusExBurned", 0.8
+    DamageFactor "DeusExExploded", 0.8
+    DamageFactor "DeusExDroneExploded", 0.8
+    DamageFactor "DukePlasma", 0.8
+    DamageFactor "Laser", 0.8
+    DamageFactor "DescentLaser", 0.8
+    DamageFactor "CMDMGSHIT", 0.8
+    DamageFactor "Disruptoruniversaldamageshit2", 0.8
+    DamageFactor "Disruptoruniversaldamageshit4", 0.8
+    DamageFactor "DisruptorWall", 0.8
+    DamageFactor "FireExplosive", 0.8
+    DamageFactor "DoomPlasma", 0.8
+    DamageFactor "BFG", 0.8
+    DamageFactor "BFGSplash", 0.8
+    DamageFactor "BFGSpray", 0.8
+    DamageFactor "PGPlasma", 0.8
+    DamageFactor "RMR-GreenPlasma", 0.8
+    DamageFactor "RMR-YellowPlasma", 0.8
+    DamageFactor "RMR-YellowPlasma2", 0.8
+    DamageFactor "RMR-CyanPlasma", 0.8
+    DamageFactor "RMR-DiscoBall", 0.8
+    DamageFactor "RMR-BigPlasma", 0.8
+    DamageFactor "DragonClaw", 0.8
+    DamageFactor "CorvusHellstaff", 0.8
+    DamageFactor "C7Disintegrate", 0.8
+    DamageFactor "DCannonProj", 0.8
+    DamageFactor "BlakePlasma", 0.8
+    DamageFactor "BJSpear", 0.8
+    DamageFactor "TotenkopfFlak", 0.8
+    DamageFactor "TotenkopfRocket", 0.8
+    DamageFactor "WTRangedFire", 0.8
+    DamageFactor "RebelMissile", 0.8
+    DamageFactor "PhosFire", 0.8
+}
+
+Actor DeusEx_Augmentation_EnergyShield2 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Explosive", 0.65
+    DamageFactor "Explosion", 0.65
+    DamageFactor "Exploded", 0.65
+    DamageFactor "RottFire", 0.65
+    DamageFactor "TotenkopfFire", 0.65
+    DamageFactor "PhosFire", 0.65
+    DamageFactor "PhosFireCoop", 0.65
+    DamageFactor "MarathonFire", 0.65
+    DamageFactor "MarathonPlasmaFire", 0.65
+    DamageFactor "WolfenFlamethrower", 0.65
+    DamageFactor "HexGreenFire", 0.65
+    DamageFactor "HexenQuietusFire", 0.65
+    DamageFactor "PGFire", 0.65
+    DamageFactor "QuakeFire", 0.65
+    DamageFactor "FireExplosive", 0.65
+    DamageFactor "WTRangedFire", 0.65
+    DamageFactor "RTCWFire", 0.65
+    DamageFactor "DoomDamageTypeFire", 0.65
+    DamageFactor "DoomDamageTypeExplosive", 0.65
+    DamageFactor "DoomDamageTypePlasma", 0.65
+    DamageFactor "DoomDamageTypeStunner", 0.65
+    DamageFactor "DoomDamageTypeBFG", 0.65
+    DamageFactor "DoomDamageTypeFireExplosive", 0.65
+    DamageFactor "DoomDamageTypeRepeater", 0.65
+    DamageFactor "RottExplosive", 0.65
+    DamageFactor "Flame", 0.65
+    DamageFactor "Fire", 0.65
+    DamageFactor "Burn", 0.65
+    DamageFactor "RottDisintegrate", 0.65
+    DamageFactor "Disintegrate", 0.65
+    DamageFactor "StrifeMauler", 0.65
+    DamageFactor "Nuke", 0.65
+    DamageFactor "StrifeExplosive", 0.65
+    DamageFactor "HLExplosive", 0.65
+    DamageFactor "HLRPGExplosive", 0.65
+    DamageFactor "HLEgon", 0.65
+    DamageFactor "LifeLeech", 0.65
+    DamageFactor "Vodoo", 0.65
+    DamageFactor "CalebNapalm", 0.65
+    DamageFactor "VoodooPuff", 0.65
+    DamageFactor "DynamiteCoop", 0.65
+    DamageFactor "Dynamite", 0.65
+    DamageFactor "CalebFire", 0.65
+    DamageFactor "EradExplosive", 0.65
+    DamageFactor "EradExplosive2", 0.65
+    DamageFactor "EradGreenFire", 0.65
+    DamageFactor "EradCoopGreenFire", 0.65
+    DamageFactor "DukeExplosive", 0.65
+    DamageFactor "PSExplosive", 0.65
+    DamageFactor "PSExplosiveCoop", 0.65
+    DamageFactor "PSFire", 0.65
+    DamageFactor "LeonardDamage2", 0.65
+    DamageFactor "LeonardDamage3", 0.65
+    DamageFactor "SWSticky", 0.65
+    DamageFactor "SWStickyCoop", 0.65
+    DamageFactor "SWGrenade", 0.65
+    DamageFactor "SWNuke", 0.65
+    DamageFactor "SWRocket", 0.65
+    DamageFactor "SWNukeCoop", 0.65
+    DamageFactor "SWFlame", 0.65
+    DamageFactor "SWFlame2", 0.65
+    DamageFactor "SWFlame2Coop", 0.65
+    DamageFactor "SWFlame3", 0.65
+    DamageFactor "ZorchPistol", 0.65
+    DamageFactor "Zorch", 0.65
+    DamageFactor "ZorchKamikaze", 0.65
+    DamageFactor "PhasingZorch", 0.65
+    DamageFactor "ZorchSpectral", 0.65
+    DamageFactor "NotQuadded", 0.65
+    DamageFactor "QuakeExplosive", 0.65
+    DamageFactor "QuakeLaser", 0.65
+    DamageFactor "BittermanDamage", 0.65
+    DamageFactor "BittermanFire", 0.65
+    DamageFactor "BittermanTrap", 0.65
+    DamageFactor "Hexen2RavenDamage", 0.65
+    DamageFactor "Hexen2Damage", 0.65
+    DamageFactor "Hexen2Fire", 0.65
+    DamageFactor "Hexen2Extreme", 0.65
+    DamageFactor "PainkillerExplosive", 0.65
+    DamageFactor "PainkillerDemon", 0.65
+    DamageFactor "PainkillerFire", 0.65
+    DamageFactor "UnrealPlasma", 0.65
+    DamageFactor "UnrealDamage", 0.65
+    DamageFactor "UnrealExplosive", 0.65
+    DamageFactor "UnrealExtreme", 0.65
+    DamageFactor "UnrealRedeemer", 0.65
+    DamageFactor "RTCWExplosive", 0.65
+    DamageFactor "Q3Explosive", 0.65
+    DamageFactor "Q3Energy", 0.65
+    DamageFactor "Q3BFG", 0.65
+    DamageFactor "DeusExStunned", 0.65
+    DamageFactor "DeusExLAM", 0.65
+    DamageFactor "DeusExRifleExploded", 0.65
+    DamageFactor "DeusExFlamed", 0.65
+    DamageFactor "DeusExBurned", 0.65
+    DamageFactor "DeusExExploded", 0.65
+    DamageFactor "DeusExDroneExploded", 0.65
+    DamageFactor "DukePlasma", 0.65
+    DamageFactor "Laser", 0.65
+    DamageFactor "DescentLaser", 0.65
+    DamageFactor "CMDMGSHIT", 0.65
+    DamageFactor "Disruptoruniversaldamageshit2", 0.65
+    DamageFactor "Disruptoruniversaldamageshit4", 0.65
+    DamageFactor "DisruptorWall", 0.65
+    DamageFactor "FireExplosive", 0.65
+    DamageFactor "DoomPlasma", 0.65
+    DamageFactor "BFG", 0.65
+    DamageFactor "BFGSplash", 0.65
+    DamageFactor "BFGSpray", 0.65
+    DamageFactor "PGPlasma", 0.65
+    DamageFactor "RMR-GreenPlasma", 0.65
+    DamageFactor "RMR-YellowPlasma", 0.65
+    DamageFactor "RMR-YellowPlasma2", 0.65
+    DamageFactor "RMR-CyanPlasma", 0.65
+    DamageFactor "RMR-DiscoBall", 0.65
+    DamageFactor "RMR-BigPlasma", 0.65
+    DamageFactor "DragonClaw", 0.65
+    DamageFactor "CorvusHellstaff", 0.65
+    DamageFactor "C7Disintegrate", 0.65
+    DamageFactor "DCannonProj", 0.65
+    DamageFactor "BlakePlasma", 0.65
+    DamageFactor "BJSpear", 0.65
+    DamageFactor "TotenkopfFlak", 0.65
+    DamageFactor "TotenkopfRocket", 0.65
+    DamageFactor "WTRangedFire", 0.65
+    DamageFactor "RebelMissile", 0.65
+    DamageFactor "PhosFire", 0.65
+}
+
+Actor DeusEx_Augmentation_EnergyShield3 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Explosive", 0.5
+    DamageFactor "Explosion", 0.5
+    DamageFactor "Exploded", 0.5
+    DamageFactor "RottFire", 0.5
+    DamageFactor "TotenkopfFire", 0.5
+    DamageFactor "PhosFire", 0.5
+    DamageFactor "PhosFireCoop", 0.5
+    DamageFactor "MarathonFire", 0.5
+    DamageFactor "MarathonPlasmaFire", 0.5
+    DamageFactor "WolfenFlamethrower", 0.5
+    DamageFactor "HexGreenFire", 0.5
+    DamageFactor "HexenQuietusFire", 0.5
+    DamageFactor "PGFire", 0.5
+    DamageFactor "QuakeFire", 0.5
+    DamageFactor "FireExplosive", 0.5
+    DamageFactor "WTRangedFire", 0.5
+    DamageFactor "RTCWFire", 0.5
+    DamageFactor "DoomDamageTypeFire", 0.5
+    DamageFactor "DoomDamageTypeExplosive", 0.5
+    DamageFactor "DoomDamageTypePlasma", 0.5
+    DamageFactor "DoomDamageTypeStunner", 0.5
+    DamageFactor "DoomDamageTypeBFG", 0.5
+    DamageFactor "DoomDamageTypeFireExplosive", 0.5
+    DamageFactor "DoomDamageTypeRepeater", 0.5
+    DamageFactor "RottExplosive", 0.5
+    DamageFactor "Flame", 0.5
+    DamageFactor "Fire", 0.5
+    DamageFactor "Burn", 0.5
+    DamageFactor "RottDisintegrate", 0.5
+    DamageFactor "Disintegrate", 0.5
+    DamageFactor "StrifeMauler", 0.5
+    DamageFactor "Nuke", 0.5
+    DamageFactor "StrifeExplosive", 0.5
+    DamageFactor "HLExplosive", 0.5
+    DamageFactor "HLRPGExplosive", 0.5
+    DamageFactor "HLEgon", 0.5
+    DamageFactor "LifeLeech", 0.5
+    DamageFactor "Vodoo", 0.5
+    DamageFactor "CalebNapalm", 0.5
+    DamageFactor "VoodooPuff", 0.5
+    DamageFactor "DynamiteCoop", 0.5
+    DamageFactor "Dynamite", 0.5
+    DamageFactor "CalebFire", 0.5
+    DamageFactor "EradExplosive", 0.5
+    DamageFactor "EradExplosive2", 0.5
+    DamageFactor "EradGreenFire", 0.5
+    DamageFactor "EradCoopGreenFire", 0.5
+    DamageFactor "DukeExplosive", 0.5
+    DamageFactor "PSExplosive", 0.5
+    DamageFactor "PSExplosiveCoop", 0.5
+    DamageFactor "PSFire", 0.5
+    DamageFactor "LeonardDamage2", 0.5
+    DamageFactor "LeonardDamage3", 0.5
+    DamageFactor "SWSticky", 0.5
+    DamageFactor "SWStickyCoop", 0.5
+    DamageFactor "SWGrenade", 0.5
+    DamageFactor "SWNuke", 0.5
+    DamageFactor "SWRocket", 0.5
+    DamageFactor "SWNukeCoop", 0.5
+    DamageFactor "SWFlame", 0.5
+    DamageFactor "SWFlame2", 0.5
+    DamageFactor "SWFlame2Coop", 0.5
+    DamageFactor "SWFlame3", 0.5
+    DamageFactor "ZorchPistol", 0.5
+    DamageFactor "Zorch", 0.5
+    DamageFactor "ZorchKamikaze", 0.5
+    DamageFactor "PhasingZorch", 0.5
+    DamageFactor "ZorchSpectral", 0.5
+    DamageFactor "NotQuadded", 0.5
+    DamageFactor "QuakeExplosive", 0.5
+    DamageFactor "QuakeLaser", 0.5
+    DamageFactor "BittermanDamage", 0.5
+    DamageFactor "BittermanFire", 0.5
+    DamageFactor "BittermanTrap", 0.5
+    DamageFactor "Hexen2RavenDamage", 0.5
+    DamageFactor "Hexen2Damage", 0.5
+    DamageFactor "Hexen2Fire", 0.5
+    DamageFactor "Hexen2Extreme", 0.5
+    DamageFactor "PainkillerExplosive", 0.5
+    DamageFactor "PainkillerDemon", 0.5
+    DamageFactor "PainkillerFire", 0.5
+    DamageFactor "UnrealPlasma", 0.5
+    DamageFactor "UnrealDamage", 0.5
+    DamageFactor "UnrealExplosive", 0.5
+    DamageFactor "UnrealExtreme", 0.5
+    DamageFactor "UnrealRedeemer", 0.5
+    DamageFactor "RTCWExplosive", 0.5
+    DamageFactor "Q3Explosive", 0.5
+    DamageFactor "Q3Energy", 0.5
+    DamageFactor "Q3BFG", 0.5
+    DamageFactor "DeusExStunned", 0.5
+    DamageFactor "DeusExLAM", 0.5
+    DamageFactor "DeusExRifleExploded", 0.5
+    DamageFactor "DeusExFlamed", 0.5
+    DamageFactor "DeusExBurned", 0.5
+    DamageFactor "DeusExExploded", 0.5
+    DamageFactor "DeusExDroneExploded", 0.5
+    DamageFactor "DukePlasma", 0.5
+    DamageFactor "Laser", 0.5
+    DamageFactor "DescentLaser", 0.5
+    DamageFactor "CMDMGSHIT", 0.5
+    DamageFactor "Disruptoruniversaldamageshit2", 0.5
+    DamageFactor "Disruptoruniversaldamageshit4", 0.5
+    DamageFactor "DisruptorWall", 0.5
+    DamageFactor "FireExplosive", 0.5
+    DamageFactor "DoomPlasma", 0.5
+    DamageFactor "BFG", 0.5
+    DamageFactor "BFGSplash", 0.5
+    DamageFactor "BFGSpray", 0.5
+    DamageFactor "PGPlasma", 0.5
+    DamageFactor "RMR-GreenPlasma", 0.5
+    DamageFactor "RMR-YellowPlasma", 0.5
+    DamageFactor "RMR-YellowPlasma2", 0.5
+    DamageFactor "RMR-CyanPlasma", 0.5
+    DamageFactor "RMR-DiscoBall", 0.5
+    DamageFactor "RMR-BigPlasma", 0.5
+    DamageFactor "DragonClaw", 0.5
+    DamageFactor "CorvusHellstaff", 0.5
+    DamageFactor "C7Disintegrate", 0.5
+    DamageFactor "DCannonProj", 0.5
+    DamageFactor "BlakePlasma", 0.5
+    DamageFactor "BJSpear", 0.5
+    DamageFactor "TotenkopfFlak", 0.5
+    DamageFactor "TotenkopfRocket", 0.5
+    DamageFactor "WTRangedFire", 0.5
+    DamageFactor "RebelMissile", 0.5
+    DamageFactor "PhosFire", 0.5
+}
+
+Actor DeusEx_Augmentation_EnergyShield4 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Explosive", 0.35
+    DamageFactor "Explosion", 0.35
+    DamageFactor "Exploded", 0.35
+    DamageFactor "RottFire", 0.35
+    DamageFactor "TotenkopfFire", 0.35
+    DamageFactor "PhosFire", 0.35
+    DamageFactor "PhosFireCoop", 0.35
+    DamageFactor "MarathonFire", 0.35
+    DamageFactor "MarathonPlasmaFire", 0.35
+    DamageFactor "WolfenFlamethrower", 0.35
+    DamageFactor "HexGreenFire", 0.35
+    DamageFactor "HexenQuietusFire", 0.35
+    DamageFactor "PGFire", 0.35
+    DamageFactor "QuakeFire", 0.35
+    DamageFactor "FireExplosive", 0.35
+    DamageFactor "WTRangedFire", 0.35
+    DamageFactor "RTCWFire", 0.35
+    DamageFactor "DoomDamageTypeFire", 0.35
+    DamageFactor "DoomDamageTypeExplosive", 0.35
+    DamageFactor "DoomDamageTypePlasma", 0.35
+    DamageFactor "DoomDamageTypeStunner", 0.35
+    DamageFactor "DoomDamageTypeBFG", 0.35
+    DamageFactor "DoomDamageTypeFireExplosive", 0.35
+    DamageFactor "DoomDamageTypeRepeater", 0.35
+    DamageFactor "RottExplosive", 0.35
+    DamageFactor "Flame", 0.35
+    DamageFactor "Fire", 0.35
+    DamageFactor "Burn", 0.35
+    DamageFactor "RottDisintegrate", 0.35
+    DamageFactor "Disintegrate", 0.35
+    DamageFactor "StrifeMauler", 0.35
+    DamageFactor "Nuke", 0.35
+    DamageFactor "StrifeExplosive", 0.35
+    DamageFactor "HLExplosive", 0.35
+    DamageFactor "HLRPGExplosive", 0.35
+    DamageFactor "HLEgon", 0.35
+    DamageFactor "LifeLeech", 0.35
+    DamageFactor "Vodoo", 0.35
+    DamageFactor "CalebNapalm", 0.35
+    DamageFactor "VoodooPuff", 0.35
+    DamageFactor "DynamiteCoop", 0.35
+    DamageFactor "Dynamite", 0.35
+    DamageFactor "CalebFire", 0.35
+    DamageFactor "EradExplosive", 0.35
+    DamageFactor "EradExplosive2", 0.35
+    DamageFactor "EradGreenFire", 0.35
+    DamageFactor "EradCoopGreenFire", 0.35
+    DamageFactor "DukeExplosive", 0.35
+    DamageFactor "PSExplosive", 0.35
+    DamageFactor "PSExplosiveCoop", 0.35
+    DamageFactor "PSFire", 0.35
+    DamageFactor "LeonardDamage2", 0.35
+    DamageFactor "LeonardDamage3", 0.35
+    DamageFactor "SWSticky", 0.35
+    DamageFactor "SWStickyCoop", 0.35
+    DamageFactor "SWGrenade", 0.35
+    DamageFactor "SWNuke", 0.35
+    DamageFactor "SWRocket", 0.35
+    DamageFactor "SWNukeCoop", 0.35
+    DamageFactor "SWFlame", 0.35
+    DamageFactor "SWFlame2", 0.35
+    DamageFactor "SWFlame2Coop", 0.35
+    DamageFactor "SWFlame3", 0.35
+    DamageFactor "ZorchPistol", 0.35
+    DamageFactor "Zorch", 0.35
+    DamageFactor "ZorchKamikaze", 0.35
+    DamageFactor "PhasingZorch", 0.35
+    DamageFactor "ZorchSpectral", 0.35
+    DamageFactor "NotQuadded", 0.35
+    DamageFactor "QuakeExplosive", 0.35
+    DamageFactor "QuakeLaser", 0.35
+    DamageFactor "BittermanDamage", 0.35
+    DamageFactor "BittermanFire", 0.35
+    DamageFactor "BittermanTrap", 0.35
+    DamageFactor "Hexen2RavenDamage", 0.35
+    DamageFactor "Hexen2Damage", 0.35
+    DamageFactor "Hexen2Fire", 0.35
+    DamageFactor "Hexen2Extreme", 0.35
+    DamageFactor "PainkillerExplosive", 0.35
+    DamageFactor "PainkillerDemon", 0.35
+    DamageFactor "PainkillerFire", 0.35
+    DamageFactor "UnrealPlasma", 0.35
+    DamageFactor "UnrealDamage", 0.35
+    DamageFactor "UnrealExplosive", 0.35
+    DamageFactor "UnrealExtreme", 0.35
+    DamageFactor "UnrealRedeemer", 0.35
+    DamageFactor "RTCWExplosive", 0.35
+    DamageFactor "Q3Explosive", 0.35
+    DamageFactor "Q3Energy", 0.35
+    DamageFactor "Q3BFG", 0.35
+    DamageFactor "DeusExStunned", 0.35
+    DamageFactor "DeusExLAM", 0.35
+    DamageFactor "DeusExRifleExploded", 0.35
+    DamageFactor "DeusExFlamed", 0.35
+    DamageFactor "DeusExBurned", 0.35
+    DamageFactor "DeusExExploded", 0.35
+    DamageFactor "DeusExDroneExploded", 0.35
+    DamageFactor "DukePlasma", 0.35
+    DamageFactor "Laser", 0.35
+    DamageFactor "DescentLaser", 0.35
+    DamageFactor "CMDMGSHIT", 0.35
+    DamageFactor "Disruptoruniversaldamageshit2", 0.35
+    DamageFactor "Disruptoruniversaldamageshit4", 0.35
+    DamageFactor "DisruptorWall", 0.35
+    DamageFactor "FireExplosive", 0.35
+    DamageFactor "DoomPlasma", 0.35
+    DamageFactor "BFG", 0.35
+    DamageFactor "BFGSplash", 0.35
+    DamageFactor "BFGSpray", 0.35
+    DamageFactor "PGPlasma", 0.35
+    DamageFactor "RMR-GreenPlasma", 0.35
+    DamageFactor "RMR-YellowPlasma", 0.35
+    DamageFactor "RMR-YellowPlasma2", 0.35
+    DamageFactor "RMR-CyanPlasma", 0.35
+    DamageFactor "RMR-DiscoBall", 0.35
+    DamageFactor "RMR-BigPlasma", 0.35
+    DamageFactor "DragonClaw", 0.35
+    DamageFactor "CorvusHellstaff", 0.35
+    DamageFactor "C7Disintegrate", 0.35
+    DamageFactor "DCannonProj", 0.35
+    DamageFactor "BlakePlasma", 0.35
+    DamageFactor "BJSpear", 0.35
+    DamageFactor "TotenkopfFlak", 0.35
+    DamageFactor "TotenkopfRocket", 0.35
+    DamageFactor "WTRangedFire", 0.35
+    DamageFactor "RebelMissile", 0.35
+    DamageFactor "PhosFire", 0.35
+}
+
+Actor DeusEx_Augmentation_EnvironmentalResistance1 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Poison", 0.8
+    DamageFactor "PoisonCloud", 0.8
+    DamageFactor "Slime", 0.8
+    DamageFactor "Drowning", 0.8
+    DamageFactor "Ice", 0.8
+    DamageFactor "WTRangedIce", 0.8
+    DamageFactor "DoomDamageTypeIce", 0.8
+    DamageFactor "PoisonBolt", 0.8
+    DamageFactor "DukeIce", 0.8
+    DamageFactor "HexenIce", 0.8
+    DamageFactor "PainkillerIce", 0.8
+}
+
+Actor DeusEx_Augmentation_EnvironmentalResistance2 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Poison", 0.65
+    DamageFactor "PoisonCloud", 0.65
+    DamageFactor "Slime", 0.65
+    DamageFactor "Drowning", 0.65
+    DamageFactor "Ice", 0.65
+    DamageFactor "WTRangedIce", 0.65
+    DamageFactor "DoomDamageTypeIce", 0.65
+    DamageFactor "PoisonBolt", 0.65
+    DamageFactor "DukeIce", 0.65
+    DamageFactor "HexenIce", 0.65
+    DamageFactor "PainkillerIce", 0.65
+}
+
+Actor DeusEx_Augmentation_EnvironmentalResistance3 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Poison", 0.5
+    DamageFactor "PoisonCloud", 0.5
+    DamageFactor "Slime", 0.5
+    DamageFactor "Drowning", 0.5
+    DamageFactor "Ice", 0.5
+    DamageFactor "WTRangedIce", 0.5
+    DamageFactor "DoomDamageTypeIce", 0.5
+    DamageFactor "PoisonBolt", 0.5
+    DamageFactor "DukeIce", 0.5
+    DamageFactor "HexenIce", 0.5
+    DamageFactor "PainkillerIce", 0.5
+}
+
+Actor DeusEx_Augmentation_EnvironmentalResistance4 : DeusEx_Augmentation_ProtectionBase
+{
+    DamageFactor "Poison", 0.35
+    DamageFactor "PoisonCloud", 0.35
+    DamageFactor "Slime", 0.35
+    DamageFactor "Drowning", 0.35
+    DamageFactor "Ice", 0.35
+    DamageFactor "WTRangedIce", 0.35
+    DamageFactor "DoomDamageTypeIce", 0.35
+    DamageFactor "PoisonBolt", 0.35
+    DamageFactor "DukeIce", 0.35
+    DamageFactor "HexenIce", 0.35
+    DamageFactor "PainkillerIce", 0.35
+}
+
+//Cranial
+Actor DeusEx_Augmentation_CranialActive : Counter { Inventory.MaxAmount 2 Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_CranialSlot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_SpyDrone : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_AggressiveDefenseSystem : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_SpyDroneToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_AggressiveDefenseSystemToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_ADSDetonate : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_UsingSpyDrone : TemporaryBoolean {}
+Actor DeusEx_Augmentation_SpyDroneDetonate : TemporaryBoolean {}
+
+
+Actor DeusEx_SpyDrone
+{
+	Height 12
+	Radius 8
+	Species "Player"
+	Health 100
+    Tag "Spy Drone"
+	+NOGRAVITY
+	+SOLID
+	+THRUSPECIES
+	+SHOOTABLE
+	+NOBLOCKMONST
+	+NODROPOFF
+	+CANPASS
+	States
+	{
+		Spawn:
+			DX00 A 1 A_Playsound("DeusEx/SpyDrone/Move",CHAN_5,1.0,true)
+			Loop
+		Death:
+			TNT1 A 0 A_StopSound(CHAN_5)
+			TNT1 A 0 A_GiveInventory("DeusEx_Augmentation_SpyDroneDetonate",1,AAPTR_MASTER)
+			TNT1 A 0 A_JumpIfInventory("DeusEx_Augmentation_SpyDrone",4,"Explode4",AAPTR_MASTER)
+			TNT1 A 0 A_JumpIfInventory("DeusEx_Augmentation_SpyDrone",3,"Explode3",AAPTR_MASTER)
+			TNT1 A 0 A_JumpIfInventory("DeusEx_Augmentation_SpyDrone",2,"Explode2",AAPTR_MASTER)
+		Explode1:
+			TNT1 A 1 A_CustomMissile("DeusEx_DroneExplosion1",0)
+			Stop
+		Explode2:
+			TNT1 A 1 A_CustomMissile("DeusEx_DroneExplosion2",0)
+			Stop
+		Explode3:
+			TNT1 A 1 A_CustomMissile("DeusEx_DroneExplosion3",0)
+			Stop
+		Explode4:
+			TNT1 A 1 A_CustomMissile("DeusEx_DroneExplosion4",0)
+			Stop
+		StopIt:
+			DX00 A 0 A_GiveInventory("DeusEx_Augmentation_SpyDroneDetonate",1,AAPTR_MASTER)
+			DX00 A 0 A_StopSound(CHAN_5)
+			DX00 A 0 A_Gravity
+			DX00 A 1 A_CheckFloor("StopFloor")
+			wait
+		StopFloor:
+			DX00 A 1 A_Playsound("DeusEx/SpyDrone/Death",CHAN_5,1.0,true)
+			DX00 AAAAAAAAAAAAAAAAAA 3 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			DX00 A 2 A_Fadeout(0.025)
+			wait
+	}
+}
+
+Actor DeusEx_DroneExplosion1
+{
+	Projectile
+	Damage (0)
+	Speed 0
+	Height 2
+	Radius 1
+	Decal "DeusExExplosionDecal"
+	DamageType "DeusExDroneExploded"
+	ReactionTime 0
+	+THRUACTORS
+	+BLOODLESSIMPACT
+	States
+	{
+		Spawn:
+			TNT1 A 1 NoDelay A_CountDown
+		Death:
+			TNT1 A 0 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Master,AAPTR_Target)
+			TNT1 A 0 A_PlaySound("DeusEx/LAM/Explode", CHAN_BODY)
+			TNT1 A 0 A_AlertMonsters(2400)
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("DeusEx_FireCometLAM",0,0,0,frandom(2.0,6.0),0,frandom(4.0,8.0),random(0,360))
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveSpawner", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 2 A_Explode(30, 60)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(30, 60)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(30, 60)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(30, 60)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(30, 60)
+			TNT1 AAAAAAAAA 2 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			Stop
+	}
+}
+
+Actor DeusEx_DroneExplosion2 : DeusEx_DroneExplosion1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 1 NoDelay A_CountDown
+		Death:
+			TNT1 A 0 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Master,AAPTR_Target)
+			TNT1 A 0 A_PlaySound("DeusEx/LAM/Explode", CHAN_BODY)
+			TNT1 A 0 A_AlertMonsters(2400)
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("DeusEx_FireCometLAM",0,0,0,frandom(2.0,6.0),0,frandom(4.0,8.0),random(0,360))
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveSpawner", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 2 A_Explode(60, 90)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(60, 90)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(60, 90)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(60, 90)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(60, 90)
+			TNT1 AAAAAAAAA 2 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			Stop
+	}
+}
+
+Actor DeusEx_DroneExplosion3 : DeusEx_DroneExplosion1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 1 NoDelay A_CountDown
+		Death:
+			TNT1 A 0 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Master,AAPTR_Target)
+			TNT1 A 0 A_PlaySound("DeusEx/LAM/Explode", CHAN_BODY)
+			TNT1 A 0 A_AlertMonsters(2400)
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("DeusEx_FireCometLAM",0,0,0,frandom(2.0,6.0),0,frandom(4.0,8.0),random(0,360))
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveSpawner", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 2 A_Explode(105, 120)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(105, 120)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(105, 120)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(105, 120)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(105, 120)
+			TNT1 AAAAAAAAA 2 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			Stop
+	}
+}
+
+Actor DeusEx_DroneExplosion4 : DeusEx_DroneExplosion1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 1 NoDelay A_CountDown
+		Death:
+			TNT1 A 0 A_TransferPointer(AAPTR_Target,AAPTR_Default,AAPTR_Master,AAPTR_Target)
+			TNT1 A 0 A_PlaySound("DeusEx/LAM/Explode", CHAN_BODY)
+			TNT1 A 0 A_AlertMonsters(2400)
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("DeusEx_FireCometLAM",0,0,0,frandom(2.0,6.0),0,frandom(4.0,8.0),random(0,360))
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveSpawner", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 2 A_Explode(150, 150)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(150, 150)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(150, 150)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(150, 150)
+			TNT1 A 0 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			TNT1 A 2 A_Explode(150, 150)
+			TNT1 AAAAAAAAA 2 A_SpawnItemEx("DeusEx_SmokeTrail",0,0,0,frandom(-0.25,0.25),frandom(-0.25,0.25),1.0)
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_AggressiveDefenseSystemTrigger : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("DeusEx_Augmentation_AggressiveDefenseSystemReceiver",CallACS("DeusEX_Decorate",21)*64,RGF_MISSILES|RGF_NOSIGHT)
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_AggressiveDefenseSystemReceiver : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 ACS_NamedExecuteWithResult("DeusEX_Decorate",19)
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_AggressiveDefenseSystemZandronumEnable : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_SetReflective
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_AggressiveDefenseSystemZandronumDisable : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_UnsetReflective
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_ADSForceDetonate : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_CountDown
+			Stop
+	}
+}
+
+//Eyes
+Actor DeusEx_Augmentation_EyeActive : Counter { Inventory.MaxAmount 2 Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_EyeSlot : Counter { Inventory.MaxAmount 2 }
+Actor DeusEx_Augmentation_VisionEnhancement : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_Targeting : Counter { Inventory.MaxAmount 4 }
+Actor DeusEx_Augmentation_VisionEnhancementToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_TargetingToken : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_NightVision : PowerLightAmp
+{
+	Powerup.Duration 0x7FFFFFFF
+	Powerup.Colormap 0.0, 0.0, 0.0, 0.0, 1.0, 0.0
+}
+
+Actor DeusEx_Augmentation_InfraredVision : PowerLightAmp
+{
+	Powerup.Duration 0x7FFFFFFF
+	Powerup.Colormap 0.0, 0.0, 0.0, 1.0, 0.0, 0.0
+}
+
+Actor DeusEx_Augmentation_InfraredLooker : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_RadiusGive("DeusEx_Augmentation_InfraredSignal",768,RGF_MONSTERS|RGF_NOSIGHT)
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_InfraredSignal : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_CheckFlag("NODECAL","PickupStop")
+			TNT1 A 0 A_RadiusGive("C7EnemyCoordinateX",768,RGF_PLAYERS|RGF_NOSIGHT,x+65536)
+			TNT1 A 0 A_RadiusGive("C7EnemyCoordinateY",768,RGF_PLAYERS|RGF_NOSIGHT,y+65536)
+			TNT1 A 0 A_RadiusGive("C7EnemyCoordinateZ",768,RGF_PLAYERS|RGF_NOSIGHT,z+65536)
+			TNT1 A 0 A_RadiusGive("C7EnemyMonsterRadius",768,RGF_PLAYERS|RGF_NOSIGHT,radius)
+			TNT1 A 0 A_RadiusGive("C7EnemyMonsterHeight",768,RGF_PLAYERS|RGF_NOSIGHT,height)
+			TNT1 A 0 A_RadiusGive("DeusEx_Augmentation_InfraredReceiver",768,RGF_PLAYERS|RGF_NOSIGHT,1)
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_InfraredReceiver : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_MonsterCoordinate")
+			Stop
+	}
+}
+
+Actor DeusEx_Augmentation_TargetingScanning : Counter { Inventory.MaxAmount 35 Inventory.InterHubAmount 0 }
+Actor DeusEx_Augmentation_TargetingNoTarget : Counter { Inventory.MaxAmount 35 Inventory.InterHubAmount 0 }
+
+//Default
+Actor DeusEx_Augmentation_InfoLinkActive : TemporaryBoolean {}
+Actor DeusEx_Augmentation_LightActive : TemporaryBoolean {}
+Actor DeusEx_Augmentation_IFFActive : TemporaryBoolean {}
+Actor DeusEx_Augmentation_InfoLink : Boolean {}
+Actor DeusEx_Augmentation_Light : Boolean {}
+Actor DeusEx_Augmentation_IFF : Boolean {}
+Actor DeusEx_Augmentation_InfoLinkToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_LightToken : TemporaryBoolean {}
+Actor DeusEx_Augmentation_IFFToken : TemporaryBoolean {}
+
+Actor DeusEx_Augmentation_LightTrigger : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_FireBullets(0,0,1,0,"DeusEX_LightObject",FBF_NOFLASH|FBF_NORANDOMPUFFZ,2048)
+			stop
+	}
+}
+
+Actor DeusEX_LightObject
+{
+	+NOGRAVITY
+	+DONTSPLASH
+	+PUFFONACTORS
+	+BLOODLESSIMPACT
+	+NOTIMEFREEZE
+	+ALWAYSPUFF
+	+CLIENTSIDEONLY
+	+NOTRIGGER
+	Radius 2
+	Height 2
+	Alpha 0.0
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		DX99 A 3
+		Stop
+	}
+}

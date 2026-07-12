@@ -1,0 +1,713 @@
+actor SamsaraROTTExcalibatChargeAmount : Counter {}
+actor SamsaraROTTExcalibatPrimaryAttackSilentSound : Boolean {}
+actor SamsaraROTTExcalibatPrimaryAttackOffset : Counter { Inventory.MaxAmount 10 }
+actor SamsaraROTTExcalibatInvulning : Boolean {}
+
+actor Excalibat : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You picked up the Excalibat."
+    Inventory.PickupSound "excalibat/pu"
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 8
+    Weapon.SelectionOrder 1000
+    Weapon.Kickback 175
+    Weapon.AmmoType "BMissiles"
+    Weapon.AmmoGive 10
+    Weapon.AmmoUse 1
+    Obituary "%k killed %o. STRIKE YOU'RE OUT!!!"
+    HitObituary "%k hit a home run, %o took it in the face."
+    Tag "Excalibat"
+    +EXPLOSIVE
+    +FLOATBOB
+    +NOALERT
+    States
+    {
+      Spawn:
+        PBAT A -1 Bright
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("UsingFirearm")
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatInvulnTaker")
+        EXBT A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatInvulnTaker")
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        EXBT A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatInvulnTaker")
+        EXBT A 1 A_Raise
+        loop
+
+      //This was a real pain in the ass to code....
+      Fire:
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryPreFireSoundPlayer")
+        EXBT A 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire("FireCharge1")
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStop
+
+      FireCharge1:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStop
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatChargeAmount")
+        EXBT A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatChargeAmount",10,1)
+        loop
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire("FireCharge2")
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStop
+
+      FireCharge2:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStop
+        EXBT A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise1
+        EXBT C 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise2
+        EXBT D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise3
+        EXBT E 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise4
+        EXBT F 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise5
+        EXBT G 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire("FireCharge3")
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise5
+
+      FireCharge3:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire(2)
+        TNT1 A 0 A_ClearReFire
+        goto FireChargeStopRaise5
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatChargeAmount")
+        EXBT H 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatChargeAmount",30,1)
+        loop
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        goto FireStart
+
+      FireStart:
+        EXBT IJ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        EXBT KLMNOP 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_TakeInventory("SamsaraTakingAmmo")
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatPrimaryAttackSilentSound")
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatPrimaryAttackOffset")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT Q 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT R 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT S 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT T 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT U 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT V 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT W 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT X 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT Y 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXBT Z 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraTakingAmmo")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackHandler")
+        EXB2 ABCDEFG 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      FireChargeStopRaise5:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        goto FireChargeStopRaise5Continue
+
+      FireChargeStopRaise4:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        goto FireChargeStopRaise4Continue
+
+      FireChargeStopRaise3:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        goto FireChargeStopRaise3Continue
+
+      FireChargeStopRaise2:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        goto FireChargeStopRaise2Continue
+
+      FireChargeStopRaise1:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        goto FireChargeStopRaise1Continue
+
+      FireChargeStopRaise5Continue:
+        EXBT G 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireChargeStopRaise4Continue:
+        EXBT F 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireChargeStopRaise3Continue:
+        EXBT E 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireChargeStopRaise2Continue:
+        EXBT D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireChargeStopRaise1Continue:
+        EXBT C 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      FireChargeStop:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatChargeAmount")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        goto Ready
+
+      AltFire: // to make it more user friendly
+        EXB3 B 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatSecondarySwingSoundPlayer")
+        EXB3 CDEF 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatInvulnGiver")
+        EXB3 GHIJ 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatSecondaryAttackHandler")
+        EXB3 KLMNO 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatInvulnTaker")
+        EXB3 PQRSTUVWX 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire
+        TNT1 A 0 A_ClearReFire
+        goto Ready
+    }
+}
+
+actor SamsaraROTTExcalibatPrimaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("BMissiles",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraTakingAmmo",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("BMissiles",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackAlternate")
+      // Original sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackSilentSound",1,2)
+        TNT1 A 0 A_PlaySound("excalibat/blast",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",0,"PickupAttackOriginalOffset11")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",9,"PickupAttackOriginalOffset10")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",8,"PickupAttackOriginalOffset9")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",7,"PickupAttackOriginalOffset8")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",6,"PickupAttackOriginalOffset7")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",5,"PickupAttackOriginalOffset6")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",4,"PickupAttackOriginalOffset5")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",3,"PickupAttackOriginalOffset4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",2,"PickupAttackOriginalOffset3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",1,"PickupAttackOriginalOffset2")
+        goto PickupAttackOriginalOffset1
+
+      PickupAttackOriginalOffset1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset1Coop")
+      PickupAttackOriginalOffset1DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",-35,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset1Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",-35,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset2Coop")
+      PickupAttackOriginalOffset2DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",-28,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset2Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",-28,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset3Coop")
+      PickupAttackOriginalOffset3DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",-21,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset3Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",-21,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset4:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset4Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset4Coop")
+      PickupAttackOriginalOffset4DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",-14,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset4Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",-14,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset5:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset5Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset5Coop")
+      PickupAttackOriginalOffset5DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",-7,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset5Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",-7,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset6:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset6Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset6Coop")
+      PickupAttackOriginalOffset6DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",0,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset6Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",0,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset7:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset7Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset7Coop")
+      PickupAttackOriginalOffset7DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",7,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset7Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",7,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset8:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset8Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset8Coop")
+      PickupAttackOriginalOffset8DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",14,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset8Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",14,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset9:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset9Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset9Coop")
+      PickupAttackOriginalOffset9DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",21,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset9Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",21,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset10:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset10Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset10Coop")
+      PickupAttackOriginalOffset10DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",28,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset10Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",28,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset11:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalOffset11Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalOffset11Coop")
+      PickupAttackOriginalOffset11DM:
+        TNT1 A 0 A_FireCustomMissile("Baseball",35,false)
+        goto PickupFinish
+
+      PickupAttackOriginalOffset11Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoop",35,false)
+        goto PickupFinish
+
+      // Alternate sounds
+      PickupAttackAlternate:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackSilentSound",1,2)
+        TNT1 A 0 A_PlaySound("excalibat/blast/alt",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",0,"PickupAttackAlternateOffset11")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",9,"PickupAttackAlternateOffset10")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",8,"PickupAttackAlternateOffset9")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",7,"PickupAttackAlternateOffset8")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",6,"PickupAttackAlternateOffset7")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",5,"PickupAttackAlternateOffset6")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",4,"PickupAttackAlternateOffset5")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",3,"PickupAttackAlternateOffset4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",2,"PickupAttackAlternateOffset3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatPrimaryAttackOffset",1,"PickupAttackAlternateOffset2")
+        goto PickupAttackAlternateOffset1
+
+      PickupAttackAlternateOffset1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset1Coop")
+      PickupAttackAlternateOffset1DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",-35,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset1Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",-35,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset2Coop")
+      PickupAttackAlternateOffset2DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",-28,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset2Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",-28,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset3Coop")
+      PickupAttackAlternateOffset3DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",-21,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset3Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",-21,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset4:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset4Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset4Coop")
+      PickupAttackAlternateOffset4DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",-14,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset4Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",-14,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset5:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset5Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset5Coop")
+      PickupAttackAlternateOffset5DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",-7,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset5Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",-7,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset6:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset6Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset6Coop")
+      PickupAttackAlternateOffset6DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",0,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset6Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",0,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset7:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset7Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset7Coop")
+      PickupAttackAlternateOffset7DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",7,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset7Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",7,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset8:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset8Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset8Coop")
+      PickupAttackAlternateOffset8DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",14,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset8Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",14,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset9:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset9Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset9Coop")
+      PickupAttackAlternateOffset9DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",21,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset9Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",21,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset10:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset10Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset10Coop")
+      PickupAttackAlternateOffset10DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",28,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset10Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",28,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset11:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateOffset11Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateOffset11Coop")
+      PickupAttackAlternateOffset11DM:
+        TNT1 A 0 A_FireCustomMissile("BaseballSoundAlternate",35,false)
+        goto PickupFinish
+
+      PickupAttackAlternateOffset11Coop:
+        TNT1 A 0 A_FireCustomMissile("BaseballCoopSoundAlternate",35,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackSilentSound")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatPrimaryAttackOffset")
+        stop
+    }
+}
+
+actor SamsaraROTTExcalibatSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAlternate")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupOriginalCoop")
+      PickupOriginalDM:
+        TNT1 A 0 A_FireCustomMissile("ExcalibatMeleeProjectile",0,false)
+        stop
+
+      PickupOriginalCoop:
+        TNT1 A 0 A_FireCustomMissile("ExcalibatMeleeProjectileCoop",0,false)
+        stop
+
+      // Alternate sounds
+      PickupAlternate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAlternateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAlternateCoop")
+      PickupAlternateDM:
+        TNT1 A 0 A_FireCustomMissile("ExcalibatMeleeProjectileSoundAlternate",0,false)
+        stop
+
+      PickupAlternateCoop:
+        TNT1 A 0 A_FireCustomMissile("ExcalibatMeleeProjectileCoopSoundAlternate",0,false)
+        stop
+    }
+}
+
+actor SamsaraROTTExcalibatPrimaryPreFireSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAlternate")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("excalibat/charge",CHAN_WEAPON)
+        stop
+
+      // Alternate sounds
+      PickupAlternate:
+        TNT1 A 0 A_PlaySound("excalibat/charge/alt",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraROTTExcalibatSecondarySwingSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAlternate")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("excalibat/swing",CHAN_WEAPON)
+        stop
+
+      // Alternate sounds
+      PickupAlternate:
+        TNT1 A 0 A_PlaySound("excalibat/swing/alt",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor BMissiles : Ammo
+{
+    Inventory.MaxAmount 10
+    Tag "Excalibat Missiles"
+    +IGNORESKILL
+}
+
+actor Baseball
+{
+    Projectile
+    Radius 11
+    Height 8
+    Speed 50
+    Damage (0)
+    DamageType "RottExplosive"
+    Scale 0.5
+    DeathSound "god/bang"
+    Obituary "%k killed %o. STRIKE YOU'RE OUT!!!"
+    //+BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +FOILINVUL
+    +FORCERADIUSDMG
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        BSA7 AABBCCDD 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(75,128,XF_HURTSOURCE,true,32)
+      DeathFinish:
+        BOMB ABCDEFGHIJKLMNOPQRST 2 Bright Light("FIREBOMBEXP")
+        stop
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor BaseballCoop : BaseBall
+{
+    Damage (50)
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor BaseballSoundAlternate : Baseball { DeathSound "god/bang/alt" }
+
+actor BaseballCoopSoundAlternate : BaseballSoundAlternate
+{
+    Damage (50)
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor ExcalibatMeleeProjectile : FastProjectile
+{
+    Radius 8
+    Height 16
+    Speed 80
+    Damage (150)
+    DeathSound "excalibat/hit"
+    +DONTBLAST
+    +HITTRACER
+    +NODAMAGETHRUST
+    +NOEXTREMEDEATH
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        stop
+
+      Death:
+        TNT1 A 1 ACS_NamedExecuteWithResult("RottExcalibatThrow")
+        stop
+    }
+}
+
+actor ExcalibatMeleeProjectileCoop : ExcalibatMeleeProjectile
+{
+    Species "Player" 
+    +THRUSPECIES
+}
+
+actor ExcalibatMeleeProjectileSoundAlternate : ExcalibatMeleeProjectile { DeathSound "excalibat/hit/alt" }
+
+actor ExcalibatMeleeProjectileCoopSoundAlternate : ExcalibatMeleeProjectileSoundAlternate
+{
+    Species "Player" 
+    +THRUSPECIES
+}
+
+/*actor Nothing
+{
+    DamageType "RottExplosive"
+    Obituary "%k hit a home run, %o took it in the face."
+    States
+    {
+      Spawn:
+      Crash:
+        TNT1 A 1 A_PlaySound("excalibat/miss")
+        stop
+    }
+}*/
+
+actor SamsaraROTTExcalibatInvulnGiver : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatInvulning",1,"PickupStop")
+        TNT1 A 0 A_SetReflectiveInvulnerable
+        TNT1 A 0 A_GiveInventory("SamsaraROTTExcalibatInvulning")
+        stop
+    }
+}
+
+actor SamsaraROTTExcalibatInvulnTaker : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTExcalibatInvulning",1,1)
+        stop
+        TNT1 A 0 A_UnSetReflectiveInvulnerable
+        TNT1 A 0 A_TakeInventory("SamsaraROTTExcalibatInvulning")
+        stop
+    }
+}

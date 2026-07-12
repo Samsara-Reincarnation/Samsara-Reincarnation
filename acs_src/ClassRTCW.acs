@@ -1496,39 +1496,28 @@ Script "RTCW_KnifeDamage" (int hint)
 	int knifeY = GetActorY(0);
 	int knifeZ = GetActorZ(0);
 	SetActivator(0,AAPTR_Tracer);
-	int monsterX = GetActorX(0);
-	int monsterY = GetActorY(0);
-	int monsterZ = GetActorZ(0);
-	int monsterHeight = GetActorProperty(0,APROP_Height);
-	int monsterAngle = GetActorAngle(0) - 0.5;
-
-	int vang = VectorAngle(monsterX - knifeX, monsterY - knifeY);
-	int angle = vang % 1.0;
 
 	if(!CheckInventory("NoHeadShots"))
 	{
-		if(knifeZ > monsterZ + (monsterHeight / 3) && (abs(monsterAngle - angle)) < 0.6 && (abs(monsterAngle - angle)) > 0.4)
+		int monsterZ = GetActorZ(0);
+		int monsterHeight = GetActorProperty(0,APROP_Height);
+		int relativeAngle = abs(relativeAngleToXY(0, knifeX, knifeY) - 0.5);
+
+		if(knifeZ > monsterZ + (monsterHeight / 3) && relativeAngle < 0.6 && relativeAngle > 0.4)
 		{
 			if(hint == 0)
 				SetResultValue(200);
 			else
 				SetResultValue(1);
-		}
-		else
-		{
-			if(hint == 0)
-				SetResultValue(15);
-			else
-				SetResultValue(0);
+
+			terminate;
 		}
 	}
+
+	if(hint == 0)
+		SetResultValue(15);
 	else
-	{
-		if(hint == 0)
-			SetResultValue(15);
-		else
-			SetResultValue(0);
-	}
+		SetResultValue(0);
 }
 
 Script "RTCW_BulletDamage" (int damage, int soundtype)
@@ -1537,67 +1526,69 @@ Script "RTCW_BulletDamage" (int damage, int soundtype)
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
 	SetActivator(0,AAPTR_Tracer);
-	int monsterX = GetActorX(0);
-	int monsterY = GetActorY(0);
+
+	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
+
 	int monsterZ = GetActorZ(0);
 	int monsterHealth = GetActorProperty(0,APROP_Health);
 	int monsterHeight = GetActorProperty(0,APROP_Height);
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 
-	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
-	if(CheckInventory("RTCW_MetalMonster"))
+	str soundName;
+
+	switch(soundtype)
 	{
-		if (soundtype >= 2) { PlaySound(0,"RTCWET/BulletHitMetal",CHAN_6,0.5,0,ATTN_NORM); }
-		else { PlaySound(0,"RTCW/BulletHitMetal",CHAN_6,0.5,0,ATTN_NORM); }
+		case 2:
+			soundName = CheckInventory("RTCW_MetalMonster") ? "RTCWET/BulletHitMetal" : "RTCWET/BulletHitFlesh";
+			break;
+		case 1:
+			soundName = CheckInventory("RTCW_MetalMonster") ? "RTCW/BulletHitMetal" : "RTCWConsole/BulletHitFlesh";
+			break;
+		default:
+			soundName = CheckInventory("RTCW_MetalMonster") ? "RTCW/BulletHitMetal" : "RTCW/BulletHitFlesh";
+			break;
 	}
-	else
+
+	PlaySound(0,soundName,CHAN_6,0.5,0,ATTN_NORM);
+
+	if (health >= 1000)
 	{
-		if (soundtype >= 2) { PlaySound(0,"RTCWET/BulletHitFlesh",CHAN_6,0.5,0,ATTN_NORM); }
-		else if (soundtype == 1) { PlaySound(0,"RTCWConsole/BulletHitFlesh",CHAN_6,0.5,0,ATTN_NORM); }
-		else { PlaySound(0,"RTCW/BulletHitFlesh",CHAN_6,0.5,0,ATTN_NORM); }
+		SetResultValue(damage);
+		terminate;
 	}
-
-	if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
+	else if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
 	{
-		int monsterAngle = GetActorAngle(0);
-		int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
-		int angle = vang % 1.0;
+		int relativeAngle = abs(relativeAngleToXY(0, bulletX, bulletY));
 
-		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
+		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && (relativeAngle < 0.65 && relativeAngle > 0.35))
 		{
-			if(monsterHealth - (damage*3) <= 0)
+			if(monsterHealth - (damage*2) <= 0)
 				PlaySound(0,"RTCW/HeadShot",CHAN_ITEM,1.0,0,ATTN_NORM);
 
-			SetResultValue(damage*3);
+			SetResultValue(damage*2);
+			terminate;
 		}
-		else
-			SetResultValue(damage);
 	}
-	else
+	else if (bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
 	{
-		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
+		int result = GetCVar("samsara_mixerloaded") ? ACS_NamedExecuteWithResult("Goldeneye_HatShot") : 0;
+
+		if(result == -1)
 		{
-			int result;
-			if(GetCvar("samsara_mixerloaded"))
-				result = ACS_NamedExecuteWithResult("Goldeneye_HatShot",0,0,0,0);
-			else
-				result = 0;
-
-			if(result == -1)
-			{
-				SetResultValue(-1);
-				terminate;
-			}
-			//if(StrLeft(GetActorClass(0),4)=="RTCW" && GetCvar("samsara_mixerloaded"))
-				//GiveInventory("RTCW_RemoveHat",1);
-			if(!CheckInventory("NoHeadShots") && monsterHealth - (damage*3) <= 0)
-				PlaySound(0,"RTCW/HeadShot",CHAN_ITEM,1.0,0,ATTN_NORM);
-
-			SetResultValue(damage*3);
+			SetResultValue(-1);
+			terminate;
 		}
-		else
-			SetResultValue(damage);
+		//if(StrLeft(GetActorClass(0),4)=="RTCW" && GetCvar("samsara_mixerloaded"))
+			//GiveInventory("RTCW_RemoveHat",1);
+		if(!CheckInventory("NoHeadShots") && monsterHealth - (damage*2) <= 0)
+			PlaySound(0,"RTCW/HeadShot",CHAN_ITEM,1.0,0,ATTN_NORM);
+
+		SetResultValue(damage*2);
+		terminate;
 	}
+
+	SetResultValue(damage);
 }
 
 script "RTCW_Kick" (void)

@@ -1,0 +1,32 @@
+actor " Eradicator Enhancement Chip " : CustomInventory
+{
+    Inventory.UseSound ""
+    Inventory.Icon "D7X_H0"
+    Inventory.MaxAmount 3
+    Inventory.InterHubAmount 3
+    Inventory.RestrictedTo "Eleena"
+    Tag "Weapon Enhancement Chip"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"UseFailPPW")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 17, 0), "UseFail")
+        TNT1 A 0 A_PlaySound("Erad/ItemUse",CHAN_ITEM)
+        TNT1 A 0 A_GiveInventory("SamsaraPowerEradEnWPGiver")
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+
+      UseFailPPW:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 18, 3)
+        fail
+    }
+}
+
+actor SamsaraPowerEradEnWPGiver : SamsaraPowerupGiver { Powerup.Type "EradEnWP" }
+
+actor PowerEradEnWP : Powerup { Powerup.Duration -120 }

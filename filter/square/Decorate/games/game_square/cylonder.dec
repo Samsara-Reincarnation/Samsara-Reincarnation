@@ -1,0 +1,118 @@
+actor Cylonder_Samsara : SquareMonster_Samsara2 replaces Cylonder
+{
+	Health 300
+	Radius 24
+	Height 56
+	Speed 12
+	FastSpeed 18
+	Obituary "$OB_CYLONDER"
+	SeeSound "cylonder/sight"
+	ActiveSound "cylonder/active"
+	PainSound "cylonder/pain"
+	DeathSound "cylonder/death"
+	MinMissileChance 220
+	PainChance 20
+	Mass 2000
+	+DONTBLAST
+	+NOBLOOD
+  
+	DamageFactor "Vacuum", 0.0
+	Tag "Cylonder"
+	SpawnID 16
+	States
+	{
+	Spawn:
+		CYLN ACAB 4 A_Look
+		Loop
+	See:
+		CYLN AACCAABB 3 A_Chase
+		Loop
+	Missile:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		CYLN A 10 A_PlaySound("cylonder/attack")
+		CYLN A 3 A_FaceTarget
+		CYLN D 3 Bright A_CustomMissile("CylonLaser", 12)
+		CYLN BAC 2 A_FaceTarget
+		CYLN D 0 A_CPosRefire
+		Goto Missile+2
+	Pain:
+		CYLN A 4
+		CYLN A 4 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		CYLN A 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		CYLN A 16 A_Pain
+		Goto See
+	Death:
+		CYLN F 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		CYLN F 1
+		CYLN C 1 A_Scream
+		CYLN FBFCFBFCFBFCFBFCFBFCFB 1 Bright
+		CYLN F 0 Bright A_SpawnItem("CrystalGibSpawner")
+		CYLN F 1 Bright A_SpawnItem("MibSpawnerCylonder")
+		TNT1 A 0 A_Explode(80,100)
+		CYLN E 0 A_NoBlocking
+		CYLN E 1 Bright A_SpawnItemEx("ExplosionSilent", random(-20,20), random(-20,20), random(20,30))
+		CYLN EEEEEEEE 2 A_SpawnItemEx("Smoke", frandom[SquareEffectRandom](-7.0,7.0), frandom[SquareEffectRandom](-7.0,7.0), 8.0, 0, 0, 2)
+		CYLN E -1
+		Stop
+	}
+}
+
+actor Cybandit_Samsara : Cylonder_Samsara
+{
+	SeeSound "cybandit/sight"
+	ActiveSound "cybandit/active"
+	PainSound "cybandit/pain"
+	DeathSound "cybandit/death"
+	Obituary "$OB_CYBANDIT"
+	Tag "Cybandit"
+	SpawnID 42
+	States
+	{
+	Spawn:
+		CYBT ACAB 4 A_Look
+		Loop
+	See:
+		CYBT AACCAABB 3 A_Chase
+		Loop
+	Missile:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		CYBT A 10 A_PlaySound("cybandit/attack")
+		CYBT A 3 A_FaceTarget
+		CYBT D 3 Bright A_CustomMissile("CylonLaser", 12)
+		CYBT BAC 2 A_FaceTarget
+		CYBT D 0 A_CPosRefire
+		Goto Missile+2
+	Pain:
+		CYBT A 4
+		CYBT A 4 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		CYBT A 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		CYBT A 16 A_Pain
+		Goto See
+	Death:
+		CYBT F 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		CYBT F 1
+		CYBT C 1 A_Scream
+		CYBT FBFCFBFCFBFCFBFCFBFCFB 1 Bright
+		CYBT F 0 A_SpawnItemEx("GibTenGallonPinkHat", random[SquareGibRandom](-8,8), random[SquareGibRandom](-4,4), 40
+	                                        , random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](7, 10), 0)
+		CYBT F 0 Bright A_SpawnItem("CrystalGibSpawner")
+		CYBT F 1 Bright A_SpawnItem("MibSpawnerCylonder")
+		CYBT E 0 A_Explode(80,100)
+		CYBT E 0 A_Fall
+		CYBT E 1 Bright A_SpawnItemEx("Explosion", random(-20,20), random(-20,20), random(20,30))
+		CYBT EEEEEEEE 2 A_SpawnItemEx("Smoke", frandom[SquareEffectRandom](-7.0,7.0), frandom[SquareEffectRandom](-7.0,7.0), 8.0, 0, 0, 2)
+		CYBT E -1 A_GiveToTarget("SquareVOEnemiesCylonder", 1)
+		Stop
+	}
+}
+

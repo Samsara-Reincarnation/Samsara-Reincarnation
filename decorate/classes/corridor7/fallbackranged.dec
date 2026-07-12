@@ -1,0 +1,67 @@
+actor "Taser" : Corridor7WeaponBase
+{
+    Inventory.PickupMessage "You got the Taser! Wait, you should have one of these!"
+    Weapon.SlotNumber 1
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 4500
+    Weapon.YAdjust 11
+    Obituary "%k tazed %o with lethal force."
+    Tag "Taser"
+    +WIMPY_WEAPON
+    States
+    {
+      Spawn:
+        7PS2 A -1
+        stop
+
+      Ready:
+        C7PS OPQRSTU 2 A_WeaponReady
+      ReadyLoop:
+        C7PS ABCDEFG 2 A_WeaponReady
+        loop
+
+      Fire:
+        C7PS H 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraCorridor7TaserAttackHandler")
+        C7PS I 3 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        C7PS JKLMN 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      AltFire:
+        C7PS O 0
+        goto AltFireMine
+    }
+}
+
+actor SamsaraCorridor7TaserAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("C7/Taser",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireBullets(0,0,1,random(8,20),"BlankPuff2",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,random(4,10),"BlankPuff2Bloodless",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,random(8,20),"BlankPuff2Bloodless",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupCoopImproved")
+        TNT1 A 0 A_FireBullets(0,0,1,random(8,20),"BlankPuff2Coop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,random(4,10),"BlankPuff2BloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,random(8,20),"BlankPuff2BloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+
+      PickupCoopImproved:
+        TNT1 A 0 A_FireBullets(0,0,1,random(12,20),"BlankPuff2Coop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,random(2,5),"BlankPuff2BloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,random(2,5),"BlankPuff2BloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(0,0,1,random(4,10),"BlankPuff2BloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(0,0,1,random(4,10),"BlankPuff2BloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+    }
+}

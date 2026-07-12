@@ -1,0 +1,225 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Effect Zones
+ * (C) BigBrik Games 2014 - 2018
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Xaser Acheron, Matt Tropiano
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+//#include "sqglobal.acs"
+
+int player_zone_tag[PLAYER_MAX];
+int effect_zone_default_tag;
+
+/*****************************************************************************
+ * Static functions.
+ ****************************************************************************/
+
+/**
+ * Performs a single area refresh for set.
+ * If any player is in the affected area, the effects attached to that area tag are activated.
+ * areaTID: the area tag to check for.
+ */
+function void EffectZoneAreaRefreshSet (int areaTID)
+{
+	// scan through the array and see if any players are in
+	// this area. If so, activate the effects.
+	// succeed-fast.
+	for (int i = 0; i < PLAYER_MAX; i++) 
+	{
+		if (player_zone_tag[i] == areaTID) 
+		{
+			Thing_Activate(areaTID);
+			return;
+		}
+	}
+}
+
+/**
+ * Performs a single area refresh for clear.
+ * If no player is in the affected area, the effects attached to that area tag are deactivated.
+ * areaTID: the area tag to check for.
+ */
+function void EffectZoneAreaRefreshClear (int areaTID)
+{
+	// scan through the array and see if any players are in
+	// this area. If not, deactivate the effects.
+	// fail-fast.
+	for (int i = 0; i < PLAYER_MAX; i++) 
+	{
+		if (player_zone_tag[i] == areaTID) 
+			return;
+	}
+
+	Thing_Deactivate(areaTID);
+}
+
+/**
+ * Does the effect latch.
+ */
+function void DoEffectLatch (int playerNum, int areaTID, bool set)
+{
+	//Log(s:StrParam(s:"Player ", d:playerNum, s:", Area ", d:areaTID, s:" ", d:set));
+	if (!areaTID)
+		return;
+
+	// mark the player as being in the specified area.
+	if (set) 
+	{
+		player_zone_tag[playerNum] = areaTID;
+		EffectZoneAreaRefreshSet(areaTID);
+	} 
+	else 
+	{
+		player_zone_tag[playerNum] = 0;
+		EffectZoneAreaRefreshClear(areaTID);
+	}
+	
+	//Log(s:StrParam(s:"Player ", d:playerNum, s:", Set to Area ", d:player_zone_tag[playerNum]));
+}
+
+/*****************************************************************************
+ * Evented Named Scripts
+ ****************************************************************************/
+
+script "__EffectZone_PlayerEnter" ENTER
+{
+	int playerNum = PlayerNumber();
+	if (effect_zone_default_tag)
+		DoEffectLatch(playerNum, effect_zone_default_tag, true);
+}
+
+script "__EffectZone_PlayerDisconnect" (int playerNum) DISCONNECT
+{
+	DoEffectLatch(playerNum, player_zone_tag[playerNum], false);
+}
+
+script "__EffectZone_PlayerRespawn" RESPAWN
+{
+	int playerNum = PlayerNumber();
+	DoEffectLatch(playerNum, player_zone_tag[playerNum], false);
+	if (effect_zone_default_tag)
+		DoEffectLatch(playerNum, effect_zone_default_tag, true);
+}
+
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * Adds a zone tag as the default Effect Zone - this is what should be activated once players RESPAWN or ENTER the map.
+ * Tag 0 clears this functionality.
+ * Should be called with ACS_NamedExecuteAlways.
+ * tag: the TID of the toggleable effects in the starting zone.
+ */
+script "EffectZone_Default" (int tag)
+{
+	effect_zone_default_tag = tag;
+}
+
+/**
+ * Effect Zone Line special script.
+ * When called, this checks the side of the line that activated it.
+ * If front, do SET. If back, do CLEAR.
+ * If this script is not activated by a player, this does nothing.
+ * Should be called with ACS_NamedExecuteAlways.
+ * areaTID: the area to SET/CLEAR for the activating player.
+ * teleTID: if nonzero, this also will teleport the player to a thing tag as a bonus.
+ */
+script "EffectZone_Line" (int areaTID, int teleTID)
+{
+	int pnum = PlayerNumber();
+	if (pnum < 0)
+		terminate;
+
+	// set if crossing the front side; otherwise, clear it.
+	DoEffectLatch(pnum, areaTID, LineSide() == SIDE_FRONT);
+
+	// teleport the player to the area if we have a TID set.
+	// this is to handle teleporters that take you directly
+	// to one of the zones.
+	if (teleTID)
+		Teleport(teleTID, 0, 0);
+}
+
+/**
+ * Effect Zone Line Boundary special script.
+ * This assumes that one "area" is on one side of the line, and another on the back.
+ * When called, this checks the side of the line that activated it.
+ * If front, CLEAR areaFrontTID, SET areaBackTID.
+ * If back, CLEAR areaBackTID, SET areaFrontTID.
+ * If this script is not activated by a player, this does nothing.
+ * Should be called with ACS_NamedExecuteAlways.
+ * areaFrontTID: the area TID on the front side.
+ * areaBackTID: the area TID on the back side.
+ */
+script "EffectZone_Line_Boundary" (int areaFrontTID, int areaBackTID)
+{
+	int pnum = PlayerNumber();
+	if (pnum < 0)
+		terminate;
+
+	// cross front to back.
+	if (LineSide() == SIDE_FRONT)
+	{
+		DoEffectLatch(pnum, areaFrontTID, false);
+		DoEffectLatch(pnum, areaBackTID, true);
+	}
+	// cross back to front.
+	else
+	{
+		DoEffectLatch(pnum, areaBackTID, false);
+		DoEffectLatch(pnum, areaFrontTID, true);
+	}
+}
+
+
+/**
+ * Effect Zone Set script.
+ * When called, this assumes SET, always (good for sector actions and such).
+ * If this script is not activated by a player, this does nothing.
+ * Should be called with ACS_NamedExecuteAlways.
+ * areaTID: the area to SET for the activating player.
+ */
+script "EffectZone_Set" (int areaTID)
+{
+	int pnum = PlayerNumber();
+	if (pnum < 0)
+		terminate;
+
+	DoEffectLatch(pnum, areaTID, true);
+}
+
+/**
+ * Effect Zone Clear script.
+ * When called, this assumes CLEAR, always (good for sector actions and such).
+ * If this script is not activated by a player, this does nothing.
+ * Should be called with ACS_NamedExecuteAlways.
+ * areaTID: the area to CLEAR for the activating player.
+ */
+script "EffectZone_Clear" (int areaTID)
+{
+	int pnum = PlayerNumber();
+	if (pnum < 0)
+		terminate;
+
+	DoEffectLatch(pnum, areaTID, false);
+}

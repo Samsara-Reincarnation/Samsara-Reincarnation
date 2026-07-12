@@ -1,0 +1,752 @@
+actor PainkillerClass : Boolean {}
+
+Actor DanielGarner : SamsaraPlayerPawnNormalRedBlood
+{
+	Player.Scoreicon "SR29ICON"
+	Player.StartItem "Painkiller_Painkiller"
+	Player.StartItem "PainkillerClass", 1
+	Player.StartItem "IsSamsaraClass", 1
+	Player.StartItem "SamsaraTipsChecker", 1
+	Player.StartItem "Shell", 20
+	Player.StartItem "Cell", 25
+	Player.DisplayName "Painkiller"
+	Player.SoundClass "DanielGarner"
+	Player.AttackZOffset 16
+	Player.ViewHeight 48
+	//Player.ForwardMove 0.5
+	//Player.SideMove 0.5
+	Speed 1
+	Health 100
+	Radius 16
+	Height 56
+	Mass 100
+	PainChance 255
+	Player.ColorRange 112, 127
+	Species "Player"
+	BloodType "Painkiller_Blood"
+	+NOBLOODDECALS
+	States
+	{
+		Spawn:
+			PK20 A 0 NoDelay ACS_NamedExecuteWithResult("DisableVoodooDoll")
+			TNT1 A 0 A_JumpIf((momx > 0.1 || momx < -0.1) || (momy > 0.1 || momy < -0.1),"See")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingDemon",1,"SpawnDemon")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingBolt",1,"SpawnBolt")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingElectro",1,"SpawnElectro")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingChaingun",1,"SpawnChaingun")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingRifle",1,"SpawnRifle")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingStake",1,"SpawnStake")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingShotgun",1,"SpawnShotgun")
+			PK20 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Loop
+		SpawnShotgun:
+			PK30 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		SpawnStake:
+			PK40 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		SpawnRifle:
+			PK50 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		SpawnChaingun:
+			PK60 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		SpawnElectro:
+			PK70 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		SpawnBolt:
+			PK80 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		SpawnDemon:
+			PK90 A 2 A_JumpIf(momz > 0.5,"JumpStart")
+			Goto Spawn
+		See:
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingDemon",1,"SeeDemon")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingBolt",1,"SeeBolt")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingElectro",1,"SeeElectro")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingChaingun",1,"SeeChaingun")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingRifle",1,"SeeRifle")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingStake",1,"SeeStake")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingShotgun",1,"SeeShotgun")
+			PK21 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK21 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Loop
+		SeeShotgun:
+			PK31 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK31 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		SeeStake:
+			PK41 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK41 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		SeeRifle:
+			PK51 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK51 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		SeeChaingun:
+			PK61 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK61 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		SeeElectro:
+			PK71 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK71 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		SeeBolt:
+			PK81 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK81 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		SeeDemon:
+			PK91 A 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 B 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 C 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 D 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 E 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 F 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 G 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 H 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 I 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 J 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 K 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 L 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 M 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 N 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 O 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 P 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 Q 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			PK91 R 2 A_JumpIf(momz > 0.5,"JumpStart")	TNT1 A 0 A_JumpIf((momx < 0.1 && momx > -0.1) && (momy < 0.1 && momy > -0.1),"Spawn")
+			Goto See
+		Missile:
+		Melee:
+			TNT1 A 0
+			Goto Spawn
+		Pain:
+			TNT1 A 0 A_Pain
+			Goto Spawn
+		Pain.Shock:
+		Pain.Tesla:
+			CBGS A 8 A_Pain
+			Goto Spawn
+		JumpStart:
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingDemon",1,"JumpStartDemon")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingBolt",1,"JumpStartBolt")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingElectro",1,"JumpStartElectro")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingChaingun",1,"JumpStartChaingun")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingRifle",1,"JumpStartRifle")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingStake",1,"JumpStartStake")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingShotgun",1,"JumpStartShotgun")
+			PK25 ABCDEFG 2
+		JumpFly:
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingDemon",1,"JumpFlyDemon")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingBolt",1,"JumpFlyBolt")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingElectro",1,"JumpFlyElectro")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingChaingun",1,"JumpFlyChaingun")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingRifle",1,"JumpFlyRifle")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingStake",1,"JumpFlyStake")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingShotgun",1,"JumpFlyShotgun")
+			PK26 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Loop
+		JumpLand:
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingDemon",1,"JumpLandDemon")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingBolt",1,"JumpLandBolt")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingElectro",1,"JumpLandElectro")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingChaingun",1,"JumpLandChaingun")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingRifle",1,"JumpLandRifle")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingStake",1,"JumpLandStake")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingShotgun",1,"JumpLandShotgun")
+			PK27 ABCDEFG 2
+			Goto Spawn
+		JumpStartShotgun:
+			PK35 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyShotgun:
+			PK36 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandShotgun:
+			PK37 ABCDEFG 2
+			Goto Spawn
+		JumpStartStake:
+			PK45 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyStake:
+			PK46 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandStake:
+			PK47 ABCDEFG 2
+			Goto Spawn
+		JumpStartRifle:
+			PK55 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyRifle:
+			PK56 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandRifle:
+			PK57 ABCDEFG 2
+			Goto Spawn
+		JumpStartChaingun:
+			PK65 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyChaingun:
+			PK66 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandChaingun:
+			PK67 ABCDEFG 2
+			Goto Spawn
+		JumpStartElectro:
+			PK75 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyElectro:
+			PK76 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandElectro:
+			PK77 ABCDEFG 2
+			Goto Spawn
+		JumpStartBolt:
+			PK85 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyBolt:
+			PK86 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandBolt:
+			PK87 ABCDEFG 2
+			Goto Spawn
+		JumpStartDemon:
+			PK95 ABCDEFG 2
+			Goto JumpFly
+		JumpFlyDemon:
+			PK96 ABCDEFGFEDCBA 2 A_CheckFloor("JumpLand")
+			Goto JumpFly
+		JumpLandDemon:
+			PK97 ABCDEFG 2
+			Goto Spawn
+		Death:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		Death.Massacre:
+			TNT1 A 0 A_PlayerScream
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingDemon",1,"DeathDemon")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingBolt",1,"DeathBolt")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingElectro",1,"DeathElectro")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingChaingun",1,"DeathChaingun")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingRifle",1,"DeathRifle")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingStake",1,"DeathStake")
+			TNT1 A 0 A_JumpIfInventory("Painkiller_HoldingShotgun",1,"DeathShotgun")
+			TNT1 A 0 A_Jump(256,"Death1","Death2","Death3")
+		Death1:
+			PK22 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK22 Y -1
+			Stop
+		Death2:
+			PK23 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK23 Y -1
+			Stop
+		Death3:
+			PK24 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK24 Y -1
+			Stop
+		DeathShotgun:
+			TNT1 A 0 A_Jump(256,"DeathShotgun1","DeathShotgun2","DeathShotgun3")
+		DeathShotgun1:
+			PK32 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK32 Y -1
+			Stop
+		DeathShotgun2:
+			PK33 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK33 Y -1
+			Stop
+		DeathShotgun3:
+			PK34 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK34 Y -1
+			Stop
+		DeathStake:
+			TNT1 A 0 A_Jump(256,"DeathStake1","DeathStake2","DeathStake3")
+		DeathStake1:
+			PK42 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK42 Y -1
+			Stop
+		DeathStake2:
+			PK43 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK43 Y -1
+			Stop
+		DeathStake3:
+			PK44 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK44 Y -1
+			Stop
+		DeathRifle:
+			TNT1 A 0 A_Jump(256,"DeathRifle1","DeathRifle2","DeathRifle3")
+		DeathRifle1:
+			PK52 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK52 Y -1
+			Stop
+		DeathRifle2:
+			PK53 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK53 Y -1
+			Stop
+		DeathRifle3:
+			PK54 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK54 Y -1
+			Stop
+		DeathChaingun:
+			TNT1 A 0 A_Jump(256,"DeathChaingun1","DeathChaingun2","DeathChaingun3")
+		DeathChaingun1:
+			PK62 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK62 Y -1
+			Stop
+		DeathChaingun2:
+			PK63 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK63 Y -1
+			Stop
+		DeathChaingun3:
+			PK64 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK64 Y -1
+			Stop
+		DeathElectro:
+			TNT1 A 0 A_Jump(256,"DeathElectro1","DeathElectro2","DeathElectro3")
+		DeathElectro1:
+			PK72 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK72 Y -1
+			Stop
+		DeathElectro2:
+			PK73 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK73 Y -1
+			Stop
+		DeathElectro3:
+			PK74 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK74 Y -1
+			Stop
+		DeathBolt:
+			TNT1 A 0 A_Jump(256,"DeathBolt1","DeathBolt2","DeathBolt3")
+		DeathBolt1:
+			PK82 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK82 Y -1
+			Stop
+		DeathBolt2:
+			PK83 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK83 Y -1
+			Stop
+		DeathBolt3:
+			PK84 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK84 Y -1
+			Stop
+		DeathDemon:
+			TNT1 A 0 A_Jump(256,"DeathDemon1","DeathDemon2","DeathDemon3")
+		DeathDemon1:
+			PK92 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK92 Y -1
+			Stop
+		DeathDemon2:
+			PK93 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK93 Y -1
+			Stop
+		DeathDemon3:
+			PK94 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			PK94 Y -1
+			Stop
+		Death.Painkiller:
+		Death.PainkillerBullet:
+		Death.PainkillerElectro:
+		Death.PainkillerExplosive:
+		Death.PainkillerShuriken:
+		Death.PainkillerDemon:
+		Death.PainkillerStake:
+			TNT1 A 0 A_JumpIf(CallACS("Painkiller_IsItGibbed")==1,"PainkillerGib")
+			TNT1 A -1 A_Jump(256,"Death")
+			wait
+		Death.PainkillerFire:
+			TNT1 A -1 A_Jump(256,"Burn")
+			wait
+		PainkillerGib:
+		XDeath:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		XDeath.Massacre:
+			TNT1 A 0 A_PlaySound("Painkiller/Player/Gib",CHAN_BODY)
+			TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Painkiller_Blood_Spray",0,0,height*2,frandom(-4,4),frandom(-4,4),velz+frandom(4,8),0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("Painkiller_Blood",random(-8,8),random(-8,8),random(0,44),0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("DanielGarner_Gib_ArmRight",2,28,44,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("DanielGarner_Gib_ArmLeft",2,-28,44,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("DanielGarner_Gib_Torso",0,0,40,velx,vely,velz,0,SXF_TRANSFERTRANSLATION|SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("DanielGarner_Gib_Head",0,0,51,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("DanielGarner_Gib_LegLeft",-2,-8,10,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("DanielGarner_Gib_LegRight",-2,8,10,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY|SXF_CLIENTSIDE)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A -1
+			Stop
+		Pain.ShrinkerDMG:
+            TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 70), "Spawn")
+			TNT1 A 0 A_ChangeFlag("NOPAIN",true)
+			TNT1 A 0 A_ChangeFlag("NODAMAGE",true)
+			PK20 A 0 ACS_NamedExecuteAlways("Samsara_PlayerShrinker")
+			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			"####" "#" 0 A_PlaySound("duke/shrink")
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("DanielGarner_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 4 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+			TNT1 A 0 A_ChangeFlag("NOPAIN",false)
+			TNT1 A 0 A_ChangeFlag("NODAMAGE",false)
+			Goto Spawn
+	}
+}
+
+Actor DanielGarner_Shrink : DanielGarner
+{
+	Player.ForwardMove 0.25
+	Player.SideMove 0.25
+	Player.MorphWeapon "ShrunkWeapon"
+	Player.ViewHeight 8
+	DamageFactor "ZorchPistol", 0.0
+	DamageFactor "Zorch", 0.0
+	DamageFactor "ZorchKamikaze", 0.0
+	DamageFactor "PhasingZorch", 0.0
+	DamageFactor "ZorchSpectral", 0.0
+	MaxStepHeight 2
+	Height 8
+	Radius 4
+	-SOLID
+	+NOPAIN
+	States
+	{
+		Spawn:
+			PK20 A 1
+			Loop		
+		See:
+			PK21 ABCDEFGHIJKLMNOPQR 2
+			Loop
+		Death.PhosFire:
+		Death.PhosFireCoop:
+		Death.HexGreenFire:
+		Death.HexenQuietusFire:
+		Death.QuakeFire:
+		Death.FireExplosive:
+		Death.PGFire:
+		Death.WTRangedFire:
+		Death.WolfenFlamethrower:
+		Death.MarathonFire:
+		Death.MarathonPlasmaFire:
+		Burn:
+		Death.TotenkopfFire:
+		Death.DukeDamage:
+		Death.DukePistol:
+		Death.MightyBoot:
+		Death.DukeExplosive:
+		Death.HexenMedusa:
+		Death.DukeIce:
+		Ice:
+		Death.HexenIce:
+		Death.Ice:
+		Death.ExpanderDMG:
+		XDeath.ExpanderDMG:
+		Death.ExpanderDMGCoop:
+		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
+		Death.QuakeElectric:
+		Death.NotQuadded:
+		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
+		XDeath.QuakeElectric:
+		XDeath.NotQuadded:
+		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
+		Death.RottExplosive:
+		Death.RottFire:
+		Death.RottDisintegrate:
+		Death.CalebFire:
+		Death.LifeLeech:
+		Death.CalebNapalm:
+		Death.Vodoo:
+		Death.VoodooPuff:
+		Death.DynamiteCoop:
+		Death.Dynamite:
+		Death.Shock:  
+		Death.Tesla:
+		Death.CalebBullet:
+		Disintegrate:
+		Death.StrifeMauler:
+		Death.EradExplosive:
+		Death.EradNova:
+		Death.EradShock:
+		Death.EradExplosive2:
+		Death.EradDisc:
+		Death.EradPiercingDart:
+		Death.EradGreenFire:
+		Death.EradCoopGreenFire:
+		Death.Nuke:
+		Death.HLLaser:
+		Death.HLExplosive:
+		Death.HLRPGExplosive:
+		Death.HLEgon:
+		Death.FreemanGibs:
+		Death.SWFist:
+		Death.SWKatana:
+		Death.SWShuriken:
+		Death.SWSticky:
+		Death.SWStickyCoop:
+		Death.SWGrenade:
+		Death.SWNuke:
+		Death.SWRocket:
+		Death.SWRailgun:
+		Death.SWRailgunCoop:
+		Death.SWNukeCoop:
+		Death.SWFlame:
+		Death.SWFlame2:
+		Death.SWFlame2Coop:
+		Death.SWFlame3:	
+		Death.SWBullet:
+		Death.PSRAPower:
+		Death.PSRAPowerCoop:
+		Death.PSExplosive:
+		Death.PSExplosiveCoop:
+		Death.PSBullet:
+		Death.PSFire:
+		Death.PSFire:
+		Death.LeonardDamage2:
+		Death.LeonardDamage3:
+		Death.LeonardDamage0:
+		Death.LeonardDamage1:	
+		Death.BittermanDamage:
+		Death.Hexen2Damage:
+		Death.Hexen2Fire:
+		Death.Hexen2Electric:
+		Death.Hexen2Extreme:
+		Death.Hexen2ElectricExtreme:
+		Death.Painkiller:
+		Death.PainkillerBullet:
+		Death.PainkillerElectro:
+		Death.PainkillerExplosive:
+		Death.PainkillerShuriken:
+		Death.PainkillerDemon:
+		Death.PainkillerStake:
+		Death.PainkillerFire:
+		PainkillerGib:
+		Death.UnrealDamage:
+		Death.UnrealPlasma:
+		Death.UnrealSludge:
+		Death.ASMDShockTrace:
+		Death.UnrealExplosive:
+		Death.UnrealRazor:
+		Death.UnrealExtreme:
+		Death.UnrealRedeemer:
+		Death.UnrealShredded:
+		UnrealXDeath:
+		Death.RTCWVenomBullet:
+		Death.RTCWExplosive:
+		RTCWXDeath:
+		RTCWXDeath2:
+		Death.Q3Explosive:
+		Death.Q3Energy:
+		Death.Q3BFG:
+		XDeath.Q3Explosive:
+		XDeath.Q3Energy:
+		Death.DeusExPistolFire:
+		Death.DeusExFlamed:
+		Death.DeusExLAM:
+		Death.DeusExRifleExploded:
+		Death.DeusExSabotPistol:
+		Death.DeusExSabot:
+		Death.DeusExBurned:
+		Death.DeusExExploded:
+		Death.DeusExDroneExploded:
+		DeusXDeath:
+		Death:
+		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
+		Death.Squish:
+		XDeath.Squish:
+			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1
+			stop
+		Death.DukeSquish:
+		XDeath.DukeSquish:
+			TNT1 A 0 A_GiveToTarget("DukeStomp", 1)
+			TNT1 A 0 SetPlayerProperty(0,1,PROP_TOTALLYFROZEN)
+			PK20 A 15
+			TNT1 A 0 A_Jump(64,2)
+			TNT1 A 0 A_GiveToTarget("DukeBootTaunt",1)
+			TNT1 A 0 SetPlayerProperty(0,0,PROP_TOTALLYFROZEN)
+			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1
+			stop
+	}
+}
+
+actor DanielGarner_ShrinkEffect : DanielGarner
+{
+	-ISMONSTER
+	-COUNTKILL
+	-SHOOTABLE
+	-SOLID
+	+NOINTERACTION
+	-NOGRAVITY
+	+CLIENTSIDEONLY	
+	Renderstyle Translucent
+	Alpha 0.4
+	States
+	{
+		Spawn:
+			PK20 A 0
+			PK20 A 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			PK20 A 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+			Stop
+	}
+}
+
+Actor DanielGarner_Gib_ArmRight : Painkiller_PotatoHeadGib {}
+Actor DanielGarner_Gib_ArmLeft : Painkiller_PotatoHeadGib {}
+Actor DanielGarner_Gib_Head : Painkiller_PotatoHeadGib {}
+Actor DanielGarner_Gib_Torso : Painkiller_PotatoHeadGib {}
+Actor DanielGarner_Gib_LegRight : Painkiller_PotatoHeadGib {}
+Actor DanielGarner_Gib_LegLeft : Painkiller_PotatoHeadGib {}
+

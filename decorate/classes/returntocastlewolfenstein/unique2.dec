@@ -1,0 +1,411 @@
+Actor RTCW_Winchester : RTCW_Weapon
+{
+	Weapon.SlotNumber 9
+	Weapon.SlotPriority 0
+	Weapon.SelectionOrder 1100
+	Weapon.AmmoType1 "RTCW_ShotgunMagazine"
+	Weapon.AmmoUse1 1
+	Weapon.AmmoType2 "RTCW_AlliedAmmo2"
+	Weapon.AmmoGive2 3
+	Obituary "%o was killed (shotgun) by %k."
+	Inventory.PickupMessage "Shotgun"
+    Inventory.Icon "CWCMPW15"
+	Tag "Winchester M1897"
+	States
+	{
+		Spawn:
+			RW98 A -1
+			stop
+
+		ReadyActual:
+			RW00 A 0 A_JumpIfInventory("RTCW_Kicking",1,"Kicking")
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+		ReadyActualNonReloadable:
+			RW00 A 1 A_WeaponReady
+			goto ReadyActualAmmoCheck
+
+		ReadyActualReloadable:
+			RW00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			goto ReadyActualAmmoCheck
+
+		ReadyActualAmmoCheck:
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+			goto ReadyActual
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+			RW00 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,"ReadyActual")
+			goto ReloadCheck
+
+		Deselect:
+			RW00 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			RW00 A 2 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			RW00 IJKLM 2
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			RW00 A 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW00 O 2 A_GiveInventory("RTCW_WeaponToken",24)
+			RW00 PQRST 2
+			goto ReadyActual
+
+		Fire:
+			RW00 B 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+		FireNonReloadable:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+			RW00 B 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,"FireStart")
+			goto FireDry
+
+		FireReloadable:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+			RW00 B 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,"FireStart")
+		FireReloadableDryCheck:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			RW00 B 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,"ReloadStart")
+			goto FireDry
+
+		FireDry:
+			RW00 A 0 A_ClearReFire
+			RW00 A 0 A_GiveInventory("SamsaraRTCWWeaponDrySoundPlayer")
+			RW00 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_SelectWeapon("RTCW_Luger")
+			goto Deselect
+
+		FireUnderwater:
+			RW00 A 0 A_ClearReFire
+			RW00 A 0 A_GiveInventory("SamsaraRTCWWeaponUnderwaterSoundPlayer")
+			RW00 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		FireStart:
+			RW00 U 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+			RW00 U 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireUnderwater")
+			RW00 U 0 A_GiveInventory("RTCW_FiringToken",1)
+			RW00 U 0 A_GiveInventory("RTCW_BlazkoWeaponAlert",1)
+			RW00 U 0 A_GunFlash("FireFlash")
+		FireLastShotCalc:
+			RW00 U 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireLastShotCalcReloadable")
+		FireLastShotCalcNonReloadable:
+			RW00 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue")
+			RW00 U 0 A_JumpIfInventory("RTCW_AlliedAmmo2",2,"FireContinue")
+			goto FireContinueLast
+
+		FireLastShotCalcReloadable:
+			RW00 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireContinue")
+			RW00 U 0 A_JumpIfInventory("RTCW_ShotgunMagazine",2,"FireContinue")
+			goto FireContinueLast
+
+		FireContinue:
+			RW00 U 0 A_GiveInventory("SamsaraRTCWShotgunAttackHandler")
+			RW00 "UVWXYZ[" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			//RW00 "\" 0 A_SpawnItemEx("RTCW_CasingShell",4,-6*cos(-pitch),32+(6*sin(-pitch)),1,0,0,-random(85,95),SXF_TRANSFERPITCH)
+			RW00 "\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 ABCDEFGHIJ 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		FireContinueLast:
+			RW00 U 0 A_GiveInventory("SamsaraRTCWShotgunAttackHandler")
+			RW00 "UVWXYZ[\AAAAAAAAAAA" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		FireFlash:
+			TNT1 A 0 A_Jump(256,1,2)
+			RW05 U 2 Bright
+			stop
+			RW06 U 2 Bright
+			stop
+
+		Reload:
+		ReloadCheck:
+			RW00 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",0,"ReadyActual")
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			RW00 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,"ReloadStart")
+			goto ReadyActual
+
+		ReloadStart:
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+			goto ReloadStartAmmoless
+			RW02 "]" 1
+			RW03 ABCDEFG 1
+		ReloadLoopInit:
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+			goto ReloadFinish
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",0,"ReloadFinish")
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadLoopAnim")
+			TNT1 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,"ReloadLoopAnim")
+			goto ReloadFinish
+
+		ReloadLoopAnim:
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+			goto ReloadLoopAnimAmmoless
+			RW03 HJLNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW03 Q 0 A_GiveInventory("SamsaraRTCWShotgunReloadSoundPlayer1")
+			RW03 "QSUWY[]" 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+		ReloadFinish:
+			RW04 ABCDEFGHIJ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW04 K 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		ReloadAmmo:
+			TNT1 A 0 A_TakeInventory("SamsaraReloadCalcs") // reset
+		ReloadAmmoCalc:
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",0,"ReloadLoopReFireCheck")
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadCalcs",1,"ReloadLoopReFireCheck")
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,1)
+			goto ReloadLoopReFireCheck
+			TNT1 A 0 A_GiveInventory("SamsaraReloadCalcs")
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			TNT1 A 0 A_TakeInventory("RTCW_AlliedAmmo2",1)
+			TNT1 A 0 A_GiveInventory("RTCW_ShotgunMagazine")
+			loop
+
+		ReloadLoopReFireCheck:
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReloadLoopReFireCheckModern")
+		ReloadLoopReFireCheckClassic:
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+			goto ReloadLoopInit
+			TNT1 A 0 A_ReFire("ReloadFinish")
+			goto ReloadLoopInit
+
+		ReloadLoopReFireCheckModern:
+			//TNT1 A 0 A_WeaponReady(WRF_NOFIRE) // works in gzdoom, but not zan. blah.
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+			goto ReloadLoopInit
+			TNT1 A 0 A_ReFire
+			goto ReloadLoopInit
+
+		ReloadStartAmmoless:
+			RW01 LMNOPQRST 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReloadLoopInit
+
+		ReloadLoopAnimAmmoless:
+			RW01 UVWXY 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 Z 0 A_GiveInventory("SamsaraRTCWShotgunReloadSoundPlayer1")
+			RW01 "Z[\]" 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW02 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW02 N 0 A_PlaySound("RTCW/Shotgun/Reload",CHAN_6)
+			//RW02 N 0 A_SpawnItemEx("RTCW_CasingShell",4,-6*cos(-pitch),32+(6*sin(-pitch)),1,0,0,-random(85,95),SXF_TRANSFERPITCH)
+			RW02 NOPQRSTUV 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmoless")
+		ReloadFinishAmmoless:
+			RW02 W 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		ReloadAmmoAmmoless:
+			TNT1 A 0 A_TakeInventory("SamsaraReloadCalcs") // reset
+		ReloadAmmoCalcAmmoless:
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",0,"ReloadLoopReFireCheckAmmoless")
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadCalcs",1,"ReloadLoopReFireCheckAmmoless")
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,1)
+			goto ReloadLoopReFireCheckAmmoless
+			TNT1 A 0 A_GiveInventory("SamsaraReloadCalcs")
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			TNT1 A 0 A_TakeInventory("RTCW_AlliedAmmo2",1)
+			TNT1 A 0 A_GiveInventory("RTCW_ShotgunMagazine")
+			loop
+
+		ReloadLoopReFireCheckAmmoless:
+			TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReloadLoopReFireCheckAmmolessModern")
+		ReloadLoopReFireCheckAmmolessClassic:
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+			goto ReloadLoopReFireCheckTransitionAmmoless
+			TNT1 A 0 A_ReFire("ReloadFinishAmmoless")
+			goto ReloadLoopReFireCheckTransitionAmmoless
+
+		ReloadLoopReFireCheckAmmolessModern:
+			//TNT1 A 0 A_WeaponReady(WRF_NOFIRE) // works in gzdoom, but not zan. blah.
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+			goto ReloadLoopReFireCheckTransitionAmmoless
+			TNT1 A 0 A_ReFire
+			goto ReloadLoopReFireCheckTransitionAmmoless
+
+		ReloadLoopReFireCheckTransitionAmmoless:
+			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",0,"ReloadFinishAmmoless")
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			TNT1 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,1)
+			goto ReloadFinishAmmoless
+			RW02 MLKJH 1
+			RW03 F 0
+			goto ReloadLoopInit
+
+		Kicking:
+			RW00 A 0 A_GunFlash("KickingFoot")
+		KickingDelay:
+			RW00 A 18 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_TakeInventory("RTCW_Kicking",1)
+			goto ReadyActual
+	}
+}
+
+actor SamsaraRTCWShotgunAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
+        TNT1 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RTCW_AlliedAmmo2",1)
+        goto PickupPlaySound
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupPlaySound")
+        TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RTCW_ShotgunMagazine",1)
+        goto PickupPlaySound
+
+      // Sound stuff
+      PickupPlaySound:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupPlaySoundReloadable")
+      PickupPlaySoundNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySoundNormal")
+        TNT1 A 0 A_JumpIfInventory("RTCW_AlliedAmmo2",1,"PickupPlaySoundNormal")
+        goto PickupPlaySoundLast
+
+      PickupPlaySoundReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupPlaySoundNormal")
+        TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,"PickupPlaySoundNormal")
+        goto PickupPlaySoundLast
+
+      PickupPlaySoundNormal:
+        TNT1 A 0 A_PlaySound("RTCW/Shotgun/Fire",CHAN_WEAPON)
+        goto PickupAttack
+
+      PickupPlaySoundLast:
+        TNT1 A 0 A_PlaySound("RTCW/Shotgun/FireLast",CHAN_WEAPON)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_SpawnItemEx("RTCW_CasingShell",4,-6*cos(-pitch),32+(6*sin(-pitch)),1,0,0,-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackRTCWConsole")
+      // Original sounds
+      PickupAttackRTCWPC:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWPCCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWPCCoop")
+      PickupAttackRTCWPCDM:
+        TNT1 AAAAAAAAAAAA 0 A_FireCustomMissile("RTCW_ShotgunTracer",frandom(-6.0,6.0),false,4,9,0,frandom(-6.0,6.0))
+        stop
+
+      PickupAttackRTCWPCCoop:
+        TNT1 AAAAAAAAAAAA 0 A_FireCustomMissile("RTCW_ShotgunTracerCoop",frandom(-6.0,6.0),false,4,9,0,frandom(-6.0,6.0))
+        stop
+
+      // Console sounds
+      PickupAttackRTCWConsole:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWConsoleCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWConsoleCoop")
+      PickupAttackRTCWConsoleDM:
+        TNT1 AAAAAAAAAAAA 0 A_FireCustomMissile("RTCW_ShotgunTracerSoundConsole",frandom(-6.0,6.0),false,4,9,0,frandom(-6.0,6.0))
+        stop
+
+      PickupAttackRTCWConsoleCoop:
+        TNT1 AAAAAAAAAAAA 0 A_FireCustomMissile("RTCW_ShotgunTracerCoopSoundConsole",frandom(-6.0,6.0),false,4,9,0,frandom(-6.0,6.0))
+        stop
+
+      // Enemy Territory sounds
+      PickupAttackET:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackETCoop")
+      PickupAttackETDM:
+        TNT1 AAAAAAAAAAAA 0 A_FireCustomMissile("RTCW_ShotgunTracerSoundET",frandom(-6.0,6.0),false,4,9,0,frandom(-6.0,6.0))
+        stop
+
+      PickupAttackETCoop:
+        TNT1 AAAAAAAAAAAA 0 A_FireCustomMissile("RTCW_ShotgunTracerCoopSoundET",frandom(-6.0,6.0),false,4,9,0,frandom(-6.0,6.0))
+        stop
+    }
+}
+
+actor SamsaraRTCWShotgunReloadSoundPlayer1 : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Shotgun/AddShell",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Shotgun/AddShell",CHAN_6)
+        stop
+    }
+}
+
+actor RTCW_ShotgunMagazine : Ammo
+{
+	Inventory.MaxAmount 6
+	Tag "Winchester Magazine"
+	+IGNORESKILL
+}
+
+Actor RTCW_ShotgunTracer : RTCW_Tracer
+{
+	States
+	{
+		Crash:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 14, 0),8,!XF_HURTSOURCE,0,8)
+			Goto Super::Death
+		XDeath:
+			TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 14, 0),8,!XF_HURTSOURCE,0,8)
+			Goto Super::XDeath
+	}
+}
+
+Actor RTCW_ShotgunTracerCoop : RTCW_ShotgunTracer { +THRUSPECIES Species "Player" }
+
+Actor RTCW_ShotgunTracerSoundConsole : RTCW_TracerSoundConsole
+{
+	States
+	{
+		Crash:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 14, 1),8,!XF_HURTSOURCE,0,8)
+			Goto Super::Death
+		XDeath:
+			TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 14, 1),8,!XF_HURTSOURCE,0,8)
+			Goto Super::XDeath
+	}
+}
+
+Actor RTCW_ShotgunTracerCoopSoundConsole : RTCW_ShotgunTracerSoundConsole { +THRUSPECIES Species "Player" }
+
+Actor RTCW_ShotgunTracerSoundET : RTCW_TracerSoundET
+{
+	States
+	{
+		Crash:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 14, 2),8,!XF_HURTSOURCE,0,8)
+			Goto Super::Death
+		XDeath:
+			TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 14, 2),8,!XF_HURTSOURCE,0,8)
+			Goto Super::XDeath
+	}
+}
+
+Actor RTCW_ShotgunTracerCoopSoundET : RTCW_ShotgunTracerSoundET { +THRUSPECIES Species "Player" }
+
+Actor RTCW_CasingShell : RTCW_Casing {}

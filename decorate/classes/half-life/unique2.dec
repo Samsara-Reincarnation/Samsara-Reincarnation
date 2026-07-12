@@ -1,0 +1,1802 @@
+// Tokens
+
+actor freeman_unique2selected : Boolean { Inventory.InterHubAmount 0 }
+actor SamsaraHalfLifeLoadoutUnique2 : Boolean {}
+
+// Crossbow
+
+actor HLXBowIsZoomed : Boolean {}
+
+actor "HL Crossbow" : HLWeapon
+{
+    Inventory.PickupMessage "You found a crossbow!"
+    Inventory.Icon "HWU1Z0"
+    Weapon.SlotNumber 8
+    Weapon.SelectionOrder 1500
+    Weapon.AmmoType1 "HLXBowAmmoCounter"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Shell"
+    Weapon.AmmoGive2 10
+    Tag "Crossbow"
+    +NOAUTOAIM
+    States
+    {
+      Spawn:
+        HWU0 A -1
+        stop
+
+      // Gordon Freeman
+      ReadyActual:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+      ReadyActualNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,"ReadyActualNonReloadableZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyActualNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReadyActualNonReloadableAmmo")
+        goto ReadyActualNonReloadableNoAmmo
+
+      ReadyActualNonReloadableNoAmmo:
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualNonReloadableNoAmmoShephard")
+        HW35 N 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualNonReloadableAmmo:
+        HW32 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualNonReloadableAmmoShephard")
+        HW32 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualNonReloadableZoomed:
+        TNT1 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualReloadable:
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,"ReadyActualReloadableZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActualReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"ReadyActualReloadableAmmo")
+        goto ReadyActualReloadableNoAmmo
+
+      ReadyActualReloadableNoAmmo:
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualReloadableNoAmmoShephard")
+        HW35 N 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualReloadableAmmo:
+        HW32 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualReloadableAmmoShephard")
+        HW32 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualReloadableZoomed:
+        TNT1 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualJump:
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(4,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(3,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(2,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(1,"ReadyActualIdle1","ReadyActualIdle2")
+        goto ReadyActualAmmoCheck
+
+      ReadyActualIdle1:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle1Reloadable")
+      ReadyActualIdle1NonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyActualIdle1NonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReadyActualIdle1NonReloadableAmmo")
+        goto ReadyActualIdle1NonReloadableNoAmmo
+
+      ReadyActualIdle1NonReloadableNoAmmo:
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1NonReloadableNoAmmoShephard")
+        HW35 NOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW36 ABCDEFGHIJKLMNOPQR 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle1NonReloadableAmmo:
+        HW32 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1NonReloadableAmmoShephard")
+        HW32 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW33 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW34 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW35 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle1Reloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActualIdle1ReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"ReadyActualIdle1ReloadableAmmo")
+        goto ReadyActualIdle1ReloadableNoAmmo
+
+      ReadyActualIdle1ReloadableNoAmmo:
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1ReloadableNoAmmoShephard")
+        HW35 NOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW36 ABCDEFGHIJKLMNOPQR 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle1ReloadableAmmo:
+        HW32 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1ReloadableAmmoShephard")
+        HW32 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW33 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW34 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW35 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle2Reloadable")
+      ReadyActualIdle2NonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyActualIdle2NonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReadyActualIdle2NonReloadableAmmo")
+        goto ReadyActualIdle2NonReloadableNoAmmo
+
+      ReadyActualIdle2NonReloadableNoAmmo:
+        HW39 V 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2NonReloadableNoAmmoShephard")
+        HW39 VWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW40 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW41 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW42 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW43 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2NonReloadableAmmo:
+        HW36 S 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2NonReloadableAmmoShephard")
+        HW36 STUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW37 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW38 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW39 ABCDEFGHIJKLMNOPQRSTU 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2Reloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActualIdle2ReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"ReadyActualIdle2ReloadableAmmo")
+        goto ReadyActualIdle2ReloadableNoAmmo
+
+      ReadyActualIdle2ReloadableNoAmmo:
+        HW39 V 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2ReloadableNoAmmoShephard")
+        HW39 VWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW40 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW41 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW42 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW43 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2ReloadableAmmo:
+        HW36 S 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2ReloadableAmmoShephard")
+        HW36 STUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW37 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW38 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        HW39 ABCDEFGHIJKLMNOPQRSTU 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReadyActual
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"ReadyActual")
+        goto ReloadCheck
+
+      Deselect:
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,1)
+        goto Super::Deselect
+        TNT1 A 0 A_TakeInventory("HLXBowIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto Super::Deselect
+
+      Select:
+        TNT1 A 0 A_TakeInventory("freeman_fistselected")
+        TNT1 A 0 A_TakeInventory("freeman_pistolselected")
+        TNT1 A 0 A_TakeInventory("freeman_slot1selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot2selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot3selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot4selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot5selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot6selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot7selected")
+        TNT1 A 0 A_TakeInventory("freeman_uniqueselected")
+        TNT1 A 0 A_GiveInventory("freeman_unique2selected")
+        TNT1 A 0 A_TakeInventory("freeman_unique3selected")
+        goto Super::Select
+
+      Ready: // our "Select" state
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyReloadable")
+      ReadyNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReadyAmmo")
+        goto ReadyNoAmmo
+
+      ReadyReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"ReadyAmmo")
+        goto ReadyNoAmmo
+
+      ReadyNoAmmo:
+        HW60 M 0 A_JumpIfInventory("HLXBowIsZoomed",1,1) // map change hack
+        goto ReadyNoAmmoStart1
+        HW60 M 0 A_TakeInventory("HLXBowIsZoomed")
+        HW60 M 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyNoAmmoStart1
+
+      ReadyNoAmmoStart1:
+        HW60 M 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyNoAmmoStart1Shephard")
+        HW60 M 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW60 N 0 A_JumpIfInventory("HLXBowIsZoomed",1,1) // map change hack
+        goto ReadyNoAmmoStart2
+        HW60 N 0 A_TakeInventory("HLXBowIsZoomed")
+        HW60 N 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyNoAmmoStart2
+
+      ReadyNoAmmoStart2:
+        HW60 NOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW61 AB 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW35 N 0
+        goto ReadyActual
+
+      ReadyAmmo:
+        HW59 W 0 A_JumpIfInventory("HLXBowIsZoomed",1,1) // map change hack
+        goto ReadyAmmoStart1
+        HW59 W 0 A_TakeInventory("HLXBowIsZoomed")
+        HW59 W 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyAmmoStart1
+
+      ReadyAmmoStart1:
+        HW59 W 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyAmmoStart1Shephard")
+        HW59 W 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW59 X 0 A_JumpIfInventory("HLXBowIsZoomed",1,1) // map change hack
+        goto ReadyAmmoStart2
+        HW59 X 0 A_TakeInventory("HLXBowIsZoomed")
+        HW59 X 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyAmmoStart2
+
+      ReadyAmmoStart2:
+        HW59 XYZ 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW60 ABCDEFGHIJK 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW32 A 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        goto ReadyActual
+
+      Fire:
+        HW43 I 0 A_JumpIfInventory("HLOriginalKeySwitcherOpen",1,"ReadyActual")
+        HW43 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        HW43 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireLastShotCalc")
+        HW43 I 0 A_JumpIfInventory("Shell",2,"FireLastShotCalc")
+        goto FireDryAmmoless
+
+      FireReloadable:
+        HW43 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireLastShotCalc")
+        HW43 I 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"FireLastShotCalc")
+        goto FireDryAmmoless
+
+      FireDry:
+        HW32 A 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        HW32 A 0 A_ClearReFire
+        HW32 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,"FireDryZoomed")
+        HW32 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireDryShephard")
+        HW32 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireDryAmmoless:
+        HW35 N 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        HW35 N 0 A_ClearReFire
+        HW35 N 0 A_JumpIfInventory("HLXBowIsZoomed",1,"FireDryZoomed")
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireDryAmmolessShephard")
+        HW35 N 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireDryZoomed:
+        TNT1 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      Hold:
+        HW43 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"HoldReloadable")
+      HoldNonReloadable:
+        HW43 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireLastShotCalc")
+        HW43 I 0 A_JumpIfInventory("Shell",2,"FireLastShotCalc")
+        goto HoldDryAmmoless
+
+      HoldReloadable:
+        HW43 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireLastShotCalc")
+        HW43 I 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"FireLastShotCalc")
+        goto HoldDryAmmoless
+
+      HoldDry:
+        HW44 O 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        HW44 O 0 A_ClearReFire
+        HW44 O 0 A_JumpIfInventory("HLXBowIsZoomed",1,"HoldDryZoomed")
+        HW44 O 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"HoldDryShephard")
+        HW44 OQSU 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 WY 1 A_WeaponReady(WRF_NOFIRE)
+        HW45 ACEGIKMOQSUWY 1 A_WeaponReady(WRF_NOFIRE)
+        HW46 ACEGIKMOQSUWY 1 A_WeaponReady(WRF_NOFIRE)
+        HW47 ACEGIKM 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      HoldDryAmmoless:
+        HW35 N 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        HW35 N 0 A_ClearReFire
+        HW35 N 0 A_JumpIfInventory("HLXBowIsZoomed",1,"HoldDryZoomed")
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"HoldDryAmmolessShephard")
+        HW35 NNNN 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      HoldDryZoomed:
+        TNT1 AAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireLastShotCalc:
+        HW43 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireLastShotCalcReloadable")
+      FireLastShotCalcNonReloadable:
+        HW43 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        HW43 I 0 A_JumpIfInventory("Shell",4,"FireStart")
+        goto FireStartLast
+
+      FireLastShotCalcReloadable:
+        HW43 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+        HW43 I 0 A_JumpIfInventory("HLXBowAmmoCounter",2,"FireStart")
+        goto FireStartLast
+
+      FireStart:
+        HW43 I 0 A_GiveInventory("SamsaraHalfLifeCrossbowAttackHandler")
+        HW43 I 0 A_PlaySound("HLXBow/Reload") // hl also played this sound for the last shot, but we're just playing it here this time
+        HW43 I 0 A_JumpIfInventory("HLXBowIsZoomed",1,"FireStartZoomed")
+        HW43 I 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireStartShephard")
+        HW43 IJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 ACEGIKM 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // painsplosion
+        HW44 O 0 A_ReFire HW44 O 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 Q 0 A_ReFire HW44 Q 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 S 0 A_ReFire HW44 S 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 U 0 A_ReFire HW44 U 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 W 0 A_ReFire HW44 W 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW44 Y 0 A_ReFire HW44 Y 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 A 0 A_ReFire HW45 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 C 0 A_ReFire HW45 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 E 0 A_ReFire HW45 E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 G 0 A_ReFire HW45 G 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 I 0 A_ReFire HW45 I 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 K 0 A_ReFire HW45 K 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 M 0 A_ReFire HW45 M 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 O 0 A_ReFire HW45 O 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 Q 0 A_ReFire HW45 Q 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 S 0 A_ReFire HW45 S 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 U 0 A_ReFire HW45 U 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 W 0 A_ReFire HW45 W 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW45 Y 0 A_ReFire HW45 Y 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 A 0 A_ReFire HW46 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 C 0 A_ReFire HW46 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 E 0 A_ReFire HW46 E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 G 0 A_ReFire HW46 G 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 I 0 A_ReFire HW46 I 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 K 0 A_ReFire HW46 K 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 M 0 A_ReFire HW46 M 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 O 0 A_ReFire HW46 O 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 Q 0 A_ReFire HW46 Q 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 S 0 A_ReFire HW46 S 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 U 0 A_ReFire HW46 U 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 W 0 A_ReFire HW46 W 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW46 Y 0 A_ReFire HW46 Y 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 A 0 A_ReFire HW47 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 C 0 A_ReFire HW47 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 E 0 A_ReFire HW47 E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 G 0 A_ReFire HW47 G 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 I 0 A_ReFire HW47 I 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 K 0 A_ReFire HW47 K 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW47 M 0 A_ReFire HW47 M 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireStartZoomed:
+        TNT1 AAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // painsplosion zoomed
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireStartLast:
+        HW53 Y 0 A_GiveInventory("SamsaraHalfLifeCrossbowAttackHandler")
+        HW53 Y 0 A_JumpIfInventory("HLXBowIsZoomed",1,"FireStartLastZoomed")
+        HW53 Y 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireStartLastShephard")
+        HW53 YZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW54 BCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // keeping DoubleFiringSpeed parity
+        HW35 NNNNNNNNN 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // painsplosion 2.0
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW35 N 0 A_ReFire HW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireStartLastZoomed:
+        TNT1 AA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // keeping DoubleFiringSpeed parity
+        TNT1 AAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // painsplosion 2.0 zoomed
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire TNT1 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      AltFire:
+      Zoom:
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,"ZoomDeactivate")
+      ZoomActivate:
+        TNT1 A 0 A_GiveInventory("HLXBowIsZoomed")
+        TNT1 A 0 A_ZoomFactor(4,ZOOM_INSTANT)
+        TNT1 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivate:
+        TNT1 A 0 A_TakeInventory("HLXBowIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ZoomDeactivateReloadable")
+      ZoomDeactivateNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ZoomDeactivateAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ZoomDeactivateAmmo")
+        goto ZoomDeactivateNoAmmo
+
+      ZoomDeactivateReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ZoomDeactivateAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,"ZoomDeactivateAmmo")
+        goto ZoomDeactivateNoAmmo
+
+      ZoomDeactivateNoAmmo:
+        HW35 N 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ZoomDeactivateNoAmmoShephard")
+        HW35 N 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivateAmmo:
+        HW32 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ZoomDeactivateAmmoShephard")
+        HW32 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      Reload:
+      ReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",0,"ReadyActual")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadScopeCheck")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReloadScopeCheck")
+        goto ReadyActual
+
+      ReloadScopeCheck:
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,1)
+        goto ReloadStart
+        TNT1 A 0 A_TakeInventory("HLXBowIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReloadStart
+
+      ReloadStart:
+        TNT1 A 0 A_PlaySound("HLXBow/Reload")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,1)
+        goto ReloadStartAmmoless
+        HW47 O 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReloadStartShephard")
+        HW47 OPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW48 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW49 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW50 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW51 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW52 ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE)
+        HW52 U 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        HW52 UVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        HW53 ABCDEFGHIJKLMNOPQRSTUVWX 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReloadAmmo:
+        HW52 U 0 A_JumpIfInventory("HLXBowAmmoCounter",0,"ReloadFinish")
+        HW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        HW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        HW52 U 0 A_JumpIfInventory("Shell",2,1)
+        goto ReloadFinish
+        HW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        HW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        HW52 U 0 A_TakeInventory("Shell",2)
+        HW52 U 0 A_GiveInventory("HLXBowAmmoCounter")
+        loop
+
+      ReloadStartAmmoless:
+        HW54 O 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReloadStartAmmolessShephard")
+        HW54 OQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW55 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW56 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW57 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW58 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        HW59 ABCDEFGHIJKLMNOPQRSTU 1 A_WeaponReady(WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmoless")
+      ReloadFinishAmmoless:
+        TNT1 A 0
+        goto ReadyActual
+
+      ReloadAmmoAmmoless:
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",0,"ReloadFinishAmmoless")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",2,1)
+        goto ReloadFinishAmmoless
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",2)
+        TNT1 A 0 A_GiveInventory("HLXBowAmmoCounter")
+        loop
+
+      // Adrian Shephard
+      ReadyActualNonReloadableNoAmmoShephard:
+        SW35 N 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualNonReloadableAmmoShephard:
+        SW32 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualReloadableNoAmmoShephard:
+        SW35 N 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualReloadableAmmoShephard:
+        SW32 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+
+      ReadyActualIdle1NonReloadableNoAmmoShephard:
+        SW35 NOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW36 ABCDEFGHIJKLMNOPQR 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle1NonReloadableAmmoShephard:
+        SW32 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW33 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW34 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW35 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle1ReloadableNoAmmoShephard:
+        SW35 NOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW36 ABCDEFGHIJKLMNOPQR 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle1ReloadableAmmoShephard:
+        SW32 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW33 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW34 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW35 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2NonReloadableNoAmmoShephard:
+        SW39 VWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW40 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW41 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW42 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW43 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2NonReloadableAmmoShephard:
+        SW36 STUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW37 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW38 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW39 ABCDEFGHIJKLMNOPQRSTU 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2ReloadableNoAmmoShephard:
+        SW39 VWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW40 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW41 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW42 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW43 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyActualIdle2ReloadableAmmoShephard:
+        SW36 STUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW37 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW38 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        SW39 ABCDEFGHIJKLMNOPQRSTU 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReadyNoAmmoStart1Shephard:
+        SW60 M 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        SW60 N 0 A_JumpIfInventory("HLXBowIsZoomed",1,1) // map change hack
+        goto ReadyNoAmmoStart2Shephard
+        SW60 N 0 A_TakeInventory("HLXBowIsZoomed")
+        SW60 N 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyNoAmmoStart2Shephard
+
+      ReadyNoAmmoStart2Shephard:
+        SW60 NOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        SW61 AB 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        SW35 N 0
+        goto ReadyActual
+
+      ReadyAmmoStart1Shephard:
+        SW59 W 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        SW59 X 0 A_JumpIfInventory("HLXBowIsZoomed",1,1) // map change hack
+        goto ReadyAmmoStart2Shephard
+        SW59 X 0 A_TakeInventory("HLXBowIsZoomed")
+        SW59 X 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyAmmoStart2Shephard
+
+      ReadyAmmoStart2Shephard:
+        SW59 XYZ 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        SW60 ABCDEFGHIJK 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        SW32 A 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireDryShephard:
+        SW32 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireDryAmmolessShephard:
+        SW35 N 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      HoldDryShephard:
+        SW44 OQSU 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 WY 1 A_WeaponReady(WRF_NOFIRE)
+        SW45 ACEGIKMOQSUWY 1 A_WeaponReady(WRF_NOFIRE)
+        SW46 ACEGIKMOQSUWY 1 A_WeaponReady(WRF_NOFIRE)
+        SW47 ACEGIKM 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      HoldDryAmmolessShephard:
+        SW35 NNNN 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireStartShephard:
+        SW43 IJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 ACEGIKM 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // painsplosion
+        SW44 O 0 A_ReFire SW44 O 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 Q 0 A_ReFire SW44 Q 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 S 0 A_ReFire SW44 S 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 U 0 A_ReFire SW44 U 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 W 0 A_ReFire SW44 W 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW44 Y 0 A_ReFire SW44 Y 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 A 0 A_ReFire SW45 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 C 0 A_ReFire SW45 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 E 0 A_ReFire SW45 E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 G 0 A_ReFire SW45 G 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 I 0 A_ReFire SW45 I 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 K 0 A_ReFire SW45 K 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 M 0 A_ReFire SW45 M 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 O 0 A_ReFire SW45 O 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 Q 0 A_ReFire SW45 Q 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 S 0 A_ReFire SW45 S 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 U 0 A_ReFire SW45 U 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 W 0 A_ReFire SW45 W 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW45 Y 0 A_ReFire SW45 Y 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 A 0 A_ReFire SW46 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 C 0 A_ReFire SW46 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 E 0 A_ReFire SW46 E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 G 0 A_ReFire SW46 G 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 I 0 A_ReFire SW46 I 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 K 0 A_ReFire SW46 K 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 M 0 A_ReFire SW46 M 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 O 0 A_ReFire SW46 O 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 Q 0 A_ReFire SW46 Q 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 S 0 A_ReFire SW46 S 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 U 0 A_ReFire SW46 U 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 W 0 A_ReFire SW46 W 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW46 Y 0 A_ReFire SW46 Y 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 A 0 A_ReFire SW47 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 C 0 A_ReFire SW47 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 E 0 A_ReFire SW47 E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 G 0 A_ReFire SW47 G 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 I 0 A_ReFire SW47 I 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 K 0 A_ReFire SW47 K 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW47 M 0 A_ReFire SW47 M 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireStartLastShephard:
+        SW53 YZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW54 BCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // keeping DoubleFiringSpeed parity
+        SW35 NNNNNNNNN 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // painsplosion 2.0
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SW35 N 0 A_ReFire SW35 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivateNoAmmoShephard:
+        SW35 N 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivateAmmoShephard:
+        SW32 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ReloadStartShephard:
+        SW47 OPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW48 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW49 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW50 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW51 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW52 ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE)
+        SW52 U 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoShephard")
+      ReloadFinishShephard:
+        SW52 UVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        SW53 ABCDEFGHIJKLMNOPQRSTUVWX 1 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActual
+
+      ReloadAmmoShephard:
+        SW52 U 0 A_JumpIfInventory("HLXBowAmmoCounter",0,"ReloadFinishShephard")
+        SW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        SW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        SW52 U 0 A_JumpIfInventory("Shell",2,1)
+        goto ReloadFinishShephard
+        SW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        SW52 U 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        SW52 U 0 A_TakeInventory("Shell",2)
+        SW52 U 0 A_GiveInventory("HLXBowAmmoCounter")
+        loop
+
+      ReloadStartAmmolessShephard:
+        SW54 OQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW55 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW56 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW57 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW58 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        SW59 ABCDEFGHIJKLMNOPQRSTU 1 A_WeaponReady(WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmoless")
+        goto ReloadFinishAmmoless
+    }
+}
+
+actor SamsaraHalfLifeCrossbowAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Shell",2)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("HLXBowAmmoCounter",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("HLXBowAmmoCounter",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("HLXBow/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("HLXBowIsZoomed",1,"PickupAttackScoped")
+      // Unscoped
+      PickupAttackUnscoped:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 62) == 1, "PickupAttackUnscopedExplosive")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 62) >= 3, "PickupAttackUnscopedExplosive")
+      // Non-explosive bolts
+      PickupAttackUnscopedNonExplosive:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnscopedNonExplosiveCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnscopedNonExplosiveCoop")
+      PickupAttackUnscopedNonExplosiveDM:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBolt",0,false,4)
+        goto PickupFinish
+
+      PickupAttackUnscopedNonExplosiveCoop:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBoltCoop",0,false,4)
+        goto PickupFinish
+
+      // Explosive bolts
+      PickupAttackUnscopedExplosive:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnscopedExplosiveCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnscopedExplosiveCoop")
+      PickupAttackUnscopedExplosiveDM:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBoltExplosive",0,false,4)
+        goto PickupFinish
+
+      PickupAttackUnscopedExplosiveCoop:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBoltExplosiveCoop",0,false,4)
+        goto PickupFinish
+
+      // Scoped
+      PickupAttackScoped:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 62) == 2, "PickupAttackScopedExplosive")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 62) >= 3, "PickupAttackScopedExplosive")
+      // Non-explosive bolts
+      PickupAttackScopedNonExplosive:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackScopedNonExplosiveCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackScopedNonExplosiveCoop")
+      PickupAttackScopedNonExplosiveDM:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBolt",0,false,4)
+        goto PickupFinish
+
+      PickupAttackScopedNonExplosiveCoop:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBoltCoop",0,false,4)
+        goto PickupFinish
+
+      // Explosive bolts
+      PickupAttackScopedExplosive:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackScopedExplosiveCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackScopedExplosiveCoop")
+      PickupAttackScopedExplosiveDM:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBoltExplosive",0,false,4)
+        goto PickupFinish
+
+      PickupAttackScopedExplosiveCoop:
+        TNT1 A 0 A_FireCustomMissile("HLXBowBoltExplosiveCoop",0,false,4)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 ACS_NamedExecuteAlways("HalfLifeRecoil", 0, 2)
+        stop
+    }
+}
+
+actor HLXBowAmmoCounter : Ammo
+{
+    Inventory.MaxAmount 5
+    Tag "Crossbow Magazine"
+    +IGNORESKILL
+}
+
+actor HLXBowBolt
+{
+    Projectile
+    Radius 2
+    Height 4
+    Speed 55
+    Damage (0)
+    DamageType "HLBullet"
+    Mass 5
+    Scale 0.5
+    +BLOODSPLATTER
+    +FORCERADIUSDMG
+    +HITTRACER
+    +NODAMAGETHRUST
+    +NOEXTREMEDEATH
+    States
+    {
+      Spawn:
+        BOLT A 5 A_PlaySound("HLXbow/Fly",CHAN_VOICE,0.5,true)
+        loop
+
+      Death:
+        BOLT A 0 A_PlaySound("silence",CHAN_VOICE)
+        BOLT A 0 A_StopSound(CHAN_VOICE)
+        BOLT A 0 A_PlaySound("HLXbow/Hit/Wall",CHAN_VOICE)
+        BOLT A 0 A_Jump(128,1,2,3,4,5,6,7)
+        BOLT AAAAAA 0 A_SpawnItemEx("HLPuffSpark",0,0,0,frandom(1,4),0,random(0,3),random(-90,90))
+        BOLT A 350 A_SpawnItemEx("HLXBowSpark",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        stop
+
+      XDeath:
+        TNT1 A 0 A_PlaySound("silence",CHAN_VOICE)
+        TNT1 A 0 A_StopSound(CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("HLXbow/Hit/Body",CHAN_VOICE)
+        TNT1 A 5 A_Explode(CallACS("HalfLife_BulletDamage",125),8,0,false,8)
+        stop
+
+      Crash:
+        TNT1 A 0 A_PlaySound("silence",CHAN_VOICE)
+        TNT1 A 0 A_StopSound(CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("HLXbow/Hit/Wall",CHAN_VOICE)
+        TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",125),8,0,false,8)
+        TNT1 A 0 A_Jump(128,1,2,3,4,5,6,7)
+        TNT1 AAAAAA 0 A_SpawnItemEx("HLPuffSpark",0,0,0,frandom(1,4),0,random(0,3),random(-90,90))
+        TNT1 A 5 A_SpawnItemEx("HLXBowSpark",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        stop
+    }
+}
+
+actor HLXBowBoltCoop : HLXBowBolt
+{
+    Speed 60
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor HLXBowBoltExplosive : HLXBowBolt
+{
+    States
+    {
+      Death:
+        BOLT A 0 A_PlaySound("silence",CHAN_VOICE)
+        BOLT A 0 A_StopSound(CHAN_VOICE)
+        BOLT A 0 A_PlaySound("HLXbow/Hit/Wall",CHAN_VOICE)
+        BOLT A 0 A_Jump(128,1,2,3,4,5,6,7)
+        BOLT AAAAAA 0 A_SpawnItemEx("HLPuffSpark",0,0,0,frandom(1,4),0,random(0,3),random(-90,90))
+        BOLT A 17 A_SpawnItemEx("HLXBowSpark",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_SetDamageType("HLExplosive")
+        TNT1 A 0 A_Explode(120,70,XF_HURTSOURCE,true)
+        TNT1 A 0 A_PlaySound("halflife/mp5_grenadehit")
+        TNT1 A 5 A_SpawnItemEx("HLSmallExplosionBoom",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        stop
+    }
+}
+
+actor HLXBowBoltExplosiveCoop : HLXBowBoltExplosive
+{
+    Speed 60
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor HLXBowSpark
+{
+    Radius 1
+    Height 1
+    RenderStyle "Add"
+    Scale 0.5
+    +CLIENTSIDEONLY
+    +NOBLOCKMAP
+    +NOGRAVITY
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        HWX4 A 3
+        stop
+    }
+}
+
+// M40A1 Sniper Rifle
+
+actor HLSniperIsZoomed : Boolean {}
+actor SamsaraHalfLifeSniperReloadCooldown : Counter {}
+
+actor "M40A1 Sniper Rifle" : HLWeapon
+{
+    Inventory.PickupMessage "You found an M40A1 Sniper Rifle!"
+    Inventory.Icon "HWU1Y0"
+    Weapon.SlotNumber 8
+    Weapon.SelectionOrder 1500
+    Weapon.AmmoType1 "HLSniperCounter"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Shell"
+    Weapon.AmmoGive2 10
+    Tag "M40A1 Sniper Rifle"
+    +NOAUTOAIM
+    States
+    {
+      Spawn:
+        OWU0 A -1
+        stop
+
+      // Gordon Freeman
+      ReadyActual:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+      ReadyActualNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"ReadyActualNonReloadableZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyActualNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReadyActualNonReloadableAmmo")
+        goto ReadyActualNonReloadableNoAmmo
+
+      ReadyActualNonReloadableNoAmmo:
+        0P22 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualNonReloadableNoAmmoShephard")
+        0P22 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        0P22 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        0P22 A 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActual // restart the state
+
+      ReadyActualNonReloadableAmmo:
+        0P02 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualNonReloadableAmmoShephard")
+        0P02 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        0P02 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        0P02 A 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActual // restart the state
+
+      ReadyActualNonReloadableZoomed:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        TNT1 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        TNT1 A 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActual // restart the state
+
+      ReadyActualReloadable:
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"ReadyActualReloadableZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActualReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",1,"ReadyActualReloadableAmmo")
+        goto ReadyActualReloadableNoAmmo
+
+      ReadyActualReloadableNoAmmo:
+        0P22 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualReloadableNoAmmoShephard")
+        0P22 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        0P22 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        0P22 A 1 A_WeaponReady(WRF_NOFIRE) // disallow reloading during cooldown
+        goto ReadyActual // restart the state
+
+      ReadyActualReloadableAmmo:
+        0P02 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualReloadableAmmoShephard")
+        0P02 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        0P02 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        0P02 A 1 A_WeaponReady(WRF_NOFIRE) // disallow reloading during cooldown
+        goto ReadyActual // restart the state
+
+      ReadyActualReloadableZoomed:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        TNT1 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        TNT1 A 1 A_WeaponReady(WRF_NOFIRE) // disallow reloading during cooldown
+        goto ReadyActual // restart the state
+
+      ReadyActualJump:
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(4,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(3,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(2,"ReadyActualAmmoCheck")
+        TNT1 A 0 A_Jump(1,"ReadyActualIdle")
+        goto ReadyActualAmmoCheck
+
+      ReadyActualIdle:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdleReloadable")
+      ReadyActualIdleNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyActualIdleNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReadyActualIdleNonReloadableAmmo")
+        goto ReadyActualIdleNonReloadableNoAmmo
+
+      ReadyActualIdleNonReloadableNoAmmo:
+        0P22 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdleNonReloadableNoAmmoShephard")
+        0P22 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P23 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P24 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P25 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P22 A 0
+        goto ReadyActual
+
+      ReadyActualIdleNonReloadableAmmo:
+        0P02 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdleNonReloadableAmmoShephard")
+        0P02 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P05 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P02 A 0
+        goto ReadyActual
+
+      ReadyActualIdleReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActualIdleReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",1,"ReadyActualIdleReloadableAmmo")
+        goto ReadyActualIdleReloadableNoAmmo
+
+      ReadyActualIdleReloadableNoAmmo:
+        0P22 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdleReloadableNoAmmoShephard")
+        0P22 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P23 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P24 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P25 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P22 A 0
+        goto ReadyActual
+
+      ReadyActualIdleReloadableAmmo:
+        0P02 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdleReloadableAmmoShephard")
+        0P02 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P05 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P02 A 0
+        goto ReadyActual
+
+      ReadyActualAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReadyActual
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",1,"ReadyActual")
+        goto ReloadCheck
+
+      Deselect:
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,1)
+        goto Super::Deselect
+        TNT1 A 0 A_TakeInventory("HLSniperIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        TNT1 A 0 A_PlaySound("HLM40a1/Zoom",CHAN_6)
+        goto Super::Deselect
+
+      Select:
+        TNT1 A 0 A_TakeInventory("freeman_fistselected")
+        TNT1 A 0 A_TakeInventory("freeman_pistolselected")
+        TNT1 A 0 A_TakeInventory("freeman_slot1selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot2selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot3selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot4selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot5selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot6selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot7selected")
+        TNT1 A 0 A_TakeInventory("freeman_uniqueselected")
+        TNT1 A 0 A_GiveInventory("freeman_unique2selected")
+        TNT1 A 0 A_TakeInventory("freeman_unique3selected")
+        goto Super::Select
+
+      Ready: // our "Select" state
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,1) // map change hack
+        goto ReadyStart1
+        TNT1 A 0 A_TakeInventory("HLSniperIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        // no need for a sound
+        goto ReadyStart1
+
+      ReadyStart1:
+        0P00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyStart1Shephard")
+        0P00 A 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        0P00 B 0 A_JumpIfInventory("HLSniperIsZoomed",1,1) // map change hack
+        goto ReadyStart2
+        0P00 B 0 A_TakeInventory("HLSniperIsZoomed")
+        0P00 B 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        // no need for a sound
+        goto ReadyStart2
+
+      ReadyStart2:
+        0P00 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        0P01 ABCD 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        0P02 A 0
+        goto ReadyActual
+
+      Fire:
+        0P06 A 0 A_JumpIfInventory("HLOriginalKeySwitcherOpen",1,"ReadyActual")
+        0P06 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,"ReadyActual")
+        0P06 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        0P06 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        0P06 A 0 A_JumpIfInventory("Shell",2,"FireWaterCheck")
+        goto FireDryAmmoless
+
+      FireReloadable:
+        0P06 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        0P06 A 0 A_JumpIfInventory("HLSniperCounter",1,"FireWaterCheck")
+        goto FireDryAmmoless
+
+      FireWaterCheck:
+        0P06 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        0P06 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto FireStart
+
+      FireDry:
+        0P02 A 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        0P02 A 0 A_ClearReFire
+        0P02 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"FireDryZoomed")
+        0P02 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireDryShephard")
+        0P02 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireDryAmmoless:
+        0P22 A 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        0P22 A 0 A_ClearReFire
+        0P22 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"FireDryZoomed")
+        0P22 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireDryAmmolessShephard")
+        0P22 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireDryZoomed:
+        TNT1 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireStart:
+        0P06 A 0 A_AlertMonsters
+      FireStartLastShotCalc:
+        0P06 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStartLastShotCalcReloadable")
+      FireStartLastShotCalcNonReloadable:
+        0P06 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue")
+        0P06 A 0 A_JumpIfInventory("Shell",4,"FireContinue")
+        goto FireContinueLast
+
+      FireStartLastShotCalcReloadable:
+        0P06 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireContinue")
+        0P06 A 0 A_JumpIfInventory("HLSniperCounter",2,"FireContinue")
+        goto FireContinueLast
+
+      FireContinue:
+        0P06 A 0 A_GiveInventory("SamsaraHalfLifeM40A1AttackHandler")
+        0P06 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"FireContinueZoomed")
+        0P06 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireContinueShephard")
+        0P06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P07 ABCDEF 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P07 G 0 A_PlaySound("HLM40a1/Bolt1")
+        0P07 GHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P08 ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireContinueZoomed:
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("HLM40a1/Bolt1")
+        TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireContinueLast:
+        0P09 A 0 A_GiveInventory("SamsaraHalfLifeM40A1AttackHandler")
+        0P09 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"FireContinueLastZoomed")
+        0P09 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireContinueLastShephard")
+        0P09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 ABCDEF 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 G 0 A_PlaySound("HLM40a1/Bolt2")
+        0P10 GHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P11 ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireContinueLastZoomed:
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("HLM40a1/Bolt2")
+        TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 AAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      AltFire:
+      Zoom:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,"ReadyActual")
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"ZoomDeactivate")
+      ZoomActivate:
+        TNT1 A 0 A_GiveInventory("HLSniperIsZoomed")
+        TNT1 A 0 A_ZoomFactor(8,ZOOM_INSTANT)
+        TNT1 A 0 A_PlaySound("HLM40a1/Zoom",CHAN_6)
+        TNT1 A 0 ACS_NamedExecuteAlways("HalfLifeSniperScope")
+        TNT1 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivate:
+        TNT1 A 0 A_TakeInventory("HLSniperIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        TNT1 A 0 A_PlaySound("HLM40a1/Zoom",CHAN_6)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ZoomDeactivateReloadable")
+      ZoomDeactivateNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ZoomDeactivateAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ZoomDeactivateAmmo")
+        goto ZoomDeactivateNoAmmo
+
+      ZoomDeactivateReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ZoomDeactivateAmmo")
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",1,"ZoomDeactivateAmmo")
+        goto ZoomDeactivateNoAmmo
+
+      ZoomDeactivateNoAmmo:
+        0P22 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ZoomDeactivateNoAmmoShephard")
+        0P22 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivateAmmo:
+        0P02 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ZoomDeactivateAmmoShephard")
+        0P02 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      Reload:
+      ReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,"ReadyActual")
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",0,"ReadyActual")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadScopeCheck")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,"ReloadScopeCheck")
+        goto ReadyActual
+
+      ReloadScopeCheck:
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,1)
+        goto ReloadStart
+        TNT1 A 0 A_TakeInventory("HLSniperIsZoomed")
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        TNT1 A 0 A_PlaySound("HLM40a1/Zoom",CHAN_6) // interestingly, opfor doesn't play scope sound on reload. let's do it here
+        goto ReloadStart
+
+      ReloadStart:
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",1,1)
+        goto ReloadStartAmmoless
+        0P18 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReloadStartShephard")
+        0P18 A 1 A_WeaponReady(WRF_NOFIRE)
+        0P18 B 0 A_PlaySound("HLM40a1/Reload")
+        0P18 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P19 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P20 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P21 A 1 A_WeaponReady(WRF_NOFIRE)
+        0P02 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        TNT1 A 0
+        goto ReadyActual
+
+      ReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",2,1)
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",2)
+        TNT1 A 0 A_GiveInventory("HLSniperCounter")
+        loop
+
+      ReloadStartAmmoless:
+        0P12 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReloadStartAmmolessShephard")
+        0P12 A 1 A_WeaponReady(WRF_NOFIRE)
+        0P12 B 0 A_PlaySound("HLM40a1/Reload")
+        0P12 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P13 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P15 A 1 A_WeaponReady(WRF_NOFIRE)
+        0P16 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmoless")
+      ReloadFinishAmmoless: // also could not be fired immediately after ammo calculation in opfor, so apply this same rule from slot6.dec here
+        0P16 A 0 A_TakeInventory("SamsaraHalfLifeSniperReloadCooldown") // reset
+        0P16 A 0 A_GiveInventory("SamsaraHalfLifeSniperReloadCooldown",48)
+        0P16 A 1 A_WeaponReady(WRF_NOFIRE)
+        0P16 B 0 A_PlaySound("HLM40a1/Reload2")
+        0P16 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        0P17 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_NOFIRE)
+        0P02 A 0
+        goto ReadyActual
+
+      ReloadAmmoAmmoless:
+        0P16 A 0 A_JumpIfInventory("HLSniperCounter",0,"ReloadFinishAmmoless")
+        0P16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        0P16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        0P16 A 0 A_JumpIfInventory("Shell",2,1)
+        goto ReloadFinishAmmoless
+        0P16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        0P16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        0P16 A 0 A_TakeInventory("Shell",2)
+        0P16 A 0 A_GiveInventory("HLSniperCounter")
+        loop
+
+      // Adrian Shephard
+      ReadyActualNonReloadableNoAmmoShephard:
+        OP22 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        OP22 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        OP22 A 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActual // restart the state
+
+      ReadyActualNonReloadableAmmoShephard:
+        OP02 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        OP02 A 2 A_WeaponReady(WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        OP02 A 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActual // restart the state
+
+      ReadyActualReloadableNoAmmoShephard:
+        OP22 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        OP22 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        OP22 A 1 A_WeaponReady(WRF_NOFIRE) // disallow reloading during cooldown
+        goto ReadyActual // restart the state
+
+      ReadyActualReloadableAmmoShephard:
+        OP02 A 0 A_JumpIfInventory("SamsaraHalfLifeSniperReloadCooldown",1,2)
+        OP02 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        goto ReadyActualJump
+        OP02 A 1 A_WeaponReady(WRF_NOFIRE) // disallow reloading during cooldown
+        goto ReadyActual // restart the state
+
+      ReadyActualIdleNonReloadableNoAmmoShephard:
+        OP22 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP23 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP24 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP25 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP22 A 0
+        goto ReadyActual
+
+      ReadyActualIdleNonReloadableAmmoShephard:
+        OP02 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP05 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP02 A 0
+        goto ReadyActual
+
+      ReadyActualIdleReloadableNoAmmoShephard:
+        OP22 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP23 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP24 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP25 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP22 A 0
+        goto ReadyActual
+
+      ReadyActualIdleReloadableAmmoShephard:
+        OP02 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP05 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP02 A 0
+        goto ReadyActual
+
+      ReadyStart1Shephard:
+        OP00 A 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        OP00 B 0 A_JumpIfInventory("HLSniperIsZoomed",1,1) // map change hack
+        goto ReadyStart2Shephard
+        OP00 B 0 A_TakeInventory("HLSniperIsZoomed")
+        OP00 B 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        goto ReadyStart2Shephard
+
+      ReadyStart2Shephard:
+        OP00 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        OP01 ABCD 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        OP02 A 0
+        goto ReadyActual
+
+      FireDryShephard:
+        OP02 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireDryAmmolessShephard:
+        OP22 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireContinueShephard:
+        OP06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        OP07 ABCDEF 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        OP07 G 0 A_PlaySound("HLM40a1/Bolt1")
+        OP07 GHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        OP08 ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireContinueLastShephard:
+        OP09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        OP10 ABCDEF 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        OP10 G 0 A_PlaySound("HLM40a1/Bolt2")
+        OP10 GHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        OP11 ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivateNoAmmoShephard:
+        OP22 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ZoomDeactivateAmmoShephard:
+        OP02 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ReloadStartShephard:
+        OP18 A 1 A_WeaponReady(WRF_NOFIRE)
+        OP18 B 0 A_PlaySound("HLM40a1/Reload")
+        OP18 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP19 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP20 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP21 A 1 A_WeaponReady(WRF_NOFIRE)
+        OP02 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+        goto ReloadFinish
+
+      ReloadStartAmmolessShephard:
+        OP12 A 1 A_WeaponReady(WRF_NOFIRE)
+        OP12 B 0 A_PlaySound("HLM40a1/Reload")
+        OP12 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP13 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP15 A 1 A_WeaponReady(WRF_NOFIRE)
+        OP16 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmolessShephard")
+      ReloadFinishAmmolessShephard:
+        OP16 A 0 A_TakeInventory("SamsaraHalfLifeSniperReloadCooldown") // reset
+        OP16 A 0 A_GiveInventory("SamsaraHalfLifeSniperReloadCooldown",48)
+        OP16 A 1 A_WeaponReady(WRF_NOFIRE)
+        OP16 B 0 A_PlaySound("HLM40a1/Reload2")
+        OP16 BCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
+        OP17 ABCDEFGHIJKLMNOPQRSTUV 1 A_WeaponReady(WRF_NOFIRE)
+        OP02 A 0
+        goto ReadyActual
+
+      ReloadAmmoAmmolessShephard:
+        OP16 A 0 A_JumpIfInventory("HLSniperCounter",0,"ReloadFinishAmmolessShephard")
+        OP16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        OP16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        OP16 A 0 A_JumpIfInventory("Shell",2,1)
+        goto ReloadFinishAmmolessShephard
+        OP16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        OP16 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        OP16 A 0 A_TakeInventory("Shell",2)
+        OP16 A 0 A_GiveInventory("HLSniperCounter")
+        loop
+    }
+}
+
+actor SamsaraHalfLifeM40A1AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Shell",2)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("HLSniperCounter",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("HLSniperCounter",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("HLM40a1/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("HLSniperIsZoomed",1,"PickupAttackScoped")
+      // Unscoped
+      PickupAttackUnscoped:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnscopedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnscopedCoop")
+      PickupAttackUnscopedDM:
+        TNT1 A 0 A_FireCustomMissile("HLM40A1Bullet",0,false,4)
+        //TNT1 A 0 A_FireBullets(0,0,1,150,"HLM40A1Puff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      PickupAttackUnscopedCoop:
+        TNT1 A 0 A_FireCustomMissile("HLM40A1BulletCoop",0,false,4)
+        //TNT1 A 0 A_FireBullets(0,0,1,150,"HLM40A1PuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Scoped
+      PickupAttackScoped:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackScopedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackScopedCoop")
+      PickupAttackScopedDM:
+        //TNT1 A 0 A_FireCustomMissile("HLM40A1BulletZoomed",0,false,0,0,0,0.25)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"HLM40A1PuffZoomed",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ) // [tv50] normal shot was -1 spread_horz, last shot was 1 spread_horz, but numbullets wasn't -1 in both cases. adjust values and readd FBF_EXPLICITANGLE if needed
+        goto PickupFinish
+
+      PickupAttackScopedCoop:
+        //TNT1 A 0 A_FireCustomMissile("HLM40A1BulletZoomedCoop",0,false,0,0,0,0.25)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"HLM40A1PuffZoomedCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 ACS_NamedExecuteAlways("HalfLifeRecoil", 0, 2)
+        stop
+    }
+}
+
+actor HLSniperCounter : Ammo
+{
+    Inventory.MaxAmount 5
+    Tag "M40A1 Magazine"
+    +IGNORESKILL
+}
+
+Actor HLM40A1Bullet : HLBullet
+{
+    +THRUGHOST
+    Damage (0)
+    States
+    {
+        Crash:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            Goto Super::Death
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            Goto Super::XDeath
+    }
+}
+
+actor HLM40A1BulletCoop : HLBulletCoop
+{
+    DamageType "HLBullet"
+    Damage (0)
+    +THRUGHOST
+    +NOEXTREMEDEATH
+    +NODAMAGETHRUST
+    Scale 0.5
+    Speed 512
+    States
+    {
+        SpawnLoop:
+            TNT1 A 1
+            loop
+        Crash:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            Goto Super::Death
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            Goto Super::XDeath
+    }
+}
+
+actor HLM40A1Puff : HLBulletPuff
+{
+    +NODAMAGETHRUST
+    +NOEXTREMEDEATH
+    +NOTIMEFREEZE
+    +PUFFGETSOWNER
+    +THRUGHOST
+    States
+    {
+        Spawn:
+            TNT1 A 0
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            Goto Super::Spawn
+    }
+}
+
+actor HLM40A1PuffCoop : HLBulletPuffCoop
+{
+    +NODAMAGETHRUST
+    +NOEXTREMEDEATH
+    +NOTIMEFREEZE
+    +PUFFGETSOWNER
+    +THRUGHOST
+    States
+    {
+        Spawn:
+            TNT1 A 0
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            Goto Super::Spawn
+    }
+}
+
+actor HLM40A1PuffZoomed : HLBulletPuff
+{
+    +NODAMAGETHRUST
+    +NOEXTREMEDEATH
+    +NOTIMEFREEZE
+    +FORCERADIUSDMG
+    +PUFFONACTORS
+    +PUFFGETSOWNER
+    +HITTRACER
+    +THRUGHOST
+    States
+    {
+        Spawn:
+            TNT1 A 0
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            TNT1 A 1
+            Stop
+    }
+}
+
+actor HLM40A1PuffZoomedCoop : HLBulletPuffCoop
+{
+    +NODAMAGETHRUST
+    +NOEXTREMEDEATH
+    +NOTIMEFREEZE
+    +FORCERADIUSDMG
+    +PUFFGETSOWNER
+    +HITTRACER
+    +THRUGHOST
+    States
+    {
+        Spawn:
+            TNT1 A 0
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",150),8,!XF_HURTSOURCE,0,8)
+            TNT1 A 1
+            Stop
+    }
+}

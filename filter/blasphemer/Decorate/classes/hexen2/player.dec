@@ -9,6 +9,7 @@ Actor Demoness : SamsaraPlayerPawnNormalRedBlood
     Player.StartItem "IsSamsaraClass", 1
 	Player.StartItem "SamsaraTipsChecker", 1
 	Player.StartItem "Hexen2Level", 1
+	Player.StartItem "SamsaraPermaWeaponLevel2ToggleMemory", 1
 	Player.StartItem "Clip", 50
 	Player.ForwardMove 1.098
     Player.SideMove 1.098
@@ -196,6 +197,7 @@ Actor Demoness : SamsaraPlayerPawnNormalRedBlood
 			Loop
 		Death:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
 			HX17 A 0 A_PlayerScream
 			HX17 A 0 A_NoBlocking
 			HX17 ABCDEFGHIJKLMNOPQRST 2
@@ -211,12 +213,13 @@ Actor Demoness : SamsaraPlayerPawnNormalRedBlood
 		Death.Hexen2ElectricExtreme:
 		XDeathForDemoness:
 		XDeath:
-			"####" A 0 A_Playsound("Hexen2/Gib", CHAN_5)
 			"####" A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|1048576)
+		XDeath.Massacre:
+			"####" A 0 A_Playsound("Hexen2/Gib", CHAN_5)
 			"####" A 0 A_SpawnItemEx("Hexen2GibSpawner",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_SETMASTER)
 			"####" A 0 A_ChangeFlag("SOLID",false)
 			TNT1 A -1
-			Stop	
+			Stop
 		NoFrames:
 			HX00 A 0 bright A_Stop HX01 A 0 bright A_Stop HX02 A 0 bright A_Stop HX03 A 0 bright A_Stop HX04 A 0 bright A_Stop HX05 A 0 bright A_Stop 
 			HX06 A 0 bright A_Stop HX07 A 0 bright A_Stop HX08 A 0 bright A_Stop HX09 A 0 bright A_Stop HX10 A 0 bright A_Stop HX11 A 0 bright A_Stop 
@@ -305,6 +308,7 @@ Actor Demoness_Shrink : Demoness
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -313,12 +317,18 @@ Actor Demoness_Shrink : Demoness
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -333,6 +343,7 @@ Actor Demoness_Shrink : Demoness
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -420,6 +431,8 @@ Actor Demoness_Shrink : Demoness
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

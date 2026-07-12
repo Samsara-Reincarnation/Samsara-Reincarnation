@@ -61,8 +61,9 @@ Actor D64Revenant_Samsara : SamsaraMonsterDemonicTotalGib replaces RevenantTwo
 		SKEL L 16 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
-		SKEL L 6 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+	Death.Massacre:
+		SKEL L 6 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		SKEL M 6
 		SKEL N 6 A_Scream
 		SKEL O 6 A_NoBlocking
@@ -75,6 +76,9 @@ Actor D64Revenant_Samsara : SamsaraMonsterDemonicTotalGib replaces RevenantTwo
 		SKEL Q 6
 		SKEL PONML 6
 		Goto See
+	Crush:
+		A027 A -1 A_PlaySound("misc/gibbed")
+		Stop
 	Pain.ShrinkerDMG:
 		SKEL L 0
 		"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
@@ -181,6 +185,7 @@ Actor D64Revenant_Samsara : SamsaraMonsterDemonicTotalGib replaces RevenantTwo
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
 		Disintegrate:
+		Death.StrifeMauler:
 			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
 			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
@@ -370,6 +375,8 @@ actor D64Revenant_Samsara_Shrink : D64Revenant_Samsara
 			Loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)
@@ -426,3 +433,5 @@ actor D64WeakRevenantTracer_Samsara : D64WeakRevenantTracer
 	-THRUGHOST
 	DamageType "DoomTheseGuysAreTheBest"
 }
+
+actor D64RevenantTracer_Samsara : D64RevenantTracer replaces D64RevenantTracer { SpawnID 156 }

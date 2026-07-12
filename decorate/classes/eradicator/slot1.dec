@@ -1,0 +1,713 @@
+// Tokens
+
+actor SamsaraEradicatorSlot1Spawned : Boolean {}
+actor SamsaraEradicatorSlot1Controlled : Boolean {}
+actor SamsaraEradicatorSlot1ProjActive : Counter { Inventory.MaxAmount 3 } // for spread rune
+
+// Eleena Brynstaarl/Alliance Commando
+
+actor " Arachnicator " : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Arachnicator"
+    Weapon.SlotNumber 1
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 2800
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 3
+    Weapon.AmmoUse 1
+    Obituary "%k didn't know %o was arachnophobic."
+    Tag "Arachnicator"
+    +EXPLOSIVE
+    +NOALERT
+    States
+    {
+      Spawn:
+        SPPU AB 3 Bright
+        loop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyStartAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyStartAmmo")
+        goto ReadyStartNoAmmo
+
+      ReadyStartNoAmmo:
+        TNT1 A 1 A_WeaponReady
+        goto ReadyNoAmmoCheck
+
+      ReadyStartAmmo:
+        ESPM A 1 A_WeaponReady
+        goto Ready
+
+      ReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFinish")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"FireFinish")
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectLoopAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectLoopAmmo")
+        goto DeselectLoopNoAmmo
+
+      DeselectLoopNoAmmo:
+        TNT1 A 1 A_Lower
+        goto DeselectLoop
+
+      DeselectLoopAmmo:
+        ESPM A 1 A_Lower
+        goto DeselectLoop
+
+      Select:
+        TNT1 A 0 A_Raise
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectAmmo")
+        goto SelectNoAmmo
+
+      SelectNoAmmo:
+        TNT1 A 1 A_Raise
+        goto Select
+
+      SelectAmmo:
+        ESPM A 1 A_Raise
+        goto Select
+
+      Fire:
+        ESPM A 2 Offset(0,40)
+        ESPM A 2 Offset(0,50)
+        ESPM A 2 Offset(0,60)
+        ESPM A 2 Offset(0,70)
+        ESPM A 2 Offset(0,80)
+        ESPM A 2 Offset(0,90)
+        ESPM A 4 Offset(0,150)
+      FireLastShotCalc:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",2,"FireContinue")
+        goto FireContinueLast
+
+      FireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorArachnicatorAttackHandler")
+      FireFinish:
+        ESPM A 1 Offset(0,100)
+        ESPM A 1 Offset(0,90)
+        ESPM A 1 Offset(0,80)
+        ESPM A 1 Offset(0,70)
+        ESPM A 1 Offset(0,60)
+        ESPM A 1 Offset(0,50)
+        ESPM A 1 Offset(0,40)
+        ESPM A 1 Offset(0,32)
+        goto Ready
+
+      FireContinueLast:
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorArachnicatorAttackHandler")
+        goto Ready
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorArachnicatorAttackHandler : Trigger
+{
+    States
+    {
+      // Initializing stuff
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SamsaraEradicatorSlot1ProjActive")
+        goto PickupAmmoCheck
+
+      // Ammo checking/taking stuff
+      PickupAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Eleena/SpiderReady",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SeekingSpider",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("CoopSeekingSpider",0,false)
+        stop
+    }
+}
+
+actor SeekingSpider
+{
+    Projectile
+    Radius 5
+    Height 5
+    Speed 8
+    Damage (75)
+    DamageType "EradExplosive"
+    Scale 0.65
+    Obituary "%k didn't know %o was arachnophobic."
+    +FLOORHUGGER
+    +NOTIMEFREEZE // allow moving controlled slot 1 during timefreeze. this should suffice for now
+    +SEEKERMISSILE
+    +STEPMISSILE
+    +THRUGHOST
+    States
+    {
+      Spawn:
+        SPMB A 0 Light("ERADSPIDERSHIT__")
+        TNT1 A 0 ACS_NamedExecuteWithResult("EradicatorPipObject", 1)
+        TNT1 A 0 A_PlaySound("Eleena/SpiderWalk",CHAN_VOICE,1.0,true)
+      SpawnLoop:
+        // prevent homing in on spawn if we're using the camera
+        SPMB A 2 Light("ERADSPIDERSHIT__")
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        SPMB B 2 Light("ERADSPIDERSHIT__")
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        SPMB C 2 Light("ERADSPIDERSHIT__")
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        SPMB D 2 Light("ERADSPIDERSHIT__")
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        SPMB E 2 Light("ERADSPIDERSHIT__")
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,"SpawnLoop")
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        loop
+
+      Death:
+        TNT1 A 0 A_Stop // just in case
+        TNT1 A 0 A_PlaySound("silence",CHAN_VOICE)
+        TNT1 A 0 A_StopSound(CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("Eleena/SpiderDie",CHAN_VOICE)
+        TNT1 A 0 A_SpawnDebris("SpiderGib1")
+        TNT1 A 0 A_SpawnDebris("SpiderGib2")
+        TNT1 A 0 A_SpawnDebris("SpiderGib3")
+        TNT1 A 0 A_SpawnDebris("SpiderGib4")
+        TNT1 A 0 A_SpawnDebris("SpiderGib5")
+        GLBB A 2 Bright Light("ERADEXPLOSION_1__") A_Explode(160,80,XF_HURTSOURCE,true)
+        GLBB B 2 Bright Light("ERADEXPLOSION_2__")
+        GLBB C 2 Bright Light("ERADEXPLOSION_3__")
+        GLBB D 2 Bright Light("ERADEXPLOSION_4__") A_FadeOut
+        GLBB EF 2 Bright Light("ERADEXPLOSION_5__") A_FadeOut
+        stop
+    }
+}
+
+actor CoopSeekingSpider : SeekingSpider
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor SpiderGib1
+{
+    Projectile
+    Health 1
+    Radius 1
+    Height 1
+    Speed 3
+    Gravity 0.8 // 0.125
+    BounceType "Doom"
+    Scale 0.65
+    +CLIENTSIDEONLY
+    +FLOORCLIP
+    +MOVEWITHSECTOR
+    +NOBLOCKMONST
+    -NOGRAVITY
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        SPGB ABCDE 2
+        loop
+
+      Death:
+        SPGB E 1 A_FadeOut
+        stop
+    }
+}
+
+actor SpiderGib2 : SpiderGib1
+{
+    States
+    {
+      Spawn:
+        SPGB FGHIJ 2
+        loop
+
+      Death:
+        SPGB J 1 A_FadeOut
+        stop
+    }
+}
+
+actor SpiderGib3 : SpiderGib1
+{
+    States
+    {
+      Spawn:
+        SPGB KLMNO 2
+        loop
+
+      Death:
+        SPGB O 1 A_FadeOut
+        stop
+    }
+}
+
+actor SpiderGib4 : SpiderGib1
+{
+    States
+    {
+      Spawn:
+        SPGB PQRST 2
+        loop
+
+      Death:
+        SPGB T 1 A_FadeOut
+        stop
+    }
+}
+
+actor SpiderGib5 : SpiderGib1
+{
+    States
+    {
+      Spawn:
+        SPGB UVWXY 2
+        loop
+
+      Death:
+        SPGB Y 1 A_FadeOut
+        stop
+    }
+}
+
+// Kamchak
+
+actor EradRovingMine : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Roving Mine"
+    Weapon.SlotNumber 1
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 2800
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 3
+    Weapon.AmmoUse 1
+    Obituary "%o was killed by %k's cylindrical roving mine."
+    Tag "Roving Mine"
+    +EXPLOSIVE
+    +NOALERT
+    States
+    {
+      Spawn:
+        ER13 B -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyStartAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyStartAmmo")
+        goto ReadyStartNoAmmo
+
+      ReadyStartNoAmmo:
+        TNT1 A 1 A_WeaponReady
+        goto ReadyNoAmmoCheck
+
+      ReadyStartAmmo:
+        ER13 A 1 A_WeaponReady
+        goto Ready
+
+      ReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFinish")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"FireFinish")
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectLoopAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectLoopAmmo")
+        goto DeselectLoopNoAmmo
+
+      DeselectLoopNoAmmo:
+        TNT1 A 1 A_Lower
+        goto DeselectLoop
+
+      DeselectLoopAmmo:
+        ER13 A 1 A_Lower
+        goto DeselectLoop
+
+      Select:
+        TNT1 A 0 A_Raise
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectAmmo")
+        goto SelectNoAmmo
+
+      SelectNoAmmo:
+        TNT1 A 1 A_Raise
+        goto Select
+
+      SelectAmmo:
+        ER13 A 1 A_Raise
+        goto Select
+
+      Fire:
+        ER13 A 2 Offset(0,40)
+        ER13 A 2 Offset(0,50)
+        ER13 A 2 Offset(0,60)
+        ER13 A 2 Offset(0,70)
+        ER13 A 2 Offset(0,80)
+        ER13 A 2 Offset(0,90)
+        ER13 A 4 Offset(0,150)
+      FireLastShotCalc:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",2,"FireContinue")
+        goto FireContinueLast
+
+      FireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorRovingMineAttackHandler")
+      FireFinish:
+        ER13 A 1 Offset(0,100)
+        ER13 A 1 Offset(0,90)
+        ER13 A 1 Offset(0,80)
+        ER13 A 1 Offset(0,70)
+        ER13 A 1 Offset(0,60)
+        ER13 A 1 Offset(0,50)
+        ER13 A 1 Offset(0,40)
+        ER13 A 1 Offset(0,32)
+        goto Ready
+
+      FireContinueLast:
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorRovingMineAttackHandler")
+        goto Ready
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorRovingMineAttackHandler : Trigger
+{
+    States
+    {
+      // Initializing stuff
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SamsaraEradicatorSlot1ProjActive")
+        goto PickupAmmoCheck
+
+      // Ammo checking/taking stuff
+      PickupAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("RovingMine",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("CoopRovingMine",0,false)
+        stop
+    }
+}
+
+actor RovingMine
+{
+    Projectile
+    Radius 5
+    Height 5
+    Speed 8
+    Damage (75)
+    DamageType "EradExplosive"
+    Scale 0.65
+    +FLOORHUGGER
+    +NOTIMEFREEZE // allow moving controlled slot 1 during timefreeze. this should suffice for now
+    +SEEKERMISSILE
+    +STEPMISSILE
+    +THRUGHOST
+    States
+    {
+      Spawn:
+        ER76 C 0
+        TNT1 A 0 ACS_NamedExecuteWithResult("EradicatorPipObject", 1)
+        TNT1 A 0 A_PlaySound("Erad/MiniTank",CHAN_VOICE,1.0,true)
+      SpawnLoop:
+        // prevent homing in on spawn if we're using the camera
+        ER76 C 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 D 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 E 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 F 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 G 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 H 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 I 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 J 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 K 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 L 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 M 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER76 N 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,"SpawnLoop")
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        loop
+
+      Death:
+        TNT1 A 0 A_Stop // just in case
+        TNT1 A 0 A_PlaySound("silence",CHAN_VOICE)
+        TNT1 A 0 A_StopSound(CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("Eleena/SpiderDie",CHAN_VOICE)
+        TNT1 AA 0 A_SpawnDebris("EradFriendlyRemotePillGib")
+        GLBB A 2 Bright Light("ERADEXPLOSION_1__") A_Explode(160,80,XF_HURTSOURCE,true)
+        GLBB B 2 Bright Light("ERADEXPLOSION_2__")
+        GLBB C 2 Bright Light("ERADEXPLOSION_3__")
+        GLBB D 2 Bright Light("ERADEXPLOSION_4__") A_FadeOut
+        GLBB EF 2 Bright Light("ERADEXPLOSION_5__") A_FadeOut
+        stop
+    }
+}
+
+actor CoopRovingMine : RovingMine
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+// Dan Blaze
+
+actor EradMiniTankDetonator : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Mini-Tank Detonator"
+    Weapon.SlotNumber 1
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 2800
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 3
+    Weapon.AmmoUse 1
+    Obituary "%o's foot was ran over by %k's mini tank detonator."
+    Tag "Mini Tank Detonator"
+    +EXPLOSIVE
+    +NOALERT
+    States
+    {
+      Spawn:
+        ER12 B -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyStartAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyStartAmmo")
+        goto ReadyStartNoAmmo
+
+      ReadyStartNoAmmo:
+        TNT1 A 1 A_WeaponReady
+        goto ReadyNoAmmoCheck
+
+      ReadyStartAmmo:
+        ER12 A 1 A_WeaponReady
+        goto Ready
+
+      ReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFinish")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"FireFinish")
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectLoopAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectLoopAmmo")
+        goto DeselectLoopNoAmmo
+
+      DeselectLoopNoAmmo:
+        TNT1 A 1 A_Lower
+        goto DeselectLoop
+
+      DeselectLoopAmmo:
+        ER12 A 1 A_Lower
+        goto DeselectLoop
+
+      Select:
+        TNT1 A 0 A_Raise
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectAmmo")
+        goto SelectNoAmmo
+
+      SelectNoAmmo:
+        TNT1 A 1 A_Raise
+        goto Select
+
+      SelectAmmo:
+        ER12 A 1 A_Raise
+        goto Select
+
+      Fire:
+        ER12 A 2 Offset(0,40)
+        ER12 A 2 Offset(0,50)
+        ER12 A 2 Offset(0,60)
+        ER12 A 2 Offset(0,70)
+        ER12 A 2 Offset(0,80)
+        ER12 A 2 Offset(0,90)
+        ER12 A 4 Offset(0,150)
+      FireLastShotCalc:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",2,"FireContinue")
+        goto FireContinueLast
+
+      FireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorMiniTankAttackHandler")
+      FireFinish:
+        ER12 A 1 Offset(0,100)
+        ER12 A 1 Offset(0,90)
+        ER12 A 1 Offset(0,80)
+        ER12 A 1 Offset(0,70)
+        ER12 A 1 Offset(0,60)
+        ER12 A 1 Offset(0,50)
+        ER12 A 1 Offset(0,40)
+        ER12 A 1 Offset(0,32)
+        goto Ready
+
+      FireContinueLast:
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorMiniTankAttackHandler")
+        goto Ready
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorMiniTankAttackHandler : Trigger
+{
+    States
+    {
+      // Initializing stuff
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SamsaraEradicatorSlot1ProjActive")
+        goto PickupAmmoCheck
+
+      // Ammo checking/taking stuff
+      PickupAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("MiniTankDetonator",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("CoopMiniTankDetonator",0,false)
+        stop
+    }
+}
+
+actor MiniTankDetonator
+{
+    Projectile
+    Radius 5
+    Height 5
+    Speed 8
+    Damage (75)
+    DamageType "EradExplosive"
+    Scale 0.65
+    +FLOORHUGGER
+    +NOTIMEFREEZE // allow moving controlled slot 1 during timefreeze. this should suffice for now
+    +SEEKERMISSILE
+    +STEPMISSILE
+    +THRUGHOST
+    States
+    {
+      Spawn:
+        ER75 T 0
+        TNT1 A 0 ACS_NamedExecuteWithResult("EradicatorPipObject", 1)
+        TNT1 A 0 A_PlaySound("Erad/MiniTank",CHAN_VOICE,1.0,true)
+      SpawnLoop:
+        // prevent homing in on spawn if we're using the camera
+        ER75 T 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER75 U 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER75 V 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER75 W 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,2)
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        ER75 X 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraEradicatorSlot1Controlled",1,"SpawnLoop")
+        TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK)
+        loop
+
+      Death:
+        TNT1 A 0 A_Stop // just in case
+        TNT1 A 0 A_PlaySound("silence",CHAN_VOICE)
+        TNT1 A 0 A_StopSound(CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("Eleena/SpiderDie",CHAN_VOICE)
+        TNT1 AAAA 0 A_SpawnDebris("EradFriendlyRemoteCarGib")
+        GLBB A 2 Bright Light("ERADEXPLOSION_1__") A_Explode(160,80,XF_HURTSOURCE,true)
+        GLBB B 2 Bright Light("ERADEXPLOSION_2__")
+        GLBB C 2 Bright Light("ERADEXPLOSION_3__")
+        GLBB D 2 Bright Light("ERADEXPLOSION_4__") A_FadeOut
+        GLBB EF 2 Bright Light("ERADEXPLOSION_5__") A_FadeOut
+        stop
+    }
+}
+
+actor CoopMiniTankDetonator : MiniTankDetonator
+{
+    Species "Player"
+    +THRUSPECIES
+}

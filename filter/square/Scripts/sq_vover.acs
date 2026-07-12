@@ -1,0 +1,170 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Voice-over handling.
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+
+/****************************************************************************/
+
+#define SQJABBER_MAX 100
+
+int voclip_current_id;
+
+/****************************************************************************/
+
+/**
+ * Returns the chance that a VO gets played.
+ * Result is a number from 0 to 100 or chanceoverride if CVAR(square_jabber_chance) is nonzero.
+ */
+function int VO_GetJabberChance(int chanceoverride)
+{
+	int chance = GetCVar("square_jabber_chance");
+	if (chanceoverride && chance)
+		chance = chanceoverride;
+	return chance;
+}
+
+/**
+ * Returns if a voice over should be played.
+ * Returns TRUE or FALSE.
+ */
+function int VO_GetJabber(int chanceoverride)
+{
+	int chance = VO_GetJabberChance(chanceoverride);
+	if (chance == 0) // to not "eat" a random number.
+		return FALSE;
+	return Random(0, SQJABBER_MAX-1) < chance;
+}
+
+/**
+ * Returns nonzero if subtitles is enabled.
+ */
+function int VO_Subtitle_Enabled(void)
+{
+	return GetCVar("square_subtitles");
+}
+
+/*****************************************************************************
+ * Actor-called Scripts
+ ****************************************************************************/
+
+/**
+ * Plays a Voice-Over category for everybody.
+ * The clip name is referenced in language definitions under VOCLIP_CATEGORY_X.
+ * votype: The category index to use.
+ */
+script "VO_PlaySound_All" (int votype)
+{
+	if (!VO_GetJabber(0))
+		terminate;
+	str sndname = StrParam(l: StrParam(s:"VOCLIP_CATEGORY_", d:votype));
+	//AmbientSound(sndname, 127);
+}
+
+/**
+ * Plays (or not) a Voice-Over category at the player level, intended for Square saying something during gameplay.
+ * Affected by CVAR "square_jabber_chance".
+ * If CVAR(square_jabber_chance) is 0, then it never plays. If 100, it always does.
+ * The clip name is referenced in language definitions under VOCLIP_CATEGORY_X.
+ * votype: The category index to use ("X" in above).
+ * chanceoverride: If greater than 0, use THIS as the chance if CVAR(square_jabber_chance) > 0.
+ */
+script "VO_Jabber" (int votype, int chanceoverride)
+{
+	if (!VO_GetJabber(chanceoverride))
+		terminate;
+	str sndname = StrParam(l: StrParam(s:"VOCLIP_CATEGORY_", d:votype));
+	//PlaySound(0, sndname, CHAN_VOICE | CHAN_MAYBE_LOCAL | CHAN_UI, 1.0, FALSE, ATTN_NORM);
+}
+
+
+/*****************************************************************************
+ * Evented Named Scripts
+ ****************************************************************************/
+
+/**
+ * Intitalizes map variables.
+ */
+script "__Init_VO" OPEN
+{
+	voclip_current_id = 0;
+}
+ 
+/*****************************************************************************
+ * Invoked End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * Plays a Voice over clip, captioned on-screen.
+ * The clip is played from language definitions, where X is the ID, Y is a sequence number: 
+ * VOCLIP_X_NAME - Sndinfo name.
+ * VOCLIP_X_SUBTITLE_COUNT - The amount of lines in total for the clip.
+ * VOCLIP_X_SUBTITLE_Y - The subtitle line to print.
+ * VOCLIP_X_SUBTITLE_Y_TICS - The length in tics to display the line for before moving to the next.
+ * clipId: the clip id number ("X" in above).
+ * cutscene: if nonzero, use cutscene positioning.
+ */
+script "VO_PlayClip" (int clipId, int cutscene)
+{
+	str sndname, sndsourcename, cursubtitle;
+	int linecount, curline, curtics, linepos;
+	
+	if (cutscene)
+		linepos = 0.90;
+	else
+		linepos = 0.70;
+	
+	sndname = StrParam(l: StrParam(s:"VOCLIP_", d:clipId, s:"_NAME"));
+	linecount = ParseInt(StrParam(l: StrParam(s:"VOCLIP_", d:clipId, s:"_SUBTITLE_COUNT")));
+
+	if (CheckInventory("CutsceneModeItem")) { AmbientSound(sndname, 127); }
+	voclip_current_id = clipId;
+
+	if (CheckInventory("CutsceneModeItem") && VO_Subtitle_Enabled() && linecount)
+	{
+		HudMessageBold(s:""; HUDMSG_PLAIN, HUD_SUBTITLE, CR_UNTRANSLATED, 0.5, linepos, 0.0);
+		
+		for (curline = 0; curline < linecount && voclip_current_id; curline++)
+		{
+			cursubtitle = StrParam(l: StrParam(s:"VOCLIP_", d:voclip_current_id, s:"_SUBTITLE_", d:curline));
+			curtics = ParseInt(StrParam(l: StrParam(s:"VOCLIP_", d:voclip_current_id, s:"_SUBTITLE_", d:curline, s:"_TICS")));
+			
+			if (curtics)
+			{
+				SetFont("SmallFont");
+				// display indefinitely - will be replaced by next line
+				if (curline < linecount - 1)
+				{
+					HudMessageBold(s:cursubtitle; HUDMSG_PLAIN, HUD_SUBTITLE, CR_UNTRANSLATED, 0.5, linepos, 0.0);
+					delay(curtics);
+				}
+				// display last line for length of delay only 
+				else
+					HudMessageBold(s:cursubtitle; HUDMSG_PLAIN, HUD_SUBTITLE, CR_UNTRANSLATED, 0.5, linepos, FixedDiv((curtics << 16), 35.0));
+			}
+		}
+	}
+
+	voclip_current_id = 0;
+}

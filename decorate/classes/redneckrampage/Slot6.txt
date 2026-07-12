@@ -1,0 +1,102 @@
+Actor " Alien Bra Gun " : Weapon
+{
+	Inventory.PickupMessage "A bra!"
+    Inventory.PickupSound "RR/Wpickup"
+	Weapon.SelectionOrder 1200
+    Weapon.BobRangeX 0.75
+    Weapon.BobRangeY 0.95
+    Weapon.BobSpeed 1.1	
+	Weapon.SlotNumber 6
+	Weapon.SlotPriority 6
+	Weapon.AmmoType "Cell"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 40
+	Obituary "%o was caught playing with %k's tits."
+	Inventory.RestrictedTo "Leonard"
+    Tag "Alien Bra Gun"
+	States
+	{
+		Spawn:
+			R_T9 D -1
+			Stop
+		Select:
+			TNT1 A 0 A_Raise
+			R_T9 B 1 A_Raise
+			Loop
+		Deselect:
+			TNT1 A 0 A_Lower
+			R_T9 B 1 A_Lower
+			Loop
+		Ready:
+			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
+			Goto SetSoberView
+			TNT1 A 0 A_JumpIfInventory("LeonardWaiting", 15, "WaitingTaunt")
+			TNT1 A 0 A_JumpIfInventory("LeonardReady",1,"IntroTaunt")		
+			R_T9 B 1 A_WeaponReady
+			Loop
+		Fire:
+			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkViewFire")
+			Goto SetSoberViewFire
+			TNT1 A 0 A_JumpIfInventory("RRTITSHIT",1,"Fire2")
+			TNT1 A 0 A_PlaySound("RR/RanchRF",CHAN_WEAPON)
+			TNT1 A 0 A_JumpIfInventory("DMModeOn",1,4)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)		
+			R_T9 A 1 Bright A_FireBullets(6,6,1,30,"RRPuff", FBF_USEAMMO|FBF_NORANDOM)
+			Goto A
+			R_T9 A 1 Bright A_FireBullets(6,6,1,30,"RRPuffCoop", FBF_USEAMMO|FBF_NORANDOM)
+			Goto A
+			R_T9 A 1 Bright A_FireBullets(6,6,1,20,"RRPuff", FBF_USEAMMO|FBF_NORANDOM)
+		A:
+			TNT1 A 0 ACS_NamedExecuteWithResult("RRTeatGunRecoil",1)//A_SetAngle(angle-((abs(x)+abs(y)+abs(z))/1200))
+			R_T9 B 1 Bright A_GiveInventory("RRTITSHIT",1)
+			TNT1 A 0 A_Refire
+			Goto Ready
+		Fire2:
+			TNT1 A 0 A_PlaySound("RR/RanchRF",CHAN_WEAPON)
+			TNT1 A 0 A_JumpIfInventory("DMModeOn",1,4)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)			
+			R_T9 C 1 Bright A_FireBullets(6,6,1,30,"RRPuff", FBF_USEAMMO|FBF_NORANDOM)
+			Goto B
+			R_T9 C 1 Bright A_FireBullets(6,6,1,30,"RRPuffCoop", FBF_USEAMMO|FBF_NORANDOM)
+			Goto B
+			R_T9 C 1 Bright A_FireBullets(6,6,1,20,"RRPuff", FBF_USEAMMO|FBF_NORANDOM)
+		B:
+			TNT1 A 0 ACS_NamedExecuteWithResult("RRTeatGunRecoil",0)//A_SetAngle(angle+((abs(x)+abs(y)+abs(z))/1200))		
+			R_T9 B 1 Bright A_TakeInventory("RRTITSHIT",1)
+			TNT1 A 0 A_Refire
+			Goto Ready
+		IntroTaunt:
+			TNT1 A 0 A_JumpIfInventory("SamsaraBallgag",1,2)
+			TNT1 A 0 A_PlaySoundEx("Leonard/Enter", "SoundSlot7", 0, 0)
+			TNT1 A 0 A_TakeInventory("LeonardReady", 1)
+			TNT1 A 0 A_GiveInventory("LeonardTauntCooldown",5)
+			TNT1 A 0 ACS_NamedExecuteAlways("LeonardTauntCooldown", 0)
+			Goto Ready	
+		WaitingTaunt:
+			TNT1 A 0 A_JumpIfInventory("SamsaraIdleBallgag",1,"IdleBallgagStuff")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBallgag",1,2)
+			TNT1 A 0 A_PlaySoundEx("Leonard/Bored", "SoundSlot7", 0, 0)
+			TNT1 A 0 A_TakeInventory("LeonardWaiting", 15)
+			TNT1 A 0 A_GiveInventory("LeonardTauntCooldown",5)
+			TNT1 A 0 ACS_NamedExecuteAlways("LeonardTauntCooldown", 0)
+			Goto Ready
+		IdleBallgagStuff:
+			TNT1 A 0 A_TakeInventory("LeonardWaiting", 15)
+			goto Ready
+		SetDrunkView:
+			TNT1 A 0 A_ZoomFactor(0.55)
+			Goto Ready+1
+	    SetDrunkViewFire:
+			TNT1 A 0 A_ZoomFactor(0.55)
+			Goto Fire+1
+		SetSoberView:
+			TNT1 A 0 A_ZoomFactor(1.0)
+			Goto Ready+1
+	    SetSoberViewFire:
+			TNT1 A 0 A_ZoomFactor(1.0)
+			Goto Fire+1
+	}
+}
+
+Actor RRBullet4 : RRBullet1 { Damage (30) DamageType "LeonardDamage3" }
+Actor RRTITSHIT : Inventory { Inventory.Amount 1 Inventory.MaxAmount 1 }

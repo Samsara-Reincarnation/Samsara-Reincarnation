@@ -59,7 +59,7 @@ $playeralias        Ranger      male    *pain75         ranger/pain75
 $playeralias        Ranger      male    *pain50         ranger/pain50
 $playeralias        Ranger      male    *pain25         ranger/pain25
 $playersound        Ranger      male    *jump           sounds/ranger/plyrjmp8.ogg
-$playersound        Ranger      male    *land           dgland
+$playersound        Ranger      male    *land           "Sounds/Quake2/Player/quake2_BMMLAND1.wav"
 $playersound        Ranger      male    *grunt          sounds/ranger/land.wav
 $playersound        Ranger      male    *usefail        sounds/ranger/bump1.wav //land.wav
 $playersound        Ranger      male    *puzzfail       q_puzz
@@ -75,10 +75,13 @@ quakeweps/itemget                 sounds/ranger/lock4.wav
 quakeweps/megahealth              sounds/ranger/m_health.ogg
 quakeweps/megasphere              sounds/ranger/megasphere.ogg
 
-quakeweps/gauntlet              sounds/ranger/fstrun.ogg
-quakeweps/gauntlethum           nosoundforyoubitch
-quakeweps/gauntlethit           sounds/ranger/fstatck.ogg
-$limit quakeweps/gauntlethit 0
+quakeweps/saw/revving           sounds/ranger/zsawidle.wav
+quakeweps/saw/idle              sounds/ranger/zsawridle.wav
+quakeweps/saw/attack            sounds/ranger/zsawatck.wav
+$alias quakeweps/saw/hitwall    quakeweps/axewall
+$limit quakeweps/saw/hitwall    0
+quakeweps/saw/hit               sounds/ranger/zsawguts.wav
+$limit quakeweps/saw/hit        0
 
 quakeweps/lasershot             sounds/ranger/laserg.ogg
 quakeweps/laserbounce           sounds/ranger/laserric.ogg
@@ -127,13 +130,13 @@ quakeweps/lightningdischarge    sounds/ranger/lstart.ogg
 $rolloff quakeweps/lightningdischarge 512 2048
 
 quakeweps/quadget               sounds/ranger/quadget.ogg
-quakeweps/quadon                sounds/ranger/quaddamage.wav
+quakeweps/quadon                Sounds/ranger/quaddamage.flac
 quakeweps/quadfire              sounds/ranger/damage3.ogg
 quakeweps/quadoff               sounds/ranger/damage2.ogg
 quakeweps/quadready             sounds/ranger/quadready.ogg
 
-quakeweps/biosuiton                   Sounds/ranger/suit.wav
-quakeweps/biosuitoff                   Sounds/ranger/suit2.wav
+quakeweps/biosuiton                   Sounds/ranger/suit.flac
+quakeweps/biosuitoff                   Sounds/ranger/suit2.flac
 
 quakeweps/regenannounce         nosoundforyoubitch //sounds/ranger/regeneration.ogg
 quakeweps/regenup                 sounds/ranger/regenup.mp3
@@ -147,7 +150,7 @@ quake/invisannouncer            nosoundforyoubitch //sounds/ranger/invisibility.
 
 quakeweps/pentagramon           sounds/ranger/pentagram.flac
 quakeweps/pentagram             sounds/ranger/pentagramding.flac
-quakeweps/pentagramout   sounds/ranger/pentagramout.wav
+quakeweps/pentagramout   Sounds/ranger/pentagramout.flac
 
 $rolloff quakeweps/inviswhisper 64 512
 
@@ -168,6 +171,9 @@ plasmacell/fly Sounds/Quake/pboltfly.ogg
 
 quakeweps/megahealth51	R2_MEGAH
 $Random quakeweps/megahealthSA { quakeweps/megahealth quakeweps/megahealth51 }
+
+$alias quakeweps/rerelease/saw/hitwall    quakeweps/rerelease/axewall
+$limit quakeweps/rerelease/saw/hitwall    0
 
 quakeweps/rerelease/lasershot             Sounds/ranger/laserg_alt.flac
 quakeweps/rerelease/laserbounce           Sounds/ranger/laserric_alt.flac
@@ -250,11 +256,11 @@ quakeweps/dmc/laserbounce           Sounds/ranger/laserric_dmc.wav
 
 quakeweps/dmc/axe                   Sounds/ranger/axe_dmc.wav
 quakeweps/dmc/axehit                Sounds/ranger/raxehit_dmc.wav
-quakeweps/dmc/shotgunfire           Sounds/ranger/shotgun_dmc.wav
+quakeweps/dmc/shotgunfire           Sounds/ranger/shotgun_dmc.flac
 quakeweps/dmc/ssgfire               Sounds/ranger/shotgun2_dmc.wav
-quakeweps/dmc/nailgunfire           Sounds/ranger/nailgun_dmc.wav
+quakeweps/dmc/nailgunfire           Sounds/ranger/nailgun_dmc.flac
 quakeweps/dmc/sngfire               Sounds/ranger/supernailgun_dmc.wav
-quakeweps/dmc/lavaend               Sounds/ranger/lavaend_dmc.wav
+quakeweps/dmc/lavaend               Sounds/ranger/lavaend_dmc.flac
 
 $random quakeweps/dmc/nr4           { quakeweps/dmc/nr4_1 quakeweps/dmc/nr4_2 quakeweps/dmc/nr4_3 }
 quakeweps/dmc/nr4_1                 HW00RIC0
@@ -280,12 +286,12 @@ quakeweps/dmc/explode3              HW00EXP2
 
 $limit quakeweps/dmc/explode        0
 
-quakeweps/dmc/rlfire                Sounds/ranger/rocket_dmc.wav
+quakeweps/dmc/rlfire                Sounds/ranger/rocket_dmc.flac
 
-quakeweps/dmc/lightningstart        Sounds/ranger/lstart_dmc.wav
+quakeweps/dmc/lightningstart        Sounds/ranger/lstart_dmc.flac
 quakeweps/dmc/lightning             Sounds/ranger/lightning_dmc.wav
 
-quakeweps/dmc/lightningdischarge    Sounds/ranger/lstart_dmc.wav
+quakeweps/dmc/lightningdischarge    Sounds/ranger/lstart_dmc.flac
 $rolloff quakeweps/dmc/lightningdischarge 512 2048
 
 quakeweps/dmc/quadon                sounds/ranger/quaddamage_dmc.wav
@@ -297,20 +303,20 @@ quakeweps/dmc/regenup                 sounds/ranger/regenup_dmc.mp3
 quakeweps/dmc/regen                 sounds/ranger/regen_dmc.mp3
 quakeweps/dmc/regenout              sounds/ranger/regenout_dmc.mp3
 
-quakeweps/dmc/biosuiton                   Sounds/ranger/suit_dmc.wav
-quakeweps/dmc/biosuitoff                   Sounds/ranger/suit2_dmc.wav
+quakeweps/dmc/biosuiton                   Sounds/ranger/suit_dmc.flac
+quakeweps/dmc/biosuitoff                   Sounds/ranger/suit2_dmc.flac
 
-quakeweps/dmc/invison               sounds/ranger/inv1_dmc.wav
-quakeweps/dmc/invisout              sounds/ranger/inv2_dmc.wav
-quakeweps/dmc/inviswhisper          sounds/ranger/inv3_dmc.wav
+quakeweps/dmc/invison               Sounds/ranger/inv1_dmc.flac
+quakeweps/dmc/invisout              Sounds/ranger/inv2_dmc.flac
+quakeweps/dmc/inviswhisper          Sounds/ranger/inv3_dmc.flac
 $rolloff quakeweps/dmc/inviswhisper 64 512
 
-quakeweps/dmc/pentagramon           sounds/ranger/pentagram_dmc.wav
-quakeweps/dmc/pentagram             sounds/ranger/pentagramding_dmc.wav
-quakeweps/dmc/pentagramout   sounds/ranger/pentagramout_dmc.wav
+quakeweps/dmc/pentagramon           Sounds/ranger/pentagram_dmc.flac
+quakeweps/dmc/pentagram             Sounds/ranger/pentagramding_dmc.flac
+quakeweps/dmc/pentagramout   Sounds/ranger/pentagramout_dmc.flac
 
 //quakeweps/dmc/mjolnirmiss           Sounds/ranger/mjolnir_miss_dmc.wav
-quakeweps/dmc/mjolnirhit            Sounds/ranger/mjolnir_hit_dmc.wav
+quakeweps/dmc/mjolnirhit            Sounds/ranger/mjolnir_hit_dmc.flac
 //quakeweps/dmc/mjolnirwhack          Sounds/ranger/mjolnir_whack_dmc.wav
 $alias quakeweps/dmc/mjolnirwall    HLXbow/Hit/Wall2
 
@@ -324,9 +330,22 @@ plasmacell/dmc/hit Sounds/Quake/pboltexp_dmc.flac
 $alias plasmacell/dmc/fire HLShockRoach/Discharge
 $alias plasmacell/dmc/fly HLShockRoach/Recharge
 
+quakeweps/widowfire                  Sounds/ranger/widow_fire.wav
+$alias quakeweps/rerelease/widowfire Quake3/ShotGun/Fire
+quakeweps/dmc/widowfire              Sounds/ranger/widow_fire2.wav //from counter-strike
+
 DarkSideAI/Ranger/Taunt				sounds/ranger/plyrjmp8.ogg
 $random DarkSideAI/Ranger/Pain		{ ranger/pain100_1 ranger/pain100_2 }
 $random DarkSideAI/Ranger/Death		{ ranger/death1 ranger/death2 ranger/death3 }
 $random DarkSideAI/Ranger/XDeath 	{ ranger/gib1 ranger/gib2 }
 $random DarkSideAI/Ranger/Telefrag  { ranger/telefragged1 ranger/telefragged2 }
 DarkSideAI/Ranger/Burn				rburn
+
+quakeweps/dmc/saw/revving           sounds/ranger/zsawidle2.wav
+quakeweps/dmc/saw/idle              sounds/ranger/zsawridle2.wav
+quakeweps/dmc/saw/attack            sounds/ranger/zsawatck2.wav
+$alias quakeweps/dmc/saw/hitwall    quakeweps/axewall
+$limit quakeweps/dmc/saw/hitwall    0
+//quakeweps/dmc/saw/hit               sounds/ranger/zsawguts2.wav
+$alias quakeweps/dmc/saw/hit 		HGIBFLS0
+$limit quakeweps/dmc/saw/hit        0

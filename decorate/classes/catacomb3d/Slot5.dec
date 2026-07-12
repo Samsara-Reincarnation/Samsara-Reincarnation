@@ -1,0 +1,547 @@
+actor SamsaraCatacombCanUseNukes : Boolean {}
+
+actor Catacomb_NukesQuickSpell : Catacomb3D_QuickSpell
+{
+    Inventory.PickupMessage "Nukes"
+    Inventory.PickupSound "Catacomb/SpecialItem"
+    Weapon.UpSound "Catacomb/SpecialItem"
+    Weapon.SlotNumber 5
+    Weapon.SelectionOrder 2900
+    Weapon.AmmoType "Catacomb_Nukes"
+    Weapon.AmmoGive 2
+    Weapon.AmmoUse 1
+    Tag "Nukes"
+    +EXPLOSIVE
+    States
+    {
+      Spawn:
+        CT01 PQ 14 Bright
+        loop
+
+      Ready:
+        goto ReadyRaise
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("Catacomb_WeaponMode",1,"AltFireRelease")
+        goto FireMagicMissile
+
+      AltFire:
+        goto AltFireCharge
+
+      AltFireRelease:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_BounceShot",1,"AltFireReleaseBounce")
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_RapidFire",1,"AltFireReleaseFast")
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_SpreadShot",1,"AltFireReleaseSpread")
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_FireRing",1,"AltFireReleaseFireball")
+      AltFireReleaseNormal:
+        CT00 A 2
+        CT00 B 4 Bright A_GiveInventory("SamsaraCatacombNukesAttackHandler")
+        CT00 A 24
+        goto AltFireFinish
+
+      AltFireReleaseFireball:
+        CT00 C 2
+        CT00 D 4 Bright A_GiveInventory("SamsaraCatacombNukesFireballAttackHandler")
+        CT00 C 24
+        goto AltFireFinish
+
+      AltFireReleaseSpread:
+        CT00 E 2
+        CT00 F 4 Bright A_GiveInventory("SamsaraCatacombNukesSpreadAttackHandler")
+        CT00 E 24
+        goto AltFireFinish
+
+      AltFireReleaseFast:
+        CT00 G 2
+        CT00 H 4 Bright A_GiveInventory("SamsaraCatacombNukesFastAttackHandler")
+        CT00 G 24
+        goto AltFireFinish
+
+      AltFireReleaseBounce:
+        CT00 I 2
+        CT00 J 4 Bright A_GiveInventory("SamsaraCatacombNukesBounceAttackHandler")
+        CT00 I 24
+        goto AltFireFinish
+
+      AltFireFinish:
+        TNT1 A 0 A_CheckReload
+        goto ReadyActual
+    }
+}
+
+actor SamsaraCatacombNukesAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Nukes",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Nukes",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/FireBomb",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2XCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3XCoop",0,false)
+        goto PickupResetCharge
+    }
+}
+
+actor SamsaraCatacombNukesFireballAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Nukes",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Nukes",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/FireBomb",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeFireballProjectile",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeFireballProjectileCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeFireballProjectile2X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeFireballProjectile2XCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeFireballProjectile3X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeFireballProjectile3XCoop",0,false)
+        goto PickupResetCharge
+    }
+}
+
+actor SamsaraCatacombNukesSpreadAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Nukes",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Nukes",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/FireBomb",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile",10,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileCoop",10,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2X",10,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile2XCoop",10,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3X",10,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectile3XCoop",10,false)
+        goto PickupResetCharge
+    }
+}
+
+actor SamsaraCatacombNukesFastAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Nukes",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Nukes",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/FireBomb",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileFast",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileFastCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileFast2X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileFast2XCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileFast3X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileFast3XCoop",0,false)
+        goto PickupResetCharge
+    }
+}
+
+actor SamsaraCatacombNukesBounceAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Nukes",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Nukes",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/FireBomb",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileBounce",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileBounceCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileBounce2X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileBounce2XCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileBounce3X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_NukeProjectileBounce3XCoop",0,false)
+        goto PickupResetCharge
+    }
+}
+
+Actor Catacomb_Nukes : Ammo
+{
+    +INVENTORY.UNDROPPABLE
+    Inventory.MaxAmount 99
+    Inventory.Amount 2
+    Inventory.InterHubAmount 99
+    Inventory.Icon "AMSMC0"
+    Inventory.PickupSound "Catacomb/SpecialItem"
+    Inventory.PickupMessage "You got the Nukes!"
+    Tag "Nukes"
+    Inventory.RestrictedTo "PettonEverhail"
+    States
+    {
+        Spawn:
+            CT01 PQ 14 Bright
+            Loop
+    }
+}
+
+Actor Catacomb_NukeProjectile : Catacomb_MagicMissileProjectile
+{
+    Speed 15
+    Damage (0)
+    Radius 10
+    Height 10
+    Scale 1.50
+    DeathSound "Catacomb/BigExplosion"
+    +FORCERADIUSDMG
+    DamageType "FireExplosive"
+    States
+    {
+        Spawn:
+            CTA1 AB 2 Bright
+            Loop
+        Death:
+            CT00 M 0 A_Explode(300, 80, 0, True)
+            CT00 MNO 4 Bright
+            Stop
+    }
+}
+
+Actor Catacomb_NukeProjectile2X : Catacomb_NukeProjectile
+{
+    Scale 1.75
+    Radius 12
+    Height 12
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(600, 100, 0, True)
+            CT00 MNO 4 Bright
+            Stop
+    }
+}
+
+Actor Catacomb_NukeProjectile3X : Catacomb_NukeProjectile
+{
+    Scale 2.0
+    Radius 15
+    Height 15
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(900, 120, 0, True)
+            CT00 MNO 4 Bright
+            Stop
+    }
+}
+
+Actor Catacomb_MegaNuke : Catacomb_NukeProjectile3X
+{
+    Scale 2.25
+    Radius 16
+    Height 16
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(1350, 140, 0, True)
+            CT00 MNO 4 Bright
+            Stop
+    }
+}
+
+Actor Catacomb_GigaNuke : Catacomb_NukeProjectile3X
+{
+    Scale 2.5
+    Radius 18
+    Height 18
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(1800, 160, 0, True)
+            CT00 MNO 4 Bright
+            Stop
+    }
+}
+
+Actor Catacomb_NukeProjectileBounce : Catacomb_NukeProjectile
+{
+    +BOUNCEONWALLS
+    BounceType Doom
+    BounceCount 4
+    ReactionTime 66
+    States
+    {
+        Spawn:
+            CTA1 AB 2 Bright A_CountDown
+            Loop
+        }
+    }
+Actor Catacomb_NukeProjectileBounce2X : Catacomb_NukeProjectile2X
+{
+    +BOUNCEONWALLS
+    BounceType Doom
+    BounceCount 4
+    ReactionTime 66
+    States
+    {
+        Spawn:
+            CTA1 AB 2 Bright A_CountDown
+            Loop
+        }
+    }
+Actor Catacomb_NukeProjectileBounce3x : Catacomb_NukeProjectile3X
+{
+    +BOUNCEONWALLS
+    BounceType Doom
+    BounceCount 4
+    ReactionTime 66
+    States
+    {
+        Spawn:
+            CTA1 AB 2 Bright A_CountDown
+            Loop
+        }
+    }
+
+Actor Catacomb_MegaNukeBounce : Catacomb_MegaNuke
+{
+    +BOUNCEONWALLS
+    BounceType Doom
+    BounceCount 4
+    ReactionTime 66
+    States
+    {
+        Spawn:
+            CTA1 AB 2 Bright A_CountDown
+            Loop
+        }
+    }
+
+Actor Catacomb_GigaNukeBounce : Catacomb_GigaNuke
+{
+    +BOUNCEONWALLS
+    BounceType Doom
+    BounceCount 4
+    ReactionTime 66
+    States
+    {
+        Spawn:
+            CTA1 AB 2 Bright A_CountDown
+            Loop
+        }
+    }
+
+Actor Catacomb_NukeProjectileFast : Catacomb_NukeProjectile { Speed 30 }
+Actor Catacomb_NukeProjectileFast2X : Catacomb_NukeProjectile2X { Speed 30 }
+Actor Catacomb_NukeProjectileFast3X : Catacomb_NukeProjectile3X { Speed 30 }
+Actor Catacomb_MegaNukeFast : Catacomb_MegaNuke { Speed 30 }
+Actor Catacomb_GigaNukeFast : Catacomb_GigaNuke { Speed 30 }
+
+Actor Catacomb_NukeProjectileCoop : Catacomb_NukeProjectile { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_NukeProjectile2XCoop : Catacomb_NukeProjectile2X { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_NukeProjectile3XCoop : Catacomb_NukeProjectile3X { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_MegaNukeCoop : Catacomb_MegaNuke { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_GigaNukeCoop : Catacomb_GigaNuke { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_NukeProjectileBounceCoop : Catacomb_NukeProjectileBounce { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_NukeProjectileBounce2XCoop : Catacomb_NukeProjectileBounce2X { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_NukeProjectileBounce3XCoop : Catacomb_NukeProjectileBounce3X { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_MegaNukeBounceCoop : Catacomb_MegaNukeBounce { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_GigaNukeBounceCoop : Catacomb_GigaNukeBounce { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_NukeProjectileFastCoop : Catacomb_NukeProjectileFast { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_NukeProjectileFast2XCoop : Catacomb_NukeProjectileFast2X { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_NukeProjectileFast3XCoop : Catacomb_NukeProjectileFast3X { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_MegaNukeFastCoop : Catacomb_MegaNukeFast { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_GigaNukeFastCoop : Catacomb_GigaNukeFast { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }

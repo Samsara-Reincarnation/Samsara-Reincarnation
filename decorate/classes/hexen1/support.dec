@@ -1,0 +1,106 @@
+actor SamsaraClassicPariasHasSpikedGauntlet : Boolean {}
+
+actor "Spiked Gauntlet" : SamsaraHexenWeapon
+{
+    Inventory.PickupMessage "Spiked Gauntlet of Baratus"
+    Weapon.SlotNumber 0
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 3400
+    Obituary "$SAMSARA_HEXEN_OB_SUPPORT"
+    Tag "Spiked Gauntlet"
+    +BLOODSPLATTER
+    +MELEEWEAPON
+    +NOALERT
+    +WIMPY_WEAPON
+    States
+    {
+      Spawn:
+        UNIQ S -1
+        stop
+
+      Ready:
+        FPCH F 1 A_WeaponReady
+        loop
+
+      Deselect:
+        FPCH F 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenSpikedGauntletsHitCounter") // map change ignores this
+      SelectLoop:
+        FPCH F 1 A_Raise
+        loop
+
+      // Unpowered
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
+        FPCH B 5 Offset(5,40)
+        FPCH C 4 Offset(5,40)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenSpikedGauntletsHitCounter",0,"FireUnpoweredStrong")
+      FireUnpoweredNormal:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenSpikedGauntletsAttackHandler")
+      FireUnpoweredNormalFinish:
+        FPCH DC 4 Offset(5,40)
+        FPCH B 5 Offset(5,40) A_ReFire
+        goto Ready
+
+      FireUnpoweredStrong:
+        TNT1 A 0 A_JumpIfCloser(129,1)
+        goto FireUnpoweredNormal
+        TNT1 A 0 A_TakeInventory("SamsaraHexenSpikedGauntletsUppercutting")
+        TNT1 A 0 A_GiveInventory("SamsaraHexenSpikedGauntletsAttackHandler")
+      FireUnpoweredStrongFinish:
+        FPCH DE 4 Offset(5,40)
+        FPCH E 1 Offset(15,50)
+        FPCH E 1 Offset(25,60)
+        FPCH E 1 Offset(35,70)
+        FPCH E 1 Offset(45,80)
+        FPCH E 1 Offset(55,90)
+        FPCH E 1 Offset(65,100)
+        FPCH E 10 Offset(0,150)
+        goto Ready
+
+      // Powered
+      FirePowered:
+        FPCH B 3 Offset(5,40)
+        FPCH C 2 Offset(10,40)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenSpikedGauntletsHitCounter",0,"FirePoweredStrong")
+      FirePoweredNormal:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenSpikedGauntletsAttackHandler")
+      FirePoweredNormalFinish:
+        FPCH D 2 Offset(15,40)
+        FPCH C 2 Offset(10,40)
+        FPCH B 3 Offset(5,40) A_ReFire
+        goto Ready
+
+      FirePoweredStrong:
+        TNT1 A 0 A_JumpIfCloser(129,1)
+        goto FirePoweredNormal
+        TNT1 A 0 A_Jump(128,"FirePoweredUppercut")
+        TNT1 A 0 A_TakeInventory("SamsaraHexenSpikedGauntletsUppercutting")
+        TNT1 A 0 A_GiveInventory("SamsaraHexenSpikedGauntletsAttackHandler")
+      FirePoweredStrongFinish:
+        FPCH DE 2 Offset(5,40)
+        FPCH E 1 Offset(25,60)
+        FPCH E 1 Offset(45,80)
+        FPCH E 1 Offset(65,100)
+        FPCH E 5 Offset(0,150)
+        goto Ready
+
+      FirePoweredUppercut:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenSpikedGauntletsUppercutting")
+        FPCH K 2 Offset(0,150) A_GiveInventory("SamsaraHexenSpikedGauntletsAttackHandler")
+        FPCH K 1 Offset(0,130)
+        FPCH K 1 Offset(0,110)
+        FPCH K 1 Offset(0,90)
+        FPCH K 5 Offset(0,70)
+        FPCH K 1 Offset(0,90)
+        FPCH K 1 Offset(0,110)
+        FPCH K 1 Offset(0,130)
+        FPCH K 2 Offset(0,150)
+        goto Ready
+    }
+}

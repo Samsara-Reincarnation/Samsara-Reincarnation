@@ -64,6 +64,31 @@ $playersound	HexenBaratus	male	*puzzfail		FGTHMM
 $playersound	HexenBaratus	male	*falling		FGTFALL
 $playersound	HexenBaratus	male	*taunt			FGTAUNT
 
+$playeralias	Pig male	*usefail		PigActive1
+$playeralias	Pig male	*puzzfail		PigActive2
+$playeralias	Pig male	*grunt			PigActive1
+$playeralias	Pig male	*land			PigActive2
+$playeralias	Pig male	*jump			PigActive1
+$playeralias	Pig male	*poison			PigActive2
+$playeralias	Pig male	*falling		PigPain
+$playeralias	Pig male	*splat			PigDeath
+$playeralias	Pig male	*pain100		PigPain
+$playeralias	Pig male	*pain75			PigPain
+$playeralias	Pig male	*pain50			PigPain
+$playeralias	Pig male	*pain25			PigPain
+$playeralias	Pig male	*death			PigDeath
+$playeralias	Pig male	*wimpydeath		PigDeath
+$playeralias	Pig male	*crazydeath		PigDeath
+$playeralias	Pig male	*xdeath			PigDeath
+$playeralias	Pig male	*taunt			PigActive1
+$playeralias	Pig male	*evillaugh		PigActive1
+
+PigActive1              pigrunt1
+PigActive2              squeal1
+PigPain                 pigpain2
+PigAttack               bite4
+PigDeath                pigdth2
+
 parias/explode			PABOOM
 parias/death				clrdth
 parias/crazydeath			clrcdth
@@ -97,6 +122,8 @@ FighterHammerHitWall    hamwal1
 FighterHammerHitThing   hmhit1a
 FighterHammerContinuous hamfly1
 FighterHammerExplode    impact3
+$alias FighterHammerExplodePowered MageStaffExplode
+$limit FighterHammerExplodePowered 0
 FighterSwordFire        sword2
 FighterSwordExplode     impact3
 ClericCStaffFire        spell1
@@ -113,6 +140,7 @@ SpiritAttack            spirt5
 $limit SpiritAttack 0
 SpiritDie               spirts1
 $limit SpiritDie 0
+$alias SpiritGoodImpact parias/explode
 MageStaffFire           mage4
 MageStaffExplode        mageball
 MageLightningReady	 wepele2
@@ -120,28 +148,64 @@ MageLightningFire		 lite2
 MageLightningContinuous gntpow
 MageLightningZap        gntact1
 hexen/fireblast/fire    spit6
-hexen/cult/hit				cotshit
-hexen/cult/fire			cotsfire
-BloodScepter/PowerHit	BDSPHIT
-BloodScepter/PowerFire	BDSPFIR2
-BloodScepter/Charge	BDSPCHRG
-BloodScepter/CoolDown	BDSPCOOL
-Hexen/JadeFire		JADEFIRE
-Hexen/BowString		BOWREADY
-Hexen/ElectricArrow		ARROWELE
-Hexen/ArrowHit		EROWIMPC
+hexen/cult/hit				sounds/Hexen/MCOTSHIT.ogg
+hexen/cult/fire			sounds/Hexen/MCOTSFIRE.ogg
+Hexen/Viscerelagh/Hit	sounds/Hexen/MBDSPHIT.ogg
+Hexen/Viscerelagh/Fire	sounds/Hexen/MBDSPFIR2.mp3
+Hexen/Viscerelagh/Charge	sounds/Hexen/MBDSPCHRG.mp3
+Hexen/Viscerelagh/CoolDown	sounds/Hexen/MBDSPCOOL.mp3
+Hexen/JadeFire		sounds/Hexen/CJADEFIRE.lmp
+Hexen/BowString		sounds/Hexen/CBOWREADY.ogg
+Hexen/ElectricArrow		sounds/Hexen/CARROWELE.ogg
+Hexen/ArrowHit		sounds/Hexen/CEROWIMPC.ogg
 Hexen/BishopSword/Swing	CLRSWRDS
 Hexen/BishopSword/SwingHoly	CLRSWRDH
-Hexen/FrostFang/Fire		FSTFFIR2
-Hexen/FrostFang/Hit		FSTFHIT2
+Hexen/WandOfEmbers/Open	sounds/Hexen/CWEMBOPEN.ogg
+Hexen/WandOfEmbers/Fire	sounds/Hexen/CWEMBFIRE.ogg
+Hexen/WandOfEmbers/Hit	sounds/Hexen/CWEMBHIT.ogg
+Hexen/FrostFang/Fire		sounds/Hexen/CFSTFFIR2.mp3
+Hexen/FrostFang/Hit		sounds/Hexen/CFSTFHIT2.mp3
+Hexen/GrapplePull		sounds/Hexen/CHNSWCH8
+Hexen/Spike2			sounds/Hexen/spike2
+Hexen/Spike3			sounds/Hexen/spike3
+Hexen/SpearThrow		sounds/Hexen/hexen_spearlaunch.wav
+Hexen/SpearHit			sounds/Hexen/hexen_spearhit.wav
+Hexen/ArrowBolt			sounds/Hexen/hexen_arrowbolt.wav
+Hexen/SwordSwing		sounds/Hexen/hexen_swordswing.wav
+Hexen/AxeLightning		sounds/Hexen/hexen_lghtn1.wav
+Hexen/AxeThunder		sounds/Hexen/hexen_lghtn2.wav
+Hexen/FireLaunch		sounds/Hexen/hexen_firelaunch.wav
+Hexen/FireLoop			sounds/Hexen/hexen_fireloop.wav
+Hexen/FireBurn			sounds/Hexen/hexen_fireburn.wav
+$limit Hexen/FireBurn 0
+Hexen/StoneTurn			sounds/Hexen/hexen_stoneturn.wav
+Hexen/StoneBreak		sounds/Hexen/hexen_stonebreak.wav
+Hexen/StoneLand			sounds/Hexen/hexen_stoneland.wav
+Hexen/BallRoll			sounds/Hexen/hexen_ballroll.wav
+Hexen/IceBallExplode	sounds/Hexen/hexen_iceballexp.wav
+Hexen/IceBallFall		sounds/Hexen/hexen_iceballfall.wav
+Hexen/Blizzard 			"Sounds/Hexen2/hexen2_blizzard.wav"
+$limit Hexen/Blizzard 0
+Hexen/Volcano			sounds/Hexen/hexen_volcano
+Hexen/VolcanoFireBall	sounds/Hexen/hexen_volcfireball
+$limit Hexen/VolcanoFireBall 0
+Hexen/VolcanoFireBlast	sounds/Hexen/hexen_volcfireblast
+Hexen/ArcBolt			sounds/Hexen/hexen_arcbolt.wav
+Hexen/Divine			sounds/Hexen/hexen_divine.wav
+SorcererBallExplode     SORBLEXP
+DragonSight				DRAGSIT1
+Hexen/BloodscourgeLoop	sounds/Hexen/hexen_bsflame.wav
+IceGuyAttack			FROSTY2
 
-hexen/weaponget         sample11
-hexen/artiget           artget1
-hexen/artiuse           artact1
-hexen/itemget           picup5
-PoisonShroomDeath       puff1
-hexen/ambituse			ambituse
-BlastRadius             blastr
+hexen/weaponget            sample11
+hexen/artiget              artget1
+hexen/artiuse              artact1
+$alias hexen/tometoggleon  hexen/artiuse
+hexen/tometoggleoff        nosoundforyoubitch
+hexen/itemget              picup5
+PoisonShroomDeath          puff1
+hexen/ambituse             ambituse
+BlastRadius                blastr
 
 freeze/cyberdemon		frcyber
 freeze/spidermind		frspider

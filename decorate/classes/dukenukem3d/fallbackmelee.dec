@@ -1,0 +1,648 @@
+actor DukeKicking : Boolean {}
+
+actor "Mighty Boot" : DukeWeapon
+{
+	Weapon.SlotNumber 0
+	Weapon.SelectionOrder 3700
+	+MELEEWEAPON
+	+NOALERT
+	+WIMPY_WEAPON
+	+INVENTORY.UNDROPPABLE
+	Tag "Mighty Boot"
+	States
+	{
+    Spawn:
+        DMBP A -1
+        stop
+
+	Select:
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt1")
+		Goto Super::Select
+	Deselect:
+		TNT1 A 0
+		Goto Super::Deselect
+
+	Ready:
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_GiveInventory("SamsaraSynthFireActive",1)
+		Goto LIdle
+
+	// Left Boot
+	LIdle:
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdleContinue
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdleContinue
+    LIdleContinue:
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 1 A_WeaponReady(WRF_NOFIRE)
+		goto LIdle
+
+    Fire:
+    AltFire:
+      TNT1 A 0
+      goto LIdle
+
+	LFire:
+		TNT1 A 0 A_GiveInventory("DukeKicking",1)
+		//TNT1 A 0 A_JumpIfInventory("CalmYoLegsDuke", 1, "FastLeft")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "LFire64")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "LFireLAB")
+		DNBT A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearLeft")
+		Goto LFire2
+	LFireLAB:
+		DNBT E 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearLeft")
+		Goto LFire2
+	LFire64:
+		D6BT A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDuke64MightyFootAttackHandler")
+		Goto LFire64End
+	LFire64End:
+		D6BT B 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		D6BT A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdle
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearLeft")
+		//Goto LFire2
+
+	NuclearLeft:
+		//TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootNuclearLeftAttackHandler")
+		Goto LFire2
+
+	LFire2:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "LFire264")
+		TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootAttackHandler")
+		Goto LFire2End
+	LFire264:
+		TNT1 A 0 A_GiveInventory("SamsaraDuke64MightyFootAttackHandler")
+		Goto LFire2End
+
+	LFire2End:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "LFire264End")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "LFire2LABEnd")
+		DNBT B 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT A 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LFire2End2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LFire2End2
+    LFire2End2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdle
+	LFire2LABEnd:
+		DNBT F 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT E 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LFire2LABEnd2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LFire2LABEnd2
+    LFire2LABEnd2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdle
+	LFire264End:
+		D6BT B 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		D6BT A 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LFire264End2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LFire264End2
+    LFire264End2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdle
+
+	FastLeft:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FastLeftLAB")
+		DNBT A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearLeft2")
+		Goto FL2
+	FastLeftLAB:
+		DNBT E 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearLeft2")
+		Goto FL2
+
+	NuclearLeft2:
+		//TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootNuclearLeftAttackHandler")
+		Goto FL2
+
+	FL2:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootFastAttackHandler")
+		Goto FL2End
+
+	FL2End:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FL2LABEnd")
+		DNBT B 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto FL2End2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto FL2End2
+    FL2End2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdle
+	FL2LABEnd:
+		DNBT F 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto FL2LABEnd2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto FL2LABEnd2
+    FL2LABEnd2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LIdle
+
+	// Right Boot
+	Flash:
+		TNT1 A 1
+
+	RIdle:
+		TNT1 A 0 A_JumpIfHealthLower(1, "RDone")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "Flash")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 1 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        loop
+        TNT1 A 1 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        loop
+
+	RDone:
+		TNT1 A 0
+		Goto LightDone
+
+	RFire:
+		TNT1 A 0 A_GiveInventory("DukeKicking",1)
+		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate",0,3)
+		//TNT1 A 0 A_JumpIfInventory("CalmYoLegsDuke", 1, "FastRight")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "RFireLAB")
+		DNBT C 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearRight")
+		Goto RFire2
+	RFireLAB:
+		DNBT G 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearRight")
+		Goto RFire2
+
+	NuclearRight:
+		//TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootNuclearRightAttackHandler")
+		Goto RFire2
+
+	RFire2:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootAttackHandler")
+		Goto RFire2End
+
+	RFire2End:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "RFire2LABEnd")
+		DNBT D 9 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"RFire2End2")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RFire2End2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RFire2End2
+    RFire2End2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfHealthLower(1, "RDone")
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"RIdle")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RIdle
+	RFire2LABEnd:
+		DNBT H 9 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"RFire2LABEnd2")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RFire2LABEnd2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RFire2LABEnd2
+    RFire2LABEnd2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfHealthLower(1, "RDone")
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"RIdle")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RIdle
+
+	FastRight:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FastRightLAB")
+		DNBT C 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearRight2")
+		Goto FR2
+	FastRightLAB:
+		DNBT G 5 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		//TNT1 A 0 A_JumpIfInventory("NuclearKicks", 1, "NuclearRight2")
+		Goto FR2
+
+	NuclearRight2:
+		//TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootNuclearRightAttackHandler")
+		Goto FR2
+
+	FR2:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootFastAttackHandler")
+		Goto FR2End
+
+	FR2End:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FR2LABEnd")
+		DNBT D 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"FR2End2")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto FR2End2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto FR2End2
+    FR2End2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfHealthLower(1, "RDone")
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"RIdle")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RIdle
+	FR2LABEnd:
+		DNBT H 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"FR2LABEnd2")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto FR2LABEnd2
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto FR2LABEnd2
+    FR2LABEnd2:
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfHealthLower(1, "RDone")
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"RIdle")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RIdle
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RIdle
+
+	TauntWeaponSound:
+		Goto Select
+
+	IntroTaunt:
+	IntroTaunt1:
+		KNUX AB 3
+		KNUX C 0 A_JumpIfInventory("SamsaraBallgag",1,"IntroTaunt2")
+		KNUX C 0 A_JumpIfInventory("PistolStartEnabled",1,"IntroTaunt1PistolStart")
+		KNUX C 0 A_JumpIfInventory("DukeLegacyVoices",1,"IntroTaunt1Legacy")
+		KNUX C 3 A_PlaySound("duke/introtaunt",CHAN_7)
+		KNUX D 0 A_GiveInventory("DukeTauntCooldown",5)
+		KNUX D 0 ACS_NamedExecuteAlways("DukeTauntCooldown")
+		Goto IntroTauntEnd
+	IntroTaunt1PistolStart:
+		KNUX C 0 A_JumpIfInventory("DukeLegacyVoices",1,"IntroTaunt1PistolStartLegacy")
+		KNUX C 3 A_PlaySound("duke/mpdeath",CHAN_7)
+		KNUX D 0 A_GiveInventory("DukeTauntCooldown",5)
+		KNUX D 0 ACS_NamedExecuteAlways("DukeTauntCooldown")
+		Goto IntroTauntEnd
+	IntroTaunt1Legacy:
+		KNUX C 3 A_PlaySound("duke/old_introtaunt",CHAN_7)
+		KNUX D 0 A_GiveInventory("DukeTauntCooldown",5)
+		KNUX D 0 ACS_NamedExecuteAlways("DukeTauntCooldown")
+		Goto IntroTauntEnd
+	IntroTaunt1PistolStartLegacy:
+		KNUX C 3 A_PlaySound("duke/old_mpdeath",CHAN_7)
+		KNUX D 0 A_GiveInventory("DukeTauntCooldown",5)
+		KNUX D 0 ACS_NamedExecuteAlways("DukeTauntCooldown")
+		Goto IntroTauntEnd
+	IntroTaunt2:
+		KNUX C 3
+		Goto IntroTauntEnd
+		IntroTauntEnd:
+		KNUX D 3 A_PlayWeaponSound("duke/knuckles")
+		KNUX CB 3
+		KNUX A 0 A_TakeInventory("DukeReady",1)
+		Goto SharedTauntEnd
+
+	WaitingTaunt:
+		TNT1 A 0 A_JumpIfInventory("SamsaraIdleBallgag",1,"IdleBallgagStuff")
+	WaitingTaunt1:
+		KNUX AB 3
+		KNUX C 0 A_JumpIfInventory("SamsaraBallgag",1,"IntroTaunt2")
+		KNUX C 0 A_JumpIfInventory("DukeLegacyVoices",1,"WaitingTaunt1Legacy")
+		KNUX C 3 A_PlaySound("duke/waitingtoolong",CHAN_7)
+		KNUX D 0 A_GiveInventory("DukeTauntCooldown",5)
+		KNUX D 0 ACS_NamedExecuteAlways("DukeTauntCooldown")
+		Goto WaitingTauntEnd
+	WaitingTaunt1Legacy:
+		KNUX C 3 A_PlaySound("duke/old_waitingtoolong",CHAN_7)
+		KNUX D 0 A_GiveInventory("DukeTauntCooldown",5)
+		KNUX D 0 ACS_NamedExecuteAlways("DukeTauntCooldown")
+		Goto WaitingTauntEnd
+	WaitingTaunt2:
+		KNUX C 3
+		Goto WaitingTauntEnd
+	WaitingTauntEnd:
+		KNUX D 3 A_PlayWeaponSound("duke/knuckles")
+		KNUX CB 3
+		KNUX A 0 A_TakeInventory("DukeWaiting")
+		Goto SharedTauntEnd
+
+	SharedTauntEnd:
+		KNUX A 3
+		Goto Select
+		
+	IdleBallgagStuff:
+		TNT1 A 0 A_TakeInventory("DukeWaiting")
+		TNT1 A 0
+		Goto Select
+
+	GiveMoney:
+		TNT1 A 0
+		Goto Super::GiveMoney
+
+	FlashPlayer:
+		TNT1 A 1
+		Stop
+	}
+}
+
+// Original
+
+actor SamsaraDukeMightyFootAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("DukeKickAttack",0,false)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeKickAttackCoop",0,false)
+        stop
+    }
+}
+
+actor SamsaraDukeMightyFootFastAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("DukeKickAttack2",0,false)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeKickAttack2Coop",0,false)
+        stop
+    }
+}
+
+actor SamsaraDukeMightyFootNuclearLeftAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("DukeNuclearKick",0,false,random(4,6))
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeNuclearKickCoop",0,false,random(4,6))
+        stop
+    }
+}
+
+actor SamsaraDukeMightyFootNuclearRightAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("DukeNuclearKick",0,false,-random(4,6))
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeNuclearKickCoop",0,false,-random(4,6))
+        stop
+    }
+}
+
+actor DukeKickAttack : FastProjectile
+{
+	Radius 6
+	Height 6
+	DamageType "MightyBoot"
+	Projectile
+	Damage (10)
+	Speed 25
+	Obituary "$SAMSARA_DUKE_OB_FALLBACKMELEE"
+    +DONTBLAST
+	+NOTIMEFREEZE
+	States
+	{
+	Spawn:
+		TNT1 A 2
+		Stop
+
+	Death:
+		TNT1 A 1
+		TNT1 A 0 A_PlaySound("duke/kickwall")
+		TNT1 A 1 A_SpawnItem("DukeBootPuff")
+		Stop
+
+	Crash:
+		TNT1 A 1
+		TNT1 A 0 A_PlaySound("duke/kickhit")
+		TNT1 A 1 A_SpawnItem("DukeBootPuff")
+		Stop
+
+	XDeath:
+		TNT1 A 1
+		TNT1 A 0 A_PlaySound("duke/kickhit")
+		Stop
+	}
+}
+
+actor DukeKickAttackCoop : DukeKickAttack { +THRUSPECIES Species "Player" }
+
+actor DukeKickAttack2 : DukeKickAttack { Damage (14) }
+
+actor DukeKickAttack2Coop : DukeKickAttack2 { +THRUSPECIES Species "Player" }
+
+actor DukeBootPuff : BulletPuffSettingless
+{
+	Radius 1
+	Height 1
+	Alpha 1
+	Scale 0.45
+	VSpeed 1.15
+	Speed 0
+    -ALLOWPARTICLES
+	+MISSILE
+	-SOLID
+	+NOCLIP
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		//TNT1 A 1 A_PlaySound("duke/kickwall")
+		DKPF ABCD 4
+		Stop
+	}
+}
+
+actor DukeBulletPuff2 : BulletPuffSettingless
+{
+	Alpha 1
+	DamageType "DukeDamage"
+	Scale 0.55
+	VSpeed 0
+    -ALLOWPARTICLES
+	-SOLID
+	States
+	{
+	Spawn:
+	  	TNT1 A 0
+		TNT1 A 0 A_Jump(224,2)
+		TNT1 A 0 A_PlaySound("duke/bulletricochet")
+		TNT1 A 1 A_SpawnItem("DukeBootPuff")
+		DKPF EFGH 3 BRIGHT
+		Stop
+	}
+}
+
+actor DukeNuclearKick : DukeKickAttack
+{
+	Scale 0.30
+	Speed 15
+	ReactionTime 1
+	+NODAMAGETHRUST
+	+FORCERADIUSDMG
+	DamageType "DukeExplosive"
+	States
+	{
+	Spawn:
+		TNT1 A 2
+		TNT1 A 1 A_Countdown
+		Wait
+	Death:
+	Crash:
+	XDeath:
+		RPGX B 0 A_AlertMonsters
+		RPGX B 0 A_PlaySound("duke/explosion")
+		RPGX B 0 A_Explode(20, 64, 0)
+		RPGX BCDEFGHIJKLMNOPQRSTUV 2 BRIGHT
+		Stop
+	}
+}
+
+actor DukeNuclearKickCoop : DukeNuclearKick { +THRUSPECIES Species "Player" }
+
+actor DukeBootserk : PowerDamage // most likely will no longer be used
+{
+	+HUBPOWER
+	Powerup.Duration 0x7FFFFFFF
+	DamageFactor "MightyBoot", 8
+}
+
+// Life's A Beach
+
+actor DukeBootPuffBeach : DukeBootPuff
+{
+	States
+	{
+	Spawn:
+		//TNT1 A 1 A_PlaySound("duke/kickwall")
+		DKPF IJKL 4
+		Stop
+	}
+}
+
+// Duke Nukem 64
+
+actor SamsaraDuke64MightyFootAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("Duke64KickAttack",0,false)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("Duke64KickAttackCoop",0,false)
+        stop
+    }
+}
+
+actor Duke64KickAttack : DukeKickAttack { Damage (random(9,16)) }
+
+actor Duke64KickAttackCoop : Duke64KickAttack { +THRUSPECIES Species "Player" }

@@ -1,6 +1,6 @@
 script "SamsaraBossMonologue" (int bossmonologueshit, int mixershit, int iosshit) //204
 {
-    if (GetCVar("samsara_nomonologues") || CheckInventory("SamsaraBossMonologueInitialized") || isDead(0) || isInvasion()) // don't do the monologue if Spawn state is called more than once, dead, or playing invasion
+    if (GetCVar("samsara_nomonologues") || CheckInventory("SamsaraBossMonologueInitialized") || isDead(0) || isInvasion() || (GetCVar("samsara_mixerloaded") && GetCVar("mm_performancemode"))) // don't do the monologue if Spawn state is called more than once, dead, or playing invasion. also disabled when mixer's performance mode setting is on as a temporary fix
     {
         GiveInventory("SamsaraBossMonologueInitialized", 1); // mainly for samsara_nomonologues
         terminate;
@@ -8,9 +8,9 @@ script "SamsaraBossMonologue" (int bossmonologueshit, int mixershit, int iosshit
 
     GiveInventory("SamsaraBossMonologueInitialized", 1);
 
-    bool CheckForIOSBossMap = !StrIcmp(strparam(n:PRINTNAME_LEVEL), "MAP30") ||
-                              !StrIcmp(strparam(n:PRINTNAME_LEVEL), "LOST61") || // PSX Final Doom CE
-                              !StrIcmp(strparam(n:PRINTNAME_LEVEL), "LOST61C"); // PSX Doom CE Lost Levels
+    bool CheckForIOSBossMap = !StrIcmp(StrParam(n:PRINTNAME_LEVEL), "MAP30") ||
+                              !StrIcmp(StrParam(n:PRINTNAME_LEVEL), "LOST61") || // PSX Final Doom CE
+                              !StrIcmp(StrParam(n:PRINTNAME_LEVEL), "LOST61C"); // PSX Doom CE Lost Levels
 
     switch (bossmonologueshit)
     {
@@ -1724,5 +1724,3 @@ script "SamsaraBossMonologue" (int bossmonologueshit, int mixershit, int iosshit
         break;
     }
 }
-
-script "SamsaraBossMonologueSetRenderStyle" (int styletype) { SetActorProperty(0, APROP_RenderStyle, styletype); }

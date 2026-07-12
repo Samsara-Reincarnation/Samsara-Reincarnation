@@ -1,0 +1,240 @@
+actor UsingMarathonInstagib: Boolean {}
+
+actor "SPNKR-25 Auto Cannon" : SamsaraMarathonWeapon
+{
+    Inventory.PickupMessage "You got the SPNKR-25 Auto Cannon!"
+    Weapon.SlotNumber 6
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 100
+	Weapon.Kickback 100
+    Weapon.AmmoType1 "Spanker2Ammo"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Cell"
+    Weapon.AmmoGive2 35
+	Obituary "$SAMSARA_MARATHON_OB_SLOT6S"
+    Tag "SPNKR-25 Auto Cannon"
+    States
+    {
+      Spawn:
+        MATC H -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReadyAllowReload")
+      ReadyDisallowReload:
+        MATC A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyAllowReload:
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",0,"ReadyDisallowReload")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        goto ReadyDisallowReload
+        MATC A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyAmmoCheck
+
+      ReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",1,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"Reload")
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        MATC A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectReloadAmmoCheck")
+      SelectStart:
+        TNT1 A 0 A_TakeInventory("UsingFists")
+        TNT1 A 0 A_TakeInventory("UsingPistols")
+        TNT1 A 0 A_TakeInventory("UsingDualPistols")
+        TNT1 A 0 A_TakeInventory("UsingSMG")
+        TNT1 A 0 A_TakeInventory("UsingPacifier")
+        TNT1 A 0 A_TakeInventory("UsingShotguns")
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("UsingFusionPistol")
+        TNT1 A 0 A_TakeInventory("UsingAssaultRifle")
+        TNT1 A 0 A_TakeInventory("UsingSpanker")
+        TNT1 A 0 A_TakeInventory("UsingToasty")
+        TNT1 A 0 A_TakeInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon2")
+        //TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
+
+        TNT1 A 0 A_GiveInventory("UsingMarathonInstagib")
+        MATC A 1 A_Raise
+        loop
+
+      SelectReloadAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"SelectStart")
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",1,"SelectStart")
+      SelectReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",0,"SelectStart")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        goto SelectStart
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        TNT1 A 0 A_GiveInventory("Spanker2Ammo")
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"FireStart")
+        goto Ready
+
+      FireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",1,"FireStart")
+      FireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"Reload")
+        goto Ready
+
+      FireStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"Ready")
+        TNT1 A 0 A_AlertMonsters
+        MATC A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStartReloadable")
+      FireStartNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"FireAttack")
+        goto FireContinue
+
+      FireStartReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireAttack")
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",1,"FireAttack")
+        goto FireContinue
+
+      FireAttack:
+        TNT1 A 0 A_GunFlash
+      FireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonSpanker2AttackHandler")
+        MATC BCD 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MATC EFG 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      Reload:
+        MATC A 1 Offset(0,38)
+        MATC A 1 Offset(0,44)
+        MATC A 1 Offset(0,50)
+        MATC A 1 Offset(0,56)
+        MATC A 1 Offset(0,62)
+        MATC A 1 Offset(0,68)
+        MATC A 1 Offset(0,74)
+        MATC A 1 Offset(0,80)
+        MATC A 1 Offset(0,86)
+        MATC A 1 Offset(0,92)
+        MATC A 1 Offset(0,98)
+        MATC A 1 Offset(0,104)
+        MATC A 1 Offset(0,110)
+        MATC A 1 Offset(0,116)
+        MATC A 1 Offset(0,122)
+        MATC A 18 Offset(0,128)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectReloadAmmo")
+        goto SelectStart
+		
+      Flash:
+        TNT1 A 5 Bright A_Light1
+        TNT1 A 5 Bright A_Light2
+        goto LightDone
+    }
+}
+
+actor SamsaraMarathonSpanker2AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Spanker2Ammo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Spanker2Ammo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("marathon/railfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(0,0,1,random(20,24)*7,"SpnkrAutoPuff",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,random(20,24)*7,"SpnkrAutoPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+    }
+}
+
+actor Spanker2Ammo : Ammo
+{
+    Inventory.MaxAmount 7
+    Tag "Auto Cannon Energy Pack"
+    +IGNORESKILL
+}
+
+actor SpnkrAutoPuff
+{
+    Radius 1
+    Height 1
+    Decal "DoomImpScorch"
+    +ALWAYSPUFF
+    +NOEXTREMEDEATH
+    +NOINTERACTION
+    +NOTIMEFREEZE
+    +PUFFGETSOWNER
+    +PUFFONACTORS
+    +SKYEXPLODE
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 8 ACS_NamedExecuteWithResult("Marathon678")
+        stop
+    }
+}
+
+actor SpnkrAutoPuffCoop : SpnkrAutoPuff { +MTHRUSPECIES }
+
+actor SpnkrBeam
+{
+    Radius 1
+    Height 1
+    RenderStyle "Add"
+    Scale 0.25
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    +NOTIMEFREEZE // performance reasons
+    +RANDOMIZE
+    States
+    {
+      Spawn:
+        RBPL L 4 Light("SPNKRBEAM")
+        RBPL L 1 Light("SPNKRBEAM") //A_FadeOut(0.05)
+        stop
+    }
+}

@@ -1,4 +1,4 @@
-Actor PsxLostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
+Actor PsxLostSoul_Samsara : SamsaraMonsterReincLostSoul replaces LostSoulTwo
 {
 	Health 60
 	Radius 16
@@ -22,9 +22,8 @@ Actor PsxLostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
 	Obituary "$OB_SKULL"
 	Tag "Lost Soul"
 	Species "SamsaraLostSoul"
-	RenderStyle "Normal" // gzdoom
+	RenderStyle "Normal" // gzdoom // originally still used SoulTrans, but Normal just looks nicer here
 	DamageFactor "LostSoul64Explosion", 0
-	+NOBLOOD
 	States
 	{
 	Spawn:
@@ -61,7 +60,7 @@ Actor PsxLostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
 		SKUL JK 6
 		Stop
 
-		// SamsaraMonsterGhost states
+		// SamsaraMonsterReincLostSoul states
 		Death.ZorchPistol:
 		Death.Zorch:
 		Death.ZorchKamikaze:
@@ -131,6 +130,7 @@ Actor PsxLostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
 		Disintegrate:
+		Death.StrifeMauler:
 			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
 			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
@@ -215,9 +215,9 @@ Actor PsxPainElemental_Samsara : SamsaraMonsterReincPainElemental replaces PainE
 	Pain.MightyBoot:
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 		TNT1 A 0 A_PlaySound("duke/kickhit",CHAN_BODY)
-		PAIN E 2 A_FaceTarget
+		PAIN G 2 A_FaceTarget
 		TNT1 A 0 A_Recoil(14)
-		PAIN E 16 A_Pain
+		PAIN G 16 A_Pain
 		Goto See
 	Death:
 		PAIN H 8 bright ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
@@ -227,7 +227,16 @@ Actor PsxPainElemental_Samsara : SamsaraMonsterReincPainElemental replaces PainE
 		PAIN L 8 bright A_PainDie("PsxLostSoul_Samsara")
 		PAIN M 8 bright
 		Stop
+	Death.Massacre:
+		PAIN H 8 bright ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		PAIN I 8 bright A_Scream
+		PAIN JK 8 bright
+		PAIN L 8 bright A_PainDie("PsxLostSoul_Samsara")
+		PAIN M 8 bright
+		Stop
 	Raise:
+		PAIN A 0
+		"####" "#" 0 A_JumpIfInventory("EnemyZorched",1,"ZorchRaise") // just in case
 		PAIN MLKJIH 8
 		Goto See
 	Pain.ShrinkerDMG:
@@ -337,6 +346,7 @@ Actor PsxPainElemental_Samsara : SamsaraMonsterReincPainElemental replaces PainE
 			TNT1 A -1 A_Jump(256, "SpawnTheLostSoul")
 			Wait
 		Disintegrate:
+		Death.StrifeMauler:
 			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
 			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
@@ -495,6 +505,8 @@ actor PsxPainElemental_Samsara_Shrink : PsxPainElemental_Samsara
 			Loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

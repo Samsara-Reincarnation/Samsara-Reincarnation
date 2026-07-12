@@ -1,0 +1,132 @@
+/* The flemoid gibs -- modified from Nash's Nashgore. */
+actor FlemoidGib
+{
+	Scale 0.95
+	Health 1
+	Radius 8
+	Height 1
+	Mass 1
+	+CORPSE
+	+NOTELEPORT
+	-SOLID
+	+NOBLOCKMAP
+	+CLIENTSIDEONLY
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		FLBL AABBCCDD 2 A_SpawnItemEx("FlemoidGibTrail",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+		Loop
+
+	Crash:
+		TNT1 A 1
+		Stop
+	}
+}
+
+// Blood trails spawned by FlyingBlood
+actor FlemoidGibTrail
+{
+	Scale 0.8//0.70
+	Mass 1
+	+LOWGRAVITY
+	+NOTELEPORT
+	+NOBLOCKMAP
+	States
+	{
+	Spawn:
+		FTRL ABCD 4
+		Stop
+	}
+}
+
+actor FlemoidEyeGib
+{
+	Scale 0.8
+	Health 1
+	Radius 2
+	Height 2
+	Mass 1
+	Speed 8
+	+CORPSE
+	+NOTELEPORT
+	-SOLID
+	+NOBLOCKMAP
+	+CLIENTSIDEONLY
+	+MOVEWITHSECTOR
+	States
+	{
+	Spawn:
+		TNT1 A 0 ThrustThingZ (0, 28, 0, 1)
+	Spawn2:
+		FLBL RSTU 4
+		Loop
+
+	Crash:
+		FLBL VWXY 4
+		FLBL Z -1
+		Stop
+	}
+}
+
+actor FlemoidPowerStrand_Samsara 2035
+{
+	Game Chex
+	SpawnID 125
+	Health 20
+	Radius 15
+	Height 60
+	Mass 10000
+    Tag "Power Strand"
+	+SOLID
+	+SHOOTABLE
+	+NOBLOOD
+	-BLOODSPLATTER
+	+ACTIVATEMCROSS
+	+DONTGIB
+	+NOICEDEATH
+	+OLDRADIUSDMG
+	+RANDOMIZE
+	+DONTRIP
+	+BLOODLESSIMPACT
+	DeathSound "weapons/rocklx"
+	Obituary "$OB_POWERSTRAND"
+	States
+	{
+	Spawn:
+		BAR2 ABCD 4 bright
+		Loop
+	Death:
+		BEXP ABC 5 bright
+		TNT1 A 0 A_SetDamageType("Explosive") // placeholder for now
+	DeathContinue:
+		TNT1 A 0 A_Explode
+		BEXP DE 10 bright
+		BEXP E 1050 bright A_BarrelDestroy
+		BEXP E 5 A_Respawn
+		Wait
+
+	Death.ZorchPistol:
+	Death.Zorch:
+	Death.ZorchKamikaze:
+	Death.PhasingZorch:
+	Death.ZorchSpectral:
+		BEXP ABC 5 bright
+		TNT1 A 0 A_SetDamageType("Zorch")
+		Goto DeathContinue
+	}
+}
+
+#include "decorate/games/game_chex/commonus.dec"
+#include "decorate/games/game_chex/bipedicus.dec"
+#include "decorate/games/game_chex/armoredbipedicus.dec"
+#include "decorate/games/game_chex/quadrumpus.dec"
+#include "decorate/games/game_chex/stridicus.dec"
+#include "decorate/games/game_chex/cycloptis.dec"
+#include "decorate/games/game_chex/supercycloptis.dec"
+#include "decorate/games/game_chex/larva.dec"
+#include "decorate/games/game_chex/flemmine.dec"
+#include "decorate/games/game_chex/snotfolus.dec"
+#include "decorate/games/game_chex/maximus.dec"
+#include "decorate/games/game_chex/flembrane.dec"
+#include "decorate/games/game_chex/flembomination.dec"

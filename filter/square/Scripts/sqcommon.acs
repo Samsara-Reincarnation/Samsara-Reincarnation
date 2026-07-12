@@ -1,0 +1,564 @@
+/*****************************************************************************
+ * Adventures of Square Common Library.
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+#library "sqcommon"
+
+#include "zcommon.acs"
+#include "sqglobal.acs"
+#include "sqspawn.acs"
+#include "sqtutor.acs"
+
+/*****************************************************************************
+ * Map scope.
+ ****************************************************************************/
+
+/** List of player tags by player number. */
+int player_tags[PLAYER_MAX];
+/** Player's previous velocity Z. */
+int player_prev_velz[PLAYER_MAX]; //fixed point
+
+/****************************************************************************/
+
+#include "sq_funcs.acs"
+#include "sq_event.acs"
+#include "sq_hints.acs"
+#include "sq_inter.acs"
+#include "sq_scene.acs"
+#include "sq_vover.acs" // This is the only modified file used for Samsara
+#include "sq_bossm.acs"
+#include "sq_timea.acs"
+#include "sq_crate.acs"
+#include "sq_prism.acs"
+#include "sq_fxzon.acs"
+
+/*****************************************************************************
+ * Static functions.
+ ****************************************************************************/
+
+/**
+ * Freezes all players.
+ * flag: if 0, unset. if nonzero, set.
+ */
+function void Players_Freeze(int flag)
+{
+	int v;
+	if (flag)
+		v = ON;
+	else
+		v = OFF;
+	
+	SetPlayerProperty(1, v, PROP_TOTALLYFROZEN);
+	
+	for (int pid = 0; pid < PLAYER_MAX; pid++)
+	{
+		int tid = player_tags[pid];
+		if (tid != PLAYER_NOTAG)
+			SetActorProperty(tid, APROP_Invulnerable, v);
+	}
+}
+
+/**
+ * Freezes activating player.
+ * flag: if 0, unset. if nonzero, set.
+ */
+function void Activator_Freeze(int flag)
+{
+	int v;
+	if (flag)
+		v = ON;
+	else
+		v = OFF;
+
+	int playernum = PlayerNumber();
+	if (playernum >= 0 && playernum < PLAYER_MAX)
+	{
+		SetPlayerProperty(0, v, PROP_TOTALLYFROZEN);
+		int tid = player_tags[playernum];
+		if (tid != PLAYER_NOTAG)
+			SetActorProperty(tid, APROP_Invulnerable, v);
+	}
+
+}
+
+/**
+ * Give a thing to all players.
+ */
+function void Give_Item_All(str itemClass, int amount)
+{
+	for (int player = 0; player < PLAYER_MAX; player++)
+	{
+		int playertid = player_tags[player];
+		if (playertid != PLAYER_NOTAG)
+			GiveActorInventory(playertid, itemClass, amount);
+	}
+}
+
+/**
+ * Take a thing from all players.
+ */
+function void Take_Item_All(str itemClass, int amount)
+{
+	for (int player = 0; player < PLAYER_MAX; player++)
+	{
+		int playertid = player_tags[player];
+		if (playertid != PLAYER_NOTAG)
+			TakeActorInventory(playertid, itemClass, amount);
+	}
+}
+
+/**
+ * Give a thing to a player.
+ */
+function void Give_Item_Player(int playerNum, str itemClass, int amount)
+{
+	if (playerNum >= 0 && playerNum < PLAYER_MAX)
+	{
+		int playertid = player_tags[playerNum];
+		if (playertid != PLAYER_NOTAG)
+			GiveActorInventory(playertid, itemClass, amount);
+	}
+}
+
+/**
+ * Take a thing from a player.
+ */
+function void Take_Item_Player(int playerNum, str itemClass, int amount)
+{
+	if (playerNum >= 0 && playerNum < PLAYER_MAX)
+	{
+		int playertid = player_tags[playerNum];
+		if (playertid != PLAYER_NOTAG)
+			TakeActorInventory(playertid, itemClass, amount);
+	}
+}
+
+/*****************************************************************************
+ * Powerups removed every map.
+ ****************************************************************************/
+
+#define POWERUP_TAKE_MAX 15
+str player_take_powerups[POWERUP_TAKE_MAX] = 
+{
+	"SauceWeapon",
+	"HotSauceGodMode",
+	"SauceBreath",
+	"CrateWeapon",
+	"TNTCrateWeapon",
+	"NukageCrateWeapon",
+	"FizzoPopCrateWeapon",
+	"PowerInvulnerable",
+	"Power2xDamage",
+	"PowerEnergyDrink",
+	"PowerNoDrown",
+	"PowerIronFeet",
+	"PowerFlight",
+	"IntermissionModeItem",
+	"CutsceneModeItem"
+};
+
+/**
+ * Resets all players' powerups.
+ */
+function void Reset_All_Player_Powerups (void)
+{
+	for (int takeindex = 0; takeindex < POWERUP_TAKE_MAX; takeindex++)
+		for (int player = 0; player < PLAYER_MAX; player++)
+		{
+			int playerid = player_tags[player];
+			if (playerid != PLAYER_NOTAG)
+				TakeActorInventory(playerid, player_take_powerups[takeindex], 999);
+		}
+}
+
+/*****************************************************************************
+ * "Moon Damage" sector tags.
+ ****************************************************************************/
+ 
+#define VACUUM_DAMAGE_MAX 128
+int vacuum_damage_tags[VACUUM_DAMAGE_MAX];
+int vacuum_damage_tags_count;
+ 
+/**
+ * Iterates through all "vacuum damage" tags and calls SectorDamage
+ * with appropriate parameters.
+ */
+function void Vacuum_Damage (void)
+{
+	for (int i = 0; i < vacuum_damage_tags_count; i++)
+	{
+		SectorDamage(vacuum_damage_tags[i], 25, "Vacuum", "", (DAMAGE_PLAYERS | DAMAGE_NONPLAYERS | DAMAGE_IN_AIR));
+	}
+}
+
+
+/*****************************************************************************
+ * Evented Named Scripts
+ ****************************************************************************/
+
+function void AssignPlayerTID(void)
+{
+	int pid = PlayerNumber();
+	if (pid < 0)
+		return;
+
+	int ptid = UniqueTID();
+	player_tags[pid] = ptid;
+	// activator is player
+	Thing_ChangeTID(0, ptid);
+}
+
+/**
+ * Intitalizes player tags.
+ */
+script "__Init_PlayerTags" OPEN
+{
+	int i;
+	for (i = 0; i < PLAYER_MAX; i++)
+		player_tags[i] = PLAYER_NOTAG;
+}
+
+/**
+ * Intitalizes a player tag once it enters.
+ */
+script "__Init_Player_Tag" ENTER
+{
+	AssignPlayerTID();
+}
+
+/**
+ * Display the map name.
+ */
+script "__Init_Level_Name_Display" ENTER
+{
+	if (GameType() != GAME_SINGLE_PLAYER && GameType() != GAME_NET_COOPERATIVE)
+		terminate;
+	if (time_attack_active || GetMapArgInt("NOTITLE"))
+		terminate;
+
+	delay(35*2);
+		
+	SetHudSize(HUD_WIDTH, HUD_HEIGHT, 1);
+	SetFont("BigFont");
+	HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, HUD_ENTER_LEVELNAME, CR_WHITE, 200.0, 50.0, 3.0, 1.0, 1.0);
+}
+
+/**
+ * Called when a player respawns.
+ */
+script "__Player_Respawns" RESPAWN
+{
+	// Clear HUD message
+	HudMessage(s:""; HUDMSG_PLAIN, HUD_DEATHMSG, CR_GOLD, 200.0, 120.0, 0.0);
+	// reassign TID
+	AssignPlayerTID();
+}
+
+/**
+ * Called at every map start.
+ */
+script "__MapUtil_Start" OPEN
+{
+	FadeTo(
+		0, 0, 0,
+		1.0, 
+		0.0
+	);
+	delay(1);
+	FadeRange(
+		0, 0, 0,
+		1.0, 
+		0, 0, 0,
+		0.0, 
+		2.0
+	);
+}
+
+/**
+ * Called at every map end.
+ */
+script "__MapUtil_End" UNLOADING
+{
+	FadeRange(
+		0, 0, 0,
+		0.0, 
+		0, 0, 0,
+		1.0, 
+		2.0
+	);
+}
+
+/**
+ * Called when a player dies.
+ */
+script "__Player_Dies" DEATH
+{
+	Tutor_ClearHint();
+	Tutor_ClearKey();
+	
+	switch (GameType())
+	{
+		case GAME_SINGLE_PLAYER:
+			HudMessage(l:"GAME_USETORESTART"; HUDMSG_PLAIN, HUD_DEATHMSG, CR_GOLD, 1.5, 0.75, 0.0);
+			break;
+		case GAME_NET_COOPERATIVE:
+		case GAME_NET_DEATHMATCH:
+			HudMessage(l:"GAME_USETORESPAWN"; HUDMSG_PLAIN, HUD_DEATHMSG, CR_GOLD, 1.5, 0.75, 0.0);
+			break;
+		case GAME_TITLE_MAP:
+			break;
+	}
+}
+
+/*****************************************************************************
+ * Invoked Actor Scripts
+ ****************************************************************************/
+
+/**
+ * Returns game type (used by actor code).
+ */
+script "Map_GameType" (void)
+{
+	// Actor "return"
+	SetResultValue(GameType());
+}
+
+/**
+ * Returns a Unique TID (used by actor code).
+ */
+script "Map_UniqueID" (void)
+{
+	// Actor "return"
+	SetResultValue(UniqueTID());
+}
+
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * Grate destruction script.
+ * Sets a grate texture on the line according to grateSize, or removes it entirely.
+ * Also unsets blocking flags.
+ * lineId: the line to affect.
+ * grateSize: the grating size. sizes 24, 32, 48, and 64 set corresponding broken grate textures.
+ * chunkTID: the TID for spawning metal debris on destroy.
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Grate_Destroy" (int lineId, int grateSize, int chunkTID)
+{
+	str texture = "-";
+	switch (grateSize)
+	{
+		case 24:
+			texture = "MIDVBB24";
+			break;
+		case 32:
+			texture = "MIDVBB32";
+			break;
+		case 48:
+			texture = "MIDVBB48";
+			break;
+		case 64:
+			texture = "MIDVBB64";
+			break;
+	}
+	
+	SetLineTexture(lineId, SIDE_FRONT, TEXTURE_MIDDLE, texture);
+	SetLineTexture(lineId, SIDE_BACK, TEXTURE_MIDDLE, texture);
+	SetLineBlocking(lineId, 0);
+	
+	if (chunkTID)
+	{
+		// TODO: Add spawn spot debris.
+	}
+}
+
+/**
+ * Adds a sector tag to the "Vacuum Damage".
+ * Will NOT add tag 0.
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Setup_Vacuum_Damage" (int sectorTag)
+{
+	if (!sectorTag)
+		terminate;
+	if (vacuum_damage_tags_count == VACUUM_DAMAGE_MAX)
+	{
+		Log(s:"ERROR: Too many tags for Setup_Vacuum_Damage");
+		terminate;
+	}
+
+	vacuum_damage_tags[vacuum_damage_tags_count] = sectorTag;
+	vacuum_damage_tags_count++;
+}
+
+#define AIRLOCK_ELEC 0
+#define AIRLOCK_AETHER 1
+
+/**
+ * Plays the airlock sound locally and emits a screen flash.
+ * Should be called with ACS_NamedExecuteAlways.
+ * type: 0 for electrical, 1 for aether.
+ */
+script "Airlock_Field" (int type)
+{
+	if (type == AIRLOCK_AETHER)
+	{
+		FadeRange(190, 190, 190, 0.35, 190, 190, 190, 0.0, 0.5);
+		LocalAmbientSound("world/airlock/aether", 127);
+	}
+	else // AIRLOCK_ELEC
+	{
+		FadeRange(81, 218, 255, 0.35, 81, 218, 255, 0.0, 0.5);
+		LocalAmbientSound("world/airlock/field", 127);
+	}
+}
+
+/**
+ * Same as ClearForceField(sector), but plays a powerdown sound as well, "world/forcefield/powerdown".
+ * Should be called with ACS_NamedExecuteAlways.
+ * sectorTag: The tag used that would normally be used with ClearForceField.
+ * soundSourceTag: If nonzero, this is the tag that the "power down sound" is played from.
+ *		If zero, it is played at the activating actor.
+ */
+script "ForceField_PowerDown" (int sectorTag, int soundSourceTag)
+{
+	ClearForceField(sectorTag);
+	if (soundSourceTag)
+		PlaySound(soundSourceTag, "world/forcefield/powerdown");
+	else
+		ActivatorSound("world/forcefield/powerdown", 127);
+}
+
+/**
+ * ThrustThingZ plus uses previous downward velocity to determine force. 
+ * Plays a sound as well: "world/jelly/bounce".
+ * maxforce: the maximum upward force to apply.
+ * additiveforce: the force to add per bounce. 0 is no additional
+ * _log: if nonzero, log the result force for debugging.
+ */
+function void bounce_player(int maxforce, int additiveforce, int _log)
+{
+	int velz = 0.0;
+	int pn = PlayerNumber();
+	if (pn >= 0)
+	{
+		velz = player_prev_velz[pn];
+		if (velz >= 0.0)
+			return;
+		else
+			velz = -velz;
+	}
+	else
+		velz = maxforce;
+	
+	int addforce = (additiveforce << 16);
+	int totalforce = FixedMul(velz + addforce, 4.0) >> 16;
+	
+	if (totalforce > maxforce)
+		totalforce = maxforce;
+	
+	if (_log)
+		Log(s:"VELZ: ", f:velz, s:", ADD: ", d:additiveforce, s:", RESULT: ", d:totalforce);
+		
+    ActivatorSound("world/jelly/bounce", 127);
+    ThrustThingZ(0, totalforce, 0, 0);
+}
+
+/**
+ * Parameterized Jelly Bounce script.
+ * Best used with a repeatable "actor touches floor" 
+ * special (with a "no falling damage" floor).
+ *
+ * ThrustThingZ plus uses downward velocity to determine force. 
+ * Plays a sound as well: "world/jelly/bounce".
+ * Should be called with ACS_NamedExecuteAlways.
+ *
+ * maxforce: the maximum upward force to apply.
+ * additiveforce: the force to add per bounce. 0 is no additional
+ * _log: if nonzero, log the result force for debugging.
+ */
+script "Bounce_Floor" (int maxforce, int additiveforce, int _log)
+{
+	bounce_player(maxforce, additiveforce, _log);
+}
+
+// TODO: Adjust these for E3!
+
+/**
+ * Purple Jelly Bounce script. Additive bounce.
+ * Best used with a repeatable "actor touches floor" 
+ * special (with a "no falling damage" floor).
+ *
+ * ThrustThingZ plus uses downward velocity to determine force. 
+ * Plays a sound as well: "world/jelly/bounce".
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Bounce_Floor_Purple" (void)
+{
+	bounce_player(128, 8, 0);
+}
+
+/**
+ * Red Jelly Bounce script. Highest consistent bounce.
+ * Best used with a repeatable "actor touches floor" 
+ * special (with a "no falling damage" floor).
+ *
+ * ThrustThingZ plus uses downward velocity to determine force. 
+ * Plays a sound as well: "world/jelly/bounce".
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Bounce_Floor_Red" (void)
+{
+	bounce_player(160, 160, 0);
+}
+
+/**
+ * Yellow Jelly Bounce script. Medium consistent bounce.
+ * Best used with a repeatable "actor touches floor" 
+ * special (with a "no falling damage" floor).
+ *
+ * ThrustThingZ plus uses downward velocity to determine force. 
+ * Plays a sound as well: "world/jelly/bounce".
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Bounce_Floor_Yellow" (void)
+{
+	bounce_player(96, 96, 0);
+}
+
+/**
+ * Green Jelly Bounce script. Lowest consistent bounce.
+ * Best used with a repeatable "actor touches floor" 
+ * special (with a "no falling damage" floor).
+ *
+ * ThrustThingZ plus uses downward velocity to determine force. 
+ * Plays a sound as well: "world/jelly/bounce".
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Bounce_Floor_Green" (void)
+{
+	bounce_player(64, 64, 0);
+}

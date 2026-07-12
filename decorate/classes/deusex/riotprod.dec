@@ -1,0 +1,224 @@
+Actor DeusEx_RiotProd : DeusExWeapon
+{
+	Weapon.SlotNumber 0
+	Weapon.SlotPriority 0
+	+WEAPON.MELEEWEAPON
+	+BRIGHT
+	+WEAPON.CHEATNOTWEAPON
+	Tag "Riot Prod"
+	Weapon.AmmoType1 "DeusEx_ProdMagazine"
+	Weapon.AmmoType2 "DeusEx_ProdAmmo"
+	Weapon.AmmoUse1 1
+	Inventory.PickupMessage "You found a Riot Prod."
+	Obituary "%o was tazed to sleep by %k."
+	States
+	{
+		ReadyActual:
+			DX00 O 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+		ReadyActualNonReloadable:
+			DX00 O 1 A_WeaponReady
+			goto ReadyActualJump
+
+		ReadyActualReloadable:
+			DX00 O 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			goto ReadyActualJump
+
+		ReadyActualJump:
+			DX00 O 0 A_Jump(2,"ReadyActualIdle")
+			goto ReadyActualAmmoCheck
+
+		ReadyActualIdle:
+			DX00 O 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdleReloadable")
+		ReadyActualIdleNonReloadable:
+			DX00 O 4 A_WeaponReady // interpolation hack (possibly?)
+			DX01 "LMNOPQRSTUVWXYZ[\" 4 A_WeaponReady
+			goto ReadyActual
+
+		ReadyActualIdleReloadable:
+			DX00 O 4 A_WeaponReady(WRF_ALLOWRELOAD) // interpolation hack (possibly?)
+			DX01 "LMNOPQRSTUVWXYZ[\" 4 A_WeaponReady(WRF_ALLOWRELOAD)
+			goto ReadyActual
+
+		ReadyActualAmmoCheck:
+			DX00 O 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+			goto ReadyActual
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+			DX00 O 0 A_JumpIfInventory("DeusEx_ProdMagazine",1,"ReadyActual")
+			goto ReloadCheck
+
+		Deselect:
+			DX00 W 0 A_GiveInventory("DeusEx_Reloading")
+			DX00 W 2 A_JumpIfHealthLower(1,"DeathDeselect")
+			DX00 "XYZ[\" 2
+			goto DeselectFinish
+
+		DeathDeselect:
+			TNT1 AAAAAA 2
+			goto DeselectFinish
+
+		DeselectFinish:
+			TNT1 A 0 A_TakeInventory("DeusEx_ProdEquipped")
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			DX00 A 0 A_PlaySound("DeusEx/Prod/Select")
+			DX00 A 2 A_GiveInventory("DeusEx_ProdEquipped")
+			DX00 BCDEFGHIJKLMN 2
+			DX00 O 0 A_TakeInventory("DeusEx_Reloading")
+			goto ReadyActual
+
+		Fire:
+			DX00 P 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+		FireNonReloadable:
+			DX00 P 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+			DX00 P 0 A_JumpIfInventory("DeusEx_ProdAmmo",1,"FireWaterCheck")
+			goto FireDry
+
+		FireReloadable:
+			DX00 P 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+			DX00 P 0 A_JumpIfInventory("DeusEx_ProdMagazine",1,"FireWaterCheck")
+		FireReloadableDryCheck:
+			DX00 P 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			DX00 P 0 A_JumpIfInventory("DeusEx_ProdAmmo",1,"ReloadStart")
+			goto FireDry
+
+		FireWaterCheck:
+			DX00 P 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+			DX00 P 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+			goto FireStart
+
+		FireDry:
+			DX00 O 0 A_PlaySound("DeusEx/DryFire",CHAN_6)
+			DX00 O 0 A_ClearReFire
+			DX00 O 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActualAmmoCheck
+
+		FireStart:
+			DX00 P 0 A_GiveInventory("DeusEx_Firing")
+			DX00 P 0 A_GiveInventory("SamsaraDeusExProdAttackHandler")
+			DX00 P 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			DX00 Q 0
+			DX00 RSTU 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			DX00 V 0 A_ReFire
+			DX00 V 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		Reload:
+		ReloadCheck:
+			DX00 O 0 A_JumpIfInventory("DeusEx_ProdMagazine",0,"ReadyActual")
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			DX00 O 0 A_JumpIfInventory("DeusEx_ProdAmmo",1,"ReloadStart")
+			goto ReadyActual
+
+		ReloadStart:
+			DX01 A 0 A_GiveInventory("DeusEx_Reloading")
+			DX01 A 0 A_PlaySound("DeusEx/Prod/Reload1")
+			DX01 ABC 2 A_WeaponReady(WRF_NOFIRE)
+			DX01 DEFGHIDEFGHI 6 A_WeaponReady(WRF_NOFIRE)
+			DX01 J 0 A_TakeInventory("DeusEx_Reloading")
+			DX01 J 0 A_PlaySound("DeusEx/Prod/Reload2")
+			DX01 JKL 6 A_WeaponReady(WRF_NOFIRE)
+			DX00 O 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+			goto ReloadDone
+
+		ReloadDone:
+			DX00 O 0
+			goto ReadyActual
+
+		ReloadAmmo:
+			DX00 O 0 A_JumpIfInventory("DeusEx_ProdMagazine",0,"ReloadDone")
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			DX00 O 0 A_JumpIfInventory("DeusEx_ProdAmmo",1,1)
+			goto ReloadDone
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			DX00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			DX00 O 0 A_TakeInventory("DeusEx_ProdAmmo",1)
+			DX00 O 0 A_GiveInventory("DeusEx_ProdMagazine")
+			loop
+	}
+}
+
+actor SamsaraDeusExProdAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_ProdAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DeusEx_ProdAmmo",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_ProdMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DeusEx_ProdMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("DeusEx/Prod/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("DeusEx_ProdMissile",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("DeusEx_ProdMissileCoop",0,false)
+        stop
+    }
+}
+
+Actor DeusEx_ProdMagazine : Ammo
+{
+	Inventory.MaxAmount 4
+	Tag "Riot Prod Magazine"
+	+IGNORESKILL
+}
+
+Actor DeusEx_ProdAmmo : Ammo
+{
+	Inventory.Amount 4
+	Inventory.MaxAmount 40
+	Ammo.BackpackAmount 2
+	Ammo.BackpackMaxAmount 80
+	Tag "Riot Prod Ammo"
+	+IGNORESKILL
+}
+
+Actor DeusEx_ProdMissile : DeusExBullet
+{
+	Speed 32
+	+FORCEPAIN
+	DamageType "DeusExStunned"
+	Decal None
+	States
+	{
+		Spawn:
+			TNT1 A 0 NODELAY A_SetUserVar(user_damage, CallACS("DeusEx_WeaponSkillDamage", 2, 15))
+			TNT1 A 1
+			Stop
+		Crash:
+		XDeath:
+			//TNT1 A 0 A_GiveInventory("PowerDeusEx_StunDamage", 1, AAPTR_TRACER)
+			TNT1 A 0 A_Explode(CallACS("DeusEx_BackDamage",CallACS("DeusEx_WeaponSkillDamage", 2, 15)),8,!XF_HURTSOURCE,0,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
+			TNT1 A 1 A_GiveInventory("DeusEx_BloodGenerator",1,AAPTR_TRACER)
+			stop
+	}
+}
+
+Actor DeusEx_ProdMissileCoop : DeusEx_ProdMissile { Species "Player" +THRUSPECIES }
+
+Actor PowerDeusEx_StunDamage : PowerProtection
+{
+	DamageFactor "Normal", 4
+	Powerup.Duration -3
+}

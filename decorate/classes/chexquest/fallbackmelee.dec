@@ -1,0 +1,194 @@
+actor " Bootspoon " : Weapon
+{
+    Weapon.SlotNumber 0
+    Weapon.SelectionOrder 3700
+    Weapon.Kickback 100
+    +WEAPON.WIMPY_WEAPON
+    +WEAPON.MELEEWEAPON
+    +WEAPON.NOALERT
+    +BLOODLESSIMPACT
+    +INVENTORY.UNDROPPABLE
+    Obituary "$SAMSARA_CHEX_OB_FALLBACKMELEE"
+	Inventory.RestrictedTo "ChexWarrior"
+    Tag "Bootspoon"
+    States
+    {
+      Spawn:
+        CSPR B -1
+        stop
+
+      Ready:
+        CPUN A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        CPUN A 1 A_Lower
+        loop
+
+      Select: 
+        CPUN A 1 A_Raise
+        loop
+
+      Fire:
+        CPUN B 4
+        CPUN C 4 A_GiveInventory("SamsaraChexBootspoonAttackHandler")
+        CPUN D 5
+        CPUN C 4
+        CPUN B 5 A_ReFire
+        goto Ready
+    }
+}
+
+actor SamsaraChexBootspoonAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupNormalImproved")
+      // Normal (vanilla)
+      PickupNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalVanillaCoop")
+      PickupNormalVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalVanillaDMSpread") // A_CustomPunch doesn't support spread, multiply damage by 3 to compensate
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupNormalVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupNormalVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      PickupNormalVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      // Normal (improved)
+      PickupNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalImprovedCoop")
+      PickupNormalImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupNormalImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupNormalImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      PickupNormalImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupBerserkImproved")
+      // Berserk (vanilla)
+      PickupBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkVanillaCoop")
+      PickupBerserkVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkVanillaDMSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupBerserkVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupBerserkVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      PickupBerserkVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      // Berserk (improved)
+      PickupBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkImprovedCoop")
+      PickupBerserkImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupBerserkImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"ChexSpoonPuff")
+        stop
+
+      PickupBerserkImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"ChexSpoonPuffCoop")
+        stop
+
+      PickupBerserkImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"ChexSpoonPuffCoop")
+        stop
+    }
+}
+
+actor ChexSpoonPuff : BulletPuff
+{
+    DamageType "ZorchPistol"
+    RenderStyle Add
+    -BLOODSPLATTER
+    +BLOODLESSIMPACT
+    +PUFFGETSOWNER
+    +PUFFONACTORS
+    Alpha 0.4
+    Scale 0.22
+    VSpeed 0
+    States
+    {
+      Spawn:
+      Melee:
+        CMIS D 0 Bright Light("CPUFF1") A_SpawnItemEx("Switchable_FlyingBlood_NonViolent",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),33)
+        TNT1 A 0 A_GiveInventory("SamsaraChexBootspoonHitActorSoundPlayer",1,AAPTR_TARGET)
+      SpawnFinish:
+        CMIS D 4 Bright Light("CPUFF1")
+        CMIS CB 4 Bright Light("CPUFF2")
+        stop
+
+      Crash:
+        TNT1 A 0 A_GiveInventory("SamsaraChexBootspoonHitWallSoundPlayer",1,AAPTR_TARGET)
+        goto SpawnFinish
+    }
+}
+
+actor ChexSpoonPuffCoop : ChexSpoonPuff { +MTHRUSPECIES }
+
+actor SamsaraChexBootspoonHitWallSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("chex/wallspoon",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraChexBootspoonHitActorSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("chex/spoon",CHAN_WEAPON)
+        stop
+    }
+}

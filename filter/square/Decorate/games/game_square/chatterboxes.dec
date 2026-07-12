@@ -1,0 +1,230 @@
+actor Chatterbox_Samsara : SquareMonster_Samsara2 replaces Chatterbox
+{
+	Speed 12
+	FastSpeed 16
+	Health 150
+	Radius 26
+	Mass 500
+	SpawnID 8
+  
+	BloodColor "00 99 11"
+	Obituary "$OB_CHATTERBOX"
+	SeeSound "chatterbox/active"
+	PainSound "chatterbox/pain"
+	ActiveSound "chatterbox/active"
+	DeathSound "chatterbox/death"
+
+	DamageFactor "Vacuum", 0.0
+	Tag "Chatterbox"
+	States
+	{
+	Spawn:
+		CHBX ABCB 4 A_Look
+		Loop
+	See:
+		CHBX AABBCCBB 2 A_Chase
+		Loop
+	Melee:
+		CHBX A 0 A_ChangeFlag("NOPAIN",0)
+		CHBX ADD 4 A_FaceTarget
+		CHBX E 6 A_CustomMeleeAttack(random(1,8)*6, "chatterbox/melee", "none")
+		Goto See
+	Pain:
+		CHBX F 3
+		CHBX F 3 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		CHBX F 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		CHBX F 16 A_Pain
+		Goto See
+	Death:
+		CHBX F 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		CHBX F 1
+		CHBX F 1 A_Scream
+		CHBX F 0 A_SpawnItemEx("GibKey", random[SquareGibRandom](-32,32), random[SquareGibRandom](-4,4), random[SquareGibRandom](4,12),
+									  random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](0,8), 0, SXF_TRANSFERTRANSLATION)
+		CHBX FF 0 A_SpawnItemEx("GibEye", random[SquareGibRandom](-32,32), random[SquareGibRandom](-4,4), random[SquareGibRandom](4,12),
+									  random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](0,8), 0, SXF_TRANSFERTRANSLATION)
+		CHBX F 0 A_Jump(256,1,2,3,4,5)
+		CHBX FFFFFFFF 0 A_SpawnItemEx("GibTooth", random[SquareGibRandom](-32,32), random[SquareGibRandom](-4,4), random[SquareGibRandom](4,12),
+									          random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](0,8), 0, SXF_TRANSFERTRANSLATION)
+		CHBX F 0 A_SpawnItem("GibSpawnerChatterbox")
+		TNT1 A 18
+		Stop
+	}
+}
+
+actor Shatterbox_Samsara : Chatterbox_Samsara
+{
+	RenderStyle Translucent
+	Alpha 0.75
+	Speed 15
+	FastSpeed 18
+	Health 225
+
+	DeathSound "shatterbox/death"
+	Obituary "$OB_SHATTERBOX"
+	Tag "Shatterbox"
+	SpawnID 9
+	States
+	{
+	Spawn:
+		SHBX ABCB 4 A_Look
+		Loop
+	See:
+		TNT1 AA 0 A_SpawnItemEx("ShatterboxSnowflake", frandom[SquareEffectRandom](-8.0, 8.0), frandom[SquareEffectRandom](-8.0, 8.0), 16,
+													frandom[SquareEffectRandom](-1.0, 1.0), frandom[SquareEffectRandom](-1.0, 1.0), frandom[SquareEffectRandom](1.0, 2.0),
+													0, 0, 96)
+		SHBX AABB 2 A_Chase
+		TNT1 B 0 A_SpawnItemEx("ShatterboxSnowflake", frandom[SquareEffectRandom](-8.0, 8.0), frandom[SquareEffectRandom](-8.0, 8.0), 16,
+													frandom[SquareEffectRandom](-1.0, 1.0), frandom[SquareEffectRandom](-1.0, 1.0), frandom[SquareEffectRandom](1.0, 2.0),
+													0, 0, 96)
+		SHBX CCBB 2 A_Chase
+		TNT1 B 0 A_SpawnItemEx("ShatterboxSnowflake", frandom[SquareEffectRandom](-8.0, 8.0), frandom[SquareEffectRandom](-8.0, 8.0), 16,
+													frandom[SquareEffectRandom](-1.0, 1.0), frandom[SquareEffectRandom](-1.0, 1.0), frandom[SquareEffectRandom](1.0, 2.0),
+													0, 0, 96)
+		Loop
+	Melee:
+		SHBX A 0 A_ChangeFlag("NOPAIN",0)
+		SHBX ADD 3 A_FaceTarget
+		SHBX E 5 A_CustomMeleeAttack(random(1,8)*10, "chatterbox/melee", "none")
+		Goto See
+	Pain:
+		SHBX F 3
+		SHBX F 3 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		SHBX F 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		SHBX F 16 A_Pain
+		Goto See
+	Death:
+		SHBX F 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		SHBX F 1
+		SHBX F 1 A_Scream
+		SHBX F 0 A_SpawnItemEx("GibKey", random[SquareGibRandom](-32,32), random[SquareGibRandom](-4,4), random[SquareGibRandom](4,12),
+										random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](0,8), 0)
+		SHBX FF 0 A_SpawnItemEx("GibEye", random[SquareGibRandom](-32,32), random[SquareGibRandom](-4,4), random[SquareGibRandom](4,12),
+										random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](0,8), 0)
+		SHBX F 0 A_Jump(256,1,2,3)
+		SHBX FFFFFFFF 0 A_SpawnItemEx("GibTooth", random[SquareGibRandom](-32,32), random[SquareGibRandom](-4,4), random[SquareGibRandom](4,12),
+												random[SquareGibRandom](-4,4), random[SquareGibRandom](-4,4), random[SquareGibRandom](0,8), 0)
+		SHBX F 0 A_SpawnItem("GlassMibSpawnerShatterbox")
+		SHBX F 0 A_SpawnItemEx("ShardExplosion")
+		TNT1 A 18
+		Stop
+	}
+}
+
+actor Rectangolier_Samsara : Chatterbox_Samsara
+{
+	Health 200
+	Speed 15
+	FastSpeed 15
+	BloodColor "9f 00 9b"
+	Obituary "$OB_RECTANGOLIER"
+	SeeSound "rectangolier/sight"
+	ActiveSound "rectangolier/active"
+	DeathSound "rectangolier/death"
+	PainSound "rectangolier/pain"
+
+	MaxTargetRange 384
+
+	+FLOAT
+	+NOGRAVITY
+	+NEVERFAST // otherwise weird stuff happens on Cubular
+	Tag "Rectangolier"
+	SpawnID 35
+
+	States
+	{
+	Spawn:
+		CHB2 ABCD 4 A_Look
+	Loop
+	See:
+		CHB2 A 0 A_FaceTarget
+		CHB2 AAAAAAAAAA 1 A_CustomMissile("RectangolierBlurA", random[SquareEffectRandom](-32, 32), random[SquareEffectRandom](-16, 16))
+	SeeLoop:
+		CHB2 A 0 A_CustomMissile("RectangolierBlurA", 0)
+		CHB2 A 1 A_Chase
+		CHB2 A 0 A_CustomMissile("RectangolierBlurA", 0)
+		CHB2 A 1 A_Chase
+		CHB2 B 0 A_CustomMissile("RectangolierBlurB", 0)
+		CHB2 B 1 A_Chase
+		CHB2 B 0 A_CustomMissile("RectangolierBlurB", 0)
+		CHB2 B 1 A_Chase
+		CHB2 C 0 A_CustomMissile("RectangolierBlurC", 0)
+		CHB2 C 1 A_Chase
+		CHB2 C 0 A_CustomMissile("RectangolierBlurC", 0)
+		CHB2 C 1 A_Chase
+		CHB2 D 0 A_CustomMissile("RectangolierBlurD", 0)
+		CHB2 D 1 A_Chase
+		CHB2 D 0 A_CustomMissile("RectangolierBlurD", 0)
+		CHB2 D 1 A_Chase
+		CHB2 C 0 A_CustomMissile("RectangolierBlurC", 0)
+		CHB2 C 1 A_Chase
+		CHB2 C 0 A_CustomMissile("RectangolierBlurC", 0)
+		CHB2 C 1 A_Chase
+		CHB2 B 0 A_CustomMissile("RectangolierBlurB", 0)
+		CHB2 B 1 A_Chase
+		CHB2 B 0 A_CustomMissile("RectangolierBlurB", 0)
+		CHB2 B 1 A_Chase
+		Loop
+	Missile:
+		CHB2 A 0 A_ChangeFlag("NOPAIN",0)
+		CHB2 A 0 A_Jump(256, "StartCharge")
+		Goto SeeLoop
+	StartCharge:
+		CHB2 A 10 A_FaceTarget
+	Charge:
+		CHB2 A 0 A_FaceTarget
+		CHB2 A 0 A_Stop
+		CHB2 A 0 A_FaceTarget
+		CHB2 A 0 A_CustomMissile("RectangolierBlurA", 0)
+		CHB2 A 1 A_Recoil(-15)
+		CHB2 F 0 A_FaceTarget
+		CHB2 F 0 A_CustomMissile("RectangolierBlurF", 0)
+		CHB2 F 4 A_CustomMeleeAttack(random(1,8)*6, "rectangolier/attack", "none")
+		CHB2 B 0 A_FaceTarget
+		CHB2 B 0 A_CustomMissile("RectangolierBlurB", 0)
+		CHB2 B 1 
+		CHB2 A 0 A_MonsterRefire(0, "SeeLoop")
+		CHB2 A 0 A_Jump(16, "SeeLoop")
+		Loop
+	Melee:
+		CHB2 F 4 A_CustomMeleeAttack(random(1,8)*6, "rectangolier/attack", "none")
+		Goto SeeLoop
+	Pain:
+		CHB2 G 0 A_FaceTarget
+		CHB2 G 0 A_Stop
+		CHB2 G 0 A_Pain
+		CHB2 GGGGGG 1 A_CustomMissile("RectangolierBlurG", random[SquareEffectRandom](-32, 32), random[SquareEffectRandom](-16, 16))
+		Goto SeeLoop
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		CHB2 G 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		CHB2 G 16 A_Pain
+		Goto See
+	Death:
+		CHB2 G 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		CHB2 G 1
+		CHB2 G 1 A_Scream
+		CHB2 G 0 A_FaceTarget
+		CHB2 G 0 A_SpawnItemEx("GibKey", random[SquareEffectRandom](-32,32), random[SquareEffectRandom](-4,4), random[SquareEffectRandom](4,12),
+										random[SquareEffectRandom](-4,4), random[SquareEffectRandom](-4,4), random[SquareEffectRandom](0,8), 0)
+		CHB2 G 0 A_Jump(256,1,2,3,4,5)
+		CHB2 GGGGGGGG 0 A_SpawnItemEx("GibTooth", random[SquareEffectRandom](-32,32), random[SquareEffectRandom](-4,4), random[SquareEffectRandom](4,12),
+										random[SquareEffectRandom](-4,4), random[SquareEffectRandom](-4,4), random[SquareEffectRandom](0,8), 0)
+		CHB2 G 0 A_SpawnItem("GibSpawnerRectangolier")
+		TNT1 AAAAAAA 1 A_CustomMissile("RectangolierBlurG", random[SquareEffectRandom](-32, 32), random[SquareEffectRandom](-16, 16))
+		TNT1 A 18
+		Stop
+	}
+}

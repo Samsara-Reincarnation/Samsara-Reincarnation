@@ -30,6 +30,8 @@ script "SamsaraOpen" OPEN  //623 -- SAMSARA_OPEN
 		currentGame = GAME_HARMONY;
 	else if(GetActorClass(checkerTid) == "SamsaraIWADChecker_Doom" && StrICmp(strparam(l:"OB_IMPHIT"),"You were burned by the wizard cat!") == 0)
 		currentGame = GAME_ROTWB;
+	else if(GetActorClass(checkerTid) == "SamsaraIWADChecker_Doom" && StrICmp(strparam(l:"SQMENU_HOWSQUARE"),"How square are you?") == 0)
+		currentGame = GAME_SQUARE;
 
 	// Now we check for custom iwads or TCs that we want to add compatibility for
 	else if(GetActorClass(checkerTid) == "SamsaraIWADChecker_Doom" && StrICmp(strparam(l:"TAG_SHOTGUN"),"Steel-shot Launcher") == 0)
@@ -124,13 +126,20 @@ script "SamsaraOpenClient" OPEN CLIENTSIDE
 	//Let's check if view models are loaded. We should only be doing this once. The future tells me I should put this on the client
 	SetUserCvar(ConsolePlayerNumber(),"samsara_cl_viewmodelsloaded",SpawnForced("SamsaraCheckViewModels",0,0,0,0,0));
 
+	str uniqueKey1New = StrParam(k:"+samsara_cmd_classuniques");
+	str uniqueKey2New = StrParam(k:"+samsara_cmd_classuniques2");
+	str uniqueKey1Old = StrParam(k:"samsara_cmd_classuniques");
+	str uniqueKey2Old = StrParam(k:"samsara_cmd_classuniques2");
+
+	if((strleft(uniqueKey1New,3) == "???" && strleft(uniqueKey1Old,3) != "???") || (strleft(uniqueKey2New,3) == "???" && strleft(uniqueKey2Old,3) != "???"))
+		Log(s:"You are using the old version of the unique keys. Please rebind your \cgclass unique keys\c- to whatever you are currently reusing!!!");
+
 	while (1)
 	{
         for (int c = 0; c < PLAYERMAX; c++) // REOPEN doesn't exist in zandronum, so this is what we have to work with
         {
             if (!PlayerInGame(c)) { playerClassesClient[c] = -1; }
         }
-
 		Delay(1);
 	}
 }
@@ -175,6 +184,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
     int morphset;
     int respawnhealth = 100;
     bool hasfist = false, haspistol = false; // netplay hack to stop dummy weapons being given on map change
+    str storedammopriname = "Placeholder", storedammosecname = "Placeholder";
+    int storedammopri = 0, storedammosec = 0;
 
 	ACS_NamedExecuteWithResult("SamsaraFirstTimeUserTutorialSystem", PlayerNumber(), 0, 0);
 
@@ -274,7 +285,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 	case CLASS_DOOM:
 		if (!CheckInventory("SamsaraDoom64StartingUnmakerArtifactsGiven"))
 		{
-			if (GetCVar("samsara_unmakerartifacts") > 0) { SetInventory("SamsaraDoom64UnmakerArtifact", GetCVar("samsara_unmakerartifacts")); }
+			if (GetCVar("samsara_unmakerartifacts") > 0 && !CheckInventory("SamsaraDoomguyInDoom64CE")) { SetInventory("SamsaraDoom64UnmakerArtifact", GetCVar("samsara_unmakerartifacts")); }
 			SetInventory("SamsaraDoom64StartingUnmakerArtifactsGiven", 1);
 		}
 
@@ -359,11 +370,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
         if (!respawning)
         {
-            if (GetCVar("samsara_currentgame") == GAME_STRIFE)
-            {
-                SetInventory("StrifeGuyInStrife", 1);
-                SetInventory("BlackBirdInStrife", (isSinglePlayer() || isCoop()) && !isInvasion());
-            }
+            // keeping strife game check just in case
+            if (CheckInventory("StrifeGuyInStrife") || GetCVar("samsara_currentgame") == GAME_STRIFE) { SetInventory("BlackBirdInStrife", (isSinglePlayer() || isCoop()) && !isInvasion()); }
 
             if (!GetUserCVar(pln, "samsara_cl_ballgag")) { GiveInventory("BlackBirdReady", 1); }
         }
@@ -534,6 +542,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
         SetInventory("SamsaraHasDisabledInventoryCooldown", CheckInventory("SamsaraHasInfiniteInventory") && GetCVar("samsara_noinventorycooldown"));
 
+        SetInventory("SamsaraCanFireWeaponsUnderwater", GetCVar("samsara_underwaterweapons"));
+
         SetInventory("SamsaraCurrentWaterLevel", GetActorProperty(0, APROP_WaterLevel));
 
         SetInventory("WolfenMovement", GetUserCVar(pln, "samsara_cl_wolfmove") && !GetCVar("samsara_banwolfmove"));
@@ -567,10 +577,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
             SetInventory("SamsaraCurrentTeamIndicator", 0);
         }
 
-        SetInventory("SamsaraSkulltagWeaponsAreEnabled", GetCVar("samsara_skulltagspawn") >= 1);
-
-        SetInventory("SamsaraExtraWeaponsAreEnabled", GetCVar("samsara_extraweapons"));
-
         SetInventory("SamsaraReverseDualWieldFiring", GetUserCVar(pln, "samsara_cl_dualwieldswap"));
 
         SetInventory("SamsaraQuietFootsteps", !GetUserCVar(pln, "samsara_cl_footstepsounds") && !GetCVar("samsara_forcefootstepsounds"));
@@ -580,6 +586,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 		switch (samsaraClassNum())
 		{
 			case CLASS_DOOM:
+                if (CheckInventory("SamsaraDoomguyInDoom64CE")) { SetInventory("SamsaraDoom64UnmakerArtifact", CheckInventory("UnmakerUpgrades")); }
+
 				if (CheckInventory("SamsaraDoomguyStrRailgunScope") && !CheckWeapon(" RailGun ")) { SetInventory("SamsaraDoomguyStrRailgunScope", 0); }
 
 				if (CheckInventory("SamsaraDoomguyStrChaingunFiringSoundCheck") && !CheckWeapon(" Chaingun "))
@@ -625,7 +633,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 				if(doommode == 2)
 				{
-					if(CheckInventory("SamsaraExtraWeaponsAreEnabled") && CheckInventory("Super Shotgun"))
+					if(CheckInventory("Super Shotgun"))
 					{
 						GiveInventory("Automatic Shotgun", 1);
 					}
@@ -638,7 +646,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						TakeInventory("Automatic Shotgun", 1);
 					}
 
-					if(CheckInventory("SamsaraExtraWeaponsAreEnabled") && (CheckInventory(" Chaingun ") || CheckInventory(" Machine Gun "))) // loadout still checked because we haven't hit that point yet
+					if(CheckInventory(" Chaingun ") || CheckInventory(" Machine Gun ")) // loadout still checked because we haven't hit that point yet
 					{
 						GiveInventory(" Flamer ", 1);
 					}
@@ -651,7 +659,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						TakeInventory(" Flamer ", 1);
 					}
 
-					if(CheckInventory("SamsaraExtraWeaponsAreEnabled") && CheckInventory("Rocket Launcher"))
+					if(CheckInventory("Rocket Launcher"))
 					{
 						GiveInventory("Land Mine Layer", 1);
 					}
@@ -664,7 +672,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						TakeInventory("Land Mine Layer", 1);
 					}
 
-					if(CheckInventory("SamsaraExtraWeaponsAreEnabled") && (CheckInventory("Plasma Rifle") || CheckInventory(" Incinerator "))) // loadout still checked because we haven't hit that point yet
+					if(CheckInventory("Plasma Rifle") || CheckInventory(" Incinerator ")) // loadout still checked because we haven't hit that point yet
 					{
 						GiveInventory("Stunner Rifle", 1);
 					}
@@ -677,7 +685,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						TakeInventory("Stunner Rifle", 1);
 					}
 
-					if(CheckInventory("SamsaraExtraWeaponsAreEnabled") && (CheckInventory("B.F.G. 9000") || CheckInventory("B.F.G. 2704") || CheckInventory("Calamity Blade"))) // loadout still checked because we haven't hit that point yet
+					if(CheckInventory("B.F.G. 9000") || CheckInventory("B.F.G. 2704") || CheckInventory("Calamity Blade")) // loadout still checked because we haven't hit that point yet
 					{
 						GiveInventory("Pyro Cannon", 1);
 					}
@@ -773,25 +781,25 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						}
 						else if(doommode == 2)
 						{
-							if (CheckInventory("DGStrHasHomingRocketLauncher") && !CheckInventory("Homing Rocket Launcher")) { GiveInventory("Homing Rocket Launcher", 1); }
+                            if (CheckInventory("DGStrHasHomingRocketLauncher") && !CheckInventory("Homing Rocket Launcher"))
+                            {
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Homing Rocket Launcher", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
-							if (CheckInventory("DGStrHasPlasmaRepeater") && !CheckInventory("Plasma Repeater")) { GiveInventory("Plasma Repeater", 1); }
+                            if (CheckInventory("DGStrHasPlasmaRepeater") && !CheckInventory("Plasma Repeater"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Plasma Repeater", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
-							if (CheckInventory("DGStrHasWPK")) { SetInventory("SamsaraDoomguyStrWeaponPowerItem", CheckInventory("DGStrHasWPK")); }
+                            if (CheckInventory("DGStrHasWPK")) { SetInventory("SamsaraDoomguyStrWeaponPowerItem", CheckInventory("DGStrHasWPK")); }
 
 							if(CheckInventory("Doom64_IHaveUnmaker"))
 							{
-								if(CheckWeapon(" Unmaker "))
-								{
-									if(CheckInventory("SamsaraExtraWeaponsAreEnabled"))
-									{
-										SetWeapon("Pyro Cannon");
-									}
-									else
-									{
-										SetWeapon("B.F.G. 9000");
-									}
-								}
+								if(CheckWeapon(" Unmaker ")) { SetWeapon("Pyro Cannon"); }
 							}
 
 							GiveInventory("DoomGuyScalar",1);
@@ -871,34 +879,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					previousvalue = doommode;
 				}
 
-                loadoutmode = GetCVar("samsara_doomguy_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_fallbackranged");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraDoomOriginalLoadoutFallbackRanged", loadoutmode);
-
-                loadoutmode = GetCVar("samsara_doomguy_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot4") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot4");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraDoomOriginalLoadoutSlot4", loadoutmode);
-
-                loadoutmode = GetCVar("samsara_doomguy_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot6") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot6");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraDoomOriginalLoadoutSlot6", loadoutmode);
-
-                loadoutmode = GetCVar("samsara_doomguy_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot7") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot7");
-
-                if (loadoutmode > 2) { loadoutmode = 2; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraDoomOriginalLoadoutSlot7", loadoutmode);
-
                 if (doommode >= 1)
                 {
                     if (loadoutPrevValue[pln][SLOT_PISTOL] != 0)
@@ -974,6 +954,34 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         SetInventory("Calamity Blade", 0);
                     }
                 } else {
+                    loadoutmode = GetCVar("samsara_doomguy_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_fallbackranged");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraDoomOriginalLoadoutFallbackRanged", loadoutmode);
+
+                    loadoutmode = GetCVar("samsara_doomguy_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot4") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot4");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraDoomOriginalLoadoutSlot4", loadoutmode);
+
+                    loadoutmode = GetCVar("samsara_doomguy_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot6") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot6");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraDoomOriginalLoadoutSlot6", loadoutmode);
+
+                    loadoutmode = GetCVar("samsara_doomguy_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot7") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot7");
+
+                    if (loadoutmode > 2) { loadoutmode = 2; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraDoomOriginalLoadoutSlot7", loadoutmode);
+
                     if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraDoomOriginalLoadoutFallbackRanged"))
                     {
                         ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_PISTOL, CheckInventory("SamsaraDoomOriginalLoadoutFallbackRanged"), pln);
@@ -1135,6 +1143,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
           case CLASS_CHEX:
+            SetInventory("ChexWarriorFiringCLZ", CheckWeapon("Chain-Lightning Zorcher"));
+
             if (previousvalue != 0)
             {
                 haspistol = CheckInventory("Mini-Zorcher");
@@ -1151,7 +1161,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
             else if (loadoutmode < 0) { loadoutmode = 0; }
 
             SetInventory("SamsaraChexLoadoutFallbackRanged", loadoutmode);
-            
+
             if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraChexLoadoutFallbackRanged"))
             {
                 ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_PISTOL, CheckInventory("SamsaraChexLoadoutFallbackRanged"), pln);
@@ -1226,7 +1236,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 				if(CheckInventory("TomeOfPowerCooldown") > 0 && !CheckInventory("PowerHereticTome"))
 				{
-					int weaponCount = CheckInventory("GotWeapon0") + CheckInventory("GotWeapon2") + CheckInventory("GotWeapon3") + CheckInventory("GotWeapon4") + CheckInventory("GotWeapon5") + CheckInventory("GotWeapon6") + CheckInventory("GotWeapon7");
+                    int weaponCount = CheckInventory("GotWeapon0") + CheckInventory("GotWeapon2") + CheckInventory("GotWeapon3") +
+                                      CheckInventory("GotWeapon4") + CheckInventory("GotWeapon5") + CheckInventory("GotWeapon6") +
+                                      CheckInventory("CorvusTempestWand") + CheckInventory("GotWeapon7") + CheckInventory("Grim Ballista");
 					int tomeTimer = 1800;
 
 					until(weaponCount == 0)
@@ -1252,6 +1264,14 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_WOLFEN:
+                if (CheckInventory("Totenkopf_Kar98k") && CheckInventory("Totenkopf_IHaveScope"))
+                {
+                    storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
+                    SetInventory("Totenkopf_Sniper", 1);
+                    SetInventory(storedammopriname, storedammopri);
+                }
+                else { SetInventory("Totenkopf_Sniper", 0); }
+
 				wolfmode = GetUserCVar(pln, "samsara_cl_wolfmode");
 
                 if (wolfmode > 2) { wolfmode = 2; }
@@ -1303,7 +1323,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Totenkopf_IHaveDualPistols")) { SetInventory("Totenkopf_PistolDual", 1); }
 
-                            if (CheckInventory("Wolfen_IHaveSlot2") || CheckInventory("Totenkopf_IHaveScope"))
+                            if (CheckInventory("Totenkopf_IHaveKar98k"))
                             {
                                 SetInventory("Totenkopf_Kar98k", 1);
 
@@ -1321,22 +1341,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Mauser Rifle", 0);
                             }
 
-                            if (CheckInventory("Wolfen_IHaveSlot4"))
+                            if (CheckInventory("Totenkopf_IHaveMP40"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Totenkopf_MP40", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
-                                if (CheckWeapon("  Chaingun  ")) { SetWeapon("Totenkopf_MP40"); }
-                            }
-
-                            if (CheckInventory("Wolfen_IHaveDualChainguns"))
-                            {
-                                SetInventory("Totenkopf_MP40", 1);
-
-                                if (CheckWeapon("  Dual Chainguns  ")) { SetWeapon("Totenkopf_MP40"); }
-                            }
-
-                            if (CheckInventory("  Chaingun  ") || CheckInventory("  Dual Chainguns  "))
-                            {
                                 if (CheckWeapon("  Chaingun  ") || CheckWeapon("  Dual Chainguns  ")) { SetWeapon("Totenkopf_MP40"); }
                             }
 
@@ -1344,29 +1354,37 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             SetInventory("  Dual Chainguns  ", 0);
 
-                            if (CheckInventory("Totenkopf_IHaveDualMP40s")) { SetInventory("Totenkopf_MP40Dual", 1); }
+                            if (CheckInventory("Totenkopf_IHaveMP40") && CheckInventory("Totenkopf_IHaveDualMP40s")) { SetInventory("Totenkopf_MP40Dual", 1); }
 
                             if (CheckInventory(" Rocket Launcher "))
                             {
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Totenkopf_Panzerschreck", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon(" Rocket Launcher ")) { SetWeapon("Totenkopf_Panzerschreck"); }
 
                                 SetInventory(" Rocket Launcher ", 0);
                             }
 
-                            if (CheckInventory(" Flamethrower "))
+                            if (CheckInventory("Totenkopf_IHaveChaingun"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Totenkopf_Chaingun", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
-                                if (CheckWeapon(" Flamethrower ")) { SetWeapon("Totenkopf_Chaingun"); }
-
-                                SetInventory(" Flamethrower ", 0);
+                                if (CheckWeapon(" Flamethrower ") || CheckWeapon("Wolf3DLightningGun")) { SetWeapon("Totenkopf_Chaingun"); }
                             }
+
+                            SetInventory(" Flamethrower ", 0);
+
+                            SetInventory("Wolf3DLightningGun", 0);
 
                             if (CheckInventory("Spear of Destiny"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Totenkopf_Flakgun", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Spear of Destiny")) { SetWeapon("Totenkopf_Flakgun"); }
 
@@ -1375,21 +1393,41 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             SetInventory("WolfExtraLife", 0);
 
-                            if (CheckInventory("Totenkopf_IHaveFlamethrower")) { SetInventory("Totenkopf_Flamethrower", 1); }
+                            if (CheckInventory("Totenkopf_IHaveFlamethrower"))
+                            {
+                                storedammopriname = "Totenkopf_FlameThrowerFuel", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Totenkopf_Flamethrower", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
                             SetInventory("WolfenAmmoCrate", 0);
                             SetInventory("WolfenAmmoCrateLost", 0);
 
-                            if (CheckInventory("Totenkopf_IHaveMG42")) { SetInventory("Totenkopf_MG42", 1); }
+                            if (CheckInventory("Totenkopf_IHaveMG42"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Totenkopf_MG42", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
-                            if (CheckInventory("Totenkopf_IHaveScope")) { SetInventory("Totenkopf_Sniper", 1); }
+                            if (CheckInventory("Totenkopf_IHaveKar98k"))
+                            {
+                                if (CheckInventory("Totenkopf_IHaveScope"))
+                                {
+                                    storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
+                                    SetInventory("Totenkopf_Sniper", 1);
+                                    SetInventory(storedammopriname, storedammopri);
+                                }
+                            }
+                            else { SetInventory("Totenkopf_Sniper", 0); }
 
 							if(CheckInventory("Totenkopf_IHavePowerArmor") && (!CheckInventory("TotenkopfHasPowerArmor"))) { GiveInventory("TotenkopfHasPowerArmor", 1); }
 							if(CheckInventory("Totenkopf_IAmWolverine") && (!CheckInventory("TotenkopfHasHealingOrb"))) { GiveInventory("TotenkopfHasHealingOrb", 1); }
 
                             SetInventory("GotWeapon0", CheckInventory("Wolfen_IHaveSlot1"));
-                            SetInventory("GotWeapon2", CheckInventory("Wolfen_IHaveSlot2") || CheckInventory("Totenkopf_IHaveScope"));
-                            SetInventory("GotWeapon4", CheckInventory("Wolfen_IHaveSlot4") || CheckInventory("Wolfen_IHaveDualChainguns"));
+                            SetInventory("GotWeapon2", CheckInventory("Totenkopf_IHaveKar98k"));
+                            SetInventory("GotWeapon4", CheckInventory("Totenkopf_IHaveMP40"));
+                            SetInventory("GotWeapon6", CheckInventory("Totenkopf_IHaveChaingun"));
 
                             SetActorProperty(0, APROP_SoundClass, "TotenkopfPlayer");
 						}
@@ -1454,53 +1492,67 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Totenkopf_STG44", 0);
                             }
 
-                            if (CheckInventory("Wolfen_IHaveDualChainguns")) { GiveInventory("  Dual Chainguns  ", 1); }
+                            if (CheckInventory("Wolfen_IHaveDualChainguns"))
+                            {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("  Dual Chainguns  ", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
                             if (CheckInventory("Wolfen_IHaveSlot4"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("  Chaingun  ", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
-                                if (CheckWeapon("Totenkopf_MP40")) { SetWeapon("  Chaingun  "); }
+                                if (CheckWeapon("Totenkopf_MP40") || CheckWeapon("Totenkopf_MP40Dual")) { SetWeapon("  Chaingun  "); }
                             } else {
-                                if (CheckWeapon("  Chaingun  ") || CheckWeapon("Totenkopf_MP40")) { SetWeapon("  Dual Chainguns  "); }
+                                if (CheckWeapon("  Chaingun  ") || CheckWeapon("Totenkopf_MP40") || CheckWeapon("Totenkopf_MP40Dual")) { SetWeapon("  Dual Chainguns  "); }
 
                                 SetInventory("  Chaingun  ", 0);
                             }
 
                             SetInventory("Totenkopf_MP40", 0);
-
-                            if (CheckInventory("Totenkopf_MP40Dual"))
-                            {
-                                if (CheckWeapon("Totenkopf_MP40Dual"))
-                                {
-                                    if (CheckInventory("  Chaingun  ")) { SetWeapon("  Chaingun  "); }
-                                    else if (CheckInventory("  Dual Chainguns  ")) { SetWeapon("  Dual Chainguns  "); }
-                                }
-                            }
-
                             SetInventory("Totenkopf_MP40Dual", 0);
 
                             if (CheckInventory("Totenkopf_Panzerschreck"))
                             {
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory(" Rocket Launcher ", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Totenkopf_Panzerschreck")) { SetWeapon(" Rocket Launcher "); }
 
                                 SetInventory("Totenkopf_Panzerschreck", 0);
                             }
 
-                            if (CheckInventory("Totenkopf_Chaingun"))
+                            if (CheckInventory("Wolfen_IHaveLightningGun"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Wolf3DLightningGun", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
+                            if (CheckInventory("Wolfen_IHaveSlot6"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory(" Flamethrower ", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Totenkopf_Chaingun")) { SetWeapon(" Flamethrower "); }
+                            } else {
+                                if (CheckWeapon(" Flamethrower ") || CheckWeapon("Totenkopf_Chaingun")) { SetWeapon("Wolf3DLightningGun"); }
 
-                                SetInventory("Totenkopf_Chaingun", 0);
+                                SetInventory(" Flamethrower ", 0);
                             }
+
+                            SetInventory("Totenkopf_Chaingun", 0);
 
                             if (CheckInventory("Totenkopf_Flakgun"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Spear of Destiny", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Totenkopf_Flakgun")) { SetWeapon("Spear of Destiny"); }
 
@@ -1535,6 +1587,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             SetInventory("GotWeapon0", CheckInventory("Wolfen_IHaveSlot1"));
                             SetInventory("GotWeapon2", CheckInventory("Wolfen_IHaveSlot2"));
                             SetInventory("GotWeapon4", CheckInventory("Wolfen_IHaveSlot4"));
+                            SetInventory("GotWeapon6", CheckInventory("Wolfen_IHaveSlot6"));
 
                             SetActorProperty(0, APROP_SoundClass, "WolfenPlayer");
 						}
@@ -1545,6 +1598,20 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_HEXEN:
+                if (CheckInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck") && !CheckWeapon("Fire Blast"))
+                {
+                    StopSound(0, CHAN_WEAPON);
+
+                    SetInventory("SamsaraHexenFireBlastPoweredFiringSoundCheck", 0);
+                }
+
+                if (CheckInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck") && !CheckWeapon("Bloodscourge"))
+                {
+                    StopSound(0, CHAN_WEAPON);
+
+                    SetInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck", 0);
+                }
+
 				hexmode = GetUserCVar(pln, "samsara_cl_hexclass");
 
                 if (hexmode > 3) { hexmode = 3; }
@@ -1639,7 +1706,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Crusader's Longbow") || CheckInventory("Javelin of Zeal"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Frost Shards", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Crusader's Longbow") || CheckWeapon("Javelin of Zeal")) { SetWeapon("Frost Shards"); }
 
@@ -1647,19 +1716,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Javelin of Zeal", 0);
                             }
 
-                            if (CheckInventory("Bishop's Shortsword") || CheckInventory("Fire Blast"))
+                            if (CheckInventory("Bishop's Shortsword") || CheckInventory("Wand of Embers") || CheckInventory("Fire Blast"))
                             {
                                 SetInventory("Timon's Axe", 1);
 
-                                if (CheckWeapon("Bishop's Shortsword") || CheckWeapon("Fire Blast")) { SetWeapon("Timon's Axe"); }
+                                if (CheckWeapon("Bishop's Shortsword") || CheckWeapon("Wand of Embers") || CheckWeapon("Fire Blast") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("Timon's Axe");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
 
                                 SetInventory("Bishop's Shortsword", 0);
+                                SetInventory("Wand of Embers", 0);
                                 SetInventory("Fire Blast", 0);
                             }
 
                             if (CheckInventory("Blight Shock") || CheckInventory("Jotunn's Flail"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Serpent Staff", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Blight Shock") || CheckWeapon("Jotunn's Flail")) { SetWeapon("Serpent Staff"); }
 
@@ -1669,7 +1745,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Ice Fang") || CheckInventory("Viscerelagh"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Hammer of Retribution", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Ice Fang") || CheckWeapon("Viscerelagh")) { SetWeapon("Hammer of Retribution"); }
 
@@ -1679,7 +1757,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Arc of Death") || CheckInventory("Quickspell Gauntlets"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Firestorm", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Arc of Death") || CheckWeapon("Quickspell Gauntlets")) { SetWeapon("Firestorm"); }
 
@@ -1687,11 +1767,22 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Quickspell Gauntlets", 0);
                             }
 
-                            if (CheckInventory("SamsaraClassicPariasHasBloodscourge")) { SetInventory(" Bloodscourge ", 1); }
-
-                            if (CheckInventory("SamsaraHexenHasSlot7"))
+                            if (CheckInventory("SamsaraClassicPariasHasBloodscourge"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                storedammosecname = "Cell", storedammosec = CheckInventory(storedammosecname);
+                                SetInventory(" Bloodscourge ", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                                SetInventory(storedammosecname, storedammosec);
+                            }
+
+                            if (CheckInventory("SamsaraClassicPariasHasSlot7"))
+                            {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                storedammosecname = "Cell", storedammosec = CheckInventory(storedammosecname);
                                 SetInventory("Wraithverge", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                                SetInventory(storedammosecname, storedammosec);
 
                                 if (CheckWeapon("Bloodscourge") || CheckWeapon("Quietus")) { SetWeapon("Wraithverge"); }
                             } else {
@@ -1705,7 +1796,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("SamsaraClassicPariasHasSpikedGauntlet")) { SetInventory("Spiked Gauntlet", 1); }
 
-                            SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7"));
+                            SetInventory("GotWeapon7", CheckInventory("SamsaraClassicPariasHasSlot7"));
 						}
 						else if(hexmode == 2)
 						{
@@ -1746,7 +1837,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Crusader's Longbow") || CheckInventory("Javelin of Zeal"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Frost Shards", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Crusader's Longbow") || CheckWeapon("Javelin of Zeal")) { SetWeapon("Frost Shards"); }
 
@@ -1754,19 +1847,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Javelin of Zeal", 0);
                             }
 
-                            if (CheckInventory("Bishop's Shortsword") || CheckInventory("Timon's Axe"))
+                            if (CheckInventory("Bishop's Shortsword") || CheckInventory("Wand of Embers") || CheckInventory("Timon's Axe"))
                             {
                                 SetInventory("Fire Blast", 1);
 
-                                if (CheckWeapon("Bishop's Shortsword") || CheckWeapon("Timon's Axe")) { SetWeapon("Fire Blast"); }
+                                if (CheckWeapon("Bishop's Shortsword") || CheckWeapon("Wand of Embers") || CheckWeapon("Timon's Axe") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("Fire Blast");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
 
                                 SetInventory("Bishop's Shortsword", 0);
+                                SetInventory("Wand of Embers", 0);
                                 SetInventory("Timon's Axe", 0);
                             }
 
                             if (CheckInventory("Serpent Staff") || CheckInventory("Jotunn's Flail"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Blight Shock", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Serpent Staff") || CheckWeapon("Jotunn's Flail")) { SetWeapon("Blight Shock"); }
 
@@ -1776,7 +1876,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Ice Fang") || CheckInventory("Hammer of Retribution"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Viscerelagh", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Ice Fang") || CheckWeapon("Hammer of Retribution")) { SetWeapon("Viscerelagh"); }
 
@@ -1786,7 +1888,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Firestorm") || CheckInventory("Quickspell Gauntlets"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Arc of Death", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Firestorm") || CheckWeapon("Quickspell Gauntlets")) { SetWeapon("Arc of Death"); }
 
@@ -1796,20 +1900,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("SamsaraHexenHasSlot7"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                storedammosecname = "Cell", storedammosec = CheckInventory(storedammosecname);
                                 SetInventory("Bloodscourge", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                                SetInventory(storedammosecname, storedammosec);
 
-                                if (CheckWeapon("Wraithverge") || CheckWeapon("Quietus")) { SetWeapon("Bloodscourge"); }
-                            }
-
-                            if (CheckInventory("SamsaraClassicPariasHasBloodscourge"))
-                            {
-                                SetInventory("Bloodscourge", 1);
-
-                                if (CheckWeapon(" Bloodscourge ")) { SetWeapon("Bloodscourge"); }
-                            }
-
-                            if (CheckInventory("Wraithverge") || CheckInventory("Quietus") || CheckInventory(" Bloodscourge "))
-                            {
                                 if (CheckWeapon("Wraithverge") || CheckWeapon("Quietus") || CheckWeapon(" Bloodscourge ")) { SetWeapon("Bloodscourge"); }
                             }
 
@@ -1825,7 +1921,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             SetInventory("Spiked Gauntlet", 0);
 
-                            SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7") || CheckInventory("SamsaraClassicPariasHasBloodscourge"));
+                            SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7"));
 						}
 						else if(hexmode == 3)
 						{
@@ -1896,7 +1992,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Crusader's Longbow") || CheckInventory("Frost Shards"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Javelin of Zeal", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Crusader's Longbow") || CheckWeapon("Frost Shards")) { SetWeapon("Javelin of Zeal"); }
 
@@ -1904,19 +2002,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Frost Shards", 0);
                             }
 
-                            if (CheckInventory("Bishop's Shortsword") || CheckInventory("Fire Blast"))
+                            if (CheckInventory("Bishop's Shortsword") || CheckInventory("Wand of Embers") || CheckInventory("Fire Blast"))
                             {
                                 SetInventory("Timon's Axe", 1);
 
-                                if (CheckWeapon("Bishop's Shortsword") || CheckWeapon("Fire Blast")) { SetWeapon("Timon's Axe"); }
+                                if (CheckWeapon("Bishop's Shortsword") || CheckWeapon("Wand of Embers") || CheckWeapon("Fire Blast") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("Timon's Axe");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
 
                                 SetInventory("Bishop's Shortsword", 0);
+                                SetInventory("Wand of Embers", 0);
                                 SetInventory("Fire Blast", 0);
                             }
 
                             if (CheckInventory("Serpent Staff") || CheckInventory("Blight Shock"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Jotunn's Flail", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Serpent Staff") || CheckWeapon("Blight Shock")) { SetWeapon("Jotunn's Flail"); }
 
@@ -1926,7 +2031,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Ice Fang") || CheckInventory("Viscerelagh"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Hammer of Retribution", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Ice Fang") || CheckWeapon("Viscerelagh")) { SetWeapon("Hammer of Retribution"); }
 
@@ -1936,7 +2043,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("Firestorm") || CheckInventory("Arc of Death"))
                             {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Quickspell Gauntlets", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Firestorm") || CheckWeapon("Arc of Death")) { SetWeapon("Quickspell Gauntlets"); }
 
@@ -1946,20 +2055,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             if (CheckInventory("SamsaraHexenHasSlot7"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                storedammosecname = "Cell", storedammosec = CheckInventory(storedammosecname);
                                 SetInventory("Quietus", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                                SetInventory(storedammosecname, storedammosec);
 
-                                if (CheckWeapon("Wraithverge") || CheckWeapon("Bloodscourge")) { SetWeapon("Quietus"); }
-                            }
-
-                            if (CheckInventory("SamsaraClassicPariasHasBloodscourge"))
-                            {
-                                SetInventory("Quietus", 1);
-
-                                if (CheckWeapon(" Bloodscourge ")) { SetWeapon("Quietus"); }
-                            }
-
-                            if (CheckInventory("Wraithverge") || CheckInventory("Bloodscourge") || CheckInventory(" Bloodscourge "))
-                            {
                                 if (CheckWeapon("Wraithverge") || CheckWeapon("Bloodscourge") || CheckWeapon(" Bloodscourge ")) { SetWeapon("Quietus"); }
                             }
 
@@ -1975,7 +2076,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                             SetInventory("Spiked Gauntlet", 0);
 
-                            SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7") || CheckInventory("SamsaraClassicPariasHasBloodscourge"));
+                            SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7"));
 						}
 					}
 					else
@@ -2050,7 +2151,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         if (CheckInventory("Frost Shards") || CheckInventory("Javelin of Zeal"))
                         {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Crusader's Longbow", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("Frost Shards") || CheckWeapon("Javelin of Zeal")) { SetWeapon("Crusader's Longbow"); }
 
@@ -2060,9 +2163,14 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         if (CheckInventory("Fire Blast") || CheckInventory("Timon's Axe"))
                         {
-                            SetInventory("Bishop's Shortsword", 1);
+                            if (!CheckInventory("SamsaraHexen1ClericLoadoutSlot3") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Bishop's Shortsword", 1); }
+                            if (CheckInventory("SamsaraHexen1ClericLoadoutSlot3") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Wand of Embers", 1); }
 
-                            if (CheckWeapon("Fire Blast") || CheckWeapon("Timon's Axe")) { SetWeapon("Bishop's Shortsword"); }
+                            if (CheckWeapon("Fire Blast") || CheckWeapon("Timon's Axe"))
+                            {
+                                if (CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetWeapon("Bishop's Shortsword"); }
+                                else { GiveInventory("SamsaraAltClassWeaponSwitchHackSlot3", 1); }
+                            }
 
                             SetInventory("Fire Blast", 0);
                             SetInventory("Timon's Axe", 0);
@@ -2070,7 +2178,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         if (CheckInventory("Blight Shock") || CheckInventory("Jotunn's Flail"))
                         {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Serpent Staff", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("Blight Shock") || CheckWeapon("Jotunn's Flail")) { SetWeapon("Serpent Staff"); }
 
@@ -2080,7 +2190,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         if (CheckInventory("Viscerelagh") || CheckInventory("Hammer of Retribution"))
                         {
+                            storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Ice Fang", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("Viscerelagh") || CheckWeapon("Hammer of Retribution")) { SetWeapon("Ice Fang"); }
 
@@ -2090,7 +2202,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         if (CheckInventory("Arc of Death") || CheckInventory("Quickspell Gauntlets"))
                         {
+                            storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Firestorm", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("Arc of Death") || CheckWeapon("Quickspell Gauntlets")) { SetWeapon("Firestorm"); }
 
@@ -2100,20 +2214,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         if (CheckInventory("SamsaraHexenHasSlot7"))
                         {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            storedammosecname = "Cell", storedammosec = CheckInventory(storedammosecname);
                             SetInventory("Wraithverge", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                            SetInventory(storedammosecname, storedammosec);
 
-                            if (CheckWeapon("Bloodscourge") || CheckWeapon("Quietus")) { SetWeapon("Wraithverge"); }
-                        }
-
-                        if (CheckInventory("SamsaraClassicPariasHasBloodscourge"))
-                        {
-                            SetInventory("Wraithverge", 1);
-
-                            if (CheckWeapon(" Bloodscourge ")) { SetWeapon("Wraithverge"); }
-                        }
-
-                        if (CheckInventory("Bloodscourge") || CheckInventory("Quietus") || CheckInventory(" Bloodscourge "))
-                        {
                             if (CheckWeapon("Bloodscourge") || CheckWeapon("Quietus") || CheckWeapon(" Bloodscourge ")) { SetWeapon("Wraithverge"); }
                         }
 
@@ -2129,13 +2235,143 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                         SetInventory("Spiked Gauntlet", 0);
 
-                        SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7") || CheckInventory("SamsaraClassicPariasHasBloodscourge"));
+                        SetInventory("GotWeapon7", CheckInventory("SamsaraHexenHasSlot7"));
 					}
 					previousvalue = hexmode;
 				}
+
+                if (hexmode >= 3)
+                {
+                    loadoutmode = GetCVar("samsara_baratus_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_baratus_unique3") - 1 : GetUserCVar(pln, "samsara_cl_baratus_unique3");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
+                } else if (hexmode == 2) {
+                    loadoutmode = GetCVar("samsara_daedolon_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_daedolon_unique3") - 1 : GetUserCVar(pln, "samsara_cl_daedolon_unique3");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
+                } else if (hexmode == 1) {
+                    loadoutmode = GetCVar("samsara_pariasclassic_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_pariasclassic_unique3") - 1 : GetUserCVar(pln, "samsara_cl_pariasclassic_unique3");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
+                } else {
+                    loadoutmode = GetCVar("samsara_parias_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_parias_slot3") - 1 : GetUserCVar(pln, "samsara_cl_parias_slot3");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraHexen1ClericLoadoutSlot3", loadoutmode);
+
+                    loadoutmode = GetCVar("samsara_parias_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_parias_unique3") - 1 : GetUserCVar(pln, "samsara_cl_parias_unique3");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
+                }
+
+                if (hexmode >= 1)
+                {
+                    if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, 0, pln);
+                        loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = 0;
+                    }
+                } else {
+                    if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != CheckInventory("SamsaraHexen1ClericLoadoutSlot3"))
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, CheckInventory("SamsaraHexen1ClericLoadoutSlot3"), pln);
+                        loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = CheckInventory("SamsaraHexen1ClericLoadoutSlot3");
+                    }
+                }
+
+                if (loadoutPrevValue[pln][SLOTCOUNT - 1 - SLOT_UNIQUE3] != CheckInventory("SamsaraHexen1LoadoutUnique3"))
+                {
+                    ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOTCOUNT - 1 - SLOT_UNIQUE3, CheckInventory("SamsaraHexen1LoadoutUnique3"), pln);
+                    loadoutPrevValue[pln][SLOTCOUNT - 1 - SLOT_UNIQUE3] = CheckInventory("SamsaraHexen1LoadoutUnique3");
+                }
+
+                if (hexmode <= 0)
+                {
+                    if (CheckInventory("Bishop's Shortsword") || CheckInventory("Wand of Embers"))
+                    {
+                        if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            SetInventory("Bishop's Shortsword", 1);
+                            SetInventory("Wand of Embers", 1);
+                        } else {
+                            if (!CheckInventory("SamsaraHexen1ClericLoadoutSlot3"))
+                            {
+                                SetInventory("Bishop's Shortsword", 1);
+
+                                if (CheckWeapon("Wand of Embers") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("Bishop's Shortsword");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
+
+                                SetInventory("Wand of Embers", 0);
+                            } else if (CheckInventory("SamsaraHexen1ClericLoadoutSlot3")) {
+                                SetInventory("Wand of Embers", 1);
+
+                                if (CheckWeapon("Bishop's Shortsword") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("Wand of Embers");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
+
+                                SetInventory("Bishop's Shortsword", 0);
+                            }
+                        }
+                    }
+                }
+
+                if (CheckInventory("SamsaraHexen1AcquiredUnique3"))
+                {
+                    if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                    {
+                        SetInventory("SamsaraHexenDarkServant", 1);
+                        SetInventory("SamsaraHexenPorkalator", CheckInventory("SamsaraHexenHasPorkalator"));
+                    } else {
+                        if (!CheckInventory("SamsaraHexen1LoadoutUnique3"))
+                        {
+                            SetInventory("SamsaraHexenDarkServant", 1);
+
+                            SetInventory("SamsaraHexenPorkalator", 0);
+                        } else if (CheckInventory("SamsaraHexen1LoadoutUnique3")) {
+                            SetInventory("SamsaraHexenPorkalator", CheckInventory("SamsaraHexenHasPorkalator"));
+
+                            SetInventory("SamsaraHexenDarkServant", 0);
+                        }
+                    }
+                }
 				break;
 
 			case CLASS_DUKE:
+                SetInventory("Shrinker", CheckInventory("Expander"));
+
+                if (CheckInventory("SamsaraDukeX3000LoopSoundCheck") && !CheckWeapon("Duke3D_X3000"))
+                {
+                    StopSound(0, CHAN_5);
+
+                    SetInventory("SamsaraDukeX3000LoopSoundCheck", 0);
+                }
+
+                SetInventory("SamsaraDukeUsingAltAmmo", CheckWeapon("Shrinker"));
+
+				SetInventory("SamsaraDuke64UsingAltAmmo", (CheckWeapon("Glock 17") && CheckInventory("Duke64UsingDumDums")) ||
+                                                          (CheckWeapon("  Shotgun  ") && CheckInventory("Duke64UsingExplosiveShells")) ||
+                                                          (CheckWeapon("RPG") && CheckInventory("Duke64UsingHeatSeeking")) ||
+                                                          (CheckWeapon("Freezethrower") && CheckInventory("Duke64UsingShrinker")));
+
 				if (CheckInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck") && !CheckWeapon("Devastator Weapon"))
 				{
 					StopSound(0, CHAN_5);
@@ -2157,20 +2393,29 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						SetInventory("DukeClassMode", dukemode);
 						if(dukemode == 1)
 						{
-							if(CheckInventory("SamsaraDukeHasGoldenDesertEagle"))
-							{
-								GiveInventory("Golden Desert Eagle", 1);
-							}
+                            if (CheckInventory("SamsaraDukeHasGoldenDesertEagle")) { SetInventory("Golden Desert Eagle", 1); }
 
-							if(CheckInventory("DukeHasShrinker"))
-							{
-								GiveInventory("Shrinker", 1);
-							}
+                            if (CheckInventory("SamsaraDukeHasIncinerator"))
+                            {
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Duke3D_Incinerator", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
-							if(CheckInventory("DukeHasExpander"))
-							{
-								GiveInventory("Expander", 1);
-							}
+                            if (CheckInventory("SamsaraDukeHasExpanderShrinker"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Expander", 1);
+                                SetInventory("Shrinker", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
+                            if (CheckInventory("SamsaraDukeHasX3000"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Duke3D_X3000", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
                             if (CheckInventory("DukePortJetpack64")) { GiveInventory("DukePortJetpack", 1); }
 
@@ -2183,8 +2428,37 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             if (!CheckInventory("SamsaraDukeHasSlot4"))
                             {
                                 SetInventory("GotWeapon4", 0);
+
                                 if (CheckWeapon("Chaingun Cannon")) { SetWeapon("Golden Desert Eagle"); }
+
                                 SetInventory("Chaingun Cannon", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot5"))
+                            {
+                                SetInventory("GotWeapon5", 0);
+
+                                if (CheckWeapon("RPG")) { SetWeapon("Duke3D_Incinerator"); }
+
+                                SetInventory("RPG", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot6"))
+                            {
+                                SetInventory("GotWeapon6", 0);
+
+                                if (CheckWeapon("Freezethrower")) { SetWeapon("Expander"); }
+
+                                SetInventory("Freezethrower", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot7"))
+                            {
+                                SetInventory("GotWeapon7", 0);
+
+                                if (CheckWeapon("Devastator Weapon")) { SetWeapon("Duke3D_X3000"); }
+
+                                SetInventory("Devastator Weapon", 0);
                             }
 
 							SetInventory("DukePortJetpack64", 0);
@@ -2199,25 +2473,47 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						}
 						else if(dukemode == 2)
 						{
-							if(CheckInventory("SamsaraDukeHasGoldenDesertEagle"))
-							{
+                            if (CheckInventory("SamsaraDuke64HasSlot4"))
+                            {
                                 SetInventory("GotWeapon4", 1);
+
                                 SetInventory("Chaingun Cannon", 1);
-								if(CheckWeapon("Golden Desert Eagle"))
-									SetWeapon("Chaingun Cannon");
-							}
 
-							if(CheckInventory("DukeHasShrinker"))
-							{
-								if(CheckWeapon("Shrinker"))
-									SetWeapon("Freezethrower");
-							}
+                                if (CheckWeapon("Golden Desert Eagle")) { SetWeapon("Chaingun Cannon"); }
+                            }
 
-							if(CheckInventory("DukeHasExpander"))
-							{
-								if(CheckWeapon("Expander"))
-									SetWeapon("Freezethrower");
-							}
+                            if (CheckInventory("SamsaraDuke64HasSlot5"))
+                            {
+                                SetInventory("GotWeapon5", 1);
+
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("RPG", 1);
+                                SetInventory(storedammopriname, storedammopri);
+
+                                if (CheckWeapon("Duke3D_Incinerator")) { SetWeapon("RPG"); }
+                            }
+
+                            if (CheckInventory("SamsaraDuke64HasSlot6"))
+                            {
+                                SetInventory("GotWeapon6", 1);
+
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Freezethrower", 1);
+                                SetInventory(storedammopriname, storedammopri);
+
+                                if (CheckWeapon("Expander") || CheckWeapon("Shrinker")) { SetWeapon("Freezethrower"); }
+                            }
+
+                            if (CheckInventory("SamsaraDuke64HasSlot7"))
+                            {
+                                SetInventory("GotWeapon7", 1);
+
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Devastator Weapon", 1);
+                                SetInventory(storedammopriname, storedammopri);
+
+                                if (CheckWeapon("Duke3D_X3000")) { SetWeapon("Devastator Weapon"); }
+                            }
 
                             if (CheckInventory("DukePortJetpack")) { GiveInventory("DukePortJetpack64", 1); }
 
@@ -2228,9 +2524,11 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             if (CheckInventory("DukePortSteroids") || CheckInventory("DukePortSteroidsLAB")) { GiveInventory("DukePortSteroids64", 1); }
 
 							TakeInventory("Golden Desert Eagle", 1);
-							SetInventory("DukePortJetpack", 0);
-							TakeInventory("Shrinker", 1);
+							TakeInventory("Duke3D_Incinerator", 1);
 							TakeInventory("Expander", 1);
+							TakeInventory("Shrinker", 1);
+							TakeInventory("Duke3D_X3000", 1);
+							SetInventory("DukePortJetpack", 0);
 							SetInventory("ItemHoloduke", 0);
 							SetInventory("ItemHolodukeLAB", 0);
 							TakeInventory("DukePortNiVi", 1);
@@ -2242,20 +2540,29 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						}
 						else
 						{
-							if(CheckInventory("SamsaraDukeHasGoldenDesertEagle"))
-							{
-								GiveInventory("Golden Desert Eagle", 1);
-							}
+                            if (CheckInventory("SamsaraDukeHasGoldenDesertEagle")) { SetInventory("Golden Desert Eagle", 1); }
 
-							if(CheckInventory("DukeHasShrinker"))
-							{
-								GiveInventory("Shrinker", 1);
-							}
+                            if (CheckInventory("SamsaraDukeHasIncinerator"))
+                            {
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Duke3D_Incinerator", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
-							if(CheckInventory("DukeHasExpander"))
-							{
-								GiveInventory("Expander", 1);
-							}
+                            if (CheckInventory("SamsaraDukeHasExpanderShrinker"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Expander", 1);
+                                SetInventory("Shrinker", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
+                            if (CheckInventory("SamsaraDukeHasX3000"))
+                            {
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Duke3D_X3000", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
                             if (CheckInventory("DukePortJetpack64")) { GiveInventory("DukePortJetpack", 1); }
 
@@ -2268,8 +2575,37 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             if (!CheckInventory("SamsaraDukeHasSlot4"))
                             {
                                 SetInventory("GotWeapon4", 0);
+
                                 if (CheckWeapon("Chaingun Cannon")) { SetWeapon("Golden Desert Eagle"); }
+
                                 SetInventory("Chaingun Cannon", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot5"))
+                            {
+                                SetInventory("GotWeapon5", 0);
+
+                                if (CheckWeapon("RPG")) { SetWeapon("Duke3D_Incinerator"); }
+
+                                SetInventory("RPG", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot6"))
+                            {
+                                SetInventory("GotWeapon6", 0);
+
+                                if (CheckWeapon("Freezethrower")) { SetWeapon("Expander"); }
+
+                                SetInventory("Freezethrower", 0);
+                            }
+
+                            if (!CheckInventory("SamsaraDukeHasSlot7"))
+                            {
+                                SetInventory("GotWeapon7", 0);
+
+                                if (CheckWeapon("Devastator Weapon")) { SetWeapon("Duke3D_X3000"); }
+
+                                SetInventory("Devastator Weapon", 0);
                             }
 
 							SetInventory("DukePortJetpack64", 0);
@@ -2286,6 +2622,71 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					ACS_NamedExecuteAlways("SAMSARA_CLIENT_ALTERNATIVECLASS", 0, dukemode, pln);
 					previousvalue = dukemode;
 				}
+
+                if (dukemode == 1)
+                {
+                    loadoutmode = GetCVar("samsara_dukelab_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_dukelab_slot4") - 1 : GetUserCVar(pln, "samsara_cl_dukelab_slot4");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraDukeLoadoutSlot4", loadoutmode);
+                } else if (dukemode <= 0) {
+                    loadoutmode = GetCVar("samsara_duke_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_duke_slot4") - 1 : GetUserCVar(pln, "samsara_cl_duke_slot4");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraDukeLoadoutSlot4", loadoutmode);
+                }
+				
+                if (dukemode == 2)
+                {
+                    if (loadoutPrevValue[pln][SLOT_CHAINGUN] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINGUN, 0, pln);
+                        loadoutPrevValue[pln][SLOT_CHAINGUN] = 0;
+                    }
+
+                    if (CheckInventory("Duke3D_M16"))
+                    {
+                        SetInventory("Chaingun Cannon", 1);
+
+                        if (CheckWeapon("Duke3D_M16")) { SetWeapon("Chaingun Cannon"); }
+
+                        SetInventory("Duke3D_M16", 0);
+                    }
+                } else {
+                    if (loadoutPrevValue[pln][SLOT_CHAINGUN] != CheckInventory("SamsaraDukeLoadoutSlot4"))
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINGUN, CheckInventory("SamsaraDukeLoadoutSlot4"), pln);
+                        loadoutPrevValue[pln][SLOT_CHAINGUN] = CheckInventory("SamsaraDukeLoadoutSlot4");
+                    }
+
+                    if (CheckInventory("Chaingun Cannon") || CheckInventory("Duke3D_M16"))
+                    {
+                        if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            SetInventory("Chaingun Cannon", 1);
+                            SetInventory("Duke3D_M16", 1);
+                        } else {
+                            if (!CheckInventory("SamsaraDukeLoadoutSlot4"))
+                            {
+                                SetInventory("Chaingun Cannon", 1);
+
+                                if (CheckWeapon("Duke3D_M16")) { SetWeapon("Chaingun Cannon"); }
+
+                                SetInventory("Duke3D_M16", 0);
+                            } else if (CheckInventory("SamsaraDukeLoadoutSlot4")) {
+                                SetInventory("Duke3D_M16", 1);
+
+                                if (CheckWeapon("Chaingun Cannon")) { SetWeapon("Duke3D_M16"); }
+
+                                SetInventory("Chaingun Cannon", 0);
+                            }
+                        }
+                    }
+                }
 				break;
 
 			case CLASS_MARATHON:
@@ -2366,16 +2767,96 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         SetInventory("SamsaraQuakeThunderboltLightningFiringQuadSoundCheck", 0);
                     }
                 }
+
+                loadoutmode = GetCVar("samsara_ranger_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_ranger_slot1") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot1");
+
+                if (loadoutmode > 1) { loadoutmode = 1; }
+                else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                SetInventory("SamsaraQuake1LoadoutSlot1", loadoutmode);
+
+                loadoutmode = GetCVar("samsara_ranger_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_ranger_slot3") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot3");
+
+                if (loadoutmode > 1) { loadoutmode = 1; }
+                else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                SetInventory("SamsaraQuake1LoadoutSlot3", loadoutmode);
+
+                if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraQuake1LoadoutSlot1"))
+                {
+                    ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINSAW, CheckInventory("SamsaraQuake1LoadoutSlot1"), pln);
+                    loadoutPrevValue[pln][SLOT_CHAINSAW] = CheckInventory("SamsaraQuake1LoadoutSlot1");
+                }
+
+                if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != CheckInventory("SamsaraQuake1LoadoutSlot3"))
+                {
+                    ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, CheckInventory("SamsaraQuake1LoadoutSlot3"), pln);
+                    loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = CheckInventory("SamsaraQuake1LoadoutSlot3");
+                }
+
+                if (CheckInventory("Mjolnir") || CheckInventory("Q1Chainsaw"))
+                {
+                    if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                    {
+                        SetInventory("Mjolnir", 1);
+                        SetInventory("Q1Chainsaw", 1);
+                    } else {
+                        if (!CheckInventory("SamsaraQuake1LoadoutSlot1"))
+                        {
+                            SetInventory("Mjolnir", 1);
+
+                            if (CheckWeapon("Q1Chainsaw")) { SetWeapon("Mjolnir"); }
+
+                            SetInventory("Q1Chainsaw", 0);
+                        } else if (CheckInventory("SamsaraQuake1LoadoutSlot1")) {
+                            SetInventory("Q1Chainsaw", 1);
+
+                            if (CheckWeapon("Mjolnir")) { SetWeapon("Q1Chainsaw"); }
+
+                            SetInventory("Mjolnir", 0);
+                        }
+                    }
+                }
+
+                if (CheckInventory("Grenade Launcher") || CheckInventory("Q1Widowmaker"))
+                {
+                    if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                    {
+                        SetInventory("Grenade Launcher", 1);
+                        SetInventory("Grenade Launcher DOE", CheckInventory("Grenade Launcher") && !vanillaquake);
+                        SetInventory("Q1Widowmaker", 1);
+                    } else {
+                        if (!CheckInventory("SamsaraQuake1LoadoutSlot3"))
+                        {
+                            SetInventory("Grenade Launcher", 1);
+                            SetInventory("Grenade Launcher DOE", CheckInventory("Grenade Launcher") && !vanillaquake);
+
+                            if (CheckWeapon("Q1Widowmaker")) { SetWeapon("Grenade Launcher"); }
+
+                            SetInventory("Q1Widowmaker", 0);
+                        } else if (CheckInventory("SamsaraQuake1LoadoutSlot3")) {
+                            SetInventory("Q1Widowmaker", 1);
+
+                            if (CheckWeapon("Grenade Launcher") || CheckWeapon("Grenade Launcher DOE")) { SetWeapon("Q1Widowmaker"); }
+
+                            SetInventory("Grenade Launcher", 0);
+                            SetInventory("Grenade Launcher DOE", 0);
+                        }
+                    }
+                }
 				break;
 
 			case CLASS_ROTT:
                 SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_rottsounds"));
 
-				GiveInventory("RottDamageEnemyBeneath",1);
+				if (!isDead(0)) { GiveInventory("RottDamageEnemyBeneath", 1); }
 
                 if (!CheckWeapon("Excalibat") && CheckInventory("SamsaraROTTExcalibatInvulning")) { GiveInventory("SamsaraROTTExcalibatInvulnTaker", 1); }
 
-                if (CheckInventory("God Hand") && !CheckWeapon("God Hand") && !CheckInventory("PowerGodProtection")) { TakeInventory("God Hand", 1); }
+                if (!CheckInventory("SamsaraHasInfiniteAmmo"))
+                {
+                    if (CheckInventory("Dark Staff") && !CheckWeapon("Dark Staff") && !CheckInventory("DSEnergy")) { TakeInventory("Dark Staff", 1); }
+                }
 
 				if (CheckInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck") && !CheckWeapon("Dark Staff"))
 				{
@@ -2383,6 +2864,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 					SetInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck", 0);
 				}
+
+                if (CheckInventory("God Hand") && !CheckWeapon("God Hand") && !CheckInventory("PowerGodProtection")) { TakeInventory("God Hand", 1); }
 
 				rottmode = GetUserCVar(pln, "samsara_cl_rottmode");
 
@@ -2433,14 +2916,27 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				}
 				break;
 			case CLASS_BLAKE:
-				// stupid fragile code prevention hack
-				if (CheckWeapon("Rapid Assault Weapon")) { SetInventory("SamsaraBStoneCurrentAmmoUsed", 1); }
-				else if (CheckWeapon("Slow Fire Protector") || CheckWeapon("Heavy Assault Weapon")) { SetInventory("SamsaraBStoneCurrentAmmoUsed", 2); }
-				else if (CheckWeapon("Plasma Discharge Unit")) { SetInventory("SamsaraBStoneCurrentAmmoUsed", 3); }
-				else if (CheckWeapon("Dual Neutron Disruptor") || CheckWeapon("Anti-Plasma Cannon")) { SetInventory("SamsaraBStoneCurrentAmmoUsed", 4); }
-				else { SetInventory("SamsaraBStoneCurrentAmmoUsed", 0); }
+                // stupid fragile code prevention hack
+                if (CheckWeapon("Rapid Assault Weapon") || CheckWeapon("Gatling Fusion Devastator") ||
+                    CheckWeapon("Pistol") || CheckWeapon("Chaingun") || CheckWeapon("Minigun") ||
+                    CheckWeapon("MiniZorcher") || CheckWeapon("RapidZorcher"))
+                { SetInventory("SamsaraBStoneCurrentAmmoUsed", 1); }
+                else if (CheckWeapon("Slow Fire Protector") || CheckWeapon("Heavy Assault Weapon") ||
+                         CheckWeapon("Shotgun") || CheckWeapon("SuperShotgun") ||
+                         CheckWeapon("LargeZorcher") || CheckWeapon("SuperLargeZorcher"))
+                { SetInventory("SamsaraBStoneCurrentAmmoUsed", 2); }
+                else if (CheckWeapon("Plasma Discharge Unit") ||
+                         CheckWeapon("RocketLauncher") || CheckWeapon("GrenadeLauncher") ||
+                         CheckWeapon("ZorchPropulsor"))
+                { SetInventory("SamsaraBStoneCurrentAmmoUsed", 3); }
+                else if (CheckWeapon("Dual Neutron Disruptor") || CheckWeapon("Anti-Plasma Cannon") ||
+                         CheckWeapon("PlasmaRifle") || CheckWeapon("Railgun") || CheckWeapon("BFG9000") ||
+                         CheckWeapon("BFG10K") ||
+                         CheckWeapon("PhasingZorcher") || CheckWeapon("LAZDevice"))
+                { SetInventory("SamsaraBStoneCurrentAmmoUsed", 4); }
+                else { SetInventory("SamsaraBStoneCurrentAmmoUsed", 0); }
 
-				TakeInventory("SamsaraBStoneAutoChargePistolCooldown", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
+                TakeInventory("SamsaraBStoneAutoChargePistolCooldown", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
 
 				blakemode = GetUserCVar(pln, "samsara_cl_bsaog");
 
@@ -2545,7 +3041,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						{
 							if (CheckInventory("EradRovingMine") || CheckInventory("EradMiniTankDetonator"))
 							{
-								SetInventory(" Arachnicator ", 1);
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory(" Arachnicator ", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("EradRovingMine") || CheckWeapon("EradMiniTankDetonator")) { SetWeapon(" Arachnicator "); }
 
@@ -2555,7 +3053,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Cluster Bomb") || CheckInventory("Pellet Bomb"))
 							{
-								SetInventory("Death Bomb", 1);
+                                storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Death Bomb", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Cluster Bomb") || CheckWeapon("Pellet Bomb")) { SetWeapon("Death Bomb"); }
 
@@ -2565,7 +3065,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("EradNitrofogger") || CheckInventory("EradFlamethrower"))
 							{
-								SetInventory("EradEnergywhip", 1);
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("EradEnergywhip", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("EradNitrofogger") || CheckWeapon("EradFlamethrower")) { SetWeapon("EradEnergywhip"); }
 
@@ -2575,7 +3077,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Napalm Charge") || CheckInventory("Ion Sphere"))
 							{
-								SetInventory("Eleena Smoke Bomb", 1);
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Eleena Smoke Bomb", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Napalm Charge") || CheckWeapon("Ion Sphere")) { SetWeapon("Eleena Smoke Bomb"); }
 
@@ -2591,7 +3095,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						} else if (eradmode == 1) {
 							if (CheckInventory(" Arachnicator ") || CheckInventory("EradMiniTankDetonator"))
 							{
-								SetInventory("EradRovingMine", 1);
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("EradRovingMine", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon(" Arachnicator ") || CheckWeapon("EradMiniTankDetonator")) { SetWeapon("EradRovingMine"); }
 
@@ -2601,7 +3107,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Death Bomb") || CheckInventory("Pellet Bomb"))
 							{
-								SetInventory("Cluster Bomb", 1);
+                                storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Cluster Bomb", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Death Bomb") || CheckWeapon("Pellet Bomb")) { SetWeapon("Cluster Bomb"); }
 
@@ -2611,7 +3119,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("EradEnergywhip") || CheckInventory("EradFlamethrower"))
 							{
-								SetInventory("EradNitrofogger", 1);
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("EradNitrofogger", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("EradEnergywhip") || CheckWeapon("EradFlamethrower")) { SetWeapon("EradNitrofogger"); }
 
@@ -2621,7 +3131,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Eleena Smoke Bomb") || CheckInventory("Ion Sphere"))
 							{
-								SetInventory("Napalm Charge", 1);
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Napalm Charge", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Eleena Smoke Bomb") || CheckWeapon("Ion Sphere")) { SetWeapon("Napalm Charge"); }
 
@@ -2637,7 +3149,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						} else if (eradmode == 2) {
 							if (CheckInventory(" Arachnicator ") || CheckInventory("EradRovingMine"))
 							{
-								SetInventory("EradMiniTankDetonator", 1);
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("EradMiniTankDetonator", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon(" Arachnicator ") || CheckWeapon("EradRovingMine")) { SetWeapon("EradMiniTankDetonator"); }
 
@@ -2647,7 +3161,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Death Bomb") || CheckInventory("Cluster Bomb"))
 							{
-								SetInventory("Pellet Bomb", 1);
+                                storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Pellet Bomb", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Death Bomb") || CheckWeapon("Cluster Bomb")) { SetWeapon("Pellet Bomb"); }
 
@@ -2657,7 +3173,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("EradEnergywhip") || CheckInventory("EradNitrofogger"))
 							{
-								SetInventory("EradFlamethrower", 1);
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("EradFlamethrower", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("EradEnergywhip") || CheckWeapon("EradNitrofogger")) { SetWeapon("EradFlamethrower"); }
 
@@ -2667,7 +3185,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Eleena Smoke Bomb") || CheckInventory("Napalm Charge"))
 							{
-								SetInventory("Ion Sphere", 1);
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Ion Sphere", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Eleena Smoke Bomb") || CheckWeapon("Napalm Charge")) { SetWeapon("Ion Sphere"); }
 
@@ -2683,7 +3203,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						} else if (eradmode == 3) {
 							if (CheckInventory("EradRovingMine") || CheckInventory("EradMiniTankDetonator"))
 							{
-								SetInventory(" Arachnicator ", 1);
+                                storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory(" Arachnicator ", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("EradRovingMine") || CheckWeapon("EradMiniTankDetonator")) { SetWeapon(" Arachnicator "); }
 
@@ -2693,7 +3215,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Death Bomb") || CheckInventory("Cluster Bomb"))
 							{
-								SetInventory("Pellet Bomb", 1);
+                                storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Pellet Bomb", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Death Bomb") || CheckWeapon("Cluster Bomb")) { SetWeapon("Pellet Bomb"); }
 
@@ -2703,7 +3227,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("EradEnergywhip") || CheckInventory("EradNitrofogger"))
 							{
-								SetInventory("EradFlamethrower", 1);
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("EradFlamethrower", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("EradEnergywhip") || CheckWeapon("EradNitrofogger")) { SetWeapon("EradFlamethrower"); }
 
@@ -2713,7 +3239,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 							if (CheckInventory("Eleena Smoke Bomb") || CheckInventory("Ion Sphere"))
 							{
-								SetInventory("Napalm Charge", 1);
+                                storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("Napalm Charge", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
 								if (CheckWeapon("Eleena Smoke Bomb") || CheckWeapon("Ion Sphere")) { SetWeapon("Napalm Charge"); }
 
@@ -2735,19 +3263,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 			
 			case CLASS_RMR:
 				SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_rebelmoonrisingsounds"));
-
-				if(CheckInventory("SamsaraExtraWeaponsAreEnabled") && CheckInventory(" RMR Plasma Cannon "))
-				{
-					GiveInventory("Subestron Arm", 1);
-				}
-				else
-				{
-					if(CheckWeapon("Subestron Arm"))
-					{
-						SetWeapon(" RMR Plasma Cannon ");
-					}
-					TakeInventory("Subestron Arm", 1);
-				}
 
                 if (!CheckInventory("PowerRMRFlyAbilityHack")) { TakeInventory("PowerRMRFlyAbility", 1); } // hexen
 				break;
@@ -2797,7 +3312,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				}
 				break;
 			case CLASS_DISRUPTOR:
-				SetInventory("SamsaraDisruptorUsingAltAmmo", (CheckWeapon(" Phase Rifle ") && CheckInventory("SamsaraDisruptorPhaseRifleMode")) || (CheckWeapon("Phase Repeater") && CheckInventory("SamsaraDisruptorPhaseRepeaterMode")) || (CheckWeapon(" Lock-on Cannon ") && CheckInventory("SamsaraDisruptorLockOnCannonMode")));
+				SetInventory("SamsaraDisruptorUsingAltAmmo", (CheckWeapon(" Phase Rifle ") && CheckInventory("SamsaraDisruptorPhaseRifleMode")) ||
+                                                             (CheckWeapon("Phase Repeater") && CheckInventory("SamsaraDisruptorPhaseRepeaterMode")) ||
+                                                             (CheckWeapon(" Lock-on Cannon ") && CheckInventory("SamsaraDisruptorLockOnCannonMode")));
 
 				if (CheckInventory("SamsaraDisruptorPlasmaLanceFiringSoundCheck") && !CheckWeapon(" Disruptor Plasmalance "))
 				{
@@ -2810,6 +3327,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				if (!CheckInventory("PowerWTSpellFlyHack")) { TakeInventory("PowerWTSpellFly", 1); } // hexen
 				break;
 			case CLASS_HALFLIFE:
+                SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_halflifesounds"));
+
 				if (CheckInventory("HLGaussCharged") && !CheckWeapon("Gauss Cannon"))
 				{
 					StopSound(0, CHAN_WEAPON);
@@ -2877,7 +3396,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					previousvalue = halflifemode;
 				}
 
-                if (CheckInventory("HalfLifeOpposingForce"))
+                if (halflifemode)
                 {
                     loadoutmode = GetCVar("samsara_shephard_fallbackmelee") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_fallbackmelee") - 1 : GetUserCVar(pln, "samsara_cl_shephard_fallbackmelee");
 
@@ -3226,18 +3745,33 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 {
                     if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
                     {
-                        if (CheckInventory("SamsaraHalfLifeSnarksAvailable")) { SetInventory("HL Squeaks", 1); }
+                        if (CheckInventory("SamsaraHalfLifeSnarksAvailable"))
+                        {
+                            storedammopriname = "HLSqueakAmmo", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("HL Squeaks", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
+
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Mk 2 Grenades", 1);
+                        SetInventory(storedammopriname, storedammopri);
                     } else {
                         if (!CheckInventory("SamsaraHalfLifeLoadoutUnique1"))
                         {
-                            if (CheckInventory("SamsaraHalfLifeSnarksAvailable")) { SetInventory("HL Squeaks", 1); }
+                            if (CheckInventory("SamsaraHalfLifeSnarksAvailable"))
+                            {
+                                storedammopriname = "HLSqueakAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("HL Squeaks", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
 
                             if (CheckWeapon("Mk 2 Grenades") && CheckInventory("HL Squeaks")) { SetWeapon("HL Squeaks"); }
 
                             SetInventory("Mk 2 Grenades", 0);
                         } else if (CheckInventory("SamsaraHalfLifeLoadoutUnique1")) {
+                            storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Mk 2 Grenades", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("HL Squeaks")) { SetWeapon("Mk 2 Grenades"); }
 
@@ -3250,18 +3784,27 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 {
                     if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
                     {
+                        storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("HL Crossbow", 1);
+                        SetInventory(storedammopriname, storedammopri);
+
+                        storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("M40A1 Sniper Rifle", 1);
+                        SetInventory(storedammopriname, storedammopri);
                     } else {
                         if (!CheckInventory("SamsaraHalfLifeLoadoutUnique2"))
                         {
+                            storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("HL Crossbow", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("M40A1 Sniper Rifle")) { SetWeapon("HL Crossbow"); }
 
                             SetInventory("M40A1 Sniper Rifle", 0);
                         } else if (CheckInventory("SamsaraHalfLifeLoadoutUnique2")) {
+                            storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("M40A1 Sniper Rifle", 1);
+                            SetInventory(storedammopriname, storedammopri);
 
                             if (CheckWeapon("HL Crossbow")) { SetWeapon("M40A1 Sniper Rifle"); }
 
@@ -3349,7 +3892,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 					if (CheckInventory("ChickenAmmo") || CheckInventory("SamsaraHasInfiniteAmmo"))
 					{
-						if (!CheckInventory(" Chicken Crossbow ")) { GiveInventory(" Chicken Crossbow ", 1); }
+						if (!CheckInventory(" Chicken Crossbow "))
+                        {
+                            storedammopriname = "ChickenAmmo", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory(" Chicken Crossbow ", 1);
+                            SetInventory(storedammopriname, storedammopri); // don't give extra; only the ammo pickup itself should give ammo
+                        }
 					} else {
 						if (CheckInventory(" Chicken Crossbow ") && !CheckWeapon(" Chicken Crossbow ")) { TakeInventory(" Chicken Crossbow ", 1); }
 					}
@@ -3424,6 +3972,43 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 					SetInventory("SamsaraQuake2RailgunLoopSoundCheck", 0);
 				}
+
+                loadoutmode = GetCVar("samsara_bitterman_slot7s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bitterman_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_bitterman_slot7s");
+
+                if (loadoutmode > 1) { loadoutmode = 1; }
+                else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                SetInventory("SamsaraQuake2LoadoutSlot7S", loadoutmode);
+
+                if (loadoutPrevValue[pln][SLOT_BFG10K] != CheckInventory("SamsaraQuake2LoadoutSlot7S"))
+                {
+                    ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_BFG10K, CheckInventory("SamsaraQuake2LoadoutSlot7S"), pln);
+                    loadoutPrevValue[pln][SLOT_BFG10K] = CheckInventory("SamsaraQuake2LoadoutSlot7S");
+                }
+
+                if (CheckInventory("Q2Trap") || CheckInventory("Q2Disruptor"))
+                {
+                    if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                    {
+                        SetInventory("Q2Trap", 1);
+                        SetInventory("Q2Disruptor", 1);
+                    } else {
+                        if (!CheckInventory("SamsaraQuake2LoadoutSlot7S"))
+                        {
+                            SetInventory("Q2Trap", 1);
+
+                            if (CheckWeapon("Q2Disruptor")) { SetWeapon("Q2Trap"); }
+
+                            SetInventory("Q2Disruptor", 0);
+                        } else if (CheckInventory("SamsaraQuake2LoadoutSlot7S")) {
+                            SetInventory("Q2Disruptor", 1);
+
+                            if (CheckWeapon("Q2Trap")) { SetWeapon("Q2Disruptor"); }
+
+                            SetInventory("Q2Trap", 0);
+                        }
+                    }
+                }
 				break;
 
 			case CLASS_BOND:
@@ -3452,6 +4037,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				{
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_goldeneyesounds"));
 
+                    loadoutmode = GetCVar("samsara_bond_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_slot1") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot1");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraGoldenEyeLoadoutSlot1", loadoutmode);
+
                     loadoutmode = GetCVar("samsara_bond_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_bond_fallbackranged");
 
                     if (loadoutmode > 3) { loadoutmode = 3; }
@@ -3479,6 +4071,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     else if (loadoutmode < 0) { loadoutmode = 0; }
 
                     SetInventory("SamsaraGoldenEyeLoadoutUnique2", loadoutmode);
+
+                    if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraGoldenEyeLoadoutSlot1"))
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINSAW, CheckInventory("SamsaraGoldenEyeLoadoutSlot1"), pln);
+                        loadoutPrevValue[pln][SLOT_CHAINSAW] = CheckInventory("SamsaraGoldenEyeLoadoutSlot1");
+                    }
 
                     if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraGoldenEyeLoadoutFallbackRanged"))
                     {
@@ -3533,18 +4131,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         SetInventory("Goldfinger_WaltherP38", 0);
                     }
 
-                    if (CheckInventory("Goldfinger_OddjobHat"))
+                    if (CheckInventory("Goldfinger_OddjobHat") || CheckInventory("Goldfinger_GolfClub"))
                     {
-                        SetInventory("Goldeneye_ThrowingKnives", 1);
+                        if (!CheckInventory("SamsaraGoldenEyeLoadoutSlot1") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldeneye_ThrowingKnives", 1); }
+                        if (CheckInventory("SamsaraGoldenEyeLoadoutSlot1") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldeneye_HuntingKnife", 1); }
 
-                        if (CheckWeapon("Goldfinger_OddjobHat")) { SetWeapon("Goldeneye_ThrowingKnives"); }
+                        if (CheckWeapon("Goldfinger_OddjobHat") || CheckWeapon("Goldfinger_GolfClub"))
+                        {
+                            if (!CheckInventory("SamsaraGoldenEyeLoadoutSlot1")) { SetWeapon("Goldeneye_ThrowingKnives"); }
+                            else if (CheckInventory("SamsaraGoldenEyeLoadoutSlot1")) { SetWeapon("Goldeneye_HuntingKnife"); }
+                        }
 
                         SetInventory("Goldfinger_OddjobHat", 0);
+                        SetInventory("Goldfinger_GolfClub", 0);
                     }
 
                     if (CheckInventory("Goldfinger_MP40"))
                     {
+                        storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_KF7Soviet", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_MP40")) { SetWeapon("Goldeneye_KF7Soviet"); }
 
@@ -3568,7 +4174,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_AK47"))
                     {
+                        storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_AR33", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_AK47")) { SetWeapon("Goldeneye_AR33"); }
 
@@ -3587,7 +4195,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_SuperBazooka"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_RocketLauncher", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_SuperBazooka")) { SetWeapon("Goldeneye_RocketLauncher"); }
 
@@ -3596,7 +4206,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_M79"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_GrenadeLauncher", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_M79")) { SetWeapon("Goldeneye_GrenadeLauncher"); }
 
@@ -3605,7 +4217,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_M1Carbine"))
                     {
+                        storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_RCP90", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_M1Carbine")) { SetWeapon("Goldeneye_RCP90"); }
 
@@ -3649,7 +4263,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_AR7"))
                     {
+                        storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_SniperRifle", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_AR7")) { SetWeapon("Goldeneye_SniperRifle"); }
 
@@ -3658,9 +4274,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_UZI") || CheckInventory("Goldfinger_SmithWesson22") || CheckInventory("Goldfinger_SmithWesson36"))
                     {
-                        if (!CheckInventory("SamsaraGoldenEyeLoadoutUnique2") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldeneye_SilencedD5K", 1); }
-                        if (CheckInventory("SamsaraGoldenEyeLoadoutUnique2") == 1 || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldeneye_ZMG", 1); }
-                        if (CheckInventory("SamsaraGoldenEyeLoadoutUnique2") >= 2 || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldeneye_D5KDeutsche", 1); }
+                        if (!CheckInventory("SamsaraGoldenEyeLoadoutUnique2") || CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("Goldeneye_SilencedD5K", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
+
+                        if (CheckInventory("SamsaraGoldenEyeLoadoutUnique2") == 1 || CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("Goldeneye_ZMG", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
+
+                        if (CheckInventory("SamsaraGoldenEyeLoadoutUnique2") >= 2 || CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("Goldeneye_D5KDeutsche", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
 
                         if (CheckWeapon("Goldfinger_UZI") || CheckWeapon("Goldfinger_SmithWesson22") || CheckWeapon("Goldfinger_SmithWesson36"))
                         {
@@ -3687,7 +4320,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_Limpet"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_TimedMines", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_Limpet")) { SetWeapon("Goldeneye_TimedMines"); }
 
@@ -3696,7 +4331,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_LandMine"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_ProximityMines", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_LandMine")) { SetWeapon("Goldeneye_ProximityMines"); }
 
@@ -3705,7 +4342,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldfinger_Claymore"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_RemoteMines", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_Claymore")) { SetWeapon("Goldeneye_RemoteMines"); }
 
@@ -3714,7 +4353,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("SamsaraGoldenEyeHasGoldPP7"))
                     {
+                        storedammopriname = "Goldeneye_GoldenGunRounds", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldeneye_GoldPP7", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldfinger_GoldMagnum")) { SetWeapon("Goldeneye_GoldPP7"); }
                     }
@@ -3764,6 +4405,30 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Goldeneye_PP7Silenced", 0);
                                 SetInventory("Goldeneye_Klobb", 0);
                                 SetInventory("Goldeneye_PP7SpecialIssue", 0);
+                            }
+                        }
+                    }
+
+                    if (CheckInventory("Goldeneye_ThrowingKnives") || CheckInventory("Goldeneye_HuntingKnife"))
+                    {
+                        if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            SetInventory("Goldeneye_ThrowingKnives", 1);
+                            SetInventory("Goldeneye_HuntingKnife", 1);
+                        } else {
+                            if (!CheckInventory("SamsaraGoldenEyeLoadoutSlot1"))
+                            {
+                                SetInventory("Goldeneye_ThrowingKnives", 1);
+
+                                if (CheckWeapon("Goldeneye_HuntingKnife")) { SetWeapon("Goldeneye_ThrowingKnives"); }
+
+                                SetInventory("Goldeneye_HuntingKnife", 0);
+                            } else if (CheckInventory("SamsaraGoldenEyeLoadoutSlot1")) {
+                                SetInventory("Goldeneye_HuntingKnife", 1);
+
+                                if (CheckWeapon("Goldeneye_ThrowingKnives")) { SetWeapon("Goldeneye_HuntingKnife"); }
+
+                                SetInventory("Goldeneye_ThrowingKnives", 0);
                             }
                         }
                     }
@@ -3830,27 +4495,41 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     {
                         if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
                         {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Goldeneye_SilencedD5K", 1);
+                            SetInventory(storedammopriname, storedammopri);
+
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Goldeneye_ZMG", 1);
+                            SetInventory(storedammopriname, storedammopri);
+
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Goldeneye_D5KDeutsche", 1);
+                            SetInventory(storedammopriname, storedammopri);
                         } else {
                             if (!CheckInventory("SamsaraGoldenEyeLoadoutUnique2"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Goldeneye_SilencedD5K", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Goldeneye_ZMG") || CheckWeapon("Goldeneye_D5KDeutsche")) { SetWeapon("Goldeneye_SilencedD5K"); }
 
                                 SetInventory("Goldeneye_ZMG", 0);
                                 SetInventory("Goldeneye_D5KDeutsche", 0);
                             } else if (CheckInventory("SamsaraGoldenEyeLoadoutUnique2") == 1) {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Goldeneye_ZMG", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Goldeneye_SilencedD5K") || CheckWeapon("Goldeneye_D5KDeutsche")) { SetWeapon("Goldeneye_ZMG"); }
 
                                 SetInventory("Goldeneye_SilencedD5K", 0);
                                 SetInventory("Goldeneye_D5KDeutsche", 0);
                             } else if (CheckInventory("SamsaraGoldenEyeLoadoutUnique2") >= 2) {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Goldeneye_D5KDeutsche", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Goldeneye_SilencedD5K") || CheckWeapon("Goldeneye_ZMG")) { SetWeapon("Goldeneye_D5KDeutsche"); }
 
@@ -3865,7 +4544,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					if (CheckInventory("Goldeneye_Slapper") &&
 						(CheckInventory("Goldeneye_PP7Silenced") || CheckInventory("Goldeneye_Klobb") || CheckInventory("Goldeneye_PP7SpecialIssue") ||
 						CheckInventory("Goldeneye_DD44")) &&
-						CheckInventory("Goldeneye_ThrowingKnives") && CheckInventory("Goldeneye_KF7Soviet") &&
+						(CheckInventory("Goldeneye_ThrowingKnives") || CheckInventory("Goldeneye_HuntingKnife")) &&
+						CheckInventory("Goldeneye_KF7Soviet") &&
 						(CheckInventory("Goldeneye_AutoShotgun") || CheckInventory("Goldeneye_Shotgun")) &&
 						CheckInventory("Goldeneye_AR33") && CheckInventory("Goldeneye_Phantom") && CheckInventory("Goldeneye_RocketLauncher") &&
 						CheckInventory("Goldeneye_GrenadeLauncher") && CheckInventory("Goldeneye_RCP90") &&
@@ -3877,7 +4557,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						!CheckInventory("SamsaraGoldenEyeHasGoldPP7"))
 					{
 						GiveInventory("Goldeneye_GoldPP7", 1);
-						GiveInventory("Goldeneye_GoldenGunRounds", 7);
 						GiveInventory("SamsaraGoldenEyeHasGoldPP7", 1);
 						dualpickupcheck++;
 					}
@@ -3889,8 +4568,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						CheckInventory("Goldeneye_SniperDualToken") && CheckInventory("Goldeneye_D5KDualToken") && CheckInventory("SamsaraGoldenEyeHasGoldPP7") &&
 						!CheckInventory("Goldeneye_GoldPP7DualToken"))
 					{
+						GiveInventory("Goldeneye_GoldPP7", 1);
 						GiveInventory("Goldeneye_GoldPP7DualToken", 1);
-						GiveInventory("Goldeneye_GoldenGunRounds", 7);
 						dualpickupcheck += 2;
 					}
 
@@ -3903,7 +4582,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					if (CheckInventory("Goldeneye_Slapper") &&
 						(CheckInventory("Goldeneye_PP7Silenced") || CheckInventory("Goldeneye_Klobb") || CheckInventory("Goldeneye_PP7SpecialIssue") ||
 						CheckInventory("Goldeneye_DD44")) &&
-						CheckInventory("Goldeneye_ThrowingKnives") && CheckInventory("Goldeneye_KF7Soviet") &&
+						(CheckInventory("Goldeneye_ThrowingKnives") || CheckInventory("Goldeneye_HuntingKnife")) &&
+						CheckInventory("Goldeneye_KF7Soviet") &&
 						(CheckInventory("Goldeneye_AutoShotgun") || CheckInventory("Goldeneye_Shotgun")) &&
 						CheckInventory("Goldeneye_AR33") && CheckInventory("Goldeneye_Phantom") && CheckInventory("Goldeneye_RocketLauncher") &&
 						CheckInventory("Goldeneye_GrenadeLauncher") && CheckInventory("Goldeneye_RCP90") &&
@@ -3915,6 +4595,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						!CheckInventory("SamsaraGoldfingerHasGoldMagnum"))
 					{ GiveInventory("SamsaraGoldfingerHasGoldMagnum", 1); }
 
+                    // due to the nature of loadout weapons (at least one weapon is not a dual wieldable), we are exempting the slot 1 from this check
 					if (CheckInventory("Goldeneye_PP7DualToken") && CheckInventory("Goldeneye_KF7DualToken") && CheckInventory("Goldeneye_AutoShotgunDualToken") &&
                         CheckInventory("Goldeneye_AR33DualToken") && CheckInventory("Goldeneye_PhantomDualToken") && CheckInventory("Goldeneye_RocketLauncherDualToken") &&
                         CheckInventory("Goldeneye_GrenadeLauncherDualToken") && CheckInventory("Goldeneye_RCP90DualToken") && CheckInventory("Goldeneye_CougarDualToken") &&
@@ -3927,6 +4608,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				else
 				{
 					SetInventory("SamsaraAlternateSoundToken", 0);
+
+                    loadoutmode = GetCVar("samsara_bondgf_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_slot1") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot1");
+
+                    if (loadoutmode > 1) { loadoutmode = 1; }
+                    else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                    SetInventory("SamsaraGoldfingerLoadoutSlot1", loadoutmode);
 
                     loadoutmode = GetCVar("samsara_bondgf_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_fallbackranged");
 
@@ -3962,6 +4650,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     else if (loadoutmode < 0) { loadoutmode = 0; }
 
                     SetInventory("SamsaraGoldfingerLoadoutUnique2", loadoutmode);
+
+                    if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraGoldfingerLoadoutSlot1"))
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINSAW, CheckInventory("SamsaraGoldfingerLoadoutSlot1"), pln);
+                        loadoutPrevValue[pln][SLOT_CHAINSAW] = CheckInventory("SamsaraGoldfingerLoadoutSlot1");
+                    }
 
                     if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraGoldfingerLoadoutFallbackRanged"))
                     {
@@ -4017,18 +4711,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         SetInventory("Goldeneye_DD44", 0);
                     }
 
-                    if (CheckInventory("Goldeneye_ThrowingKnives"))
+                    if (CheckInventory("Goldeneye_ThrowingKnives") || CheckInventory("Goldeneye_HuntingKnife"))
                     {
-                        SetInventory("Goldfinger_OddjobHat", 1);
+                        if (!CheckInventory("SamsaraGoldfingerLoadoutSlot1") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldfinger_OddjobHat", 1); }
+                        if (CheckInventory("SamsaraGoldfingerLoadoutSlot1") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldfinger_GolfClub", 1); }
 
-                        if (CheckWeapon("Goldeneye_ThrowingKnives")) { SetWeapon("Goldfinger_OddjobHat"); }
+                        if (CheckWeapon("Goldeneye_ThrowingKnives") || CheckWeapon("Goldeneye_HuntingKnife"))
+                        {
+                            if (!CheckInventory("SamsaraGoldfingerLoadoutSlot1")) { SetWeapon("Goldfinger_OddjobHat"); }
+                            else if (CheckInventory("SamsaraGoldfingerLoadoutSlot1")) { SetWeapon("Goldfinger_GolfClub"); }
+                        }
 
                         SetInventory("Goldeneye_ThrowingKnives", 0);
+                        SetInventory("Goldeneye_HuntingKnife", 0);
                     }
 
                     if (CheckInventory("Goldeneye_KF7Soviet"))
                     {
+                        storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_MP40", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_KF7Soviet")) { SetWeapon("Goldfinger_MP40"); }
 
@@ -4052,7 +4754,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_AR33"))
                     {
+                        storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_AK47", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_AR33")) { SetWeapon("Goldfinger_AK47"); }
 
@@ -4075,7 +4779,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_RocketLauncher"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_SuperBazooka", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_RocketLauncher")) { SetWeapon("Goldfinger_SuperBazooka"); }
 
@@ -4084,7 +4790,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_GrenadeLauncher"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_M79", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_GrenadeLauncher")) { SetWeapon("Goldfinger_M79"); }
 
@@ -4093,7 +4801,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_RCP90"))
                     {
+                        storedammopriname = "Cell", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_M1Carbine", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_RCP90")) { SetWeapon("Goldfinger_M1Carbine"); }
 
@@ -4136,7 +4846,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_SniperRifle"))
                     {
+                        storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_AR7", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_SniperRifle")) { SetWeapon("Goldfinger_AR7"); }
 
@@ -4145,9 +4857,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_SilencedD5K") || CheckInventory("Goldeneye_ZMG") || CheckInventory("Goldeneye_D5KDeutsche"))
                     {
-                        if (!CheckInventory("SamsaraGoldfingerLoadoutUnique2") || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldfinger_UZI", 1); }
-                        if (CheckInventory("SamsaraGoldfingerLoadoutUnique2") == 1 || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldfinger_SmithWesson22", 1); }
-                        if (CheckInventory("SamsaraGoldfingerLoadoutUnique2") >= 2 || CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetInventory("Goldfinger_SmithWesson36", 1); }
+                        if (!CheckInventory("SamsaraGoldfingerLoadoutUnique2") || CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("Goldfinger_UZI", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
+
+                        if (CheckInventory("SamsaraGoldfingerLoadoutUnique2") == 1 || CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("Goldfinger_SmithWesson22", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
+
+                        if (CheckInventory("SamsaraGoldfingerLoadoutUnique2") >= 2 || CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
+                            SetInventory("Goldfinger_SmithWesson36", 1);
+                            SetInventory(storedammopriname, storedammopri);
+                        }
 
                         if (CheckWeapon("Goldeneye_SilencedD5K") || CheckWeapon("Goldeneye_ZMG") || CheckWeapon("Goldeneye_D5KDeutsche"))
                         {
@@ -4174,7 +4903,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_TimedMines"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_Limpet", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_TimedMines")) { SetWeapon("Goldfinger_Limpet"); }
 
@@ -4183,7 +4914,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_ProximityMines"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_LandMine", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_ProximityMines")) { SetWeapon("Goldfinger_LandMine"); }
 
@@ -4192,7 +4925,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("Goldeneye_RemoteMines"))
                     {
+                        storedammopriname = "RocketAmmo", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_Claymore", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_RemoteMines")) { SetWeapon("Goldfinger_Claymore"); }
 
@@ -4201,7 +4936,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                     if (CheckInventory("SamsaraGoldfingerHasGoldMagnum"))
                     {
+                        storedammopriname = "Goldeneye_GoldenGunRounds", storedammopri = CheckInventory(storedammopriname);
                         SetInventory("Goldfinger_GoldMagnum", 1);
+                        SetInventory(storedammopriname, storedammopri);
 
                         if (CheckWeapon("Goldeneye_GoldPP7")) { SetWeapon("Goldfinger_GoldMagnum"); }
                     }
@@ -4265,6 +5002,30 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("Goldfinger_PPK", 0);
                                 SetInventory("Goldfinger_ColtM1911", 0);
                                 SetInventory("Goldfinger_LugerP08", 0);
+                            }
+                        }
+                    }
+
+                    if (CheckInventory("Goldfinger_OddjobHat") || CheckInventory("Goldfinger_GolfClub"))
+                    {
+                        if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            SetInventory("Goldfinger_OddjobHat", 1);
+                            SetInventory("Goldfinger_GolfClub", 1);
+                        } else {
+                            if (!CheckInventory("SamsaraGoldfingerLoadoutSlot1"))
+                            {
+                                SetInventory("Goldfinger_OddjobHat", 1);
+
+                                if (CheckWeapon("Goldfinger_GolfClub")) { SetWeapon("Goldfinger_OddjobHat"); }
+
+                                SetInventory("Goldfinger_GolfClub", 0);
+                            } else if (CheckInventory("SamsaraGoldfingerLoadoutSlot1")) {
+                                SetInventory("Goldfinger_GolfClub", 1);
+
+                                if (CheckWeapon("Goldfinger_OddjobHat")) { SetWeapon("Goldfinger_GolfClub"); }
+
+                                SetInventory("Goldfinger_OddjobHat", 0);
                             }
                         }
                     }
@@ -4345,27 +5106,41 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     {
                         if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
                         {
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Goldfinger_UZI", 1);
+                            SetInventory(storedammopriname, storedammopri);
+
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Goldfinger_SmithWesson22", 1);
+                            SetInventory(storedammopriname, storedammopri);
+
+                            storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                             SetInventory("Goldfinger_SmithWesson36", 1);
+                            SetInventory(storedammopriname, storedammopri);
                         } else {
                             if (!CheckInventory("SamsaraGoldfingerLoadoutUnique2"))
                             {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Goldfinger_UZI", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Goldfinger_SmithWesson22") || CheckWeapon("Goldfinger_SmithWesson36")) { SetWeapon("Goldfinger_UZI"); }
 
                                 SetInventory("Goldfinger_SmithWesson22", 0);
                                 SetInventory("Goldfinger_SmithWesson36", 0);
                             } else if (CheckInventory("SamsaraGoldfingerLoadoutUnique2") == 1) {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Goldfinger_SmithWesson22", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Goldfinger_UZI") || CheckWeapon("Goldfinger_SmithWesson36")) { SetWeapon("Goldfinger_SmithWesson22"); }
 
                                 SetInventory("Goldfinger_UZI", 0);
                                 SetInventory("Goldfinger_SmithWesson36", 0);
                             } else if (CheckInventory("SamsaraGoldfingerLoadoutUnique2") >= 2) {
+                                storedammopriname = "Clip", storedammopri = CheckInventory(storedammopriname);
                                 SetInventory("Goldfinger_SmithWesson36", 1);
+                                SetInventory(storedammopriname, storedammopri);
 
                                 if (CheckWeapon("Goldfinger_UZI") || CheckWeapon("Goldfinger_SmithWesson22")) { SetWeapon("Goldfinger_SmithWesson36"); }
 
@@ -4380,7 +5155,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					if (CheckInventory("Goldeneye_Slapper") &&
 						(CheckInventory("Goldfinger_PPKSilenced") || CheckInventory("Goldfinger_PPK") || CheckInventory("Goldfinger_ColtM1911") ||
 						CheckInventory("Goldfinger_LugerP08") || CheckInventory("Goldfinger_WaltherP38")) &&
-						CheckInventory("Goldfinger_OddjobHat") && CheckInventory("Goldfinger_MP40") &&
+						(CheckInventory("Goldfinger_OddjobHat") || CheckInventory("Goldfinger_GolfClub")) &&
+						CheckInventory("Goldfinger_MP40") &&
 						(CheckInventory("Goldfinger_Shotgun") || CheckInventory("Goldfinger_OverUnder")) &&
 						CheckInventory("Goldfinger_AK47") &&
                         (CheckInventory("Goldfinger_ThompsonDrum") || CheckInventory("Goldfinger_Thompson")) &&
@@ -4393,19 +5169,19 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						!CheckInventory("SamsaraGoldfingerHasGoldMagnum"))
 					{
 						GiveInventory("Goldfinger_GoldMagnum", 1);
-						GiveInventory("Goldeneye_GoldenGunRounds", 6);
 						GiveInventory("SamsaraGoldfingerHasGoldMagnum", 1);
 						dualpickupcheck++;
 					}
 
+                    // due to the nature of loadout weapons (at least one weapon is not a dual wieldable), we are exempting the slot 1 from this check
 					if (CheckInventory("Goldeneye_PP7DualToken") && CheckInventory("Goldeneye_KF7DualToken") && CheckInventory("Goldeneye_AutoShotgunDualToken") &&
                         CheckInventory("Goldeneye_AR33DualToken") && CheckInventory("Goldeneye_PhantomDualToken") && CheckInventory("Goldeneye_RocketLauncherDualToken") &&
                         CheckInventory("Goldeneye_GrenadeLauncherDualToken") && CheckInventory("Goldeneye_RCP90DualToken") && CheckInventory("Goldeneye_CougarDualToken") &&
                         CheckInventory("Goldeneye_LaserDualToken") && CheckInventory("Goldeneye_GoldenGunDualToken") && CheckInventory("Goldeneye_SniperDualToken") &&
                         CheckInventory("Goldeneye_D5KDualToken") && CheckInventory("SamsaraGoldfingerHasGoldMagnum") && !CheckInventory("Goldfinger_GoldMagnumDualToken"))
 					{
+						GiveInventory("Goldfinger_GoldMagnum", 1);
 						GiveInventory("Goldfinger_GoldMagnumDualToken", 1);
-						GiveInventory("Goldeneye_GoldenGunRounds", 6);
 						dualpickupcheck += 2;
 					}
 
@@ -4418,7 +5194,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					if (CheckInventory("Goldeneye_Slapper") &&
 						(CheckInventory("Goldfinger_PPKSilenced") || CheckInventory("Goldfinger_PPK") || CheckInventory("Goldfinger_ColtM1911") ||
 						CheckInventory("Goldfinger_LugerP08") || CheckInventory("Goldfinger_WaltherP38")) &&
-						CheckInventory("Goldfinger_OddjobHat") && CheckInventory("Goldfinger_MP40") &&
+						(CheckInventory("Goldfinger_OddjobHat") || CheckInventory("Goldfinger_GolfClub")) &&
+						CheckInventory("Goldfinger_MP40") &&
 						(CheckInventory("Goldfinger_Shotgun") || CheckInventory("Goldfinger_OverUnder")) &&
 						CheckInventory("Goldfinger_AK47") &&
                         (CheckInventory("Goldfinger_ThompsonDrum") || CheckInventory("Goldfinger_Thompson")) &&
@@ -4453,46 +5230,76 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 if (CheckInventory("Catacomb_Nukes")) { GiveInventory("GotWeapon5", 1); }
                 if (CheckInventory("Catacomb_Bolts")) { GiveInventory("GotWeapon6", 1); }
 
-				if (CheckInventory("Catacomb_Waves"))
+				if (CheckInventory("SamsaraCatacombCanUseWaves") && (CheckInventory("Catacomb_Waves") || CheckInventory("SamsaraHasInfiniteAmmo")))
 				{
-					if (!CheckInventory("Catacomb_WavesQuickSpell")) { GiveInventory("Catacomb_WavesQuickSpell", 1); }
+					if (!CheckInventory("Catacomb_WavesQuickSpell"))
+                    {
+                        storedammopriname = "Catacomb_Waves", storedammopri = CheckInventory(storedammopriname);
+                        SetInventory("Catacomb_WavesQuickSpell", 1);
+                        SetInventory(storedammopriname, storedammopri);
+                    }
 				} else {
-					if (CheckInventory("Catacomb_WavesQuickSpell") && !CheckWeapon("Catacomb_WavesQuickSpell") && !CheckInventory("SamsaraHasInfiniteAmmo")) { TakeInventory("Catacomb_WavesQuickSpell", 1); }
+					if (CheckInventory("Catacomb_WavesQuickSpell") && !CheckWeapon("Catacomb_WavesQuickSpell")) { TakeInventory("Catacomb_WavesQuickSpell", 1); }
 				}
 
-				if (CheckInventory("Catacomb_XTerminators"))
+				if (CheckInventory("SamsaraCatacombCanUseXTerminators") && (CheckInventory("Catacomb_XTerminators") || CheckInventory("SamsaraHasInfiniteAmmo")))
 				{
-					if (!CheckInventory("Catacomb_XTerminatorsQuickSpell")) { GiveInventory("Catacomb_XTerminatorsQuickSpell", 1); }
+					if (!CheckInventory("Catacomb_XTerminatorsQuickSpell"))
+                    {
+                        storedammopriname = "Catacomb_XTerminators", storedammopri = CheckInventory(storedammopriname);
+                        SetInventory("Catacomb_XTerminatorsQuickSpell", 1);
+                        SetInventory(storedammopriname, storedammopri);
+                    }
 				} else {
-					if (CheckInventory("Catacomb_XTerminatorsQuickSpell") && !CheckWeapon("Catacomb_XTerminatorsQuickSpell") && !CheckInventory("SamsaraHasInfiniteAmmo")) { TakeInventory("Catacomb_XTerminatorsQuickSpell", 1); }
+					if (CheckInventory("Catacomb_XTerminatorsQuickSpell") && !CheckWeapon("Catacomb_XTerminatorsQuickSpell")) { TakeInventory("Catacomb_XTerminatorsQuickSpell", 1); }
 				}
 
-				if (CheckInventory("Catacomb_Bursts"))
+				if (CheckInventory("SamsaraCatacombCanUseBursts") && (CheckInventory("Catacomb_Bursts") || CheckInventory("SamsaraHasInfiniteAmmo")))
 				{
-					if (!CheckInventory("Catacomb_BurstsQuickSpell")) { GiveInventory("Catacomb_BurstsQuickSpell", 1); }
+					if (!CheckInventory("Catacomb_BurstsQuickSpell"))
+                    {
+                        storedammopriname = "Catacomb_Bursts", storedammopri = CheckInventory(storedammopriname);
+                        SetInventory("Catacomb_BurstsQuickSpell", 1);
+                        SetInventory(storedammopriname, storedammopri);
+                    }
 				} else {
-					if (CheckInventory("Catacomb_BurstsQuickSpell") && !CheckWeapon("Catacomb_BurstsQuickSpell") && !CheckInventory("SamsaraHasInfiniteAmmo")) { TakeInventory("Catacomb_BurstsQuickSpell", 1); }
+					if (CheckInventory("Catacomb_BurstsQuickSpell") && !CheckWeapon("Catacomb_BurstsQuickSpell")) { TakeInventory("Catacomb_BurstsQuickSpell", 1); }
 				}
 
-				if (CheckInventory("Catacomb_Zappers"))
+				if (CheckInventory("SamsaraCatacombCanUseZappers") && (CheckInventory("Catacomb_Zappers") || CheckInventory("SamsaraHasInfiniteAmmo")))
 				{
-					if (!CheckInventory("Catacomb_ZappersQuickSpell")) { GiveInventory("Catacomb_ZappersQuickSpell", 1); }
+					if (!CheckInventory("Catacomb_ZappersQuickSpell"))
+                    {
+                        storedammopriname = "Catacomb_Zappers", storedammopri = CheckInventory(storedammopriname);
+                        SetInventory("Catacomb_ZappersQuickSpell", 1);
+                        SetInventory(storedammopriname, storedammopri);
+                    }
 				} else {
-					if (CheckInventory("Catacomb_ZappersQuickSpell") && !CheckWeapon("Catacomb_ZappersQuickSpell") && !CheckInventory("SamsaraHasInfiniteAmmo")) { TakeInventory("Catacomb_ZappersQuickSpell", 1); }
+					if (CheckInventory("Catacomb_ZappersQuickSpell") && !CheckWeapon("Catacomb_ZappersQuickSpell")) { TakeInventory("Catacomb_ZappersQuickSpell", 1); }
 				}
 
-				if (CheckInventory("Catacomb_Nukes"))
+				if (CheckInventory("SamsaraCatacombCanUseNukes") && (CheckInventory("Catacomb_Nukes") || CheckInventory("SamsaraHasInfiniteAmmo")))
 				{
-					if (!CheckInventory("Catacomb_NukesQuickSpell")) { GiveInventory("Catacomb_NukesQuickSpell", 1); }
+					if (!CheckInventory("Catacomb_NukesQuickSpell"))
+                    {
+                        storedammopriname = "Catacomb_Nukes", storedammopri = CheckInventory(storedammopriname);
+                        SetInventory("Catacomb_NukesQuickSpell", 1);
+                        SetInventory(storedammopriname, storedammopri);
+                    }
 				} else {
-					if (CheckInventory("Catacomb_NukesQuickSpell") && !CheckWeapon("Catacomb_NukesQuickSpell") && !CheckInventory("SamsaraHasInfiniteAmmo")) { TakeInventory("Catacomb_NukesQuickSpell", 1); }
+					if (CheckInventory("Catacomb_NukesQuickSpell") && !CheckWeapon("Catacomb_NukesQuickSpell")) { TakeInventory("Catacomb_NukesQuickSpell", 1); }
 				}
 
-				if (CheckInventory("Catacomb_Bolts"))
+				if (CheckInventory("SamsaraCatacombCanUseBolts") && (CheckInventory("Catacomb_Bolts") || CheckInventory("SamsaraHasInfiniteAmmo")))
 				{
-					if (!CheckInventory("Catacomb_BoltsQuickSpell")) { GiveInventory("Catacomb_BoltsQuickSpell", 1); }
+					if (!CheckInventory("Catacomb_BoltsQuickSpell"))
+                    {
+                        storedammopriname = "Catacomb_Bolts", storedammopri = CheckInventory(storedammopriname);
+                        SetInventory("Catacomb_BoltsQuickSpell", 1);
+                        SetInventory(storedammopriname, storedammopri);
+                    }
 				} else {
-					if (CheckInventory("Catacomb_BoltsQuickSpell") && !CheckWeapon("Catacomb_BoltsQuickSpell") && !CheckInventory("SamsaraHasInfiniteAmmo")) { TakeInventory("Catacomb_BoltsQuickSpell", 1); }
+					if (CheckInventory("Catacomb_BoltsQuickSpell") && !CheckWeapon("Catacomb_BoltsQuickSpell")) { TakeInventory("Catacomb_BoltsQuickSpell", 1); }
 				}
 				break;
 
@@ -4678,20 +5485,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
         SetInventory("SamsaraIsPlayingInZandronum", !isZDoom());
 
+        SetInventory("SamsaraDoom64UnmakerArtifact1Icon", CheckInventory("UnmakerUpgrade1Icon"));
+        SetInventory("SamsaraDoom64UnmakerArtifact2Icon", CheckInventory("UnmakerUpgrade2Icon"));
+        SetInventory("SamsaraDoom64UnmakerArtifact3Icon", CheckInventory("UnmakerUpgrade3Icon"));
+
         SetInventory("SamsaraUsingVerticalSpread", IsZDoom() && GetUserCVar(pln, "vertspread") && !GetCVar("sv_novertspread"));
 
         SetInventory("DoomNoBFGAim", (GetCVar("sv_nobfgaim") && isZDoom()) || (!GetCVar("sv_bfgfreeaim") && !isZDoom()));
 
-        SetInventory("SamsaraImprovedDoomguyBalance", GetCVar("samsara_doomguybalance") == 1 || (GetCVar("samsara_doomguybalance") >= 2 && GetCVar("samsara_mixerloaded")));
+        SetInventory("SamsaraImprovedBalance", GetCVar("samsara_weaponbalance") == 1 || (GetCVar("samsara_weaponbalance") >= 2 && GetCVar("samsara_mixerloaded")));
 
         SetInventory("SamsaraUsingAbsolutionUnmaker", GetCVar("samsara_absolutionunmaker"));
 
         SetInventory("SamsaraRecoilIsDisabled", CheckSamsaraRecoilSettings(pln));
 
-        bool noflashes = GetUserCVar(pln, "samsara_cl_noflashes");
+        int noflashes = GetUserCVar(pln, "samsara_cl_noflashes");
 
         SetInventory("PickupFlashesAreDisabled", noflashes == 1 || noflashes >= 3);
         SetInventory("WeaponFlashesAreDisabled", noflashes >= 2);
+
+        SetInventory("SamsaraSofterInvulnColormapIsEnabled", GetUserCVar(pln, "samsara_cl_softerinvulncolormap"));
 
         SetInventory("ChexClassicLaz", GetCVar("samsara_classiclaz"));
 
@@ -4727,7 +5540,14 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
         SetInventory("DukeLegacyVoices", GetUserCVar(pln, "samsara_cl_legacydukevoices"));
 
-        SetInventory("SamsaraHasPermaWeaponLevel2", GetCVar("samsara_permaweaponlevel2"));
+        SetInventory("SamsaraHasPermaWeaponLevel2", GetCVar("samsara_permaweaponlevel2") &&
+                                                    ((samsaraClassNum() != CLASS_HERETIC && samsaraClassNum() != CLASS_HEXEN && samsaraClassNum() != CLASS_DEMONESS) ||
+                                                    ((samsaraClassNum() == CLASS_HERETIC || samsaraClassNum() == CLASS_DEMONESS) && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory")) ||
+                                                    (samsaraClassNum() == CLASS_HEXEN && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory") && !GetCVar("samsara_banhextomeofpower"))));
+
+        SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHeretic", samsaraClassNum() == CLASS_HERETIC && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerHereticTome"));
+        SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHexen1", samsaraClassNum() == CLASS_HEXEN && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerSamsaraHexenWeaponLevel2"));
+        SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHexen2", samsaraClassNum() == CLASS_DEMONESS && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerHexen2WeaponLevel2"));
 
 		HandleAmmoCapacities(0);
 		HandleBans();
@@ -4766,6 +5586,49 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
             }
 
             SetInventory("SamsaraCorvusArtiEgg", 0);
+        }
+
+        if (GetCVar("samsara_banhextomeofpower") && CheckInventory("SamsaraHexenTomeOfPower"))
+        {
+            for (i = 0; i < CheckInventory("SamsaraHexenTomeOfPower"); i++)
+            {
+                if (CheckInventory("SamsaraLesserTomeInventoryRaven") < 16)
+                {
+                    Print(l:"HEXEN1TOMEOFPOWERDISABLED2");
+                    GiveInventory("SamsaraLesserTomeInventoryRaven", 1);
+                }
+                else { Print(l:"HEXEN1TOMEOFPOWERDISABLED1"); }
+            }
+
+            SetInventory("SamsaraHexenTomeOfPower", 0);
+            SetInventory("SamsaraHexenTomeOfPowerCooldown", 0);
+            SetInventory("PowerSamsaraHexenWeaponLevel2", 0);
+        }
+
+        if (!isZDoom() && GetCVar("samsara_banmorphovum") && CheckInventory("SamsaraHexenPorkalator"))
+        {
+            for (i = 0; i < CheckInventory("SamsaraHexenPorkalator"); i++)
+            {
+                if (!CheckInventory("SamsaraHexenDiscOfRepulsion"))
+                {
+                    Print(l:"HEXEN1PORKALATORDISABLED4");
+                    GiveInventory("SamsaraHexenDiscOfRepulsion", 1);
+                } else if ((!GetCVar("samsara_banhextomeofpower") && (!CheckInventory("SamsaraHexenTomeOfPower") || (CheckInventory("SamsaraHexenTomeOfPower") && CheckInventory("SamsaraHexenTomeOfPowerCooldown")))) || (GetCVar("samsara_banhextomeofpower") && CheckInventory("SamsaraLesserTomeInventoryRaven") < 16)) {
+                    if (GetCVar("samsara_banhextomeofpower"))
+                    {
+                        Print(l:"HEXEN1PORKALATORDISABLED3");
+                        GiveInventory("SamsaraLesserTomeInventoryRaven", 1);
+                    } else {
+                        Print(l:"HEXEN1PORKALATORDISABLED2");
+                        GiveInventory("SamsaraHexenTomeOfPower", 1);
+                        if (CheckInventory("SamsaraHexenTomeOfPowerCooldown")) { ACS_NamedExecuteWithResult("SamsaraHexenTomeOfPowerCooldownDecrement"); }
+                    }
+                }
+                else { Print(l:"HEXEN1PORKALATORDISABLED1"); }
+            }
+
+            SetInventory("SamsaraHexenPorkalator", 0);
+            SetInventory("SamsaraHexenHasPorkalator", 0);
         }
 
         if (GetCVar("samsara_banjetpack") && (CheckInventory("DukePortJetpack") || CheckInventory("DukePortJetpack64")))
@@ -4812,15 +5675,15 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
             for (i = 0; i < CheckInventory("RMRJetPack"); i++)
             {
                 if (CheckInventory("RMROxygenRecycler") < oxyrecmax ||
-                    (GetCVar("samsara_cl_maxedinventoryhealthpickup") >= 2 && (GetActorProperty(0, APROP_Health) < ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1) || ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 0, -1))) ||
+                    (GetCVar("samsara_cl_maxedinventoryhealthpickup") >= 2 && (GetActorProperty(0, APROP_Health) < ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1) || ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 0, -1, 0))) ||
                     GetCVar("samsara_nohealthcap"))
                 {
-                    if ((CheckInventory("RMROxygenRecycler") >= oxyrecmax && GetCVar("samsara_cl_maxedinventoryhealthpickup") >= 2 && (GetActorProperty(0, APROP_Health) < ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1) || ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 0, -1))) ||
+                    if ((CheckInventory("RMROxygenRecycler") >= oxyrecmax && GetCVar("samsara_cl_maxedinventoryhealthpickup") >= 2 && (GetActorProperty(0, APROP_Health) < ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1) || ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 0, -1, 0))) ||
                         GetCVar("samsara_nohealthcap"))
                     {
                         Print(l:"RMRJETPACKDISABLED3");
                         ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100);
-                        ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 1, -1);
+                        ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 1, -1, 1);
                     } else {
                         Print(l:"RMRJETPACKDISABLED2");
                         GiveInventory("RMROxygenRecycler", 1);
@@ -4896,7 +5759,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("StrifeSigilPiecePreferred", sigilCounter);
                                 GiveInventory(" Sigil ", 1);
 
-                                ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 23, -1, 0);
+                                ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0);
                             }
                         } else {
                             for (int a = 0; a < SIGILCOUNT; a++) { SetInventory(SpectralTogglers[a], 0); }
@@ -5063,9 +5926,16 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 			break;
 
 		case CLASS_DEMONESS:
-			if (GetCVar("samsara_nocustomgravity")) { SetActorProperty(0, APROP_Gravity, 1.0); }
-			SetActorProperty(0, APROP_Mass, 100);
-			SetInventory("SamsaraIncreasedFallingDamageMode", 0);
+			if (GetCVar("samsara_nocustomgravity"))
+			{
+				// gravity adjustments done in class script (1.0; 0.5 with glide)
+				SetActorProperty(0, APROP_Mass, 100);
+				SetInventory("SamsaraIncreasedFallingDamageMode", 0);
+			} else {
+				// gravity adjustments done in class script (0.8125; 0.5 with glide)
+				SetActorProperty(0, APROP_Mass, 100);
+				SetInventory("SamsaraIncreasedFallingDamageMode", 0);
+			}
 			break;
 
 		default:
@@ -5077,23 +5947,23 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
         if (CheckInventory("ForceNormalGravity"))
         {
-            SetActorProperty(0, APROP_Gravity, 1.0);
+            if (samsaraClassNum() != CLASS_DEMONESS) { SetActorProperty(0, APROP_Gravity, 1.0); }
             SetActorProperty(0, APROP_Mass, 100);
             SetInventory("SamsaraIncreasedFallingDamageMode", 0);
         } else if (CheckInventory("ForceSOGravity")) {
-            SetActorProperty(0, APROP_Gravity, 0.15);
+            if (samsaraClassNum() != CLASS_DEMONESS) { SetActorProperty(0, APROP_Gravity, 0.15); }
             SetActorProperty(0, APROP_Mass, 220);
             SetInventory("SamsaraIncreasedFallingDamageMode", 1);
         } else if (CheckInventory("ForceRangerGravity")) {
-            SetActorProperty(0, APROP_Gravity, 0.75);
+            if (samsaraClassNum() != CLASS_DEMONESS) { SetActorProperty(0, APROP_Gravity, 0.75); }
             SetActorProperty(0, APROP_Mass, 100);
             SetInventory("SamsaraIncreasedFallingDamageMode", 2);
         } else if (CheckInventory("ForceEleenaGravity")) {
-            SetActorProperty(0, APROP_Gravity, 0.68);
+            if (samsaraClassNum() != CLASS_DEMONESS) { SetActorProperty(0, APROP_Gravity, 0.68); }
             SetActorProperty(0, APROP_Mass, 100);
             SetInventory("SamsaraIncreasedFallingDamageMode", 3);
         } else if (CheckInventory("ForceDemonessGravity")) {
-            SetActorProperty(0, APROP_Gravity, 0.8125);
+            if (samsaraClassNum() != CLASS_DEMONESS) { SetActorProperty(0, APROP_Gravity, 0.8125); }
             SetActorProperty(0, APROP_Mass, 100);
             SetInventory("SamsaraIncreasedFallingDamageMode", 0);
         }
@@ -5110,12 +5980,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
         else if (samsaraClassNum() == CLASS_DEUSEX && !GetCVar("samsara_nocustomgravity")) { i = JumpZFromHeight(FixedMul(36 + GetCVar("samsara_jumpmod"), 1.0 + (CheckInventory("DeusEx_Augmentation_SpeedEnhancement") * CheckInventory("DeusEx_Augmentation_SpeedEnhancementToken") * 0.2)), GetActorProperty(0, APROP_Gravity)); }
         else { i = JumpZFromHeight(32 + GetCVar("samsara_jumpmod"), GetActorProperty(0, APROP_Gravity)); }
 
-		// Hexen requires an increased jumping height
-		if (isZDoom() && GetCvar("samsara_currentgame") == GAME_HEXEN && samsaraClassNum() != CLASS_HEXEN) { GiveInventory("SamsaraIncreasedJumpHeightForHexen", 1); }
+		// Hexen and The Adventures of Square require an increased jumping height
+		if (isZDoom() && (GetCVar("samsara_currentgame") == GAME_HEXEN || GetCVar("samsara_currentgame") == GAME_SQUARE) && samsaraClassNum() != CLASS_HEXEN) { GiveInventory("SamsaraIncreasedJumpHeightForHexen", 1); }
 		else { TakeInventory("SamsaraIncreasedJumpHeightForHexen", 0x7FFFFFFF); }
 
-		// Strife requires a decreased step height
-		if (GetCvar("samsara_currentgame") == GAME_STRIFE) { SetActorProperty(0, APROP_MaxStepHeight, 16.0); }
+		// Strife and The Adventures of Square require a decreased step height
+		if (GetCVar("samsara_currentgame") == GAME_STRIFE || GetCVar("samsara_currentgame") == GAME_SQUARE) { SetActorProperty(0, APROP_MaxStepHeight, 16.0); }
 
         if (CheckInventory("PowerHighJump1") && !GetCVar("LockHighJumpHeightChanges")) { SetActorProperty(0, APROP_JumpZ, max(FixedMul(i, FixedDiv(GetUserCVar(pln, "HighJumpRuneHeight"), 8.0)), 0)); } // multi runes compatibility
         else { SetActorProperty(0, APROP_JumpZ, max(i, 0)); }
@@ -5471,7 +6341,7 @@ script "SamsaraEnterClient" (void) clientside //521 -- SAMSARA_ENTER_CLIENT
 		for (i = 0; i < SLOTCOUNT; i++)
 		{
 			j = SamsaraClientWeps[i];
-			SamsaraClientWeps[i] = HasClassWeapon(class, i, 1);
+			SamsaraClientWeps[i] = HasClassWeapon(class, i, 1, 1);
 
 			if (j != SamsaraClientWeps[i]) { SamsaraClientWepFlashes[i] = Timer(); }
 		}
@@ -5743,6 +6613,10 @@ script "SamsaraGameplayModCrap" (int respawning)
 		SetCvar("samsara_moddedgame", true);
 		HandleBuffCVars();
 
+		SetInventory("SamsaraIsPlayingInZandronum", !isZDoom());
+
+		SetInventory("SamsaraSofterInvulnColormapIsEnabled", GetUserCVar(pln, "samsara_cl_softerinvulncolormap"));
+
         for (i = 1; i <= 100; i++)
         {
             str actortotake = StrParam(s:"SAMSARAPATCH_CUSTOMWEAPON_NAME", d:i);
@@ -5774,12 +6648,17 @@ script "SamsaraGameplayModCrap" (int respawning)
             }
         }
 
+        i = JumpZFromHeight(32 + GetCVar("samsara_jumpmod"), GetActorProperty(0, APROP_Gravity));
+
 		// Hexen requires an increased jumping height
-		if (isZDoom() && GetCvar("samsara_currentgame") == GAME_HEXEN && samsaraClassNum() != CLASS_HEXEN) { GiveInventory("SamsaraIncreasedJumpHeightForHexen", 1); }
+		if (isZDoom() && GetCvar("samsara_currentgame") == GAME_HEXEN) { GiveInventory("SamsaraIncreasedJumpHeightForHexen", 1); }
 		else { TakeInventory("SamsaraIncreasedJumpHeightForHexen", 0x7FFFFFFF); }
 
 		// Strife requires a decreased step height
 		if (GetCvar("samsara_currentgame") == GAME_STRIFE) { SetActorProperty(0, APROP_MaxStepHeight, 16.0); }
+
+        if (CheckInventory("PowerHighJump1") && !GetCVar("LockHighJumpHeightChanges")) { SetActorProperty(0, APROP_JumpZ, max(FixedMul(i, FixedDiv(GetUserCVar(pln, "HighJumpRuneHeight"), 8.0)), 0)); } // multi runes compatibility
+        else { SetActorProperty(0, APROP_JumpZ, max(i, 0)); }
 
 		Delay(1);
 	}
@@ -6011,12 +6890,21 @@ script "SamsaraPlayerOxygenFakeInvulnCheck" ENTER
 {
     while (true)
     {
+        int pln = PlayerNumber();
         int aircapacity = 35 * 20; // usually the maximum
 
-        if (CheckInventory("PowerFakeInvulnerable") || CheckInventory("PowerFakeInvulnerableCleric") || CheckInventory("PowerFakeInvulnerableMage") ||
-            CheckInventory("PowerFakeInvulnerableFighter") || CheckInventory("QuakePentagram") || CheckInventory("PowerGodProtection") ||
-            CheckInventory("PowerDogProtection") || CheckInventory("Painkiller_IronWill_Protection") || CheckInventory("PainkillerDemonMorphInvulnerability"))
-        { SetAirSupply(PlayerNumber(), aircapacity); }
+        if (CheckInventory("SamsaraUsingCustomAirSupply")) { aircapacity = CheckInventory("SamsaraCustomAirSupplyMax"); }
+
+        if (aircapacity > 0)
+        {
+            if (CheckInventory("PowerFakeInvulnerable") || CheckInventory("PowerFakeInvulnerableCleric") || CheckInventory("PowerFakeInvulnerableMage") ||
+                CheckInventory("PowerFakeInvulnerableFighter") || CheckInventory("QuakePentagram") || CheckInventory("PowerGodProtection") ||
+                CheckInventory("PowerDoggyMorph") || CheckInventory("Painkiller_IronWill_Protection") || CheckInventory("PainkillerDemonMorphInvulnerability"))
+            {
+                if (GetAirSupply(pln) <= 0) { PlaySound(0, "*gasp", CHAN_VOICE); }
+                SetAirSupply(pln, aircapacity);
+            }
+        }
 
         Delay(1);
     }

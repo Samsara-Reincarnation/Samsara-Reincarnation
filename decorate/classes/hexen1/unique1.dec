@@ -1,0 +1,55 @@
+actor SamsaraHexenTomeOfPowerCooldown : Counter { Inventory.MaxAmount 360 }
+
+actor SamsaraHexenTomeOfPower : PortTome
+{
+    Inventory.MaxAmount 1
+    Inventory.InterHubAmount 1
+    Inventory.RestrictedTo "HexenPlayer"
+    Tag "Tome of Power"
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIf(CallACS("Hexen2_Decorate", 34), 1)
+        TNT1 A 0 A_RailWait
+        stop
+
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 71), "UseFailPPW")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasDisabledInventoryCooldown",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenTomeOfPowerCooldown",1,"UseFailCooldown")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 15, 0), "UseFail")
+        TNT1 A 0 A_PlaySound("hexen/artiuse",CHAN_ITEM)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasDisabledInventoryCooldown",1,2)
+        TNT1 A 0 A_GiveInventory("SamsaraHexenTomeOfPowerCooldown",360)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraHexenTomeOfPowerCooldown")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerHexenWeaponLevel2Giver")
+        fail
+
+     UseFailCooldown:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 17, 4)
+        fail
+
+     UseFailPPW:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 18, 2)
+        fail
+    }
+}
+
+actor SamsaraPowerHexenWeaponLevel2Giver : SamsaraPowerupGiver
+{
+    Powerup.Type "SamsaraHexenWeaponLevel2"
+    Powerup.Color "Red", 0.1
+}
+
+actor PowerSamsaraHexenWeaponLevel2 : Powerup
+{
+    Inventory.Icon "SPINBK0"
+    Powerup.Duration -40
+    //+NOTELEPORTFREEZE // doesn't exist in zandronum yet
+}
+
+actor PowerSamsaraHasPermaWeaponLevel2IconHexen1 : Powerup
+{
+    Inventory.Icon "SPINBK0"
+    Powerup.Duration 0x7FFFFFFF
+}

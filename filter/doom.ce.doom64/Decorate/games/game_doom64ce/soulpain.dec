@@ -1,4 +1,4 @@
-Actor D64LostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
+Actor D64LostSoul_Samsara : SamsaraMonsterReincLostSoul replaces LostSoulTwo
 {
 	Health 50
 	Radius 16
@@ -22,9 +22,8 @@ Actor D64LostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
 	Obituary "$OB_SKULL"
 	Tag "Lost Soul"
 	Species "SamsaraLostSoul"
-	RenderStyle "SoulTrans"
+	RenderStyle "Normal" // gzdoom // originally still used SoulTrans, but Normal just looks nicer here
 	DamageFactor "LostSoul64Explosion", 0
-	+NOBLOOD
 	States
 	{
 	Spawn:
@@ -63,8 +62,11 @@ Actor D64LostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
 		SKUL MN 2 bright
 		SKUL OP 1 bright
 		Stop
+	Crush:
+		A027 A -1 A_PlaySound("misc/gibbed")
+		Stop
 
-		// SamsaraMonsterGhost states
+		// SamsaraMonsterReincLostSoul states
 		Death.ZorchPistol:
 		Death.Zorch:
 		Death.ZorchKamikaze:
@@ -134,6 +136,7 @@ Actor D64LostSoul_Samsara : SamsaraMonsterGhost replaces LostSoul2
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
 		Disintegrate:
+		Death.StrifeMauler:
 			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
 			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
@@ -232,9 +235,14 @@ Actor D64PainElemental_Samsara : SamsaraMonsterReincPainElemental replaces PainE
 		PAIN KL 5 bright
 		Stop
 	Raise:
+		PAIN A 0
+		"####" "#" 0 A_JumpIfInventory("EnemyZorched",1,"ZorchRaise") // just in case
 		PAIN LKJI 5
 		PAIN HGFE 8
 		Goto See
+	Crush:
+		A027 A -1 A_PlaySound("misc/gibbed")
+		Stop
 	Pain.ShrinkerDMG:
 		PAIN D 0
 		"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
@@ -342,6 +350,7 @@ Actor D64PainElemental_Samsara : SamsaraMonsterReincPainElemental replaces PainE
 			TNT1 A -1 A_Jump(256, "SpawnTheLostSoul")
 			Wait
 		Disintegrate:
+		Death.StrifeMauler:
 			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
 			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
@@ -488,6 +497,8 @@ actor D64PainElemental_Samsara_Shrink : D64PainElemental_Samsara
 			Loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)
@@ -536,4 +547,87 @@ actor D64PainElemental_Samsara_ShrinkEffect : D64PainElemental_Samsara
 			"####" "#" 1 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
 			Stop
 	}
+}
+
+// I'm not gonna bother porting over the Stalker functions to Decorate,
+// so we'll also borrow from ReMixer (pls don't sue me popsoap)
+Actor D64Stalker_Samsara : D64LostSoul_Samsara replaces D64Stalker
+{
+	Health 200
+	Damage 3
+	-MISSILEMORE
+	AttackSound ""
+	Obituary "$OB_STALKER"
+	Tag "Stalker"
+	States
+	{
+	Spawn:
+		STLK A 5 bright A_Look
+		Loop
+	See:
+		STLK A 3 bright A_Chase
+		Loop
+	Missile:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		STLK B 15 bright A_FaceTarget
+		TNT1 A 0 A_JumpIfInventory("D64StalkerTeleportCooldown",1,"Tracer")
+		TNT1 A 0 A_JumpIfCloser(1024,1)
+		Goto Tracer
+		TNT1 A 0 A_Jump(128,"Teleport")
+		Goto Tracer
+	Tracer:
+		TNT1 A 0 A_FaceTarget
+		STLK B 5 bright A_CustomMissile("D64StalkerTracer",16)
+		STLK B 15 bright A_FaceTarget
+		Goto See
+	Teleport:
+		TNT1 A 0 A_SpawnItemEx("D64HellFog", 0, 0, 0, 0, 0, 0, 0, 0)
+		TNT1 A 0 A_UnSetShootable
+		TNT1 A 0 A_Jump(256, 1, 13, 25)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		TNT1 AAA 1 A_Chase("","",CHF_NOPLAYACTIVE)
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",0)
+		TNT1 AAAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 AAAAA 1 A_Chase("","",CHF_NOPLAYACTIVE)
+		TNT1 A 0 A_GiveInventory("D64StalkerTeleportCooldown",1)
+		TNT1 A 0 A_FaceTarget
+		TNT1 A 0 A_SetShootable
+		TNT1 A 0 A_SpawnItemEx("D64HellFog", 0, 0, 0, 0, 0, 0, 0, 0)
+		STLK B 5 bright A_CustomMissile("D64StalkerTracer",16)
+		STLK B 10 bright A_FaceTarget
+		Goto See
+	Pain:
+		STLK C 5 bright
+		STLK C 3 bright A_Pain
+		Goto See
+	Pain.DoomDamageTypeStunner:
+		STLK C 2 bright A_ChangeFlag("NOPAIN",true)
+		STLK C 300 bright A_Pain
+		TNT1 A 0 A_ChangeFlag("NOPAIN",false)
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_PlaySound("duke/kickhit",CHAN_BODY)
+		STLK C 2 bright A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		STLK C 16 bright A_Pain
+		Goto See
+	Death:
+		STLK D 7 BRIGHT ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		STLK E 7 BRIGHT A_Scream
+		STLK F 5 BRIGHT
+		STLK G 4 BRIGHT A_NoBlocking
+		STLK HIJKL 4 BRIGHT A_FadeOut(0.20)
+		Stop
+	Crush:
+		A027 A -1 A_PlaySound("misc/gibbed")
+		Stop
+	}
+}
+
+Actor D64InvisibleStalker_Samsara : D64Stalker_Samsara replaces D64InvisibleStalker { SpawnID 219 }
+
+Actor D64StalkerTeleportCooldown : Powerup
+{
+	Powerup.Duration 87
 }

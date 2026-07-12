@@ -1,0 +1,310 @@
+// Tokens
+
+actor DGStrHasAutoShotgun : Boolean {}
+actor SamsaraDoomguyStrAutoShotgunPoweredAttackAmount : Counter { Inventory.MaxAmount 4 }
+
+// Weapon
+
+actor "Automatic Shotgun" : Weapon
+{
+	Inventory.PickupMessage "You got the automatic shotgun!"
+	Inventory.RestrictedTo "DoomguyPlayer"
+	Weapon.SlotNumber 3
+	Weapon.SelectionOrder 700
+	Weapon.AmmoType1 "DoomguyStrASGClip"
+	Weapon.AmmoUse1 1
+	Weapon.AmmoType2 "Shell"
+	//Weapon.AmmoGive2 20
+	Obituary "$SAMSARA_DOOMGUYSTR_OB_SLOT3E"
+	Tag "Auto Shotgun"
+	+AMMO_OPTIONAL
+	+NOALERT
+	+UNDROPPABLE
+	States
+	{
+	Spawn:
+		WASG A -1
+		stop
+
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyAllowReload")
+	ReadyDisallowReload:
+		ASGG A 1 A_WeaponReady
+		goto Ready
+
+	ReadyAllowReload:
+		TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",0,"ReadyDisallowReload")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+		goto ReadyDisallowReload
+		ASGG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+		goto Ready
+
+	// Unpowered
+	Deselect:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectPowered")
+	DeselectContinue:
+		TNT1 A 0 A_Lower
+		ASGG A 1 A_Lower
+		goto Deselect
+
+	Select:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectPowered")
+	SelectContinue:
+		TNT1 A 0 A_Raise
+		ASGG A 1 A_Raise
+		goto Select
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+	FireNonReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,"FireStart")
+		goto FireDry
+
+	FireReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+		TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",1,"FireStart")
+	FireReloadableDryCheck:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+		goto FireDry
+
+	FireDry:
+		ASGG A 2 A_PlaySound("doomguy/stronghold/asgout")
+		goto Ready
+
+	FireStart:
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"FirePowered")
+		ASGG A 1 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStartReloadable")
+	FireStartNonReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,"FireAttack")
+		goto FireContinue
+
+	FireStartReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireAttack")
+		TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",1,"FireAttack")
+		goto FireContinue
+
+	FireAttack:
+		TNT1 A 0 A_GunFlash
+	FireContinue:
+		ASGG L 2 Bright A_GiveInventory("SamsaraDoomguyStrAutoShotgunAttackHandler")
+		ASGG M 3 Bright
+		ASGG N 2 Bright
+		ASGG A 7 A_PlaySound("doomguy/stronghold/asgld1")
+	FireFinish:
+		TNT1 A 0 A_ReFire
+		goto Ready
+
+	Flash:
+		TNT1 A 4 Bright A_Light1
+		TNT1 A 3 Bright A_Light2
+		goto LightDone
+
+	Reload:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReloadPowered")
+		ASGG B 3 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReloadPowered")
+		ASGG CDEF 3
+		ASGG G 3 A_PlaySound("doomguy/stronghold/asgout")
+		ASGG HIJ 3
+		ASGG K 15
+		ASGG JIH 3
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+	ReloadFinish:
+		ASGG G 3 A_PlaySound("doomguy/stronghold/asgin")
+		ASGG FEDCB 3
+		ASGG A 8 A_PlaySound("doomguy/stronghold/asgld1")
+		goto Ready
+
+	ReloadAmmo:
+		TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",0,"ReloadFinish")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+		goto ReloadFinish
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_TakeInventory("Shell",1)
+		TNT1 A 0 A_GiveInventory("DoomguyStrASGClip")
+		loop
+
+	// Powered
+	DeselectPowered:
+		TNT1 A 0 A_Lower
+		goto DeselectContinue
+
+	SelectPowered:
+		TNT1 A 0 A_Raise
+		goto SelectContinue
+
+	FirePowered:
+		TNT1 A 0 A_TakeInventory("SamsaraTakingAmmo")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrAutoShotgunPoweredAttackAmount") // reset
+	FirePoweredLoop:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrAutoShotgunPoweredAttackAmount")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrAutoShotgunPoweredAttackAmount",0,1)
+		goto FirePoweredLoopAmmoCheck
+		TNT1 A 0 A_GiveInventory("SamsaraTakingAmmo")
+		goto FirePoweredLoopAmmoCheck
+
+	FirePoweredLoopAmmoCheck:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FirePoweredLoopAmmoCheckReloadable")
+	FirePoweredLoopAmmoCheckNonReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FirePoweredLoopAttack")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,"FirePoweredLoopAttack")
+		goto FirePoweredLoopContinue
+
+	FirePoweredLoopAmmoCheckReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FirePoweredLoopAttack")
+		TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",1,"FirePoweredLoopAttack")
+		goto FirePoweredLoopContinue
+
+	FirePoweredLoopAttack:
+		TNT1 A 0 A_GunFlash("FlashPowered")
+	FirePoweredLoopContinue:
+		ASGG L 1 Bright A_GiveInventory("SamsaraDoomguyStrAutoShotgunPoweredAttackHandler")
+		ASGG MN 1 Bright
+		ASGG A 1 A_PlaySound("doomguy/stronghold/asgld1")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrAutoShotgunPoweredAttackAmount",0,"FireFinish")
+		goto FirePoweredLoop
+
+	FlashPowered:
+		TNT1 A 2 Bright A_Light1
+		TNT1 A 2 Bright A_Light2
+		goto LightDone
+
+	ReloadPowered:
+		ASGG BCDEF 2
+		ASGG G 3 A_PlaySound("doomguy/stronghold/asgout")
+		ASGG HIJ 2
+		ASGG K 10
+		ASGG JIH 2
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+		goto ReloadFinish
+	}
+}
+
+// Unpowered attack handler
+
+actor SamsaraDoomguyStrAutoShotgunAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DoomguyStrASGClip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("doomguy/stronghold/asgfir",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackImproved")
+      // Vanilla
+      PickupAttackVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackVanillaCoop")
+      PickupAttackVanillaDM:
+        TNT1 A 0 A_FireBullets(5,4,7,5,"SamsaraDoomguyStrBulletPuffBallisticThruGhost",FBF_NOFLASH)
+        stop
+
+      PickupAttackVanillaCoop:
+        TNT1 A 0 A_FireBullets(5,4,7,5,"SamsaraDoomguyStrBulletPuffBallisticThruGhostCoop",FBF_NOFLASH)
+        stop
+
+      // Improved
+      PickupAttackImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackImprovedCoop")
+      PickupAttackImprovedDM:
+        TNT1 A 0 A_FireBullets(3.1,2.6,7,5,"SamsaraDoomguyStrBulletPuffBallisticThruGhost",FBF_NOFLASH)
+        stop
+
+      PickupAttackImprovedCoop:
+        TNT1 A 0 A_FireBullets(3.1,2.6,7,5,"SamsaraDoomguyStrBulletPuffBallisticThruGhostCoop",FBF_NOFLASH)
+        stop
+    }
+}
+
+// Powered attack handler
+
+actor SamsaraDoomguyStrAutoShotgunPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraTakingAmmo",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DoomguyStrASGClip",1,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraTakingAmmo",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("DoomguyStrASGClip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("doomguy/stronghold/asgfir",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackDE")
+      PickupAttackStr:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrCoop")
+      PickupAttackStrDM:
+        TNT1 A 0 A_FireBullets(8.6,5.1,7,3,"SamsaraDoomguyStrElectricalPuff",FBF_NOFLASH)
+        stop
+
+      PickupAttackStrCoop:
+        TNT1 A 0 A_FireBullets(8.6,5.1,7,3,"SamsaraDoomguyStrElectricalPuffCoop",FBF_NOFLASH)
+        stop
+
+      PickupAttackDE:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackDECoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackDECoop")
+      PickupAttackDEDM:
+        TNT1 A 0 A_FireBullets(8.6,5.1,7,3,"SamsaraDoomguyStrElectricalPuffSoundDE",FBF_NOFLASH)
+        stop
+
+      PickupAttackDECoop:
+        TNT1 A 0 A_FireBullets(8.6,5.1,7,3,"SamsaraDoomguyStrElectricalPuffCoopSoundDE",FBF_NOFLASH)
+        stop
+    }
+}
+
+// Ammo
+
+actor DoomguyStrASGClip : Ammo
+{
+	Inventory.MaxAmount 20
+	Tag "Auto Shotgun Magazine"
+	+IGNORESKILL
+	+UNTOSSABLE
+}

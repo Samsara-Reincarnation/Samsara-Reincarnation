@@ -50,9 +50,9 @@ ACTOR OfficerCat_Samsara : SamsaraMonsterBeastTotalGib replaces OfficerCat
         OFFI F 16 A_Pain
         Goto See
 	Death:
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-		OFFI F 4
+	Death.Massacre:
+		OFFI F 4 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		OFFI G 4 A_Scream
 		OFFI H 4 A_NoBlocking
         OFFI I 4
@@ -229,6 +229,8 @@ actor OfficerCat_Samsara_Shrink : OfficerCat_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

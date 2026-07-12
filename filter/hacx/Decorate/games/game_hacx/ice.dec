@@ -48,9 +48,9 @@ actor HacxICE_Samsara : SamsaraMonsterCyberneticTotalGib replaces DoomImp
 			TROO H 16 A_Pain
 			Goto See
 		Death:
-			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-			TROO N 10
+		Death.Massacre:
+			TROO N 10 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			TROO O 5 A_XScream
 			TROO P 5
 			TROO Q 5 A_NoBlocking
@@ -228,6 +228,8 @@ actor HacxICE_Samsara_Shrink : HacxICE_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

@@ -1,0 +1,394 @@
+Actor UnrealGore
+{
+	PROJECTILE
+	-NOGRAVITY
+	+NOBLOCKMAP
+	+MOVEWITHSECTOR
+	+NOTELEPORT
+	-SOLID
+	-TELESTOMP
+	+CLIENTSIDEONLY
+	+BOUNCEONWALLS
+	+BOUNCEONACTORS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	BounceCount 2
+	BounceFactor 0.75
+	scale 1.0
+	Gravity 0.5
+	Radius 3
+	Height 4
+	BounceSound "Unreal/GibBounce"
+	DeathSound "Unreal/GibThud"
+	Var Int User_Angle;
+	States
+	{
+	Spawn:
+		UN00 A 0
+		UN00 A 0 A_Jump(128,2)
+		UN00 A 0 A_SetUserVar(User_Angle,Random(6,20))
+		Goto Decide
+		UN00 A 0 A_SetUserVar(User_Angle,Random(-20,-6))
+		Goto Decide
+	Decide:
+		UN00 A 0 A_Jump(64,"Flying")
+		Loop
+	Flying:
+		"----" A 0 A_SpawnItemEx("UnrealBloodTrailGenerator",FRandom(0,8),0,FRandom(-8,8),velx,vely,velz-0.33,Random(1,360),SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEVELOCITY)
+		"----" A 0 A_SetPitch(Pitch+User_Angle)
+		"----" A 5 A_SetAngle(Angle+User_Angle)
+		Loop
+	Death:
+		//Doesn't look like it even does these, really
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		//"----" A 1 A_SpawnItemEx("UnrealBloodSprayGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,0.33,Random(1,360), SXF_TRANSFERTRANSLATION)
+		"----" A 100
+		"----" A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Death")
+		"----" A 35 A_FadeOut(0.5)
+		Wait
+	}
+}
+
+Actor UnrealBloodSprayGenerator
+{
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,-3,0,0,-0.125,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,3,0,0,0.125,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,0,3,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,-3,6,0,-0.125,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,3,6,0,0.125,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,0,9,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,-3,12,0,-0.125,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSpray",0,3,12,0,0.125,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			TNT1 A 1 A_SpawnItemEx("UnrealBloodSpray",0,0,15,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_CLIENTSIDE)
+			Stop
+	}
+}
+
+Actor UnrealBloodTrailGenerator
+{
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("UnrealBloodSpray",random(-4,4),random(-4,4),random(0,12),velx,vely,velz,0,SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEVELOCITY)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor UnrealBloodSpray
+{
+	Height 2
+	Radius 2
+	Scale 0.25
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	States
+	{
+		Spawn:
+			UN25 H 10
+			stop
+	}
+}
+
+/*
+Actor UnrealBloodSpray
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			UN00 AB 4
+			UN00 C 0
+			Stop
+	}
+}
+
+Actor UnrealBloodTrail
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			UN01 ABCDE 1
+			Stop
+	}
+}
+
+Actor UnrealBloodSpurt
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			UN05 ABCDEF 1
+			Stop
+	}
+}
+
+Actor UnrealBloodBurst
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			UN04 AB 4
+			Stop
+	}
+}
+*/
+
+Actor Unreal_GibLiver : UnrealGore {}
+Actor Unreal_GibThigh : UnrealGore {}
+Actor Unreal_GibArm : UnrealGore {}
+Actor Unreal_GibMHead : UnrealGore {}
+Actor Unreal_GibFlesh1 : UnrealGore {}
+Actor Unreal_GibFlesh2 : UnrealGore {}
+Actor Unreal_GibStomach : UnrealGore {}
+Actor Unreal_GibBrutePiece : UnrealGore {}
+Actor Unreal_GibNaliPart : UnrealGore {}
+Actor Unreal_SkullPart : UnrealGore {}
+Actor Unreal_GibF2Head : UnrealGore {}
+Actor Unreal_GibHeart : UnrealGore
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_Jump(128,2)
+			TNT1 A 0 A_SetUserVar(User_Angle,Random(6,20))
+			Goto Decide
+			TNT1 A 0 A_SetUserVar(User_Angle,Random(-20,-6))
+			Goto Decide
+		Decide:
+			TNT1 A 0 A_Jump(64,"Flying")
+			Loop
+		Flying:
+			"----" A 0 A_SpawnItemEx("UnrealBloodTrailGenerator",FRandom(0,8),0,FRandom(-8,8),FRandom(0,0.25),0,-0.33,Random(1,360),SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEVELOCITY)
+			"----" A 0 A_SetPitch(Pitch+User_Angle)
+			"----" A 5 A_SetAngle(Angle+User_Angle)
+			Loop
+		Death:
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			UN00 AAAAAAA 5
+			UN00 ABCDABCD 3
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Death")
+			UN00 A 35 A_FadeOut(0.5)
+			Wait
+	}
+}
+
+Actor UnrealGenericGibSpawnerM
+{
+	Radius 2
+	Height 4
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	+THRUACTORS
+	+NOTELEPORT
+	+ISMONSTER
+	-COUNTKILL
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+			TNT1 A 0 ACS_NamedExecuteAlways("Unreal_GibScale", 0, 0, 0)
+		Play:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibMHead",0,0,43,random(-2,4),random(-2,4),random(2,4),0,SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibThigh",random(-1,1),random(-1,1),random(28,35),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibHeart",random(-1,1),random(-1,1),random(28,35),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh1",random(-1,1),random(-1,1),random(5,22),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh2",random(-1,1),random(-1,1),random(30,38),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibStomach",random(-1,1),random(-1,1),random(25,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibArm",random(-1,1),random(-1,1),random(8,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibLiver",random(-1,1),random(-1,1),random(8,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BloodSpot",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_PlaySound("Unreal/EnemyGibbed",CHAN_BODY)
+			stop
+	}
+}
+
+Actor UnrealGenericGibSpawnerMMassacre : UnrealGenericGibSpawnerM
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteAlways("Unreal_GibScale", 0, 0, 0)
+            goto Play
+	}
+}
+
+Actor UnrealGenericGibSpawnerF
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+NOCLIP
+	-TELESTOMP
+	-SOLID
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+			TNT1 A 0 ACS_NamedExecuteAlways("Unreal_GibScale", 0, 0, 0)
+		Play:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibF2Head",0,0,43,random(-2,4),random(-2,4),random(2,4),0,SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibThigh",random(-1,1),random(-1,1),random(28,35),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibHeart",random(-1,1),random(-1,1),random(28,35),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh1",random(-1,1),random(-1,1),random(5,22),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh2",random(-1,1),random(-1,1),random(30,38),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibStomach",random(-1,1),random(-1,1),random(25,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibArm",random(-1,1),random(-1,1),random(8,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibLiver",random(-1,1),random(-1,1),random(8,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BloodSpot",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_PlaySound("Unreal/EnemyGibbed",CHAN_BODY)
+			stop
+	}
+}
+
+Actor UnrealGenericGibSpawnerFMassacre : UnrealGenericGibSpawnerF
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteAlways("Unreal_GibScale", 0, 0, 0)
+            goto Play
+	}
+}
+
+Actor UnrealGenericCreatureGibSpawner
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+NOCLIP
+	-TELESTOMP
+	-SOLID
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+			TNT1 A 0 ACS_NamedExecuteAlways("Unreal_GibScale", 0, 0, 0)
+		Play:
+			TNT1 A 0
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh1",random(-1,1),random(-1,1),random(28,35),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh2",random(-1,1),random(-1,1),random(5,22),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_GibNaliPart",random(-1,1),random(-1,1),random(5,22),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh2",random(-1,1),random(-1,1),random(30,38),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibBrutePiece",random(-1,1),random(-1,1),random(25,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Unreal_GibFlesh1",random(-1,1),random(-1,1),random(8,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_GibLiver",random(-1,1),random(-1,1),random(8,40),random(-3,3),random(-3,3),random(0,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BloodSpot",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_PlaySound("Unreal/EnemyGibbed",CHAN_BODY)
+			stop
+	}
+}
+
+Actor UnrealGenericCreatureGibSpawnerMassacre : UnrealGenericCreatureGibSpawner
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteAlways("Unreal_GibScale", 0, 0, 0)
+            goto Play
+	}
+}
+
+Actor UnrealGenericHeadshotGibSpawner
+{
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 AAAAA 0 A_SpawnItemEx("Unreal_SkullPart",random(-1,1),random(-1,1),(CallACS("Unreal_GibHeightCheck",0)),random(-3,3),random(-3,3),random(1,7),Random(1,360),SXF_CLIENTSIDE|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodyPuff",radius*cos(CallACS("SamsaraBloodGeneratorReturn",1)),radius*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEPOSITION)
+			TNT1 A 0 A_SpawnItemEx("UnrealBloodSprayGenerator",radius*cos(CallACS("SamsaraBloodGeneratorReturn",1)),radius*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEPOSITION)
+			Stop
+	}
+}
+
+Actor Unreal_HeadshotGibGenerator : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_CheckFlag("NOBLOOD", "PickupStop")
+			TNT1 A 0 A_SpawnItemEx("Server_FlyingBloodSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
+			TNT1 A 0 A_SpawnItemEx("UnrealGenericHeadshotGibSpawner",(radius*cos(CallACS("SamsaraBloodGeneratorReturn",1))),radius*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,-0.33,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
+			Stop
+		PickupStop:
+			TNT1 A 1 A_SpawnItemEx("UnrealSmoke",radius*cos(CallACS("SamsaraBloodGeneratorReturn",1)),radius*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEPOSITION)
+			Stop
+	}
+}
+
+Actor Unreal_BloodSpot
+{
+	Radius 12
+	Height 2
+	Mass 1
+	RenderStyle Translucent
+	Alpha 0.9
+	+NOINTERACTION
+	+FLOORHUGGER
+	-NOGRAVITY
+	+THRUACTORS
+	-SOLID
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_CheckFloor("SpawnEnd")
+			stop
+		SpawnEnd:
+			UN00 A 2100
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "SpawnEnd")
+			UN00 AAAAAAAAAA 1 A_Fadeout(0.1)
+			stop
+	}
+}

@@ -1,0 +1,257 @@
+actor "Dragon Claw" : Weapon
+{
+    +BLOODSPLATTER
+    +PUFFONACTORS
+    //+AMMO_OPTIONAL
+    +INVENTORY.UNDROPPABLE
+    +NOALERT
+    Weapon.SelectionOrder 500
+    Inventory.PickUpSound "heretic/weaponget"
+    Weapon.AmmoUse 1
+    Weapon.AmmoGive 30
+    Weapon.YAdjust 16
+    Weapon.SlotNumber 4
+    Weapon.AmmoType "Clip"
+    DamageType "DragonClaw"
+    Decal RailScorchLower
+    Obituary "$SAMSARA_CORVUS_OB_SLOT4"
+    Inventory.PickupMessage "You got the Dragon Claw!"
+    Inventory.RestrictedTo "CorvusPlayer"
+    Tag "Dragon Claw"
+    States
+    {
+      Spawn:
+        WBLS A -1
+        stop
+
+      Ready:
+		TNT1 A 0 A_TakeInventory("CorvusHoldingSlot")
+		TNT1 A 0 A_GiveInventory("CorvusHoldingSlot",3)
+        BLSR A 1 A_WeaponReady
+        loop
+
+      Deselect:
+		BLSR A 1 A_Lower
+        loop
+
+      Select:
+        BLSR A 1 A_Raise
+        loop
+
+      // Unpowered
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
+        TNT1 A 0 A_AlertMonsters
+        BLSR B 3 ACS_NamedExecuteWithResult("HereticTriggerCloneAttack")
+        BLSR C 3
+        goto HoldStartUnpowered
+
+      Hold:
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      HoldUnpowered:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 ACS_NamedExecuteWithResult("HereticTriggerCloneAttack")
+      HoldStartUnpowered:
+        BLSR D 2 A_GiveInventory("SamsaraHereticBlasterAttackHandler")
+        BLSR CB 2
+        BLSR A 1 A_ReFire
+        goto Ready
+
+      // Powered
+      FirePowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",5,1)
+        goto NoAmmoSwitch
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 ACS_NamedExecuteWithResult("HereticTriggerCloneAttack")
+        BLSR D 3 A_GiveInventory("SamsaraHereticBlasterPoweredAttackHandler")
+        BLSR CB 4
+        TNT1 A 0 A_CheckReload // normal switch if we have exactly 0 bullets. otherwise, do the alternate switch check
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",5,1)
+        goto NoAmmoSwitch
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      // "No ammo" switch
+      NoAmmoSwitch:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Elven Wand")
+        goto Deselect
+    }
+}
+
+// Unpowered
+
+actor SamsaraHereticBlasterAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("heretic/dragonclaw",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingVerticalSpread",1,2)
+        TNT1 A 0 A_FireBullets(3.6,0,1,random(17,30),"BlasterPuff2",FBF_NORANDOM|FBF_NOFLASH) // old spread: 5.6
+        stop
+        TNT1 A 0 A_FireBullets(3.6,3.5,1,random(17,30),"BlasterPuff2",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingVerticalSpread",1,2)
+        TNT1 A 0 A_FireBullets(5.6,0,1,random(1,8)*4,"BlasterPuff2Coop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+        TNT1 A 0 A_FireBullets(5.6,3.5,1,random(1,8)*4,"BlasterPuff2Coop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingVerticalSpread",1,2)
+        TNT1 A 0 A_FireBullets(5.6,0,1,random(1,12)*4,"BlasterPuff2Coop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+        TNT1 A 0 A_FireBullets(5.6,3.5,1,random(1,12)*4,"BlasterPuff2Coop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+    }
+}
+
+actor BlasterPuff2 : BlasterPuff
+{
+    DamageType "DragonClaw"
+    SeeSound "heretic/dragonclawhit"
+    +CLIENTSIDEONLY
+    States
+    {
+      Spawn:
+        FX17 F 3 Bright Light("CLAWPUFF1")
+        FX17 G 3 Bright Light("CLAWPUFF2")
+        FX17 H 4 Bright Light("CLAWPUFF3")
+        FX17 I 4 Bright Light("CLAWPUFF4")
+        FX17 JKL 4 Bright
+        stop
+
+      Crash:
+        FX17 A 4 Bright Light("CLAWPUFF1")
+        FX17 B 4 Bright Light("CLAWPUFF2")
+        FX17 C 4 Bright Light("CLAWPUFF3")
+        FX17 D 4 Bright Light("CLAWPUFF4")
+        FX17 E 4 Bright
+        stop
+    }
+}
+
+actor BlasterPuff2Coop : BlasterPuff2 { +MTHRUSPECIES }
+
+// Powered
+
+actor SamsaraHereticBlasterPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",5)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("heretic/dragonclaw",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("BlasterFX1B",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("BlasterFX1C",0,false)
+        stop
+    }
+}
+
+actor BlasterFX1B : BlasterFX1
+{
+    Speed 320
+    SeeSound "" //"heretic/dragonclaw"
+    DeathSound "heretic/dragonclawhit"
+    Decal HImpScorch
+    Obituary "$SAMSARA_CORVUS_OB_SLOT4"
+    -SPAWNSOUNDSOURCE // this flag is currently bugged in netplay
+    +NOTIMEFREEZE
+    +BLOODSPLATTER
+    States
+    {
+      Spawn:
+        TNT1 A -1
+        stop
+
+      Death:
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2",0,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+      DeathFinish:
+        FX18 A 3 Bright A_ChangeFlag("NOTIMEFREEZE",false)
+        FX18 B 3 Bright
+        FX18 C 4 Bright Light("BIGCLAWPUFF1")
+        FX18 D 4 Bright Light("BIGCLAWPUFF2")
+        FX18 E 4 Bright Light("BIGCLAWPUFF3")
+        FX18 F 4 Bright Light("BIGCLAWPUFF4")
+        FX18 G 4 Bright Light("BIGCLAWPUFF5")
+        stop
+    }
+}
+
+actor BlasterFX1C : BlasterFX1B
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Ripper2Coop",0,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraBlasterSmoke : BlasterSmoke replaces BlasterSmoke { +CLIENTSIDEONLY }
+
+actor Ripper2 : Ripper
+{
+    DeathSound "heretic/dragonclawpowhit"
+    Decal HImpScorch
+    Obituary "$SAMSARA_CORVUS_OB_SLOT4"
+    +BLOODSPLATTER
+    +NOBOSSRIP
+}
+
+actor Ripper2Coop : Ripper2
+{
+    Species "Player"
+    +THRUSPECIES
+}

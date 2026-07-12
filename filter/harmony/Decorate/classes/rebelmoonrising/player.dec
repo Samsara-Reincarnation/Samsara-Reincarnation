@@ -41,6 +41,7 @@ Actor RebelMoonCommando : SamsaraPlayerPawnTotalGibRedBlood
     DamageFactor "MarathonPlasmaFire", 0.843
     DamageFactor "Slime", 0.807
     DamageFactor "Disintegrate", 0.900
+    DamageFactor "StrifeMauler", 0.900
     DamageFactor "Poison", 0.924
     DamageFactor "WolfenFlamethrower", 0.800
     DamageFactor "DukeDamage", 1.15
@@ -160,6 +161,7 @@ Actor RebelMoonCommando : SamsaraPlayerPawnTotalGibRedBlood
             Goto Spawn
         Death:
             TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+        Death.Massacre:
             RMZ7 H 4 A_PlayerScream
             RMZ7 I 4 A_NoBlocking
             RMZ7 J 4
@@ -250,6 +252,7 @@ Actor RebelMoonCommando_Shrink : RebelMoonCommando
         Death.DukePistol:
         Death.MightyBoot:
         Death.DukeExplosive:
+        Death.HexenMedusa:
         Death.DukeIce:
         Ice:
         Death.HexenIce:
@@ -258,12 +261,18 @@ Actor RebelMoonCommando_Shrink : RebelMoonCommando
         XDeath.ExpanderDMG:
         Death.ExpanderDMGCoop:
         XDeath.ExpanderDMGCoop:
+        Death.QuakeDamage:
+        Death.QuakePistol:
         Death.QuakeElectric:
         Death.NotQuadded:
         Death.QuakeExplosive:
+        Death.QuakeLaser:
+        XDeath.QuakeDamage:
+        XDeath.QuakePistol:
         XDeath.QuakeElectric:
         XDeath.NotQuadded:
         XDeath.QuakeExplosive:
+        XDeath.QuakeLaser:
         Death.RottExplosive:
         Death.RottFire:
         Death.RottDisintegrate:
@@ -278,6 +287,7 @@ Actor RebelMoonCommando_Shrink : RebelMoonCommando
         Death.Tesla:
         Death.CalebBullet:
         Disintegrate:
+        Death.StrifeMauler:
         Death.EradExplosive:
         Death.EradNova:
         Death.EradShock:
@@ -365,6 +375,8 @@ Actor RebelMoonCommando_Shrink : RebelMoonCommando
         DeusXDeath:
         Death:
         XDeath:
+        Death.Massacre:
+        XDeath.Massacre:
         Death.Squish:
         XDeath.Squish:
             TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
@@ -486,6 +498,7 @@ actor RMRLDFGuard : SamsaraMiscCharHumanoidStatic
         Goto See
     Death:
         TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+    Death.Massacre:
         TNT1 A 0 A_SetScale(1.0,1.0)
         RM77 G 5
         RM77 H 5 A_Scream
@@ -645,6 +658,8 @@ actor RMRLDFGuard_Shrink : RMRLDFGuard
             loop
         Death:
         XDeath:
+        Death.Massacre:
+        XDeath.Massacre:
         Death.Squish:
         XDeath.Squish:
             TNT1 A 0 A_Jump(64,2)
@@ -759,6 +774,7 @@ actor RMRLDFMilitia : SamsaraMiscCharHumanoidStatic
         Goto See
     Death:
         TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+    Death.Massacre:
         TNT1 A 0 A_SetScale(1.0,1.0)
         RM78 G 5
         RM78 H 5 A_Scream
@@ -919,6 +935,8 @@ actor RMRLDFMilitia_Shrink : RMRLDFMilitia
             loop
         Death:
         XDeath:
+        Death.Massacre:
+        XDeath.Massacre:
         Death.Squish:
         XDeath.Squish:
             TNT1 A 0 A_Jump(64,2)

@@ -80,15 +80,16 @@ function int _giveclassweapon(int class, int slot, int ammoMode, int dropped, in
 	return !!success;
 }
 
-function bool HasClassWeapon(int class, int slot, int ignorechecks)
+function bool HasClassWeapon(int class, int slot, int ignorechecks, int checkdisplaytoken)
 {
     if (class == -1) { return false; }
 
     int weapon = ClassWeapons[class][slot][S_WEP];
     int checkitem = ClassWeapons[class][slot][S_CHECKITEM];
     int failitem = ClassWeapons[class][slot][S_CHECKFAILITEM];
+    int displayitem = ClassWeapons[class][slot][S_CHECKDISPLAYITEM];
 
-    int hasWep, hasItem, hasFail;
+    int hasWep, hasItem, hasFail, hasDisplay;
 
     if (!StrLen(weapon))
     {
@@ -101,11 +102,19 @@ function bool HasClassWeapon(int class, int slot, int ignorechecks)
         else { return false; }
     }
 
-    hasWep  = CheckInventory(weapon);
-    hasItem = StrLen(checkitem) && CheckInventory(checkitem);
-    hasFail = StrLen(failitem) && CheckInventory(failitem);
+    hasWep     = CheckInventory(weapon);
+    hasItem    = StrLen(checkitem) && CheckInventory(checkitem);
+    hasFail    = StrLen(failitem) && CheckInventory(failitem);
+    hasDisplay = StrLen(displayitem) && CheckInventory(displayitem);
 
-    if (ignorechecks) { return hasWep; }
+    if (ignorechecks)
+    {
+        if (checkdisplaytoken) { return hasWep || hasDisplay; }
+
+        return hasWep;
+    }
+
+    if (checkdisplaytoken) { return hasWep || hasItem || hasFail || hasDisplay; }
 
     return hasWep || hasItem || hasFail;
 }
@@ -234,6 +243,11 @@ function void ApplyLMS(void)
                     SetInventory("Goldeneye_Klobb", 0);
                     SetInventory("Goldeneye_PP7SpecialIssue", 0);
                     SetInventory("Goldeneye_DD44", 0);
+                    SetInventory("Goldfinger_PPKSilenced", 0);
+                    SetInventory("Goldfinger_PPK", 0);
+                    SetInventory("Goldfinger_ColtM1911", 0);
+                    SetInventory("Goldfinger_LugerP08", 0);
+                    SetInventory("Goldfinger_WaltherP38", 0);
                     break;
                 }
             }
@@ -534,7 +548,7 @@ function int ConvertClassWeapons(int classnum)
 
 		for (j = 0; j < SLOTCOUNT; j++)
 		{
-			if (HasClassWeapon(i, j, 1))
+			if (HasClassWeapon(i, j, 1, 0))
 			{
 				TakeInventory(ClassWeapons[i][j][S_WEP], INTMAX);
 				if (classnum != -1) { GiveClassWeapon(classnum, j, 1, 0); }
@@ -935,7 +949,6 @@ function void HandleAmmoCapacities (int pickedup)
 
     // Duke 3D Ammo
     SetAmmoCapacity("ShrinkerAmmo", noAmmoCap ? INTMAXSAFE : (maxCell * hasBackPack) / 10);
-    SetAmmoCapacity("ExpanderAmmo", noAmmoCap ? INTMAXSAFE : (maxCell * hasBackPack) / 3);
 
     // Duke 64 Ammo
     SetAmmoCapacity("Duke64DumDums", noAmmoCap ? INTMAXSAFE : ((maxClip * hasBackPack) / 100) * 12);
@@ -952,11 +965,11 @@ function void HandleAmmoCapacities (int pickedup)
     SetAmmoCapacity("PlasmaCell", noAmmoCap ? INTMAXSAFE : (maxCell * hasBackPack) / 20);
 
     // RoTT Ammo
-    SetAmmoCapacity("RottMissiles", noAmmoCap ? INTMAXSAFE : ((maxClip * hasBackPack) + increasingClip) / 2);
+    SetAmmoCapacity("RottMissiles", noAmmoCap ? INTMAXSAFE : ((maxClip * hasBackPack) + increasingClip) / 4);
     SetAmmoCapacity("HSMissiles", noAmmoCap ? INTMAXSAFE : ((maxShell * hasBackPack) + increasingShell) / 2);
     SetAmmoCapacity("FBMissiles", noAmmoCap ? INTMAXSAFE : ((maxRocket * hasBackPack) + increasingRockets) / 2);
-    SetAmmoCapacity("DMissiles", noAmmoCap ? INTMAXSAFE : ((maxCell * hasBackPack) + increasingCell) / 5);
-    SetAmmoCapacity("SMissiles", noAmmoCap ? INTMAXSAFE : ((maxCell * hasBackPack) + increasingCell) / 3);
+    SetAmmoCapacity("DMissiles", noAmmoCap ? INTMAXSAFE : ((maxCell * hasBackPack) + increasingCell) / 6);
+    SetAmmoCapacity("SMissiles", noAmmoCap ? INTMAXSAFE : ((maxCell * hasBackPack) + increasingCell) / 12);
     SetAmmoCapacity("DMMissiles", noAmmoCap ? INTMAXSAFE : ((maxRocket * hasBackPack) + increasingRockets) / 2);
     SetAmmoCapacity("FWMissiles", noAmmoCap ? INTMAXSAFE : ((maxCell * hasBackPack) + increasingCell) / 30);
     SetAmmoCapacity("BMissiles", noAmmoCap ? INTMAXSAFE : (maxCell + increasingCell) / 30);
@@ -987,7 +1000,7 @@ function void HandleAmmoCapacities (int pickedup)
 
     // GE Ammo
     SetAmmoCapacity("Goldeneye_ThrowingKnivesAmmo", noAmmoCap ? INTMAXSAFE : (maxShell * hasBackPack) / 8);
-    SetAmmoCapacity("Goldeneye_GoldenGunRounds", noAmmoCap ? INTMAXSAFE : (maxCell * hasBackPack) / 12);
+    SetAmmoCapacity("Goldeneye_GoldenGunRounds", noAmmoCap ? INTMAXSAFE : (maxCell * hasBackPack) / 30);
 
     // PK Ammo
     ammocalc = ((maxClip * hasBackPack) * 3) / 4;
@@ -1086,25 +1099,22 @@ function int ExecuteClassScripts (int player, int client)
 
         switch (pClass)
         {
-            case CLASS_HERETIC:      ACS_NamedExecuteWithResult("TomeOfPowerStartCheck");  break;
-            case CLASS_ROTT:         ACS_NamedExecuteWithResult("RoTT453");                break;
-            case CLASS_C7:           ACS_NamedExecuteWithResult("Corridor7Loop");          break;
-            case CLASS_ERAD:         ACS_NamedExecuteWithResult("EradicatorPipCameraHud"); break;
-            case CLASS_WITCHAVEN:    ACS_NamedExecuteWithResult("GrondovalLoop");          break;
-            case CLASS_HALFLIFE:     ACS_NamedExecuteWithResult("Freeman_Loop");           break;
-            case CLASS_SW:           ACS_NamedExecuteWithResult("LoWangLoop");             break;
-            case CLASS_RR:           ACS_NamedExecuteWithResult("LeonardLoop");            break;
-            case CLASS_BITTERMAN:    ACS_NamedExecuteWithResult("Q2Scripts");              break;
-            case CLASS_DEMONESS:     ACS_NamedExecuteWithResult("Hexen2_Hud");             break;
-            case CLASS_BOND:         ACS_NamedExecuteWithResult("BondAim");                break;
-            case CLASS_PAINKILLER:   ACS_NamedExecuteWithResult("Painkiller_Loop");        break;
-            case CLASS_UNREAL:       ACS_NamedExecuteWithResult("Unreal_Loop");            break;
-            case CLASS_RTCW:         ACS_NamedExecuteWithResult("RTCW_Enter");             break;
-            case CLASS_QUAKE3:       ACS_NamedExecuteWithResult("Q3Loop");                 break;
-            case CLASS_DESCENT:      ACS_NamedExecuteWithResult("DescentEnter");           break;
-            case CLASS_DEUSEX:       ACS_NamedExecuteWithResult("DeusEx_Enter");           break;
-			case CLASS_KINGPIN:      ACS_NamedExecuteWithResult("Kingpin_Player");         break;
-			case CLASS_SOF:       	 ACS_NamedExecuteWithResult("SoF_Player");             break;
+            case CLASS_HERETIC:      ACS_NamedExecuteWithResult("HereticStartInventoryLoop"); break;
+            case CLASS_C7:           ACS_NamedExecuteWithResult("Corridor7Loop");             break;
+            case CLASS_ERAD:         ACS_NamedExecuteWithResult("EradicatorPipCameraHud");    break;
+            case CLASS_WITCHAVEN:    ACS_NamedExecuteWithResult("GrondovalLoop");             break;
+            case CLASS_HALFLIFE:     ACS_NamedExecuteWithResult("Freeman_Loop");              break;
+            case CLASS_SW:           ACS_NamedExecuteWithResult("LoWangLoop");                break;
+            case CLASS_RR:           ACS_NamedExecuteWithResult("LeonardLoop");               break;
+            case CLASS_BITTERMAN:    ACS_NamedExecuteWithResult("Q2Scripts");                 break;
+            case CLASS_DEMONESS:     ACS_NamedExecuteWithResult("Hexen2_Hud");                break;
+            case CLASS_BOND:         ACS_NamedExecuteWithResult("BondAim");                   break;
+            case CLASS_PAINKILLER:   ACS_NamedExecuteWithResult("Painkiller_Loop");           break;
+            case CLASS_UNREAL:       ACS_NamedExecuteWithResult("Unreal_Loop");               break;
+            case CLASS_RTCW:         ACS_NamedExecuteWithResult("RTCW_Enter");                break;
+            case CLASS_QUAKE3:       ACS_NamedExecuteWithResult("Q3Loop");                    break;
+            case CLASS_DESCENT:      ACS_NamedExecuteWithResult("DescentEnter");              break;
+            case CLASS_DEUSEX:       ACS_NamedExecuteWithResult("DeusEx_Enter");              break;
         }
     }
 

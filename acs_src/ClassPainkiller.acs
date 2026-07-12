@@ -1215,6 +1215,18 @@ Script "Painkiller_ElectroDiscEffects" (void)
 	StopSound(0,CHAN_ITEM);
 }
 
+
+script "Painkiller_HasTarget" (void)
+{
+    SetActivator(0, AAPTR_TRACER);
+    SetActivator(0, AAPTR_TARGET);
+
+    bool isally = CheckInventory("SamsaraOST_IgnoreTarget");
+
+    if ((ClassifyActor(0) & ACTOR_ALIVE) && !isally && SetActivator(0, AAPTR_TARGET)) { SetResultValue(1); }
+    else { SetResultValue(0); }
+}
+
 Script "Painkiller_TracerDead" (void)
 {
 	if(SetActivator(0,AAPTR_TRACER))
@@ -1264,7 +1276,7 @@ Script "Painkiller_SpawnGrenadeHitBox" (int type)
 
 Script "Painkiller_DemonModeActive" (void)
 {
-	While(CheckWeapon("Painkiller_DemonMorph"))
+	While(CheckWeapon("Painkiller_DemonMorph") && !isDead(0))
 	{
 		SetHudSize(768,1024,0);
 		SetFont("PKDEMONC");
@@ -1342,6 +1354,49 @@ Script "Painkiller_MonsterKill2" (int corpseActor)
 	if(!GetCvar("samsara_nopainkillercorpseremoval")) { Thing_Remove(0); }
 }
 
+Script "Painkiller_MonsterKill3" (int corpseActor)
+{
+	//For monsters that burst, we will get the coordinates so we know where to put it
+	int monsterX = GetActorX(0);
+	int monsterY = GetActorY(0);
+	int monsterZ = GetActorZ(0);
+	int monsterHealth = GetActorProperty(0,APROP_SpawnHealth);
+	int coinDummyTid = UniqueTid();
+
+	if(CheckInventory("Painkiller_DeathQueue"))
+		terminate;
+	else
+		GiveInventory("Painkiller_DeathQueue",1);
+
+	SpawnForced("Painkiller_CoinTosser",monsterX,monsterY,monsterZ+((ACS_NamedExecuteWithResult("Painkiller_GibHeightCheck")<<16)/2),coinDummyTid);
+	ACS_NamedExecuteWithResult("Painkiller_DropCoins",GetActorProperty(0,APROP_Radius)>>16,ACS_NamedExecuteWithResult("Painkiller_GibHeightCheck"),monsterHealth,coinDummyTid);
+	Delay(104);
+	if(!GetCvar("samsara_nopainkillercorpseremoval")) { GiveInventory("Painkiller_CorpseRemover",1); }
+	Delay(1);
+	if(corpseActor == 0)
+	{
+		if(!(ClassifyActor(0) & ACTOR_MONSTER))
+		{
+			if(monsterHealth >= 300)
+				SpawnForced("Painkiller_RedSoul",monsterX,monsterY,monsterZ,0);
+			else
+				SpawnForced("Painkiller_GreenSoul",monsterX,monsterY,monsterZ,0);
+
+			if(!GetCvar("samsara_nopainkillercorpseremoval")) { SpawnForced("Painkiller_CorpseBurstGibbed",monsterX,monsterY,monsterZ,0); }
+		}
+		else
+		{
+			if(monsterHealth >= 300)
+				SpawnSpotFacingForced("Painkiller_RedSoul",0,0);
+			else
+				SpawnSpotFacingForced("Painkiller_GreenSoul",0,0);
+
+			if(!GetCvar("samsara_nopainkillercorpseremoval")) { GiveInventory("Painkiller_CorpseBurst2",1); }
+		}
+	}
+	else if(!GetCvar("samsara_nopainkillercorpseremoval")) { Thing_Remove(0); }
+}
+
 Script "Painkiller_StartDemonMorph" (int duration)
 {
 	int morphtime = 0;
@@ -1357,7 +1412,7 @@ Script "Painkiller_StartDemonMorph" (int duration)
 
 	until (morphtime >= duration)
 	{
-		if (!CheckInventory("Painkiller_DemonMorph")) { break; }
+		if (!CheckInventory("Painkiller_DemonMorph") || isDead(0)) { break; }
 
 		if (!CheckWeapon("Painkiller_DemonMorph")) { SetWeapon("Painkiller_DemonMorph"); }
 		morphtime++;
@@ -1366,7 +1421,7 @@ Script "Painkiller_StartDemonMorph" (int duration)
 
 	TakeInventory("PainkillerDemonMorphActive", 1);
 
-	while (CheckWeapon("Painkiller_DemonMorph")) { Delay(1); }
+	while (CheckWeapon("Painkiller_DemonMorph") && !isDead(0)) { Delay(1); }
 
 	HudMessage(s:""; HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 32600, 0, 0.0, 0.0, 0.5, 0.1);
 }
@@ -2290,7 +2345,7 @@ Script "Painkiller_BlackTarot_CardLoop" (int type, int extra)
 
 			while (CheckInventory("Painkiller_GoldActive"))
 			{
-				if (!CheckInventory("Painkiller_DemonMorph")) { break; }
+				if (!CheckInventory("Painkiller_DemonMorph") || isDead(0)) { break; }
 
 				if (!CheckWeapon("Painkiller_DemonMorph")) { SetWeapon("Painkiller_DemonMorph"); }
 				Delay(1);
@@ -2298,7 +2353,7 @@ Script "Painkiller_BlackTarot_CardLoop" (int type, int extra)
 
 			TakeInventory("PainkillerDemonMorphActive", 1);
 
-			while (CheckWeapon("Painkiller_DemonMorph")) { Delay(1); }
+			while (CheckWeapon("Painkiller_DemonMorph") && !isDead(0)) { Delay(1); }
 
 			HudMessage(s:""; HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 32600, 0, 0.0, 0.0, 0.5, 0.1);
 			break;

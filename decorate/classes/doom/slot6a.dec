@@ -1,0 +1,976 @@
+// Tokens
+
+actor DGHasPlasmaRifle : Boolean {}
+actor SamsaraDoomOriginalLoadoutSlot6 : Boolean {}
+
+// Plasma Rifle
+
+actor SamsaraDoom64PlasmaRifleSoundActive : Boolean {}
+actor SamsaraDoomguyStrPlasmaRifleReadySoundCheck : Boolean {}
+
+actor "Plasma Rifle" : PlasmaRifle
+{
+	Weapon.SlotNumber 6
+	Weapon.AmmoGive 0
+	+INVENTORY.UNDROPPABLE
+	+ALT_USES_BOTH
+	Tag "Plasma Rifle"
+	Inventory.RestrictedTo "DoomguyPlayer"
+	States
+	{
+	Spawn:
+		WPLS A -1
+		stop
+
+	// Original
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"ReadyStopSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"ReadyStopSound")
+	ReadyContinue:
+		DPLS A 1 A_WeaponReady
+		goto Ready
+
+	ReadyStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		goto ReadyContinue
+
+	Deselect:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"DeselectStopSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"DeselectStopSound")
+	DeselectStart:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStartStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"DeselectStart64")
+		DPLS A 1 A_Lower
+		goto Deselect
+
+	DeselectStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		goto DeselectStart
+
+	Select:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"SelectStopSound")
+	SelectContinue:
+		DPLS A 1 A_Raise
+		goto Select
+
+	SelectStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		goto SelectContinue
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"FireStopSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"FireStopSound")
+	FireStart:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FireSmooth")
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 3 Bright A_GiveInventory("SamsaraDoomguyPlasmaRifleAttackHandler")
+		DPLS B 20 A_ReFire
+		goto Ready
+
+	Flash:
+		TNT1 A 0 A_Jump(256,1,2)
+		DPLF A 3 Bright A_Light1
+		goto LightDone
+		DPLF B 3 Bright A_Light1
+		goto LightDone
+
+	FireSmooth:
+		TNT1 A 0 A_GunFlash("FlashSmooth",GFF_NOEXTCHANGE)
+		KPLS A 3 Bright A_GiveInventory("SamsaraDoomguyPlasmaRifleAttackHandler")
+		KPLS A 1 A_ReFire
+		KPLS B 1 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireSmoothRage")
+		KPLS BCD 1
+		KPLS E 6
+		KPLS EDCB 2
+		KPLS A 1
+		goto Ready
+
+	FireSmoothRage:
+		KPLS BCD 1
+		KPLS E 4
+		KPLS DCB 1
+		KPLS A 1
+		goto Ready
+
+	FireStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		goto FireStart
+
+	FlashSmooth:
+		TNT1 A 0 A_Light1
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FlashSmoothRage")
+		SPLF ABCD 1 Bright
+		goto LightDone
+
+	FlashSmoothRage:
+		SPLF AD 1 Bright
+		goto LightDone
+
+	// Doom 64 (fires slower, but is more damaging)
+	Ready64:
+		TNT1 A 0 A_PlaySound("doom64guy/plasmaidle",CHAN_6,1,true)
+		TNT1 A 0 A_GiveInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		64PR BCD 2 A_WeaponReady
+		goto Ready
+
+	DeselectStart64:
+		64PR A 1 A_Lower
+		goto Deselect
+
+	Select64:
+		TNT1 A 0 A_PlaySound("doom64guy/plasmaidle",CHAN_6,1,true)
+		TNT1 A 0 A_GiveInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		64PR A 1 A_Raise
+		goto Select
+
+	Fire64:
+		TNT1 A 0 A_PlaySound("doom64guy/plasmaidle",CHAN_6,1,true)
+		TNT1 A 0 A_GiveInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"Fire64ImprovedBalance")
+	Fire64VanillaBalance:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"Fire64VanillaBalanceSmooth")
+	Fire64VanillaBalanceVanilla:
+		TNT1 A 0 A_GunFlash("Flash64",GFF_NOEXTCHANGE)
+		64PR A 5 A_GiveInventory("SamsaraDoomguy64PlasmaRifleAttackHandler")
+	Fire64Finish:
+		TNT1 A 0 A_ReFire
+		goto Ready
+
+	Fire64ImprovedBalance:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"Fire64ImprovedBalanceSmooth")
+	Fire64ImprovedBalanceVanilla:
+		TNT1 A 0 A_GunFlash("Flash64Improved",GFF_NOEXTCHANGE)
+		64PR A 4 A_GiveInventory("SamsaraDoomguy64PlasmaRifleAttackHandler")
+		64PR A 20 A_ReFire
+		goto Ready
+
+	Flash64:
+		64RF A 4 Bright A_Light1
+		goto LightDone
+
+	Flash64Improved:
+		TNT1 A 0 A_Light1
+		64RF A 3 Bright A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"Flash64ImprovedRage")
+		goto LightDone
+
+	Flash64ImprovedRage:
+		64RF A 2 Bright
+		goto LightDone
+
+	Fire64VanillaBalanceSmooth:
+		TNT1 A 0 A_GunFlash("Flash64Smooth",GFF_NOEXTCHANGE)
+		64PR I 2 Bright A_GiveInventory("SamsaraDoomguy64PlasmaRifleAttackHandler")
+		64PR J 2 Bright
+		64PR K 1 Bright
+		goto Fire64Finish
+
+	Fire64ImprovedBalanceSmooth:
+		64PR A 0 A_GunFlash("Flash64ImprovedSmooth",GFF_NOEXTCHANGE)
+		64PR I 2  Bright A_GiveInventory("SamsaraDoomguy64PlasmaRifleAttackHandler")
+		64PR J 1 Bright
+		64PR K 1 Bright
+		64PR E 3 A_ReFire
+		64PR FGHGF 3
+		goto Ready
+
+	Flash64Smooth:
+		TNT1 A 4 Bright A_Light1
+		goto LightDone
+
+	Flash64ImprovedSmooth:
+		TNT1 A 0 A_Light1
+		TNT1 A 3 Bright A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"Flash64ImprovedSmoothRage")
+		goto LightDone
+
+	Flash64ImprovedSmoothRage:
+		TNT1 A 2 Bright
+		goto LightDone
+
+	// Stronghold
+	// Unpowered
+	ReadyStr: // This is messy, but it must be done.
+		TNT1 A 0 A_PlaySound("doomguy/stronghold/plasmariflehum",CHAN_6,1,true)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+	ReadyStr1:
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr1Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr1Powered")
+		DPLS I 1 Bright A_WeaponReady
+	ReadyStr2:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"ReadyStr3")
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr2Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr2Powered")
+		DPLS I 1 Bright A_WeaponReady
+	ReadyStr3:
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr3Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr3Powered")
+		DPLS I 1 Bright A_WeaponReady
+	ReadyStr4:
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr4Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr4Powered")
+		DPLS J 1 Bright A_WeaponReady
+	ReadyStr5:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"ReadyStr6")
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr5Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr5Powered")
+		DPLS J 1 Bright A_WeaponReady
+	ReadyStr6:
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr6Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr6Powered")
+		DPLS J 1 Bright A_WeaponReady
+	ReadyStr7:
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr7Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr7Powered")
+		DPLS K 1 Bright A_WeaponReady
+	ReadyStr8:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"ReadyStr9")
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr8Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr8Powered")
+		DPLS K 1 Bright A_WeaponReady
+	ReadyStr9:
+		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr9Powered")
+		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr9Powered")
+		DPLS K 1 Bright A_WeaponReady
+		goto Ready
+
+	DeselectStartStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStartStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStartStrPowered")
+	DeselectStartStrContinue:
+		TNT1 A 0 A_Lower
+		DPLS M 1 A_Lower
+		goto Deselect
+
+	SelectStr:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"SelectStrStopSound")
+	SelectStartStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectStartStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectStartStrPowered")
+	SelectStartStrContinue:
+		TNT1 A 0 A_Raise
+		DPLS M 1 A_Raise
+		goto Select
+
+	SelectStrStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		goto SelectStartStr
+
+	FireStr:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"FireStrStopSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"FireStrStopSound")
+	FireStrStart:
+		TNT1 A 0 A_GunFlash("FlashStr",GFF_NOEXTCHANGE)
+		DPLS N 1 Bright A_GiveInventory("SamsaraDoomguyStrPlasmaRifleAttackHandler")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,2)
+		DPLS OP 1 Bright
+		DPLS L 20 Bright A_ReFire
+		goto Ready
+
+	FireStrStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		goto FireStrStart
+
+	FlashStr:
+		TNT1 A 1 A_Light1
+		TNT1 A 1 A_Light2
+		TNT1 A 1 A_Light1
+		goto LightDone
+
+	// Powered
+/*
+	ReadyStr1Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS I 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr2
+		DPLS I 1 Bright A_WeaponReady
+		goto ReadyStr2
+
+	ReadyStr2Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS I 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr3
+		DPLS I 1 Bright A_WeaponReady
+		goto ReadyStr3
+
+	ReadyStr3Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS I 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr4
+		DPLS I 1 Bright A_WeaponReady
+		goto ReadyStr4
+
+	ReadyStr4Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS J 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr5
+		DPLS J 1 Bright A_WeaponReady
+		goto ReadyStr5
+
+	ReadyStr5Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS J 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr6
+		DPLS J 1 Bright A_WeaponReady
+		goto ReadyStr6
+
+	ReadyStr6Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS J 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr7
+		DPLS J 1 Bright A_WeaponReady
+		goto ReadyStr7
+
+	ReadyStr7Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS K 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr8
+		DPLS K 1 Bright A_WeaponReady
+		goto ReadyStr8
+
+	ReadyStr8Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS K 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto ReadyStr9
+		DPLS K 1 Bright A_WeaponReady
+		goto ReadyStr9
+
+	ReadyStr9Powered:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		DPLS K 1 Bright A_WeaponReady(WRF_NOSECONDARY)
+		goto Ready
+		DPLS K 1 Bright A_WeaponReady
+		goto Ready
+*/
+
+	DeselectStartStrPowered:
+		TNT1 A 0 A_Lower
+		goto DeselectStartStrContinue
+
+	SelectStartStrPowered:
+		TNT1 A 0 A_Raise
+		goto SelectStartStrContinue
+
+/*
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"AltFireStopSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"AltFireStopSound")
+	AltFireStart:
+		TNT1 A 0 A_GunFlash("FlashStr",GFF_NOEXTCHANGE)
+		DPLS N 1 Bright A_GiveInventory("SamsaraDoomguyStrPlasmaRiflePoweredSecondaryAttackHandler")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,2)
+		DPLS OP 1 Bright
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"AltFireFinishReFire")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"AltFireFinishReFire")
+		TNT1 A 0 A_CheckReload
+	AltFireFinish:
+		DPLS L 20 Bright
+		goto Ready
+
+	AltFireFinishReFire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
+		TNT1 A 0 A_CheckReload
+		goto AltFireFinish
+		TNT1 A 0 A_ReFire
+		goto AltFireFinish
+
+	AltFireStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		goto AltFireStart
+*/
+	}
+}
+
+actor SamsaraDoomguyPlasmaRifleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackDMSoundPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackDMSoundPSX")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("DoomPlasmaBall",0,false)
+        stop
+
+      PickupAttackDMSoundPSX:
+        TNT1 A 0 A_FireCustomMissile("DoomPlasmaBallSoundPSX",0,false)
+        stop
+
+      PickupAttackDMSoundPerkristan:
+        TNT1 A 0 A_FireCustomMissile("DoomPlasmaBallSoundPerkristan",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackCoopSoundPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackCoopSoundPSX")
+        TNT1 A 0 A_FireCustomMissile("DoomPlasmaBall2",0,false)
+        stop
+
+      PickupAttackCoopSoundPSX:
+        TNT1 A 0 A_FireCustomMissile("DoomPlasmaBall2SoundPSX",0,false)
+        stop
+
+      PickupAttackCoopSoundPerkristan:
+        TNT1 A 0 A_FireCustomMissile("DoomPlasmaBall2SoundPerkristan",0,false)
+        stop
+    }
+}
+
+actor DoomPlasmaBall : PlasmaBall
+{
+	Decal DoomPlasmaScorch
+	SeeSound "doomguy/plasmaf"
+	DeathSound "doomguy/plasmax"
+	Obituary "$SAMSARA_DOOMGUY_OB_SLOT6"
+	DamageType "DoomDamageTypePlasma"
+	-BLOODSPLATTER
+	States
+	{
+	Spawn:
+		DPLM AB 6 Bright Light("DOOMPLASMABALL")
+		loop
+
+	Death:
+		DPLE A 4 Bright Light("DOOMPLASMA_X1")
+		DPLE BC 4 Bright Light("DOOMPLASMA_X2")
+		DPLE D 4 Bright Light("DOOMPLASMA_X3")
+		DPLE E 4 Bright Light("DOOMPLASMA_X4")
+		stop
+	}
+}
+
+actor DoomPlasmaBall2 : DoomPlasmaBall { +THRUSPECIES Species "Player" }
+
+actor DoomPlasmaBallSoundPSX : DoomPlasmaBall { SeeSound "doom64guy/plasmaf" DeathSound "doom64guy/plasmax" }
+actor DoomPlasmaBall2SoundPSX : DoomPlasmaBall2 { SeeSound "doom64guy/plasmaf" DeathSound "doom64guy/plasmax" }
+
+actor DoomPlasmaBallSoundPerkristan : DoomPlasmaBall { SeeSound "doomguy/perkristan/plasmaf" DeathSound "doomguy/perkristan/plasmax" }
+actor DoomPlasmaBall2SoundPerkristan : DoomPlasmaBall2 { SeeSound "doomguy/perkristan/plasmaf" DeathSound "doomguy/perkristan/plasmax" }
+
+actor SamsaraDoomguy64PlasmaRifleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Doom64PlasmaBall",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Doom64PlasmaBall2",0,false)
+        stop
+    }
+}
+
+actor Doom64PlasmaBall : PlasmaBall
+{
+	Decal Doom64PlasmaScorch
+	RenderStyle Normal
+	Alpha 1
+	Speed 32
+	XScale 0.81
+	YScale 0.68
+	SeeSound "doom64guy/plasmaf"
+	DeathSound "doom64guy/plasmax"
+	Obituary "%k \cpfried\c- %o \cpwith the Plasma Gun.\c-"
+	DamageType "DoomDamageTypePlasma"
+	Damage 6 // slightly higher damage to make up for drastically slower ROF
+	-BLOODSPLATTER
+	States
+	{
+	Spawn:
+		64PB AB 3 Bright Light("PLASMA64BALL")
+		loop
+
+	Death:
+		64PB C 2 Bright Light("PLASMA64_X1")
+		64PB DE 2 Bright Light("PLASMA64_X2")
+		64PB F 2 Bright Light("PLASMA64_X3")
+		64PB G 2 Bright Light("PLASMA64_X4")
+		64PB H 2 Bright Light("PLASMA64_X5")
+		stop
+	}
+}
+
+actor Doom64PlasmaBall2 : Doom64PlasmaBall { +THRUSPECIES Species "Player" }
+
+// Primary attack handler
+
+actor SamsaraDoomguyStrPlasmaRifleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackUnpoweredDMSoundDE")
+      PickupAttackUnpoweredDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPlasmaBall",0,false)
+        stop
+
+      PickupAttackUnpoweredDMSoundDE:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPlasmaBallSoundDE",0,false)
+        stop
+
+      PickupAttackUnpoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackUnpoweredCoopSoundDE")
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPlasmaBallCoop",0,false)
+        stop
+
+      PickupAttackUnpoweredCoopSoundDE:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPlasmaBallCoopSoundDE",0,false)
+        stop
+
+      // Powered
+      PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackPoweredDMSoundDE")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBall",0,false)
+        stop
+
+      PickupAttackPoweredDMSoundDE:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBallSoundDE",0,false)
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackPoweredCoopSoundDE")
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBallCoop",0,false)
+        stop
+
+      PickupAttackPoweredCoopSoundDE:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBallCoopSoundDE",0,false)
+        stop
+    }
+}
+
+// Secondary (powered) attack handler
+
+/*
+actor SamsaraDoomguyStrPlasmaRiflePoweredSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackDMSoundDE")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBall2",random(-150,150)/100.0,false,0,0,0,random(-150,150)/100.0)
+        stop
+
+      PickupAttackDMSoundDE:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBall2SoundDE",random(-150,150)/100.0,false,0,0,0,random(-150,150)/100.0)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackCoopSoundDE")
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBall2Coop",random(-150,150)/100.0,false,0,0,0,random(-150,150)/100.0)
+        stop
+
+      PickupAttackCoopSoundDE:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrPowerPlasmaBall2CoopSoundDE",random(-150,150)/100.0,false,0,0,0,random(-150,150)/100.0)
+        stop
+    }
+}
+*/
+
+// Plasma ball
+
+actor SamsaraDoomguyStrPlasmaBall : PlasmaBall
+{
+	DamageType "DoomDamageTypePlasma"
+	SeeSound "doomguy/stronghold/plasmaf"
+	DeathSound "doomguy/stronghold/plasmax"
+	Decal "DoomStrPlasmaScorch"
+	-BLOODSPLATTER
+	States
+	{
+	Spawn:
+		DPLM CD 6 Bright Light("DOOMPLASMABALL")
+		loop
+
+	Death:
+		DPLE F 4 Bright Light("DOOMPLASMA_X1")
+		DPLE GH 4 Bright Light("DOOMPLASMA_X2")
+		DPLE I 4 Bright Light("DOOMPLASMA_X3")
+		DPLE J 4 Bright Light("DOOMPLASMA_X4")
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrPlasmaBallCoop : SamsaraDoomguyStrPlasmaBall
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+actor SamsaraDoomguyStrPlasmaBallSoundDE : SamsaraDoomguyStrPlasmaBall
+{
+	SeeSound "doomguy/demoneclipse/plasmaf"
+	DeathSound "doomguy/demoneclipse/plasmax"
+}
+
+actor SamsaraDoomguyStrPlasmaBallCoopSoundDE : SamsaraDoomguyStrPlasmaBallSoundDE
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+// Powered plasma ball
+
+actor SamsaraDoomguyStrPowerPlasmaBall : SamsaraDoomguyStrPlasmaBall
+{
+	Radius 22.75
+	Height 14
+	Speed 30
+	Damage 9
+	Alpha 1
+	Scale 0.8
+	+SEEKERMISSILE
+	States
+	{
+	Spawn:
+		DPLE F 0 Bright Light("POWERPLASMA_X1") A_SeekerMissile(2,10,SMF_LOOK,50,10)
+		DPLE F 2 Bright Light("POWERPLASMA_X1") A_SpawnItemEx("SamsaraDoomguyStrPowerPlasmaBallTrail",random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(0,359))
+		loop
+
+	Death:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyNoSelfDamage",1,AAPTR_TARGET)
+		TNT1 A 0 A_Explode(40,80)
+		TNT1 A 0 A_TakeInventory("PowerSamsaraDoomguyNoSelfDamage",1,0,AAPTR_TARGET)
+	DeathFinish:
+		DPLE F 4 Bright Light("POWERPLASMA_X1")
+		DPLE GH 4 Bright Light("POWERPLASMA_X2")
+		DPLE I 4 Bright Light("POWERPLASMA_X3")
+		DPLE J 4 Bright Light("POWERPLASMA_X4")
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrPowerPlasmaBallCoop : SamsaraDoomguyStrPowerPlasmaBall
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+actor SamsaraDoomguyStrPowerPlasmaBallSoundDE : SamsaraDoomguyStrPowerPlasmaBall
+{
+	SeeSound "doomguy/demoneclipse/plasmaf"
+	DeathSound "doomguy/demoneclipse/plasmax"
+}
+
+actor SamsaraDoomguyStrPowerPlasmaBallCoopSoundDE : SamsaraDoomguyStrPowerPlasmaBallSoundDE
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+/*
+// Powered homing plasma ball
+
+actor SamsaraDoomguyStrPowerPlasmaBall2 : SamsaraDoomguyStrPowerPlasmaBall
+{
+	Speed 60
+	Damage 9
+	DamageType "DoomDamageTypePlasma"
+	-FORCERADIUSDMG
+	+SEEKERMISSILE
+	States
+	{
+	Spawn:
+		DPLE F 1 Bright Light("POWERPLASMA_X1")
+	SpawnLoop:
+		TNT1 A 0 A_SeekerMissile(2,10,SMF_LOOK,50,10)
+		DPLE F 1 Bright Light("POWERPLASMA_X1") A_SpawnItemEx("SamsaraDoomguyStrPowerPlasmaBallTrail")
+		loop
+
+	Death:
+		goto DeathFinish
+	}
+}
+
+actor SamsaraDoomguyStrPowerPlasmaBall2Coop : SamsaraDoomguyStrPowerPlasmaBall2
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+actor SamsaraDoomguyStrPowerPlasmaBall2SoundDE : SamsaraDoomguyStrPowerPlasmaBall2
+{
+	SeeSound "doomguy/demoneclipse/plasmaf"
+	DeathSound "doomguy/demoneclipse/plasmax"
+}
+
+actor SamsaraDoomguyStrPowerPlasmaBall2CoopSoundDE : SamsaraDoomguyStrPowerPlasmaBall2SoundDE
+{
+	Species "Player"
+	+THRUSPECIES
+}
+*/
+
+// Powered plasma ball trail
+
+actor SamsaraDoomguyStrPowerPlasmaBallTrail : SamsaraDoomguyStrElectricalPuff
+{
+	SeeSound ""
+	AttackSound ""
+	Decal ""
+	+CLIENTSIDEONLY
+	+NOTONAUTOMAP
+}
+
+// Incinerator
+
+actor " Incinerator " : Weapon
+{
+    Weapon.SelectionOrder 120
+    Weapon.AmmoUse 2 // ammo use doubled due to running off cells
+    Weapon.AmmoType "Cell"
+    Weapon.SlotNumber 6
+    Tag "Incinerator"
+    Inventory.PickupMessage "You got the Incinerator!"
+    +EXPLOSIVE
+    +UNDROPPABLE
+    Inventory.RestrictedTo "DoomguyPlayer"
+    States
+    {
+      Spawn:
+        WNCN A -1
+        stop
+
+      Ready:
+        DFLA A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        DFLA A 1 A_Lower
+        loop
+
+      Select:
+        DFLA A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 A_GunFlash
+        DFLF A 1 Bright A_GiveInventory("SamsaraDoomguyIncineratorAttackHandler")
+        DFLF B 1 Bright
+        DFLA A 1
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      Flash:
+        TNT1 A 2 A_Light2
+        TNT1 A 1 A_Light1
+        goto LightDone
+    }
+}
+
+actor SamsaraDoomguyIncineratorAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackDMSoundPerkristan")
+      PickupAttackDM:
+		TNT1 A 0 A_PlaySound("doomguy/incinerator/fire",CHAN_WEAPON) // not using existing sound entries; randomization handled via SNDINFO instead
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyIncineratorFlame",0,false)
+        stop
+
+      PickupAttackDMSoundPerkristan:
+		TNT1 A 0 A_PlaySound("doomguy/perkristan/incinerator/fire",CHAN_WEAPON)
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyIncineratorFlameSoundPerkristan",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackCoopSoundPerkristan")
+		TNT1 A 0 A_PlaySound("doomguy/incinerator/fire",CHAN_WEAPON)
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyIncineratorFlameCoop",0,false)
+        stop
+
+      PickupAttackCoopSoundPerkristan:
+		TNT1 A 0 A_PlaySound("doomguy/perkristan/incinerator/fire",CHAN_WEAPON)
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyIncineratorFlameCoopSoundPerkristan",0,false)
+        stop
+    }
+}
+
+actor SamsaraDoomguyIncineratorFlame
+{
+    Projectile
+    Radius 13
+    Height 8
+    Speed 40
+    Damage 5
+    DamageType "DoomDamageTypeFire"
+    RenderStyle "Add"
+    Decal "Scorch"
+    Obituary "$SAMSARA_DOOMGUY_OB_SLOT6"
+    -BLOODSPLATTER
+    +FORCERADIUSDMG
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        DIFL A 2 Bright Light("DOOMARCHFIRE1")
+        TNT1 A 0 A_PlaySound("doomguy/incinerator/burn")
+      SpawnFinish:
+        DIFL B 2 Bright Light("DOOMARCHFIRE2")
+        DIFL C 2 Bright Light("DOOMARCHFIRE3")
+        DIFL D 2 Bright Light("DOOMARCHFIRE4")
+        DIFL E 2 Bright Light("DOOMARCHFIRE5")
+        DIFL F 2 Bright Light("DOOMARCHFIRE6")
+        DIFL G 2 Bright Light("DOOMARCHFIRE7")
+        DIFL H 2 Bright Light("DOOMARCHFIRE8")
+        stop
+
+      Death:
+        TNT1 A 0 A_PlaySound("doomguy/incinerator/hot") // not using existing sound entries; randomization handled via SNDINFO instead
+        DIFL I 2 Bright Light("DOOMARCHFIRE1") A_Explode(5,64)
+        DIFL J 2 Bright Light("DOOMARCHFIRE2")
+        DIFL I 2 Bright Light("DOOMARCHFIRE1")
+        DIFL J 2 Bright Light("DOOMARCHFIRE2") A_Explode(5,64)
+        DIFL K 2 Bright Light("DOOMARCHFIRE3")
+        DIFL J 2 Bright Light("DOOMARCHFIRE2")
+        DIFL K 2 Bright Light("DOOMARCHFIRE3") A_Explode(5,64)
+        DIFL L 2 Bright Light("DOOMARCHFIRE4")
+        TNT1 A 0 A_PlaySound("doomguy/incinerator/hot3")
+      DeathFinish:
+        DIFL K 2 Bright Light("DOOMARCHFIRE3")
+        DIFL L 2 Bright Light("DOOMARCHFIRE4") A_Explode(5,64)
+        DIFL M 2 Bright Light("DOOMARCHFIRE5")
+        DIFL L 2 Bright Light("DOOMARCHFIRE4")
+        DIFL M 2 Bright Light("DOOMARCHFIRE5") A_Explode(5,64)
+        DIFL N 2 Bright Light("DOOMARCHFIRE6")
+        DIFL M 2 Bright Light("DOOMARCHFIRE5")
+        DIFL N 2 Bright Light("DOOMARCHFIRE6") A_Explode(5,64)
+        DIFL O 2 Bright Light("DOOMARCHFIRE7")
+        DIFL N 2 Bright Light("DOOMARCHFIRE6")
+        DIFL O 2 Bright Light("DOOMARCHFIRE7")
+        DIFL P 2 Bright Light("DOOMARCHFIRE8")
+        DIFL O 2 Bright Light("DOOMARCHFIRE7")
+        DIFL P 2 Bright Light("DOOMARCHFIRE8")
+        stop
+    }
+}
+
+actor SamsaraDoomguyIncineratorFlameCoop : SamsaraDoomguyIncineratorFlame
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor SamsaraDoomguyIncineratorFlameSoundPerkristan : SamsaraDoomguyIncineratorFlame
+{
+	States
+	{
+      Spawn:
+        TNT1 A 1
+        DIFL A 2 Bright Light("DOOMARCHFIRE1")
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/incinerator/burn")
+        goto SpawnFinish
+
+      Death:
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/incinerator/hot")
+        DIFL I 2 Bright Light("DOOMARCHFIRE1") A_Explode(5,64)
+        DIFL J 2 Bright Light("DOOMARCHFIRE2")
+        DIFL I 2 Bright Light("DOOMARCHFIRE1")
+        DIFL J 2 Bright Light("DOOMARCHFIRE2") A_Explode(5,64)
+        DIFL K 2 Bright Light("DOOMARCHFIRE3")
+        DIFL J 2 Bright Light("DOOMARCHFIRE2")
+        DIFL K 2 Bright Light("DOOMARCHFIRE3") A_Explode(5,64)
+        DIFL L 2 Bright Light("DOOMARCHFIRE4")
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/incinerator/hot3")
+        goto DeathFinish
+	}
+}
+
+actor SamsaraDoomguyIncineratorFlameCoopSoundPerkristan : SamsaraDoomguyIncineratorFlameSoundPerkristan
+{
+    Species "Player"
+    +THRUSPECIES
+}

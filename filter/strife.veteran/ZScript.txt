@@ -10,8 +10,7 @@ class SamsaraTalismanPowerup : CustomInventory replaces SVETalismanPowerup
 	{
 	Pickup:
 		TNT1 A 0 A_JumpIfInventory("PickupFlashesAreDisabled",1,2);
-		TNT1 A 0 A_SetBlend("ffffff", 1.0, 175);
-		TNT1 A 0 A_QuakeEx(5,5,5,210,0,1024,0,QF_SCALEDOWN);
+		TNT1 A 0 A_SetBlend("ffffff", 1.0, 35);
 		TNT1 A 0 A_PlaySound("Samsara/SVETalismanSecretPowerUnlocked",7,1.0,0,ATTN_NONE);
 		TNT1 A 0 A_GiveInventory("SamsaraTalismanPowerDamage");
 		Stop;
@@ -61,7 +60,7 @@ class SamsaraTalismanRed : Inventory replaces SVETalismanRed
 				toucher.FindInventory("SamsaraTalismanGreen") && 
 				toucher.FindInventory("SamsaraTalismanBlue"))
 			{
-				toucher.A_Print("$SAMSARA_SVE_TALISMANS", 10);
+				toucher.A_Print("$SAMSARA_SVE_TALISMANS");
 				toucher.GiveInventoryType("SamsaraTalismanPowerup");
 			}
 		}

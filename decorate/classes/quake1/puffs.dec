@@ -1,0 +1,95 @@
+actor QuakeBulletPuff
+{
+    //+CLIENTSIDEONLY
+    +NOINTERACTION
+    DamageType "QuakeDamage"
+    States
+    {
+      Spawn:
+        TNT1 A 0
+      SpawnFinish:
+        TNT1 AAAAA 0 A_SpawnItemEx("QuakeBulletPuff2",random(-7,7),random(-7,7),random(-3,1),0,0,random(-10,1)/10)
+        TNT1 AAAAAAAAAA 0 A_SpawnItemEx("QuakeBulletPuff3",random(-7,7),random(-7,7),random(-3,1),0,0,random(-10,1)/10)
+        TNT1 AAAAA 0 A_SpawnItemEx("QuakeBulletPuff4",random(-7,7),random(-7,7),random(-3,1),0,0,random(-10,1)/10)
+        TNT1 A 1
+        stop
+    }
+}
+
+actor QuakeBulletPuffCoop : QuakeBulletPuff { +MTHRUSPECIES }    
+
+actor QuakeBulletPuffThruGhost : QuakeBulletPuff { +THRUGHOST }
+actor QuakeBulletPuffThruGhostCoop : QuakeBulletPuffThruGhost { +MTHRUSPECIES }
+
+actor QuakeBulletPuff2 : BulletPuff
+{
+    Radius 1
+    Height 1
+    Alpha 0.9
+    Scale 0.15
+    Gravity 0.25
+    Renderstyle Translucent
+    VSpeed 0
+    Speed 0
+    DamageType "QuakeDamage"
+    +MISSILE
+    -SOLID
+    +NOCLIP
+    +FORCEXYBILLBOARD
+    //+CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        QPRT A 2 A_Gravity
+        TNT1 A 0 A_Jump(128,"Spawn")
+        QPRT AAAAA 1 A_FadeOut(0.2)
+        stop
+    }
+}
+
+actor QuakeBulletPuff3 : QuakeBulletPuff2
+{
+    States
+    {
+      Spawn:
+        QPRT B 2 A_Gravity
+        TNT1 A 0 A_Jump(128,"Spawn")
+        QPRT BBBBB 1 A_FadeOut(0.2)
+        stop
+    }
+}
+
+actor QuakeBulletPuff4 : QuakeBulletPuff2
+{
+    States
+    {
+      Spawn:
+        QPRT C 2 A_Gravity
+        TNT1 A 0 A_Jump(128,"Spawn")
+        QPRT CCCCC 1 A_FadeOut(0.2)
+        stop
+    }
+}
+
+actor QuakePistolPuff : QuakeBulletPuff { DamageType "QuakePistol" }
+actor QuakePistolPuffCoop : QuakePistolPuff { +MTHRUSPECIES }
+
+actor QuakeBulletPuffSoundDMC : QuakeBulletPuff
+{
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_PlaySound("quakeweps/dmc/bulletricochet")
+        goto SpawnFinish
+    }
+}
+
+actor QuakeBulletPuffCoopSoundDMC : QuakeBulletPuffSoundDMC { +MTHRUSPECIES }    
+
+actor QuakeBulletPuffThruGhostSoundDMC : QuakeBulletPuffSoundDMC { +THRUGHOST }
+actor QuakeBulletPuffThruGhostCoopSoundDMC : QuakeBulletPuffThruGhostSoundDMC { +MTHRUSPECIES }
+
+actor QuakePistolPuffSoundDMC : QuakeBulletPuffSoundDMC { DamageType "QuakePistol" }
+actor QuakePistolPuffCoopSoundDMC : QuakePistolPuffSoundDMC { +MTHRUSPECIES }

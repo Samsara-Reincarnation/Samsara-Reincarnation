@@ -1,0 +1,290 @@
+actor SigilSplinter1: Boolean { ConversationID 196 }
+actor SigilSplinter2: Boolean { ConversationID 197 }
+actor SigilSplinter3: Boolean { ConversationID 198 }
+actor SigilSplinter4: Boolean { ConversationID 199 }
+actor SigilSplinter5: Boolean { ConversationID 200 }
+actor SigilInventoryCharge : Boolean { Inventory.InterHubAmount 0 }
+
+actor GlobalSigilGiver
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, args[0], 1)
+		Stop
+	}
+}
+
+actor GlobalSigil1Giver: GlobalSigilGiver { Args 1 }
+actor GlobalSigil2Giver: GlobalSigilGiver { Args 2 }
+actor GlobalSigil3Giver: GlobalSigilGiver { Args 3 }
+actor GlobalSigil4Giver: GlobalSigilGiver { Args 4 }
+actor GlobalSigil5Giver: GlobalSigilGiver { Args 5 }
+
+actor MaxSigil: Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 1, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 2, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 3, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 4, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 5, 1)
+        stop
+    }
+}
+
+actor SigilInventoryWeapon: CustomInventory
+{
+    Inventory.MaxAmount 1
+    Inventory.ForbiddenTo "StrifeguyPlayer"
+    Tag "Sigil"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"UseFail")
+        TNT1 A 0 A_JumpIfInventory("SigilInventoryCharge",1,"UseFail")
+      UseSuccess:
+        TNT1 A 0 A_GiveInventory("SigilInventoryCharge")
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("strife/sigilcharge",CHAN_WEAPON)
+        TNT1 A 0 A_Light2
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraSigil", 1) // gunflash stuff
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraSigil", 2) // attack stuff
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraSigil", 3) // cooldown stuff
+        fail
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor SigilInventoryWeapon1: SigilInventoryWeapon { Inventory.Icon "I_SGL1" }
+actor SigilInventoryWeapon2: SigilInventoryWeapon { Inventory.Icon "I_SGL2" }
+actor SigilInventoryWeapon3: SigilInventoryWeapon { Inventory.Icon "I_SGL3" }
+actor SigilInventoryWeapon4: SigilInventoryWeapon { Inventory.Icon "I_SGL4" }
+actor SigilInventoryWeapon5: SigilInventoryWeapon { Inventory.Icon "I_SGL5" }
+
+actor SigilInventorySequenceGunFlash1 : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_Light2
+        stop
+    }
+}
+
+actor SigilInventorySequenceGunFlash2 : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_LightInverse
+        stop
+    }
+}
+
+actor SigilInventorySequenceGunFlash3 : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_Light1
+        stop
+    }
+}
+
+actor SigilInventorySequenceGunFlash4 : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_Light0
+        stop
+    }
+}
+
+actor SigilInventorySequenceEnd : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SigilInventoryCharge")
+        stop
+    }
+}
+
+actor SigilSplinter1Temp : Boolean {}
+actor SigilSplinter2Temp : Boolean {}
+actor SigilSplinter3Temp : Boolean {}
+actor SigilSplinter4Temp : Boolean {}
+actor SigilSplinter5Temp : Boolean {}
+
+actor StrifeSigil1Pickup : CustomInventory replaces Sigil1
+{
+    Game Strife
+    ConversationID 196, 190, 194
+    Inventory.Icon "I_SGL1"
+    Inventory.MaxAmount 0
+    +AUTOACTIVATE
+    +QUIET
+    States
+    {
+      Spawn:
+        SIGL A -1
+        stop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupDisplayStrife")
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 4, 0, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSigilPickupBlend")
+        TNT1 A 0 A_PlaySound("weapons/sigilcharge",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter1",1,2)
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter1Temp",1,1)
+        goto PickupSuccess
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0) // haaaaack.
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 1, 1)
+        stop
+    }
+}
+
+actor StrifeSigil2Pickup : StrifeSigil1Pickup replaces Sigil2
+{
+    ConversationID 197, 191, 195
+    Inventory.Icon "I_SGL2"
+    States
+    {
+      Spawn:
+        SIGL B -1
+        stop
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter2",1,2)
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter2Temp",1,1)
+        goto PickupSuccess
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0) // haaaaack.
+        goto PickupSuccess
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 1, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 2, 1)
+        stop
+    }
+}
+
+actor StrifeSigil3Pickup : StrifeSigil2Pickup replaces Sigil3
+{
+    ConversationID 198, 192, 196
+    Inventory.Icon "I_SGL3"
+    States
+    {
+      Spawn:
+        SIGL C -1
+        stop
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter3",1,2)
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter3Temp",1,1)
+        goto PickupSuccess
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0) // haaaaack.
+        goto PickupSuccess
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 1, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 2, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 3, 1)
+        stop
+    }
+}
+
+actor StrifeSigil4Pickup : StrifeSigil3Pickup replaces Sigil4
+{
+    ConversationID 199, 193, 197
+    Inventory.Icon "I_SGL4"
+    States
+    {
+      Spawn:
+        SIGL D -1
+        stop
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter4",1,2)
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter4Temp",1,1)
+        goto PickupSuccess
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0) // haaaaack.
+        goto PickupSuccess
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 1, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 2, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 3, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 4, 1)
+        stop
+    }
+}
+
+actor StrifeSigil5Pickup : StrifeSigil4Pickup replaces Sigil5
+{
+    ConversationID 200, 194, 198
+    Inventory.Icon "I_SGL5"
+    States
+    {
+      Spawn:
+        SIGL E -1
+        stop
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter5",1,2)
+        TNT1 A 0 A_JumpIfInventory("SigilSplinter5Temp",1,1)
+        goto PickupSuccess
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0) // haaaaack.
+        goto PickupSuccess
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 1, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 2, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 3, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 4, 1)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraSpectres", 0, 6, 5, 1)
+        stop
+    }
+}
+
+actor SamsaraSigilPickupBlend : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PickupFlashesAreDisabled",1,"PickupStop")
+        TNT1 A 0 A_SetBlend("D7BA45",0.3,4)
+        stop
+    }
+}

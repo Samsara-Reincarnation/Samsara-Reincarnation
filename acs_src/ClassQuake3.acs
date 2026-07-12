@@ -303,23 +303,6 @@ Script "Q3Loop" (void)
 					/*case 1:
 						if(pTics/35 == 3 && pTics % 35 == 0) { PlaySound(0,Q3PowerupSounds[a],CHAN_7); }
 						break;*/
-					case 3:
-                        int regenmax = 200;
-
-                        if (getMaxHealth(0) > 200) { regenmax = getMaxHealth(0); }
-
-                        if (GetCVar("samsara_nohealthcap")) { regenmax = INTMAX; }
-                        else if (regenmax < 250 && CheckInventory("SamsaraHasProsperity")) { regenmax = 250; }
-
-						if (pTics % 35 == 0 && GetActorProperty(0, APROP_Health) < regenmax) 
-						{
-                            if (GetActorProperty(0, APROP_Health) + 5 > regenmax) { SetActorProperty(0, APROP_Health, regenmax); }
-                            else { SetActorProperty(0, APROP_Health, GetActorProperty(0, APROP_Health) + 5); }
-
-							PlaySound(0, "Quake3/Items/RegenActive", CHAN_7);
-						}
-						if (pTics / 35 <= 5 && pTics % 35 == 0) { PlaySound(0, Q3PowerupSounds[a], CHAN_7); }
-						break;
 				}
 				
 				activePowerups++;

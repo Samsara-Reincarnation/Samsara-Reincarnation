@@ -1,0 +1,171 @@
+actor " Staff " : Weapon
+{
+    Weapon.SlotNumber 0
+    Weapon.SelectionOrder 3800
+    +WIMPY_WEAPON
+    +MELEEWEAPON
+    +NOALERT
+    +STAFF2_KICKBACK
+    +INVENTORY.UNDROPPABLE
+    Obituary "$SAMSARA_CORVUS_OB_FALLBACKMELEE"
+	Inventory.RestrictedTo "CorvusPlayer"
+    Tag "Staff"
+    States
+    {
+      Spawn:
+        WSTF A -1
+        stop
+	
+      // Unpowered
+      Ready:
+		TNT1 A 0 A_TakeInventory("CorvusHoldingSlot")
+		TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"ReadyPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyPowered")
+      ReadyUnpowered:
+        STFF A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"DeselectPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectPowered")
+      DeselectUnpowered:
+        STFF A 1 A_Lower
+        goto Deselect
+
+      Select:
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"SelectPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectPowered")
+      SelectUnpowered:
+        STFF A 1 A_Raise
+        goto Select
+
+      Fire:
+		TNT1 A 0 ACS_NamedExecuteWithResult("HereticTriggerCloneAttack")
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
+        STFF B 6
+        STFF C 8 A_GiveInventory("SamsaraHereticStaffAttackHandler")
+        STFF B 8 A_ReFire
+        goto Ready
+
+      // Powered
+      ReadyPowered:
+        TNT1 A 0 A_Jump(128,2)
+        TNT1 A 0 A_PlaySound("heretic/staffcrackle",CHAN_WEAPON)
+        STFF DEF 4 Bright A_WeaponReady
+        goto Ready
+
+      DeselectPowered:
+        STFF D 1 Bright A_Lower
+        goto Deselect
+
+      SelectPowered:
+        STFF D 1 Bright A_Raise
+        goto Select
+
+      FirePowered:
+        STFF G 6 Bright
+        STFF H 8 Bright A_GiveInventory("SamsaraHereticStaffPoweredAttackHandler")
+        STFF G 8 Bright A_ReFire
+        goto Ready
+    }
+}
+
+// Unpowered
+
+actor SamsaraHereticStaffAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(random(5,20),true,0,"StaffPuff3") //A_StaffAttack(random[StaffAttack](5,20),"StaffPuff3")
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch(random(5,20)*3,true,0,"StaffPuff3")
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(5,20),true,0,"StaffPuff3Coop")
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch(random(5,20)*3,true,0,"StaffPuff3Coop")
+        stop
+    }
+}
+
+actor StaffPuff3 : StaffPuff
+{
+    DamageType "Pistol"
+    SeeSound "heretic/staffhit"
+    States
+    {
+      Spawn:
+      Crash:
+      Melee:
+        PUF3 A 4 Bright A_PlaySound("heretic/staffhit")
+        PUF3 BCD 4
+        stop
+    }
+}
+
+actor StaffPuff3Coop : StaffPuff3 { +MTHRUSPECIES }
+
+// Powered
+
+actor SamsaraHereticStaffPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(random(60,120),true,0,"StaffPuff4") //A_StaffAttack(random[StaffAttack](18,81),"StaffPuff4")
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch(random(60,120)*3,true,0,"StaffPuff4")
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(60,120),true,0,"StaffPuff4Coop")
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch(random(60,120)*3,true,0,"StaffPuff4Coop")
+        stop
+    }
+}
+
+actor StaffPuff4 : StaffPuff2
+{
+    DamageType "Pistol"
+    SeeSound "heretic/staffpowerhit"
+    States
+    {
+      Spawn:
+      Crash:
+      Melee:
+        PUF4 A 4 Bright Light("BIGCLAWPUFF1") A_PlaySound("heretic/staffpowerhit")
+        PUF4 B 4 Bright Light("BIGCLAWPUFF1")
+        PUF4 C 4 Bright Light("BIGCLAWPUFF2")
+        PUF4 D 4 Bright Light("BIGCLAWPUFF3")
+        PUF4 E 4 Bright Light("BIGCLAWPUFF4")
+        PUF4 F 4 Bright Light("BIGCLAWPUFF5")
+        stop
+    }
+}
+
+actor StaffPuff4Coop : StaffPuff4 { +MTHRUSPECIES }

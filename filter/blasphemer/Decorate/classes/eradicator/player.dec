@@ -18,8 +18,6 @@ actor Eleena : SamsaraPlayerPawnNormalRedBlood
 	Player.StartItem "Clip", 50
 	Player.SoundClass "Eleena"
 	Player.JumpZ 10.63
-	Player.ForwardMove 1.105
-	Player.SideMove 1.105
 	Player.ColorRange 209, 224
 	DamageFactor "RebelMissile", 0
 	DamageFactor "DynamiteCoop", 0.0  
@@ -164,10 +162,11 @@ actor Eleena : SamsaraPlayerPawnNormalRedBlood
 			MARE G 6
 			Goto Spawn
 		Death:
+			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
 			TNT1 A 0 A_JumpIfInventory("EradMode", 3, "DeathMarine")
 			TNT1 A 0 A_JumpIfInventory("EradMode", 2, "DeathDan")
 			TNT1 A 0 A_JumpIfInventory("EradMode", 1, "DeathKamchak")
-			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
 			ELEE N 8  	
 			ELEE O 8 A_GiveInventory("SamsaraPlayerBaseDeathSoundTrigger")
 			ELEE P 8 A_NoBlocking
@@ -178,7 +177,6 @@ actor Eleena : SamsaraPlayerPawnNormalRedBlood
 			ELEE S -1
 			Stop
 		DeathKamchak:
-			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
 			KAME O 8  	
 			KAME P 8 A_GiveInventory("SamsaraPlayerBaseDeathSoundTrigger")
 			KAME Q 8 A_NoBlocking
@@ -189,7 +187,6 @@ actor Eleena : SamsaraPlayerPawnNormalRedBlood
 			KAME T -1
 			Stop
 		DeathDan:
-			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
 			DANE R 8  	
 			DANE S 8 A_GiveInventory("SamsaraPlayerBaseDeathSoundTrigger")
 			DANE T 8 A_NoBlocking
@@ -200,7 +197,6 @@ actor Eleena : SamsaraPlayerPawnNormalRedBlood
 			DANE W -1
 			Stop
 		DeathMarine:
-			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
 			MARE O 8  	
 			MARE P 8 A_GiveInventory("SamsaraPlayerBaseDeathSoundTrigger")
 			MARE Q 8 A_NoBlocking
@@ -212,6 +208,7 @@ actor Eleena : SamsaraPlayerPawnNormalRedBlood
 			Stop
 		XDeath:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreXDeathEffect")
+		XDeath.Massacre:
 			TNT1 A 0 A_SpawnItemex("EleGibs1", 0, 0, random(8, 56), random(-4, 4), 0, random(0, 6))
 			TNT1 A 0 A_SpawnItemex("EleGibs1", 0, 0, random(8, 56), random(-4, 4), 0, random(0, 6))
 			TNT1 A 0 A_SpawnItemex("EleGibs1", 0, 0, random(8, 56), random(-4, 4), 0, random(0, 6))
@@ -541,6 +538,7 @@ Actor Eleena_Shrink : Eleena
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -549,12 +547,18 @@ Actor Eleena_Shrink : Eleena
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -569,6 +573,7 @@ Actor Eleena_Shrink : Eleena
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -656,6 +661,8 @@ Actor Eleena_Shrink : Eleena
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

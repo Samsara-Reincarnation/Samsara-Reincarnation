@@ -1,0 +1,235 @@
+actor "  Claw  " : SamsaraEradicatorWeapon
+{
+    Weapon.SlotNumber 0
+    Weapon.SelectionOrder 3700
+    Weapon.Kickback 100
+    Obituary "%o didn't see %k's bitch scratch."
+    Tag "Claw"
+    +MELEEWEAPON
+    +NOALERT
+    +WIMPY_WEAPON
+    States
+    {
+      Spawn:
+        ER81 H -1
+        stop
+
+      // Eleena Brynstaarl
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        TNT1 A 0 A_JumpIfInventory("EradMode",3,"ReadyStartMarine")
+        TNT1 A 0 A_JumpIfInventory("EradMode",2,"ReadyStartDan")
+        TNT1 A 0 A_JumpIfInventory("EradMode",1,"ReadyStartKamchak")
+      ReadyStartEleena:
+        TNT1 A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_JumpIfInventory("EradMode",3,"DeselectLoopMarine")
+        TNT1 A 0 A_JumpIfInventory("EradMode",2,"DeselectLoopDan")
+        TNT1 A 0 A_JumpIfInventory("EradMode",1,"DeselectLoopKamchak")
+      DeselectLoopEleena:
+        TNT1 A 0 A_Lower
+        TNT1 A 1 A_Lower
+        goto DeselectLoop
+
+      Select:
+        TNT1 A 0 A_JumpIfInventory("EradMode",3,"SelectMarine")
+        TNT1 A 0 A_JumpIfInventory("EradMode",2,"SelectDan")
+        TNT1 A 0 A_JumpIfInventory("EradMode",1,"SelectKamchak")
+      SelectEleena:
+        TNT1 A 0 A_Raise
+        TNT1 A 1 A_Raise
+        goto Select
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("EradMode",3,"FireMarine")
+        TNT1 A 0 A_JumpIfInventory("EradMode",2,"FireDan")
+        TNT1 A 0 A_JumpIfInventory("EradMode",1,"FireKamchak")
+      FireEleena:
+        ERAC A 2 A_PlaySound("eleena/airhit",CHAN_WEAPON)
+        ERAC BC 2
+        ERAC D 2 A_GiveInventory("SamsaraEradicatorClawAttackHandler")
+        ERAC EFHIJK 1
+      FireFinish:
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+
+      // Kamchak (Fist)
+      ReadyStartKamchak:
+        ER01 A 1 A_WeaponReady
+        goto Ready
+
+      DeselectLoopKamchak:
+        TNT1 A 0 A_Lower
+        ER01 A 1 A_Lower
+        goto DeselectLoop
+
+      SelectKamchak:
+        TNT1 A 0 A_Raise
+        ER01 A 1 A_Raise
+        goto Select
+
+      FireKamchak:
+        ER01 A 2 A_PlaySound("eleena/airhit",CHAN_WEAPON)
+        ER01 B 3
+        ER01 C 2
+        ER01 D 2 A_GiveInventory("SamsaraEradicatorClawAttackHandler")
+        ER01 E 3
+        ER01 F 2
+        goto FireFinish
+
+      // Dan Blaze (Pickaxe)
+      ReadyStartDan:
+        ER00 A 1 A_WeaponReady
+        goto Ready
+
+      DeselectLoopDan:
+        TNT1 A 0 A_Lower
+        ER00 A 1 A_Lower
+        goto DeselectLoop
+
+      SelectDan:
+        TNT1 A 0 A_Raise
+        ER00 A 1 A_Raise
+        goto Select
+
+      FireDan:
+        ER00 A 2 A_PlaySound("eleena/airhit",CHAN_WEAPON)
+        ER00 B 3
+        ER00 C 2
+        ER00 D 2 A_GiveInventory("SamsaraEradicatorClawAttackHandler")
+        ER00 E 3
+        ER00 F 2
+        goto FireFinish
+
+      // Alliance Commando (Boot)
+      ReadyStartMarine:
+        TNT1 A 1 A_WeaponReady
+        goto Ready
+
+      DeselectLoopMarine:
+        TNT1 A 0 A_Lower
+        TNT1 A 1 A_Lower
+        goto DeselectLoop
+
+      SelectMarine:
+        TNT1 A 0 A_Raise
+        TNT1 A 1 A_Raise
+        goto Select
+
+      FireMarine:
+        ER02 A 2 A_PlaySound("eleena/airhit",CHAN_WEAPON)
+        ER02 B 3
+        ER02 C 2
+        ER02 D 2 A_GiveInventory("SamsaraEradicatorBootAttackHandler")
+        ER02 E 3
+        ER02 F 2
+        goto FireFinish
+    }
+}
+
+// Eleena Brynstaarl/Kamchak/Dan Blaze
+
+actor SamsaraEradicatorClawAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(4*random(3,6)*3,true,0,"EClawPuff")
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch((4*random(3,6)*3)*3,true,0,"EClawPuff")
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(4*random(3,6)*3,true,0,"EClawPuffCoop")
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch((4*random(3,6)*3)*3,true,0,"EClawPuffCoop")
+        stop
+    }
+}
+
+actor EClawPuff : BulletPuffSettingless
+{
+    VSpeed 0
+    //DamageType "BitchScratch"
+    Mass 5
+    RenderStyle "Translucent"
+    Alpha 0.5
+    -ALLOWPARTICLES
+    States
+    {
+      Melee:
+        TNT1 A 1
+        stop
+
+      Crash:
+        TNT1 A 0 A_PlaySound("eleena/claw")
+      CrashFinish:
+        ERPF ABCDEF 4 Bright
+        ERPF G 4 Bright A_FadeOut
+        stop
+    }
+}
+
+actor EClawPuffCoop : EClawPuff { +MTHRUSPECIES }
+
+// Alliance Commando
+
+actor SamsaraEradicatorBootAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(4*random(3,6)*3,true,0,"EBootPuff")
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch((4*random(3,6)*3)*3,true,0,"EBootPuff")
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(4*random(3,6)*3,true,0,"EBootPuffCoop")
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch((4*random(3,6)*3)*3,true,0,"EBootPuffCoop")
+        stop
+    }
+}
+
+actor EBootPuff : EClawPuff
+{
+    States
+    {
+      Crash:
+        TNT1 A 0 A_PlaySound("emarine/boot")
+        goto CrashFinish
+    }
+}
+
+actor EBootPuffCoop : EBootPuff { +MTHRUSPECIES }

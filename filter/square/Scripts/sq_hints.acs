@@ -1,0 +1,232 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Game Hints and Tutorials.
+ * (C) BigBrik Games 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+//#include "sqtutor.acs"
+
+/*****************************************************************************
+ * Time Attack defines and Map-scope variables.
+ ****************************************************************************/
+
+/*****************************************************************************
+ * Static functions.
+ ****************************************************************************/
+
+ /**
+ * Returns nonzero if in-game hints are enabled.
+ */
+function int Hints_Enabled(void)
+{
+	// disable on CUBULAR
+	if (GameSkill() == SKILL_VERY_HARD)
+		return FALSE;
+	if (GameType() != GAME_SINGLE_PLAYER)
+		return FALSE;
+
+	return GetCVar("square_hints");
+}
+
+function void Tutor_Hint(int tm, str tx)
+{
+    LocalAmbientSound("misc/chat", 127);
+	HUDMessage(s:tx; HUDMSG_PLAIN | HUDMSG_LOG, HUD_TUTOR_HINT, CR_UNTRANSLATED, 1.5, 0.36, tm);
+}
+
+function void Tutor_KeyGeneral(str t, str msg)
+{
+    LocalAmbientSound("misc/chat", 127);
+	HUDMessage(
+		l:t, s:":   \cj", l:msg; 
+		HUDMSG_FADEOUT | HUDMSG_LOG, HUD_TUTOR_KEY, CR_GREEN, 1.5, 0.75, 6.0, 1.0
+	);
+}
+
+function void Tutor_Key(str t, str k)
+{
+    LocalAmbientSound("misc/chat", 127);
+	HUDMessage(
+		l:t, s:":   \cj", k:k; 
+		HUDMSG_FADEOUT | HUDMSG_LOG, HUD_TUTOR_KEY, CR_GREEN, 1.5, 0.75, 6.0, 1.0
+	);
+}
+
+function void Tutor_Key2(str t1, str k1, str t2, str k2)
+{
+    LocalAmbientSound("misc/chat", 127);
+	HUDMessage(
+		l:t1, s:":   \cj", k:k1, s:"\n\n", l:t2, s:":   \cj", k:k2;
+		HUDMSG_FADEOUT | HUDMSG_LOG, HUD_TUTOR_KEY, CR_GREEN, 1.5, 0.75, 6.0, 1.0
+	);
+}
+
+function void Tutor_ClearHint(void)
+{
+	HUDMessage(s:""; HUDMSG_PLAIN, HUD_TUTOR_HINT, CR_GREEN, 1.5, 0.75, 0.0);
+}
+
+function void Tutor_ClearKey(void)
+{
+	HUDMessage(s:""; HUDMSG_PLAIN, HUD_TUTOR_KEY, CR_GREEN, 1.5, 0.75, 0.0);
+}
+
+/**
+ * Prints a tutorial key on the screen.
+ * tutorEnum: a tutorial type enumerant (from sqtutor.acs).
+ */
+function void Print_Tutorial_Key(int tutorEnum)
+{
+	if (!Hints_Enabled())
+		return;
+	else if (G_TutorKeyMap[tutorEnum])
+		return;
+	else
+		G_TutorKeyMap[tutorEnum] = TRUE;
+		
+	switch (tutorEnum)
+	{
+		default: //fall through.
+		case TUTOR_NONE: 
+			Tutor_ClearKey(); 
+			break;
+		case TUTOR_FORWARDBACK: 
+			Tutor_Key2("TUTOR_KEY_FORWARD", "+forward", "TUTOR_KEY_BACK", "+back"); 
+			break;
+		case TUTOR_STRAFING: 
+			Tutor_Key2("TUTOR_KEY_STRAFE_LEFT", "+moveleft", "TUTOR_KEY_STRAFE_RIGHT", "+moveright"); 
+			break;
+		case TUTOR_LOOKTURN: 
+			if (GetCVar("use_mouse"))
+			{
+				if (GetCVar("freelook"))
+					Tutor_KeyGeneral("TUTOR_KEY_LOOKING", "TUTOR_KEY_GENERAL_MOUSE"); 
+				else
+					Tutor_Key2("TUTOR_KEY_LOOKING_HOLD_MOUSE", "+mlook", "TUTOR_KEY_LOOKING_HOLD_KBD", "+klook"); 
+			}
+			else
+			{
+				Tutor_Key2("TUTOR_KEY_TURN_LEFT", "+left", "TUTOR_KEY_TURN_RIGHT", "+right"); 
+			}
+			break;
+		case TUTOR_FIRE: 
+			Tutor_Key("TUTOR_KEY_FIRE", "+attack"); 
+			break;
+		case TUTOR_ALTFIRE: 
+			Tutor_Key("TUTOR_KEY_ALTFIRE", "+altattack"); 
+			break;
+		case TUTOR_CRATES: 
+			Tutor_Key2("TUTOR_KEY_CRATEUP", "+use", "TUTOR_KEY_CRATEDOWN", "+attack"); 
+			break;
+		case TUTOR_JUMP: 
+			Tutor_Key("TUTOR_KEY_JUMP", "+jump"); 
+			break;
+		case TUTOR_CROUCH: 
+			Tutor_Key2("TUTOR_KEY_CROUCH", "+crouch", "TUTOR_KEY_TOGGLE_CROUCH", "crouch"); 
+			break;
+		case TUTOR_JUMPCROUCH: 
+			Tutor_Key2("TUTOR_KEY_JUMP", "+jump", "TUTOR_KEY_CROUCH", "+crouch"); 
+			break;
+		case TUTOR_USE: 
+			Tutor_Key("TUTOR_KEY_USE", "+use"); 
+			break;
+		case TUTOR_RUNNING: 
+			Tutor_Key2("TUTOR_KEY_RUN_TOGGLE", "toggle cl_run", "TUTOR_KEY_RUN_HOLD", "+speed"); 
+			break;
+		case TUTOR_RELOAD: 
+			Tutor_Key("TUTOR_KEY_RELOAD", "+reload"); 
+			break;
+		case TUTOR_WEAPONNEXTPREV: 
+			Tutor_Key2("TUTOR_KEY_WEAPONNEXT", "weapnext", "TUTOR_KEY_WEAPONPREV", "weapprev"); 
+			break;
+		case TUTOR_AUTOMAP: 
+			Tutor_Key("TUTOR_KEY_AUTOMAP", "togglemap"); 
+			break;
+		case TUTOR_SAVE: 
+			Tutor_Key2("TUTOR_KEY_SAVE", "menu_save", "TUTOR_KEY_SAVE_QUICK", "quicksave"); 
+			break;
+		case TUTOR_LOAD: 
+			Tutor_Key2("TUTOR_KEY_LOAD", "menu_load", "TUTOR_KEY_LOAD_QUICK", "quickload"); 
+			break;
+	}
+}
+
+/**
+ * Prints a game hint on the screen.
+ * hintEnum: a game hint type enumerant (from sqtutor.acs).
+ */
+function void Print_Game_Hint(int hintEnum)
+{
+	if (!Hints_Enabled())
+		return;
+		
+	if (hintEnum <= 0)
+		Tutor_ClearHint();
+	else if (G_GameHintMap[hintEnum])
+		return;
+	else
+	{
+		G_GameHintMap[hintEnum] = TRUE;
+		Tutor_Hint(3.0, StrParam(l: StrParam(s:"GAME_HINT_", d:hintEnum)));
+	}
+}
+
+/*****************************************************************************
+ * Actor-called Scripts
+ ****************************************************************************/
+
+/**
+ * Returns nonzero if hints are enabled (used by actor code).
+ */
+script "CVAR_Hints" (void)
+{
+	// Actor "return"
+	SetResultValue(Hints_Enabled());
+}
+
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+ /**
+ * Prints a tutorial key on the screen.
+ * tutorEnum: a tutorial type enumerant (from sqtutor.acs).
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Tutorial_Key" (int tutorEnum)
+{
+	Print_Tutorial_Key(tutorEnum);
+}
+
+/**
+ * Prints a game hint on the screen, and logs it as seen 
+ * (will never show again if called for the current game).
+ * Namely, a message from language enumeration GAME_HINT_X.
+ * hintEnum: the value of X.
+ * Should be called with ACS_NamedExecuteAlways.
+ */
+script "Game_Hint" (int hintEnum)
+{
+	Print_Game_Hint(hintEnum);
+}
+

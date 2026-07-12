@@ -1,0 +1,817 @@
+// LEVEL 5: KETCHUP GIBS (also brutal gibs)
+// ========================
+
+Actor Ketchup_FlyingBloodTrail : GenericGoreActor
+{
+	Scale 0.70
+	Mass 1
+	RenderStyle Translucent
+	Alpha 0.7
+	Gravity 0.125
+	Speed 2
+	//Decal BloodSplat
+	+MISSILE
+	+THRUACTORS
+	+BOUNCEONWALLS
+	+NOCLIP
+	States
+	{
+	Spawn:
+		//BLHT NNNNNNNNN 4
+		TNT1 AAAAAAAAA 4
+		Stop
+	Death:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Ketchup_FlyingBlood : GenericGoreActor
+{
+	Scale 0.5
+	Speed 4
+	Radius 8
+	Height 1
+	Alpha 0.95
+	Gravity 0.8
+	+MISSILE
+	+THRUACTORS
+	+BLOODLESSIMPACT
+	+NODAMAGETHRUST
+	States
+	{
+	Spawn:
+		BLHT IJ 2
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2")
+		Goto Spawn1
+	Spawn1:
+		BLHT K 1
+		Loop
+	Spawn2:
+		BLHT M 1
+		Loop
+	Death:
+		TNT1 A 0 A_PlaySound("bolognese/blooddrop2")
+		TNT1 A 0 A_SpawnItemEx("ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Ketchup_BloodSpot : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Mass 1
+	+FLOORCLIP
+	+THRUACTORS
+	-SHOOTABLE
+	Alpha 0.9
+	Scale 0.5
+	Decal BloodSplat
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_CheckFloor("SpawnNormally")
+		Stop
+	SpawnNormally:
+		TNT1 A 0 A_Jump(256, "SpawnBFrameOnly", "SpawnCFrameOnly", "SpawnDFrameOnly")
+		Goto SpawnAFrameOnly
+	SpawnAFrameOnly:
+		BPDL A 0
+		Goto Super::FadeGore
+	SpawnBFrameOnly:
+		BPDL B 0
+		Goto Super::FadeGore
+	SpawnCFrameOnly:
+		BPDL C 0
+		Goto Super::FadeGore
+	SpawnDFrameOnly:
+		BPDL D 0
+		Goto Super::FadeGore
+	Death:
+		TNT1 A 0 A_NoBlocking
+		Stop
+	}
+}
+
+Actor Ketchup_MinuscleBloodSpot : Ketchup_BloodSpot { Scale 0.25 }
+Actor Ketchup_BigBloodSpot : Ketchup_BloodSpot { Scale 0.7 }
+
+Actor Ketchup_CeilingBlood : Ketchup_FlyingBlood
+{
+	+THRUACTORS
+	-DOOMBOUNCE
+	-SKYEXPLODE
+	+BOUNCEONWALLS
+	+BLOODLESSIMPACT
+	Speed 40
+	Gravity 0.0
+	Radius 1
+	Height 1
+	States
+	{
+	Spawn:
+		TNT1 A 4
+		Stop
+	Death:
+		TNT1 A 0 A_CheckCeiling("IsOnCeiling")
+		Stop
+	IsOnCeiling:
+		TNT1 A 1 A_SpawnItemEx("Ketchup_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Melee:
+	XDeath:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor Ketchup_CeilingBloodSpot : GenericGoreActorFadeOut
+{
+	+CEILINGHUGGER
+	+MISSILE
+	+NOGRAVITY
+	+THRUACTORS
+	-FORCEXYBILLBOARD
+	-MOVEWITHSECTOR
+	-SKYEXPLODE
+	Height 1
+	Radius 2
+	Mass 0
+	Scale 0.5
+	Gravity 0.0
+	Renderstyle Normal
+	Alpha 0.9
+	States
+	{
+	Spawn:
+		BPDL A 1
+		BPDL A 0 A_SpawnItemEx("Ketchup_DripingBloodLeavesPool",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		BPDL A 0 A_SpawnItemEx("Ketchup_CeilBloodTinyBloodSpawner",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Live
+	Live:
+		BPDL A 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_CeilBloodTinyBloodSpawner : Ketchup_FlyingBlood
+{
+	+NOGRAVITY
+	+THRUACTORS
+	+NOCLIP
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAAAAAAAAAAA 5 A_SpawnItemEx("Ketchup_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 10 A_SpawnItemEx("Ketchup_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 16 A_SpawnItemEx("Ketchup_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 24 A_SpawnItemEx("Ketchup_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Ketchup_BloodDripingFromCeiling : Ketchup_FlyingBlood
+{
+	+THRUACTORS
+	Gravity 0.7
+	Radius 4
+	Height 1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		BSPX K 500 A_Jump(230, "NoSpawn")
+		Loop
+	Death:
+		TNT1 A 0 A_PlaySound("bolognese/blooddrop3")
+		TNT1 A 0 A_Stop
+		XDT1 EFGHIJKL 2
+		Stop
+	NoSpawn:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Ketchup_DripingBloodLeavesPool : Ketchup_BloodDripingFromCeiling
+{
+	Gravity 0.7
+	Scale 0.3
+	Radius 4
+	Height 1
+	States
+	{
+	Spawn:
+		BSPX K 4
+		Loop
+	 Death:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_MinuscleBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_PlaySound("bolognese/blooddrop2")
+		XDT1 EFGHIJKL 2
+		Stop
+	}
+}
+
+Actor Ketchup_XDeath1 : GenericGoreActorFadeOut
+{
+	Radius 8
+	Height 8
+	Speed 10
+	Scale 1.2
+	+MISSILE
+	+BLOODLESSIMPACT
+	+FLOORCLIP
+	+THRUACTORS
+	-DONTSPLASH
+	-FORCEXYBILLBOARD
+	SeeSound "bolognese/xdeath4"
+	DeathSound "bolognese/xdeath1"
+	Mass 1
+	States
+	{
+	Spawn:
+		BLDT A 4 A_SpawnItemEx("Ketchup_XDeath1Trail",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XDT1 EFGHIJKL 5
+		Stop
+	}
+}
+
+Actor Ketchup_XDeath1Trail : Ketchup_FlyingBlood
+{
+	Scale 0.8
+	Gravity 1
+	Speed 0
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		BLHT IJKLM 2
+		Stop
+	Death:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Ketchup_XDeath2 : Ketchup_XDeath1
+{
+	+DONTSPLASH
+	Speed 10
+	Gravity 0.4
+	DeathSound "bolognese/xdeath2"
+	//Decal BloodSplat
+	Scale 1.1
+	States
+	{
+	Spawn:
+		XME1 ABCD 3 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,180),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_CheckFloor("SpawnFloor")
+		TNT1 A 0 A_CheckCeiling("SpawnCeiling")
+		TNT1 A 0 A_SpawnItemEx("Ketchup_SmearingXDeath2",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	SpawnFloor:
+		XME1 E 1
+		XME1 E 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	SpawnCeiling:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_CeilXDeath2",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_SpawnItemEx("Ketchup_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Ketchup_SmearingXDeath2 : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Speed 10
+	Mass 1
+	Scale 1.0
+	Gravity 0.25
+	+THRUGHOST
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("NOGRAVITY", 1)
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		Goto Death
+	Spawn1:
+		XME1 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Spawn2:
+		XME1 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Spawn3:
+		XME1 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Spawn4:
+		XME1 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Death:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_XDeath2NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Rest:
+		XME1 E 4
+		XME1 E 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_CeilXDeath2 : Ketchup_BloodSpot
+{
+	PROJECTILE
+	+CEILINGHUGGER
+	+MISSILE
+	+NOGRAVITY
+	+SPAWNCEILING
+	RenderStyle Normal
+	Scale 1.1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Live1", "Live2", "Live3")
+		Goto Live1
+	Live1:
+		XME1 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF 3 ThrustThingZ(0,35,0,1)
+		Goto Fall
+	Live2:
+		XME1 FFFFFFFFFFFFFFFFFFFFFFFFFFFF 3 ThrustThingZ(0,35,0,1)
+		Goto Fall
+	Live3:
+		XME1 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF 3 ThrustThingZ(0,35,0,1)
+		Goto Fall
+	Fall:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_XDeath2NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Ketchup_XDeath2NoStick : Ketchup_XDeath2
+{
+	Speed 0
+	Gravity 0.4
+	DeathSound "bolognese/xdeath2"
+	Radius 1
+	Height 0
+	States
+	{
+	Spawn:
+		TNT1 A 0 A_CheckFloor("Death")
+		XME1 H 3
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XME1 E 4
+		XME1 E 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto FadeGore
+	FadeGore:
+		"####" "#" 800
+		"####" "#" 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate",13) == 1, "FadeGore")
+		"####" "#" 1 A_FadeOut(0.1)
+		Wait
+	}
+}
+
+Actor Ketchup_XDeath3 : Ketchup_XDeath2
+{
+	SeeSound "bolognese/xdeath4"
+	DeathSound "bolognese/xdeath3"
+	//Decal BloodSplat
+	Scale 1.1
+	States
+	{
+	Spawn:
+		XME2 ABCD 3 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,180),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_CheckFloor("SpawnFloor")
+		TNT1 A 0 A_CheckCeiling("SpawnCeiling")
+		TNT1 A 0 A_SpawnItemEx("Ketchup_SmearingXDeath3",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	SpawnFloor:
+		XME2 E 4
+		XME2 E 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	SpawnCeiling:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_CeilXDeath3",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_SpawnItemEx("Ketchup_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Ketchup_SmearingXDeath3 : Ketchup_SmearingXDeath2
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Death")
+		TNT1 A 0 A_ChangeFlag("NOGRAVITY", 1)
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		Goto Spawn1
+	Spawn1:
+		XME2 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Spawn2:
+		XME2 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Spawn3:
+		XME2 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Spawn4:
+		XME2 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG 1 A_CheckFloor("Rest")
+		Goto Death
+	Death:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_XDeath3NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Rest:
+		XME2 E 4
+		XME2 E 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_CeilXDeath3 : Ketchup_CeilXDeath2
+{
+	States
+	{
+	Spawn:
+	Death:
+	Crash:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Live1", "Live2", "Live3")
+		Goto Live1
+	Live1:
+		XME2 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF 3 ThrustThingZ(0,35,0,1)
+		Goto Fall
+	Live2:
+		XME2 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF 3 ThrustThingZ(0,35,0,1)
+		Goto Fall
+	Live3:
+		XME2 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF 3 ThrustThingZ(0,35,0,1)
+		Goto Fall
+	Fall:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_XDeath3NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Ketchup_XDeath3NoStick : Ketchup_XDeath2NoStick
+{
+	States
+	{
+	Spawn:
+		XME2 H 3 A_CheckFloor("Death")
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XME2 E 4
+		XME2 E 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto GenericGoreActorFadeOut::FadeGore
+	}
+}
+
+Actor Ketchup_XDeath4 : Ketchup_XDeath2
+{
+	SeeSound "bolognese/xdeath4"
+	DeathSound "bolognese/xdeath3"
+	Scale 1.1
+	+DOOMBOUNCE
+	BounceFactor 0.3
+	WallBounceFactor 0.2
+	States
+	{
+	Spawn:
+		XME3 ABCDEFGH 3 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		XME3 GH 3
+		XME3 A 1
+		XME3 A 0 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_Jump(256, "Death1", "Death2")
+		Goto Death1
+	Death1:
+		XME3 A 0
+		Goto Super::FadeGore
+	Death2:
+		XME3 I 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_XDeath5 : Ketchup_XDeath2
+{
+	SeeSound "bolognese/xdeath4"
+	DeathSound "bolognese/xdeath3"
+	Scale 1.1
+	States
+	{
+	Spawn:
+		XDT8 P 3 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XDT8 Q 3 A_SpawnItemEx("Ketchup_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_XDeathOrgan1 : Ketchup_XDeath2
+{
+	SeeSound "bolognese/xdeath4"
+	DeathSound "bolognese/xdeath3"
+	Scale 0.9
+	Speed 4
+	States
+	{
+	Spawn:
+		XME8 A 4 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		XME8 A 1
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_XDeathOrgan2 : Ketchup_XDeath2
+{
+	SeeSound "bolognese/xdeath4"
+	DeathSound "bolognese/xdeath3"
+	Scale 0.9
+	Speed 4
+	States
+	{
+	Spawn:
+		XME8 B 4 A_SpawnItemEx("Ketchup_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		XME8 B 1
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_SmallBrainPiece : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Speed 10
+	Mass 1
+	Scale 0.5
+	+FLOORCLIP
+	+MISSILE
+	+THRUACTORS
+	-DONTSPLASH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(32, "DoNothing")
+		Goto SpawnLoop
+	SpawnLoop:
+		XDB7 ABCDEFGH 3
+		Loop
+	Death:
+		TNT1 A 0 A_CheckFloor("SpawnFloor")
+		TNT1 A 0 A_CheckCeiling("SpawnCeiling")
+		Stop
+	SpawnFloor:
+		TNT1 A 0 A_Jump(256, "SpawnFloor1", "SpawnFloor2")
+		Goto SpawnFloor1
+	SpawnFloor1:
+		XDT8 B 0
+		Goto Super::FadeGore
+	SpawnFloor2:
+		XDT8 O 0
+		Goto Super::FadeGore
+	SpawnCeiling:
+		TNT1 A 0 A_SpawnItemEx("Ketchup_SmearingBrain",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	DoNothing:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Ketchup_SmearingBrain : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Speed 10
+	Mass 1
+	Scale 0.5
+	+NOGRAVITY
+	+THRUGHOST
+	-DONTSPLASH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(255, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		Goto Spawn1
+	Spawn1:
+		XDB7 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_CheckFloor("Rest")
+		Goto Fall
+	Spawn2:
+		XDB7 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 1 A_CheckFloor("Rest")
+		Goto Fall
+	Spawn3:
+		XDB7 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 1 A_CheckFloor("Rest")
+		Goto Fall
+	Spawn4:
+		XDB7 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD 1 A_CheckFloor("Rest")
+		Goto Fall
+	Fall:
+	Rest:
+		TNT1 A 0 A_SetGravity(0.25)
+		XDB7 A 2 ThrustThingZ(0,-2,0,1)
+		TNT1 A 0 A_CheckFloor("Sleep")
+		Loop
+	Sleep:
+		XDT8 B 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_Eyeball : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Speed 6
+	Mass 1
+	BounceFactor 0.5
+	+DOOMBOUNCE
+	+MISSILE
+	-EXPLODEONWATER
+	//Decal BloodSplat
+	Scale 0.8
+	States
+	{
+	Spawn:
+		BRIB EFGH 4
+		Loop
+	Death:
+		BRIB E 1
+		Goto Rest
+	Rest:
+		TNT1 A 0 A_Jump(256, "Rest1", "Rest2", "Rest3", "Rest4")
+		Goto Rest1
+	Rest1:
+		BRIB E 0
+		Goto Super::FadeGore
+	Rest2:
+		BRIB F 0
+		Goto Super::FadeGore
+	Rest3:
+		BRIB G 0
+		Goto Super::FadeGore
+	Rest4:
+		BRIB H 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_Intestine : GenericGoreActorFadeOut
+{
+	Radius 8
+	Height 12
+	Speed 6
+	Mass 1
+	BounceFactor 0.4
+	Renderstyle Translucent
+	Alpha 0.9
+	+DOOMBOUNCE
+	+MISSILE
+	-EXPLODEONWATER
+	DeathSound "bolognese/xdeath1"
+	//Decal BloodSplat
+	Scale 1.1
+	States
+	{
+	Spawn:
+		XDT9 ABCD 8
+		Loop
+	Death:
+		XDT9 E 1
+		TNT1 A 0 A_Jump(256, "Death1", "Death2")
+		Goto Death1
+	Death1:
+		XDT9 E 0
+		Goto Super::FadeGore
+	Death2:
+		XDT9 F 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Ketchup_Bloodmist : Ketchup_FlyingBlood
+{
+	Scale 0.8
+	Radius 2
+	Height 2
+	Speed  8
+	Gravity 0.4
+	RenderStyle Translucent
+	Alpha 0.9
+	States
+	{
+	Spawn:
+		BLHT QRSTUVWX 1
+		BLHT XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 1 A_FadeOut(0.005)
+		Goto Death
+	Death:
+		TNT1 A 0 A_CheckFloor("Disappear")
+		BLHT XXXXXXXX 1 A_FadeOut(0.1)
+		Stop
+	Disappear:
+		TNT1 A 2
+		Stop
+	}
+}
+
+Actor Ketchup_SuperGore : GenericGoreActor
+{
+	//Decal BloodSplat
+	Alpha 0.6
+	Gravity 0.05
+	-ALLOWPARTICLES
+	-EXPLODEONWATER
+	-MOVEWITHSECTOR
+	+NOCLIP
+	+THRUACTORS
+	Scale 1.0
+	Speed 3
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		B1OR L 1 A_FadeOut(0.01)
+		Wait
+	}
+}
+
+Actor Ketchup_SuperGoreMist : Ketchup_SuperGore
+{
+	Scale 3.0
+	Speed 8
+	Gravity 0.3
+}
+
+Actor Ketchup_SuperGoreMistTiny : Ketchup_SuperGore
+{
+	Scale 0.4
+	Speed 1
+	Gravity 0.1
+}
+
+Actor Ketchup_GrowingBloodPool : Ketchup_BloodSpot
+{
+	var int user_bloodpoolsize;
+	Radius 1
+	Height 1
+	Mass 1
+	Health 600
+	RenderStyle Normal
+	Alpha 1.0
+	+MISSILE
+	Scale 1.0
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT5 A 1 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraDecorate",14) == 1, "Splash")
+		TNT5 A 30
+		TNT5 BCD 5
+		TNT5 EFGHIJKLMNOP 5
+		TNT5 QRSTUVWXYZ 5
+		Goto Super::FadeGore
+	Splash:
+		BLDT A 0
+		Stop
+	 }
+}
+
+Actor Ketchup_GibExplosion : GenericGoreActor
+{
+	Scale 0.75
+	+NOGRAVITY
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		XME8 CDEFG 5
+		Stop
+	}
+}

@@ -1,0 +1,203 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Functions
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+
+/*****************************************************************************
+ * Static functions.
+ ****************************************************************************/
+
+/**
+ * Returns the minimum value between two values.
+ */
+function int min(int a, int b)
+{
+	if (a < b)
+		return a;
+	return b;
+}
+
+/**
+ * Returns the maximum value between two values.
+ */
+function int max(int a, int b)
+{
+	if (a < b)
+		return b;
+	return a;
+}
+
+/**
+ * Returns the percentage, as an integer, of the smaller number
+ * in the larger one. If larger is 0, this returns 0.
+ * e.g. percent(20, 60) -> 33
+ */
+function int percent(int smaller, int larger)
+{
+	if (smaller >= larger)
+		return 100;
+	else if (larger == 0)
+		return 0;
+	return (smaller * 100) / larger;
+}
+
+/**
+ * Gets all player input bits.
+ */
+function int GetAllPlayerInput(int input)
+{
+	int out = 0, p = 0;
+	for (p = 0; p < PLAYER_MAX; p++)
+		out = out | GetPlayerInput(p, input);
+	return out;
+}
+
+/**
+ * Returns the input time in tics as a MM:SS.CCC formatted string.
+ */
+function str Format_TickTimeFull(int timeTics)
+{
+	int t = timeTics; // for brevity
+	return StrParam(
+		d: (t / (35 * 60)), 
+		s: ":", 
+		d: ((t % (35 * 60)) / 350), 
+		d: ((t % (35 * 60)) / 35 % 10), 
+		s: ".", 
+		d: ((t % 35) * 1000 / 35) / 100, 
+		d: ((t % 35) * 1000 / 35) % 100 / 10, 
+		d: ((t % 35) * 1000 / 35) % 10
+	);
+}
+ 
+/**
+ * Returns the input time in tics as a MM:SS formatted string, chopping milliseconds.
+ */
+function str Format_TickTime(int timeTics)
+{
+	return Format_SecondTime(timeTics / 35);
+}
+ 
+/**
+ * Returns the input time in seconds as a MM:SS formatted string.
+ */
+function str Format_SecondTime(int timeSecs)
+{
+	return StrParam (
+		d: timeSecs / 60, 
+		s: ":", 
+		d: (timeSecs % 60) / 10, 
+		d: timeSecs % 10
+	);
+}
+
+/**
+ * Spawns an object (by spawnID) 'dist' units in front of parent object.
+ */
+function int Spawn_Front(int srcID, str type, int dist, int newTID, bool forced)
+{
+	int srcX = GetActorX(srcID);
+	int srcY = GetActorY(srcID);
+	int srcZ = GetActorZ(srcID);
+	int srcAngle = GetActorAngle(srcID);
+	
+	int posX = srcX + (dist * cos(srcAngle));
+	int posY = srcY + (dist * sin(srcAngle));
+	int posZ = srcZ;
+	
+	int spawnCount = 0;
+	if(forced)
+		spawnCount = SpawnForced(type, posX, posY, posZ, newTID, 0);
+	else
+		spawnCount = Spawn(type, posX, posY, posZ, newTID, 0);
+	return spawnCount;
+}
+
+/**
+ * Tests if a language key exists.
+ * Returns nonzero if it exists.
+ */ 
+function int LanguageExist(str key)
+{
+	// Equality to key means the language key (probably) does not exist.
+	// You better not have your values the same as your keys. Seriously. What's wrong with you?
+	return StrCmp(key, StrParam(l:key));
+}
+
+/**
+ * Converts a string to an integer, or returns 0 if it can't be converted.
+ */ 
+function int ParseInt(str instr)
+{
+	int len = StrLen(instr), i = 0;
+	int factor = 1;
+	int c = 0;
+	int val = 0;
+	int out = 0;
+	for (i = len - 1; i >= 0; i--)
+	{
+		c = GetChar(instr, i);
+		if (i == 0 && c == '-')
+			out = -out;
+		else
+		{
+			val = c - '0';
+			
+			if (val < 0 || val > 9)
+				return 0;
+			
+			out += val * factor;
+			factor *= 10;
+		}
+	}
+	
+	return out;
+}
+
+/**
+ * Returns a MapArg string value or the empty string if not defined in language.
+ * Corresponds to LANGUAGE keys called MAPARG_[CURRENTLUMPNAME]_[KEY]
+ * argname: the arg name.
+ */ 
+function str GetMapArgStr(str argname)
+{
+	str langkey = StrParam(s:"MAPARG_", n:PRINTNAME_LEVEL, s:"_", s:argname);
+	if (!LanguageExist(langkey))
+		return "";
+	return StrParam(l:langkey);
+}
+
+/**
+ * Returns a MapArg string value or 0 if not defined in language.
+ * Corresponds to LANGUAGE keys called MAPARG_[CURRENTLUMPNAME]_[KEY]
+ * argname: the arg name.
+ */ 
+function int GetMapArgInt(str argname)
+{
+	str langkey = StrParam(s:"MAPARG_", n:PRINTNAME_LEVEL, s:"_", s:argname);
+	if (!LanguageExist(langkey))
+		return 0;
+	return ParseInt(StrParam(l:langkey));
+}

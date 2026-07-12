@@ -47,10 +47,16 @@ Actor REKKRSkelespider_Samsara : SamsaraMonsterDemonicTotalGib replaces HangNoGu
 		SKEL F 8 Bright A_BruisAttack
 		goto Missile
 	Death:
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
-		SKEL J 14
+		SKEL J 14 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		SKEL K 10
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		SKEL L 12 A_PainDie
+		SKEL MN 8
+		SKEL O -1
+		stop
+	Death.Massacre:
+		SKEL J 14 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		SKEL K 10
 		SKEL L 12 A_PainDie
 		SKEL MN 8
 		SKEL O -1
@@ -266,6 +272,8 @@ actor REKKRSkelespider_Samsara_Shrink : REKKRSkelespider_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

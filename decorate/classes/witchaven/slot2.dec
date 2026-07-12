@@ -1,0 +1,238 @@
+Actor "Shortsword" : WTWeapon
+{
+	Weapon.Slotnumber 2
+	Weapon.SelectionOrder 4000
+	Weapon.BobStyle Alpha
+	Weapon.BobRangeX 0.2
+	Weapon.BobRangeY 0.6
+	Weapon.BobSpeed 0.8	
+	Weapon.AmmoType "Clip"
+	Weapon.AmmoGive 24
+	Weapon.AmmoUse 0
+	+WEAPON.MELEEWEAPON
+	+WEAPON.NOALERT
+	+THRUGHOST
+	Tag "Short Sword"	
+	Inventory.RestrictedTo "GrondovalPlayer"		
+	States
+	{
+	Spawn:
+		PWHH ABCD 5
+		Loop
+	Select:
+		TNT1 A 0 A_GiveInventory("WTWeaponActive",1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Raise
+		TNT1 A 1 A_Raise
+		loop
+	Deselect:
+		TNT1 A 0 A_TakeInventory("WTWeaponActive",1)
+		TNT1 A 0 A_TakeInventory("WTShieldActive",1)
+		WW10 H 1 A_Lower
+		loop
+	Ready:
+		WW10 A 0 A_JumpIfInventory("Clip",3,"MegaDraw")
+	Draw:
+		WW10 ABCDEFG 3 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE) //Draw sword animation (normal)
+		WW10 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE) //Call shield statemachine
+		goto WIdle
+	MegaDraw:
+		WW11 A 0 A_PlayWeaponSound("ggen/fireloop")
+		WW11 ABCDEFG 4 bright // "    "     "        (fire)
+		WW10 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE) //Call shield statemachine
+		goto MegaWIdle
+	WIdle:
+		WW11 H 0 A_JumpIfInventory("WTSlotIClip", 1, 2)
+		WW11 H 0 A_JumpIfInventory("Clip",3,"MegaWIdle")	
+		WW10 H 2 A_WeaponReady
+		loop
+	MegaWIdle:
+		WW11 H 0 A_PlayWeaponSound("ggen/fireloop")
+		WW11 HIJ 3 bright A_WeaponReady
+		WW11 HIJ 3 bright A_WeaponReady
+		WW11 HIJ 3 bright A_WeaponReady
+		WW11 H 0 A_PlayWeaponSound("DSNONE")
+		goto WIdle
+	Fire:
+		WW10 A 0 A_JumpIfInventory("WTSlotIClip", 1, 2)
+		WW10 A 0 A_JumpIfInventory("Clip",3,"MegaFire")
+		WW10 A 0 A_JumpIfInventory("WTAttackClip",1,2)
+		WW10 A 0 A_GiveInventory("WTAttackClip",1)
+		goto Attack1
+		WW10 A 0 A_TakeInventory("WTAttackClip",1)
+		goto Attack2
+	MegaFire:
+		WW11 A 0 A_JumpIfInventory("WTAttackClip",1,2)
+		WW11 A 0 A_GiveInventory("WTAttackClip",1)
+		goto MegaAttack1
+		WW11 A 0 A_TakeInventory("WTAttackClip",1)
+		goto MegaAttack2
+	Attack1:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopAttack1")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopAttack1")
+		WW10 IJK 3
+		WW10 L 0 A_PlayWeaponSound("ggen/swing4")
+		WW10 L 3 A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW10 M 3 A_FireCustomMissile("WTShortswordProjectile",0,0,4,6)
+		WW10 N 3 A_TakeInventory("WTShieldDisable",999)
+		TNT1 A 6
+		WW10 H 1 /*offset(0,32)*/ A_Refire
+		goto WIdle
+	CoopAttack1: 
+		WW10 IJK 3
+		WW10 L 0 A_PlayWeaponSound("ggen/swing4")
+		WW10 L 3 A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW10 M 3 A_FireCustomMissile("WTShortswordProjectile_2",0,0,4,6)
+		WW10 N 3 A_TakeInventory("WTShieldDisable",999)
+		TNT1 A 6
+		WW10 H 1 /*offset(0,32)*/ A_Refire
+		goto WIdle
+	Attack2:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopAttack2")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopAttack2")	
+		WW10 OPQ 3
+		WW10 R 0 A_PlayWeaponSound("ggen/swing4")
+		WW10 R 3 A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW10 S 3 A_FireCustomMissile("WTShortswordProjectile_Weak",0,0,4,6)
+		WW10 T 3 A_TakeInventory("WTShieldDisable",999)
+		WW10 U 3
+		TNT1 A 6
+		WW10 H 1 /*offset(0,32)*/ A_Refire
+		goto WIdle
+	CoopAttack2: 
+		WW10 OPQ 3
+		WW10 R 0 A_PlayWeaponSound("ggen/swing4")
+		WW10 R 3 A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW10 S 3 A_FireCustomMissile("WTShortswordProjectile_Weak_2",0,0,4,6)
+		WW10 T 3 A_TakeInventory("WTShieldDisable",999)
+		WW10 U 3
+		TNT1 A 6
+		WW10 H 1 /*offset(0,32)*/ A_Refire
+		goto WIdle		
+	MegaAttack1:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopMegaAttack1")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopMegaAttack1")		
+		WW11 K 3 bright
+		WW11 LMN 3 bright
+		WW11 O 0 bright A_PlayWeaponSound("gspell/fire")
+		WW11 O 3 bright A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW11 P 3 bright A_FireCustomMissile("WTMegaShortswordProjectile",0,0,4,6)
+		WW11 Q 3 bright A_TakeInventory("WTShieldDisable",1)
+		TNT1 A 6 bright
+		WW11 J 1 bright /*offset(0,32)*/ A_Refire
+		goto MegaWIdle
+	CoopMegaAttack1:
+		WW11 K 3 bright
+		WW11 LMN 3 bright
+		WW11 O 0 bright A_PlayWeaponSound("gspell/fire")
+		WW11 O 3 bright A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW11 P 3 bright A_FireCustomMissile("WTMegaShortswordProjectile_2",0,0,4,6)
+		WW11 Q 3 bright A_TakeInventory("WTShieldDisable",1)
+		TNT1 A 6 bright
+		WW11 J 1 bright /*offset(0,32)*/ A_Refire
+		goto MegaWIdle	
+	MegaAttack2:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopMegaAttack2")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopMegaAttack2")			
+		WW11 RST 3 bright
+		WW11 U 0 bright A_PlayWeaponSound("gspell/fire")
+		WW11 U 3 bright A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW11 V 3 bright A_FireCustomMissile("WTMegaShortswordProjectile_Weak",0,0,4,6)
+		WW11 W 3 bright A_TakeInventory("WTShieldDisable",1)
+		WW11 X 3 bright
+		TNT1 A 6 bright
+		WW11 J 1 bright /*offset(0,32)*/ A_Refire
+		goto MegaWIdle
+	CoopMegaAttack2:
+		WW11 RST 3 bright
+		WW11 U 0 bright A_PlayWeaponSound("gspell/fire")
+		WW11 U 3 bright A_GiveInventory("WTShieldDisable",1) //Disable shield, else the projectile gets blocked
+		WW11 V 3 bright A_FireCustomMissile("WTMegaShortswordProjectile_Weak_2",0,0,4,6)
+		WW11 W 3 bright A_TakeInventory("WTShieldDisable",1)
+		WW11 X 3 bright
+		TNT1 A 6 bright
+		WW11 J 1 bright /*offset(0,32)*/ A_Refire
+		goto MegaWIdle
+	Altfire:
+		WW10 L 0 A_JumpIfInventory("WTSlotIClip",1,"TakeClip")
+	GiveClip:
+		WW11 H 0 A_PlayWeaponSound("DSNONE")
+		WW10 H 12 A_GiveInventory("WTSlotIClip",1)
+		goto WIdle
+	TakeClip:
+		WW10 L 0 A_TakeInventory("WTSlotIClip",999)
+		WW10 L 12 A_JumpIfInventory("Clip",3,1)
+		goto WIdle
+		WW11 A 0 A_PlayWeaponSound("ggen/fireloop")
+		WW11 HIJ 3 bright
+		goto MegaWIdle				
+	}
+}
+
+Actor WTShortswordProjectile : WTMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(40,80))
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS"
+}
+
+Actor WTShortswordProjectile_Weak : WTMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN	
+	Damage (random(40,64))
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS"
+}
+
+Actor WTMegaShortswordProjectile : WTGigaMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(60,120)) //Too much damage?
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS_MEGA"
+	DamageType "Fire"
+	States
+	{
+	Crash:
+		TNT1 A 0 A_GiveToTarget("WTShortSwordAmmoDrain",1)
+		goto Super::Crash
+	XDeath:
+		TNT1 A 0 A_GiveToTarget("WTShortSwordAmmoDrain",1)
+		goto Super::XDeath	
+	}	
+}
+
+Actor WTMegaShortswordProjectile_Weak : WTGigaMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(60,96))
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS_MEGA"
+	DamageType "Fire"
+	States
+	{
+	Crash:
+		TNT1 A 0 A_GiveToTarget("WTShortSwordAmmoDrain",1)
+		goto Super::Crash
+	XDeath:
+		TNT1 A 0 A_GiveToTarget("WTShortSwordAmmoDrain",1)
+		goto Super::XDeath	
+	}	
+}
+
+Actor WTShortSwordAmmoDrain : WTACSTrigger
+{
+	states
+	{
+	//Pickup:
+		//stop
+	Use:
+		TNT1 A 1 A_TakeInventory("Clip",3,TIF_NOTAKEINFINITE)
+		stop
+	}
+}
+
+Actor WTShortswordProjectile_2 : WTShortswordProjectile { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }
+Actor WTShortswordProjectile_Weak_2 : WTShortswordProjectile_Weak { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }
+Actor WTMegaShortswordProjectile_2 : WTMegaShortswordProjectile { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }
+Actor WTMegaShortswordProjectile_Weak_2 : WTMegaShortswordProjectile_Weak { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }

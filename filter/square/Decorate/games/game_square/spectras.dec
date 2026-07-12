@@ -1,0 +1,215 @@
+actor Spectra_Samsara : SquareMonster_Samsara3 replaces Spectra
+{
+	Speed 12
+	FastSpeed 18
+	RenderStyle Translucent
+	Alpha 1.0
+	Height 52
+	Radius 28
+	Health 240
+	SeeSound "spectra/active"
+	ActiveSound "spectra/active"
+	PainSound "spectra/pain"
+	DeathSound "spectra/death"
+	Obituary "$OB_SPECTRA"
+	BloodType SpectraBlood
+	BloodColor "dd dd dd"
+	+NOGRAVITY 
+	+FLOAT 
+	+DONTFALL
+	Tag "Spectra"
+	SpawnID 23
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetTranslucent(1.0)
+		TNT1 A 0 A_JumpIf(args[0] != 0, "AmbushSpawn")
+		Goto Look
+	AmbushSpawn:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", FALSE)
+		TNT1 A 5 A_LookEx(LOF_NOSOUNDCHECK | LOF_DONTCHASEGOAL | LOF_NOSEESOUND, 0, args[1], 0, 0, "AppearPoof")
+		Loop
+	AppearPoof:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", TRUE)
+		TNT1 A 0 A_SpawnItemEx("SpectraPoof")
+		TNT1 A 0 A_PlaySound("spectra/blink", CHAN_ITEM)
+		Goto MissileStream
+	Look:
+		SPEC A 10 A_Look 
+		Loop
+	See:
+		SPEC A 0 A_Chase
+		SPEC A 3 A_SetTranslucent(0.95)
+		SPEC A 0 A_Chase
+		SPEC A 3 A_SetTranslucent(0.9)
+		SPEC A 0 A_Chase
+		SPEC A 3 A_SetTranslucent(0.95)
+		SPEC A 0 A_Chase
+		SPEC A 3 A_SetTranslucent(1.0)
+		Loop
+	Missile:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		SPEC A 0 A_Jump(128, "Blink")
+		Goto MissileStream
+	Blink:
+		SPEC DE 6 A_FaceTarget
+		SPEC E 0 A_Stop
+		TNT1 A 0 A_SpawnItemEx("SpectraPoof")
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", FALSE)
+		TNT1 A 1 // Fight enemy LERP
+		TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 A 0 A_SpawnItemEx("SpectraPoof")
+		SPEC A 0 A_PlaySound("spectra/blink", CHAN_ITEM)
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", TRUE)
+		TNT1 A 1 // Fight enemy LERP
+		SPEC ED 6 A_FaceTarget
+		SPEC A 0 A_Jump(128, "MissileStream")
+		GOTO See
+	MissileStream:
+		SPEC B 0 A_SetTranslucent(1.0)
+		SPEC B 0 A_PlaySound("spectra/attack")
+		SPEC B 7 Bright A_FaceTarget
+		SPEC C 0 Bright A_FaceTarget
+		SPEC C 2 Bright A_CustomMissile("SpectraBallRed", 34)
+		SPEC K 0 Bright A_FaceTarget
+		SPEC K 2 Bright A_CustomMissile("SpectraBallOrange", 34)
+		SPEC L 0 Bright A_FaceTarget
+		SPEC L 2 Bright A_CustomMissile("SpectraBallYellow", 34)
+		SPEC M 0 Bright A_FaceTarget
+		SPEC M 2 Bright A_CustomMissile("SpectraBallGreen", 34)
+		SPEC N 0 Bright A_FaceTarget
+		SPEC N 2 Bright A_CustomMissile("SpectraBallBlue", 34)
+		SPEC O 0 Bright A_FaceTarget
+		SPEC O 2 Bright A_CustomMissile("SpectraBallPurple", 34)
+		SPEC A 6
+		Goto See
+	Pain:
+		SPEC F 0 A_SetTranslucent(0.8)
+		SPEC F 4
+		SPEC F 6 A_Pain
+		SPEC F 0 A_SetTranslucent(1.0)
+		Goto See
+	Pain.MightyBoot:
+		SPEC F 0 A_SetTranslucent(0.8)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		SPEC F 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		SPEC F 16 A_Pain
+		SPEC F 0 A_SetTranslucent(1.0)
+		Goto See
+	Death:
+		SPEC F 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		SPEC F 0 A_Stop
+		SPEC F 0 A_Scream
+		SPEC F 0 A_NoBlocking
+		SPEC FG 4
+		SPEC H 0 A_SpawnItemEx("GibHeadCrystal", random(-32,32), random(-4,4), random(4,12),
+										random(-4,4), random(-4,4), random(0,8), 0, SXF_CLIENTSIDE)
+		SPEC H 0 A_SpawnItemEx("GibWhiteGlove", random(-32,32), random(-4,4), random(24,36),
+										random(-4,4), random(-4,4), random(0,8), 0, SXF_CLIENTSIDE)
+		SPEC H 4 A_SpawnItemEx("GibWhiteGlove2", random(-32,32), random(-4,4), random(24,36),
+										random(-4,4), random(-4,4), random(0,8), 0, SXF_CLIENTSIDE)
+		SPEC IIIIIIIIIIIIII 0 A_SpawnItemEx("SpectraPuff", frandom(-6.0,6.0), frandom(-6.0,6.0), random(16,32),
+										frandom(-1.0,1.0), frandom(-1.0,1.0), frandom(-1.0,1.0), 0, SXF_CLIENTSIDE)
+		SPEC IJ 4
+		TNT1 A 18
+		Stop
+	}
+}
+
+actor DarkSpectra_Samsara : Spectra_Samsara
+{
+	Health 300
+	Speed 16
+	FastSpeed 20
+	RenderStyle Normal
+	BloodColor "11 11 11"
+	Obituary "$OB_DARKSPECTRA"
+	SeeSound "darkspectra/active"
+	ActiveSound "darkspectra/active"
+	PainSound "darkspectra/pain"
+	DeathSound "darkspectra/death"
+	Tag "Dark Spectra"
+	SpawnID 24
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(args[0] > 0, "AmbushSpawn")
+		Goto Look
+	AmbushSpawn:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", FALSE)
+		TNT1 A 5 A_LookEx(LOF_NOSOUNDCHECK | LOF_DONTCHASEGOAL | LOF_NOSEESOUND, 0, args[1], 0, 0, "AppearPoof")
+		Loop
+	AppearPoof:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", TRUE)
+		TNT1 A 0 A_SpawnItemEx("DarkSpectraPoof")
+		TNT1 A 0 A_PlaySound("spectra/blink", CHAN_ITEM)
+		Goto MissileStream
+	Look:
+		DSPC A 10 A_Look
+		Loop
+	See:
+		DSPC A 3 A_Chase
+		Loop
+	Blink: //Override
+	Missile:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		DSPC DE 6 A_FaceTarget
+		DSPC E 0 A_Stop
+		TNT1 A 0 A_SpawnItemEx("DarkSpectraPoof")
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", FALSE)
+		TNT1 A 1 // Fight enemy LERP
+		TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 A 0 A_SpawnItemEx("DarkSpectraPoof")
+		TNT1 A 0 A_PlaySound("darkspectra/blink", CHAN_ITEM)
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE", TRUE)
+		TNT1 A 1 // Fight enemy LERP
+	// Fall Through
+	MissileStream:
+		DSPC B 0 A_PlaySound("darkspectra/attack")
+		DSPC B 7 Bright A_FaceTarget
+		DSPC C 0 Bright A_FaceTarget
+		DSPC C 3 Bright A_CustomMissile("SpectraBallCyan", 34)
+		DSPC C 0 Bright A_FaceTarget
+		DSPC C 3 Bright A_CustomMissile("SpectraBallCyan", 34)
+		DSPC C 0 Bright A_FaceTarget
+		DSPC C 3 Bright A_CustomMissile("SpectraBallCyan", 34)
+		DSPC C 0 Bright A_FaceTarget
+		DSPC C 3 Bright A_CustomMissile("SpectraBallCyan", 34)
+		DSPC C 0 Bright A_FaceTarget
+		DSPC C 3 Bright A_CustomMissile("SpectraBallCyan", 34)
+		DSPC A 6
+		Goto See
+	Pain:
+		DSPC F 4
+		DSPC F 6 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		DSPC F 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		DSPC F 16 A_Pain
+		Goto See
+	Death:
+		DSPC F 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		DSPC F 0 A_Stop
+		DSPC F 0 A_Scream
+		DSPC F 0 A_NoBlocking
+		DSPC FG 4
+		DSPC H 0 A_SpawnItemEx("GibDarkCrystal", random(-32,32), random(-4,4), random(4,12),
+										random(-4,4), random(-4,4), random(0,8), 0, SXF_CLIENTSIDE)
+		DSPC H 0 A_SpawnItemEx("GibBlackGlove", random(-32,32), random(-4,4), random(24,36),
+										random(-4,4), random(-4,4), random(0,8), 0, SXF_CLIENTSIDE)
+		DSPC H 4 A_SpawnItemEx("GibBlackGlove2", random(-32,32), random(-4,4), random(24,36),
+										random(-4,4), random(-4,4), random(0,8), 0, SXF_CLIENTSIDE)
+		DSPC IIIIIIIIIIIIII 0 A_SpawnItemEx("DarkSpectraPuff", frandom(-6.0,6.0), frandom(-6.0,6.0), random(16,32),
+										frandom(-1.0,1.0), frandom(-1.0,1.0), frandom(-1.0,1.0), 0, SXF_CLIENTSIDE)
+		DSPC IJ 4
+		TNT1 A 18
+		Stop
+	}
+}

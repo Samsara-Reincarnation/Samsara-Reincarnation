@@ -47,9 +47,9 @@ Actor REKKRSorrow_Samsara : SamsaraMonsterDemonic replaces Cacodemon 3005
 		HEAD F 16 A_Pain
 		goto See
 	Death:
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-		HEAD G 8
+	Death.Massacre:
+		HEAD G 8 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		HEAD H 8 A_Scream
 		HEAD JK 8
 		HEAD L 8 A_Fall
@@ -187,6 +187,8 @@ actor REKKRSorrow_Samsara_Shrink : REKKRSorrow_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

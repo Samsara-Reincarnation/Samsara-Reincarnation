@@ -10,6 +10,7 @@ actor Caleb : SamsaraPlayerPawnNormalRedBlood
 	Player.StartItem "Pitchfork", 1
 	Player.StartItem "IsSamsaraClass", 1
 	Player.StartItem "SamsaraTipsChecker", 1
+	Player.StartItem "SamsaraBloodGunsAkimboToggleMemory", 1
 	Player.SoundClass "Caleb"
 	Player.ColorRange 209, 224
 	RadiusDamageFactor 1.15
@@ -36,6 +37,7 @@ actor Caleb : SamsaraPlayerPawnNormalRedBlood
 	DamageFactor "MarathonPlasmaFire", 1.069
 	DamageFactor "Slime", 1.049
 	DamageFactor "Disintegrate", 1.1
+	DamageFactor "StrifeMauler", 1.1
 	DamageFactor "Poison", 1.054
 	DamageFactor "WolfenFlamethrower", 1.1
 	DamageFactor "DukeDamage", 1.051
@@ -227,6 +229,7 @@ actor Caleb : SamsaraPlayerPawnNormalRedBlood
 		Goto Spawn
 	Death:
 		TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+	Death.Massacre:
 		TNT1 A 0 A_Jump(128,"Style2")
 	Style1:
 		CALE "\" 5
@@ -246,6 +249,7 @@ actor Caleb : SamsaraPlayerPawnNormalRedBlood
 		Stop
 	XDeath:
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+	XDeath.Massacre:
 		TNT1 A 0 A_ChangeFlag("SOLID",false)
 		TNT1 A 0 A_SpawnDebris("CalebHand")
 		TNT1 A 0 A_SpawnDebris("CalebLeg")
@@ -360,6 +364,7 @@ Actor Caleb_Shrink : Caleb
 	Death.DukePistol:
 	Death.MightyBoot:
 	Death.DukeExplosive:
+	Death.HexenMedusa:
 	Death.DukeIce:
 	Ice:
 	Death.HexenIce:
@@ -368,12 +373,18 @@ Actor Caleb_Shrink : Caleb
 	XDeath.ExpanderDMG:
 	Death.ExpanderDMGCoop:
 	XDeath.ExpanderDMGCoop:
+	Death.QuakeDamage:
+	Death.QuakePistol:
 	Death.QuakeElectric:
 	Death.NotQuadded:
 	Death.QuakeExplosive:
+	Death.QuakeLaser:
+	XDeath.QuakeDamage:
+	XDeath.QuakePistol:
 	XDeath.QuakeElectric:
 	XDeath.NotQuadded:
 	XDeath.QuakeExplosive:
+	XDeath.QuakeLaser:
 	Death.RottExplosive:
 	Death.RottFire:
 	Death.RottDisintegrate:
@@ -388,6 +399,7 @@ Actor Caleb_Shrink : Caleb
 	Death.Tesla:
 	Death.CalebBullet:
 	Disintegrate:
+	Death.StrifeMauler:
 	Death.EradExplosive:
 	Death.EradNova:
 	Death.EradShock:
@@ -475,6 +487,8 @@ Actor Caleb_Shrink : Caleb
 	DeusXDeath:
 	Death:
 	XDeath:
+	Death.Massacre:
+	XDeath.Massacre:
 	Death.Squish:
 	XDeath.Squish:
 		TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
@@ -711,6 +725,7 @@ Actor BloodInnocentMime : SamsaraMiscCharHumanoidStaticTotalGib
 			Loop
 		Death:
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		Death.Massacre:
 			TNT1 A 0 A_NoBlocking
 			TNT1 A 0 A_Jump(128, 2)
 			TNT1 A 0 A_SpawnDebris("ZBloodOrganDebris")
@@ -928,6 +943,8 @@ actor BloodInnocentMime_Shrink : BloodInnocentMime
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)
@@ -1034,6 +1051,7 @@ Actor BloodInnocentMoron : SamsaraMiscCharHumanoidStatic
 			Goto See
 		Death:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
 			INNO P 5 A_NoBlocking
 			INNO QRSTUV 5
 			INNO W 0 A_SpawnItemEx("BloodInnocentMoronCorpse", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERSCALE)
@@ -1041,6 +1059,7 @@ Actor BloodInnocentMoron : SamsaraMiscCharHumanoidStatic
 			Stop
 		XDeath:
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		XDeath.Massacre:
 			TNT1 A 0 A_ChangeFlag("SOLID",false)
 			TNT1 A 0 A_SpawnItemEx("CalebGibSpawner")
 			TNT1 A -1
@@ -1155,11 +1174,12 @@ Actor BloodInnocentMoronCorpse : SamsaraCorpseActor
 			INNO W 4
 			Loop
 		Death:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		Death.Massacre:
 			TNT1 A 0 A_RemoveMaster
 			TNT1 A 0 A_ChangeFlag("SOLID",false)
 			TNT1 AA 0 A_SpawnDebris("ZBloodBloodliver")
 			TNT1 A 0 A_SpawnDebris("ZBloodOrganDebris")
-			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
 			TNT1 A 0 A_Jump(128,1,2,3)
 			TNT1 AAAAAAA 0 A_SpawnDebris("ZBloodOrganDebris2")
 			TNT1 A 0 A_Jump(128,1,2,3,4,5)
@@ -1389,6 +1409,8 @@ actor BloodInnocentMoron_Shrink : BloodInnocentMoron
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

@@ -1,0 +1,163 @@
+actor PGSuperTazer : PGBoolean {}
+actor PGUltraTazer : PGBoolean {}
+
+actor " Tazer " : Weapon
+{
+    Weapon.Slotnumber 0
+    Weapon.SelectionOrder 4000
+    Weapon.BobStyle Inverse
+    Weapon.BobSpeed 0.58
+    Weapon.BobRangeX 1.1
+    Weapon.BobRangeY 0.1    
+    +WEAPON.MELEEWEAPON
+    +WEAPON.WIMPY_WEAPON
+    +WEAPON.NOALERT
+    +INVENTORY.UNDROPPABLE
+    Obituary "$SAMSARA_GREED_OB_SLOT_FISTS"
+    Inventory.RestrictedTo "POGreedPlayer"
+    Tag "Tazer"
+    states
+    {
+    Spawn:
+        TNT1 A 5
+        stop
+    Select:
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",4,"SelectDominatrix")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",3,"SelectSpecimen")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",2,"SelectLizard")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",1,"SelectCyborg")
+        TNT1 AAA 0 A_Raise
+        GWF0 A 1 A_Raise
+        Loop
+    SelectCyborg:
+        TNT1 AAA 0 A_Raise
+        GWF1 A 1 A_Raise
+        Goto Select
+    SelectLizard:
+        TNT1 AAA 0 A_Raise
+        GWF2 A 1 A_Raise
+        Goto Select
+    SelectSpecimen:
+        TNT1 AAA 0 A_Raise
+        GWF3 A 1 A_Raise
+        Goto Select
+    SelectDominatrix:
+        TNT1 AAA 0 A_Raise
+        GWF4 A 1 A_Raise
+        Goto Select
+    Deselect:
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",4,"DeselectDominatrix")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",3,"DeselectSpecimen")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",2,"DeselectLizard")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",1,"DeselectCyborg")
+        TNT1 AAA 0 A_Lower
+        GWF0 A 1 A_Lower
+        Loop
+    DeselectCyborg:
+        TNT1 AAA 0 A_Lower
+        GWF1 A 1 A_Lower
+        Goto Deselect
+    DeselectLizard:
+        TNT1 AAA 0 A_Lower
+        GWF2 A 1 A_Lower
+        Goto Deselect
+    DeselectSpecimen:
+        TNT1 AAA 0 A_Lower
+        GWF3 A 1 A_Lower
+        Goto Deselect
+    DeselectDominatrix:
+        TNT1 AAA 0 A_Lower
+        GWF4 A 1 A_Lower
+        Goto Deselect
+    Ready:
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",4,"ReadyDominatrix")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",3,"ReadySpecimen")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",2,"ReadyLizard")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",1,"ReadyCyborg")
+        TNT1 A 0 A_JumpIfInventory("PGUltraTazer",1,"ReadySuper")
+        GWF0 A 1 A_WeaponReady
+        loop
+    ReadyCyborg:
+        GWF1 A 1 A_WeaponReady
+        Goto Ready
+    ReadyLizard:
+        GWF2 A 1 A_WeaponReady
+        Goto Ready
+    ReadySpecimen:
+        GWF3 A 1 A_WeaponReady
+        Goto Ready
+    ReadyDominatrix:
+        GWF4 A 1 A_WeaponReady
+        Goto Ready
+    ReadySuper:
+        GWF0 A 1 A_WeaponReady
+        goto Ready
+    Fire:
+        TNT1 A 0 A_GunFlash("MeleeFlash",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",4,"FireDominatrix")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",3,"FireSpecimen")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",2,"FireLizard")
+        TNT1 A 0 A_JumpIfInventory("IPoGMode",1,"FireCyborg")
+        GWF0 B 2 bright A_PlayWeaponSound("greed/tazer")
+        GWF0 C 3 bright A_GiveInventory("SamsaraIPOGMeleeAttackHandler")
+        GWF0 A 10
+        goto Ready
+    FireCyborg:
+        GWF1 B 2 bright A_PlayWeaponSound("greed/tazer")
+        GWF1 C 3 bright A_GiveInventory("SamsaraIPOGMeleeAttackHandler")
+        GWF1 A 10
+        goto Ready
+    FireLizard:
+        GWF2 B 2 A_PlayWeaponSound("greed/arrow")
+        GWF2 C 3 A_GiveInventory("SamsaraIPOGMeleeAttackHandler")
+        GWF2 D 2
+        GWF2 A 10
+        goto Ready
+    FireSpecimen:
+        GWF3 B 2 A_PlayWeaponSound("greed/arrow")
+        GWF3 C 3 A_GiveInventory("SamsaraIPOGMeleeAttackHandler")
+        GWF3 A 10
+        goto Ready
+    FireDominatrix:
+        GWF4 B 2 A_PlayWeaponSound("greed/arrow")
+        GWF4 C 3 A_GiveInventory("SamsaraIPOGMeleeAttackHandler")
+        GWF4 A 10
+        goto Ready
+    MeleeFlash:
+        TNT1 A 1
+        Stop
+    AltFire:
+        TNT1 A 0 A_JumpIfInventory("IPOGGrenadeToken", 1, 1)
+        Goto Ready    
+        TNT1 A 0 A_GiveInventory("IPOGGrenadeThrower", 1)
+        Goto Ready            
+    }
+}
+
+actor SamsaraIPOGMeleeAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(30,true,CPF_NORANDOMPUFFZ,"PGBulletPuff",72)
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch(30*3,true,CPF_NORANDOMPUFFZ,"PGBulletPuff",72)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(30,true,CPF_NORANDOMPUFFZ,"PGBulletPuffCoop",72)
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch(30*3,true,CPF_NORANDOMPUFFZ,"PGBulletPuffCoop",72)
+        stop
+    }
+}

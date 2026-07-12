@@ -1,0 +1,1620 @@
+actor UsingWMC : Boolean {}
+actor SamsaraWMCChargeTime : Counter { Inventory.MaxAmount 7 }
+actor SamsaraMarathonWMCReloadingAlt : Boolean {}
+
+actor "ONI-71 Wave Motion Cannon" : SamsaraMarathonWeapon
+{
+    Inventory.PickupMessage "You picked up the ONI-71 Wave Motion Cannon!"
+    //Weapon.SlotNumber 7
+    Weapon.SelectionOrder 2800
+    Weapon.AmmoType1 "WMCAmmo"
+    Weapon.AmmoType2 "MortarAmmo"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoUse2 1
+    //Scale 0.5
+    Tag "ONI-71 Wave Motion Cannon"
+    +EXPLOSIVE
+    +NOAUTOFIRE
+    States
+    {
+      Spawn:
+        WMCP A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount",43)
+        MWMC A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReadyAltAmmoCheck
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyAltAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,"ReadyAltAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"Reload")
+        goto ReadyAltAmmoCheck
+
+      ReadyAltAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",1,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltReload")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,"AltReload")
+        goto Ready
+
+      // oh this isn't pleasant to look at
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",0,"Deselect43")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",42,"Deselect42")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",41,"Deselect41")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",40,"Deselect40")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",39,"Deselect39")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",38,"Deselect38")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",37,"Deselect37")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",36,"Deselect36")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",35,"Deselect35")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",34,"Deselect34")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",33,"Deselect33")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",32,"Deselect32")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",31,"Deselect31")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",30,"Deselect30")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",29,"Deselect29")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",28,"Deselect28")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",27,"Deselect27")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",26,"Deselect26")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",25,"Deselect25")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",24,"Deselect24")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",23,"Deselect23")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",22,"Deselect22")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",21,"Deselect21")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",20,"Deselect20")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",19,"Deselect19")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",18,"Deselect18")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",17,"Deselect17")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",16,"Deselect16")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",15,"Deselect15")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",14,"Deselect14")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",13,"Deselect13")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",12,"Deselect12")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",11,"Deselect11")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",10,"Deselect10")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",9,"Deselect9")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",8,"Deselect8")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",7,"Deselect7")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",6,"Deselect6")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",5,"Deselect5")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",4,"Deselect4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",3,"Deselect3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",2,"Deselect2")
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWeaponSwapOffsetCount",1,"Deselect1")
+        goto Deselect0
+
+      Deselect43:
+        MWMC A 1 Offset(0,35) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect42:
+        MWMC A 1 Offset(0,38) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect41:
+        MWMC A 1 Offset(0,41) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect40:
+        MWMC A 1 Offset(0,44) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect39:
+        MWMC A 1 Offset(0,47) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect38:
+        MWMC A 1 Offset(0,50) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect37:
+        MWMC A 1 Offset(0,53) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect36:
+        MWMC A 1 Offset(0,56) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect35:
+        MWMC A 1 Offset(0,59) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect34:
+        MWMC A 1 Offset(0,62) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect33:
+        MWMC A 1 Offset(0,65) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect32:
+        MWMC A 1 Offset(0,68) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect31:
+        MWMC A 1 Offset(0,71) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect30:
+        MWMC A 1 Offset(0,74) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect29:
+        MWMC A 1 Offset(0,77) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect28:
+        MWMC A 1 Offset(0,80) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect27:
+        MWMC A 1 Offset(0,83) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect26:
+        MWMC A 1 Offset(0,86) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect25:
+        MWMC A 1 Offset(0,89) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect24:
+        MWMC A 1 Offset(0,92) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect23:
+        MWMC A 1 Offset(0,95) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect22:
+        MWMC A 1 Offset(0,98) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect21:
+        MWMC A 1 Offset(0,101) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect20:
+        MWMC A 1 Offset(0,104) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect19:
+        MWMC A 1 Offset(0,107) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect18:
+        MWMC A 1 Offset(0,110) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect17:
+        MWMC A 1 Offset(0,113) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect16:
+        MWMC A 1 Offset(0,116) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect15:
+        MWMC A 1 Offset(0,119) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect14:
+        MWMC A 1 Offset(0,122) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect13:
+        MWMC A 1 Offset(0,125) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect12:
+        MWMC A 1 Offset(0,128) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect11:
+        MWMC A 1 Offset(0,131) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect10:
+        MWMC A 1 Offset(0,134) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect9:
+        MWMC A 1 Offset(0,137) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect8:
+        MWMC A 1 Offset(0,140) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect7:
+        MWMC A 1 Offset(0,143) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect6:
+        MWMC A 1 Offset(0,146) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect5:
+        MWMC A 1 Offset(0,149) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect4:
+        MWMC A 1 Offset(0,152) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect3:
+        MWMC A 1 Offset(0,155) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect2:
+        MWMC A 1 Offset(0,158) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect1:
+        MWMC A 1 Offset(0,161) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Deselect0:
+        MWMC A 1 Offset(0,164) A_Lower
+        loop
+
+      // but it's what should be done
+      Select:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectReloadAmmoCheck")
+      Select0:
+        TNT1 A 0 A_TakeInventory("UsingFists")
+        TNT1 A 0 A_TakeInventory("UsingPistols")
+        TNT1 A 0 A_TakeInventory("UsingDualPistols")
+        TNT1 A 0 A_TakeInventory("UsingSMG")
+        TNT1 A 0 A_TakeInventory("UsingPacifier")
+        TNT1 A 0 A_TakeInventory("UsingShotguns")
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("UsingFusionPistol")
+        TNT1 A 0 A_TakeInventory("UsingAssaultRifle")
+        TNT1 A 0 A_TakeInventory("UsingSpanker")
+        TNT1 A 0 A_TakeInventory("UsingToasty")
+        //TNT1 A 0 A_TakeInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon2")
+        TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
+
+        TNT1 A 0 A_GiveInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,161) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select1: // token giving repeated mainly for map change
+        TNT1 A 0 A_TakeInventory("UsingFists")
+        TNT1 A 0 A_TakeInventory("UsingPistols")
+        TNT1 A 0 A_TakeInventory("UsingDualPistols")
+        TNT1 A 0 A_TakeInventory("UsingSMG")
+        TNT1 A 0 A_TakeInventory("UsingPacifier")
+        TNT1 A 0 A_TakeInventory("UsingShotguns")
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("UsingFusionPistol")
+        TNT1 A 0 A_TakeInventory("UsingAssaultRifle")
+        TNT1 A 0 A_TakeInventory("UsingSpanker")
+        TNT1 A 0 A_TakeInventory("UsingToasty")
+        //TNT1 A 0 A_TakeInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon2")
+        TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
+
+        TNT1 A 0 A_GiveInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,158) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select2:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,155) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select3:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,152) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select4:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,149) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select5:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,146) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select6:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,143) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select7:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,140) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select8:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,137) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select9:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,134) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select10:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,131) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select11:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,128) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select12:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,125) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select13:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,122) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select14:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,119) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select15:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,116) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select16:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,113) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select17:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,110) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select18:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,107) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select19:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,104) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select20:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,101) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select21:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,98) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select22:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,95) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select23:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,92) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select24:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,89) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select25:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,86) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select26:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,83) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select27:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,80) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select28:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,77) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select29:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,74) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select30:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,71) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select31:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,68) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select32:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,65) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select33:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,62) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select34:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,59) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select35:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,56) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select36:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,53) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select37:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,50) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select38:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,47) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select39:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,44) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select40:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,41) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select41:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,38) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select42:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,35) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+      Select43:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWeaponSwapOffsetCount")
+        MWMC A 1 Offset(0,32) A_Raise
+        wait
+
+      SelectReloadAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"SelectAltReloadAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,"SelectAltReloadAmmoCheck")
+      SelectReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",0,"SelectAltReloadAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        goto SelectAltReloadAmmoCheck
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        TNT1 A 0 A_GiveInventory("WMCAmmo")
+        loop
+
+      SelectAltReloadAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Select0")
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",1,"Select0")
+      SelectAltReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",0,"Select0")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,1)
+        goto Select0
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("RocketAmmo",5)
+        TNT1 A 0 A_GiveInventory("MortarAmmo")
+        loop
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadableReloadCheck")
+      FireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireChargeInit")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"FireChargeInit")
+        goto Ready
+
+      FireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireChargeInit")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,"FireChargeInit")
+      FireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"Reload")
+        goto Ready
+
+      FireReloadableReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,1) // only allowed with modern reloading
+        goto FireReloadable
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireReload",1,1) // holding attack + reload?
+        goto FireReloadable
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",0,"FireReloadable") // ignore if full on magazine or insufficient reserve
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"Reload")
+        goto FireReloadable
+
+      FireChargeInit:
+        MWMC A 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireCharge1:
+        TNT1 A 0 A_TakeInventory("SamsaraWMCChargeTime")
+        TNT1 A 0 A_PlaySound("wmc/chargeup",CHAN_WEAPON)
+        WMC1 BCDEFGHIJ 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        WMC1 KLM 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("wmc/beep1",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("WeaponFlashesAreDisabled",1,2)
+        TNT1 A 0 A_SetBlend("Red",0.4,8)
+        TNT1 A 0 A_ReFire("FireCharge1Ready")
+      FireCharge1Stop:
+        TNT1 A 0 A_PlaySound("wmc/chargedown",CHAN_WEAPON)
+        WMC1 MLK 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        WMC1 JIHGFEDCB 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      FireCharge1Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraWMCChargeTime",0,"FireCharge2")
+        WMC2 A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraWMCChargeTime")
+        TNT1 A 0 A_ReFire("FireCharge1Ready")
+        WMC2 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireStart1:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStart1Reloadable")
+      FireStart1NonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack1")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"FireAttack1")
+        goto FireContinue1
+
+      FireStart1Reloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireAttack1")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,"FireAttack1")
+        goto FireContinue1
+
+      FireAttack1:
+        TNT1 A 0 A_GunFlash
+      FireContinue1:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWMCPrimaryLevel1AttackHandler")
+        goto FireFinish
+
+      FireCharge2:
+        TNT1 A 0 A_TakeInventory("SamsaraWMCChargeTime")
+        TNT1 A 0 A_PlaySound("wmc/chargeup",CHAN_WEAPON)
+        WMC2 BCDEFGHIJ 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        WMC2 KLM 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("wmc/beep1",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("WeaponFlashesAreDisabled",1,2)
+        TNT1 A 0 A_SetBlend("Red",0.4,8)
+        TNT1 A 0 A_ReFire("FireCharge2Ready")
+        goto FireCharge2Ready
+
+      FireCharge2Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraWMCChargeTime",0,"FireCharge3")
+        WMC3 A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraWMCChargeTime")
+        TNT1 A 0 A_ReFire("FireCharge2Ready")
+        WMC3 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireStart2:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStart2Reloadable")
+      FireStart2NonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack2")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"FireAttack2") // attack could be called with less than intended amount
+        goto FireContinue2
+
+      FireStart2Reloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireAttack2")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,"FireAttack2") // attack could be called with less than intended amount
+        goto FireContinue2
+
+      FireAttack2:
+        TNT1 A 0 A_GunFlash
+      FireContinue2:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWMCPrimaryLevel2AttackHandler")
+        goto FireFinish
+
+      FireCharge3:
+        TNT1 A 0 A_TakeInventory("SamsaraWMCChargeTime")
+        TNT1 A 0 A_PlaySound("wmc/chargeup",CHAN_WEAPON)
+        WMC3 BCDEFGHIJ 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        WMC3 KLM 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("wmc/beep2",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("WeaponFlashesAreDisabled",1,2)
+        TNT1 A 0 A_SetBlend("White",0.8,12)
+        TNT1 A 0 A_ReFire("FireCharge3Ready")
+        goto FireCharge3Ready
+
+      FireCharge3Ready:
+        WMC4 A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire("FireCharge3Ready")
+        WMC4 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireStart3:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStart3Reloadable")
+      FireStart3NonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack3")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,"FireAttack3") // attack could be called with less than intended amount
+        goto FireContinue3
+
+      FireStart3Reloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireAttack3")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,"FireAttack3") // attack could be called with less than intended amount
+        goto FireContinue3
+
+      FireAttack3:
+        TNT1 A 0 A_GunFlash
+      FireContinue3:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWMCPrimaryLevel3AttackHandler")
+        goto FireFinish
+
+      FireFinish:
+        TNT1 A 0 A_TakeInventory("SamsaraWMCChargeTime")
+        TNT1 A 0 A_ZoomFactor(0.99,ZOOM_INSTANT)
+        MWMC B 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+        MWMC C 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MWMC DE 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MWMC FGP 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("wmc/reload")
+        MWMC HIJA 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"AltFireReloadableReloadCheck")
+      AltFireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltFireStart")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,"AltFireStart")
+        goto Ready
+
+      AltFireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AltFireStart")
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",1,"AltFireStart")
+      AltFireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltReload")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,"AltReload")
+        goto Ready
+
+      AltFireReloadableReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,1) // only allowed with modern reloading
+        goto AltFireReloadable
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireReload",1,1) // holding altattack + reload?
+        goto AltFireReloadable
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",0,"AltFireReloadable") // ignore if full on magazine or insufficient reserve
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltReload")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,"AltReload")
+        goto AltFireReloadable
+
+      AltFireStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"Ready")
+        TNT1 A 0 A_AlertMonsters
+        MWMC A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"AltFireStartReloadable")
+      AltFireStartNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltFireAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,"AltFireAttack")
+        goto AltFireContinue
+
+      AltFireStartReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AltFireAttack")
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",1,"AltFireAttack")
+        goto AltFireContinue
+
+      AltFireAttack:
+        TNT1 A 0 A_GunFlash("AltFlash",GFF_NOEXTCHANGE)
+      AltFireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWMCSecondaryAttackHandler")
+        MWMC KLM 4 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MWMC N 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MWMC O 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MWMC A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      AltFlash:
+        TNT1 A 4 A_Light2
+        TNT1 A 4 A_Light1
+        goto LightDone
+
+      // yep
+      Reload:
+        TNT1 A 0 A_TakeInventory("SamsaraMarathonWMCReloadingAlt")
+        goto Reload43
+
+      AltReload:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonWMCReloadingAlt")
+        goto Reload43
+
+      Reload43:
+        MWMC A 1 Offset(0,35) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload42:
+        MWMC A 1 Offset(0,38) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload41:
+        MWMC A 1 Offset(0,41) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload40:
+        MWMC A 1 Offset(0,44) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload39:
+        MWMC A 1 Offset(0,47) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload38:
+        MWMC A 1 Offset(0,50) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload37:
+        MWMC A 1 Offset(0,53) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload36:
+        MWMC A 1 Offset(0,56) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload35:
+        MWMC A 1 Offset(0,59) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload34:
+        MWMC A 1 Offset(0,62) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload33:
+        MWMC A 1 Offset(0,65) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload32:
+        MWMC A 1 Offset(0,68) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload31:
+        MWMC A 1 Offset(0,71) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload30:
+        MWMC A 1 Offset(0,74) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload29:
+        MWMC A 1 Offset(0,77) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload28:
+        MWMC A 1 Offset(0,80) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload27:
+        MWMC A 1 Offset(0,83) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload26:
+        MWMC A 1 Offset(0,86) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload25:
+        MWMC A 1 Offset(0,89) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload24:
+        MWMC A 1 Offset(0,92) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload23:
+        MWMC A 1 Offset(0,95) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload22:
+        MWMC A 1 Offset(0,98) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload21:
+        MWMC A 1 Offset(0,101) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload20:
+        MWMC A 1 Offset(0,104) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload19:
+        MWMC A 1 Offset(0,107) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload18:
+        MWMC A 1 Offset(0,110) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload17:
+        MWMC A 1 Offset(0,113) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload16:
+        MWMC A 1 Offset(0,116) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload15:
+        MWMC A 1 Offset(0,119) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload14:
+        MWMC A 1 Offset(0,122) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload13:
+        MWMC A 1 Offset(0,125) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload12:
+        MWMC A 1 Offset(0,128) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload11:
+        MWMC A 1 Offset(0,131) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload10:
+        MWMC A 1 Offset(0,134) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload9:
+        MWMC A 1 Offset(0,137) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload8:
+        MWMC A 1 Offset(0,140) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload7:
+        MWMC A 1 Offset(0,143) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload6:
+        MWMC A 1 Offset(0,146) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload5:
+        MWMC A 1 Offset(0,149) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload4:
+        MWMC A 1 Offset(0,152) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload3:
+        MWMC A 1 Offset(0,155) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload2:
+        MWMC A 1 Offset(0,158) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload1:
+        MWMC A 1 Offset(0,161) A_TakeInventory("SamsaraMarathonWeaponSwapOffsetCount",1)
+      Reload0:
+        MWMC A 10 Offset(0,164)
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonWMCReloadingAlt",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+        goto Select0
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"AltReloadAmmo")
+        goto Select0
+
+      ReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",0,"Select0")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        goto Select0
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        TNT1 A 0 A_GiveInventory("WMCAmmo")
+        loop
+
+      AltReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",0,"Select0")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,1)
+        goto Select0
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("RocketAmmo",5)
+        TNT1 A 0 A_GiveInventory("MortarAmmo")
+        loop
+    }
+}
+
+actor SamsaraMarathonWMCPrimaryLevel1AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("WMCAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("wmc/railfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,false)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel1",0,false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissileCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel1Coop",0,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(7)
+        stop
+    }
+}
+
+actor SamsaraMarathonWMCPrimaryLevel2AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1) // attack could be called with less than intended amount
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",10)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,1) // attack could be called with less than intended amount
+        stop
+        TNT1 A 0 A_TakeInventory("WMCAmmo",2)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("wmc/railfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,false)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel2DM",0,false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissileCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel2Coop",0,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(7)
+        stop
+    }
+}
+
+actor SamsaraMarathonWMCPrimaryLevel3AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1) // attack could be called with less than intended amount
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",20)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("WMCAmmo",1,1) // attack could be called with less than intended amount
+        stop
+        TNT1 A 0 A_TakeInventory("WMCAmmo",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("wmc/railfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissile",0,false)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel3DM",0,false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("WMCBeamMissileCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("WMCRailLevel3Coop",0,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(7)
+        stop
+    }
+}
+
+actor SamsaraMarathonWMCSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",5)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("MortarAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("MortarAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("wmc/grenadefire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("WMCGrenade",0,false,-1,3,0,5)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("WMCGrenadeCoop",0,false,-1,3,0,5)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(6)
+        stop
+    }
+}
+
+actor WMCAmmo : Ammo
+{
+    Inventory.MaxAmount 8
+    Tag "Wave Motion Cannon Charges"
+    +IGNORESKILL
+}
+
+actor MortarAmmo : Ammo
+{
+    Inventory.MaxAmount 3
+    Tag "Wave Motion Cannon Mortars"
+    +IGNORESKILL
+}
+
+actor WMCRailLevel1 : FastProjectile
+{
+    Radius 15
+    Height 15
+    Speed 400
+    Damage (random(210,280))
+    DamageType "WMCBeam"
+    RenderStyle "Add"
+    Alpha 0.9
+    Decal "BFGScorch"
+    Obituary "$SAMSARA_MARATHON_OB_SLOT7_1"
+    +BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +NOBOSSRIP
+    +NOTIMEFREEZE
+    +RIPPER
+    States
+    {
+      Spawn:
+        TNT1 A -1
+        stop
+
+      Death:
+        WCHT A 1 Bright A_ChangeFlag("NOTIMEFREEZE",false)
+        WCHT BCDE 1 Bright Light("WMCGR_X1")
+        WCHT FGHI 1 Bright Light("WMCGR_X2")
+        WCHT JK 1 Bright Light("WMCGR_X3")
+        WCHT LM 2 Bright Light("WMCGR_X3")
+        WCHT NOPQ 2 Bright Light("WMCGR_X4")
+        WCHT R 2 Bright Light("WMCGR_X5")
+        stop
+    }
+}
+
+actor WMCRailLevel1Coop : WMCRailLevel1
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor WMCRailLevel2 : WMCRailLevel1
+{
+    +FORCERADIUSDMG
+    States
+    {
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(490,560),128,0)
+        TNT1 A 0 A_Explode(random(35,70),128)
+        goto DeathFinish
+        TNT1 A 0 A_Explode(random(490,560),128,0,false,128)
+        TNT1 A 0 A_Explode(random(35,70),128,XF_HURTSOURCE,false,128)
+        goto DeathFinish
+
+      DeathFinish:
+        TNT1 AAAAAAAA 0 A_SpawnItemEx("WMCGrenadeExplosion",random(-5,5),random(-5,5),random(-5,5),0.4*random(2,5),0.4*random(2,5),0.4*random(2,5),random(0,359))
+        goto Super::Death
+    }
+}
+
+actor WMCRailLevel2DM : WMCRailLevel2
+{
+    States
+    {
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(140,175),128,0)
+		TNT1 A 0 A_Explode(random(35,70),128)
+        goto DeathFinish
+		TNT1 A 0 A_Explode(random(70,140),128,0,false,128)
+        TNT1 A 0 A_Explode(random(35,70),128,XF_HURTSOURCE,false,128)
+        goto DeathFinish
+    }
+}
+
+actor WMCRailLevel2Coop : WMCRailLevel2
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor WMCRailLevel3 : WMCRailLevel1
+{
+    Radius 30
+    Height 30
+    +FORCERADIUSDMG
+    States
+    {
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(490,560),196,0)
+		TNT1 A 0 A_Explode(random(70,140),196)
+        goto DeathContinue
+		TNT1 A 0 A_Explode(random(490,560),196,0,false,196)
+        TNT1 A 0 A_Explode(random(70,140),196,XF_HURTSOURCE,false,196)
+        goto DeathContinue
+
+      DeathContinue:
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3Baby",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplode",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+      DeathFinish:
+        TNT1 AAAAAAAA 0 A_SpawnItemEx("WMCGrenadeExplosion",random(-5,5),random(-5,5),random(-5,5),0.4*random(2,5),0.4*random(2,5),0.4*random(2,5),random(0,359))
+        goto Super::Death
+    }
+}
+
+actor WMCRailLevel3DM : WMCRailLevel3
+{
+    States
+    {
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(490,560),196,0)
+		TNT1 A 0 A_Explode(random(70,140),196)
+        goto DeathContinue
+		TNT1 A 0 A_Explode(random(320,490),196,0,false,196)
+        TNT1 A 0 A_Explode(random(70,140),196,XF_HURTSOURCE,false,196)
+        goto DeathContinue
+
+      DeathContinue:
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBaby",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyDM",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        goto DeathFinish
+    }
+}
+
+actor WMCRailLevel3Coop : WMCRailLevel3
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(490,560),196,0)
+		TNT1 A 0 A_Explode(random(70,140),196)
+        goto DeathContinue
+		TNT1 A 0 A_Explode(random(490,560),196,0,false,196)
+        TNT1 A 0 A_Explode(random(70,140),196,XF_HURTSOURCE,false,196)
+        goto DeathContinue
+
+      DeathContinue:
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamMissileBabyCoop",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCRailLevel3BabyCoop",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,22,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,67,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,112,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,157,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,202,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,247,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,292,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("WMCBeamExplodeCoop",1,0,337,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        goto DeathFinish
+    }
+}
+
+actor WMCBeamMissile
+{
+    Projectile
+    Radius 10
+    Height 10
+    Speed 100
+    +BLOODLESSIMPACT
+    +CLIENTSIDEONLY
+    +NOBOSSRIP
+    +NOTIMEFREEZE
+    +NOTRIGGER
+    +RIPPER
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(100*sqrt(velx*velx+vely*vely))/-100,0,(100*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(98*sqrt(velx*velx+vely*vely))/-100,0,(98*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(96*sqrt(velx*velx+vely*vely))/-100,0,(96*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(94*sqrt(velx*velx+vely*vely))/-100,0,(94*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(92*sqrt(velx*velx+vely*vely))/-100,0,(92*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(90*sqrt(velx*velx+vely*vely))/-100,0,(90*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(88*sqrt(velx*velx+vely*vely))/-100,0,(88*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(86*sqrt(velx*velx+vely*vely))/-100,0,(86*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(84*sqrt(velx*velx+vely*vely))/-100,0,(84*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(82*sqrt(velx*velx+vely*vely))/-100,0,(82*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(80*sqrt(velx*velx+vely*vely))/-100,0,(80*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(78*sqrt(velx*velx+vely*vely))/-100,0,(78*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(76*sqrt(velx*velx+vely*vely))/-100,0,(76*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(74*sqrt(velx*velx+vely*vely))/-100,0,(74*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(72*sqrt(velx*velx+vely*vely))/-100,0,(72*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(70*sqrt(velx*velx+vely*vely))/-100,0,(70*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(68*sqrt(velx*velx+vely*vely))/-100,0,(68*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(66*sqrt(velx*velx+vely*vely))/-100,0,(66*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(64*sqrt(velx*velx+vely*vely))/-100,0,(64*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(62*sqrt(velx*velx+vely*vely))/-100,0,(62*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(60*sqrt(velx*velx+vely*vely))/-100,0,(60*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(58*sqrt(velx*velx+vely*vely))/-100,0,(58*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(56*sqrt(velx*velx+vely*vely))/-100,0,(56*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(54*sqrt(velx*velx+vely*vely))/-100,0,(54*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(52*sqrt(velx*velx+vely*vely))/-100,0,(52*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(50*sqrt(velx*velx+vely*vely))/-100,0,(50*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(48*sqrt(velx*velx+vely*vely))/-100,0,(48*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(46*sqrt(velx*velx+vely*vely))/-100,0,(46*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(44*sqrt(velx*velx+vely*vely))/-100,0,(44*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(42*sqrt(velx*velx+vely*vely))/-100,0,(42*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(40*sqrt(velx*velx+vely*vely))/-100,0,(40*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(38*sqrt(velx*velx+vely*vely))/-100,0,(38*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(36*sqrt(velx*velx+vely*vely))/-100,0,(36*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(34*sqrt(velx*velx+vely*vely))/-100,0,(34*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(32*sqrt(velx*velx+vely*vely))/-100,0,(32*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(30*sqrt(velx*velx+vely*vely))/-100,0,(30*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(28*sqrt(velx*velx+vely*vely))/-100,0,(28*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(26*sqrt(velx*velx+vely*vely))/-100,0,(26*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(24*sqrt(velx*velx+vely*vely))/-100,0,(24*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(22*sqrt(velx*velx+vely*vely))/-100,0,(22*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(20*sqrt(velx*velx+vely*vely))/-100,0,(20*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(18*sqrt(velx*velx+vely*vely))/-100,0,(18*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(16*sqrt(velx*velx+vely*vely))/-100,0,(16*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(14*sqrt(velx*velx+vely*vely))/-100,0,(14*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(12*sqrt(velx*velx+vely*vely))/-100,0,(12*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(10*sqrt(velx*velx+vely*vely))/-100,0,(10*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(8*sqrt(velx*velx+vely*vely))/-100,0,(8*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(6*sqrt(velx*velx+vely*vely))/-100,0,(6*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(4*sqrt(velx*velx+vely*vely))/-100,0,(4*velz)/-100)
+        TNT1 A 0 A_SpawnItemEx("WMCBeam",(2*sqrt(velx*velx+vely*vely))/-100,0,(2*velz)/-100)
+        TNT1 A 1 A_SpawnItemEx("WMCBeam",(0*sqrt(velx*velx+vely*vely))/-100,0,(0*velz)/-100)
+        loop
+
+      Death:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor WMCBeamMissileCoop : WMCBeamMissile
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor WMCBeam
+{
+    RenderStyle "Add"
+    Alpha 0.9
+    Scale 0.55
+    +CLIENTSIDEONLY
+    +NOCLIP
+    +NOGRAVITY
+    +RANDOMIZE
+    States
+    {
+      Spawn:
+        WMCS A 2
+        WMCS A 1 A_FadeOut(0.05)
+        wait
+    }
+}
+
+actor WMCRailLevel3Baby : WMCRailLevel1
+{
+    Radius 10
+    Height 10
+    Speed 80
+    Damage (random(105,175))
+    Alpha 0.75
+    Scale 0.25
+    Decal "Scorch"
+    +FORCERADIUSDMG
+    States
+    {
+      Spawn:
+        TNT1 A 1 A_SpawnItemEx("WMCRailLevel3BabyTrail")
+        loop
+
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 2)
+        TNT1 A 0 A_Explode(64,96,0)
+        goto DeathFinish
+        TNT1 A 0 A_Explode(64,96,0,false,96)
+        goto DeathFinish
+
+      DeathFinish:
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+        TNT1 A 0 A_Jump(256,"DeathFinish1","DeathFinish2","DeathFinish3","DeathFinish4")
+      DeathFinish1:
+        WMCN B 3 Bright Light("WMCGR_X1")
+        WMCN C 3 Bright Light("WMCGR_X2")
+        WMCN D 3 Bright Light("WMCGR_X3")
+        WMCN E 3 Bright Light("WMCGR_X4")
+        WMCN F 3 Bright Light("WMCGR_X5")
+        stop
+
+      DeathFinish2:
+        WMCN G 3 Bright Light("WMCGR_X1")
+        WMCN H 3 Bright Light("WMCGR_X2")
+        WMCN I 3 Bright Light("WMCGR_X3")
+        WMCN J 3 Bright Light("WMCGR_X4")
+        WMCN K 3 Bright Light("WMCGR_X5")
+        stop
+
+      DeathFinish3:
+        WMCN L 3 Bright Light("WMCGR_X1")
+        WMCN M 3 Bright Light("WMCGR_X2")
+        WMCN N 3 Bright Light("WMCGR_X3")
+        WMCN O 3 Bright Light("WMCGR_X4")
+        WMCN P 3 Bright Light("WMCGR_X5")
+        stop
+
+      DeathFinish4:
+        WMCN Q 3 Bright Light("WMCGR_X1")
+        WMCN R 3 Bright Light("WMCGR_X2")
+        WMCN S 3 Bright Light("WMCGR_X3")
+        WMCN T 3 Bright Light("WMCGR_X4")
+        WMCN U 3 Bright Light("WMCGR_X5")
+        stop
+    }
+}
+
+actor WMCRailLevel3BabyDM : WMCRailLevel3Baby
+{
+    Damage (random(14,21))
+    States
+    {
+      Death:
+        goto DeathFinish
+    }
+}
+
+actor WMCRailLevel3BabyCoop : WMCRailLevel3Baby
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor WMCRailLevel3BabyTrail
+{
+    Radius 10
+    Height 10
+    RenderStyle "Add"
+    Alpha 0.9
+    Scale 0.25
+    +CLIENTSIDEONLY
+    +NOGRAVITY
+    +RANDOMIZE
+    States
+    {
+      Spawn:
+        WCHT ACEGIKLMNOPQR 1 Bright
+        stop
+    }
+}
+
+actor WMCBeamMissileBaby : WMCBeamMissile
+{
+    Speed 80
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(78*sqrt(velx*velx+vely*vely))/-80,0,(78*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(72*sqrt(velx*velx+vely*vely))/-80,0,(72*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(66*sqrt(velx*velx+vely*vely))/-80,0,(66*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(60*sqrt(velx*velx+vely*vely))/-80,0,(60*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(54*sqrt(velx*velx+vely*vely))/-80,0,(54*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(48*sqrt(velx*velx+vely*vely))/-80,0,(48*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(42*sqrt(velx*velx+vely*vely))/-80,0,(42*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(36*sqrt(velx*velx+vely*vely))/-80,0,(36*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(30*sqrt(velx*velx+vely*vely))/-80,0,(30*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(24*sqrt(velx*velx+vely*vely))/-80,0,(24*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(18*sqrt(velx*velx+vely*vely))/-80,0,(18*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(12*sqrt(velx*velx+vely*vely))/-80,0,(12*velz)/-80)
+        TNT1 A 0 A_SpawnItemEx("WMCBeamBaby",(6*sqrt(velx*velx+vely*vely))/-80,0,(6*velz)/-80)
+        TNT1 A 1 A_SpawnItemEx("WMCBeamBaby",(0*sqrt(velx*velx+vely*vely))/-80,0,(0*velz)/-80)
+        loop
+    }
+}
+
+actor WMCBeamMissileBabyCoop : WMCBeamMissileBaby
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor WMCBeamBaby : WMCBeam
+{
+    Scale 0.2
+    States
+    {
+      Spawn:
+        WMCS A 1 A_FadeOut(0.1)
+        loop
+    }
+}
+
+actor WMCBeamExplode : FastProjectile
+{
+    Radius 5
+    Height 5
+    Speed 20
+    DamageType "WMCBeam"
+    ReactionTime 24
+    Decal "Scorch"
+    Obituary "$SAMSARA_MARATHON_OB_SLOT7_1"
+    +BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +NOBOSSRIP
+    +NOTIMEFREEZE
+    +RIPPER
+    States
+    {
+      Spawn:
+        TNT1 A 0 NoDelay A_JumpIf(CallACS("SamsaraDecorate", 47), 2)
+        TNT1 A 1 A_Explode(48,128,0)
+        goto SpawnCountdown
+        TNT1 A 1 A_Explode(48,128,0,false,128)
+        goto SpawnCountdown
+
+      SpawnCountdown:
+        TNT1 A 0 A_Countdown
+        goto Spawn
+
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 2)
+        TNT1 A 1 A_Explode(64,128,0)
+        stop
+        TNT1 A 1 A_Explode(64,128,0,false,128)
+        stop
+    }
+}
+
+actor WMCBeamExplodeCoop : WMCBeamExplode
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor WMCGrenade
+{
+    Projectile
+    Radius 6
+    Height 8
+    Speed 15
+    Damage 10
+    DamageType "WMCNade"
+    Gravity 0.125 //0.11
+    //Scale 0.55
+    DeathSound "wmc/grenadeexplode1"
+    Decal "Scorch"
+    Obituary "$SAMSARA_MARATHON_OB_SLOT7_2"
+    +BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +FORCERADIUSDMG
+    -NOGRAVITY
+    States
+    {
+      Spawn:
+        WMCN AAAAAAAAAAAAAAA 1 Bright Light("DOOMROCKET") A_SpawnItemEx("MarathonGrenadeSmoke")
+        WMCN A -1 Bright Light("DOOMROCKET")
+        stop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(70,140),128,0)
+		TNT1 A 0 A_Explode(random(70,140),128)
+        goto DeathContinue
+		TNT1 A 0 A_Explode(random(70,140),128,0,false,128)
+        TNT1 A 0 A_Explode(random(70,140),128,XF_HURTSOURCE,false,128)
+        goto DeathContinue
+
+      DeathContinue:
+        TNT1 AAAAAAA 0 A_CustomMissile("WMCGrenade2",0,0,random(-180,180),CMF_AIMDIRECTION,random(16,65))
+        TNT1 AAAAAAA 0 A_CustomMissile("WMCGrenade2",0,0,random(-180,180),CMF_AIMDIRECTION,random(16,65))
+      DeathFinish:
+        TNT1 AAAAAAAA 0 A_SpawnItemEx("WMCGrenadeExplosion",random(-5,5),random(-5,5),random(-5,5),0.4*random(-5,5),0.4*random(-5,5),0.4*random(-5,5),random(0,359))
+        TNT1 A 1
+        stop
+    }
+}
+
+actor WMCGrenadeCoop : WMCGrenade
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(70,140),128,0)
+		TNT1 A 0 A_Explode(random(70,140),128)
+        goto DeathContinue
+		TNT1 A 0 A_Explode(random(70,140),128,0,false,128)
+        TNT1 A 0 A_Explode(random(70,140),128,XF_HURTSOURCE,false,128)
+        goto DeathContinue
+
+      DeathContinue:
+        TNT1 AAAAAAA 0 A_CustomMissile("WMCGrenadeCoop2",0,0,random(-180,180),CMF_AIMDIRECTION,random(16,65))
+        TNT1 AAAAAAA 0 A_CustomMissile("WMCGrenadeCoop2",0,0,random(-180,180),CMF_AIMDIRECTION,random(16,65))
+        goto DeathFinish
+    }
+}
+
+actor WMCGrenadeExplosion
+{
+    Radius 1
+    Height 1
+    RenderStyle "Add"
+    Alpha 0.75
+    Scale 0.75
+    +CLIENTSIDEONLY
+    +NOCLIP
+    +NOGRAVITY
+    +RANDOMIZE
+    States
+    {
+      Spawn:
+        TNT1 A 0 A_Jump(256,"Spawn1","Spawn2","Spawn3","Spawn4")
+      Spawn1:
+        WMCN B 3 Bright Light("WMCGR_X1")
+        WMCN C 3 Bright Light("WMCGR_X2")
+        WMCN D 3 Bright Light("WMCGR_X3")
+        WMCN E 3 Bright Light("WMCGR_X4")
+        WMCN F 3 Bright Light("WMCGR_X5")
+        stop
+
+      Spawn2:
+        WMCN G 3 Bright Light("WMCGR_X1")
+        WMCN H 3 Bright Light("WMCGR_X2")
+        WMCN I 3 Bright Light("WMCGR_X3")
+        WMCN J 3 Bright Light("WMCGR_X4")
+        WMCN K 3 Bright Light("WMCGR_X5")
+        stop
+
+      Spawn3:
+        WMCN L 3 Bright Light("WMCGR_X1")
+        WMCN M 3 Bright Light("WMCGR_X2")
+        WMCN N 3 Bright Light("WMCGR_X3")
+        WMCN O 3 Bright Light("WMCGR_X4")
+        WMCN P 3 Bright Light("WMCGR_X5")
+        stop
+
+      Spawn4:
+        WMCN Q 3 Bright Light("WMCGR_X1")
+        WMCN R 3 Bright Light("WMCGR_X2")
+        WMCN S 3 Bright Light("WMCGR_X3")
+        WMCN T 3 Bright Light("WMCGR_X4")
+        WMCN U 3 Bright Light("WMCGR_X5")
+        stop
+    }
+}
+
+actor WMCGrenade2 : WMCGrenade
+{
+    Speed 5
+    Damage 5
+    //Gravity 0.35 // (0.35 got overridden by +LOWGRAVITY (0.125))
+    Scale 0.3
+    DeathSound "wmc/grenadeexplode2"
+    States
+    {
+      Spawn:
+        WMCN A -1 Bright Light("MNADE")
+        stop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(25,35),96,0)
+		TNT1 A 0 A_Explode(random(25,35),96)
+        goto DeathFinish
+        TNT1 A 0 A_Explode(random(25,35),96,0,false,96)
+		TNT1 A 0 A_Explode(random(25,35),96,XF_HURTSOURCE,false,96)
+        goto DeathFinish
+
+      DeathFinish:
+        TNT1 A 1 A_SpawnItemEx("WMCGrenadeExplosion2")
+        stop
+    }
+}
+
+actor WMCGrenadeCoop2 : WMCGrenade2
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_NoGravity
+       TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 3)
+        TNT1 A 0 A_Explode(random(50,60),96,0)
+		TNT1 A 0 A_Explode(random(50,60),96)
+        goto DeathFinish
+        TNT1 A 0 A_Explode(random(50,60),96,0,false,96)
+		TNT1 A 0 A_Explode(random(50,60),96,XF_HURTSOURCE,false,96)
+        goto DeathFinish
+    }
+}
+
+actor WMCGrenadeExplosion2 : WMCGrenadeExplosion { Scale 0.25 }

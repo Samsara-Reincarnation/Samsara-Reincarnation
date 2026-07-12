@@ -43,6 +43,7 @@ actor Leonard : SamsaraPlayerPawnNormalColoredBlood
 	DamageFactor "MarathonPlasmaFire", 0.92
 	DamageFactor "Slime", 0.94
 	DamageFactor "Disintegrate", 0.94
+	DamageFactor "StrifeMauler", 0.94
 	DamageFactor "Poison", 0.91
 	DamageFactor "WolfenFlamethrower", 0.91
 	DamageFactor "DukeDamage", 1.15
@@ -131,11 +132,11 @@ actor Leonard : SamsaraPlayerPawnNormalColoredBlood
 	states
 	{
 		Spawn:
-			LEO_ A 0 NoDelay ACS_NamedExecuteWithResult("DisableVoodooDoll")
-			LEO_ A 0 A_JumpIf(waterlevel > 2, "Swimming")
+			LEO_ T 0 NoDelay ACS_NamedExecuteWithResult("DisableVoodooDoll")
+			LEO_ T 0 A_JumpIf(waterlevel > 2, "Swimming")
 			LEO_ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT 1 A_JumpIf(momz >> 0, "Jumping")
-			LEO_ A 0 A_JumpIfInventory("LeonardWaiting", 15, "LeonardWait")
-			LEO_ A 0 A_GiveInventory("LeonardWaiting", 1)
+			LEO_ T 0 A_JumpIfInventory("LeonardWaiting", 15, "LeonardWait")
+			LEO_ T 0 A_GiveInventory("LeonardWaiting", 1)
 			Loop
 		LeonardWait:
 			LEO_ T 1 A_TakeInventory("LeonardWaiting", 15)
@@ -236,6 +237,7 @@ actor Leonard : SamsaraPlayerPawnNormalColoredBlood
 			Goto Spawn
 		Death:
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		Death.Massacre:
 			LE_3 A 8 A_PlayerScream
 			LE_3 B 8 A_NoBlocking
 			LE_3 C 8 
@@ -254,22 +256,23 @@ actor Leonard : SamsaraPlayerPawnNormalColoredBlood
 			Stop
 		XDeathForLeonard:
 		XDeath:
-			TNT1 A 0 A_ChangeFlag("SOLID",false)  
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		XDeath.Massacre:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
 			TNT1 A 0 A_SpawnItemEx("LeonardBlood_RR")
 			RR20 A 0 A_CustomMissile("LeonardHead_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			RR20 AA 0 A_CustomMissile("LeonardArm_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
-			RR20 AA 0 A_CustomMissile("LeonardLeg_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))  
+			RR20 AA 0 A_CustomMissile("LeonardLeg_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			RR20 A 0 A_CustomMissile("MiscGib1_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			RR20 A 0 A_CustomMissile("MiscGib2_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			RR20 A 0 A_CustomMissile("MiscGib3_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			RR20 A 0 A_CustomMissile("MiscGib4_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			RR20 A 0 A_CustomMissile("MiscGib5_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
-			RR20 A 0 A_CustomMissile("MiscGib6_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))	
-			RR20 AAAAA 0 A_CustomMissile("MiscGib7_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))	
+			RR20 A 0 A_CustomMissile("MiscGib6_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			RR20 AAAAA 0 A_CustomMissile("MiscGib7_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 			TNT1 A 0 A_PlaySound("Leonard/XDeath",CHAN_BODY,1.0,0,ATTN_NORM)
 			TNT1 A 5 A_NoBlocking
-			TNT1 A -1 
+			TNT1 A -1
 			Stop
 		Burn:
 			TNT1 A 0
@@ -357,6 +360,7 @@ Actor Leonard_Shrink : Leonard
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -365,12 +369,18 @@ Actor Leonard_Shrink : Leonard
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -385,6 +395,7 @@ Actor Leonard_Shrink : Leonard
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -434,6 +445,8 @@ Actor Leonard_Shrink : Leonard
 		Death.Hexen2ElectricExtreme:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

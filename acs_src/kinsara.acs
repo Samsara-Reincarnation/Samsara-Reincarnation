@@ -203,7 +203,8 @@ script "SecretNotifierDisplay" (int sfound, int stotal) CLIENTSIDE
         Log(l:"SECRETFOUND_DEFAULT");
     } else if (CheckInventory("CalebClass")) {
         AmbientSound("Caleb/Secret", 127);
-        Log(l:"SECRETFOUND_BLOOD");
+        if (Random(0, 1) == 0) { Log(l:"SECRETFOUND_BLOOD_1"); }
+        else { Log(l:"SECRETFOUND_BLOOD_2"); }
     } else if (CheckInventory("StrifeClass")) {
         AmbientSound("secretfound/strife", 127);
         Log(l:"SECRETFOUND_STRIFE");
@@ -248,7 +249,8 @@ script "SecretNotifierDisplay" (int sfound, int stotal) CLIENTSIDE
         Log(l:"SECRETFOUND_DEFAULT");
     } else if (CheckInventory("RRClass")) {
         AmbientSound("Leonard/Secret", 127);
-        Print(l:"SECRETFOUND_DEFAULT");
+        SetHudSize(400, 300, 0);
+        HudMessage(l:"SECRETFOUND_REDNECK"; HUDMSG_PLAIN, 1, CR_WHITE, 200.4, 9.1, 2.0);
     } else if (CheckInventory("BittermanClass")) {
         AmbientSound("Q2Misc/Secret", 127);
         Print(l:"SECRETFOUND_QUAKE2");
@@ -332,13 +334,11 @@ script "PistolStart" ENTER
 {
     int pistolstart = GetCVar("samsara_pistolstart");
 
-	if (pistolstart >= 1 && (GameType () != GAME_TITLE_MAP))
+	if (pistolstart >= 1 && (IsSinglePlayer() || IsCoop()))
 	{
 		// We can't do pistol starts in Hexen or Strife
-		if(GetCvar("samsara_currentgame") == 8 || GetCvar("samsara_currentgame") == 16)
-		{
-			terminate;
-		}
+        // Or invasion, for that matter
+		if (GetCVar("samsara_currentgame") == 8 || GetCvar("samsara_currentgame") == 16 || isInvasion()) { terminate; }
 
 		if (GetCVar("samsara_moddedgame")) { terminate; }
 
@@ -364,14 +364,7 @@ script "PistolStart" ENTER
 				SetActorProperty (0, APROP_SpawnHealth, 100);
 				break;
 		}
-		
-		TakeInventory("GotWeapon0", 999);
-		TakeInventory("GotWeapon2", 999);
-		TakeInventory("GotWeapon3", 999);
-		TakeInventory("GotWeapon4", 999);
-		TakeInventory("GotWeapon5", 999);
-		TakeInventory("GotWeapon6", 999);
-		TakeInventory("GotWeapon7", 999);
+
 		ACS_NamedExecuteWithResult("Samsara_ResetInventory",0,0,0,0);
 		if (!(CheckInventory("QuakeClass") || CheckInventory("RottClass") || CheckInventory("HalfLifeClass") || CheckInventory("CatacombClass") || CheckInventory("PainkillerClass")))
 		{
@@ -498,7 +491,6 @@ script "SamsaraPickupMessages" (int item, int subitem, int message) CLIENTSIDE
               case 12: itemtemp = "SAMSARA_HEALPACK3_HEXEN2_1"; break;
               case 13: itemtemp = "SAMSARA_HEALPACK3_HEXEN2_2"; break;
               case 14: itemtemp = "SAMSARA_HEALPACK3_CATACOMB"; break;
-              case 15: itemtemp = "SAMSARA_HEALPACK3_QUAKE3"; break;
             }
             break;
 
@@ -515,9 +507,30 @@ script "SamsaraPickupMessages" (int item, int subitem, int message) CLIENTSIDE
             switch (message)
             {
               case 0: itemtemp = "SAMSARA_MEGAPACK"; break;
-              case 1: itemtemp = "SAMSARA_MEGAPACK_CORVUS"; break;
-              case 2: itemtemp = "SAMSARA_MEGAPACK_MARATHON"; break;
-              case 3: itemtemp = "SAMSARA_MEGAPACK_ERADICATOR"; break;
+              case 1: itemtemp = "SAMSARA_MEGAPACK12"; break;
+              case 2: itemtemp = "SAMSARA_MEGAPACK3"; break;
+              case 3: itemtemp = "SAMSARA_MEGAPACK5"; break;
+              case 4: itemtemp = "SAMSARA_MEGAPACK_CORVUS"; break;
+              case 5: itemtemp = "SAMSARA_MEGAPACK12_CORVUS"; break;
+              case 6: itemtemp = "SAMSARA_MEGAPACK3_CORVUS"; break;
+              case 7: itemtemp = "SAMSARA_MEGAPACK5_CORVUS"; break;
+              case 8: itemtemp = "SAMSARA_MEGAPACK_CORVUSINVENTORY"; break;
+              case 9: itemtemp = "SAMSARA_MEGAPACK_MARATHON"; break;
+              case 10: itemtemp = "SAMSARA_MEGAPACK12_MARATHON"; break;
+              case 11: itemtemp = "SAMSARA_MEGAPACK3_MARATHON"; break;
+              case 12: itemtemp = "SAMSARA_MEGAPACK5_MARATHON"; break;
+              case 13: itemtemp = "SAMSARA_MEGAPACK_QUAKE"; break;
+              case 14: itemtemp = "SAMSARA_MEGAPACK12_QUAKE"; break;
+              case 15: itemtemp = "SAMSARA_MEGAPACK3_QUAKE"; break;
+              case 16: itemtemp = "SAMSARA_MEGAPACK5_QUAKE"; break;
+              case 17: itemtemp = "SAMSARA_MEGAPACK_ERADICATOR"; break;
+              case 18: itemtemp = "SAMSARA_MEGAPACK12_ERADICATOR"; break;
+              case 19: itemtemp = "SAMSARA_MEGAPACK3_ERADICATOR"; break;
+              case 20: itemtemp = "SAMSARA_MEGAPACK5_ERADICATOR"; break;
+              case 21: itemtemp = "SAMSARA_MEGAPACK_QUAKE3"; break;
+              case 22: itemtemp = "SAMSARA_MEGAPACK12_QUAKE3"; break;
+              case 23: itemtemp = "SAMSARA_MEGAPACK3_QUAKE3"; break;
+              case 24: itemtemp = "SAMSARA_MEGAPACK5_QUAKE3"; break;
             }
             break;
 
@@ -821,8 +834,9 @@ script "SamsaraPickupMessages" (int item, int subitem, int message) CLIENTSIDE
             {
               case 0: itemtemp = "SAMSARA_SKULLTAG_DOOM"; break;
               case 1: itemtemp = "SAMSARA_SKULLTAG_DOOM_CORVUS"; break;
-              case 2: itemtemp = "SAMSARA_SKULLTAG_DOOM_QUAKE2"; break;
-              case 3: itemtemp = "SAMSARA_SKULLTAG_DOOM_QUAKE3"; break;
+              case 2: itemtemp = "SAMSARA_SKULLTAG_DOOM_QUAKE1"; break;
+              case 3: itemtemp = "SAMSARA_SKULLTAG_DOOM_QUAKE2"; break;
+              case 4: itemtemp = "SAMSARA_SKULLTAG_DOOM_QUAKE3"; break;
             }
             break;
 

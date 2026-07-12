@@ -1,0 +1,475 @@
+actor Tommygun : CalebWeapon
+{
+	Obituary "%k made %o dance."
+	Weapon.AmmoType1 "Clip"
+	Weapon.AmmoType2 "Clip"
+	Weapon.AmmoGive 30
+	Weapon.AmmoUse1 1
+	Weapon.AmmoUse2 1
+	Inventory.PickupMessage "You got the Tommy Gun!"
+	Inventory.PickupSound "Caleb/Weaponup"
+	Tag "Tommy Gun"
+	Weapon.SelectionOrder 150
+	Weapon.SlotNumber 4
+	Weapon.SlotPriority 0
+	Decal ZBloodBulletChip1
+	+THRUGHOST
+	+WEAPON.NOALERT
+	States
+	{
+		Spawn:
+			TOMP A -1
+			Stop
+		Select:
+			TNT1 A 0 A_JumpIfInventory("CalebLighterReadyDummy",1,"DeselectLighter")
+			TOMG A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,2)
+			TOMG A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,1)
+			Goto Super::SelectLoop
+			TOM2 A 0
+			Goto Super::SelectLoop
+		Deselect:
+			TOMG A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,2)
+			TOMG A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,1)
+			Goto Super::DeselectLoop
+			TOM2 A 0
+			Goto Super::DeselectLoop
+		DeselectPitchfork:
+			TNT1 A 0 A_SelectWeapon("Pitchfork")
+			Goto Deselect
+		Ready:
+			TNT1 A 0 A_TakeInventory("UsingPitchfork", 1)
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboReady")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboReady")
+			TNT1 A 0 A_JumpIfInventory("CalebReady",1,"IntroTaunt")
+			TNT1 A 0 A_JumpIfInventory("CalebWaiting",60,"WaitingTaunt")
+			TOMG A 1 A_WeaponReady
+			Goto Ready+1
+		Fire:
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 7, "FireI")
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 6, "FireH")
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 5, "FireG")
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 4, "FireF")
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 3, "FireE")
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 2, "FireD")
+			TNT1 A 0 A_JumpIfInventory("TommyCounter", 1, "FireC")
+			Goto FireB
+		FireB:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireB")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireB")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light2
+			TOMG B 2 Bright A_GunFlash
+			Goto FireBEnd
+		FireBEnd:
+			TNT1 A 0 A_ReFire("FireC")
+			Goto Ready
+		FireC:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireC")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireC")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light1
+			TOMG C 2 Bright A_GunFlash
+			Goto FireCEnd
+		FireCEnd:
+			TNT1 A 0 A_ReFire("FireD")
+			Goto Ready
+		FireD:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireD")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireD")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light2
+			TOMG D 2 Bright A_GunFlash
+			Goto FireDEnd
+		FireDEnd:
+			TNT1 A 0 A_ReFire("FireE")
+			Goto Ready
+		FireE:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireE")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireE")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light1
+			TOMG E 2 Bright A_GunFlash
+			Goto FireEEnd
+		FireEEnd:
+			TNT1 A 0 A_ReFire("FireF")
+			Goto Ready
+		FireF:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireF")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireF")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light2
+			TOMG F 2 Bright A_GunFlash
+			Goto FireFEnd
+		FireFEnd:
+			TNT1 A 0 A_ReFire("FireG")
+			Goto Ready
+		FireG:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireG")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireG")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light1
+			TOMG G 2 Bright A_GunFlash
+			Goto FireGEnd
+		FireGEnd:
+			TNT1 A 0 A_ReFire("FireH")
+			Goto Ready
+		FireH:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireH")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireH")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light2
+			TOMG H 2 Bright A_GunFlash
+			Goto FireHEnd
+		FireHEnd:
+			TNT1 A 0 A_ReFire("FireI")
+			Goto Ready
+		FireI:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboFireI")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboFireI")
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAttackHandler")
+			TNT1 A 0 A_Light1
+			TOMG I 2 Bright A_GunFlash
+			Goto FireIEnd
+		FireIEnd:
+			TNT1 A 0 A_TakeInventory("TommyCounter")
+			TNT1 A 0 A_ReFire("FireB")
+			Goto Ready
+		AltFire:
+			TNT1 A 0 A_TakeInventory("CalebAltSpreadCounter", 13)
+			Goto AltHold
+		AltHold:
+			TNT1 A 0 A_JumpIfInventory("PowerSamsaraBloodGunsAkimbo",1,"AkimboAltFire")
+			TNT1 A 0 A_JumpIfInventory("SamsaraBloodGunsAkimboToggled",1,"AkimboAltFire")
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 6)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG J 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 4)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG K 1 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 2)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG L 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG M 1 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 1)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG N 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 3)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG O 1 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 5)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG P 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 7)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG Q 1 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 9)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG R 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 11)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG S 1 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 13)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG T 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 12)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG U 1 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 10)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG V 2 Bright A_GunFlash
+			TNT1 A 0 A_JumpIfNoAmmo("Ready")
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 8)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAltAttackHandler")
+			TOMG W 1 Bright A_GunFlash
+			TNT1 A 0 A_ReFire
+			Goto Ready
+		Flash:
+			TNT1 A 0 A_FireCustomMissile("TommygunCasing",45+random(-8,8),0,1,8,0,2*random(-2,2))
+			Goto FlashEnd
+		FlashEnd:
+			TNT1 A 0 A_AlertMonsters
+			TNT1 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto LightDone
+		AkimboReady:
+			TNT1 A 0 A_JumpIfInventory("CalebReady",1,"IntroTaunt")
+			TNT1 A 0 A_JumpIfInventory("CalebWaiting",60,"WaitingTaunt")
+			TOM2 A 1 A_WeaponReady
+			Goto Ready+1
+		AkimboFireB:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light2
+			TOM2 B 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireBEnd
+		AkimboFireC:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light1
+			TOM2 C 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireCEnd
+		AkimboFireD:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light2
+			TOM2 D 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireDEnd
+		AkimboFireE:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light1
+			TOM2 E 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireEEnd
+		AkimboFireF:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light2
+			TOM2 F 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireFEnd
+		AkimboFireG:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light1
+			TOM2 G 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireGEnd
+		AkimboFireH:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light2
+			TOM2 H 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireHEnd
+		AkimboFireI:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAttackHandler")
+			TNT1 A 0 A_Light1
+			TOM2 I 2 Bright A_GunFlash("AkimboFlash")
+			Goto FireIEnd
+		AkimboAltFire:
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 6)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 J 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 4)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 K 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 2)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 L 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 M 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 1)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 N 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 3)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 O 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 5)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 P 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 7)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 Q 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 9)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 R 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 11)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 S 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 13)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 T 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 12)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 U 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light2
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 10)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 V 2 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_JumpIfInventory("Clip", 2, 1)
+			Goto DeselectPitchfork
+			TNT1 A 0 A_Light1
+			TNT1 A 0 A_GiveInventory("CalebAltSpreadCounter", 8)
+			TNT1 A 0 A_GiveInventory("SamsaraBloodTommyGunAkimboAltAttackHandler")
+			TOM2 W 1 Bright A_GunFlash("AkimboFlash")
+			TNT1 A 0 A_ReFire
+			Goto Ready
+		AkimboFlash:
+			TNT1 A 0 A_FireCustomMissile("TommygunCasing",45+random(-8,8),0,2,8,0,2*random(-2,2))
+			TNT1 A 0 A_FireCustomMissile("TommygunCasing",45+random(-8,8),0,-2,8,0,2*random(-2,2))
+			Goto FlashEnd
+	}
+}
+
+Actor SamsaraBloodTommyGunAttackHandler : Trigger
+{
+	States
+	{
+		Pickup:
+            TNT1 A 0 A_PlaySound("Tommy/Fire",CHAN_WEAPON)
+			TNT1 A 0 A_GiveInventory("TommyCounter", 1)
+			TNT1 A 0 A_TakeInventory("Clip", 1, TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+		PickupAttackDM:
+			TNT1 A 0 A_FireBullets(4.6,2,-1,7,"SamsaraZBBulletPuff", FBF_NORANDOM|FBF_NOFLASH)
+			Stop
+		PickupAttackCoop:
+			TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+			TNT1 A 0 A_FireBullets(4.6,2,-1,9,"SamsaraZBBulletPuffCoop", FBF_NORANDOM|FBF_NOFLASH)
+			Stop
+		PickupAttackCoopImproved:
+			TNT1 A 0 A_FireBullets(4.6,2,-1,10,"SamsaraZBBulletPuffCoop", FBF_NORANDOM|FBF_NOFLASH)
+			Stop
+	}
+}
+
+Actor SamsaraBloodTommyGunAltAttackHandler : Trigger
+{
+	States
+	{
+		Pickup:
+            TNT1 A 0 A_PlaySound("Tommy/Fire",CHAN_WEAPON)
+			TNT1 A 0 A_TakeInventory("Clip", 1, TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+		PickupAttackDM:
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,7,"SamsaraZBBulletPuff", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			Goto PickupTakeSpread
+		PickupAttackCoop:
+		    TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,9,"SamsaraZBBulletPuffCoop", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			Goto PickupTakeSpread
+		PickupAttackCoopImproved:
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,10,"SamsaraZBBulletPuffCoop", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			Goto PickupTakeSpread
+		PickupTakeSpread:
+			TNT1 A 0 A_TakeInventory("CalebAltSpreadCounter", 13)
+			Stop
+	}
+}
+
+Actor SamsaraBloodTommyGunAkimboAttackHandler : Trigger
+{
+	States
+	{
+		Pickup:
+            TNT1 A 0 A_PlaySound("Tommy/Fire",CHAN_WEAPON)
+			TNT1 A 0 A_GiveInventory("TommyCounter", 1)
+			TNT1 A 0 A_TakeInventory("Clip", 2, TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+		PickupAttackDM:
+			TNT1 A 0 A_FireBullets(6.6,2,2,7,"SamsaraZBBulletPuff", FBF_NORANDOM|FBF_NOFLASH)
+			Stop
+		PickupAttackCoop:
+		    TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+			TNT1 A 0 A_FireBullets(6.6,2,2,9,"SamsaraZBBulletPuffCoop", FBF_NORANDOM|FBF_NOFLASH)
+			Stop
+		PickupAttackCoopImproved:
+			TNT1 A 0 A_FireBullets(6.6,2,2,10,"SamsaraZBBulletPuffCoop", FBF_NORANDOM|FBF_NOFLASH)
+			Stop
+	}
+}
+
+Actor SamsaraBloodTommyGunAkimboAltAttackHandler : Trigger
+{
+	States
+	{
+		Pickup:
+            TNT1 A 0 A_PlaySound("Tommy/Fire",CHAN_WEAPON)
+			TNT1 A 0 A_TakeInventory("Clip", 2, TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+		PickupAttackDM:
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,7,"SamsaraZBBulletPuff", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,7,"SamsaraZBBulletPuff", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			Goto PickupTakeSpread
+		PickupAttackCoop:
+		    TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,9,"SamsaraZBBulletPuffCoop", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,9,"SamsaraZBBulletPuffCoop", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			Goto PickupTakeSpread
+		PickupAttackCoopImproved:
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,10,"SamsaraZBBulletPuffCoop", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			TNT1 A 0 A_FireBullets((CallACS("CalebAltSpreadAngle") >> 16) + frandom(-1.6, 1.6),frandom(-0.8, 0.8),-1,10,"SamsaraZBBulletPuffCoop", FBF_EXPLICITANGLE|FBF_NORANDOM|FBF_NOFLASH)
+			Goto PickupTakeSpread
+		PickupTakeSpread:
+			TNT1 A 0 A_TakeInventory("CalebAltSpreadCounter", 13)
+			Stop
+	}
+}
+
+Actor TommyCounter : Counter { Inventory.MaxAmount 7 }
+Actor CalebAltSpreadCounter : Counter { Inventory.MaxAmount 13 }

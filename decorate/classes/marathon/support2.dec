@@ -1,0 +1,396 @@
+actor UsingPacifier: Boolean {}
+
+actor "Tech.50 Pacifier" : SamsaraMarathonWeapon
+{
+    Inventory.PickupMessage "You picked up a Tech.50 Pacifier Security Handgun!"
+    Weapon.SlotNumber 9
+    Weapon.SelectionOrder 4000
+    Weapon.AmmoType "Tech50Ammo"
+    Weapon.AmmoUse 1
+    Scale 0.35
+    Tag "Tech.50 Pacifier"
+    States
+    {
+      Spawn:
+        PT50 C -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyReloadable")
+      ReadyNonReloadable:
+        MRTK A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReadyReloadableAllowReload")
+      ReadyReloadableDisallowReload:
+        MRTK A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyReloadableAllowReload:
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",0,"ReadyReloadableDisallowReload")
+        MRTK A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyAmmoCheck
+
+      ReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,"Reload")
+        goto Ready
+
+      ReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",1,"Ready")
+        goto Reload
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        MRTK A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectReloadAmmoCheck")
+      SelectStart:
+        TNT1 A 0 A_TakeInventory("UsingFists")
+        TNT1 A 0 A_TakeInventory("UsingPistols")
+        TNT1 A 0 A_TakeInventory("UsingDualPistols")
+        TNT1 A 0 A_TakeInventory("UsingSMG")
+        //TNT1 A 0 A_TakeInventory("UsingPacifier")
+        TNT1 A 0 A_TakeInventory("UsingShotguns")
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("UsingFusionPistol")
+        TNT1 A 0 A_TakeInventory("UsingAssaultRifle")
+        TNT1 A 0 A_TakeInventory("UsingSpanker")
+        TNT1 A 0 A_TakeInventory("UsingToasty")
+        TNT1 A 0 A_TakeInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon2")
+        TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
+
+        TNT1 A 0 A_GiveInventory("UsingPacifier")
+        MRTK A 1 A_Raise
+        loop
+
+      SelectReloadAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"SelectStart")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",1,"SelectStart")
+      SelectReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",0,"SelectStart")
+        TNT1 A 0 A_GiveInventory("Tech50Ammo", 1)
+        loop
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        TNT1 A 0
+        goto FireStart
+
+      FireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",1,"FireStart")
+      FireReloadableDryCheck:
+        TNT1 A 0
+        goto Reload
+
+      FireStart:
+        TNT1 A 0 A_AlertMonsters
+        MRTK A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStartReloadable")
+      FireStartNonReloadable:
+        TNT1 A 0
+        goto FireAttack
+
+      FireStartReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireAttack")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",1,"FireAttack")
+        goto FireContinue
+
+      FireAttack:
+        TNT1 A 0 A_GunFlash
+      FireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonTech50PrimaryAttackHandler")
+        MRTK A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK B 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK C 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK A 10 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      Flash:
+        TNT1 A 2 A_Light2
+        TNT1 A 2 A_Light1
+        goto LightDone
+
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"AltFireReloadable")
+      AltFireNonReloadable:
+        TNT1 A 0
+        goto AltFireStart
+
+      AltFireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AltFireStart")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",3,"AltFireStart")
+      AltFireReloadableDryCheck:
+        TNT1 A 0
+        goto Fire
+
+      AltFireStart:
+        TNT1 A 0 A_AlertMonsters
+        MRTK A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"AltFireStartReloadable")
+      AltFireStartNonReloadable:
+        TNT1 A 0
+        goto AltFireAttack
+
+      AltFireStartReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AltFireAttack")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",3,"AltFireAttack")
+        goto AltFireContinue
+
+      AltFireAttack:
+        TNT1 A 0 A_GunFlash
+      AltFireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonTech50SecondaryAttackHandler")
+        MRTK A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK B 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK C 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        MRTK A 10 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Ready")
+        goto ReadyNoAmmoCheck
+
+      Reload:
+        MRTK A 1 Offset(0,38)
+        MRTK A 1 Offset(0,44)
+        MRTK A 1 Offset(0,50)
+        MRTK A 1 Offset(0,56)
+        MRTK A 1 Offset(0,62)
+        MRTK A 1 Offset(0,68)
+        MRTK A 1 Offset(0,74)
+        MRTK A 1 Offset(0,80)
+        MRTK A 1 Offset(0,86)
+        MRTK A 1 Offset(0,92)
+        MRTK A 1 Offset(0,98)
+        MRTK A 1 Offset(0,104)
+        MRTK A 1 Offset(0,110)
+        MRTK A 1 Offset(0,116)
+        MRTK A 1 Offset(0,122)
+        MRTK A 11 Offset(0,128)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectReloadAmmo")
+        goto SelectStart
+    }
+}
+
+actor SamsaraMarathonTech50PrimaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Tech50Ammo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("marathon/tech50/fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupAttackDMUnderwater")
+        TNT1 A 0 A_FireCustomMissile("Tech50Shot",1,false,5,6)
+        TNT1 A 0 A_FireCustomMissile("Tech50Shot",-1,false,-5,6)
+        stop
+
+      PickupAttackDMUnderwater:
+        TNT1 AA 0 A_FireCustomMissile("Tech50ShotUnderwater",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupAttackCoopUnderwater")
+        TNT1 A 0 A_FireCustomMissile("Tech50ShotCoop",1,false,5,6)
+        TNT1 A 0 A_FireCustomMissile("Tech50ShotCoop",-1,false,-5,6)
+        stop
+
+      PickupAttackCoopUnderwater:
+        TNT1 AA 0 A_FireCustomMissile("Tech50ShotUnderwaterCoop",0,false)
+        stop
+    }
+}
+
+actor SamsaraMarathonTech50SecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Tech50Ammo",3,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Tech50Ammo",3)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("marathon/tech50/fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupAttackDMUnderwater")
+        TNT1 A 0 A_FireCustomMissile("Tech50ShotLethal",1,false,5,6)
+        TNT1 A 0 A_FireCustomMissile("Tech50ShotLethal",-1,false,-5,6)
+        stop
+
+      PickupAttackDMUnderwater:
+        TNT1 AA 0 A_FireCustomMissile("Tech50ShotUnderwater",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupAttackCoopUnderwater")
+        TNT1 A 0 A_FireCustomMissile("Tech50ShotLethalCoop",1,false,5,6)
+        TNT1 A 0 A_FireCustomMissile("Tech50ShotLethalCoop",-1,false,-5,6)
+        stop
+
+      PickupAttackCoopUnderwater:
+        TNT1 AA 0 A_FireCustomMissile("Tech50ShotUnderwaterCoop",0,false)
+        stop
+    }
+}
+
+actor Tech50Ammo : Ammo
+{
+    Inventory.MaxAmount 3
+    Tag "Tech.50 Battery"
+    +IGNORESKILL
+}
+
+actor Tech50Shot
+{
+    Projectile
+    Radius 8
+    Height 10
+    Speed 50
+    Damage (5)
+    DamageType "DoomDamageTypeStunner" // "MarathonStun"
+    ReactionTime 1
+    RenderStyle "Add"
+    Scale 0.075
+    Decal "DoomImpScorch"
+    Obituary "$SAMSARA_MARATHON_OB_SUPPORT2"
+    +BLOODLESSIMPACT
+    +DONTREFLECT
+    +FOILINVUL
+    +NOEXTREMEDEATH
+    +PIERCEARMOR
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        MRTK E 1 Bright
+        TNT1 A 1
+        MRTK F 1 Bright
+        TNT1 A 1
+        MRTK G 1 Bright
+        stop
+
+      Death:
+        TNT1 A 1
+        stop
+
+      Crash:
+      XDeath:
+        TNT1 A 1 A_PlaySound("marathon/tech50/stun")
+        stop
+    }
+}
+
+actor Tech50ShotCoop : Tech50Shot
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Tech50ShotLethal : Tech50Shot
+{
+    Speed 40
+    Damage (random(60,72))
+    DamageType "MarathonFire"
+    -DONTREFLECT
+    -FOILINVUL
+    -PIERCEARMOR
+    States
+    {
+      Crash:
+      XDeath:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor Tech50ShotLethalCoop : Tech50ShotLethal
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Tech50ShotUnderwater : Tech50Shot
+{
+    Speed 0
+    Damage 0
+    Decal ""
+    +DONTBLAST
+    +DONTSPLASH
+    +FORCERADIUSDMG
+    +NODAMAGETHRUST
+    +NOTIMEFREEZE
+    +NOTONAUTOMAP
+    +NOTRIGGER
+    +SKYEXPLODE
+    States
+    {
+      Spawn:
+        TNT1 A 1 NoDelay A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 47), 2)
+        TNT1 A 1 A_Explode(64,96)
+        stop
+        TNT1 A 1 A_Explode(64,96,XF_HURTSOURCE,false,96)
+        stop
+    }
+}
+
+actor Tech50ShotUnderwaterCoop : Tech50ShotUnderwater
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor NothingSpeed : PowerSpeed
+{
+    Inventory.Icon ""
+    Powerup.Duration -3
+    Speed 0.1
+    //-NOTELEPORTFREEZE // doesn't exist in zandronum yet
+    +NOTRAIL
+}

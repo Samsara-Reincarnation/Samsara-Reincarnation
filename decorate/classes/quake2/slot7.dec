@@ -1,0 +1,648 @@
+actor SamsaraQuake2BFG10KLoopSoundCheck : Boolean {}
+
+actor Q2BFG10K : Q2Weapon
+{
+    Inventory.PickupMessage "BFG10K"
+    Inventory.Icon "Q2CMPW09"
+    Weapon.SlotNumber 7
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 750
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 50
+    Weapon.AmmoUse 50
+    Obituary "%o was disintegrated by %k's BFG10K."
+    Tag "BFG10K"
+    +BFG
+    States
+    {
+      Spawn:
+        Q2WP A -1
+        stop
+
+      ReadyActual:
+        QBFG G 0 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStarter")
+        QBFG G 1 A_WeaponReady
+        QBFG G 0 A_Jump(10,1)
+        loop
+        QBFG G 0 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStarter")
+        QBFG G 4 A_WeaponReady
+        QBF2 DEFGHIJKLMNOPQRSTUVWXYZ 4 A_WeaponReady
+        loop
+
+      Deselect:
+        QBF3 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        QBF3 A 3 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStarter")
+        QBF3 BC 3
+        QBF3 D 0
+        TNT1 A 8
+      DeselectInstant:
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStopper")
+        goto Super::DeselectInstant
+
+      Ready: // our "Select" state
+        TNT1 A 0 A_TakeInventory("Q2WeaponIndex")
+        TNT1 A 0 A_GiveInventory("Q2WeaponIndex",7)
+        QBFG A 1 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStarter")
+        QBFG A 2 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStarter") // map change hack
+        QBFG B 4
+        QBFG C 3
+        QBFG D 4
+        QBFG E 3
+        QBFG F 4
+        goto ReadyActual
+
+      Fire:
+        QBFG H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        QBFG H 0 A_JumpIfInventory("Cell",50,"FireStart")
+        goto FireDry
+
+      FireDry:
+        QBFG G 0 A_ClearReFire
+        QBFG G 0 A_PlaySound("Q2Weapons/NoAmmo",CHAN_5)
+        QBFG G 0 A_SelectWeapon("Q2Blaster")
+        goto Deselect
+
+      FireStart:
+        QBFG H 0 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundStarter")
+        QBFG H 0 A_GiveInventory("SamsaraQuake2BFG10KPreFireSoundPlayer")
+        QBFG HIJKLMNO 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QBFG P 0 A_GiveInventory("SamsaraQuake2BFG10KAttackHandler")
+        QBFG P 0 A_JumpIfInventory("SamsaraQuake2AmmoCheckFailed",1,2)
+        QBFG P 0 A_GunFlash // have to place it here for recoil
+        QBFG P 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QBFG Q 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QBFG RSTUVWXYZ 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QBF2 ABC 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      Flash:
+        TNT1 A 1 A_Light2
+        TNT1 A 0 A_JumpIfInventory("SamsaraRecoilIsDisabled",1,"FlashNoRecoil")
+        goto FlashRecoil
+
+      FlashNoRecoil:
+        TNT1 A 1
+        TNT1 AAAA 2
+        TNT1 A 2 A_Light1
+        TNT1 AAAAA 2
+        goto LightDone
+
+      FlashRecoil:
+        TNT1 A 1 A_SetPitch(pitch-15)
+        TNT1 AAAA 2 A_SetPitch(pitch+1.5)
+        TNT1 A 0 A_Light1
+        TNT1 AAAAAA 2 A_SetPitch(pitch+1.5)
+        goto LightDone
+    }
+}
+
+actor SamsaraQuake2BFG10KAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SamsaraQuake2AmmoCheckFailed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupSilentCheck")
+        TNT1 A 0 A_JumpIfInventory("Cell",50,1)
+        goto PickupAmmoCheckFailed
+        TNT1 A 0 A_TakeInventory("Cell",50)
+        goto PickupSilentCheck
+
+      // Ammo checking failure stuff
+      PickupAmmoCheckFailed:
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2AmmoCheckFailed")
+        stop
+
+      // Silencer checking stuff
+      PickupSilentCheck:
+        TNT1 A 0 A_JumpIfInventory("PowerSilencer",1,"PickupAttack")
+        TNT1 A 0 A_AlertMonsters
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("BFG10KBallDM",0,false,10,8)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("BFG10KBall_Coop",0,false,10,8)
+        stop
+    }
+}
+
+actor SamsaraQuake2BFG10KPreFireSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerSilencer",1,3)
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Q2Weapons/BFG10KFire",CHAN_WEAPON)
+        stop
+        TNT1 A 0 A_PlaySound("Q2Weapons/BFG10KFire",CHAN_WEAPON,0.25,false,ATTN_STATIC)
+        stop
+    }
+}
+
+actor SamsaraQuake2BFG10KLoopSoundStarter : Trigger
+{
+    States
+    {
+      // Sound starting stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("Q2Weapons/BFG10KLoop",CHAN_6,1.0,true)
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2BFG10KLoopSoundCheck")
+        stop
+    }
+}
+
+actor SamsaraQuake2BFG10KLoopSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuake2BFG10KLoopSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_6)
+        TNT1 A 0 A_StopSound(CHAN_6)
+        TNT1 A 0 A_TakeInventory("SamsaraQuake2BFG10KLoopSoundCheck")
+        stop
+    }
+}
+
+actor SamsaraQuake2BFG10KProjectileOrbitRemoval : Boolean {}
+
+actor BFG10KBall : BFGBall
+{
+    var int user_angle;
+    Speed 10
+    Damage (200)
+    DamageType "BittermanDamage"
+    RenderStyle "Translucent"
+    Alpha 0.5
+    DeathSound ""
+    Decal "DoomBFGLightning"
+    //SelfObituary "%o should have used a smaller gun."
+    +FORCERADIUSDMG
+    +FORCEXYBILLBOARD
+    -MISSILE
+    +NOBLOCKMONST
+    States
+    {
+      Spawn:
+        TNT1 A 1 NoDelay A_SpawnItemEx("BFG10KOrbitParticleSpawner")
+        // we have to do it like this throughout each spawn state, or else it'll flicker in netplay
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_ChangeFlag("MISSILE",true)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(velx == 0, 1)
+        goto SpawnContinue
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(vely == 0, "Death")
+        goto SpawnContinue
+
+      SpawnContinue:
+        BGS1 A 4 Bright Light("Q2BFGBALL") A_PlaySound("Q2Weapons/BFG10KFly",CHAN_VOICE,0.66,true)
+        BGS1 BAB 4 Bright Light("Q2BFGBALL")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_Jump(256,"SpawnCycle1") // for actors inheriting from this actor
+        goto SpawnCycle1
+
+      SpawnCycle1:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_PlaySound("Q2Weapons/BFG10KFly",CHAN_VOICE,0.66,true)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle1Loop:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle1Continue")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle1Continue:
+        BGS1 A 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle2
+
+      SpawnCycle2:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle2Loop:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle2Continue")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle2Continue:
+        BGS1 A 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle3
+
+      SpawnCycle3:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle3Loop:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle3Continue")
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle3Continue:
+        BGS1 B 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle4
+
+      SpawnCycle4:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle4Loop:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle4Continue")
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle4Continue:
+        BGS1 B 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle1
+
+      Death:
+        BGE1 A 5 Bright Light("Q2BFGBALL_X1") A_PlaySound("Q2Weapons/BFG10KExplode",CHAN_VOICE)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        BGE1 B 5 Bright Light("Q2BFGBALL_X2")
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 A 0 A_Jump(256,"DeathExplode") // for actors inheriting from this actor
+        goto DeathExplode
+
+      DeathExplode:
+        TNT1 A 0 A_Explode(200,200)
+        TNT1 A 0 A_JumpIfInTargetLOS("DeathExplodeBig")
+        goto DeathFinish
+
+      DeathExplodeBig:
+        TNT1 A 0 A_RadiusGive("BFG10KExtraSpawnerCoop",1000,RGF_MONSTERS|RGF_OBJECTS)
+        TNT1 A 0 A_Explode(500,1000,0)
+        //TNT1 A 0 A_BFGSpray("BFG10KExtra",40,20)
+        goto DeathFinish
+
+      DeathFinish:
+        BGE1 C 5 Bright Light("Q2BFGBALL_X3")
+        BGE1 D 5 Bright Light("Q2BFGBALL_X1") A_GiveInventory("SamsaraQuake2BFG10KProjectileOrbitRemoval") // this thing removes the orbiting particles
+        BGE1 E 5 Bright Light("Q2BFGBALL_X4")
+        BGE1 F 5 Bright Light("Q2BFGBALL_X5")
+        stop
+    }
+}
+
+actor BFG10KBall_Coop : BFG10KBall
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      SpawnCycle1:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_PlaySound("Q2Weapons/BFG10KFly",CHAN_VOICE,0.66,true)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle1Loop:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle1Continue")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner_Coop",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle1Continue:
+        BGS1 A 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle2
+
+      SpawnCycle2:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle2Loop:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle2Continue")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner_Coop",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle2Continue:
+        BGS1 A 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle3
+
+      SpawnCycle3:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle3Loop:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle3Continue")
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner_Coop",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle3Continue:
+        BGS1 B 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle4
+
+      SpawnCycle4:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle4Loop:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle4Continue")
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawner_Coop",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle4Continue:
+        BGS1 B 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle1
+    }
+}
+
+actor BFG10KBallDM : BFG10KBall
+{
+    Damage (200)
+    States
+    {
+      SpawnCycle1:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_PlaySound("Q2Weapons/BFG10KFly",CHAN_VOICE,0.66,true)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle1Loop:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle1Continue")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawnerDM",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle1Continue:
+        BGS1 A 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle2
+
+      SpawnCycle2:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle2Loop:
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle2Continue")
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 A 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawnerDM",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle2Continue:
+        BGS1 A 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle3
+
+      SpawnCycle3:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle3Loop:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle3Continue")
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawnerDM",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle3Continue:
+        BGS1 B 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle4
+
+      SpawnCycle4:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+      SpawnCycle4Loop:
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_JumpIf(user_angle == 360, "SpawnCycle4Continue")
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",user_angle+45)
+        BGS1 B 0 Bright Light("Q2BFGBALL") A_CustomMissile("BFG10KBeamSpawnerDM",0,0,user_angle,CMF_AIMDIRECTION)
+        loop
+
+      SpawnCycle4Continue:
+        BGS1 B 2 Bright Light("Q2BFGBALL") A_SetUserVar("user_angle",0)
+        goto SpawnCycle1
+
+      DeathExplode:
+        TNT1 A 0 A_Explode(200,200)
+        TNT1 A 0 A_JumpIfInTargetLOS("DeathExplodeBig")
+        goto DeathFinish
+
+      DeathExplodeBig:
+        TNT1 A 0 A_RadiusGive("BFG10KExtraSpawner",1000,RGF_PLAYERS|RGF_MONSTERS|RGF_OBJECTS|RGF_NOTARGET)
+        TNT1 A 0 A_Explode(200,1000,0)
+        //TNT1 A 0 A_BFGSpray("BFG10KExtra",40,20)
+        goto DeathFinish
+    }
+}
+
+/*actor BFG10KBall2 : BFG10KBall
+{
+    Speed 25
+    Damage 100
+    Alpha 0.75
+    States
+    {
+      Death:
+        BGE1 A 5 Bright Light("Q2BFGBALL_X1") A_PlaySound("Q2Weapons/BFG10KExplode",CHAN_VOICE)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KExplosionParticle",0,0,0,random(-4,4),random(-4,4),random(-4,4),random(0,359))
+        BGE1 B 5 Bright Light("Q2BFGBALL_X2")
+        TNT1 A 0 A_Jump(256,"DeathExplode") // for actors inheriting from this actor
+        goto DeathExplode
+
+      DeathExplode:
+        TNT1 A 0 A_BFGSpray
+        goto DeathFinish
+    }
+}*/
+
+actor BFG10KExplosionParticle : Q2ExplosionParticle
+{
+    RenderStyle "Add"
+    Scale 1.25
+    States
+    {
+      Spawn:
+        P004 ABCDEFGH 0 Bright NoDelay A_Jump(64,"Fade")
+        loop
+
+      Fade:
+        "----" A 20 Bright
+      FadeContinue:
+        "----" A 5 Bright
+        "----" A 0 A_Jump(97,1)
+        loop
+        TNT1 A 0
+        stop
+    }
+}
+
+actor BFG10KOrbitParticleSpawner : Q2EffectBase
+{
+    States
+    {
+      Spawn:
+        TNT1 A 0 NoDelay A_JumpIf(CallACS("Q2BFG10KOnlineFix"), "SpawnFinish")
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KOrbitParticle")
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KOrbitParticle")
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KOrbitParticle")
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KOrbitParticle")
+      SpawnLoop:
+        TNT1 A 1 A_JumpIfInventory("SamsaraQuake2BFG10KProjectileOrbitRemoval",1,"SpawnFinish",AAPTR_TARGET)
+        TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"SpawnLoop")
+      SpawnFinish:
+        TNT1 A 0
+        stop
+    }
+}
+
+actor BFG10KOrbitParticle : Q2EffectBase
+{
+    var int user_orbit[4];
+    Radius 38
+    RenderStyle "Translucent"
+    Scale 1.15
+    States
+    {
+      Spawn:
+        TNT1 A 0 NoDelay A_SetUserArray(user_orbit,0,random(20,radius))
+        TNT1 A 0 A_SetUserArray(user_orbit,3,2)
+        TNT1 A 0 A_SetUserArray(user_orbit,1,frandom(-user_orbit[3]*65536,user_orbit[3]*65536))
+        TNT1 A 0 A_SetUserArray(user_orbit,2,frandom(-user_orbit[3]*65536,user_orbit[3]*65536))
+        TNT1 A 0 A_SetTranslucent((radius-(user_orbit[0]-20))*0.1,1)
+        TNT1 A 0 A_SetAngle(random(0,359))
+        TNT1 A 0 A_SetPitch(random2(45))
+      SpawnDecide:
+        P004 ABCDEFGH 0 Bright A_Jump(64,"SpawnLoop")
+        loop
+
+      SpawnLoop:
+        "----" A 0 A_SetPitch(Pitch+(user_orbit[1]*0.0000153))
+        "----" A 1 Bright A_SetAngle(angle+(user_orbit[2]*0.0000153))
+        "----" A 0 A_Warp(AAPTR_TARGET,cos(pitch)*user_orbit[0],cos(pitch)*user_orbit[0],sin(pitch)*user_orbit[0],0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"SpawnLoop")
+        stop
+    }
+}
+
+actor BFG10KBeamSpawner
+{
+    var int user_pitch;
+    Projectile
+    Radius 1
+    Height 1
+    DamageType "BittermanDamage"
+    MeleeRange 768
+    MaxTargetRange 768
+    //+SEEKERMISSILE
+    States
+    {
+      Spawn:
+        TNT1 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET)
+        TNT1 A 0 A_SetUserVar("user_pitch",90)
+        TNT1 A 0 A_ClearTarget
+        TNT1 A 0 A_CopyFriendliness
+      SpawnLoop:
+        TNT1 A 0 A_JumpIf(user_pitch == 0, "See")
+        TNT1 A 0 A_SetUserVar("user_pitch",user_pitch-45)
+        TNT1 A 0 A_SetPitch(user_pitch)
+        TNT1 A 0 A_LookEx(0,0,768,768,45,"See")
+        loop
+
+      See:
+        TNT1 A 0 A_JumpIfTargetInLOS("Melee",45,0,768,768)
+        stop
+
+      Melee:
+        TNT1 A 1 A_CustomRailgun(10,0,0,0,RGF_SILENT,1,0,"BFG10KBeamPuff",0,0,0,0,4.5,0,"BFG10KBeamTrail",-4)
+        stop
+
+      /*Missile:
+        TNT1 A 0 A_CustomRailgun(random(4,10),0,0,0,RGF_SILENT,1,0,"BFG10KBeamPuff",0,0,0,0,4.5,0,"BFG10KBeamTrail",-4)
+        stop*/
+    }
+}
+
+actor BFG10KBeamSpawner_Coop : BFG10KBeamSpawner
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Melee:
+        TNT1 A 1 A_CustomRailgun(10,0,0,0,RGF_SILENT,1,0,"BFG10KBeamPuffCoop",0,0,0,0,4.5,0,"BFG10KBeamTrail",-4)
+        stop
+    }
+}
+
+actor BFG10KBeamSpawnerDM : BFG10KBeamSpawner
+{
+    States
+    {
+      Melee:
+        TNT1 A 1 A_CustomRailgun(5,0,0,0,RGF_SILENT,1,0,"BFG10KBeamPuff",0,0,0,0,4.5,0,"BFG10KBeamTrail",-4)
+        Stop
+    }
+}
+
+/*actor BFG10KBeamSpawnerWeak : BFG10KBeamSpawner
+{
+    States
+    {
+      Missile:
+        TNT1 A 0 A_CustomRailgun(random(3,8),0,0,0,RGF_SILENT,1,0,"BFG10KBeamPuff",0,0,0,0,4.5,0,"BFG10KBeamTrail",-4)
+        Stop
+    }
+}*/
+
+actor BFG10KBeamPuff : Q2BulletPuff
+{
+    Height 2
+    Radius 1
+    //SelfObituary "%o should have used a smaller gun."
+    +ALWAYSPUFF
+    -RANDOMIZE
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor BFG10KBeamPuffCoop : BFG10KBeamPuff
+{
+    //+ALLOWTHRUFLAGS // doesn't exist in zandronum yet
+    +MTHRUSPECIES
+}
+
+actor BFG10KBeamTrail : Q2EffectBase
+{
+    Scale 5
+    Alpha 0.66 // there was another alpha property defined (0.33), adjust as needed
+    //+NOTIMEFREEZE
+    States
+    {
+      Spawn:
+        P004 F 3 Bright
+        stop
+    }
+}
+
+actor BFG10KExtraSpawner : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("BFG10KExtra",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        stop
+    }
+}
+
+actor BFG10KExtraSpawnerCoop : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("BFG10KExtraCoop",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        stop
+    }
+}
+
+actor BFG10KExtra : BFGExtra
+{
+    States
+    {
+      Spawn:
+        BGE2 A 8 Bright Light("Q2BFGBALL")
+        BGE2 B 8 Bright Light("Q2BFGBALL_X1")
+        BGE2 C 8 Bright Light("Q2BFGBALL_X4")
+        BGE2 D 8 Bright Light("Q2BFGBALL_X5")
+        stop
+    }
+}
+
+actor BFG10KExtraCoop : BFG10KExtra { +MTHRUSPECIES }

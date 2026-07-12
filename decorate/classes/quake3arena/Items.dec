@@ -1,0 +1,313 @@
+Actor Q3BattleSuit : CustomInventory
+{
+	Inventory.PickupMessage "Battle Suit"
+	+INVENTORY.AUTOACTIVATE
+	+FLOATBOB
+	+BRIGHT
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			Q300 ABCDEF 15
+			Q300 G 0
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Q3BattleSuitProtection",1)
+			TNT1 A 0 A_GiveInventory("Q3BattleSuitIronFeet",1)
+			TNT1 A 0 A_PlaySound("Quake3/Items/BioSuit",CHAN_6)
+			Stop
+	}
+}
+
+actor Q3BattleSuitProtection : SamsaraPowerupGiver
+{
+    Powerup.Type "Q3BattleSuitProtection"
+    Powerup.Color "Gold"
+}
+
+actor PowerQ3BattleSuitProtection : PowerProtection
+{
+    Powerup.Duration -30
+    DamageFactor "Normal", 0.5
+}
+
+actor Q3BattleSuitIronFeet : SamsaraPowerIronFeetGiverNoColor { Powerup.Duration -30 }
+
+Actor Q3BattleSuitGlowToken : CustomInventory
+{
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_SpawnItemEx("Q3BattleSuitGlow",0,0,40)
+			Stop
+	}
+}
+
+Actor Q3BattleSuitGlow
+{
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			Q350 A 2
+			Stop
+	}
+}
+
+actor SamsaraQuake3QuadDamageCooldown : Counter {}
+actor SamsaraQuake3QuadDamageCooldownDisplay : Counter {}
+
+Actor Q3QuadDamage : CustomInventory
+{
+	Inventory.PickupMessage "Quad Damage"
+	+INVENTORY.AUTOACTIVATE
+	+FLOATBOB
+	+BRIGHT
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			Q300 ABCDEF 15
+			Q300 G 0
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Q3QuadDamageFactor",1)
+			TNT1 A 0 A_PlaySound("Quake3/Items/QuadDamage",CHAN_6)
+			Stop
+	}
+}
+
+actor Q3QuadDamageItem : CustomInventory
+{
+    Inventory.UseSound ""
+    Inventory.Icon "QUADICON" // placeholder
+    Inventory.MaxAmount 1
+    Inventory.InterHubAmount 1
+    Inventory.RestrictedTo "Q3Sarge"
+    Tag "Quad Damage"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 64), 1)
+        goto UseDurationCheck
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasDisabledInventoryCooldown",1,"UseDurationCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuake3QuadDamageCooldown",1,"NoU")
+        goto UseDurationCheck
+
+      UseDurationCheck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 23, 0), "UseFail")
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 ACS_NamedExecuteAlways("Q3_Announcer", 0, 1) //A_PlaySound("Quake3/Items/QuadDamage",CHAN_6)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraQuake3QuadDamageInit", 2100)
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 64), "UseFail")
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+
+      NoU:
+        TNT1 A 0 A_PlaySound("Quake3/Items/QuadDamageFail",CHAN_ITEM)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 17, 14)
+        fail
+    }
+}
+
+actor Q3QuadDamageFactor : SamsaraPowerupGiver
+{
+    Powerup.Type "Q3QuadDamageFactor"
+    Powerup.Color "DodgerBlue"
+}
+
+actor PowerQ3QuadDamageFactor : PowerDamage
+{
+    Powerup.Duration -30
+    DamageFactor "Normal", 4
+}
+
+Actor Q3QuadDamageGlowToken : CustomInventory
+{
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_SpawnItemEx("Q3QuadDamageGlow",0,0,40)
+			Stop
+	}
+}
+
+Actor Q3QuadDamageGlow
+{
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			Q350 A 2
+			Stop
+	}
+}
+
+Actor Q3Haste : CustomInventory
+{
+	Inventory.PickupMessage "Haste"
+	+INVENTORY.AUTOACTIVATE
+	+FLOATBOB
+	+BRIGHT
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			Q300 ABCDEF 15
+			Q300 G 0
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Q3HasteTurbo",1)
+			TNT1 A 0 A_PlaySound("Quake3/Items/Haste",CHAN_6)
+			Stop
+	}
+}
+
+actor Q3HasteTurbo : SamsaraPowerupGiver
+{
+    Powerup.Type "Q3HasteTurbo"
+    Powerup.Color "Yellow"
+}
+
+actor PowerQ3HasteTurbo : PowerSpeed
+{
+    Inventory.Icon ""
+    Powerup.Duration -30
+    Speed 1.5
+}
+
+Actor Q3HasteGlowToken : CustomInventory
+{
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_SpawnItemEx("Q3HasteGlow",0,0,40)
+			Stop
+	}
+}
+
+Actor Q3HasteGlow
+{
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			Q350 A 2
+			Stop
+	}
+}
+
+Actor Q3Regeneration : CustomInventory
+{
+	Inventory.PickupMessage "Regeneration"
+	+INVENTORY.AUTOACTIVATE
+	+FLOATBOB
+	+BRIGHT
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			Q300 ABCDEF 15
+			Q300 G 0
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Q3RegenerationDummy",1)
+			TNT1 A 0 A_PlaySound("Quake3/Items/Regeneration",CHAN_6)
+			Stop
+	}
+}
+
+actor Q3RegenerationDummy : SamsaraPowerupGiver
+{
+    Powerup.Type "Q3RegenerationDummy"
+    Powerup.Color "Red"
+}
+
+actor PowerQ3RegenerationDummy : Powerup { Powerup.Duration -30 }
+
+Actor Q3RegenerationGlowToken : CustomInventory
+{
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_SpawnItemEx("Q3RegenerationGlow",0,0,40)
+			Stop
+	}
+}
+
+Actor Q3RegenerationGlow
+{
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			Q350 A 2
+			Stop
+	}
+}
+
+Actor Q3Invisibility : CustomInventory
+{
+	Inventory.PickupMessage "Invisibility"
+	+INVENTORY.AUTOACTIVATE
+	+FLOATBOB
+	+BRIGHT
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			Q300 ABCDEF 15
+			Q300 G 0
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Q3InvisibilityCloak",1)
+			TNT1 A 0 A_PlaySound("Quake3/Items/Invisibility",CHAN_6)
+			Stop
+	}
+}
+
+actor Q3InvisibilityCloak : SamsaraPowerupGiver
+{
+    Powerup.Type "Q3InvisibilityCloak"
+    Powerup.Color "Gray"
+}
+
+actor PowerQ3InvisibilityCloak : PowerInvisibility
+{
+    Powerup.Mode "Translucent"
+    Powerup.Strength 90
+    Powerup.Duration -30
+}
+
+Actor Q3AmmoRegeneration : CustomInventory
+{
+	Inventory.PickupMessage "Ammo Regen"
+	+INVENTORY.AUTOACTIVATE
+	+FLOATBOB
+	+BRIGHT
+	Renderstyle Add
+	States
+	{
+		Spawn:
+			Q300 ABCDEFGH 15
+			Q300 I 0
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("Q3AmmoRegenerationDummy",1)
+			TNT1 A 0 A_PlaySound("Quake3/Items/AmmoRegeneration",CHAN_6)
+			Stop
+	}
+}
+
+Actor Q3AmmoRegenerationDummy : TemporaryBoolean {}

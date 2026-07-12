@@ -1,0 +1,639 @@
+actor SamsaraDoomguyStrChainsawPoweredAttackAmount : Counter { Inventory.MaxAmount 2 }
+actor SamsaraDoomguyStrChainsawAttackSilentSound : Boolean {}
+
+actor " Chainsaw " : Chainsaw
+{
+	Weapon.Kickback 0
+	Weapon.SelectionOrder 2200
+	Weapon.SlotNumber 1
+	Weapon.SlotPriority 0
+	Weapon.UpSound "WHAT UPSOUND"
+	Weapon.ReadySound "WHAT READYSOUND"
+	Tag "Chainsaw"
+	+INVENTORY.UNDROPPABLE
+	+WEAPON.MELEEWEAPON
+	Obituary "$SAMSARA_DOOMGUY_OB_SLOT1"
+	Inventory.RestrictedTo "DoomguyPlayer"
+	States
+	{
+	Spawn:
+		WSAW A -1
+		stop
+
+	// Original
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,4)
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyChainsawReadySoundPlayer")
+		DSAW CD 4 A_WeaponReady
+		loop
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyChainsawReadySoundPlayer")
+		DAWS CDEF 2 A_WeaponReady
+		loop
+
+	Deselect:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Deselect64")
+		DSAW C 1 A_Lower
+		loop
+
+	Select:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyChainsawSelectSoundPlayer")
+	SelectLoop:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectLoopStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"SelectLoop64")
+		DSAW C 1 A_Raise
+		loop
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FireSmooth")
+	FireVanilla:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
+		TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"FireBerserk")
+		DSAW AB 4 A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+	FireFinish:
+		TNT1 A 0 A_ReFire
+		goto Ready
+		
+	FireSmooth:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64Smooth")
+		TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"FireBerserkSmooth")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireSmoothRage")
+		DAWS A 1 offset(0,36) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS A 1 offset(-1,34)
+		DAWS B 1 offset(0,35)
+		DAWS B 1 offset(1,33)
+		DAWS A 1 offset(0,36) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS A 1 offset(-1,34)
+		DAWS B 1 offset(0,37)
+		DAWS B 1 offset(1,34)
+	FireFinishSmooth:
+		TNT1 A 0 A_ReFire
+		goto Ready
+
+	FireSmoothRage:
+		DAWS A 1 offset(0,36) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS B 1 offset(0,35)
+		DAWS A 1 offset(0,36) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS B 1 offset(0,37)
+		goto FireFinishSmooth
+
+	FireBerserk:
+		DSAW AB 3 A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		goto FireFinish
+		
+	FireBerserkSmooth:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireBerserkSmoothRage")
+		DAWS A 1 offset(-1,34) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS B 1 offset(0,35)
+		DAWS A 1 offset(1,33)
+		DAWS B 1 offset(0,36) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS A 1 offset(-1,34)
+		DAWS B 1 offset(0,37) 
+		goto FireFinishSmooth
+
+	FireBerserkSmoothRage:
+		DAWS A 1 offset(-1,34) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS B 1 offset(0,35)
+		DAWS B 1 offset(0,36) A_GiveInventory("SamsaraDoomguyChainsawAttackHandler")
+		DAWS A 1 offset(-1,34)
+		goto FireFinishSmooth
+
+
+	// Doom 64 (fires twice as fast compared to unberserked original chainsaw)
+	Ready64:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,4)
+		TNT1 A 0 A_PlaySound("doom64guy/sawidle",CHAN_WEAPON)
+		64SW CD 5 A_WeaponReady
+		goto Ready
+		TNT1 A 0 A_PlaySound("doom64guy/sawidle",CHAN_WEAPON)
+		64SW E 3 A_WeaponReady
+		64SW F 2 A_WeaponReady
+		64SW G 3 A_WeaponReady
+		64SW H 2 A_WeaponReady
+		goto Ready
+
+	Deselect64:
+		64SW C 1 A_Lower
+		goto Deselect
+
+	Select64:
+		TNT1 A 0 A_PlaySound("doom64guy/sawup",CHAN_7)
+		goto SelectLoop
+
+	SelectLoop64:
+		64SW C 1 A_Raise
+		goto SelectLoop
+
+	Fire64:
+		64SW AB 2 A_GiveInventory("SamsaraDoomguy64ChainsawAttackHandler")
+		goto FireFinish
+		
+	Fire64Smooth:
+		64SW A 1 offset(0,36) A_GiveInventory("SamsaraDoomguy64ChainsawAttackHandler")
+		64SW A 1 offset(-1,34)
+		64SW B 1 offset(0,35) A_GiveInventory("SamsaraDoomguy64ChainsawAttackHandler")
+		64SW B 1 offset(1,33)
+		64SW A 1 offset(0,35) A_GiveInventory("SamsaraDoomguy64ChainsawAttackHandler")
+		64SW A 1 offset(-1,34)
+		64SW B 1 offset(0,37) A_GiveInventory("SamsaraDoomguy64ChainsawAttackHandler")
+		64SW B 1 offset(1,34)
+		//64SW A 2 A_ReFire("Fire64")
+		goto FireFinish
+
+	// Stronghold
+	ReadyStr:
+		TNT1 A 0 A_PlaySound("doomguy/stronghold/sawidle",CHAN_WEAPON)
+		DSAW GH 4 A_WeaponReady
+		goto Ready
+
+	// Unpowered
+	DeselectStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStrPowered")
+	DeselectStrContinue:
+		TNT1 A 0 A_Lower
+		DSAW G 1 A_Lower
+		goto Deselect
+
+	SelectStr:
+		TNT1 A 0 A_PlaySound("doomguy/stronghold/sawup",CHAN_WEAPON)
+		goto SelectLoop
+
+	SelectLoopStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectLoopStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectLoopStrPowered")
+	SelectLoopStrContinue:
+		TNT1 A 0 A_Raise
+		DSAW G 1 A_Raise
+		goto SelectLoop
+
+	FireStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"FireStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"FireStr1Improved")
+	FireStrVanilla:
+		TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"FireStrVanillaBerserk")
+		DSAW EF 4 A_GiveInventory("SamsaraDoomguyStrChainsawVanillaAttackHandler")
+		goto FireFinish
+
+	FireStrVanillaBerserk:
+		DSAW EF 3 A_GiveInventory("SamsaraDoomguyStrChainsawVanillaAttackHandler")
+		goto FireFinish
+
+	FireStr1Improved:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+		DSAW EE 2 A_GiveInventory("SamsaraDoomguyStrChainsawImprovedAttackHandler")
+	FireStr2Improved:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+		DSAW FF 2 A_GiveInventory("SamsaraDoomguyStrChainsawImprovedAttackHandler")
+		goto FireFinish
+
+	// Powered
+	DeselectStrPowered:
+		TNT1 A 0 A_Lower
+		goto DeselectStrContinue
+
+	SelectLoopStrPowered:
+		TNT1 A 0 A_Raise
+		goto SelectLoopStrContinue
+
+	FireStrPowered:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChainsawPoweredAttackAmount") // reset
+	FireStrPoweredLoop:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrChainsawPoweredAttackAmount",0,"FireFinish")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChainsawPoweredAttackAmount")
+	FireStrPoweredLoop1:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireStrPoweredLoop1Fast")
+		DSAW EE 1 A_GiveInventory("SamsaraDoomguyStrChainsawPoweredAttackHandler")
+	FireStrPoweredLoop2:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireStrPoweredLoop2Fast")
+		DSAW FF 1 A_GiveInventory("SamsaraDoomguyStrChainsawPoweredAttackHandler")
+		goto FireStrPoweredLoop
+
+	FireStrPoweredLoop1Fast:
+		DSAW E 1 A_GiveInventory("SamsaraDoomguyStrChainsawPoweredFastAttackHandler")
+		goto FireStrPoweredLoop2
+
+	FireStrPoweredLoop2Fast:
+		DSAW F 1 A_GiveInventory("SamsaraDoomguyStrChainsawPoweredFastAttackHandler")
+		goto FireStrPoweredLoop
+	}
+}
+
+actor SamsaraDoomguyChainsawAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupNormalImproved")
+      // Normal (vanilla)
+      PickupNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalVanillaCoop")
+      PickupNormalVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupNormalVanillaDMPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupNormalVanillaDMPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",2,"DoomBulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalVanillaDMPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",2,"DoomBulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalVanillaDMPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",2,"DoomBulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupNormalVanillaCoopPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupNormalVanillaCoopPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",2,"DoomBulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalVanillaCoopPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",2,"DoomBulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalVanillaCoopPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",2,"DoomBulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      // Normal (improved)
+      PickupNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalImprovedCoop")
+      PickupNormalImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupNormalImprovedDMPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupNormalImprovedDMPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",random(1,2)*10,"DoomBulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupNormalImprovedDMPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(1,2)*10,"DoomBulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupNormalImprovedDMPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",random(1,2)*10,"DoomBulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupNormalImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupNormalImprovedCoopPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupNormalImprovedCoopPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",random(1,2)*10,"DoomBulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupNormalImprovedCoopPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(1,2)*10,"DoomBulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupNormalImprovedCoopPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",random(1,2)*10,"DoomBulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupBerserkImproved")
+      // Berserk (vanilla)
+      PickupBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkVanillaCoop")
+      PickupBerserkVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupBerserkVanillaDMPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupBerserkVanillaDMPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",7,"DoomBulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkVanillaDMPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",7,"DoomBulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkVanillaDMPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",7,"DoomBulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupBerserkVanillaCoopPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupBerserkVanillaCoopPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",7,"DoomBulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkVanillaCoopPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",7,"DoomBulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkVanillaCoopPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",7,"DoomBulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      // Berserk (improved)
+      PickupBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkImprovedCoop")
+      PickupBerserkImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupBerserkImprovedDMPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupBerserkImprovedDMPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",random(4,7)*10,"DoomBulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkImprovedDMPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(4,7)*10,"DoomBulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkImprovedDMPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",random(4,7)*10,"DoomBulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupBerserkImprovedCoopPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupBerserkImprovedCoopPSX")
+        TNT1 A 0 A_Saw("doomguy/sawfull","doomguy/sawhit",random(4,7)*10,"DoomBulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkImprovedCoopPSX:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(4,7)*10,"DoomBulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkImprovedCoopPerkristan:
+        TNT1 A 0 A_Saw("doomguy/perkristan/sawfull","doomguy/perkristan/sawhit",random(4,7)*10,"DoomBulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+    }
+}
+
+actor SamsaraDoomguyChainsawSelectSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/sawup",CHAN_WEAPON)
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/sawup",CHAN_WEAPON)
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/sawup",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyChainsawReadySoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/sawidle",CHAN_WEAPON)
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/sawidle",CHAN_WEAPON)
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/sawidle",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguy64ChainsawAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupNormalImproved")
+      // Normal (vanilla)
+      PickupNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalVanillaCoop")
+      PickupNormalVanillaDM:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",2,"Doom64BulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalVanillaCoop:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",2,"Doom64BulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      // Normal (improved)
+      PickupNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalImprovedCoop")
+      PickupNormalImprovedDM:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(1,3)*5,"Doom64BulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupNormalImprovedCoop:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(1,3)*5,"Doom64BulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupBerserkImproved")
+      // Berserk (vanilla)
+      PickupBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkVanillaCoop")
+      PickupBerserkVanillaDM:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",7,"Doom64BulletPuffPlayer",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkVanillaCoop:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",7,"Doom64BulletPuffPlayer_Coop",SF_NOUSEAMMO)
+        stop
+
+      // Berserk (improved)
+      PickupBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkImprovedCoop")
+      PickupBerserkImprovedDM:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(3,6)*5,"Doom64BulletPuffPlayer",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkImprovedCoop:
+        TNT1 A 0 A_Saw("doom64guy/sawfull","doom64guy/sawhit",random(3,6)*5,"Doom64BulletPuffPlayer_Coop",SF_NORANDOM|SF_NOUSEAMMO)
+        stop
+    }
+}
+
+// Unpowered attack handlers
+
+actor SamsaraDoomguyStrChainsawVanillaAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
+      PickupNormalDM:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalCoop:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkCoop")
+      PickupBerserkDM:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",7,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        stop
+
+      PickupBerserkCoop:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",7,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        stop
+    }
+}
+
+actor SamsaraDoomguyStrChainsawImprovedAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrChainsawAttackSilentSound",1,"PickupSilent")
+      // First attack in animation
+      PickupNormal:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
+      PickupNormalDM:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        stop
+
+      PickupNormalCoop:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        stop
+
+      // Subsequent attacks in animation
+      PickupSilent:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupSilentCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupSilentCoop")
+      PickupSilentDM:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        stop
+
+      PickupSilentCoop:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        stop
+    }
+}
+
+// Powered attack handlers
+
+actor SamsaraDoomguyStrChainsawPoweredAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrChainsawAttackSilentSound",1,"PickupSilent")
+      // First attack in animation
+      PickupNormal:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
+      PickupNormalDM:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      PickupNormalCoop:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      // Subsequent attacks in animation
+      PickupSilent:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupSilentCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupSilentCoop")
+      PickupSilentDM:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      PickupSilentCoop:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      // Attacks in the same tic
+      PickupContinue:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupContinueCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupContinueCoop")
+      PickupContinueDM:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        stop
+
+      PickupContinueCoop:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        stop
+    }
+}
+
+actor SamsaraDoomguyStrChainsawPoweredFastAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrChainsawAttackSilentSound",1,"PickupSilent")
+      // First attack in animation
+      PickupNormal:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChainsawAttackSilentSound")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
+      PickupNormalDM:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      PickupNormalCoop:
+        TNT1 A 0 A_Saw("doomguy/stronghold/sawfull","doomguy/stronghold/sawhit",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      // Subsequent attacks in animation
+      PickupSilent:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupSilentCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupSilentCoop")
+      PickupSilentDM:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      PickupSilentCoop:
+        TNT1 A 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        goto PickupContinue
+
+      // Attacks in the same tic
+      PickupContinue:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupContinueCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupContinueCoop")
+      PickupContinueDM:
+        TNT1 AAA 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuff",SF_NOUSEAMMO)
+        stop
+
+      PickupContinueCoop:
+        TNT1 AAA 0 A_Saw("","",2,"SamsaraDoomguyStrChainsawPuffCoop",SF_NOUSEAMMO)
+        stop
+    }
+}
+
+// Bullet puff (chainsaw)
+
+actor SamsaraDoomguyStrChainsawPuff : SamsaraDoomguyStrBulletPuff { Decal "BulletChip" }
+actor SamsaraDoomguyStrChainsawPuffCoop : SamsaraDoomguyStrChainsawPuff { +MTHRUSPECIES }

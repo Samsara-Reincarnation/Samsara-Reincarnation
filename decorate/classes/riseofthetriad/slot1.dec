@@ -1,0 +1,180 @@
+actor "Double Pistols" : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You got an extra pistol."
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 1
+    Weapon.SelectionOrder 2850
+    Obituary "%k wasted %o with two pistols."
+    Tag "Double Pistols"
+    +NOALERT
+    States
+    {
+      Spawn:
+        PPST A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_GiveInventory("UsingFirearm")
+        TNT1 A 0 A_JumpIfInventory("RottMode",4,"ReadyBlack")
+        TNT1 A 0 A_JumpIfInventory("RottMode",2,"ReadyFemale")
+      ReadyWhite:
+        TNT1 A 0 A_JumpIfInventory("RPistol",1,2)
+        PIX2 A 1 A_WeaponReady(WRF_NOSECONDARY)
+        goto Ready
+        PIX2 A 1 A_WeaponReady
+        goto Ready
+
+      ReadyFemale:
+        TNT1 A 0 A_JumpIfInventory("RPistol",1,2)
+        PIX2 H 1 A_WeaponReady(WRF_NOSECONDARY)
+        goto Ready
+        PIX2 H 1 A_WeaponReady
+        goto Ready
+
+      ReadyBlack:
+        TNT1 A 0 A_JumpIfInventory("RPistol",1,2)
+        PIX2 O 1 A_WeaponReady(WRF_NOSECONDARY)
+        goto Ready
+        PIX2 O 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_JumpIfInventory("RottMode",4,"DeselectBlack")
+        TNT1 A 0 A_JumpIfInventory("RottMode",2,"DeselectFemale")
+      DeselectWhite:
+        PIX2 A 1 A_Lower
+        goto Deselect
+
+      DeselectFemale:
+        PIX2 H 1 A_Lower
+        goto Deselect
+
+      DeselectBlack:
+        PIX2 O 1 A_Lower
+        goto Deselect
+
+      Select:
+        TNT1 A 0 A_JumpIfInventory("RottMode",4,"SelectBlack")
+        TNT1 A 0 A_JumpIfInventory("RottMode",2,"SelectFemale")
+      SelectWhite:
+        PIX2 A 1 A_Raise
+        goto Select
+
+      SelectFemale:
+        PIX2 H 1 A_Raise
+        goto Select
+
+      SelectBlack:
+        PIX2 O 1 A_Raise
+        goto Select
+
+      Fire:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("RottMode",4,"FireBlack")
+        TNT1 A 0 A_JumpIfInventory("RottMode",2,"FireFemale")
+      FireWhite:
+        TNT1 A 0 A_GunFlash("FlashWhite1")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDoublePistolsAttackHandler")
+        PIX2 EE 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        PIX2 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GunFlash("FlashWhite2")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDoublePistolsAttackHandler")
+        PIX2 BBA 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireFinish:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire
+        TNT1 A 0 A_ClearReFire
+        goto Ready
+
+      FlashWhite1:
+        PIX2 C 3 Bright
+        PIX2 D 3
+        stop
+
+      FlashWhite2:
+        PIX2 F 3 Bright
+        PIX2 G 3
+        stop
+
+      FireFemale:
+        TNT1 A 0 A_GunFlash("FlashFemale1")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDoublePistolsAttackHandler")
+        PIX2 LL 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        PIX2 H 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GunFlash("FlashFemale2")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDoublePistolsAttackHandler")
+        PIX2 IIH 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto FireFinish
+
+      FlashFemale1:
+        PIX2 J 3 Bright
+        PIX2 K 3
+        stop
+
+      FlashFemale2:
+        PIX2 M 3 Bright
+        PIX2 N 3
+        stop
+
+      FireBlack:
+        TNT1 A 0 A_GunFlash("FlashBlack1")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDoublePistolsAttackHandler")
+        PIX2 SS 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        PIX2 O 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GunFlash("FlashBlack2")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDoublePistolsAttackHandler")
+        PIX2 PPO 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto FireFinish
+
+      FlashBlack1:
+        PIX2 Q 3 Bright
+        PIX2 R 3
+        stop
+
+      FlashBlack2:
+        PIX2 T 3 Bright
+        PIX2 U 3
+        stop
+
+      AltFire:
+        TNT1 A 0 A_SelectWeapon("RPistol")
+        goto Deselect
+    }
+}
+
+actor SamsaraROTTDoublePistolsAttackHandler : Trigger
+{
+    States
+    {
+      // Sound stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAlternate")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("rott/pistol2f",CHAN_WEAPON)
+        goto PickupAttack
+
+      // Alternate sounds
+      PickupAlternate:
+        TNT1 A 0 A_PlaySound("rott/pistol2f/alt",CHAN_WEAPON)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(2.7,1.6,-1,13,"RottPuff",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_FireBullets(2.7,1.6,-1,13,"RottPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_FireBullets(2.7,1.6,-1,15,"RottPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+    }
+}

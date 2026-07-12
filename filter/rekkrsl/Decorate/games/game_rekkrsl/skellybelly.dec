@@ -51,8 +51,9 @@ Actor REKKRSkellyBelly_Samsara : SamsaraMonsterDemonicTotalGib replaces HellKnig
 		BOS2 H 16 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+	Death.Massacre:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		BOS2 I 8 A_Fall
 		BOS2 J 8 A_Scream
 		BOS2 KLMN 8
@@ -269,6 +270,8 @@ actor REKKRSkellyBelly_Samsara_Shrink : REKKRSkellyBelly_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

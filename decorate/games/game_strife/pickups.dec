@@ -1,0 +1,554 @@
+actor StrifeAmmoFillup : Trigger replaces AmmoFillup
+{
+    ConversationID 298
+    States
+    {
+      Pickup:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraDecorate", 9)
+        stop
+    }
+}
+
+actor SamsaraShadowArmor : SamsaraPowerupPickup replaces ShadowArmor
+{
+    ConversationID 160
+    RenderStyle "Translucent"
+    -FLOATBOB
+    +FLOORCLIP
+    +VISIBILITYPULSE
+    States
+    {
+      Spawn:
+        SHD1 A 0 Bright
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        SHD1 A -1 Bright A_ChangeFlag("NOTIMEFREEZE",false)
+        stop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfInventory("SamsaraShadowArmorInventory",0,"PickupFail")
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 1, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
+        TNT1 A 0 A_PlaySound("misc/i_pkup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 A_GiveInventory("SamsaraShadowArmorInventory")
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 23)
+        goto PickupSuccessDefault
+    }
+}
+
+actor SamsaraShadowArmorInventory : CustomInventory
+{
+    Game Strife
+    Inventory.UseSound ""
+    Inventory.Icon "I_SHD1"
+    Inventory.MaxAmount 2
+    Inventory.InterHubAmount 2
+    Tag "$TAG_SHADOWARMOR"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 0, 2), 1)
+        goto UsePlaySound
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 0, 3), "UseFail") // not the best method, but it works
+        goto UsePlaySound
+
+      UsePlaySound:
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        TNT1 A 0 A_PlaySound("misc/invuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"UseSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"UseSuccessDefaultSubsequent")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiver")
+        goto UseFinish
+
+      UseSuccessDefaultSubsequent:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiver")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowCumulativeLockGiver")
+        goto UseFinish
+
+      UseSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("PowerShadow",1,"UseSuccessDeusExSubsequent")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",0,"UseSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",3,"UseSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",2,"UseSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",1,"UseSuccessDeusExTrained")
+      UseSuccessDeusExUntrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx1")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExTrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx2")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExProficient:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx3")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExAdvanced:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx4")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExMaster:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx5")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExSubsequent:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",0,"UseSuccessDeusExSubsequentMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",3,"UseSuccessDeusExSubsequentAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",2,"UseSuccessDeusExSubsequentProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",1,"UseSuccessDeusExSubsequentTrained")
+      UseSuccessDeusExSubsequentUntrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx1")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowCumulativeLockGiverDeusEx1")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExSubsequentTrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx2")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowCumulativeLockGiverDeusEx2")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExSubsequentProficient:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx3")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowCumulativeLockGiverDeusEx3")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExSubsequentAdvanced:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx4")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowCumulativeLockGiverDeusEx4")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExSubsequentMaster:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowGiverDeusEx5")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerShadowCumulativeLockGiverDeusEx5")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 26, 100)
+        stop
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor SamsaraPowerShadowGiverDeusEx1 : SamsaraPowerShadowGiver {}
+actor SamsaraPowerShadowGiverDeusEx2 : SamsaraPowerShadowGiver { Powerup.Duration -68 }
+actor SamsaraPowerShadowGiverDeusEx3 : SamsaraPowerShadowGiver { Powerup.Duration -82 }
+actor SamsaraPowerShadowGiverDeusEx4 : SamsaraPowerShadowGiver { Powerup.Duration -96 }
+actor SamsaraPowerShadowGiverDeusEx5 : SamsaraPowerShadowGiver { Powerup.Duration -110 }
+
+actor SamsaraPowerShadowCumulativeLockGiverDeusEx1 : SamsaraPowerShadowCumulativeLockGiver {}
+actor SamsaraPowerShadowCumulativeLockGiverDeusEx2 : SamsaraPowerShadowCumulativeLockGiver { Powerup.Duration -68 }
+actor SamsaraPowerShadowCumulativeLockGiverDeusEx3 : SamsaraPowerShadowCumulativeLockGiver { Powerup.Duration -82 }
+actor SamsaraPowerShadowCumulativeLockGiverDeusEx4 : SamsaraPowerShadowCumulativeLockGiver { Powerup.Duration -96 }
+actor SamsaraPowerShadowCumulativeLockGiverDeusEx5 : SamsaraPowerShadowCumulativeLockGiver { Powerup.Duration -110 }
+
+actor SamsaraEnvironmentalSuit : SamsaraPowerupPickup replaces EnvironmentalSuit
+{
+    ConversationID 161
+    RenderStyle "Normal"
+    -FLOATBOB
+    +FLOORCLIP
+    States
+    {
+      Spawn:
+        MASK A 0
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        MASK A -1 A_ChangeFlag("NOTIMEFREEZE",false)
+        stop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfInventory("SamsaraEnvironmentalSuitInventory",0,"PickupFail")
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 4, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
+        TNT1 A 0 A_PlaySound("misc/i_pkup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 A_GiveInventory("SamsaraEnvironmentalSuitInventory")
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_GiveInventory("DeusEx_AugmentationUpgradeCannister")
+        goto PickupSuccessDefault
+    }
+}
+
+actor SamsaraEnvironmentalSuitInventory : CustomInventory
+{
+    Game Strife
+    Inventory.UseSound ""
+    Inventory.Icon "I_MASK"
+    Inventory.MaxAmount 5
+    Inventory.InterHubAmount 5
+    Tag "$TAG_ENVSUIT"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 2, 1), "UseFail")
+        goto UsePlaySound
+
+      UsePlaySound:
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        TNT1 A 0 A_PlaySound("misc/invuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"UseSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskGiver")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskFireImmunityGiver")
+        goto UseFinish
+
+      UseSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",0,"UseSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",3,"UseSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",2,"UseSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",1,"UseSuccessDeusExTrained")
+      UseSuccessDeusExUntrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskGiverDeusEx1")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskFireImmunityGiverDeusEx1")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExTrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskGiverDeusEx2")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskFireImmunityGiverDeusEx2")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExProficient:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskGiverDeusEx3")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskFireImmunityGiverDeusEx3")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExAdvanced:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskGiverDeusEx4")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskFireImmunityGiverDeusEx4")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExMaster:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskGiverDeusEx5")
+        TNT1 A 0 A_GiveInventory("SamsaraPowerMaskFireImmunityGiverDeusEx5")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 26, 200)
+        stop
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor SamsaraPowerMaskGiverDeusEx1 : SamsaraPowerMaskGiver {}
+actor SamsaraPowerMaskGiverDeusEx2 : SamsaraPowerMaskGiver { Powerup.Duration -100 }
+actor SamsaraPowerMaskGiverDeusEx3 : SamsaraPowerMaskGiver { Powerup.Duration -120 }
+actor SamsaraPowerMaskGiverDeusEx4 : SamsaraPowerMaskGiver { Powerup.Duration -140 }
+actor SamsaraPowerMaskGiverDeusEx5 : SamsaraPowerMaskGiver { Powerup.Duration -160 }
+
+actor SamsaraPowerMaskFireImmunityGiver : SamsaraPowerupGiver { Powerup.Type "SamsaraMaskFireImmunity" }
+
+actor PowerSamsaraMaskFireImmunity : PowerProtection
+{
+    Powerup.Duration -80
+    DamageFactor "Fire", 0 // already defined by PowerMask's hardcoded behavior, but here just in case
+    DamageFactor "MarathonFire", 0
+    DamageFactor "MarathonPlasmaFire", 0
+    DamageFactor "WolfenFlamethrower", 0
+    DamageFactor "TotenkopfFire", 0
+    DamageFactor "CalebFire", 0
+    DamageFactor "LifeLeech", 0
+    DamageFactor "FireExplosive", 0
+    DamageFactor "Hexen2Fire", 0
+    DamageFactor "DoomDamageTypeFire", 0
+    DamageFactor "DoomDamageTypeFireExplosive", 0
+    DamageFactor "RottFire", 0
+    DamageFactor "WTRangedFire", 0
+    DamageFactor "DeusExPistolFire", 0
+    DamageFactor "DeusExFlamed", 0
+    DamageFactor "PSFire", 0
+    DamageFactor "PGFire", 0
+    DamageFactor "PainkillerFire", 0
+    DamageFactor "QuakeFire", 0
+    DamageFactor "RTCWFire", 0
+    DamageFactor "HexGreenFire", 0
+    DamageFactor "HexenQuietusFire", 0
+    DamageFactor "PhosFire", 0
+    DamageFactor "PhosFireCoop", 0
+    DamageFactor "EradGreenFire", 0
+    DamageFactor "EradCoopGreenFire", 0
+    DamageFactor "SWFlame", 0
+    DamageFactor "SWFlame2", 0
+    DamageFactor "SWFlame2Coop", 0
+    DamageFactor "SWFlame3", 0
+    DamageFactor "BittermanFire", 0
+    +HUBPOWER
+}
+
+actor SamsaraPowerMaskFireImmunityGiverDeusEx1 : SamsaraPowerMaskFireImmunityGiver {}
+actor SamsaraPowerMaskFireImmunityGiverDeusEx2 : SamsaraPowerMaskFireImmunityGiver { Powerup.Duration -100 }
+actor SamsaraPowerMaskFireImmunityGiverDeusEx3 : SamsaraPowerMaskFireImmunityGiver { Powerup.Duration -120 }
+actor SamsaraPowerMaskFireImmunityGiverDeusEx4 : SamsaraPowerMaskFireImmunityGiver { Powerup.Duration -140 }
+actor SamsaraPowerMaskFireImmunityGiverDeusEx5 : SamsaraPowerMaskFireImmunityGiver { Powerup.Duration -160 }
+
+actor SamsaraStrifeMap : SamsaraPowerupPickup replaces StrifeMap
+{
+    ConversationID 164
+    RenderStyle "Normal"
+    -FLOATBOB
+    +FLOORCLIP
+    States
+    {
+      Spawn:
+        SMAP A 0 Bright
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        SMAP AB 6 Bright
+        loop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
+        TNT1 A 0 A_PlaySound("misc/p_pkup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 A_GiveInventory("StrifeMap")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraMapRevealerPickup")
+        stop
+    }
+}
+
+actor SamsaraScanner : SamsaraPowerupPickup replaces Scanner
+{
+    ConversationID 165
+    RenderStyle "Normal"
+    -FLOATBOB
+    +FLOORCLIP
+    States
+    {
+      Spawn:
+        PMUP A 0
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        PMUP AB 6
+        loop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfInventory("SamsaraScannerInventory",0,"PickupFail")
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 8, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
+        TNT1 A 0 A_PlaySound("misc/i_pkup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 A_GiveInventory("SamsaraScannerInventory")
+        stop
+    }
+}
+
+actor SamsaraScannerInventory : CustomInventory
+{
+    Game Strife
+    Inventory.UseSound ""
+    Inventory.Icon "I_PMUP"
+    Inventory.MaxAmount 1
+    Inventory.InterHubAmount 1
+    Tag "$TAG_SCANNER"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIf(!CallACS("SamsaraDecorate", 53), "UseFailNeedMapRevealer")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 4, 0), "UseFail")
+        goto UsePlaySound
+
+      UsePlaySound:
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        TNT1 A 0 A_PlaySound("misc/invuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"UseSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerScannerGiver")
+        goto UseFinish
+
+      UseSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",0,"UseSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",3,"UseSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",2,"UseSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_EnviroSkill",1,"UseSuccessDeusExTrained")
+      UseSuccessDeusExUntrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerScannerGiverDeusEx1")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExTrained:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerScannerGiverDeusEx2")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExProficient:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerScannerGiverDeusEx3")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExAdvanced:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerScannerGiverDeusEx4")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExMaster:
+        TNT1 A 0 A_GiveInventory("SamsaraPowerScannerGiverDeusEx5")
+        goto UseSuccessDeusExFinish
+
+      UseSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 26, 150)
+        stop
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+
+      UseFailNeedMapRevealer:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 8)
+        fail
+    }
+}
+
+actor SamsaraPowerScannerGiver : SamsaraPowerupGiver { Powerup.Type "Scanner" }
+
+actor SamsaraPowerScannerGiverDeusEx1 : SamsaraPowerScannerGiver {}
+actor SamsaraPowerScannerGiverDeusEx2 : SamsaraPowerScannerGiver { Powerup.Duration -100 }
+actor SamsaraPowerScannerGiverDeusEx3 : SamsaraPowerScannerGiver { Powerup.Duration -120 }
+actor SamsaraPowerScannerGiverDeusEx4 : SamsaraPowerScannerGiver { Powerup.Duration -140 }
+actor SamsaraPowerScannerGiverDeusEx5 : SamsaraPowerScannerGiver { Powerup.Duration -160 }

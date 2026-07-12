@@ -1,0 +1,116 @@
+actor ColorCube_Samsara : SquareMonster_Samsara2 replaces ColorCube
+{
+	Health 500
+	Radius 32
+	Height 56
+	Speed 12
+	FastSpeed 18
+	Obituary "$OB_COLORCUBE"
+	SeeSound "colorcube/sight"
+	ActiveSound "colorcube/active"
+	PainSound "colorcube/pain"
+	DeathSound "colorcube/death"
+	Mass 3000
+	+NOBLOOD
+	+DONTBLAST
+	+DONTHURTSPECIES
+	DamageFactor "Vacuum", 0.0
+	Tag "Color Cube"
+	SpawnID 15
+	var int user_lastattack;
+	States
+	{
+	Spawn:
+		CUBE A 0 A_SetUserVar("user_lastattack", 0)
+	// Fall through
+	SpawnLook:
+		CUBE AAAABBBBCCCC 2 A_Look
+		Loop
+	See:
+		CUBE ABC 4 A_Chase
+		Loop
+	Missile:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		CUBE A 0 A_JumpIf(user_lastattack == 1, "Missile1")
+		CUBE A 0 A_JumpIf(user_lastattack == 2, "Missile2")
+		CUBE A 0 A_JumpIf(user_lastattack == 3, "Missile3")
+	// Fall through
+	Missile0:
+		CUBE A 0 A_Jump(256, "Red", "Yellow", "Purple")
+		Stop
+	Missile1:
+		CUBE A 0 A_Jump(256, "Yellow", "Purple")
+		Stop
+	Missile2:
+		CUBE A 0 A_Jump(256, "Red", "Purple")
+		Stop
+	Missile3:
+		CUBE A 0 A_Jump(256, "Red", "Yellow")
+		Stop
+	Red:
+		CUBE D 0 Bright A_SetUserVar("user_lastattack", 1)
+		CUBE B 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallRed", 32, 0, -20)
+		CUBE B 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallRed", 32, 0, -10)
+		CUBE B 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallRed", 32, 0, 0)
+		CUBE B 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallRed", 32, 0, 10)
+		CUBE B 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallRed", 32, 0, 20)
+		Goto See
+	Yellow:
+		CUBE D 0 Bright A_SetUserVar("user_lastattack", 2)
+		CUBE A 2 Bright A_FaceTarget
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, 0)
+		CUBE DA 2 Bright A_FaceTarget
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, -32)
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, 16)
+		CUBE DA 2 Bright A_FaceTarget
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, 0)
+		CUBE DA 2 Bright A_FaceTarget
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, -16)
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, 32)
+		CUBE DA 2 Bright A_FaceTarget
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, 0)
+		CUBE DA 2 Bright A_FaceTarget
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, -24)
+		CUBE D 0 A_CustomMissile("CubeBallYellow", 32, 0, 24)
+		CUBE DA 2 Bright A_FaceTarget
+		Goto See
+	Purple:
+		CUBE D 0 Bright A_SetUserVar("user_lastattack", 3)
+		CUBE C 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallPurple", 32)
+		CUBE C 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallPurple", 32)
+		CUBE C 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallPurple", 32)
+		CUBE C 2 Bright A_FaceTarget
+		CUBE D 2 Bright A_CustomMissile("CubeBallPurple", 32)
+		Goto See
+	Pain:
+		CUBE D 3
+		CUBE D 3 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		CUBE D 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		CUBE D 16 A_Pain
+		Goto See
+	Death:
+		CUBE D 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		CUBE D 2 A_Scream
+		CUBE D 0 A_NoBlocking
+		CUBE D 0 Bright A_SpawnItem("CrystalGibSpawner")
+		CUBE D 2 Bright A_SpawnItem("MibSpawnerColorCube")
+		CUBE E 0 A_Explode(60,100)
+		CUBE EEEEE 2 Bright A_SpawnItemEx("ExplosionSilent", random(-20,20), random(-20,20), random(20,30))
+		CUBE EEEEEEEEEEEEEEEEEEEE 2 A_SpawnItemEx("Smoke", frandom[SquareEffectRandom](-7.0,7.0), frandom[SquareEffectRandom](-7.0,7.0), 8.0, 0, 0, 2)
+		CUBE E -1
+		Stop
+	}
+}

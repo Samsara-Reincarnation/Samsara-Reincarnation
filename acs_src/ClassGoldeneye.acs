@@ -202,78 +202,80 @@ Script "BondAltHold" (void) Clientside
 	}
 }
 
-#define GOLDENEYEWEAPONS 32
+#define GOLDENEYEWEAPONS 33
 
 //Class name, list name, main page name, main ammo type, magazine ammo type, ammo graphic, dual magazine type
 str GoldeneyeWeaponInfo[2][GOLDENEYEWEAPONS][9] = 
 {
     {
-        {"Goldeneye_Slapper",         "Unarmed",              "Unarmed",           "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "-1"},
-        {"Goldeneye_PP7Silenced",     "PP7 (Silenced)",       "PP7 (Silenced)",    "-2",                           "Goldeneye_PP7SilencedMagazine",     "B57B31", "Goldeneye_PP7SilencedDualMagazine",    "Goldeneye_PP7DualToken",             "GEWP7S"},
-        {"Goldeneye_Klobb",           "Klobb",                "Klobb",             "-2",                           "Goldeneye_KlobbMagazine",           "B57B31", "Goldeneye_KlobbDualMagazine",          "Goldeneye_PP7DualToken",             "GEWKLO"},
-        {"Goldeneye_PP7SpecialIssue", "PP7",                  "PP7 Special Issue", "-2",                           "Goldeneye_PP7Magazine",             "B57B31", "Goldeneye_PP7DualMagazine",            "Goldeneye_PP7DualToken",             "GEWPP7"},
-        {"Goldeneye_DD44",            "DD44",                 "DD44 Dostovei",     "-2",                           "Goldeneye_DD44Magazine",            "B57B31", "Goldeneye_DD44DualMagazine",           "Goldeneye_PP7DualToken",             "GEWDD4"},
-        {"-1",                        "-1",                   "-1",                "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "-1"},
-        {"Goldeneye_ThrowingKnives",  "Throwing Knife",       "Throwing Knife",    "Goldeneye_ThrowingKnivesAmmo", "-1",                                "B47A9D", "-1",                                   "Goldeneye_KnifeDualToken",           "GEWKNI"},
-        {"Goldeneye_KF7Soviet",       "KF7 Soviet",           "KF7\nSoviet",       "Clip",                         "Goldeneye_KF7Magazine",             "B579A6", "Goldeneye_KF7DualMagazine",            "Goldeneye_KF7DualToken",             "GEWKF7"},
-        {"Goldeneye_AutoShotgun",     "Auto Shotgun",         "Automatic Shotgun", "Shell",                        "Goldeneye_AutoShotgunMagazine",     "B47C9E", "Goldeneye_AutoShotgunDualMagazine",    "Goldeneye_AutoShotgunDualToken",     "GEWASG"},
-        {"Goldeneye_Shotgun",         "Shotgun",              "Shotgun",           "Shell",                        "Goldeneye_ShotgunMagazine",         "B47C9E", "Goldeneye_ShotgunDualMagazine",        "Goldeneye_AutoShotgunDualToken",     "GEWSHO"},
-        {"Goldeneye_AR33",            "AR33",                 "US AR33 Assault",   "Clip",                         "Goldeneye_AR33Magazine",            "B579A6", "Goldeneye_AR33DualMagazine",           "Goldeneye_AR33DualToken",            "GEWAR3"},
-        {"Goldeneye_Phantom",         "Phantom",              "Phantom",           "Clip",                         "Goldeneye_PhantomMagazine",         "B57B31", "Goldeneye_PhantomDualMagazine",        "Goldeneye_PhantomDualToken",         "GEWPHA"},
-        {"Goldeneye_RocketLauncher",  "Rocket Launcher",      "Rocket Launcher",   "RocketAmmo",                   "Goldeneye_RocketLauncherMagazine",  "B46EF5", "Goldeneye_RocketLauncherDualMagazine", "Goldeneye_RocketLauncherDualToken",  "GEWRCK"},
-        {"Goldeneye_GrenadeLauncher", "Grenade Launcher",     "Grenade Launcher",  "RocketAmmo",                   "Goldeneye_GrenadeLauncherMagazine", "B4781A", "Goldeneye_GrenadeLauncherDualMagazine","Goldeneye_GrenadeLauncherDualToken", "GEWGLR"},
-        {"Goldeneye_RCP90",           "RC-P90",               "RC-P90",            "Cell",                         "Goldeneye_RCP90Magazine",           "B57B31", "Goldeneye_RCP90DualMagazine",          "Goldeneye_RCP90DualToken",           "GEWRCP"},
-        {"Goldeneye_Cougar",          "Cougar Magnum",        "Cougar Magnum",     "Cell",                         "Goldeneye_CougarMagazine",          "B47785", "Goldeneye_CougarDualMagazine",         "Goldeneye_CougarDualToken",          "GEWCOU"},
-        {"Goldeneye_SilverPP7",       "Silver PP7",           "Silver PP7",        "Cell",                         "Goldeneye_SilverPP7Magazine",       "B57B31", "Goldeneye_SilverPP7DualMagazine",      "Goldeneye_CougarDualToken",          "GEWSP7"},
-        {"Goldeneye_ArabahViper",     "Arabah Viper",         "Arabah Viper",      "Cell",                         "Goldeneye_ArabahViperMagazine",     "B47785", "Goldeneye_ArabahViperDualMagazine",    "Goldeneye_CougarDualToken",          "GEWAVP"},
-        {"Goldeneye_Moonraker",       "Laser",                "Military Laser",    "-1",                           "-1",                                "-1",     "-1",                                   "Goldeneye_LaserDualToken",           "GEWRKR"},
-        {"Goldeneye_GoldenGun",       "Golden Gun",           "Golden\nGun",       "Goldeneye_GoldenGunRounds",    "Goldeneye_GoldenGunMagazine",       "B57B31", "Goldeneye_GoldenGunDualMagazine",      "Goldeneye_GoldenGunDualToken",       "GEWGLD"},
-        {"Goldeneye_SniperRifle",     "Sniper Rifle",         "Sniper\nRifle",     "Shell",                        "Goldeneye_SniperMagazine",          "B579A6", "Goldeneye_SniperDualMagazine",         "Goldeneye_SniperDualToken",          "GEWSNI"},
-        {"Goldeneye_SilencedD5K",     "D5K (Silenced)",       "D5K (Silenced)",    "Clip",                         "Goldeneye_D5KSilencedMagazine",     "B57B31", "Goldeneye_D5KSilencedDualMagazine",    "Goldeneye_D5KDualToken",             "GEWD5S"},
-        {"Goldeneye_ZMG",             "ZMG (9mm)",            "ZMG (9mm)",         "Clip",                         "Goldeneye_ZMGMagazine",             "B57B31", "Goldeneye_ZMGDualMagazine",            "Goldeneye_D5KDualToken",             "GEWZMG"},
-        {"Goldeneye_D5KDeutsche",     "D5K",                  "D5K Deutsche",      "Clip",                         "Goldeneye_D5KMagazine",             "B57B31", "Goldeneye_D5KDualMagazine",            "Goldeneye_D5KDualToken",             "GEWD5K"},
-        {"Goldeneye_WatchMagnet",     "Watch Magnet Attract", "Magnet Attract",    "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "GEWWTC"},
-        {"Goldeneye_WatchLaser",      "Watch Laser",          "Watch Laser",       "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "GEWWTC"},
-        {"Goldeneye_WatchDetonator",  "Detonator",            "Detonator",         "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "GEWWTC"},
-        {"Goldeneye_TimedMines",      "Timed Mine",           "Mine\n(Timed)",     "RocketAmmo",                   "-1",                                "B58731", "-1",                                   "-1",                                 "GEWTIM"},
-        {"Goldeneye_ProximityMines",  "Proximity Mine",       "Mine (Proximity)",  "RocketAmmo",                   "-1",                                "B57E9F", "-1",                                   "-1",                                 "GEWPIM"},
-        {"Goldeneye_RemoteMines",     "Remote Mine",          "Mine\n(Remote)",    "RocketAmmo",                   "-1",                                "B57BC0", "-1",                                   "-1",                                 "GEWRIM"},
-        {"Goldeneye_GoldPP7",         "Gold PP7",             "Gold PP7",          "Goldeneye_GoldenGunRounds",    "Goldeneye_GoldPP7Magazine",         "B57B31", "Goldeneye_GoldPP7DualMagazine",        "Goldeneye_GoldPP7DualToken",         "GEWGP7"},
-        {"Goldeneye_TankWeapon",      "Tank",                 "Tank",              "RocketAmmo",                   "Goldeneye_TankMagazine",            "B46EF6", "-1",                                   "-1",                                 "-1"}
+        {"Goldeneye_Slapper",         "Unarmed",              "Unarmed",               "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "-1"},
+        {"Goldeneye_PP7Silenced",     "PP7 (Silenced)",       "PP7\n(Silenced)",       "-2",                           "Goldeneye_PP7SilencedMagazine",     "B57B31", "Goldeneye_PP7SilencedDualMagazine",    "Goldeneye_PP7DualToken",             "GEWP7S"},
+        {"Goldeneye_Klobb",           "Klobb",                "Klobb",                 "-2",                           "Goldeneye_KlobbMagazine",           "B57B31", "Goldeneye_KlobbDualMagazine",          "Goldeneye_PP7DualToken",             "GEWKLO"},
+        {"Goldeneye_PP7SpecialIssue", "PP7",                  "PP7 Special Issue",     "-2",                           "Goldeneye_PP7Magazine",             "B57B31", "Goldeneye_PP7DualMagazine",            "Goldeneye_PP7DualToken",             "GEWPP7"},
+        {"Goldeneye_DD44",            "DD44",                 "DD44\nDostovei",        "-2",                           "Goldeneye_DD44Magazine",            "B57B31", "Goldeneye_DD44DualMagazine",           "Goldeneye_PP7DualToken",             "GEWDD4"},
+        {"-1",                        "-1",                   "-1",                    "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "-1"},
+        {"Goldeneye_ThrowingKnives",  "Throwing Knife",       "Throwing\nKnife",       "Goldeneye_ThrowingKnivesAmmo", "-1",                                "B47A9D", "-1",                                   "Goldeneye_ThrowingKnivesDualToken",  "GEWKNI"},
+        {"Goldeneye_HuntingKnife",    "Hunting Knife",        "Knife",                 "-1",                           "-1",                                "-1",     "-1",                                   "Goldeneye_ThrowingKnivesDualToken",  "GEWKN2"},
+        {"Goldeneye_KF7Soviet",       "KF7 Soviet",           "KF7\nSoviet",           "Clip",                         "Goldeneye_KF7Magazine",             "B579A6", "Goldeneye_KF7DualMagazine",            "Goldeneye_KF7DualToken",             "GEWKF7"},
+        {"Goldeneye_AutoShotgun",     "Auto Shotgun",         "Automatic Shotgun",     "Shell",                        "Goldeneye_AutoShotgunMagazine",     "B47C9E", "Goldeneye_AutoShotgunDualMagazine",    "Goldeneye_AutoShotgunDualToken",     "GEWASG"},
+        {"Goldeneye_Shotgun",         "Shotgun",              "Shotgun",               "Shell",                        "Goldeneye_ShotgunMagazine",         "B47C9E", "Goldeneye_ShotgunDualMagazine",        "Goldeneye_AutoShotgunDualToken",     "GEWSHO"},
+        {"Goldeneye_AR33",            "AR33",                 "US AR33 Assault",       "Clip",                         "Goldeneye_AR33Magazine",            "B579A6", "Goldeneye_AR33DualMagazine",           "Goldeneye_AR33DualToken",            "GEWAR3"},
+        {"Goldeneye_Phantom",         "Phantom",              "Phantom",               "Clip",                         "Goldeneye_PhantomMagazine",         "B57B31", "Goldeneye_PhantomDualMagazine",        "Goldeneye_PhantomDualToken",         "GEWPHA"},
+        {"Goldeneye_RocketLauncher",  "Rocket Launcher",      "Rocket Launcher",       "RocketAmmo",                   "Goldeneye_RocketLauncherMagazine",  "B46EF5", "Goldeneye_RocketLauncherDualMagazine", "Goldeneye_RocketLauncherDualToken",  "GEWRCK"},
+        {"Goldeneye_GrenadeLauncher", "Grenade Launcher",     "Grenade Launcher",      "RocketAmmo",                   "Goldeneye_GrenadeLauncherMagazine", "B4781A", "Goldeneye_GrenadeLauncherDualMagazine","Goldeneye_GrenadeLauncherDualToken", "GEWGLR"},
+        {"Goldeneye_RCP90",           "RC-P90",               "RC-P90",                "Cell",                         "Goldeneye_RCP90Magazine",           "B57B31", "Goldeneye_RCP90DualMagazine",          "Goldeneye_RCP90DualToken",           "GEWRCP"},
+        {"Goldeneye_Cougar",          "Cougar Magnum",        "Cougar Magnum",         "Cell",                         "Goldeneye_CougarMagazine",          "B47785", "Goldeneye_CougarDualMagazine",         "Goldeneye_CougarDualToken",          "GEWCOU"},
+        {"Goldeneye_SilverPP7",       "Silver PP7",           "Silver PP7",            "Cell",                         "Goldeneye_SilverPP7Magazine",       "B57B31", "Goldeneye_SilverPP7DualMagazine",      "Goldeneye_CougarDualToken",          "GEWSP7"},
+        {"Goldeneye_ArabahViper",     "Arabah Viper",         "Arabah\nViper",         "Cell",                         "Goldeneye_ArabahViperMagazine",     "B47785", "Goldeneye_ArabahViperDualMagazine",    "Goldeneye_CougarDualToken",          "GEWAVP"},
+        {"Goldeneye_Moonraker",       "Laser",                "Military\nLaser",       "-1",                           "-1",                                "-1",     "-1",                                   "Goldeneye_LaserDualToken",           "GEWRKR"},
+        {"Goldeneye_GoldenGun",       "Golden Gun",           "Golden\nGun",           "Goldeneye_GoldenGunRounds",    "Goldeneye_GoldenGunMagazine",       "B57B31", "Goldeneye_GoldenGunDualMagazine",      "Goldeneye_GoldenGunDualToken",       "GEWGLD"},
+        {"Goldeneye_SniperRifle",     "Sniper Rifle",         "Sniper\nRifle",         "Shell",                        "Goldeneye_SniperMagazine",          "B579A6", "Goldeneye_SniperDualMagazine",         "Goldeneye_SniperDualToken",          "GEWSNI"},
+        {"Goldeneye_SilencedD5K",     "D5K (Silenced)",       "D5K\n(Silenced)",       "Clip",                         "Goldeneye_D5KSilencedMagazine",     "B57B31", "Goldeneye_D5KSilencedDualMagazine",    "Goldeneye_D5KDualToken",             "GEWD5S"},
+        {"Goldeneye_ZMG",             "ZMG (9mm)",            "ZMG (9mm)",             "Clip",                         "Goldeneye_ZMGMagazine",             "B57B31", "Goldeneye_ZMGDualMagazine",            "Goldeneye_D5KDualToken",             "GEWZMG"},
+        {"Goldeneye_D5KDeutsche",     "D5K",                  "D5K\nDeutsche",         "Clip",                         "Goldeneye_D5KMagazine",             "B57B31", "Goldeneye_D5KDualMagazine",            "Goldeneye_D5KDualToken",             "GEWD5K"},
+        {"Goldeneye_WatchMagnet",     "Watch Magnet Attract", "Watch Magnet\nAttract", "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "GEWWTC"},
+        {"Goldeneye_WatchLaser",      "Watch Laser",          "Watch\nLaser",          "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "GEWWTC"},
+        {"Goldeneye_WatchDetonator",  "Detonator",            "Detonator",             "-1",                           "-1",                                "-1",     "-1",                                   "-1",                                 "GEWWTC"},
+        {"Goldeneye_TimedMines",      "Timed Mine",           "Mine\n(Timed)",         "RocketAmmo",                   "-1",                                "B58731", "-1",                                   "-1",                                 "GEWTIM"},
+        {"Goldeneye_ProximityMines",  "Proximity Mine",       "Mine\n(Proximity)",     "RocketAmmo",                   "-1",                                "B57E9F", "-1",                                   "-1",                                 "GEWPIM"},
+        {"Goldeneye_RemoteMines",     "Remote Mine",          "Mine\n(Remote)",        "RocketAmmo",                   "-1",                                "B57BC0", "-1",                                   "-1",                                 "GEWRIM"},
+        {"Goldeneye_GoldPP7",         "Gold PP7",             "Gold PP7",              "Goldeneye_GoldenGunRounds",    "Goldeneye_GoldPP7Magazine",         "B57B31", "Goldeneye_GoldPP7DualMagazine",        "Goldeneye_GoldPP7DualToken",         "GEWGP7"},
+        {"Goldeneye_TankWeapon",      "Tank",                 "Tank",                  "RocketAmmo",                   "Goldeneye_TankMagazine",            "B46EF6", "-1",                                   "-1",                                 "-1"}
     },
     {
         {"Goldeneye_Slapper",         "Unarmed",              "Unarmed",                    "-1",                        "-1",                               "-1",     "-1",                                   "-1",                                 "-1"},
-        {"Goldfinger_PPK",            "PPK/s",                "Walther\nPPK/s",             "-2",                        "Goldfinger_PPKMagazine",           "GE09A0", "Goldfinger_PPKDualMagazine",           "Goldeneye_PP7DualToken",             "GFWPPK"},
-        {"Goldfinger_PPKSilenced",    "PPK/s (Silenced)",     "PPK/s\nSilenced",            "-2",                        "Goldfinger_PPKSilencedMagazine",   "GE09A0", "Goldfinger_PPKSilencedDualMagazine",   "Goldeneye_PP7DualToken",             "GFWPKS"},
+        {"Goldfinger_PPKSilenced",    "PPK/s (Silenced)",     "PPK/s\n(Silenced)",          "-2",                        "Goldfinger_PPKSilencedMagazine",   "GE09A0", "Goldfinger_PPKSilencedDualMagazine",   "Goldeneye_PP7DualToken",             "GFWPKS"},
+        {"Goldfinger_PPK",            "Walther PPK/s",        "Walther\nPPK/s",             "-2",                        "Goldfinger_PPKMagazine",           "GE09A0", "Goldfinger_PPKDualMagazine",           "Goldeneye_PP7DualToken",             "GFWPPK"},
         {"Goldfinger_ColtM1911",      "Colt M1911",           "Colt\nM1911",                "-2",                        "Goldfinger_ColtM1911Magazine",     "GE09A0", "Goldfinger_ColtM1911DualMagazine",     "Goldeneye_PP7DualToken",             "GFWCLT"},
         {"Goldfinger_LugerP08",       "Luger P08",            "Luger P08",                  "-2",                        "Goldfinger_LugerP08Magazine",      "GE09A0", "Goldfinger_LugerP08DualMagazine",      "Goldeneye_PP7DualToken",             "GFWLUG"},
         {"Goldfinger_WaltherP38",     "Walther P38",          "Walther\nP38",               "-2",                        "Goldfinger_WaltherP38Magazine",    "GE09A0", "Goldfinger_WaltherP38DualMagazine",    "Goldeneye_PP7DualToken",             "GFWP38"},
         {"Goldfinger_OddJobHat",      "Oddjob's Hat",         "Oddjob's\nBowler Hat",       "Goldfinger_OddJobHatAmmo",  "-1",                               "GE09I0", "-1",                                   "-1",                                 "GFWODD"},
-        {"Goldfinger_AK47",           "AK47 Kalashnikov",     "AK47\nKalashnikov",          "Clip",                      "Goldfinger_AK47Magazine",          "GE09K0", "Goldfinger_AK47DualMagazine",          "Goldeneye_AR33DualToken",            "GFWAK4"},
-        {"Goldfinger_UZI",            "UZI (9mm)",            "UZI (9mm)",                  "Clip",                      "Goldfinger_UZIMagazine",           "GE09A0", "Goldfinger_UZIDualMagazine",           "Goldeneye_D5KDualToken",             "GFWUZI"},
+        {"Goldfinger_GolfClub",       "Golf Club",            "Golf Club",                  "-1",                        "-1",                               "-1",     "-1",                                   "Goldeneye_ThrowingKnivesDualToken",  "GFWCLB"},
         {"Goldfinger_MP40",           "MP40",                 "MP40",                       "Clip",                      "Goldfinger_MP40Magazine",          "GE09A0", "Goldfinger_MP40DualMagazine",          "Goldeneye_KF7DualToken",             "GFWMP4"},
-        {"Goldfinger_Thompson",       "M1928a Thompson",      "M1928a\nThompson",           "Clip",                      "Goldfinger_ThompsonMagazine",      "GE09A0", "Goldfinger_ThompsonDualMagazine",      "Goldeneye_PhantomDualToken",         "GFWTMG"},
-        {"Goldfinger_ThompsonDrum",   "Thompson (Drum Mag)",  "Thompson\n(Drum Mag)",       "Clip",                      "Goldfinger_ThompsonDrumMagazine",  "GE09A0", "Goldfinger_ThompsonDrumDualMagazine",  "Goldeneye_PhantomDualToken",         "GFWTGD"},
-        {"Goldfinger_M14",            "M14",                  "M14",                        "Cell",                      "Goldfinger_M14Magazine",           "GE09K0", "Goldfinger_M14DualMagazine",           "Goldeneye_GoldenGunDualToken",       "GFWM14"},
         {"Goldfinger_Shotgun",        "Remington 870",        "Remington 870\nShotgun",     "Shell",                     "Goldfinger_ShotgunMagazine",       "B47C9E", "Goldfinger_ShotgunDualMagazine",       "Goldeneye_AutoShotgunDualToken",     "GFWSHO"},
         {"Goldfinger_OverUnder",      "Over/Under",           "Over/Under\nShotgun",        "Shell",                     "Goldfinger_OverUnderMagazine",     "B47C9E", "Goldfinger_OverUnderDualMagazine",     "Goldeneye_AutoShotgunDualToken",     "GFWOVU"},
-        {"Goldfinger_Kar98k",         "Karabiner 98k",        "Karabiner 98k",              "Cell",                      "Goldfinger_Kar98kMagazine",        "GE09K0", "Goldfinger_Kar98kDualMagazine",        "Goldeneye_CougarDualToken",          "GFWKAR"},
+        {"Goldfinger_AK47",           "AK47 Kalashnikov",     "AK47\nKalashnikov",          "Clip",                      "Goldfinger_AK47Magazine",          "GE09K0", "Goldfinger_AK47DualMagazine",          "Goldeneye_AR33DualToken",            "GFWAK4"},
+        {"Goldfinger_ThompsonDrum",   "Thompson (Drum Mag)",  "Thompson\n(Drum Mag)",       "Clip",                      "Goldfinger_ThompsonDrumMagazine",  "GE09A0", "Goldfinger_ThompsonDrumDualMagazine",  "Goldeneye_PhantomDualToken",         "GFWTGD"},
+        {"Goldfinger_Thompson",       "M1928A Thompson",      "M1928A\nThompson",           "Clip",                      "Goldfinger_ThompsonMagazine",      "GE09A0", "Goldfinger_ThompsonDualMagazine",      "Goldeneye_PhantomDualToken",         "GFWTMG"},
+        {"Goldfinger_SuperBazooka",   "Super Bazooka",        "M20A1\nSuper Bazooka",       "RocketAmmo",                "Goldfinger_SuperBazookaMagazine",  "GE09J0", "Goldfinger_SuperBazookaDualMagazine",  "Goldeneye_RocketLauncherDualToken",  "GFWBAZ"},
+        {"Goldfinger_M79",            "M79 Grenade Launcher", "M79 Grenade\nLauncher",      "RocketAmmo",                "Goldfinger_M79Magazine",           "GE09H0", "Goldfinger_M79DualMagazine",           "Goldeneye_GrenadeLauncherDualToken", "GFWM79"},
         {"Goldfinger_M1Carbine",      "M1 Carbine",           "M1\nCarbine",                "Cell",                      "Goldfinger_M1CarbineMagazine",     "GE09D0", "Goldfinger_M1CarbineDualMagazine",     "Goldeneye_RCP90DualToken",           "GFWM1C"},
         {"Goldfinger_M1Garand",       "M1 Garand",            "M1\nGarand",                 "Cell",                      "Goldfinger_M1GarandMagazine",      "GE09K0", "Goldfinger_M1GarandDualMagazine",      "Goldeneye_CougarDualToken",          "GFWM1G"},
-        {"Goldfinger_AR7",            "Armalite AR7",         "Armalite AR7 Explorer",      "Shell",                     "Goldfinger_AR7Magazine",           "GE09K0", "Goldfinger_AR7DualMagazine",           "Goldeneye_SniperDualToken",          "GFWAR7"},
+        {"Goldfinger_Kar98k",         "Karabiner 98k",        "Karabiner 98k",              "Cell",                      "Goldfinger_Kar98kMagazine",        "GE09K0", "Goldfinger_Kar98kDualMagazine",        "Goldeneye_CougarDualToken",          "GFWKAR"},
+        {"Goldfinger_Laser",          "Laser",                "Portable\nLaser",            "-1",                        "-1",                               "-1",     "-1",                                   "Goldeneye_LaserDualToken",           "GFWLAS"},
+        {"Goldfinger_M14",            "M14",                  "M14",                        "Cell",                      "Goldfinger_M14Magazine",           "GE09K0", "Goldfinger_M14DualMagazine",           "Goldeneye_GoldenGunDualToken",       "GFWM14"},
+        {"Goldfinger_AR7",            "Armalite AR7",         "Armalite\nAR7 Explorer",     "Shell",                     "Goldfinger_AR7Magazine",           "GE09K0", "Goldfinger_AR7DualMagazine",           "Goldeneye_SniperDualToken",          "GFWAR7"},
+        {"Goldfinger_UZI",            "UZI (9mm)",            "UZI (9mm)",                  "Clip",                      "Goldfinger_UZIMagazine",           "GE09A0", "Goldfinger_UZIDualMagazine",           "Goldeneye_D5KDualToken",             "GFWUZI"},
         {"Goldfinger_SmithWesson22",  "S&W Model 22",         "S&W\nModel 22",              "Clip",                      "Goldfinger_SmithWesson22Magazine", "GE09G0", "Goldfinger_SmithWesson22DualMagazine", "Goldeneye_D5KDualToken",             "GFWSW2"},
         {"Goldfinger_SmithWesson36",  "S&W Model 36",         "S&W\nModel 36",              "Clip",                      "Goldfinger_SmithWesson36Magazine", "GE09D0", "Goldfinger_SmithWesson36DualMagazine", "Goldeneye_D5KDualToken",             "GFWSW3"},
-        {"Goldfinger_GoldMagnum",     "Golden Magnum",        "Golden Ruger\nMagnum",       "Goldeneye_GoldenGunRounds", "Goldfinger_GoldMagnumMagazine",    "GE09L0", "Goldfinger_GoldMagnumDualMagazine",    "Goldfinger_GoldMagnumDualToken",     "GFWGMG"},
-        {"Goldfinger_Laser",          "Laser",                "Portable\nLaser",            "-1",                        "-1",                               "-1",     "-1",                                   "Goldeneye_LaserDualToken",           "GFWLAS"},
-        {"Goldfinger_M79",            "M79 Grenade Launcher", "M79 Grenade\nLauncher",      "RocketAmmo",                "Goldfinger_M79Magazine",           "GE09H0", "Goldfinger_M79DualMagazine",           "Goldeneye_GrenadeLauncherDualToken", "GFWM79"},
-        {"Goldfinger_SuperBazooka",   "M20A1 Super Bazooka",  "M20A1 Super Bazooka",        "RocketAmmo",                "Goldfinger_SuperBazookaMagazine",  "GE09J0", "Goldfinger_SuperBazookaDualMagazine",  "Goldeneye_RocketLauncherDualToken",  "GFWBAZ"},
         {"Goldfinger_WatchDetonator", "Detonator",            "Detonator",                  "-1",                        "-1",                               "-1",     "-1",                                   "-1",                                 "GFWWTC"},
-        {"Goldfinger_Limpet",         "Limpet",               "Limpet\n(Timed)",            "RocketAmmo",                "-1",                               "GE09E0", "-1",                                   "-1",                                 "GFWLMP"},
-        {"Goldfinger_Landmine",       "Landmine",             "Land Mine (Proximity)",      "RocketAmmo",                "-1",                               "GE09C0", "-1",                                   "-1",                                 "GFWLND"},
+        {"Goldfinger_Limpet",         "Limpet Mine",          "Limpet Mine (Timed)",        "RocketAmmo",                "-1",                               "GE09E0", "-1",                                   "-1",                                 "GFWLMP"},
+        {"Goldfinger_Landmine",       "Land Mine",            "Land Mine (Proximity)",      "RocketAmmo",                "-1",                               "GE09C0", "-1",                                   "-1",                                 "GFWLND"},
         {"Goldfinger_Claymore",       "M18 Claymore Mine",    "M18 Claymore Mine (Remote)", "RocketAmmo",                "-1",                               "GE09B0", "-1",                                   "-1",                                 "GFWCLY"},
+        {"Goldfinger_GoldMagnum",     "Golden Magnum",        "Golden Ruger\nMagnum",       "Goldeneye_GoldenGunRounds", "Goldfinger_GoldMagnumMagazine",    "GE09L0", "Goldfinger_GoldMagnumDualMagazine",    "Goldfinger_GoldMagnumDualToken",     "GFWGMG"},
         {"-1",                        "-1",                   "-1",                         "-1",                        "-1",                               "-1",     "-1",                                   "-1",                                 "-1"},
-        {"Goldfinger_DB5MachineGuns", "Forward Machine Guns", "Forward\nMachine Guns",      "Clip",                      "-1",                               "GE09K0", "-1",                                   "-1",                                 "-1"},
-        {"Goldeneye_TankWeapon",      "Tank",                 "Tank",                       "RocketAmmo",                "Goldeneye_TankMagazine",           "B46EF6", "-1",                                   "-1",                                 "-1"}
+        {"Goldeneye_TankWeapon",      "Tank",                 "Tank",                       "RocketAmmo",                "Goldeneye_TankMagazine",           "B46EF6", "-1",                                   "-1",                                 "-1"},
+        {"Goldfinger_DB5MachineGuns", "Forward Machine Guns", "Forward\nMachine Guns",      "Clip",                      "-1",                               "GE09K0", "-1",                                   "-1",                                 "-1"}
     }
 };
 
@@ -1304,28 +1306,38 @@ Script "BondHitBox" (int damage)
 {
 	int bulletX = GetActorX(0);
 	int bulletY = GetActorY(0);
-	int bulletZ = GetActorZ(0);	
-	if(!isZDoom()) Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USEPTR);
-	SetActivator(0,AAPTR_Tracer);
-	int monsterX = GetActorX(0);
-	int monsterY = GetActorY(0);
-	int monsterZ = GetActorZ(0);
+	int bulletZ = GetActorZ(0);
 	int newtid = UniqueTID();
 	int oldTID = ActivatorTID();
-	int monsterHealth = GetActorProperty(0,APROP_Health);
+
+	Thing_ChangeTID(0,newtid);
+
+	if(!isZDoom()) Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USEPTR);
+
+	SetActivator(0,AAPTR_Tracer);
+
+	if(CheckFlag(0,"NOBLOOD"))
+	{
+		SetResultValue(damage);
+		Thing_ChangeTID(newtid,oldTID);
+		terminate;
+	}
+
+	int monsterZ = GetActorZ(0);
 	int monsterHeight = GetActorProperty(0,APROP_Height);
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 	int result = damage;
 
-	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
-
-	if(!CheckInventory("IsFatButBiped") && monsterWidth > monsterHeight)
+	if (health >= 1000)
 	{
-		int monsterAngle = GetActorAngle(0);
-		int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
-		int angle = vang % 1.0;
+		result = damage;
+	}
+	else if(!CheckInventory("IsFatButBiped") && monsterWidth > monsterHeight)
+	{
+		int relativeAngle = abs(relativeAngleToXY(0, bulletX, bulletY));
 
-		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
+		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && (relativeAngle < 0.65 && relativeAngle > 0.35))
 		{
 			SetActorProperty(newtid,APROP_DamageType,"GoldeneyeHead");
 			result = damage*2;
@@ -1333,24 +1345,44 @@ Script "BondHitBox" (int damage)
 		else
 			result = damage;
 	}
-	else
+	else if(!CheckInventory("NoHeadShots"))
 	{
-		if(!CheckInventory("NoHeadShots") && (bulletZ >= monsterZ+FixedMul(GetActorProperty(0,APROP_Height),0.75)))/* && (z <= tz+GetActorProperty(0,APROP_Height))*/
+		if(bulletZ >= monsterZ + FixedMul(monsterHeight,0.75))/* && (z <= tz+monsterHeight)*/
 		{
 			if(GetCvar("samsara_mixerloaded"))
-				result = damage*ACS_NamedExecuteWithResult("Goldeneye_HatShot",0,0,0,0);
+				result = damage*ACS_NamedExecuteWithResult("Goldeneye_HatShot");
 			else
 				result = damage*2;
 
 			SetActorProperty(newtid,APROP_DamageType,"GoldeneyeHead");
 		}
-		else if(!CheckInventory("NoHeadShots") && (bulletZ >= monsterZ+FixedMul(GetActorProperty(0,APROP_Height),0.5)) && (bulletZ < monsterZ+FixedMul(GetActorProperty(0,APROP_Height),0.75)))
+		else if((bulletZ >= monsterZ + FixedMul(monsterHeight,0.5)) && (bulletZ < monsterZ + FixedMul(monsterHeight,0.75)))
 		{
 			SetActorProperty(newtid,APROP_DamageType,"GoldeneyeTorso");
 		}
 	}
 	SetResultValue(result);
 	Thing_ChangeTID(newtid,oldTID);
+}
+
+Script "Goldeneye_SlapperDamage" (int isKnife)
+{
+	int slapperX = GetActorX(0);
+	int slapperY = GetActorY(0);
+	SetActivator(0,AAPTR_Tracer);
+
+	int relativeAngle = abs(relativeAngleToXY(0, slapperX, slapperY) - 0.5);
+
+	if (relativeAngle < 0.6 && relativeAngle > 0.4)
+	{
+		if (isKnife) { SetResultValue(200); }
+		else { SetResultValue(160); }
+	}
+	else
+	{
+		if (isKnife) { SetResultValue(50); }
+		else { SetResultValue(20); }
+	}
 }
 
 Script "Goldeneye_BuildTank" (int goldfinger)
@@ -1659,523 +1691,3 @@ Script "BondAltFireActivator" (int dual)
 script "BondAccuracy" (int y) { SetResultValue(y ? CheckInventory("BondAccuracyY") : CheckInventory("BondAccuracyX")); }
 
 script "BondAccuracySet" (int setmin, int setmax, int sety) { SetInventory(sety ? "BondAccuracyY" : "BondAccuracyX", Random(setmin, setmax)); }
-
-//DB5 Stuff
-Script "Goldfinger_BuildDB5" (void)
-{
-	int x = GetActorX(0);
-	int y = GetActorY(0);
-	int z = GetActorZ(0);
-	int myTid = UniqueTid();
-	Thing_ChangeTid(0,myTid);
-	int partTid = UniqueTid();
-
-	SpawnForced("Goldfinger_DB5_Collision_Front",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-
-	SpawnForced("Goldfinger_DB5_Collision_Center",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-
-	SpawnForced("Goldfinger_DB5_Collision_BackL",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-
-	SpawnForced("Goldfinger_DB5_Collision_BackR",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5_Collision_Roof",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5_Body",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5_Glass",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5_Activator",x,y,z,partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5Suspension",GetActorX(0),GetActorY(0),GetActorZ(0),partTid);
-	SetActorAngle(partTid,GetActorAngle(0));
-	SetPointerExt(AAPTR_Tracer,0,partTid);
-	SetPointerExt(AAPTR_Tracer,partTid,0);
-	Thing_ChangeTid(partTid,0);
-	
-	SetActivator(partTid);
-	Thing_ChangeTid(partTid,0);
-}
-
-Script "Goldfinger_DB5Activator" (void)
-{
-	int tankStart = timer();
-	int yawStorage = GetActorAngle(0);
-	int GZDoom = (GetCvar("samsara_zscriptready") > 0);
-	int interpolate = WARPF_INTERPOLATE * GZDoom;
-	ACS_NamedExecuteWithResult("Goldfinger_MoveDB5", interpolate);
-	SetActivator(0,AAPTR_Target);
-	GiveInventory("Goldeneye_TankForward",65536);
-	GiveInventory("Goldeneye_TankSide",65536);
-	while(CheckInventory("Goldeneye_UsingTank"))
-	{
-		//GiveInventory("SamsaraGoldenEyeTankProtection",1);
-		SetPlayerProperty(0,1,PROP_FROZEN);
-		if ((GetPlayerInput(-1,INPUT_BUTTONS) & BT_USE && timer() > (tankStart + 35) && !CheckInventory("BondWatchToken")) || isDead(0)) { TakeInventory("Goldeneye_UsingTank",1); }
-		int playerYaw = GetPlayerInput(-1,INPUT_YAW);	
-		int playerPitch = GetPlayerInput(-1,INPUT_PITCH);
-		yawStorage += playerYaw;
-		if(yawStorage > 1.0) yawStorage -= 1.0;
-		if(yawStorage < 0.0) yawStorage += 1.0;
-		SetInventory("Goldeneye_TankAngle",yawStorage);
-
-		SetActorVelocity(0,0,0,0,0,0);
-		Delay(1);
-	}
-	//TakeInventory("PowerSamsaraGoldenEyeTankProtection",1);
-	SetPlayerProperty(0,0,PROP_FROZEN);
-	TakeInventory("Goldeneye_TankForward",131072);
-	TakeInventory("Goldeneye_TankSide",131072);
-}
-
-//mode, view height, attack z offset
-Script "DB5ACSCompanion" (int mode, int value, int who)
-{
-	if(who != 0) SetActivator(0,who);
-	switch(mode)
-	{
-		case 0:
-			SetResultValue(GetActorProperty(0,APROP_ViewHeight));
-			break;
-		case 1:
-			SetResultValue(GetActorProperty(0,APROP_AttackZOffset));
-			break;
-		case 2:
-			SetActorProperty(0,APROP_ViewHeight,value);
-			break;
-		case 3:
-			SetActorProperty(0,APROP_AttackZOffset,value);
-			break;
-		case 4:
-			SetResultValue(GetActorProperty(0,APROP_SPECIES));
-			break;
-		case 5:
-			SetActorProperty(0,APROP_Species,value);
-			break;
-		case 6:
-			TakeInventory("Goldeneye_UsingTank",1);
-			StopSound(0,CHAN_5);
-			StopSound(0,CHAN_6);
-			break;
-		case 7:
-			SetInventory("Goldfinger_DB5CarAngle",value+65536);
-			break;
-		case 8: 
-			SetInventory("Goldfinger_DB5_WheelFRZ",value+65536); 
-			break;
-		case 9: 
-			SetInventory("Goldfinger_DB5_WheelFLZ",value+65536);
-			break;
-		case 10: 
-			SetInventory("Goldfinger_DB5_WheelBRZ",value+65536); 
-			break;
-		case 11: 
-			SetInventory("Goldfinger_DB5_WheelBLZ",value+65536); 
-			break;
-		case 12: SetResultValue(GetActorZ(0)); break;
-		case 13:
-			Warp(0,0,0,value,0,WARPF_NOCHECKPOSITION);
-			break;
-		case 14: ChangeActorPitch(0,value,true); break;
-		case 15: ChangeActorRoll(0,value,true); break;
-		case 16: SetResultValue(GetActorPitch(0)); break;
-		case 17: SetResultValue(GetActorRoll(0)); break;
-		case 18: 
-			int wheelFR = CheckInventory("Goldfinger_DB5_WheelFRZ")-65536;
-			int wheelFL = CheckInventory("Goldfinger_DB5_WheelFLZ")-65536;
-			int wheelBR = CheckInventory("Goldfinger_DB5_WheelBRZ")-65536;
-			int wheelBL = CheckInventory("Goldfinger_DB5_WheelBLZ")-65536;
-			int minWheelZ = min(wheelFR,min(wheelFL,min(wheelBR,wheelBL)))<<16;
-			int averageOffset = ((wheelFR+wheelFL+wheelBR+wheelBL)/4)<<16;
-			//PrintBold(s:"Class 2: ",s:GetActorClass(0));
-			//PrintBold(d:CheckInventory("Goldfinger_DB5_WheelFRZFloor")+CheckInventory("Goldfinger_DB5_WheelFLZFloor")+CheckInventory("Goldfinger_DB5_WheelBRZFloor")+CheckInventory("Goldfinger_DB5_WheelBLZFloor"));
-			if(CheckInventory("Goldfinger_DB5_WheelFRZFloor")+CheckInventory("Goldfinger_DB5_WheelFLZFloor")+CheckInventory("Goldfinger_DB5_WheelBRZFloor")+CheckInventory("Goldfinger_DB5_WheelBLZFloor")==0)
-			{
-				minWheelZ = 0;	
-				averageOffset = 0;
-			}
-			/*PrintBold(s:"wheelFR: ",d:wheelFR);
-			PrintBold(s:"wheelFL: ",d:wheelFL);
-			PrintBold(s:"wheelBR: ",d:wheelBR);
-			PrintBold(s:"wheelBL: ",d:wheelBL);
-			PrintBold(s:"minWheelZ: ",d:minWheelZ);
-			PrintBold(s:"actorZ: ",f:GetActorZ(0));
-			PrintBold(s:"floorZ: ",f:GetActorFloorZ(0));
-			PrintBold(s:"averageOffset: ",f:averageOffset);*/
-			
-			SetResultValue(minWheelZ + abs(averageOffset)); 
-			break;
-		case 19: SetInventory("Goldfinger_DB5CarPitch",value+65536); break;
-		case 20: SetResultValue(CheckInventory("Goldfinger_DB5CarPitch")-65536);  break;
-		case 21: SetActivator(0,AAPTR_TRACER); SetInventory("Goldfinger_DB5_WheelFRZFloor",value); break;
-		case 22: SetActivator(0,AAPTR_TRACER); SetInventory("Goldfinger_DB5_WheelFLZFloor",value); break;
-		case 23: SetActivator(0,AAPTR_TRACER); SetInventory("Goldfinger_DB5_WheelBRZFloor",value); break;
-		case 24: SetActivator(0,AAPTR_TRACER); SetInventory("Goldfinger_DB5_WheelBLZFloor",value); break;
-	}
-}
-
-Script "DB5UpdateCosmetics" (void)
-{
-	int myTid = UniqueTid();
-	int GZDoom = (GetCvar("samsara_zscriptready") > 0);
-	int interpolate = WARPF_INTERPOLATE * GZDoom;
-	Thing_ChangeTid(0,myTid);
-	while(ClassifyActor(0) > 1)
-	{
-		ChangeActorPitch(0,-ACS_NamedExecuteWithResult("DB5ACSCompanion",16,0,AAPTR_TRACER),true);
-		if(gzdoom) ChangeActorRoll(0,ACS_NamedExecuteWithResult("DB5ACSCompanion",17,0,AAPTR_TRACER),true);
-		//zpos = ACS_NamedExecuteWithResult("DB5ACSCompanion",18,0,AAPTR_TRACER)<<16
-		Warp(AAPTR_TRACER,0,0,ACS_NamedExecuteWithResult("DB5ACSCompanion",18,0,AAPTR_TRACER),0,WARPF_USEPTR|WARPF_NOCHECKPOSITION|interpolate);
-		Delay(1);
-	}
-}
-
-Script "DB5UpdateSpecies" (void)
-{
-	ACS_NamedExecuteWithResult("DB5ACSCompanion",5,ACS_NamedExecuteWithResult("DB5ACSCompanion",4,0,AAPTR_TRACER));
-}
-
-Script "DB5PlayerAngle" (void)
-{
-	SetActivator(0,AAPTR_TARGET);
-	SetActorAngle(0,CheckInventory("Goldeneye_TankAngle"));
-}
-
-Script "Goldfinger_MoveDB5" (int interpolate)
-{
-	int startingviewHeight = ACS_NamedExecuteWithResult("DB5ACSCompanion",0,0,AAPTR_TARGET);
-	int startingattackOffset = ACS_NamedExecuteWithResult("DB5ACSCompanion",1,0,AAPTR_TARGET);
-	str startingspecies = ACS_NamedExecuteWithResult("DB5ACSCompanion",4,0,AAPTR_TARGET);
-	int db5Seed = PlayerNumber();
-	while(ACS_NamedExecuteWithResult("Goldeneye_IsUsingTank"))
-	{
-		ACS_NamedExecuteWithResult("Goldfinger_DB5MoveInput",interpolate);	
-		Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USEPTR|interpolate);
-		Warp(AAPTR_TARGET,-10.0,14.0,-20.0+ACS_NamedExecuteWithResult("DB5ACSCompanion",18,0,AAPTR_TRACER),0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_USEPTR|interpolate);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",19,ACS_NamedExecuteWithResult("DB5ACSCompanion",16,0,AAPTR_TRACER),AAPTR_TARGET);
-		ACS_NamedExecuteWithResult("DB5PlayerAngle",AAPTR_TRACER);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",2,53.0,AAPTR_TARGET);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",3,startingattackOffset+8.0,AAPTR_TARGET);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",5,strparam(s:"DB5",d:db5Seed),AAPTR_TARGET);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",5,strparam(s:"DB5",d:db5Seed),AAPTR_TRACER);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",7,GetActorAngle(0)%1.0,AAPTR_TARGET);
-		Delay(1);
-	}
-	TakeInventory("Goldeneye_UsingTank",1);
-	ACS_NamedExecuteWithResult("DB5ACSCompanion",6,0,AAPTR_TRACER);
-	SetActivator(0,AAPTR_TARGET);
-	ACS_NamedExecuteWithResult("DB5ACSCompanion",2,startingviewHeight);
-	ACS_NamedExecuteWithResult("DB5ACSCompanion",3,startingattackOffset);
-	ACS_NamedExecuteWithResult("DB5ACSCompanion",5,startingspecies);
-	
-	//Fix player position when exiting
-	if(!CheckInventory("Goldfinger_DB5EjectorSeat"))
-	{
-		if(!Warp(0,0,32.0,0,0,WARPF_MOVEPTR))
-			if(!Warp(0,0,-80.0,0,0,WARPF_MOVEPTR))
-				if(!Warp(0,80.0,0,0,0,WARPF_MOVEPTR))
-					if(!Warp(0,-64.0,0,0,0,WARPF_MOVEPTR))
-						Warp(0,0,0,40.0,0,WARPF_MOVEPTR);	
-	}
-	else
-	{
-		ThrustThingZ(0,72,0,1);
-		Warp(0,0,0,40.0,0,WARPF_MOVEPTR);
-	}
-	TakeInventory("Goldfinger_DB5EjectorSeat",1);
-}
-
-Script "Goldfinger_DB5MoveInput" (int interpolate)
-{
-	int myTid = UniqueTid();
-	Thing_ChangeTid(0,myTid);
-	SetActivator(0,AAPTR_Target);
-
-	int playerForward = GetPlayerInput(-1,INPUT_FORWARDMOVE)/16;
-	int playerSideMove = GetPlayerInput(-1,INPUT_SIDEMOVE);
-	int cruiseControl = GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP;
-	int accelerate = GetPlayerInput(-1,INPUT_FORWARDMOVE) > 2048;
-
-	if(playerForward == 0)
-	{
-		playerForward = CheckInventory("Goldeneye_TankForward")-65536;
-		playerForward = FixedMul(playerForward,0.98);
-		
-		if(abs(playerForward) <= 0.0125) playerForward = 0;
-		
-		SetInventory("Goldeneye_TankForward",playerForward+65536);
-	}
-	else
-	{
-		if(playerForward > 0)
-		{
-			int speedRatio = (1.0 - ((1.0*(CheckInventory("Goldeneye_TankForward")-65536) / 28000)));
-			if(speedRatio < 0) speedRatio = 0;
-			if(CheckInventory("Goldeneye_TankForward")-65536 < 28000 && !cruiseControl)
-				GiveInventory("Goldeneye_TankForward",(playerForward*speedRatio)>>16);	
-		}
-		else
-		{
-			if(CheckInventory("Goldeneye_TankForward")-65536 > -12000)
-				TakeInventory("Goldeneye_TankForward",abs(playerForward/2));
-		}
-		playerForward = CheckInventory("Goldeneye_TankForward")-65536;
-		SetInventory("Goldeneye_TankForward",playerForward+65536);
-	}
-
-	if(playerSideMove == 0)
-	{
-		playerSideMove = CheckInventory("Goldeneye_TankSide")-65536;
-		playerSideMove = FixedMul(playerSideMove,0.667);
-		if(abs(playerSideMove) <= 3) playerSideMove = 0;
-		SetInventory("Goldeneye_TankSide",playerSideMove+65536);
-	}
-	else
-	{
-		SetInventory("Goldeneye_TankSide",playerSideMove+65536);
-	}
-
-	if(abs(playerForward) > 1024 || abs(playerSideMove) > 1024 != 0)
-	{
-		SetActivator(myTid,AAPTR_Tracer);
-		int angle = GetActorAngle(0);
-		SetActivator(myTid,AAPTR_Target);
-		SetInventory("Goldeneye_TankBaseAngle",angle);
-		GiveInventory("Goldfinger_DB5DamageObjects",1);
-	}
-
-	SetActivator(myTid,AAPTR_Tracer);
-	if(CheckInventory("Goldeneye_Tank_Blocked"))
-	{
-		TakeInventory("Goldeneye_Tank_Blocked",1);
-		SetActivator(myTid,AAPTR_TARGET);
-		SetInventory("Goldeneye_TankForward",65536);
-		playerForward = 0;
-		SetActivator(myTid,AAPTR_Tracer);
-	}
-	ACS_NamedExecuteWithResult("Goldfinger_DB5Move",playerForward,-playerSideMove,accelerate,interpolate);
-	Thing_ChangeTid(myTid,0);
-}
-
-Script "Goldfinger_DB5Move" (int playerForward, int playerSideMove, int accelerate, int interpolate)
-{
-	int angle = GetActorAngle(0);
-	int x = GetActorX(0);
-	int y = GetActorY(0);
-	int z = GetActorZ(0);
-	int forwardOffset = 64/* + playerForward/500*/;
-	int backwardOffset = 96;
-	int sideOffset = 16;
-	int dummyTid = UniqueTid();
-	if(playerForward > 0)
-	{
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)),y + (forwardOffset * sin(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)) - (sideOffset * sin(angle)),y + (forwardOffset * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)) + (sideOffset * sin(angle)),y + (forwardOffset * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)) - (sideOffset * 2 * sin(angle)),y + (forwardOffset * sin(angle)) + (sideOffset * 2 * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)) + (sideOffset * 2 * sin(angle)),y + (forwardOffset * sin(angle)) - (sideOffset * 2 * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		SetActorAngle(dummyTid,angle);
-	}
-	if(playerForward < 0)
-	{
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (backwardOffset * cos(angle)),y - (backwardOffset * sin(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (backwardOffset * cos(angle)) - (sideOffset * sin(angle)),y - (backwardOffset * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (backwardOffset * cos(angle)) + (sideOffset * sin(angle)),y - (backwardOffset * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (backwardOffset * cos(angle)) - (sideOffset * 2 * sin(angle)),y - (backwardOffset * sin(angle)) + (sideOffset * 2 * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (backwardOffset * cos(angle)) + (sideOffset * 2 * sin(angle)),y - (backwardOffset * sin(angle)) - (sideOffset * 2 * cos(angle)),z + 12.0,dummyTid)) playerForward = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		SetActorAngle(dummyTid,angle+0.5);
-	}
-	forwardOffset = 30;
-	sideOffset = 36;
-	if(playerSideMove > 0)
-	{
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (sideOffset * sin(angle)),y + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)) - (sideOffset * sin(angle)),y + (forwardOffset * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * 2 * cos(angle)) - (sideOffset * sin(angle)),y + (forwardOffset * 2 * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * 3 * cos(angle)) - (sideOffset * sin(angle)),y + (forwardOffset * 3 * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (forwardOffset * cos(angle)) - (sideOffset * sin(angle)),y - (forwardOffset * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (forwardOffset * 2 * cos(angle)) - (sideOffset * sin(angle)),y - (forwardOffset * 2 * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (forwardOffset * 3 * cos(angle)) - (sideOffset * sin(angle)),y - (forwardOffset * 3 * sin(angle)) + (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		SetActorAngle(dummyTid,angle+0.25);
-	}
-	if(playerSideMove < 0)
-	{
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (sideOffset * sin(angle)),y - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * cos(angle)) + (sideOffset * sin(angle)),y + (forwardOffset * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * 2 * cos(angle)) + (sideOffset * sin(angle)),y + (forwardOffset * 2 * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x + (forwardOffset * 3 * cos(angle)) + (sideOffset * sin(angle)),y + (forwardOffset * 3 * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (forwardOffset * cos(angle)) + (sideOffset * sin(angle)),y - (forwardOffset * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (forwardOffset * 2 * cos(angle)) + (sideOffset * sin(angle)),y - (forwardOffset * 2 * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		if(!Spawn("Goldfinger_DB5_CollisionBoundary",x - (forwardOffset * 3 * cos(angle)) + (sideOffset * sin(angle)),y - (forwardOffset * 3 * sin(angle)) - (sideOffset * cos(angle)),z + 12.0,dummyTid)) playerSideMove = 0;
-		SetPointerExt(AAPTR_MASTER,0,dummyTid);
-		SetActorAngle(dummyTid,angle-0.25);
-	}
-	
-	Delay(1);
-	SetActorAngle(0,angle+playerSideMove/16);
-	if(accelerate) PlaySound(0,"Goldfinger/DB5/Move",CHAN_6,0.5,1,0.5);
-	else { PlaySound(0,"Goldeneye/Tank/Idle",CHAN_5,0.25,1,0.5); StopSound(0,CHAN_6); }
-	Thing_Remove(dummyTid);
-	if(CheckInventory("Goldeneye_Tank_Blocked"))
-	{
-		playerForward = 0; 
-		playerSideMove = 0;
-		//TakeInventory("Goldeneye_Tank_Blocked",1);
-	}
-	else Warp(0,playerForward*60,0,0,0,WARPF_NOCHECKPOSITION|interpolate);
-	
-	//PrintBold(f:ACS_NamedExecuteWithResult("DB5ACSCompanion",18));
-}
-
-Script "SamsaraGoldfingerDB5AttackObject" (int coop)
-{
-	int partTid = UniqueTid();
-	SpawnForced(coop ? "SamsaraGoldfingerDB5AttackObjectCoop" : "SamsaraGoldfingerDB5AttackObject",GetActorX(0)+cos(CheckInventory("Goldfinger_DB5CarAngle"))*84,GetActorY(0)+sin(CheckInventory("Goldfinger_DB5CarAngle"))*84,GetActorZ(0),partTid);
-	SetActorAngle(partTid,CheckInventory("Goldfinger_DB5CarAngle"));
-	SetActorProperty(partTid,APROP_Species,GetActorProperty(0,APROP_Species));
-	SetPointerExt(AAPTR_Master,0,partTid);
-	//Warp(partTid,84.0,0,0,CheckInventory("Goldfinger_DB5CarAngle"),WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEANGLE|WARPF_MOVEPTR);
-	SetActorPitch(partTid,-(CheckInventory("Goldfinger_DB5CarPitch")-65536));
-	Thing_ChangeTid(partTid,0);
-}
-
-Script "Goldfinger_DB5_BuildSuspension" (void)
-{
-	int partTid = UniqueTid();
-	int wheelFR, wheelFL, wheelBR, wheelBL;
-	int vecF, vecB, vecR, vecL;
-	int roll, pitch;
-	
-	SpawnForced("Goldfinger_DB5Suspension_WheelFR",0,0,0,partTid);
-	SetPointerExt(AAPTR_Master,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5Suspension_WheelFL",0,0,0,partTid);
-	SetPointerExt(AAPTR_Master,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5Suspension_WheelBR",0,0,0,partTid);
-	SetPointerExt(AAPTR_Master,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	SpawnForced("Goldfinger_DB5Suspension_WheelBL",0,0,0,partTid);
-	SetPointerExt(AAPTR_Master,0,partTid);
-	Thing_ChangeTid(partTid,0);
-	
-	while(ClassifyActor(0) > 1)
-	{
-		Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USEPTR);
-		wheelFR = (CheckInventory("Goldfinger_DB5_WheelFRZ")-65536)<<16;
-		wheelFL = (CheckInventory("Goldfinger_DB5_WheelFLZ")-65536)<<16;
-		wheelBR = (CheckInventory("Goldfinger_DB5_WheelBRZ")-65536)<<16;
-		wheelBL = (CheckInventory("Goldfinger_DB5_WheelBLZ")-65536)<<16;
-		
-		vecF = (wheelFR + wheelFL)/2;
-		vecB = (wheelBR + wheelBL)/2;
-		vecR = (wheelFR + wheelBR)/2;
-		vecL = (wheelFL + wheelBL)/2;
-		pitch = VectorAngle(94.0,vecF - vecB);
-		roll = VectorAngle(56.0,vecR - vecL);
-		//PrintBold(s:"VecF: ",f:vecF);
-		//PrintBold(s:"VecB: ",f:vecB);
-		
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",14,-pitch,AAPTR_TRACER);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",15,-roll,AAPTR_TRACER);
-		
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",8,CheckInventory("Goldfinger_DB5_WheelFRZ")-65536,AAPTR_TRACER);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",9,CheckInventory("Goldfinger_DB5_WheelFLZ")-65536,AAPTR_TRACER);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",10,CheckInventory("Goldfinger_DB5_WheelBRZ")-65536,AAPTR_TRACER);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",11,CheckInventory("Goldfinger_DB5_WheelBLZ")-65536,AAPTR_TRACER);
-		
-		Delay(1);
-	}
-}
-
-Script "Goldfinger_DB5_WheelThink" (int wheel)
-{
-	int wheelX, wheelY, wheelZ, parentZ, diff;
-	while(ClassifyActor(0) > 1)
-	{
-		parentZ = round(ACS_NamedExecuteWithResult("DB5ACSCompanion",12,0,AAPTR_MASTER));
-		diff = GetActorFloorZ(0) - parentZ;
-		
-		if(abs(diff) <= 24.0)
-			wheelZ = diff;
-		else wheelZ = 0;
-				
-		switch(wheel)
-		{
-			case 1:
-				wheelX = 48.0;
-				wheelY = 28.0;
-				break;
-			case 2:
-				wheelX = 48.0;
-				wheelY = -28.0;	
-				break;
-			case 3:
-				wheelX = -46.0;
-				wheelY = 28.0;
-				break;
-			case 4:	
-				wheelX = -46.0;
-				wheelY = -28.0;
-				break;
-		}
-		
-		//PrintBold(s:"floorZ: ",f:GetActorFloorZ(0));
-		//PrintBold(s:"parentZ: ",f:parentZ);
-		//PrintBold(s:"Diff: ",d:diff>>16);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",20+wheel,GetActorZ(0) - GetActorFloorZ(0) <= 1.0,AAPTR_MASTER);
-		Warp(AAPTR_MASTER,wheelX,wheelY,wheelZ,0,WARPF_NOCHECKPOSITION|WARPF_USEPTR);
-		ACS_NamedExecuteWithResult("DB5ACSCompanion",7+wheel,wheelZ>>16,AAPTR_MASTER);
-		
-		Delay(1);
-	}
-}

@@ -1,0 +1,79 @@
+actor "M343Vulcan" : Corridor7WeaponBase
+{
+    Inventory.PickupMessage "You got M-343 Mini Gun!"
+    Weapon.SlotNumber 2
+    Weapon.SelectionOrder 1400
+    Weapon.YAdjust 11
+    Weapon.AmmoType1 "Shell"
+    Weapon.AmmoGive1 10
+    Weapon.AmmoUse1 1
+    Obituary "%k ripped huge chunks out of %o with the M-343."
+    Tag "M-343 Tribarrel Power Blaster"
+    States
+    {
+      Spawn:
+        7VL2 A -1
+        stop
+
+      Ready:
+        C7VL E 1 A_WeaponReady
+        loop
+
+      Fire:
+        TNT1 A 0 A_AlertMonsters
+        C7VL E 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraCorridor7VulcanAttackHandler")
+        C7VL A 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        C7VL B 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        C7VL CD 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
+        C7VL E 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      AltFire:
+        C7VL E 0
+        goto AltFireMine
+    }
+}
+
+actor SamsaraCorridor7VulcanAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("C7/Vulcan",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(2,2,3,random(6,16),"BlankPuffThruGhost",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(2,2,3,random(5,9),"BlankPuffThruGhostBloodless",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(2,2,3,random(2,6),"BlankPuffThruGhostBloodless",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_FireBullets(2,2,3,random(6,16),"BlankPuffThruGhostCoop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(2,2,1,random(5,9),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(2,2,1,random(5,9),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(2,2,1,random(5,9),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(2,2,3,random(2,6),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_FireBullets(2,2,3,random(9,15),"BlankPuffThruGhostCoop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(2,2,1,random(8,10),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(2,2,1,random(8,10),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(2,2,1,random(8,10),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(2,2,3,random(4,8),"BlankPuffThruGhostBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+    }
+}

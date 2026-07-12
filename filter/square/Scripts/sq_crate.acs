@@ -1,0 +1,131 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Crate Pickups
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock, Xaser Acheron
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+
+/*****************************************************************************
+ * Crate Pickup defines
+ ****************************************************************************/
+ 
+ /** Stores the last-used weapon for each player. */
+str player_last_weapon[PLAYER_MAX];
+
+ /** Stores spawn ID of actor dropped by picked-up crate. */
+int player_crate_spawnid[PLAYER_MAX];
+
+ /** Stores class of picked-up crate. */
+int player_crate_class[PLAYER_MAX];
+
+
+/*****************************************************************************
+ * Evented Named Scripts
+ ****************************************************************************/
+
+/**
+ * Initializes player crate arrays.
+ */
+script "__Init_Player_Crate_Arrays" OPEN
+{
+	int i;
+	for (i = 0; i < PLAYER_MAX; i++)
+		player_crate_class[i] = "";
+}
+
+/*****************************************************************************
+ * Crate Pickup scripts
+ ****************************************************************************/
+ 
+/**
+ * Crate position check script.
+ * Checks to see if there is enough room to spawn a dropped crate in front of the player.
+ * dist: distance (in map units) to attempt to spawn the crate-checker object.
+ */
+script "Crate_PositionCheck" (int dist)
+{
+	SetResultvalue(Spawn_Front(0, "CratePosition", dist, 0, false));
+}
+
+/**
+ * Crate pickup check script.
+ * Detects whether or not the player is already carrying a crate.
+ */
+script "Crate_PickupCheck" (void)
+{
+	SetActivatorToTarget(0);
+	int player = playerNumber();
+	SetResultvalue(!StrCmp(player_crate_class[player], ""));
+}
+
+/**
+ * Crate pickup script.
+ * Stores player's current weapon and picked-up crate class for later dropping.
+ */
+script "Crate_Pickup" (void)
+{
+	int spawnid = GetUserVariable(0, "user_itemspawnid");
+	str class = GetActorClass(0);
+	
+	SetActivatorToTarget(0); // [XA] needed since this script needs to be called by Crate, not CrateWeapon.
+	int player = playerNumber();
+	
+	player_last_weapon[player] = StrParam(s:GetWeapon());
+	player_crate_spawnid[player] = spawnid;
+	player_crate_class[player] = class;
+}
+ 
+/**
+ * Crate drop script.
+ * Spawns a "new" crate 'dist' units in front of the player, inheriting the properties of the old one
+ * (crate type, crate contents, etc). Optionally switches the player's weapon to the previously-selected one.
+ */
+script "Crate_Drop" (int dist, int dontSwitch)
+{
+	int player = playerNumber();
+	str lastWeapon = player_last_weapon[player];
+	str crateClass = player_crate_class[player];
+	str crateSpawnID = player_crate_spawnid[player];
+	
+	if(!dontSwitch)
+		SetWeapon(lastWeapon);
+		
+	int tid = UniqueTID(0);	
+	Spawn_Front(0, crateClass, dist, tid, true);
+	SetUserVariable(tid, "user_itemspawnid", crateSpawnID);
+	Thing_ChangeTID(tid, 0);
+	
+	player_crate_class[player] = "";
+}
+
+/**
+ * Crate break script. 
+ * Used to spawn the contents of the crate, if a spawn ID is defined in args[0].
+ */
+script "Crate_Break" (void)
+{
+	Thing_Stop(0); // [XA] Looks silly if the broken crate flies off while the item stays...
+	int spawnid = GetUserVariable(0, "user_itemspawnid"); // [XA] uservar hack since I can't actually access args[0] in ACS... WTF??
+	if(spawnid > 0)
+		Thing_SpawnFacing(0, spawnid, 1);
+}

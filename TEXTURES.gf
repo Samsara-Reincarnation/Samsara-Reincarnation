@@ -171,6 +171,34 @@ Graphic "GFW1L0Y", 60, 49
 	Patch "GFW1L0Y", 0, 0
 }
 
+Graphic "GFW1L1N", 60, 49
+{
+	XScale 3.200
+	YScale 3.100
+	Patch "GFW1L1N", 0, 0
+}
+
+Graphic "GFW1L1Y", 60, 49
+{
+	XScale 3.200
+	YScale 3.100
+	Patch "GFW1L1Y", 0, 0
+}
+
+Graphic "GFW1L1DN", 60, 49
+{
+	XScale 3.200
+	YScale 3.100
+	Patch "GFW1L1DN", 0, 0
+}
+
+Graphic "GFW1L1DY", 60, 49
+{
+	XScale 3.200
+	YScale 3.100
+	Patch "GFW1L1DY", 0, 0
+}
+
 Graphic "GFW2L0N", 60, 49
 {
 	XScale 3.200

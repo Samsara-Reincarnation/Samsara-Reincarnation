@@ -1,0 +1,72 @@
+actor RoTTM60 : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You picked up an M60!"
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 4
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 1800
+    Obituary "%k was riddled with bullets by %o's M60."
+    Tag "M60"
+    States
+    {
+      Spawn:
+        PM60 A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_GiveInventory("UsingFirearm")
+        RM60 A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        RM60 A 1 A_Lower
+        loop
+
+      Select:
+        RM60 A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraROTTM60AttackHandler")
+        RM60 B 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        RM60 CA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,2)
+        TNT1 A 0 A_ReFire
+        TNT1 A 0 A_ClearReFire
+        RM60 A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+    }
+}
+
+actor SamsaraROTTM60AttackHandler : Trigger
+{
+    States
+    {
+      // Sound stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAlternate")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("rottm60/shoot",CHAN_WEAPON)
+        goto PickupAttack
+
+      // Alternate sounds
+      PickupAlternate:
+        TNT1 A 0 A_PlaySound("rottm60/shoot/alt",CHAN_WEAPON)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(4.8,3.8,-1,10,"RottPuff",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(4.8,3.8,-1,10,"RottPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+    }
+}

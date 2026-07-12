@@ -1,0 +1,133 @@
+// Original
+
+actor Wolfen_IHaveAmmoCrate : Counter
+{
+    Inventory.MaxAmount 9
+    Inventory.InterHubAmount 9
+}
+
+actor WolfenAmmoCrate : CustomInventory
+{
+    +INVENTORY.INVBAR
+    +INVENTORY.UNDROPPABLE
+    Inventory.MaxAmount 9 // 1
+    Inventory.InterHubAmount 9 // 1
+    Inventory.Icon "BJAMMCRT"
+    Inventory.UseSound ""
+	Inventory.RestrictedTo "WolfenPlayer"
+    Tag "Ammo Crate"
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("Clip",0,"UseFail")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,2)
+        TNT1 A 0 A_TakeInventory("Wolfen_IHaveAmmoCrate",1)
+        TNT1 A 0 A_PlaySound("wolfen/ammocrate",CHAN_ITEM)
+        TNT1 A 0 A_SetBlend("White",0.1,1)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraWolf3DClipRefill")
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+// Lost Episodes
+
+actor WolfenAmmoCrateLost : WolfenAmmoCrate { Inventory.Icon "BJAMMCR2" }
+
+// Castle Totenkopf SDL
+
+actor Totenkopf_IHaveMG42 : Boolean {}
+actor SamsaraTotenkopfMG42AttackSilentSound : Boolean {}
+
+actor Totenkopf_MG42 : InstantSwitchWeapon
+{
+	Tag "MG42 Portable Machine Gun"
+    Weapon.SelectionOrder 750
+    Weapon.SlotNumber 9
+    Inventory.PickUpSound "Totenkopf/getweapon"
+    Obituary "$SAMSARA_WOLFENTKF_OB_UNIQUE2"
+    Weapon.AmmoUse 1
+    Weapon.AmmoGive 80
+    Weapon.AmmoType "Cell"
+    +DONTBOB
+    +INVENTORY.UNDROPPABLE
+    Inventory.PickupMessage "MG42 Portable Machine Gun"
+	Inventory.RestrictedTo "WolfenPlayer"
+    Weapon.YAdjust 16
+    States
+    {
+      Spawn:
+        TK11 F -1
+        stop
+
+      Ready:
+        TK11 A 1 A_WeaponReady
+        loop
+
+      Fire:
+        TK11 B 2
+      Hold:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"HoldSmooth")
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfMG42AttackSilentSound")
+        TK11 C 3 Bright A_GiveInventory("SamsaraTotenkopfMG42AttackHandler")
+        TK11 D 2 Bright A_GiveInventory("SamsaraTotenkopfMG42AttackHandler")
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfMG42AttackSilentSound")
+        TK11 C 3 Bright A_GiveInventory("SamsaraTotenkopfMG42AttackHandler")
+        TK11 D 2 Bright
+        TK11 E 3 A_ReFire
+        goto Ready
+
+      HoldSmooth:
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfMG42AttackSilentSound")
+        TK11 C 2 Bright A_GiveInventory("SamsaraTotenkopfMG42AttackHandler")
+		TK11 H 1 Bright
+        TK11 D 1 Bright A_GiveInventory("SamsaraTotenkopfMG42AttackHandler")
+		TK11 I 1 Bright
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfMG42AttackSilentSound")
+        TK11 C 2 Bright A_GiveInventory("SamsaraTotenkopfMG42AttackHandler")
+        TK11 D 2 Bright
+		TK11 J 1 Bright
+        TK11 E 3 A_ReFire
+        goto Ready
+    }
+} 
+
+actor SamsaraTotenkopfMG42AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraTotenkopfMG42AttackSilentSound",1,2)
+        TNT1 A 0 A_PlaySound("Totenkopf/atkmg42",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Totenkopf_Tracer_MG42DM",random(-4,4),false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Totenkopf_Tracer_MG42Coop",random(-4,4),false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraTotenkopfMG42AttackSilentSound")
+        stop
+    }
+}
+
+actor Totenkopf_Tracer_MG42 : Totenkopf_Tracer { Damage (8 + (random(0,28))) }
+actor Totenkopf_Tracer_MG42DM : Totenkopf_Tracer_MG42 { Damage (8 + (random(0,14))) }
+actor Totenkopf_Tracer_MG42Coop : Totenkopf_Tracer_MG42 { Species "Player" +THRUSPECIES }

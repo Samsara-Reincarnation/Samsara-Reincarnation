@@ -1,0 +1,193 @@
+actor UsingAlienWeapon2: Boolean {}
+
+actor " Alien Weapon " : SamsaraMarathonWeapon
+{
+    Inventory.PickupMessage "system error 0xfded"
+    Weapon.SlotNumber 8
+    Weapon.SelectionOrder 500
+    Weapon.AmmoType "UnknownResonator2"
+    Tag "Alien Weapon"
+    States
+    {
+      Spawn:
+        AWPN B -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("UnknownAmmo2",1,1)
+        goto NoAmmoSwitch
+        AWP2 A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_Lower
+        AWP2 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_TakeInventory("UsingFists")
+        TNT1 A 0 A_TakeInventory("UsingPistols")
+        TNT1 A 0 A_TakeInventory("UsingDualPistols")
+        TNT1 A 0 A_TakeInventory("UsingSMG")
+        TNT1 A 0 A_TakeInventory("UsingPacifier")
+        TNT1 A 0 A_TakeInventory("UsingShotguns")
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("UsingFusionPistol")
+        TNT1 A 0 A_TakeInventory("UsingAssaultRifle")
+        TNT1 A 0 A_TakeInventory("UsingSpanker")
+        TNT1 A 0 A_TakeInventory("UsingToasty")
+        TNT1 A 0 A_TakeInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon")
+        //TNT1 A 0 A_TakeInventory("UsingAlienWeapon2")
+        TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
+
+        TNT1 A 0 A_GiveInventory("UsingAlienWeapon2")
+        TNT1 A 0 A_Raise
+        AWP2 A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("UnknownAmmo2",1,"FireStart")
+        goto Ready
+
+      FireStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"Ready")
+        TNT1 A 0 A_AlertMonsters
+        AWP2 B 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("UnknownAmmo2",1,1)
+        goto FireContinue
+        TNT1 A 0 A_GunFlash
+        goto FireContinue
+
+      FireContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonAlienWeapon1AttackHandler")
+        AWP2 C 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        AWP2 B 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      Flash:
+        TNT1 A 2 A_Light2
+        goto LightDone
+
+      // "No ammo" switch
+      NoAmmoSwitch:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon(".44 Magnum Mega Class A1")
+        goto Deselect
+    }
+}
+
+actor SamsaraMarathonAlienWeapon1AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("UnknownAmmo2",1,1)
+        stop
+        TNT1 A 0 A_Jump(256,1,1,1,1,1,1,2)
+        TNT1 A 0
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("UnknownAmmo2",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("marathon/alienweapon/shoot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("AlienWeaponBullet",random(-3,3),false)
+        TNT1 A 0 A_FireCustomMissile("AlienWeaponBullet",random(-2,2),false) //A_FireBullets(7.5,0,3,5,"alienpuff",0)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("AlienWeaponBulletCoop",random(-3,3),false)
+        TNT1 A 0 A_FireCustomMissile("AlienWeaponBulletCoop",random(-2,2),false) //A_FireBullets(7.5,0,3,5,"alienpuff",0)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(0.1)
+        stop
+    }
+}
+
+actor UnknownAmmo2 : Ammo 
+{
+    Inventory.MaxAmount 50
+    Tag "Alien Weapon Ammo"
+    +IGNORESKILL
+}
+
+actor UnknownResonator2: Ammo
+{
+    Inventory.MaxAmount 100
+    Tag "Alien Weapon Ammo"
+    +IGNORESKILL
+}
+
+actor AlienWeaponBullet : FastProjectile
+{
+    Projectile
+    Radius 1
+    Height 1
+    Speed 80
+    Damage (random(10,18)) // Formerly 10-15
+    DamageType "MarathonPlasma"
+    Mass 5
+    Decal "RailScorchLower"
+    Obituary "$SAMSARA_MARATHON_OB_UNIQUE2"
+    +BLOODLESSIMPACT
+    +NOEXTREMEDEATH
+    +NOTIMEFREEZE
+    States
+    {
+      Spawn:
+        TNT1 A -1
+        stop
+
+      Death:
+        TNT1 A 0 A_PlaySound("marathon/alienweapon/hit")
+        TNT1 A 1 A_SpawnItemEx("MarathonAlienPuff")
+        stop
+    }
+}
+
+actor AlienWeaponBulletCoop : AlienWeaponBullet
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor MarathonAlienPuff
+{
+    VSpeed 0.01
+    Mass 5
+    Scale 0.375
+    +CLIENTSIDEONLY
+    +FORCEXYBILLBOARD
+    +NOBLOCKMAP
+    +NOEXTREMEDEATH
+    +NOGRAVITY
+    +PUFFONACTORS
+    States
+    {
+      Spawn:
+      Death:
+      Crash:
+        APUF A 2 Bright Light("M1APUFF1")
+        APUF B 2 Bright Light("M1APUFF2")
+        APUF C 2 Bright Light("M1APUFF3")
+        APUF D 2 Bright Light("M1APUFF4")
+        APUF E 2 Bright
+        stop
+    }
+}

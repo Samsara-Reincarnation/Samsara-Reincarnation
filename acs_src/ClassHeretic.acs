@@ -1,6 +1,17 @@
-script "TomeOfPowerStartCheck" (void)
+script "HereticStartInventoryLoop" (void)
 {
-	if (!isFreeForAll() && !isTeamGame()) { GiveInventory("PortTomeCoOp",1); }
+    int pln = PlayerNumber();
+
+    SetInventory("PortTomeCoOp", isSinglePlayer() || isCoop());
+
+    while (CheckInventory("CorvusClass"))
+    {
+        SetInventory("PermaTimeBomb", GetUserCVar(pln, "samsara_cl_corvustimebomb") && GetCVar("samsara_allowcorvustimebomb"));
+        SetInventory("PermaRemoteBomb", GetUserCVar(pln, "samsara_cl_corvusremotebomb") && GetCVar("samsara_allowcorvusremotebomb"));
+	    SetInventory("PermaProxyBomb", GetUserCVar(pln, "samsara_cl_corvusproxybomb") && GetCVar("samsara_allowcorvusproxybomb"));
+
+        Delay(1);
+    }
 }
 
 script "TomeOfPowerCooldownReduction" (void)
@@ -11,16 +22,18 @@ script "TomeOfPowerCooldownReduction" (void)
 
 script "HereticTomeChargeRate" (void)
 {
-	int weaponCount = CheckInventory("GotWeapon0") + CheckInventory("GotWeapon2") + CheckInventory("GotWeapon3") + CheckInventory("GotWeapon4") + CheckInventory("GotWeapon5") + CheckInventory("GotWeapon6") + CheckInventory("GotWeapon7");
-	int result = 1800;
+    int weaponCount = CheckInventory("GotWeapon0") + CheckInventory("GotWeapon2") + CheckInventory("GotWeapon3") +
+                      CheckInventory("GotWeapon4") + CheckInventory("GotWeapon5") + CheckInventory("GotWeapon6") +
+                      CheckInventory("CorvusTempestWand") + CheckInventory("GotWeapon7") + CheckInventory("Grim Ballista");
+    int result = 1800;
 
-	until(weaponCount == 0)
-	{
-		weaponCount--;
-		result = (result * 2)/3;
-	}
+    until (weaponCount == 0)
+    {
+        weaponCount--;
+        result = (result * 2) / 3;
+    }
 
-	SetResultValue(result);
+    SetResultValue(result);
 }
 
 script "CorvusFaceTarget" (void)
@@ -56,7 +69,7 @@ script "HereticCloneSpawner" (int powered, int clonetype)
 	SetPointerExt(AAPTR_MASTER, 0, corvTid);
 	Thing_SetTranslation(corvTid, -1);
 	SetActivator(corvTid);
-	GiveInventory("SamsaraHereticCloneCopyFriendliness", 1);
+	GiveInventory("SamsaraCopyFriendliness", 1);
 	ACS_NamedExecuteWithResult("HereticCloneThink",powered,minionCounter);
 	Thing_ChangeTID(0, 0);
 }

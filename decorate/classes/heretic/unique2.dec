@@ -1,0 +1,233 @@
+actor SamsaraCorvusArtiEgg : ArtiEgg
+{
+    Inventory.MaxAmount 16
+    Inventory.InterHubAmount 16
+    Inventory.UseSound "heretic/itemuse"
+    Inventory.RestrictedTo "CorvusPlayer"
+    Tag "Morph Ovum"
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 45), "UseFail")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"UseCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"UseCoop")
+      UseDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFX",-15,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFX",-7.5,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFX",0,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFX",7.5,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFX",15,false,0,0,1)
+        stop
+
+      /*UseDMPunchdrunk:
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXPunchdrunk",-15,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXPunchdrunk",-7.5,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXPunchdrunk",0,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXPunchdrunk",7.5,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXPunchdrunk",15,false,0,0,1)
+        stop*/
+
+      UseCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXCoop",-15,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXCoop",-7.5,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXCoop",0,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXCoop",7.5,false,0,0,1)
+        TNT1 A 0 A_FireCustomMissile("SamsaraCorvusEggFXCoop",15,false,0,0,1)
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor SamsaraCorvusEggFX
+{
+    Projectile
+    Radius 8
+    Height 8
+    Speed 18
+    Damage (random(1,4)*20)
+    Obituary "SAMSARA_CORVUS_OB_UNIQUE2"
+    +BLOODSPLATTER
+    States
+    {
+      Spawn:
+        EGGM ABCDE 4
+        loop
+
+      Death:
+        FX01 FFGH 3 Bright
+        stop
+    }
+}
+
+//actor SamsaraCorvusEggFXPunchdrunk : SamsaraCorvusEggFX {}
+
+actor SamsaraCorvusEggFXCoop : EggFX
+{
+    MorphProjectile.Duration 1400
+    MorphProjectile.MorphStyle MRF_ADDSTAMINA|MRF_FULLHEALTH|MRF_UNDOBYTOMEOFPOWER|MRF_UNDOBYCHAOSDEVICE // allow unmorphing via chaos device like in hexen
+    MorphProjectile.MonsterClass "Chicken2"
+    Species "Player"
+    +BLOODSPLATTER
+    +THRUSPECIES
+}
+
+actor Chicken2 : SamsaraMonsterReincChicken replaces Chicken
+{
+    States
+    {
+      Melee:
+        TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+        goto Chicken::Melee
+
+      Pain.MightyBoot:
+        TNT1 A 0 A_Feathers
+        TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+        TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+        CHKN D 2 A_FaceTarget
+        TNT1 A 0 A_Recoil(12)
+        CHKN C 16 A_Pain
+        goto See
+
+      Death:
+        TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+      Death.Massacre:
+        TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+        CHKN E 6 A_Scream
+        CHKN F 6 A_Feathers
+        CHKN G 6
+        CHKN H 6 A_NoBlocking
+        CHKN IJK 6
+        CHKN L -1
+        stop
+
+      Death.WolfenFlamethrower:
+      Death.TotenkopfFire:
+        TNT1 A 0 A_Scream
+        TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+        TNT1 AAAAAAA 0 A_Feathers
+        TNT1 A -1 A_SpawnItem("WolfensteinChickenLeg")
+        stop
+
+    }
+}
+
+actor ChickenPlayer2 : ChickenPlayer
+{
+    Health 100 // Previously 30
+    ReactionTime 0
+    PainChance 255
+    Radius 8
+    Height 12
+    Speed 1
+    Gravity 0.125
+    +NOSKIN
+    PainSound "chicken/pain"
+    DeathSound "chicken/death"
+    Player.JumpZ 1
+    Player.Viewheight 21
+    Player.ForwardMove 0.85, 0.9//1.22, 1.22
+    Player.SideMove 0.85, 0.9//1.22, 1.22
+    Player.SoundClass "Chicken"
+    Player.DisplayName "Chicken"
+    Player.MorphWeapon " Beak "
+    BloodType "SamsaraBloodyHellBlood"
+    -PICKUP
+    States
+    {
+      Spawn:
+        CHKN A -1
+        Stop
+
+      See:
+        CHKN ABAB 3
+        Loop
+
+      Melee:
+      Missile:
+        CHKN C 12
+        Goto Spawn
+
+      Pain:
+        CHKN D 4 A_Feathers
+        CHKN C 4 A_Pain
+        Goto Spawn
+
+      Pain.DoomDamageTypeStunner:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrStunnerSpeedDebuff",1,"Pain") // ensure the timer doesn't reset when you are already slowed
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrStunnerSpeedDebuff") // slows down, but not stopped completely
+        goto Pain
+
+      Death:
+        TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+      Death.Massacre:
+        CHKN E 6 A_Scream
+        CHKN F 6 A_Feathers
+        CHKN G 6
+        CHKN H 6 A_NoBlocking
+        CHKN IJK 6
+        CHKN L -1
+        stop
+
+      Death.WolfenFlamethrower:
+      Death.TotenkopfFire:
+        TNT1 A 0 A_Scream
+        TNT1 AAAAAAAAA 0 A_Feathers
+        TNT1 A -1 A_SpawnItem("WolfensteinChickenLeg")
+        stop
+
+      Pain.MightyBoot:
+        CHKN D 1 ACS_NamedExecuteAlways("SamsaraRecoil", 0, 25, 5, 24)
+        CHKN D 1 A_PlaySoundEx("duke/kickhit","body",0,0)
+        TNT1 A 0 A_Recoil(12)
+        CHKN C 6 A_Pain
+        goto See
+
+      Pain.MarathonStun:
+        TNT1 A 0 A_Stop
+        CHKN D 1 ACS_NamedExecuteAlways("SamsaraRecoil", 0, 25, 5, 100)
+        TNT1 A 0 A_GiveInventory("NothingSpeed")
+        TNT1 A 0 A_SetBlend("White",0.9,105)
+        CHKN D 1 A_PlaySoundEx("marathon/tech50/stun","body",0,0)
+        CHKN C 6 A_Pain
+        Goto See
+
+      Death.ZorchPistol:
+      Death.Zorch:
+      Death.ZorchKamikaze:
+      Death.PhasingZorch:
+      Death.ZorchSpectral:
+        TNT1 A 0 A_Stop
+        TNT1 A 0 A_PlaySoundEx("chex/zorchsmall","soundslot5",0,0)
+        CHKN D 3 A_SpawnItem("ZorchEffectSuperTiny")
+        CHKN D 3 A_SetTranslucent(0.9,0)
+        CHKN AAAAAAAAAA 0 A_Feathers
+        TNT1 A 0 A_PlayerScream
+        CHKN D 3 A_SetTranslucent(0.8,0)
+        TNT1 A 0 A_NoBlocking
+        CHKN D 3 A_SetTranslucent(0.7,0)
+        CHKN D 3 A_SetTranslucent(0.6,0)
+        CHKN D 3 A_SetTranslucent(0.5,0)
+        CHKN D 3 A_SetTranslucent(0.4,0)
+        CHKN D 3 A_SetTranslucent(0.3,0)
+        CHKN D 3 A_SetTranslucent(0.2,0)
+        CHKN D 3 A_SetTranslucent(0.1,0)
+        TNT1 A 1 A_SetTranslucent(1,0)
+        TNT1 A -1
+        stop
+    }
+}
+
+actor ChickenPlayer3: ChickenPlayer2
+{
+    Radius 16
+    Height 36
+    Speed 0.75
+    Player.ForwardMove 0.75, 0.75
+    Player.SideMove 0.75, 0.75
+}
+
+actor " Beak " : Beak replaces Beak { +CHEATNOTWEAPON }

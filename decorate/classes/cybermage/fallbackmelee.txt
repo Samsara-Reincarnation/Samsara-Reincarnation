@@ -1,0 +1,706 @@
+//// CYBER-ARM
+actor MagicFist : CMWeapon
+{
+	Weapon.SlotNumber 0
+	Weapon.SelectionOrder 4000
+	Tag "Magical Fist"	
+	+IGNORESKILL
+	+WEAPON.NOAUTOFIRE
+	+WEAPON.NOALERT
+	+WEAPON.WIMPY_WEAPON
+	States
+	{
+		Spawn:
+			NULL A -1
+			Stop	
+		Ready:
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",0,"CellReady")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",3,"RocketReady")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",2,"ShellReady")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",1,"ClipReady")
+			CMFI A 1 bright A_WeaponReady
+			loop
+		ClipReady:
+			CMFI PPPQQQRRR 1 bright A_WeaponReady
+			goto Ready
+		ShellReady:
+			CMFI JJJKKKLLL 1 bright A_WeaponReady
+			goto Ready
+		RocketReady:
+			CMFI GGGHHHIII 1 bright A_WeaponReady
+			goto Ready
+		CellReady:
+			CMFI MMMNNNOOO 1 bright A_WeaponReady
+			goto Ready
+		Fire:
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",0,"CellFireR")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",3,"RocketFireR")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",2,"ShellFireR")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",1,"ClipFireR")
+			CMFI A 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)	
+			Goto DoNullFire
+		ClipFireR:	
+			TNT1 A 0 A_JumpIfInventory("Clip",5,1)
+			Goto Ready
+			CMFI A 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto DoClipFire
+		ShellFireR:	
+			TNT1 A 0 A_JumpIfInventory("Shell",3,1)
+			Goto Ready
+			CMFI A 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)		
+			Goto DoShellFire
+		RocketFireR:	
+			TNT1 A 0 A_JumpIfInventory("RocketAmmo",4,1)
+			Goto Ready	
+			CMFI A 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto DoRocketFire
+		CellFireR:
+			TNT1 A 0 A_JumpIfInventory("Cell",40,1)
+			Goto Ready	
+			CMFI A 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto DoCellFire
+		DoNullFire:	
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_PlaySound("CM/MagicFire0")
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,3)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
+			TNT1 A 0 A_FireCustomMissile("MagicNullFire",0,0,0,0)
+			Goto Z0
+			TNT1 A 0 A_FireCustomMissile("MagicNullFire_2",0,0,0,0)			
+		Z0:	
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI BB 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CCC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DDD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI FFF 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI AA 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 AA 0 bright A_Refire
+			Goto Ready
+		DoClipFire: // Ammo based attacks alert monsters!
+			TNT1 A 0 A_AlertMonsters	
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_PlaySound("CM/MagicFire1")
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,3)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
+			TNT1 A 0 A_FireCustomMissile("MagicFire1",0,0,0,0)
+			Goto Z1
+			TNT1 A 0 A_FireCustomMissile("MagicFire1_2",0,0,0,0)			
+		Z1:	
+			TNT1 A 0 A_TakeInventory("Clip",5,TIF_NOTAKEINFINITE)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright  A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CCC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DDD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI FFF 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH) 
+			CMFI CC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI AA 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 AA 0 bright A_Refire
+			Goto Ready		
+		DoShellFire:
+			TNT1 A 0 A_AlertMonsters	
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_PlaySound("CM/MagicFire2")
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,3)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
+			TNT1 A 0 A_FireCustomMissile("MagicFire2",0,0,0,0)
+			Goto Z2
+			TNT1 A 0 A_FireCustomMissile("MagicFire2_2",0,0,0,0)			
+		Z2:	
+			TNT1 A 0 A_TakeInventory("Shell",3,TIF_NOTAKEINFINITE)			
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CCC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DDD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI FFF 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI AA 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 AA 0 bright A_Refire
+			Goto Ready
+		DoRocketFire:
+			TNT1 A 0 A_AlertMonsters
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_PlaySound("CM/MagicFire3")
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,3)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
+			TNT1 A 0 A_FireCustomMissile("MagicFire3",0,0,0,0)
+			Goto Z3
+			TNT1 A 0 A_FireCustomMissile("MagicFire3_2",0,0,0,0)			
+		Z3:	
+			TNT1 A 0 A_TakeInventory("RocketAmmo",4,TIF_NOTAKEINFINITE)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CCC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DDD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI FFF 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI AA 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 AA 0 bright A_Refire
+			Goto Ready
+		DoCellFire:	
+			TNT1 A 0 A_AlertMonsters
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_PlaySound("CM/MagicFire4")
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,3)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
+			TNT1 A 0 A_FireCustomMissile("MagicFire4",0,0,0,0)
+			Goto Z4
+			TNT1 A 0 A_FireCustomMissile("MagicFire4_2",0,0,0,0)
+		Z4:	
+			TNT1 A 0 A_TakeInventory("Cell",40,TIF_NOTAKEINFINITE)			
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI B 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CCC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DDD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI FFF 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI EEE 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI DD 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI CC 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			CMFI AA 1 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 AA 0 bright A_Refire
+			Goto Ready
+		AltFire:
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",0,"E2")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",3,"D2")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",2,"C2")
+			TNT1 A 0 A_JumpIfInventory("usingmagicfisttype",1,"B2")
+		A2:
+		    TNT1 A 0 A_JumpIfInventory("MagicMode1", 1, "SwitchToClip")
+		B2:
+			TNT1 A 0 A_JumpIfInventory("MagicMode2", 1, "SwitchToShell")
+		C2:
+			TNT1 A 0 A_JumpIfInventory("MagicMode3", 1, "SwitchToRocket")
+		D2:
+			TNT1 A 0 A_JumpIfInventory("MagicMode4", 1, "SwitchToCell")
+		E2:
+			TNT1 A 0 A_JumpIfInventory("MagicMode0", 1, "SwitchToNull")		
+			CMFI Z 5 bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			Goto Ready
+		SwitchToClip:
+			TNT1 A 0 A_PlaySound("CM/Switch")		
+			TNT1 A 0 A_Print("Switch to Electroschism (Ammo 1) Magic")
+			TNT1 A 0 A_TakeInventory("usingmagicfisttype")
+			TNT1 A 0 A_GiveInventory("usingmagicfisttype")
+			CMFI Z 8 bright A_WeaponReady(WRF_NOSWITCH)
+			Goto Ready
+		SwitchToShell:
+			TNT1 A 0 A_PlaySound("CM/Switch")	
+			TNT1 A 0 A_Print("Switch to Magna Rip (Ammo 2) Magic")			
+			TNT1 A 0 A_TakeInventory("usingmagicfisttype")
+			TNT1 A 0 A_GiveInventory("usingmagicfisttype",2)
+			CMFI Z 8 bright A_WeaponReady(WRF_NOSWITCH)
+			Goto Ready
+		SwitchToRocket:
+			TNT1 A 0 A_PlaySound("CM/Switch")	
+			TNT1 A 0 A_Print("Switch to Painwave (Ammo 3) Magic")			
+			TNT1 A 0 A_TakeInventory("usingmagicfisttype")
+			TNT1 A 0 A_GiveInventory("usingmagicfisttype",3)
+			CMFI Z 8 bright A_WeaponReady(WRF_NOSWITCH)
+			Goto Ready
+		SwitchToCell:
+			TNT1 A 0 A_PlaySound("CM/Switch")	
+			TNT1 A 0 A_Print("Switch to Nova (Ammo 4) Magic")			
+			TNT1 A 0 A_TakeInventory("usingmagicfisttype")
+			TNT1 A 0 A_GiveInventory("usingmagicfisttype",4)
+			CMFI Z 8 bright A_WeaponReady(WRF_NOSWITCH)
+			Goto Ready
+		SwitchToNull:
+			TNT1 A 0 A_PlaySound("CM/Switch")	
+			TNT1 A 0 A_Print("Switch to Starbolt (Null) Magic")			
+			TNT1 A 0 A_TakeInventory("usingmagicfisttype")
+			CMFI Z 8 bright A_WeaponReady(WRF_NOSWITCH)
+			Goto Ready
+	}
+}
+
+actor usingmagicfisttype : Counter { Inventory.MaxAmount 4 }
+
+Actor MagicNullFire
+{
+	Speed 21
+	Radius 3
+	Height 3
+	Damage (20)
+	PROJECTILE
+   -EXTREMEDEATH
+   +NOEXTREMEDEATH
+   -SKYEXPLODE   
+   +BLOODSPLATTER   
+   +FORCEXYBILLBOARD
+   +FORCERADIUSDMG
+	states
+	{
+		Spawn:
+			CMM0 AABB 1 bright
+			Loop
+		Death:
+		XDeath:
+		Crash:
+			CMM0 CC 1 bright A_PlaySound("CM/FGExp")
+			TNT1 A 0 A_Explode(Random(25,35), 52, 0, 0, 14)
+			CMM0 CC 1 bright
+			CMM0 DDDDEEEE 1 bright
+			CMM0 FF 1 bright
+			CMM0 FF 1 bright A_FadeOut
+			Stop
+	}		
+}	
+
+Actor MagicNullFire_2 : MagicNullFire { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+actor MagicFire1
+{
+   Radius 3
+   Height 3
+   Speed 40
+   Scale 0.58
+   PROJECTILE
+   +SEEKERMISSILE
+   +DONTSPLASH
+   +FORCEXYBILLBOARD
+   +FOILINVUL
+   DeathSound ""
+   States
+   {
+   Spawn:
+      CMM1 AABBCCDDEE 1 Bright A_SeekerMissile(3,15, SMF_LOOK|SMF_PRECISE, 96)
+      Loop
+	  
+   Death:
+   	  CMM1 ABCDE 1 Bright A_FadeOut
+      stop
+	  
+   XDeath:
+      CMM1 FFG 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")
+	  CMM1 GHH 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 IIJ 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 JFF 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 GGH 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 HII 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 JJF 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 FGG 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 HHI 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 IJJ 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 FFG 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 GHH 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 IIJ 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 JFF 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 GGH 1 bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")	  
+      CMM1 HII 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")
+	  CMM1 JJF 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 FGG 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 HHI 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 IJJ 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  
+	  CMM1 FFG 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion")  	  
+	  CMM1 GHIJ 1 Bright A_FadeOut	  
+      Stop
+   }
+}
+
+Actor CMActorExplosion
+{
+	Speed 0
+	Height 4
+	Radius 4
+	Damage (0)
+	Obituary "%k electrocuted %o."
+	PROJECTILE
+	+RIPPER
+	+BLOODLESSIMPACT
+	+PAINLESS
+	-FORCEPAIN
+	States {
+		Spawn:
+			TNT1 A 0
+		Goto Death
+		Death:
+			TNT1 A 1 A_Explode(Random(6,8), 20, 0)
+			TNT1 A 1
+		Stop
+	}
+}
+
+actor MagicFire1_2 : MagicFire1
+{
+   Species "Player"
+   +THRUSPECIES
+   +DONTHARMCLASS
+   +DONTHARMSPECIES
+   +MTHRUSPECIES
+   States
+   {
+   XDeath:
+      CMM1 AAB 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")
+	  CMM1 BCC 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 DDE 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 EAA 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 BBC 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 CDD 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 EEA 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 ABB 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 CCD 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 DEE 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 AAB 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 BCC 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 DDE 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 EAB 1 Bright A_Warp(AAPTR_TRACER,24,0,15,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+      TNT1 A 0 A_SpawnItemEx("CMActorExplosion_2")  
+	  CMM1 CDE 1 bright A_FadeOut
+      Stop
+   }
+}
+
+Actor CMActorExplosion_2 : CMActorExplosion { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES DamageType "CMDMGSHIT" }
+
+actor MagicFire2
+{
+	Speed 23
+	Radius 3
+	Height 3
+	damage (Random(140,180))
+	Scale 1.10
+	PROJECTILE
+	-SKYEXPLODE 
+	+FORCEXYBILLBOARD
+	deathsound "CM/FGExp"
+	RenderStyle "Add"
+	Alpha 0.95
+	states
+	{
+		Spawn:
+			CMM2 AABB 1 bright
+			loop
+		Death:
+			CMM2 CDE 3 bright
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm",0,0,0,20,0,0, 0   + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm",0,0,0,20,0,0, 72  + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm",0,0,0,20,0,0, 144 + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm",0,0,0,20,0,0, 216 + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm",0,0,0,20,0,0, 288 + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 FGH 3 bright
+			stop
+	}
+}
+
+actor MagicFire2Sm
+{
+	speed 35
+	Radius 3
+	Height 3
+	damage (Random(28,36))
+	PROJECTILE
+	+FORCEXYBILLBOARD	
+	Scale 0.80
+	states
+	{
+		Spawn:
+			CMM2 AABB 1 bright
+			loop
+		Death:
+			CMM2 CDI 3 bright
+			stop
+	}
+}
+
+actor MagicFire2_2 : MagicFire2
+{
+   Species "Player"
+   +THRUSPECIES
+   +DONTHARMCLASS
+   +DONTHARMSPECIES
+   +MTHRUSPECIES
+   States
+   {
+		Death:
+			CMM2 CDE 3 bright
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm_2",0,0,0,20,0,0, 0   + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm_2",0,0,0,20,0,0, 72  + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm_2",0,0,0,20,0,0, 144 + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 E 0 A_SpawnItemEx("MagicFire2Sm_2",0,0,0,20,0,0, 216 + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 F 3 A_SpawnItemEx("MagicFire2Sm_2",0,0,0,20,0,0, 288 + random(-5,5),SXF_TRANSFERPOINTERS,0)
+			CMM2 GH 3 bright
+			stop
+	}
+}
+
+actor MagicFire2Sm_2 : MagicFire2Sm  { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES DamageType "CMDMGSHIT" }
+
+Actor MagiCFire3
+{
+	Speed 20
+	Radius 3
+	Height 3
+	Damage (0)
+	PROJECTILE
+    -EXTREMEDEATH
+    +NOEXTREMEDEATH
+    +RIPPER
+	+THRUACTORS
+    -SKYEXPLODE   
+    +BLOODSPLATTER   
+    +FORCEXYBILLBOARD
+    +FORCERADIUSDMG
+	states
+	{
+		Spawn:
+			CMM3 AABBCCDDEEFF 1 bright A_Explode(14, 32, 0, 1)
+			Loop
+		Death:
+		XDeath:
+		Crash:
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			TNT1 A 0 A_ChangeFlag(PAINLESS,1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			TNT1 A 0 A_ChangeFlag(FORCERADIUSDMG,0)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 A 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 B 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 C 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 D 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 E 2 bright A_Explode(14, 32, 0, 1)
+			CMM3 F 2 bright A_Explode(14, 32, 0, 1)
+			CMPX B 4 Bright A_PlaySound("CM/FGExp",CHAN_VOICE)
+			CMPX C 4 Bright A_Explode(82, 96, 0, 1)
+			CMPX DEFG 4 Bright
+			Stop
+	}		
+}	
+
+Actor MagiCFire3_2 : MagiCFire3 { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES DamageType "CMDMGSHIT" }
+
+Actor MagicFire4
+{
+	Speed 21
+	Radius 3
+	Height 3
+	Damage (80)
+	PROJECTILE
+    -EXTREMEDEATH
+    +NOEXTREMEDEATH
+    -SKYEXPLODE   
+    +BLOODSPLATTER   
+    +FORCEXYBILLBOARD
+	states
+	{
+		Spawn:
+			CMM4 AABBCC 1 bright
+			Loop
+		Death:
+		XDeath:
+		Crash:
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 0, 0, 16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", 5, 0, -132, CMF_AIMDIRECTION|CMF_TRACKOWNER, 12)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp", -3, 0, 48, CMF_AIMDIRECTION|CMF_TRACKOWNER, 64)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 2, 0, -64, CMF_AIMDIRECTION|CMF_TRACKOWNER, 100)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", -15, 0, 112, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp", 2, 0, -24, CMF_AIMDIRECTION|CMF_TRACKOWNER, 24)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 5, 0, 16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 48)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", -3, 0, -132, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp", 2, 0, 120, CMF_AIMDIRECTION|CMF_TRACKOWNER, 12)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 6, 0, -11, CMF_AIMDIRECTION|CMF_TRACKOWNER, 36)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", -1, 0, 133, CMF_AIMDIRECTION|CMF_TRACKOWNER, 17)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp", 3, 0, -42, CMF_AIMDIRECTION|CMF_TRACKOWNER, 21)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 8, 0, 170, CMF_AIMDIRECTION|CMF_TRACKOWNER, 100)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", 0, 0, -80, CMF_AIMDIRECTION|CMF_TRACKOWNER, 66)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp", -3, 0, 16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 0, 0, -16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", 5, 0, 132, CMF_AIMDIRECTION|CMF_TRACKOWNER, 12)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp", -3, 0, -48, CMF_AIMDIRECTION|CMF_TRACKOWNER, 64)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp", 2, 0, 124, CMF_AIMDIRECTION|CMF_TRACKOWNER, 100)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp", -15, 0, -12, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+		Stop
+	}		
+}	
+
+Actor MagicFire4_2 : MagicFire4
+{
+   Species "Player"
+   +THRUSPECIES
+   +DONTHARMCLASS
+   +DONTHARMSPECIES
+   +MTHRUSPECIES
+   States
+   {
+		Death:
+		XDeath:
+		Crash:
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 0, 0, 16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", 5, 0, -132, CMF_AIMDIRECTION|CMF_TRACKOWNER, 12)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp_2", -3, 0, 48, CMF_AIMDIRECTION|CMF_TRACKOWNER, 64)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 2, 0, -64, CMF_AIMDIRECTION|CMF_TRACKOWNER, 100)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", -15, 0, 112, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp_2", 2, 0, -24, CMF_AIMDIRECTION|CMF_TRACKOWNER, 24)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 5, 0, 16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 48)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", -3, 0, -132, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp_2", 2, 0, 120, CMF_AIMDIRECTION|CMF_TRACKOWNER, 12)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 6, 0, -11, CMF_AIMDIRECTION|CMF_TRACKOWNER, 36)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", -1, 0, 133, CMF_AIMDIRECTION|CMF_TRACKOWNER, 17)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp_2", 3, 0, -42, CMF_AIMDIRECTION|CMF_TRACKOWNER, 21)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 8, 0, 170, CMF_AIMDIRECTION|CMF_TRACKOWNER, 100)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", 0, 0, -80, CMF_AIMDIRECTION|CMF_TRACKOWNER, 66)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp_2", -3, 0, 16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 0, 0, -16, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", 5, 0, 132, CMF_AIMDIRECTION|CMF_TRACKOWNER, 12)
+        CMM4 C 2 Bright A_CustomMissile ("MagicFire4EXp_2", -3, 0, -48, CMF_AIMDIRECTION|CMF_TRACKOWNER, 64)
+        CMM4 A 2 Bright A_CustomMissile ("MagicFire4EXp_2", 2, 0, 124, CMF_AIMDIRECTION|CMF_TRACKOWNER, 100)
+        CMM4 B 2 Bright A_CustomMissile ("MagicFire4EXp_2", -15, 0, -12, CMF_AIMDIRECTION|CMF_TRACKOWNER, 32)
+		Stop
+	}
+}
+	
+ACTOR MagicFire4EXp
+{
+   Radius 10
+   Height 10
+   Speed 5
+   PROJECTILE
+   +FORCEXYBILLBOARD  
+   +FORCERADIUSDMG
+   +NOCLIP
+   States
+   {
+   Spawn:
+        CMMX A 1 BRIGHT
+		CMMX B 1 BRIGHT
+		CMMX C 1 BRIGHT
+		CMMX D 1 BRIGHT
+		CMMX D 1 BRIGHT A_PlaySound("CM/Magic4Exp")
+		CMMX E 3 BRIGHT A_Explode(80, 128, 1, 1)
+        CMMX F 3 BRIGHT 
+        CMMX G 3 BRIGHT
+        CMMX H 3 BRIGHT
+        CMMX I 4 BRIGHT
+		Stop
+   }
+}
+
+ACTOR MagicFire4EXp_2 : MagicFire4EXp { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES DamageType "CMDMGSHIT" }

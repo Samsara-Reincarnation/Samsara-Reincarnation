@@ -1,0 +1,1289 @@
+actor DGHasBFG10K : Boolean {}
+actor SamsaraDoomguyStrDevastatorHeldCheck : Boolean {}
+
+ACTOR " BFG10K " : Weapon
+{
+	Radius 20
+	Height 20
+	Weapon.Selectionorder 2800
+	Weapon.AmmoUse 5
+	//Weapon.AmmoGive 40 // stronghold's devastator gives 60
+	Weapon.AmmoType "Cell"
+	Weapon.Kickback 100
+	Inventory.Pickupmessage "You got the BFG10000! Hell, yes!"
+	Inventory.RestrictedTo "DoomguyPlayer"
+	Obituary "$SAMSARA_DOOMGUY_OB_SLOT7S"
+	+AMMO_OPTIONAL
+	+BFG
+	+EXPLOSIVE
+	+NOALERT
+	+NOAUTOFIRE
+	+NOLMS
+	+UNDROPPABLE
+	Tag "B.F.G. 10000"
+	States
+	{
+	Spawn:
+		WBG2 A -1
+		stop
+
+	// Original
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyBFG10KReadySoundPlayer")
+		DBG2 AAABBBCCCDDD 1 Bright A_WeaponReady
+		loop
+
+	Deselect:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Deselect64")
+		DBG2 E 1 Bright A_Lower
+		loop
+
+	Select:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
+		DBG2 E 1 Bright A_Raise
+		loop
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+		TNT1 A 0 A_JumpIfInventory("Cell",5,"FireStart")
+		goto Nothing
+
+	FireStart:
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
+		DBG2 E 20 Bright A_GiveInventory("SamsaraDoomguyBFG10KPreFireSoundPlayer")
+		DBG2 F 4 Bright
+		DBG2 GHIJ 1 Bright
+		goto HoldStart
+
+	Hold:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"HoldStr")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+		goto Nothing
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Hold64")
+	HoldStart:
+		DBG2 K 2 Bright A_GunFlash
+		DBG2 L 2 Bright A_GiveInventory("SamsaraDoomguyBFG10KAttackHandler")
+		DBG2 M 2 Bright 
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+		goto Nothing
+		TNT1 A 0 A_ReFire
+		DBG2 O 35 A_GiveInventory("SamsaraDoomguyBFG10KFireFinishSoundPlayer")
+		goto Ready
+
+	Flash:
+		TNT1 A 2 Bright A_Light1
+		TNT1 A 3 Bright
+		goto LightDone
+
+	// Doom 64 (has kickback, has blend effect on puff)
+	Ready64:
+		TNT1 A 0 A_PlaySound("doom64guy/bfg10kidle")
+		64BG AAABBBCCC 1 Bright A_WeaponReady
+		goto Ready
+
+	Deselect64:
+		64BG A 1 Bright A_Lower
+		goto Deselect
+
+	Select64:
+		64BG A 1 Bright A_Raise
+		goto Select
+
+	Fire64:
+		64BG D 20 Bright A_PlaySound("doom64guy/bfg10kf")
+		64BG E 4 Bright 
+		64BG FGHI 1 Bright
+	Hold64:
+		64BG J 2 Bright A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguy64BFG10KAttackHandler")
+		64BG K 1 Bright A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,1)
+		64BG L 1 Bright
+		64BG M 1 Bright A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,1)
+		64BG N 1 Bright
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+		goto Nothing
+		TNT1 A 0 A_ReFire
+		64BG O 35 A_PlaySound("doom64guy/bfg10kcool")
+		goto Ready
+
+	// Stronghold (Devastator)
+	ReadyStr:
+		DEVG A 1 A_WeaponReady
+		goto Ready
+
+	// Unpowered
+	DeselectStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStrPowered")
+	DeselectStrContinue:
+		TNT1 A 0 A_Lower
+		DEVG A 1 A_Lower
+		goto Deselect
+
+	SelectStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectStrPowered")
+	SelectStrContinue:
+		TNT1 A 0 A_Raise
+		DEVG A 1 A_Raise
+		goto Select
+
+	FireStr:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",60,1)
+		goto Nothing
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrDevastatorHeldCheck")
+		TNT1 A 0 A_PlaySound("doomguy/stronghold/devchr",CHAN_WEAPON)
+		DEVG BCDEF 10 Bright
+	FireStrContinue:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",60,1)
+		goto Nothing
+		TNT1 A 0 A_ReFire // skipped entirely when preparing a weapon switch, we don't want that
+		TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"Hold") // "weapon switch delay" hack
+		DEVG J 5 Bright A_GunFlash("FlashStr")
+		DEVG K 10 Bright A_GiveInventory("SamsaraDoomguyStrDevastatorRangedAttackHandler")
+		DEVG L 7 Bright
+		goto Ready
+
+	HoldStr:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",60,1)
+		goto Nothing
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrDevastatorHeldCheck")
+		TNT1 A 0 A_PlaySound("doomguy/stronghold/devfch",CHAN_WEAPON)
+		DEVG GHIGHI 4 Bright A_GiveInventory("SamsaraDoomguyStrDevastatorMeleeAttackHandler")
+		goto FireStrContinue
+
+	FlashStr:
+		TNT1 A 5 A_Light1
+		TNT1 A 10 A_Light2
+		TNT1 A 7 A_Light1
+		goto LightDone
+
+	// Powered
+	DeselectStrPowered:
+		TNT1 A 0 A_Lower
+		goto DeselectStrContinue
+
+	SelectStrPowered:
+		TNT1 A 0 A_Raise
+		goto SelectStrContinue
+
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"NothingStr")
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Nothing64")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomOriginalLoadoutFallbackRanged",1,2)
+        TNT1 A 0 A_SelectWeapon(" Pistol ")
+        goto Deselect
+        TNT1 A 0 A_SelectWeapon(" Rifle ")
+        goto Deselect
+
+	Nothing64:
+	NothingStr:
+        TNT1 A 0 A_SelectWeapon(" Pistol ")
+        goto Deselect
+	}
+}
+
+actor SamsaraDoomguyBFG10KAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackPSX")
+        // Doom (Original) sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalCoop")
+      PickupAttackOriginalDM:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"ST_BFG10kShot",FBF_NOFLASH)
+        stop
+
+      PickupAttackOriginalCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"ST_BFG10kShot_Coop",FBF_NOFLASH)
+        stop
+
+        // Doom (PSX) sounds
+      PickupAttackPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/bfg10kfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPSXCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPSXCoop")
+      PickupAttackPSXDM:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"ST_BFG10kShotSoundPSX",FBF_NOFLASH)
+        stop
+
+      PickupAttackPSXCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"ST_BFG10kShot_CoopSoundPSX",FBF_NOFLASH)
+        stop
+
+        // Perkristian Hi-Res Sound Pack sounds
+      PickupAttackPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/bfg10kfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPerkristanCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPerkristanCoop")
+      PickupAttackPerkristanDM:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"ST_BFG10kShotSoundPerkristan",FBF_NOFLASH)
+        stop
+
+      PickupAttackPerkristanCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"ST_BFG10kShot_CoopSoundPerkristan",FBF_NOFLASH)
+        stop
+    }
+}
+
+actor SamsaraDoomguyBFG10KReadySoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kidle")
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/bfg10kidle")
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kidle")
+        stop
+    }
+}
+
+actor SamsaraDoomguyBFG10KPreFireSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kf")
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/bfg10kf")
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kf")
+        stop
+    }
+}
+
+actor SamsaraDoomguyBFG10KFireFinishSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kcool")
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/bfg10kcool")
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/bfg10kcool")
+        stop
+    }
+}
+
+Actor ST_BFG10kShot
+{
+Radius 11
+Height 8
+Speed 20
+DamageType "DoomDamageTypeBFG"
++NOBLOCKMAP
++NOGRAVITY
++ACTIVATEIMPACT
++ACTIVATEPCROSS
++NOTELEPORT
++PUFFONACTORS
++PUFFGETSOWNER
++FORCERADIUSDMG
++NOTIMEFREEZE
+Renderstyle Add
+Alpha 0.75
+SeeSound "doomguy/bfg10kx"
+AttackSound "doomguy/bfg10kx"
+Decal "DoomBFGLightning"
+//SelfObituary "%o got reckless with %p BFG10K."
+States
+{
+Spawn:
+	DBFE A 0 Bright Light("DOOMBFG10KSHOT_X1")
+	TNT1 A 0 A_Explode(160,160)
+	DBFE A 3 Bright Light("DOOMBFG10KSHOT_X1") A_ChangeFlag("NOTIMEFREEZE",false)
+	DBFE B 3 Bright Light("DOOMBFG10KSHOT_X2")
+	DBFE C 3 Bright Light("DOOMBFG10KSHOT_X3")
+	DBFE D 3 Bright Light("DOOMBFG10KSHOT_X1")
+	DBFE E 3 Bright Light("DOOMBFG10KSHOT_X4")
+	DBFE F 3 Bright Light("DOOMBFG10KSHOT_X5")
+	stop
+}
+}
+
+Actor ST_BFG10kShot_Coop : ST_BFG10kShot { +MTHRUSPECIES +DONTHARMSPECIES }
+
+Actor ST_BFG10kShotSoundPSX : ST_BFG10kShot { SeeSound "doom64guy/bfg10kx" AttackSound "doom64guy/bfg10kx" }
+Actor ST_BFG10kShot_CoopSoundPSX : ST_BFG10kShot_Coop { SeeSound "doom64guy/bfg10kx" AttackSound "doom64guy/bfg10kx" }
+
+Actor ST_BFG10kShotSoundPerkristan : ST_BFG10kShot { SeeSound "doomguy/perkristan/bfg10kx" AttackSound "doomguy/perkristan/bfg10kx" }
+Actor ST_BFG10kShot_CoopSoundPerkristan : ST_BFG10kShot_Coop { SeeSound "doomguy/perkristan/bfg10kx" AttackSound "doomguy/perkristan/bfg10kx" }
+
+actor SamsaraDoomguy64BFG10KAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",5,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",5)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("doom64guy/bfg10kfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"Doom64BFG10KShot",FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,0,"Doom64BFG10KShotCoop",FBF_NOFLASH)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(1)
+        stop
+    }
+}
+
+actor Doom64BFG10KShot : ST_BFG10kShot
+{
+	RenderStyle "Normal"
+	Alpha 1
+	XScale 0.81
+	YScale 0.68
+	SeeSound "doom64guy/bfg10kx"
+	AttackSound "doom64guy/bfg10kx"
+	States
+	{
+	Spawn:
+		64BB C 0 Bright Light("DOOMBFGBALL_X1")
+		TNT1 A 0 A_GiveInventory("Doom64BFG10KImpactFlash",1,AAPTR_TARGET)
+		TNT1 A 0 A_Explode(160,160)
+		64BB C 3 Bright Light("DOOMBFGBALL_X1") A_ChangeFlag("NOTIMEFREEZE",false)
+		64BB D 3 Bright Light("DOOMBFGBALL_X2") A_FadeOut(0.142857)
+		64BB E 3 Bright Light("DOOMBFGBALL_X3") A_FadeOut(0.142857)
+		64BB F 3 Bright Light("DOOMBFGBALL_X1") A_FadeOut(0.142857)
+		64BB G 3 Bright Light("DOOMBFGBALL_X4") A_FadeOut(0.142857)
+		64BB H 3 Bright Light("DOOMBFGBALL_X5") A_FadeOut(0.142857)
+		stop
+	}
+}
+
+actor Doom64BFG10KShotCoop : Doom64BFG10KShot { +MTHRUSPECIES +DONTHARMSPECIES }
+
+actor Doom64BFG10KImpactFlash : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("WeaponFlashesAreDisabled",1,"PickupStop")
+        TNT1 A 0 A_SetBlend("Green",0.15,5)
+        stop
+    }
+}
+
+// Melee attack handler
+
+actor SamsaraDoomguyStrDevastatorMeleeAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",60,"PickupAttack")
+        stop
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+      PickupAttackUnpoweredDM:
+        TNT1 A 0 A_FireBullets(4,4,4,4,"SamsaraDoomguyStrDevPuff",FBF_NOFLASH,256)
+        stop
+
+      PickupAttackUnpoweredCoop:
+        TNT1 A 0 A_FireBullets(4,4,4,4,"SamsaraDoomguyStrDevPuffCoop",FBF_NOFLASH,256)
+        stop
+
+      // Powered
+      PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireBullets(4,4,4,4,"SamsaraDoomguyStrDevPuff",FBF_NOFLASH,random(256,512))
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_FireBullets(4,4,4,4,"SamsaraDoomguyStrDevPuffCoop",FBF_NOFLASH,random(256,512))
+        stop
+    }
+}
+
+// Ranged attack handler
+
+actor SamsaraDoomguyStrDevastatorRangedAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",60,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",60)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("doomguy/stronghold/devfir",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrDevastatorHeldCheck",1,"PickupAttackUnpoweredHold")
+      // Fire
+      PickupAttackUnpoweredFire:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredFireCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredFireCoop")
+      PickupAttackUnpoweredFireDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorBall",0,false)
+        stop
+
+      PickupAttackUnpoweredFireCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorBallCoop",0,false)
+        stop
+
+      // Hold
+      PickupAttackUnpoweredHold:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredHoldCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredHoldCoop")
+      PickupAttackUnpoweredHoldDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorBall1",0,false)
+        stop
+
+      PickupAttackUnpoweredHoldCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorBall1Coop",0,false)
+        stop
+
+      // Powered
+      PickupAttackPowered:
+      // Puffs
+      PickupAttackPowered1:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrDevastatorHeldCheck",1,1)
+        goto PickupAttackPowered2
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPowered1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPowered1Coop")
+      PickupAttackPowered1DM:
+        TNT1 A 0 A_FireBullets(25,25,250,50,"SamsaraDoomguyStrDevPuff",FBF_NOFLASH)
+        goto PickupAttackPowered2
+
+      PickupAttackPowered1Coop:
+        TNT1 A 0 A_FireBullets(25,25,250,50,"SamsaraDoomguyStrDevPuffCoop",FBF_NOFLASH)
+        goto PickupAttackPowered2
+
+      // Damaging trail projectile + main projectile
+      PickupAttackPowered2:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorCannonProjectile",0,false)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPowered2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPowered2Coop")
+      PickupAttackPowered2DM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorCannonProjectile2",0,false)
+        stop
+
+      PickupAttackPowered2Coop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraDoomguyStrDevastatorCannonProjectile2Coop",0,false)
+        stop
+    }
+}
+
+// Devastator puff
+
+actor SamsaraDoomguyStrDevPuff
+{
+	Radius 3
+	Height 3
+	DamageType "DoomDamageTypeDevastator"
+	RenderStyle "Add"
+	Alpha 0.75
+	SeeSound "doomguy/stronghold/buzz"
+	Obituary "%k disintegrated %o with the devastator."
+	+ALWAYSPUFF
+	+NOGRAVITY
+	+PUFFONACTORS
+	States
+	{
+	Spawn:
+		DLIT JKLJKLJKL 3 Bright Light("DevPuffLight")
+		stop
+
+	Crash:
+		TNT1 A 1
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrDevPuffCoop : SamsaraDoomguyStrDevPuff { +MTHRUSPECIES }
+
+// Devastator scatter ball
+
+actor SamsaraDoomguyStrDevastatorBall
+{
+	Projectile
+	Radius 12
+	Height 8
+	Speed 30
+	Damage 256
+	DamageType "DoomDamageTypeDevastator"
+	RenderStyle "Add"
+	Alpha 0.9
+	DeathSound "doomguy/stronghold/devexp"
+	Decal "DoomStrDevastatorLightning"
+	Obituary "%k disintegrated %o with the devastator."
+	-BLOODSPLATTER
+	+FORCEXYBILLBOARD
+	States
+	{
+	Spawn:
+		DVBL AB 4 Bright Light("DevBallLight")
+	SpawnLoop:
+		DVBL A 4 Bright Light("DevBallLight")
+		TNT1 AAA 0 A_CustomMissile("SamsaraDoomguyStrLiteShot",0,0,random(0,359),CMF_TRACKOWNER)
+		DVBL B 4 Bright Light("DevBallLight")
+		TNT1 AAA 0 A_CustomMissile("SamsaraDoomguyStrLiteShot",0,0,random(0,359),CMF_TRACKOWNER)
+		loop
+
+	Death:
+		DVBL C 5 Bright Light("DevBallBoomA")
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,18,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,36,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,54,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,72,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,108,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,126,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,144,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,162,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,196,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,216,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,234,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,252,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,288,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,306,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,324,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,342,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_Explode(320,256)
+		DVBL D 5 Bright Light("DevBallBoomB") A_Explode(320,384,0)
+		TNT1 A 0 A_Explode(320,256)
+		DVBL E 5 Bright Light("DevBallBoomC") A_Explode(320,384,0)
+		DVBL F 5 Bright Light("DevBallBoomD")
+		DVBL G 5 Bright Light("DevBallBoomE")
+	DeathFinish:
+		DVBL HI 3 Bright
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrDevastatorBallCoop : SamsaraDoomguyStrDevastatorBall
+{
+	Species "Player"
+	+MTHRUSPECIES
+	States
+	{
+	Spawn:
+		DVBL AB 4 Bright Light("DevBallLight")
+	SpawnLoop:
+		DVBL A 4 Bright Light("DevBallLight")
+		TNT1 AAA 0 A_CustomMissile("SamsaraDoomguyStrLiteShotCoop",0,0,random(0,359),CMF_TRACKOWNER)
+		DVBL B 4 Bright Light("DevBallLight")
+		TNT1 AAA 0 A_CustomMissile("SamsaraDoomguyStrLiteShotCoop",0,0,random(0,359),CMF_TRACKOWNER)
+		loop
+
+	Death:
+		DVBL C 5 Bright Light("DevBallBoomA")
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,18,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,36,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,54,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,72,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,108,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,126,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,144,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,162,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,196,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,216,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,234,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,252,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,288,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,306,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,324,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,342,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_Explode(320,256)
+		DVBL D 5 Bright Light("DevBallBoomB") A_Explode(320,384,0)
+		TNT1 A 0 A_Explode(320,256)
+		DVBL E 5 Bright Light("DevBallBoomC") A_Explode(320,384,0)
+		DVBL F 5 Bright Light("DevBallBoomD")
+		DVBL G 5 Bright Light("DevBallBoomE")
+		goto DeathFinish
+	}
+}
+
+// Devastator targeting ball
+
+actor SamsaraDoomguyStrDevastatorBall1 : SamsaraDoomguyStrDevastatorBall
+{
+	Damage 100
+	+FORCERADIUSDMG
+	States
+	{
+	Spawn:
+		DVBL AB 4 Bright Light("DevBallLight")
+	SpawnLoop:
+		DVBL A 4 Bright Light("DevBallLight") A_Explode
+		TNT1 A 0 A_Jump(160,3)
+		TNT1 AAA 0 A_SpawnItemEx("SamsaraDoomguyStrDevShooter",0,0,0,0,0,0,0,SXF_SETMASTER)
+		DVBL B 4 Bright Light("DevBallLight") A_Explode
+		TNT1 A 0 A_Jump(160,3)
+		TNT1 AAA 0 A_SpawnItemEx("SamsaraDoomguyStrDevShooter",0,0,0,0,0,0,0,SXF_SETMASTER)
+		loop
+
+	Death:
+		DVBL C 5 Bright Light("DevBallBoomA")
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,18,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,36,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,54,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,72,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,108,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,126,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,144,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,162,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,196,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,216,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,234,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,252,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,288,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,306,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,324,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2",0,0,342,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_Explode(360,256)
+		DVBL D 5 Bright Light("DevBallBoomB") A_Explode(360,384,0)
+		TNT1 A 0 A_Explode(360,256)
+		DVBL E 5 Bright Light("DevBallBoomC") A_Explode(360,384,0)
+		DVBL F 5 Bright Light("DevBallBoomD")
+		DVBL G 5 Bright Light("DevBallBoomE")
+		goto DeathFinish
+	}
+}
+
+actor SamsaraDoomguyStrDevastatorBall1Coop : SamsaraDoomguyStrDevastatorBall1
+{
+	Species "Player"
+	+THRUSPECIES
+	States
+	{
+	Spawn:
+		DVBL AB 4 Bright Light("DevBallLight")
+	SpawnLoop:
+		DVBL A 4 Bright Light("DevBallLight") A_Explode
+		TNT1 A 0 A_Jump(160,3)
+		TNT1 AAA 0 A_SpawnItemEx("SamsaraDoomguyStrDevShooterCoop",0,0,0,0,0,0,0,SXF_SETMASTER)
+		DVBL B 4 Bright Light("DevBallLight") A_Explode
+		TNT1 A 0 A_Jump(160,3)
+		TNT1 AAA 0 A_SpawnItemEx("SamsaraDoomguyStrDevShooterCoop",0,0,0,0,0,0,0,SXF_SETMASTER)
+		loop
+
+	Death:
+		DVBL C 5 Bright Light("DevBallBoomA")
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,18,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,36,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,54,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,72,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,108,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,126,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,144,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,162,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,196,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,216,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,234,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,252,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,288,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,306,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,324,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrDevastatorBall2Coop",0,0,342,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+		TNT1 A 0 A_Explode(360,256)
+		DVBL D 5 Bright Light("DevBallBoomB") A_Explode(360,384,0)
+		TNT1 A 0 A_Explode(360,256)
+		DVBL E 5 Bright Light("DevBallBoomC") A_Explode(360,384,0)
+		DVBL F 5 Bright Light("DevBallBoomD")
+		DVBL G 5 Bright Light("DevBallBoomE")
+		goto DeathFinish
+	}
+}
+
+// Devastator impact debris
+
+actor SamsaraDoomguyStrDevastatorBall2
+{
+	Projectile
+	Radius 8
+	Height 8
+	Speed 10
+	Damage 10
+	DamageType "DoomDamageTypeDevastator"
+	RenderStyle "Add"
+	Alpha 0.9
+	SeeSound "doomguy/stronghold/devbal"
+	DeathSound "doomguy/stronghold/devex2"
+	Decal "DoomImpScorch"
+	Obituary "%k disintegrated %o with the devastator."
+	-BLOODSPLATTER
+	+FORCERADIUSDMG
+	+FORCEXYBILLBOARD
+	States
+	{
+	Spawn:
+		DVB2 AB 4 Bright Light("DevPuffLight")
+		loop
+
+	Death:
+		TNT1 A 0 A_Explode(64,64,0)
+	DeathFinish:
+		DVB2 CDE 4 Bright Light("DevPuffLight")
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrDevastatorBall2Coop : SamsaraDoomguyStrDevastatorBall2
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+// Devastator targeting ball shooter
+
+actor SamsaraDoomguyStrDevShooter
+{
+	Monster
+	Radius 8
+	Height 8
+	-ACTIVATEMCROSS
+	-CANPUSHWALLS
+	-CANUSEWALLS
+	-COUNTKILL
+	+DONTBLAST
+	+DONTREFLECT
+	+DONTSPLASH
+	+INVULNERABLE // precautionary
+	+NEVERFAST
+	+NEVERTARGET
+	+NOBLOOD
+	+NOCLIP
+	+NODAMAGE // ignore things like massacre. also precautionary
+	+NOGRAVITY
+	+NOICEDEATH
+	+NOTAUTOAIMED
+	+NOTONAUTOMAP
+	-SHOOTABLE
+	-SOLID
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay A_Look
+		stop
+
+	See:
+		TNT1 A 0 A_FaceTarget
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrLiteShot",0,0,0,CMF_TRACKOWNER)
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrDevShooterCoop : SamsaraDoomguyStrDevShooter
+{
+	States
+	{
+	See:
+		TNT1 A 0 A_FaceTarget
+		TNT1 A 0 A_CustomMissile("SamsaraDoomguyStrLiteShotCoop",0,0,0,CMF_TRACKOWNER)
+		stop
+	}
+}
+
+// Devastator lightning
+
+actor SamsaraDoomguyStrLiteShot
+{
+	Projectile
+	Radius 8
+	Height 12
+	Speed 32
+	Damage 10
+	DamageType "DoomDamageTypeDevastator"
+	RenderStyle "Add"
+	Alpha 0.85
+	SeeSound "doomguy/stronghold/devlit"
+	DeathSound "doomguy/stronghold/devzap"
+	Obituary "%k disintegrated %o with the devastator."
+	-BLOODSPLATTER
+	+FORCEXYBILLBOARD
+	+RIPPER
+	States
+	{
+	Spawn:
+		DLIT AAABBBCCC 1 Bright Light("DevLiteABCD") A_SpawnItemEx("SamsaraDoomguyStrLiteTrail")
+		loop
+
+	Death:
+		DLIT D 1 Bright Light("DevLiteABCD")
+		DLIT E 1 Bright Light("DevLiteE")
+		DLIT F 1 Bright Light("DevLiteF")
+		DLIT G 1 Bright Light("DevLiteG")
+		DLIT H 1 Bright Light("DevLiteH")
+		DLIT I 1 Bright Light("DevLiteI")
+		DLIT J 1 Bright Light("DevLiteJ")
+		DLIT K 1 Bright Light("DevLiteK")
+		DLIT L 1 Bright Light("DevLiteL")
+		DLIT M 1 Bright Light("DevLiteM")
+		DLIT N 1 Bright Light("DevLiteN")
+		DLIT O 1 Bright Light("DevLiteO")
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrLiteShotCoop : SamsaraDoomguyStrLiteShot
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+// Devastator lightning trail
+
+actor SamsaraDoomguyStrLiteTrail
+{
+	RenderStyle "Add"
+	Alpha 0.67
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	States
+	{
+	Spawn:
+		DLIT ABC 3 Bright Light("DevPuffLight")
+		stop
+	}
+}
+
+// Powered devastator damaging trail shot
+
+actor SamsaraDoomguyStrDevastatorCannonProjectile
+{
+	Projectile
+	Radius 30
+	Height 40
+	Speed 100
+	RenderStyle "Add"
+	Alpha 0.9
+	Decal "DoomBFGScorch"
+	-BLOODSPLATTER
+	+NOTIMEFREEZE
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",0,0,2)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",velx/-70.0,-vely/-70.0,2+velz/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(2*velx)/-70.0,-(2*vely)/-70.0,2+(2*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(3*velx)/-70.0,-(3*vely)/-70.0,2+(3*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(4*velx)/-70.0,-(4*vely)/-70.0,2+(4*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(5*velx)/-70.0,-(5*vely)/-70.0,2+(5*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(6*velx)/-70.0,-(6*vely)/-70.0,2+(6*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(7*velx)/-70.0,-(7*vely)/-70.0,2+(7*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(8*velx)/-70.0,-(8*vely)/-70.0,2+(8*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(9*velx)/-70.0,-(9*vely)/-70.0,2+(9*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(10*velx)/-70.0,-(10*vely)/-70.0,2+(10*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(11*velx)/-70.0,-(11*vely)/-70.0,2+(11*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(12*velx)/-70.0,-(12*vely)/-70.0,2+(12*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(13*velx)/-70.0,-(13*vely)/-70.0,2+(13*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(14*velx)/-70.0,-(14*vely)/-70.0,2+(14*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(15*velx)/-70.0,-(15*vely)/-70.0,2+(15*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(16*velx)/-70.0,-(16*vely)/-70.0,2+(16*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(17*velx)/-70.0,-(17*vely)/-70.0,2+(17*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(18*velx)/-70.0,-(18*vely)/-70.0,2+(18*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(19*velx)/-70.0,-(19*vely)/-70.0,2+(19*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(20*velx)/-70.0,-(20*vely)/-70.0,2+(20*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(21*velx)/-70.0,-(21*vely)/-70.0,2+(21*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(22*velx)/-70.0,-(22*vely)/-70.0,2+(22*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(23*velx)/-70.0,-(23*vely)/-70.0,2+(23*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(24*velx)/-70.0,-(24*vely)/-70.0,2+(24*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(25*velx)/-70.0,-(25*vely)/-70.0,2+(25*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(26*velx)/-70.0,-(26*vely)/-70.0,2+(26*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(27*velx)/-70.0,-(27*vely)/-70.0,2+(27*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(28*velx)/-70.0,-(28*vely)/-70.0,2+(28*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(29*velx)/-70.0,-(29*vely)/-70.0,2+(29*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(30*velx)/-70.0,-(30*vely)/-70.0,2+(30*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(31*velx)/-70.0,-(31*vely)/-70.0,2+(31*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(32*velx)/-70.0,-(32*vely)/-70.0,2+(32*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(33*velx)/-70.0,-(33*vely)/-70.0,2+(33*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(34*velx)/-70.0,-(34*vely)/-70.0,2+(34*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(35*velx)/-70.0,-(35*vely)/-70.0,2+(35*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(36*velx)/-70.0,-(36*vely)/-70.0,2+(36*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(37*velx)/-70.0,-(37*vely)/-70.0,2+(37*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(38*velx)/-70.0,-(38*vely)/-70.0,2+(38*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(39*velx)/-70.0,-(39*vely)/-70.0,2+(39*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(40*velx)/-70.0,-(40*vely)/-70.0,2+(40*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(41*velx)/-70.0,-(41*vely)/-70.0,2+(41*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(42*velx)/-70.0,-(42*vely)/-70.0,2+(42*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(43*velx)/-70.0,-(43*vely)/-70.0,2+(43*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(44*velx)/-70.0,-(44*vely)/-70.0,2+(44*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(45*velx)/-70.0,-(45*vely)/-70.0,2+(45*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(46*velx)/-70.0,-(46*vely)/-70.0,2+(46*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(47*velx)/-70.0,-(47*vely)/-70.0,2+(47*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(48*velx)/-70.0,-(48*vely)/-70.0,2+(48*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(49*velx)/-70.0,-(49*vely)/-70.0,2+(49*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(50*velx)/-70.0,-(50*vely)/-70.0,2+(50*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(51*velx)/-70.0,-(51*vely)/-70.0,2+(51*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(52*velx)/-70.0,-(52*vely)/-70.0,2+(52*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(53*velx)/-70.0,-(53*vely)/-70.0,2+(53*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(54*velx)/-70.0,-(54*vely)/-70.0,2+(54*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(55*velx)/-70.0,-(55*vely)/-70.0,2+(55*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(56*velx)/-70.0,-(56*vely)/-70.0,2+(56*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(57*velx)/-70.0,-(57*vely)/-70.0,2+(57*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(58*velx)/-70.0,-(58*vely)/-70.0,2+(58*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(59*velx)/-70.0,-(59*vely)/-70.0,2+(59*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(60*velx)/-70.0,-(60*vely)/-70.0,2+(60*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(61*velx)/-70.0,-(61*vely)/-70.0,2+(61*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(62*velx)/-70.0,-(62*vely)/-70.0,2+(62*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(63*velx)/-70.0,-(63*vely)/-70.0,2+(63*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(64*velx)/-70.0,-(64*vely)/-70.0,2+(64*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(65*velx)/-70.0,-(65*vely)/-70.0,2+(65*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(66*velx)/-70.0,-(66*vely)/-70.0,2+(66*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(67*velx)/-70.0,-(67*vely)/-70.0,2+(67*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(68*velx)/-70.0,-(68*vely)/-70.0,2+(68*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(69*velx)/-70.0,-(69*vely)/-70.0,2+(69*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(70*velx)/-70.0,-(70*vely)/-70.0,2+(70*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(71*velx)/-70.0,-(71*vely)/-70.0,2+(71*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(72*velx)/-70.0,-(72*vely)/-70.0,2+(72*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(73*velx)/-70.0,-(73*vely)/-70.0,2+(73*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(74*velx)/-70.0,-(74*vely)/-70.0,2+(74*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(75*velx)/-70.0,-(75*vely)/-70.0,2+(75*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(76*velx)/-70.0,-(76*vely)/-70.0,2+(76*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(77*velx)/-70.0,-(77*vely)/-70.0,2+(77*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(78*velx)/-70.0,-(78*vely)/-70.0,2+(78*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(79*velx)/-70.0,-(79*vely)/-70.0,2+(79*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(80*velx)/-70.0,-(80*vely)/-70.0,2+(80*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(81*velx)/-70.0,-(81*vely)/-70.0,2+(81*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(82*velx)/-70.0,-(82*vely)/-70.0,2+(82*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(83*velx)/-70.0,-(83*vely)/-70.0,2+(83*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(84*velx)/-70.0,-(84*vely)/-70.0,2+(84*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(85*velx)/-70.0,-(85*vely)/-70.0,2+(85*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(86*velx)/-70.0,-(86*vely)/-70.0,2+(86*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(87*velx)/-70.0,-(87*vely)/-70.0,2+(87*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(88*velx)/-70.0,-(88*vely)/-70.0,2+(88*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(89*velx)/-70.0,-(89*vely)/-70.0,2+(89*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(90*velx)/-70.0,-(90*vely)/-70.0,2+(90*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(91*velx)/-70.0,-(91*vely)/-70.0,2+(91*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(92*velx)/-70.0,-(92*vely)/-70.0,2+(92*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(93*velx)/-70.0,-(93*vely)/-70.0,2+(93*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(94*velx)/-70.0,-(94*vely)/-70.0,2+(94*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(95*velx)/-70.0,-(95*vely)/-70.0,2+(95*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(96*velx)/-70.0,-(96*vely)/-70.0,2+(96*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(97*velx)/-70.0,-(97*vely)/-70.0,2+(97*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(98*velx)/-70.0,-(98*vely)/-70.0,2+(98*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(99*velx)/-70.0,-(99*vely)/-70.0,2+(99*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+		TNT1 A 1 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec",(100*velx)/-70.0,-(100*vely)/-70.0,2+(100*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE)
+	SpawnLoop:
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",0,0,2)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",velx/-70.0,-vely/-70.0,2+velz/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(2*velx)/-70.0,-(2*vely)/-70.0,2+(2*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(3*velx)/-70.0,-(3*vely)/-70.0,2+(3*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(4*velx)/-70.0,-(4*vely)/-70.0,2+(4*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(5*velx)/-70.0,-(5*vely)/-70.0,2+(5*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(6*velx)/-70.0,-(6*vely)/-70.0,2+(6*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(7*velx)/-70.0,-(7*vely)/-70.0,2+(7*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(8*velx)/-70.0,-(8*vely)/-70.0,2+(8*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(9*velx)/-70.0,-(9*vely)/-70.0,2+(9*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(10*velx)/-70.0,-(10*vely)/-70.0,2+(10*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(11*velx)/-70.0,-(11*vely)/-70.0,2+(11*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(12*velx)/-70.0,-(12*vely)/-70.0,2+(12*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(13*velx)/-70.0,-(13*vely)/-70.0,2+(13*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(14*velx)/-70.0,-(14*vely)/-70.0,2+(14*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(15*velx)/-70.0,-(15*vely)/-70.0,2+(15*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(16*velx)/-70.0,-(16*vely)/-70.0,2+(16*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(17*velx)/-70.0,-(17*vely)/-70.0,2+(17*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(18*velx)/-70.0,-(18*vely)/-70.0,2+(18*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(19*velx)/-70.0,-(19*vely)/-70.0,2+(19*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(20*velx)/-70.0,-(20*vely)/-70.0,2+(20*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(21*velx)/-70.0,-(21*vely)/-70.0,2+(21*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(22*velx)/-70.0,-(22*vely)/-70.0,2+(22*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(23*velx)/-70.0,-(23*vely)/-70.0,2+(23*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(24*velx)/-70.0,-(24*vely)/-70.0,2+(24*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(25*velx)/-70.0,-(25*vely)/-70.0,2+(25*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(26*velx)/-70.0,-(26*vely)/-70.0,2+(26*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(27*velx)/-70.0,-(27*vely)/-70.0,2+(27*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(28*velx)/-70.0,-(28*vely)/-70.0,2+(28*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(29*velx)/-70.0,-(29*vely)/-70.0,2+(29*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(30*velx)/-70.0,-(30*vely)/-70.0,2+(30*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(31*velx)/-70.0,-(31*vely)/-70.0,2+(31*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(32*velx)/-70.0,-(32*vely)/-70.0,2+(32*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(33*velx)/-70.0,-(33*vely)/-70.0,2+(33*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(34*velx)/-70.0,-(34*vely)/-70.0,2+(34*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(35*velx)/-70.0,-(35*vely)/-70.0,2+(35*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(36*velx)/-70.0,-(36*vely)/-70.0,2+(36*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(37*velx)/-70.0,-(37*vely)/-70.0,2+(37*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(38*velx)/-70.0,-(38*vely)/-70.0,2+(38*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(39*velx)/-70.0,-(39*vely)/-70.0,2+(39*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(40*velx)/-70.0,-(40*vely)/-70.0,2+(40*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(41*velx)/-70.0,-(41*vely)/-70.0,2+(41*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(42*velx)/-70.0,-(42*vely)/-70.0,2+(42*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(43*velx)/-70.0,-(43*vely)/-70.0,2+(43*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(44*velx)/-70.0,-(44*vely)/-70.0,2+(44*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(45*velx)/-70.0,-(45*vely)/-70.0,2+(45*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(46*velx)/-70.0,-(46*vely)/-70.0,2+(46*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(47*velx)/-70.0,-(47*vely)/-70.0,2+(47*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(48*velx)/-70.0,-(48*vely)/-70.0,2+(48*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(49*velx)/-70.0,-(49*vely)/-70.0,2+(49*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(50*velx)/-70.0,-(50*vely)/-70.0,2+(50*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(51*velx)/-70.0,-(51*vely)/-70.0,2+(51*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(52*velx)/-70.0,-(52*vely)/-70.0,2+(52*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(53*velx)/-70.0,-(53*vely)/-70.0,2+(53*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(54*velx)/-70.0,-(54*vely)/-70.0,2+(54*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(55*velx)/-70.0,-(55*vely)/-70.0,2+(55*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(56*velx)/-70.0,-(56*vely)/-70.0,2+(56*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(57*velx)/-70.0,-(57*vely)/-70.0,2+(57*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(58*velx)/-70.0,-(58*vely)/-70.0,2+(58*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(59*velx)/-70.0,-(59*vely)/-70.0,2+(59*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(60*velx)/-70.0,-(60*vely)/-70.0,2+(60*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(61*velx)/-70.0,-(61*vely)/-70.0,2+(61*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(62*velx)/-70.0,-(62*vely)/-70.0,2+(62*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(63*velx)/-70.0,-(63*vely)/-70.0,2+(63*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(64*velx)/-70.0,-(64*vely)/-70.0,2+(64*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(65*velx)/-70.0,-(65*vely)/-70.0,2+(65*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(66*velx)/-70.0,-(66*vely)/-70.0,2+(66*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(67*velx)/-70.0,-(67*vely)/-70.0,2+(67*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(68*velx)/-70.0,-(68*vely)/-70.0,2+(68*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(69*velx)/-70.0,-(69*vely)/-70.0,2+(69*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(70*velx)/-70.0,-(70*vely)/-70.0,2+(70*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(71*velx)/-70.0,-(71*vely)/-70.0,2+(71*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(72*velx)/-70.0,-(72*vely)/-70.0,2+(72*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(73*velx)/-70.0,-(73*vely)/-70.0,2+(73*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(74*velx)/-70.0,-(74*vely)/-70.0,2+(74*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(75*velx)/-70.0,-(75*vely)/-70.0,2+(75*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(76*velx)/-70.0,-(76*vely)/-70.0,2+(76*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(77*velx)/-70.0,-(77*vely)/-70.0,2+(77*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(78*velx)/-70.0,-(78*vely)/-70.0,2+(78*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(79*velx)/-70.0,-(79*vely)/-70.0,2+(79*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(80*velx)/-70.0,-(80*vely)/-70.0,2+(80*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(81*velx)/-70.0,-(81*vely)/-70.0,2+(81*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(82*velx)/-70.0,-(82*vely)/-70.0,2+(82*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(83*velx)/-70.0,-(83*vely)/-70.0,2+(83*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(84*velx)/-70.0,-(84*vely)/-70.0,2+(84*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(85*velx)/-70.0,-(85*vely)/-70.0,2+(85*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(86*velx)/-70.0,-(86*vely)/-70.0,2+(86*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(87*velx)/-70.0,-(87*vely)/-70.0,2+(87*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(88*velx)/-70.0,-(88*vely)/-70.0,2+(88*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(89*velx)/-70.0,-(89*vely)/-70.0,2+(89*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(90*velx)/-70.0,-(90*vely)/-70.0,2+(90*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(91*velx)/-70.0,-(91*vely)/-70.0,2+(91*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(92*velx)/-70.0,-(92*vely)/-70.0,2+(92*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(93*velx)/-70.0,-(93*vely)/-70.0,2+(93*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(94*velx)/-70.0,-(94*vely)/-70.0,2+(94*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(95*velx)/-70.0,-(95*vely)/-70.0,2+(95*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(96*velx)/-70.0,-(96*vely)/-70.0,2+(96*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(97*velx)/-70.0,-(97*vely)/-70.0,2+(97*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(98*velx)/-70.0,-(98*vely)/-70.0,2+(98*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(99*velx)/-70.0,-(99*vely)/-70.0,2+(99*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		TNT1 A 1 A_SpawnItemEx("SamsaraDoomguyStrDevastatorTrail",(100*velx)/-70.0,-(100*vely)/-70.0,2+(100*velz)/-70.0,0,0,0,0,SXF_ABSOLUTEANGLE|SXF_TRANSFERPOINTERS)
+		loop
+
+	Death:
+		DVBL DDDDDDDDDDEEEEEEEEEEFFFFFFFFFFGGGGGGGGGGHHHHHHIIIIII 1 Bright A_SpawnItemEx("SamsaraDoomguyStrDevastatorEffect",random(-4,4),random(-4,4),random(-4,4),random(-16,16),random(-16,16),random(-16,16),random(0,359))
+		stop
+	}
+}
+
+// Powered devastator shot
+
+actor SamsaraDoomguyStrDevastatorCannonProjectile2 : FastProjectile
+{
+	Projectile
+	Radius 30
+	Height 40
+	Speed 400
+	Damage (random(300,400))
+	DamageType "DoomDamageTypeDevastator" //Oh, you can hurt yourself.
+	RenderStyle "Add"
+	Alpha 0.9
+	Decal "DoomBFGScorch"
+	-BLOODSPLATTER
+	+EXTREMEDEATH
+	+FORCERADIUSDMG
+	+NOTIMEFREEZE
+	+RIPPER
+	States
+	{
+	Spawn:
+		TNT1 A -1
+		stop
+
+	Death:
+		TNT1 A 0 A_Explode(128,128)
+		TNT1 A 0 A_Explode(192,256)
+		TNT1 A 0 A_Explode(256,512) //Yeah you don't want to be anywhere near this when this explodes
+		DVBL DDDDDDDDDDEEEEEEEEEEFFFFFFFFFFGGGGGGGGGGHHHHHHIIIIII 1 Bright A_SpawnItemEx("SamsaraDoomguyStrDevastatorEffect",random(-4,4),random(-4,4),random(-4,4),random(-8,8),random(-8,8),random(-8,8),random(0,359))
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrDevastatorCannonProjectile2Coop : SamsaraDoomguyStrDevastatorCannonProjectile2
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+// Powered devastator damaging trail
+
+actor SamsaraDoomguyStrDevastatorTrail
+{
+	Projectile
+	DamageType "DoomDamageTypeDevastator"
+	RenderStyle "Add"
+	Alpha 0.9
+	Scale 3
+	Obituary "%k disintegrated %o with the devastator."
+	+FORCERADIUSDMG
+	+NOCLIP
+	+NOTIMEFREEZE
+	+NOTONAUTOMAP
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Explode(16,32,0)
+		TNT1 A 0 A_Explode(32,64,0)
+		TNT1 A 0 A_Explode(48,96,0)
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec")
+		TNT1 A 0 A_SpawnItemEx("SamsaraDoomguyStrDevastatorDec2")
+		TNT1 A 1 A_SpawnItemEx("SamsaraDoomguyStrDevastatorEffect",random(-4,4),random(-4,4),random(-4,4),random(-4,4),random(-4,4),random(-4,4),random(0,359))
+		stop
+	}
+}
+
+// Powered devastator small trail effect
+
+actor SamsaraDoomguyStrDevastatorDec
+{
+	RenderStyle Add
+	Alpha 0.9
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	States
+	{
+	Spawn:
+		DVBL AAAAAABBBBBB 1 Bright A_FadeOut(0.005)
+		loop
+	}
+}
+
+// Powered devastator large trail effect
+
+actor SamsaraDoomguyStrDevastatorDec2 : SamsaraDoomguyStrDevastatorDec
+{
+	Scale 3
+	States
+	{
+	Spawn:
+		DVBL BBBBBBAAAAAA 1 Bright A_FadeOut(0.015)
+		loop
+	}
+}
+
+// Powered devastator debris effect
+
+actor SamsaraDoomguyStrDevastatorEffect
+{
+	RenderStyle Add
+	Alpha 0.9
+	Scale 3
+	+CLIENTSIDEONLY
+	+NOCLIP
+	+NOGRAVITY
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	+RANDOMIZE
+	States
+	{
+	Spawn:
+		DVBD ABCDE 6 Bright NoDelay A_FadeOut(0.15)
+		stop
+	}
+}

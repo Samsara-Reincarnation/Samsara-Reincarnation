@@ -1,0 +1,156 @@
+actor "Mortar Gun" : SamsaraDarkForcesWeapon
+{
+    Inventory.PickupMessage "Mortar Gun"
+    Weapon.UpSound "katarn/wepslct"
+    Weapon.SlotNumber 5
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 2500
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 5
+    Weapon.AmmoUse 1
+    Obituary "%k exploded %o with the packered mortar."
+    Tag "Packered Mortar Gun"
+    +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
+    +EXPLOSIVE
+    +NOAUTOAIM
+    +NOAUTOFIRE
+    States
+    {
+      Spawn:
+        IMOR A -1
+        stop
+
+      Ready:
+        KMOR A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_Lower
+        KMOR A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        KMOR A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireFast")
+        TNT1 A 0 A_JumpIfInventory("KatarnFireRateUp",1,"FireFast")
+      FireNormal:
+        KMOR B 1 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto FireNormalContinue
+        TNT1 A 0 A_GunFlash
+        goto FireNormalContinue
+
+      FireNormalContinue:
+        KMOR B 13 Bright A_GiveInventory("SamsaraDarkForcesMortarGunAttackHandler")
+        KMOR C 4 Bright A_PlaySound("katarn/morload",CHAN_WEAPON)
+        KMOR D 3 Bright
+        KMOR A 1 Bright
+        KMOR A 3
+        KMOR A 2 A_ReFire
+        goto Ready
+
+      FireFast:
+        KMOR B 1 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto FireFastContinue
+        TNT1 A 0 A_GunFlash
+        goto FireFastContinue
+
+      FireFastContinue:
+        KMOR B 6 Bright A_GiveInventory("SamsaraDarkForcesMortarGunAttackHandler")
+        KMOR C 2 Bright A_PlaySound("katarn/morload",CHAN_WEAPON)
+        KMOR D 2 Bright
+        KMOR A 1 Bright
+        KMOR A 3
+        KMOR A 2 A_ReFire
+        goto Ready
+
+      Flash:
+        TNT1 A 1 A_Light1
+        goto LightDone
+    }
+}
+
+actor SamsaraDarkForcesMortarGunAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("katarn/morshot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("mortar_shell",0,false,5,0,0,16)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("mortar_shell2",0,false,5,0,0,16)
+        stop
+    }
+}
+
+actor mortar_shell
+{
+    Projectile
+    Radius 6
+    Height 6
+    Speed 18
+    Damage (45)
+    DamageType "Explosive"
+    Gravity 0.4
+    Scale 0.8
+    Obituary "%k exploded %o with the packered mortar."
+    -NOGRAVITY
+    States
+    {
+      Spawn:
+        PMOR ABCDEF 3
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("katarn/exmort",CHAN_VOICE)
+        TNT1 A 0 A_SpawnItemEx("explosion_mortar",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_Explode(90,192,0)
+        TNT1 A 1 A_Explode(45,192)
+        stop
+    }
+}
+
+actor mortar_shell2 : mortar_shell
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor explosion_mortar
+{
+    Radius 6
+    Height 6
+    Scale 2
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        EXMO AB 2
+        EXMO CDE 2 Bright
+        EXMO FGHIJKLMN 2
+        stop
+    }
+}

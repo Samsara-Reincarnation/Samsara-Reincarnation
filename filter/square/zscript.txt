@@ -1,0 +1,152 @@
+version "3.7"
+
+// Since the player's radius is smaller in TAOS, this handler made by Ivory Duke
+// is needed to make certain sections of the game playable in Samsara
+// Thanks to Ivory Duke for creating the code
+
+Class SamsaraTAOSHandler : EventHandler
+{
+    Override void PlayerEntered(PlayerEvent e)
+    {
+        if(e.PlayerNumber >= 0 && PlayerInGame[e.PlayerNumber] && Players[e.PlayerNumber].Mo)
+        {
+            Players[e.PlayerNumber].Mo.A_SetSize(10, 48, True);
+        }
+    }
+  
+    Override void PlayerRespawned(PlayerEvent e)
+    {
+        if(e.PlayerNumber >= 0 && PlayerInGame[e.PlayerNumber] && Players[e.PlayerNumber].Mo)
+        {
+            Players[e.PlayerNumber].Mo.A_SetSize(10, 48, True);
+        }
+    }
+}
+
+// Mutes the voice over lines
+Class ShutUpSquareVO : SquareVO
+{
+	States
+	{
+	PlaySound:
+		TNT1 A -1;
+		Stop;
+	}
+}
+
+Class ShutUpSquareVOWeaponsPaintgunSingle : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsPaintgun : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsShotbow : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsQuadcannon : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsPaintcannon : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsHellshell : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsGoonades : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsOozi : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsDefibrillator : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemies : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOFriends : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesKnifeJerk : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesPaintJerk : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesCannonJerk : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesOoziJerk : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesJetpackJerk : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesTritankle : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesChatterbox : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesShatterbox : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesRectangolier : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesCylonder : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesColorcube : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesOvolt : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOWeaponsSceptre : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesSpyEye : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesEyescreamer : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesSpectra : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesMiniDestructinator : ShutUpSquareVO replaces SquareVOWeapons { }
+Class ShutUpSquareVOEnemiesStrongman : ShutUpSquareVO replaces SquareVOWeapons { }
+
+class Gib1_Samsara : Gib1 replaces Gib1
+{
+	States
+	{
+	Spawn:
+		G1B1 A 0 A_Countdown();
+		G1B1 ABCD 3	A_SpawnItemEx("BloodDroplet", 0, 0, 0, 0, 0, -1, 0, SXF_TRANSFERTRANSLATION, 160);
+		Goto Spawn;
+	}
+}
+
+class Gib2_Samsara : Gib2 replaces Gib2
+{
+	States
+	{
+	Spawn:
+		G1B2 A 0 A_Countdown();
+		G1B2 ABCD 3	A_SpawnItemEx("BloodDroplet", 0, 0, 0, 0, 0, -1, 0, SXF_TRANSFERTRANSLATION, 160);
+		Goto Spawn;
+	}
+}
+
+class Gib3_Samsara : Gib3 replaces Gib3
+{
+	States
+	{
+	Spawn:
+		G1B3 A 0 A_Countdown();
+		G1B3 ABCD 3	A_SpawnItemEx("BloodDroplet", 0, 0, 0, 0, 0, -1, 0, SXF_TRANSFERTRANSLATION, 160);
+		Goto Spawn;
+	}
+}
+
+class Gib4_Samsara : Gib4 replaces Gib4
+{
+	States
+	{
+	Spawn:
+		G1B4 A 5;
+		Loop;
+	}
+}
+
+class Gib5_Samsara : Gib5 replaces Gib5
+{
+	States
+	{
+	Spawn:
+		G1B5 A 5;
+		Loop;
+	}
+}
+
+class Gib6_Samsara : Gib6 replaces Gib6
+{
+	States
+	{
+	Spawn:
+		G1B6 A 5;
+		Loop;
+	}
+}
+
+class BeaconRed_Samsara : SquareActor replaces BeaconRed
+{
+	Default
+	{
+		+SOLID;
+		+DONTBLAST;
+		+RANDOMIZE;
+		Height 64;
+		Radius 5;
+	}
+	States
+	{
+	Spawn:
+		BEAC ZBCB 4 Bright;
+		Loop;
+	}
+}
+
+class BeaconOrange_Samsara : BeaconRed_Samsara replaces BeaconOrange { Default { Translation "192:207=144:159"; } }
+class BeaconYellow_Samsara : BeaconRed_Samsara replaces BeaconYellow { Default { Translation "192:207=240:254"; } }
+class BeaconGreen_Samsara  : BeaconRed_Samsara replaces BeaconGreen { Default { Translation "192:207=112:127"; } }
+class BeaconBlue_Samsara   : BeaconRed_Samsara replaces BeaconBlue { Default { Translation "192:207=65:79"; } }
+class BeaconViolet_Samsara : BeaconRed_Samsara replaces BeaconViolet { Default { Translation "192:207=32:47"; } }

@@ -1,0 +1,556 @@
+actor SamsaraIPOGSuperPlasmaAnnihilatorMode : Counter { Inventory.MaxAmount 3 }
+
+Actor " Super Plasma Annihilator " : Weapon
+{
+	Weapon.Slotnumber 7
+	Weapon.SelectionOrder 500
+	Weapon.BobStyle Inverse
+	Weapon.BobSpeed 0.58
+	Weapon.BobRangeX 1.1
+	Weapon.BobRangeY 0.1
+	Inventory.Pickupmessage "You got the Energy Annihilator!"
+	Inventory.Pickupsound "greed/megapick"
+	Weapon.AmmoType "Cell"
+    Weapon.AmmoUse 25
+    Weapon.AmmoGive 50
+	+WEAPON.BFG
+	+WEAPON.NOAUTOFIRE
+	+WEAPON.NOALERT
+	scale 0.85
+	Obituary "$SAMSARA_IPOG_OB_SLOT7"
+    Inventory.RestrictedTo "POGreedPlayer"
+    Tag "Super Plasma Annihilator"
+	states
+	{
+	Spawn:
+		GW70 Z -1
+		stop
+	Ready:
+		GW70 A 1 A_WeaponReady
+		loop
+	Select:
+		TNT1 AAA 0 A_Raise
+		GW70 A 1 A_Raise
+		Loop
+	Deselect:
+		TNT1 AAA 0 A_Lower
+		GW70 A 1 A_Lower
+		Loop
+	Fire:
+		TNT1 A 0 A_JumpIfNoAmmo("Ready")
+		TNT1 A 0 A_GunFlash("FakeFlash")
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_GiveInventory("SamsaraRGPPage",1)
+		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",0,"Fire4")
+		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",2,"Fire3")
+		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",1,"Fire2")
+	Fire1:
+		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire1")
+		GW70 A 1 
+		Goto Ready
+	DoFire1:
+		GW70 A 19 bright A_PlayWeaponSound("greed/superplasma")
+		TNT1 A 0 bright A_JumpIfInventory("SPModeOn",1,"CoopFire1")
+		TNT1 A 0 bright A_JumpIfInventory("CoopModeOn",1,"CoopFire1")
+		GW70 B 1 bright 
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,1,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBall",0,0,0,0)
+		GW70 B 1 bright A_SetAngle(angle+30)
+		goto FireFinish		
+	CoopFire1:
+		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 A_SetAngle(angle+30)
+		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 1 bright A_SetAngle(angle+30)		
+		goto FireFinish		
+	Fire2:
+		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire2")
+		GW70 A 1 
+		Goto Ready
+	DoFire2:
+		GW70 A 19 bright A_PlayWeaponSound("greed/superplasma")
+		TNT1 A 0 bright A_JumpIfInventory("SPModeOn",1,"CoopFire2")
+		TNT1 A 0 bright A_JumpIfInventory("CoopModeOn",1,"CoopFire2")
+		GW70 B 1 bright 
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",0,1,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",30,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",60,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",90,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",120,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",150,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",180,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",210,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",240,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",270,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBall",300,0,0,0)
+		GW70 B 1 bright A_FireCustomMissile("PGShellSuperPlasmaBall",330,0,0,0)
+		goto FireFinish		
+	CoopFire2:
+		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",30,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",60,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",90,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",120,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",150,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",180,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",210,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",240,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",270,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",300,0,0,0)
+		GW70 B 1 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",330,0,0,0)
+		goto FireFinish
+	Fire3:
+		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire3")
+		GW70 A 1 
+		Goto Ready
+	DoFire3:
+		GW70 A 19 bright A_PlayWeaponSound("greed/superplasma")
+		TNT1 A 0 bright A_JumpIfInventory("SPModeOn",1,"CoopFire3")
+		TNT1 A 0 bright A_JumpIfInventory("CoopModeOn",1,"CoopFire3")
+		GW70 B 1 bright 
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",0,1,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",30,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",60,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",90,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",120,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",150,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",180,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",210,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",240,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",270,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",300,0,0,0)
+		GW70 B 1 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",330,0,0,0)
+		goto FireFinish	
+	CoopFire3:
+		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",30,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",60,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",90,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",120,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",150,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",180,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",210,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",240,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",270,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",300,0,0,0)
+		GW70 B 1 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",330,0,0,0)
+		goto FireFinish
+	Fire4:
+		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire4")
+		GW70 A 1 
+		Goto Ready
+	DoFire4:
+		GW70 A 19 bright A_PlayWeaponSound("greed/superplasma")
+		TNT1 A 0 bright A_JumpIfInventory("SPModeOn",1,"CoopFire4")
+		TNT1 A 0 bright A_JumpIfInventory("CoopModeOn",1,"CoopFire4")
+		GW70 B 1 bright 
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",0,1,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",30,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",60,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",90,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",120,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",150,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",180,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",210,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",240,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",270,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBall",300,0,0,0)
+		GW70 B 1 bright A_FireCustomMissile("PGCellSuperPlasmaBall",330,0,0,0)
+		goto FireFinish
+	CoopFire4:
+		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",0,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",30,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",60,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",90,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",120,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",150,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",180,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",210,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",240,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",270,0,0,0)
+		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",300,0,0,0)
+		GW70 B 1 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",330,0,0,0)
+		goto FireFinish
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",0,"SwitchTo1")
+		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",2,"SwitchTo4")
+		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",1,"SwitchTo3")
+		goto SwitchTo2
+	SwitchTo1:
+		TNT1 A 0 A_PlaySound("GW7BEEP4",CHAN_VOICE)
+		TNT1 A 0 A_TakeInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode")
+		TNT1 A 0 A_Print("Hitscan Mode", 0.75)
+		GW70 A 8 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Ready
+	SwitchTo2:
+		TNT1 A 0 A_PlaySound("GW7BEEP1",CHAN_VOICE)	
+		TNT1 A 0 A_GiveInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode")
+		TNT1 A 0 A_Print("Scatter Mode", 0.75)
+		GW70 A 8 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Ready	
+	SwitchTo3:
+		TNT1 A 0 A_PlaySound("GW7BEEP3",CHAN_VOICE)	
+		TNT1 A 0 A_GiveInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode")
+		TNT1 A 0 A_Print("Splash Mode", 0.75)
+		GW70 A 8 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Ready		
+	SwitchTo4:
+		TNT1 A 0 A_PlaySound("GW7BEEP2",CHAN_VOICE)	
+		TNT1 A 0 A_GiveInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode")
+		TNT1 A 0 A_Print("Ripper Mode", 0.75)
+		GW70 A 8 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Ready		
+	FireFinish:
+		GW70 B 4 bright
+		GW70 A 11
+		GW70 A 1 A_TakeInventory("SamsaraRGPPage",999)
+		GW70 A 0 A_Refire
+		goto Ready	
+	FakeFlash:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor PGSuperPlasmaTrail
+{
+	PROJECTILE
+	Speed 0
+	Damage (0)
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	+THRUSPECIES
+	Species "Player"
+	//renderstyle add
+	scale 1.1
+	states
+	{
+	Spawn:
+		NULL A 2 BRIGHT
+	SpawnLoop:
+		GP70 A 1 bright A_Fadeout(0.1)
+		loop
+	}
+}
+
+Actor PGSuperPlasmaPuff
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	-SOLID
+	+NOBLOCKMAP
+	+NOGRAVITY
+	scale 0.6
+	//renderstyle add
+	states
+	{
+	Spawn:
+		GP70 B 0
+		GP70 B 0 A_PlaySound("greed/plasmahit",CHAN_BODY)
+		GP70 BCDE 6 bright
+		stop
+	}
+}
+
+Actor PGSuperPlasmaPuff2 : PGSuperPlasmaPuff
+{
+	-CLIENTSIDEONLY
+	-NOINTERACTION
+	+PAINLESS
+	+NODAMAGETHRUST
+	Scale 0.4
+	states
+	{
+	Spawn:
+		GP70 B 0
+		GP70 B 6 bright A_Explode(60,30,0)
+		GP70 C 6 bright A_Explode(50,35,0)
+		GP70 D 6 bright A_Explode(40,40,0)
+		GP70 E 6 bright A_Explode(30,45,0)
+		stop
+	}
+}
+Actor PGClipSuperPlasmaBall : FastProjectile
+{
+	Radius 6
+	Height 10
+	Speed 60
+	PROJECTILE
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+	+SKYEXPLODE
+	+RIPPER //X-X
+	-DONTRIP
+	+NOBOSSRIP
+	+HITTRACER
+	+BLOODLESSIMPACT
+	Damage (200)//(230)
+	//renderstyle add
+	DamageType "PGPlasma"
+	states
+	{
+	Spawn:
+		GP70 A 1 bright A_SpawnItemEx("PGSuperPlasmaPuff2",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		Loop
+	Death:
+		//TNT1 A 2 ACS_NamedExecuteWithResult("Samsara678")
+		TNT1 A 5 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		TNT1 A 1 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		stop
+	}
+}
+
+Actor PGClipSuperPlasmaBallCoop : PGClipSuperPlasmaBall { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor PGShellSuperPlasmaBall// : FastProjectile
+{
+	Radius 8
+	Height 11
+	Speed 40
+	PROJECTILE
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+	+HITTRACER
+	+BLOODLESSIMPACT
+	Damage (65)
+	//renderstyle add
+	DamageType "PGPlasma"
+	Alpha 0.8
+	Scale 1.8
+	states
+	{
+	Spawn:
+		GP70 A 1 bright A_SpawnItemEx("PGSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)		
+		loop
+	Death:
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmall",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+		
+	}
+}
+
+Actor PGShellSuperPlasmaTrail : PGSuperPlasmaTrail { scale 0.6 }
+
+Actor PGShellSuperPlasmaBallSmall : PGShellSuperPlasmaBall
+{
+	Speed 20
+	BounceType "Hexen"
+	BounceFactor 1
+	BounceCount 2
+	Damage (30)//(Random(40,45))
+	//-NOEXTREMEDEATH
+	//+EXTREMEDEATH
+	+BLOODLESSIMPACT
+	+HITTRACER
+	Scale 1.1
+	states
+	{
+	Spawn:
+		GP70 A 1 bright A_SpawnItemEx("PGShellSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		Loop
+		/*GP70 AAAAAAAAAAAA 3 bright A_SpawnItemEx("PGShellSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		GP70 AAAAAAAAAAAA 3 bright A_SpawnItemEx("PGShellSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		GP70 AAAAAAAAAAAA 3 bright A_SpawnItemEx("PGShellSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		GP70 AAAAAAAAAAAA 3 bright A_SpawnItemEx("PGShellSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		GP70 AAAAAAAAAAAA 3 bright A_SpawnItemEx("PGShellSuperPlasmaTrail",0,0,0,momx*0.3,momy*0.3,momz*0.3,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)*/
+	Death:
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		Stop
+	}
+}
+
+Actor PGShellSuperPlasmaBallCoop : PGShellSuperPlasmaBall
+{ 
+	+THRUSPECIES
+	Species "Player"
+	+DONTHARMCLASS 
+	+DONTHARMSPECIES 
+	+MTHRUSPECIES 	
+	states
+	{
+	Death:
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 0 A_CustomMissile("PGShellSuperPlasmaBallSmallCoop",0,0,random(135,225),CMF_TRACKOWNER|CMF_AIMDIRECTION,random(-20,20))
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	}
+}
+
+Actor PGShellSuperPlasmaBallSmallCoop : PGShellSuperPlasmaBallSmall { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }
+
+Actor PGRocketSuperPlasmaBall
+{
+	Radius 6
+	Height 10
+	Speed 33
+	PROJECTILE
+	+FORCERADIUSDMG
+	+NODAMAGETHRUST
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+	+HITTRACER
+	+BLOODLESSIMPACT
+	Damage (0)
+	//renderstyle add
+	DamageType "PGPlasma"
+	scale 1.25
+	states
+	{
+	Spawn:
+		GP70 A 1 bright A_SpawnItemEx("PGSuperPlasmaTrail",random(-5,5),random(-5,5),random(-5,5),momx*0.6,momy*0.6,momz*0.6,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		loop
+	Death:
+		TNT1 A 0 A_Explode(150,160,0)
+		GP70 A 0 A_PlaySound("greed/rockboom",CHAN_BODY)
+		TNT1 AAAAAA 1 A_SpawnItemEx("PGSuperPlasmaPuff",random(-9,9),random(-9,9),random(-9,9),0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		TNT1 A 0 A_Explode(150,160,0)
+		GP70 A 0 A_PlaySound("greed/rockboom",CHAN_BODY)
+		TNT1 AAAAAA 1 A_SpawnItemEx("PGSuperPlasmaPuff",random(-9,9),random(-9,9),random(-9,9),0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	}
+}
+
+Actor PGRocketSuperPlasmaBallCoop : PGRocketSuperPlasmaBall { +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES Species "Player" }
+
+Actor PGCellSuperPlasmaBall
+{
+	Radius 6
+	Height 10
+	Speed 40
+	PROJECTILE
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+	//+RIPPER
+	+RIPPER
+	+THRUACTORS
+	+HITTRACER
+	+BLOODLESSIMPACT
+	//renderstyle add
+	DamageType "PGPlasma"
+	scale 1.1
+	states
+	{
+	Spawn:
+		GP70 A 1 bright A_SpawnItemEx("PGSuperPlasmaTrail",0,0,0,momx*0.5,momy*0.5,momz*0.5,0,SXF_ABSOLUTEMOMENTUM|SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+		GP70 A 0 Bright A_CustomMissile("PGSuperPlasmaBallRipper", 0)
+		loop
+	Death:
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		TNT1 A 1 A_SpawnItemEx("PGSuperPlasmaPuff",0,0,0,0,0,1,0,SXF_CLIENTSIDE)
+		stop
+	}
+}
+
+ACTOR PGSuperPlasmaBallRipper
+{
+	Damage (38)
+	PROJECTILE
+	Radius 6
+	Height 10
+	DamageType "PGPlasma"
+	Species "Player"
+	+DONTHURTSPECIES
+	+THRUSPECIES
+	+EXTREMEDEATH
+	-NOEXTREMEDEATH
+	+BLOODLESSIMPACT
+	+NOTIMEFREEZE
+	+NODAMAGETHRUST
+	+BLOODLESSIMPACT
+	+HITTRACER
+	States
+	{
+		Spawn:
+			TNT1 A 1 Bright
+			Stop
+		XDeath:
+			TNT1 A 1 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+			Stop
+	}
+}
+
+Actor PGCellSuperPlasmaBallCoop : PGCellSuperPlasmaBall { +THRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }

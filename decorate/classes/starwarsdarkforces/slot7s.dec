@@ -1,0 +1,175 @@
+actor "Wookie Bowcaster" : SamsaraDarkForcesWeapon
+{
+    Inventory.PickupMessage "Bowcaster"
+    Weapon.UpSound "katarn/wepslct"
+    Weapon.SlotNumber 7
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 2700
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 60
+    Weapon.AmmoUse 15
+    Obituary "%k destroyed %o with the Wookie Bowcaster."
+    Tag "Wookie Bowcaster"
+    +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
+    +BFG
+    +EXPLOSIVE
+    //+NOAUTOFIRE
+    States
+    {
+      Spawn:
+        KBWC Z -1
+        stop
+
+      Ready:
+        KBWC A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_Lower
+        KBWC A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        KBWC A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireFast")
+        TNT1 A 0 A_JumpIfInventory("KatarnFireRateUp",1,"FireFast")
+      FireNormal:
+        KBWC B 2 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",15,1)
+        goto FireNormalContinue
+        TNT1 A 0 A_GunFlash
+        goto FireNormalContinue
+
+      FireNormalContinue:
+        KBWC C 2 Bright A_GiveInventory("SamsaraDarkForcesBowcasterAttackHandler")
+        KBWC C 2
+        KBWC DE 10
+        KBWC A 1 A_ReFire
+        goto Ready
+
+      FireFast:
+        KBWC B 1 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",15,1)
+        goto FireFastContinue
+        TNT1 A 0 A_GunFlash
+        goto FireFastContinue
+
+      FireFastContinue:
+        KBWC C 1 Bright A_GiveInventory("SamsaraDarkForcesBowcasterAttackHandler")
+        KBWC C 1
+        KBWC DE 5
+        KBWC A 1 A_ReFire
+        goto Ready
+
+      Flash:
+        TNT1 A 1 A_Light2
+        TNT1 A 1 A_Light1
+        goto LightDone
+    }
+}
+
+actor SamsaraDarkForcesBowcasterAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",15,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",15)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("katarn/bowshot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("bowcaster_shot",frandom(-0.5,0.5),false,8,0,0,frandom(-0.5,0.5))
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("bowcaster_shot2",frandom(-0.5,0.5),false,8,0,0,frandom(-0.5,0.5))
+        stop
+    }
+}
+
+actor bowcaster_shot
+{
+    var int user_angle;
+    var int user_counter;
+    Projectile
+    Radius 4
+    Height 4
+    Speed 45
+    Damage (260)
+    DamageType "DoomPlasma"
+    Scale 0.75
+    Obituary "%k destroyed %o with the Wookie Bowcaster."
+    +FORCERADIUSDMG
+    States
+    {
+      Spawn:
+        PFUS E 0 Bright
+        TNT1 A 0 A_SetUserVar("user_angle",0)
+        TNT1 A 0 A_SetUserVar("user_counter",0)
+      SpawnLoop:
+        PFUS EFG 3 Bright
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("katarn/exmort",CHAN_VOICE)
+        TNT1 A 0 A_Explode(96,128)
+        TNT1 A 8 A_SpawnItemEx("bowcaster_puff",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+      DeathLoop:
+        TNT1 A 0 A_CustomMissile("bowcasater_smallshot",0,0,user_angle,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_SetUserVar("user_angle",user_angle+30)
+        TNT1 A 0 A_SetUserVar("user_counter",user_counter+1)
+        TNT1 A 0 A_JumpIf(user_counter <= 12, "DeathLoop")
+        stop
+    }
+}
+
+actor bowcasater_smallshot : fusion_shot { Damage (80) }
+
+actor bowcaster_shot2 : bowcaster_shot
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_PlaySound("katarn/exmort",CHAN_VOICE)
+        TNT1 A 0 A_Explode(96,128)
+        TNT1 A 8 A_SpawnItemEx("bowcaster_puff",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+      DeathLoop:
+        TNT1 A 0 A_CustomMissile("bowcasater_smallshot2",0,0,user_angle,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_SetUserVar("user_angle",user_angle+30)
+        TNT1 A 0 A_SetUserVar("user_counter",user_counter+1)
+        TNT1 A 0 A_JumpIf(user_counter <= 12, "DeathLoop")
+        stop
+    }
+}
+
+actor bowcasater_smallshot2 : fusion_shot2 { Damage (80) }
+
+actor bowcaster_puff : spark_puff
+{
+    RenderStyle "Normal"
+    Scale 0.75
+    States
+    {
+      Spawn:
+        PFUS HIJ 2 Bright
+        PFUS KLM 2
+        stop
+    }
+}

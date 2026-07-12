@@ -1,0 +1,682 @@
+Actor Boolean : Inventory
+{
+	Inventory.MaxAmount 1
+	+UNDROPPABLE
+	-INVBAR
+}
+
+Actor TemporaryBoolean : Boolean { Inventory.InterHubAmount 0 }
+
+Actor Counter : Inventory
+{
+	Inventory.MaxAmount 0x7FFFFFFF
+	+UNDROPPABLE
+	-INVBAR
+}
+
+Actor TemporaryCounter : Counter { Inventory.InterHubAmount 0 }
+
+Actor PermanentCounter : Counter { Inventory.InterHubAmount 0x7FFFFFFF }
+
+Actor Trigger : CustomInventory
+{
+	Inventory.MaxAmount 0
+	+AUTOACTIVATE
+	States
+	{
+	PickupStop:
+		TNT1 A 0 A_RailWait
+		Stop
+	}
+}
+
+Actor SamsaraPowerupGiver : PowerupGiver
+{
+	Inventory.MaxAmount 0
+	+ALWAYSPICKUP
+	+AUTOACTIVATE
+}
+
+Actor ACSSpawnDummy
+{
+	+NOINTERACTION
+	Radius 0
+	Height 0
+	States
+	{
+	Spawn:
+		TNT1 A -1
+		Stop
+	}
+}
+
+Actor SamsaraIsPlayingInZandronum : Boolean {}
+Actor IsSamsaraClass : Boolean {}
+Actor EnemyZorched : Boolean {}
+Actor SamsaraCurrentTeam : Counter { Inventory.MaxAmount 8 }
+Actor CoopModeOn : Boolean {}
+Actor SPModeOn : Boolean {}
+Actor DMModeOn : Boolean {}
+Actor InstagibModeOn : Boolean {}
+Actor RJingModeOn : Boolean {}
+Actor PistolModeOn : Boolean { Inventory.ForbiddenTo "HexenPlayer", "IPFreeley", "BlakeStone", "Corridor7Player", "GrondovalPlayer", "Bitterman", "Demoness", "PettonEverhail", "DanielGarner" }
+actor SamsaraImprovedBalance : Boolean {}
+Actor QuakeModeOn : Boolean { Inventory.RestrictedTo "QuakePlayer" }
+Actor SamsaraUsingSmoothAnims : Boolean {}
+Actor ExpandedHud : Boolean {}
+Actor SamsaraUsingVerticalSpread : Boolean {}
+Actor DoomNoBFGAim : Boolean { Inventory.RestrictedTo "DoomguyPlayer", "ChexWarrior" }
+Actor SamsaraRecoilIsDisabled : Boolean {}
+Actor PickupFlashesAreDisabled : Boolean {}
+Actor WeaponFlashesAreDisabled : Boolean {}
+Actor SamsaraSofterInvulnColormapIsEnabled : Boolean {}
+Actor SamsaraHealthOverMax : Counter {}
+Actor SamsaraHealthOverOverMax : Counter {}
+Actor SamsaraBaseSpawnHealth : Counter {}
+Actor SamsaraExtraBaseSpawnHealth : Counter {}
+Actor SamsaraExtraBaseSpawnHealthDeterminant : Counter {}
+Actor SamsaraExtraBaseSpawnHealthPermanent : Counter {}
+Actor SamsaraExtraSpawnHealth : Counter {}
+Actor SamsaraExtraSpawnHealthDeterminant : Counter {}
+Actor SamsaraExtraSpawnHealthPermanent : Counter {}
+Actor SamsaraHasMaxHealth : Counter {}
+Actor SamsaraArmorCategory : Counter {}
+Actor SamsaraArmorSavePercent : Counter { Inventory.MaxAmount 100 }
+Actor SamsaraHasMaxArmor : Counter {}
+Actor SamsaraUsingNewFullscreenHUD : Boolean { Inventory.RestrictedTo "DoomguyPlayer", "ChexWarrior", "WolfenPlayer", "DukePlayer", "QuakePlayer", "IPFreeley", "HalfLifePlayer", "Bitterman", "JamesBond", "DanielGarner", "RTCW_Blazkowicz", "Q3Sarge", "DescentPyroGX" }
+Actor SamsaraReverseDualWieldFiring : Boolean {}
+Actor SamsaraQuietFootsteps : Boolean { Inventory.RestrictedTo "HalfLifePlayer", "Bitterman", "PettonEverhail", "DanielGarner", "UnrealPlayer", "RTCW_Blazkowicz", "Q3Sarge", "JCDenton" }
+Actor SamsaraBallgag : Boolean { Inventory.RestrictedTo "DukePlayer", "Caleb", "StrifeguyPlayer", "Eleena", "LoWangPlayer", "PSPlayer", "Leonard" }
+Actor SamsaraIdleBallgag : Boolean { Inventory.RestrictedTo "DukePlayer", "Caleb", "LoWangPlayer", "Leonard" }
+Actor ForceNormalGravity : Boolean {}
+Actor ForceSOGravity : Boolean {}
+Actor ForceRangerGravity : Boolean {}
+Actor ForceEleenaGravity: Boolean {}
+Actor ForceDemonessGravity : Boolean {}
+Actor ShrunkPlayer : Boolean {}
+Actor SamsaraModeCounter : Counter { Inventory.InterHubAmount 10 }
+Actor IsCrouching : Boolean {}
+Actor IsNOTCrouching : Boolean {}
+Actor IsMorphed : Boolean {}
+Actor IsFatButBiped : Boolean {}
+Actor IsAFlyingActor : Boolean {}
+Actor NoHeadShots : Boolean {}
+Actor SamsaraPlayerShrinkDefaults : Boolean { Inventory.InterHubAmount 1 }
+Actor SamsaraPlayerScaleX : Counter { Inventory.MaxAmount 131072 Inventory.InterHubAmount 131072 }
+Actor SamsaraPlayerScaleY : Counter { Inventory.MaxAmount 131072 Inventory.InterHubAmount 131072 }
+Actor SamsaraPlayerViewHeight : Counter { Inventory.MaxAmount 4194304 Inventory.InterHubAmount 4194304 }
+Actor SamsaraCurrentWaterLevel : Counter { Inventory.MaxAmount 3 }
+Actor SamsaraUsingCustomAirSupply : Boolean {}
+Actor SamsaraCustomAirSupplyMax : Counter {}
+Actor SamsaraCanFireWeaponsUnderwater : Counter { Inventory.MaxAmount 2 }
+Actor SamsaraAlliesAreBanned : Boolean { Inventory.RestrictedTo "HexenPlayer", "IPFreeley", "Eleena", "POGreedPlayer", "Leonard", "JamesBond" }
+Actor SamsaraTakingAmmo : Boolean {} // mainly used for attack handlers to determine Ammo use in a burst
+Actor SamsaraProjectileSpawnInit : Boolean {} // hack token used for the situation where a projectile spawned in a wall or something, thereby immediately jumping to its death state
+Actor SamsaraWeaponDischargeAmount : Counter {}
+Actor IsNarakaClass : Boolean {} // Used in ReMixer
+Actor SamsaraOriginalKeySwitcheroo : TemporaryBoolean {}
+Actor SamsaraOriginalSlotCounter : Counter { Inventory.InterHubAmount 10 }
+Actor SamsaraOriginalKeyCounter : Counter { Inventory.InterHubAmount 10 }
+Actor SamsaraSlotIGiven : Boolean {}
+Actor SamsaraSlotIIGiven : Boolean {}
+Actor SamsaraSlotIIIGiven : Boolean {}
+Actor SamsaraSlotIVGiven : Boolean {}
+Actor SamsaraSlotIVSGiven : Boolean {}
+Actor SamsaraSlotVGiven : Boolean {}
+Actor SamsaraSlotVSGiven : Boolean {}
+Actor SamsaraSlotVIGiven : Boolean {}
+Actor SamsaraSlotVISGiven : Boolean {}
+Actor SamsaraSlotVIIGiven : Boolean {}
+Actor SamsaraSlotVIISGiven : Boolean {}
+Actor SamsaraBackpackGiven : Boolean {}
+Actor SamsaraBackpacksInInventory : PermanentCounter {}
+Actor SamsaraTipsChecker : TemporaryBoolean {}
+Actor SamsaraAlternateSoundToken : Counter { Inventory.MaxAmount 2 }
+Actor SamsaraIncreasedFallingDamageMode : Counter { Inventory.MaxAmount 3 }
+Actor SamsaraKeysAcquired : Counter {}
+Actor SamsaraItemReplacerProcessed : Boolean {}
+Actor SamsaraItemReplaced : Boolean {}
+Actor SamsaraSlotSkulltagSpawnChecked : Boolean {}
+Actor SamsaraFiringFullAuto : TemporaryBoolean {}
+Actor SamsaraFiringFullAuto2 : TemporaryBoolean {}
+Actor SamsaraZScriptReady : Boolean {}
+
+Actor SamsaraIncreasedFallingDamage : PowerProtection
+{
+    Powerup.Duration 0x7FFFFFFD
+    DamageFactor "Falling", 8
+}
+
+Actor SamsaraIncreasedFallingDamage2 : SamsaraIncreasedFallingDamage { DamageFactor "Falling", 1.33 }
+
+Actor SamsaraIncreasedFallingDamage3 : SamsaraIncreasedFallingDamage { DamageFactor "Falling", 1.5 }
+
+Actor SamsaraIncreasedJumpHeightForHexen : PowerHighJump
+{
+    Powerup.Duration 0x7FFFFFFD
+    Powerup.Strength 1.175
+}
+
+Actor MapCoordinate : Inventory
+{
+	Inventory.MaxAmount 131072
+	Inventory.InterHubAmount 0
+	+UNDROPPABLE
+	-INVBAR
+}
+
+// special refire trackers for synthetic-fire dual-wielding
+Actor SamsaraSynthFireActive : Boolean {}
+Actor SamsaraSynthFireReload : Boolean {}
+Actor SamsaraSynthFireZoom : Boolean {}
+Actor SamsaraSynthFireLeft : Boolean {}
+Actor SamsaraSynthFireRight : Boolean {}
+Actor SamsaraSynthFireLeftPress : Boolean {}
+Actor SamsaraSynthFireRightPress : Boolean {}
+
+Actor GotWeapon0 : Boolean {}
+Actor GotWeapon1 : Boolean {}
+Actor GotWeapon2 : Boolean {}
+Actor GotWeapon3 : Boolean {}
+Actor GotWeapon4 : Boolean {}
+Actor GotWeapon5 : Boolean {}
+Actor GotWeapon6 : Boolean {}
+Actor GotWeapon7 : Boolean {}
+
+Actor HoldingWeapon0 : Boolean {}
+Actor HoldingWeapon1 : Boolean {}
+Actor HoldingWeapon2 : Boolean {}
+Actor HoldingWeapon3 : Boolean {}
+Actor HoldingWeapon4 : Boolean {}
+Actor HoldingWeapon4Skulltag : Boolean {}
+Actor HoldingWeapon5 : Boolean {}
+Actor HoldingWeapon5Skulltag : Boolean {}
+Actor HoldingWeapon6 : Boolean {}
+Actor HoldingWeapon6Skulltag : Boolean {}
+Actor HoldingWeapon7 : Boolean {}
+Actor HoldingWeapon7Skulltag : Boolean {}
+Actor HoldingUnique1 : Boolean {}
+Actor HoldingUnique2 : Boolean {}
+Actor HoldingUnique3 : Boolean {}
+Actor HoldingFist : Boolean {}
+Actor HoldingPistol : Boolean {}
+
+Actor WeaponGetYaaaay : Ammo
+{
+	Radius 4
+	Height 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 999
+	Ammo.BackpackAmount 0
+	Ammo.BackpackMaxAmount 999
+	Inventory.PickupMessage "\0"
+	Inventory.PickupSound ""
+	+INVENTORY.QUIET
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor WeaponGetYaaaay2 : Weapon
+{
+	Radius 4
+	Height 1
+	Weapon.SelectionOrder 99999999
+	Weapon.AmmoUse 0
+	Weapon.AmmoType "Clip"
+	Inventory.PickupMessage "\0"
+	Inventory.PickupSound ""
+	+WEAPON.NO_AUTO_SWITCH
+	+INVENTORY.QUIET
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		Stop
+	Select:
+		PUF1 A 0 A_TakeInventory("WeaponGetYaaaay2")
+		PUF1 A 1 A_Raise
+		Loop
+	Deselect:
+		PUF1 A 0 A_TakeInventory("WeaponGetYaaaay2")
+		PUF1 A 1 A_Lower
+		Loop
+	Ready:
+		PUF1 A 0 A_TakeInventory("WeaponGetYaaaay2")
+		PUF1 A 1 A_WeaponReady
+		Loop
+	Fire:
+		PUF1 A 1
+		Goto Ready
+	}
+}
+
+Actor Fucks : CustomInventory
+{
+	-INVBAR
+	Inventory.Icon "ARTIFELD"
+	Inventory.PickupSound "misc/p_pkup"
+	Inventory.MaxAmount 1
+	Inventory.PickupMessage "Why do I suddenly give a fuck?"
+	Scale 0.5
+	States
+	{
+	Spawn:
+		FELD ABCDEFGHI 2 Bright Light("SAMSARA_MEGA_PACK")
+		Loop
+	Use:
+		FELD A 0 A_GiveInventory("FuckHealth")
+		FELD A 0 A_GiveInventory("FuckArmor")
+		Stop
+	}
+}
+
+Actor FuckHealth : Health
+{
+	Inventory.Amount 10000
+	Inventory.MaxAmount 10000
+	Inventory.PickupMessage "Fuck health."
+}
+
+Actor FuckArmor : BasicArmorPickup
+{
+	Armor.SaveAmount 10000
+	Armor.SavePercent 0.5
+	Inventory.PickupMessage "Fuck armor."
+	Inventory.Icon "RMR2A0"
+}
+
+Actor SamsaraRGPPage : Counter {}
+Actor HeroSoundTrack : Counter { Inventory.MaxAmount 3 }
+Actor HeroSoundTrackXmas : Boolean {}
+Actor HeroSoundTrackLevel : TemporaryBoolean {}
+Actor SamsaraHeroMusicGame : Counter {}
+Actor SamsaraHeroMusicHalfLifeActive : Boolean {}
+Actor SamsaraHeroMusicPainkillerActive : Boolean {}
+Actor SamsaraHeroMusicDeusExActive : Boolean {}
+Actor SamsaraHeroMusicSelectingNextTrack : Boolean {}
+Actor CellPhoneInit : Boolean {}
+Actor CellPhoneGiven : Boolean {}
+Actor AlternativeClassMode : Boolean {}
+Actor CompendiumOpened : Boolean { Inventory.InterHubAmount 0 }
+Actor SamsaraComicEffectLimiter : Boolean { Inventory.InterHubAmount 0 }
+Actor SamsaraMonsterHasSeenPlayer : Inventory { Inventory.MaxAmount 1 }
+Actor SamsaraFTUTSystemToken : Boolean {}
+
+Actor SamsaraHasDoubleFiringSpeed : Boolean {}
+Actor SamsaraHasProsperity : Boolean {}
+Actor SamsaraHasSpread : Boolean {}
+Actor SamsaraHasInfiniteInventory : Boolean {}
+Actor SamsaraHasDisabledInventoryCooldown : Boolean {}
+Actor SamsaraHasPermaWeaponLevel2 : Boolean { Inventory.RestrictedTo "DoomguyPlayer", "CorvusPlayer", "HexenPlayer", "Eleena", "KatarnPlayer", "Demoness", "DanielGarner" }
+Actor SamsaraPermaWeaponLevel2ToggleMemory : Boolean {}
+Actor SamsaraHasAllLoadoutEquipment : Boolean { Inventory.RestrictedTo "DoomguyPlayer", "ChexWarrior", "HexenPlayer", "DukePlayer", "QuakePlayer", "HalfLifePlayer", "Bitterman", "JamesBond" }
+
+Actor SamsaraReloadMode : Counter { Inventory.MaxAmount 3 }
+Actor SamsaraHasInfiniteAmmo : Counter { Inventory.MaxAmount 2 }
+Actor SamsaraWeaponOverheatingDisabled : Boolean {}
+Actor SamsaraReloadCalcs : Counter {}
+
+Actor SamsaraTeamTextActivated : Boolean {}
+Actor SamsaraCurrentTeamIndicator : Counter { Inventory.MaxAmount 8 }
+
+Actor SamsaraBloodGeneratorBleedAngle : Inventory { Inventory.MaxAmount 131072 }
+Actor SamsaraBloodGeneratorAngle : Inventory { Inventory.MaxAmount 131072 }
+Actor SamsaraBloodGeneratorZ : Inventory { Inventory.MaxAmount 131072 }
+Actor SamsaraKilledByMassacre : Boolean {}
+
+Actor TranslationDummy
+{
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 5
+			Stop
+	}
+}
+
+Actor TranslationDummyPersist : TranslationDummy
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A -1
+			Stop
+	}
+}
+
+Actor Samsara_ModeWeaponChange : Boolean {}
+
+//Don't ask me why we can't just inherit bloodyskull
+Actor InvisibleSkullPop : PlayerChunk
+{
+	Radius 4
+	Height 4
+	+NOBLOCKMAP
+	+DROPOFF
+	+LOWGRAVITY
+	+CANNOTPUSH
+	+SKYEXPLODE
+	+NOBLOCKMONST
+	+NOSKIN
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeVelocity(0,0,0,CVF_REPLACE)
+		TNT1 ABCDE 5 A_CheckFloor("Hit")
+		Goto Spawn+1
+	Hit:
+		TNT1 F 16 A_CheckPlayerDone
+		Wait
+	}
+}
+
+Actor StepDeathLogic1 : CustomInventory
+{
+	+Inventory.ALWAYSPICKUP
+	Inventory.PickupMessage ""
+	Inventory.PickupSound ""
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 1
+			Stop
+		Pickup:
+			TNT1 A 0
+			TNT1 A 0 A_RadiusGive("StepDeathLogic2",33,RGF_PLAYERS|RGF_MONSTERS,1)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor StepDeathLogic2 : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	Inventory.PickupMessage ""
+	Inventory.PickupSound ""
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 1
+			Stop
+		Pickup:
+			TNT1 A 0 A_JumpIf(CallACS("Samsara_PlayerShrinker",1)!=0,"StepPlayer")
+			TNT1 A 0 A_CustomMissile("StepDeathLogic3",0)
+			TNT1 A 1
+			Stop
+		StepPlayer:
+			TNT1 A 0 A_JumpIfInventory("DukeClass",1,"StepDuke")
+			TNT1 A 0 A_FireCustomMissile("StepDeathLogic3",0,0,0,-32)
+			TNT1 A 1
+			Stop
+		StepDuke:
+			TNT1 A 0 A_FireCustomMissile("StepDeathLogic4",0,0,0,-32)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor StepDeathLogic3
+{
+	Projectile
+	Speed 0
+	Damage (0)
+	Height 4
+	Radius 2
+	DamageType "Squish"
+	+NODAMAGETHRUST
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_Explode(5000,4,!XF_HURTSOURCE,0,4)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor StepDeathLogic4 : StepDeathLogic3 { DamageType "DukeSquish" }
+
+Actor ShrinkFlash
+{
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			TNT1 AA 1
+			Stop
+	}
+}
+
+Actor ShrunkWeapon : Weapon
+{
+    Tag "Shrunk"
+	States
+	{
+		Select:
+			TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Raise
+			TNT1 A 1 A_Raise
+			Loop
+		Deselect:
+			TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Lower
+			TNT1 A 1 A_Lower
+			Loop
+		Ready:
+			TNT1 A 0 A_JumpIfInventory("ShrunkPlayer",1,2)
+			TNT1 A 0 A_TakeInventory("ShrunkWeapon",1)
+			TNT1 A 1 A_WeaponReady(WRF_NOFIRE)
+			Loop
+		Fire:
+			TNT1 A 1
+			Goto Ready
+	}
+}
+
+Actor SamsaraAllySwitchCaller : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	Inventory.PickupMessage ""
+	Inventory.PickupSound ""
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 1
+			Stop
+		Pickup:
+			TNT1 A 1 A_GiveToChildren("SamsaraAllySwitch",1)
+			Stop
+	}
+}
+
+Actor SamsaraAllySwitch : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	Inventory.PickupMessage ""
+	Inventory.PickupSound ""
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 1
+			Stop
+		Pickup:
+			TNT1 A 1 ACS_NamedExecuteAlways("Samsara_AllySwitch")
+			Stop
+	}
+}
+
+Actor RemoveMe : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 Thing_Remove(0)
+			Stop
+	}
+}
+
+Actor MultiplyOverflowToken : Inventory { Inventory.MaxAmount 1 }
+Actor MultiplyToken : Inventory { Inventory.MaxAmount 100 }
+
+// A_Mushroom damage hack
+
+DamageType AMushroomHack
+{
+	Factor 0 // don't damage anything
+	ReplaceFactor // ignore Normal damage type
+}
+
+Actor SamsaraAMushroomBypassOn : Trigger
+{
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_SetDamageType("AMushroomHack") // apply "no damage" damage type
+		TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST",true) // don't fling anything
+		TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",true) // make nothing bleed
+		Stop
+	}
+}
+
+Actor SamsaraAMushroomBypassOff : Trigger // reset
+{
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_SetDamageType("Normal") // resets the damagetype. supply the replacement in your attack with A_SetDamageType after this trigger call
+		TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST",false)
+		TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",false)
+		Stop
+	}
+}
+
+Actor AlreadySpawned : Inventory { Inventory.MaxAmount 1 }
+Actor GeneratedMonsterToken : Inventory { Inventory.MaxAmount 1 }
+
+Actor SamsaraBossSighted : Boolean {}
+Actor SamsaraBossSightTaunt : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraBossSighted",1,"PickupStop")
+        TNT1 A 0 A_GiveInventory("SamsaraBossSighted")
+        TNT1 A 0 A_GiveInventory("HLBossSightMusicQueue",1,AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupTauntDuke",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfInventory("CalebClass",1,"PickupTauntBlood",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfInventory("EradClass",1,"PickupTauntEradicator",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfInventory("SWClass",1,"PickupTauntShadowWarrior",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupTauntRedneck",AAPTR_TARGET)
+        stop
+
+      PickupTauntDuke:
+        TNT1 A 0 A_GiveInventory("DukeBossSightTaunt",1,AAPTR_TARGET)
+        stop
+
+      PickupTauntBlood:
+        TNT1 A 0 A_GiveInventory("CalebBossSightTaunt",1,AAPTR_TARGET)
+        stop
+
+      PickupTauntEradicator:
+        TNT1 A 0 A_GiveInventory("EleenaBossSightTaunt",1,AAPTR_TARGET)
+        stop
+
+      PickupTauntShadowWarrior:
+        TNT1 A 0 A_GiveInventory("LoWangBossSightTaunt",1,AAPTR_TARGET)
+        stop
+
+      PickupTauntRedneck:
+        TNT1 A 0 A_GiveInventory("LeonardBossSightTaunt",1,AAPTR_TARGET)
+        stop
+    }
+}
+
+Actor SamsaraBossMonologueInitialized : Boolean {}
+
+Actor SamsaraAltClassWeaponSwitchHackFallbackMelee : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackFallbackRanged : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot1 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot2 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot3 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot4 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot4S : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot5 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot5S : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot6 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot6S : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot7 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackSlot7S : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackUnique1 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackUnique2 : Boolean {}
+Actor SamsaraAltClassWeaponSwitchHackUnique3 : Boolean {}
+
+Actor SamsaraMiscPickupDisplayBlocker : Boolean {} // prevent special weapon giving messages from showing on LMS/equipmentstart
+Actor SamsaraMiscPickupDisplayExtraChoice1 : Counter {}
+Actor SamsaraMiscPickupDisplayExtraLoadout1 : Counter {}
+Actor SamsaraMiscPickupDisplayExtraDropped1 : Counter {}
+
+// the following triggers are given through player pain/death
+// sound triggers because apparently the code pointers do not
+// want to cooperate in the same trigger in netplay. hacky.
+
+Actor SamsaraPlayerPainSoundTrigger : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_Pain
+        stop
+    }
+}
+
+Actor SamsaraPlayerDeathSoundTrigger : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_PlayerScream
+        stop
+    }
+}
+
+Actor SamsaraPlayerXDeathSoundTrigger : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_XScream
+        stop
+    }
+}
+
+// Hero OST stuff
+
+Actor SamsaraOST_IgnoreTarget : Boolean {}
+
+// Dummy HUD stuff
+
+Actor SamsaraDoom64UnmakerArtifact1Icon : Boolean {}
+Actor SamsaraDoom64UnmakerArtifact2Icon : Boolean {}
+Actor SamsaraDoom64UnmakerArtifact3Icon : Boolean {}
+
+// Friendliness copying stuff
+
+Actor SamsaraCopyFriendliness : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_CopyFriendliness(AAPTR_MASTER)
+        stop
+    }
+}

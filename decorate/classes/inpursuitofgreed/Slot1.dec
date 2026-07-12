@@ -1,0 +1,93 @@
+// Grenade - the name says it all :P
+Actor IPOGGrenadeToken : Boolean {}
+actor IPOGGrenadeCooldown : Counter { Inventory.MaxAmount 1 }
+
+Actor PGPoisonBall
+{
+	Radius 8
+	Height 12
+	Speed 35
+	PROJECTILE
+	+NOEXTREMEDEATH
+	PoisonDamage 2,5,15
+	//+ADDITIVEPOISONDAMAGE
+	+ADDITIVEPOISONDURATION
+	+BLOODLESSIMPACT
+	+HITTRACER
+	Damage (20)
+	renderstyle add
+	DamageType "PGPlasma"
+	DeathSound "DSNONE"
+	Scale 0.9
+	states
+	{
+	Spawn:
+		GP80 AB 4 bright
+		loop
+	Death:
+		GP80 C 1 A_SpawnItemEx("PGPoisonBallPuff",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		stop
+	XDeath:
+		TNT1 A 0 A_SpawnItemEx("PGPoisonBallPuff",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		TNT1 A 1 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		Stop
+	}
+}
+
+
+Actor PGPoisonBallPuff
+{
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	-SOLID
+	+NOBLOCKMAP
+	+NOGRAVITY
+	scale 0.3
+	renderstyle add
+	states
+	{
+	Spawn:
+		GP70 B 0
+		GP70 B 0 A_PlaySound("greed/plasmahit",CHAN_BODY)
+		GP70 BCDE 6 bright
+		stop
+	}
+}
+
+Actor PGPoisonBallCoop : PGPoisonBall
+{
+    +ADDITIVEPOISONDAMAGE
+    +THRUSPECIES
+    Species "Player"
+    PoisonDamage 5,6,7
+    Damage (35)
+}
+
+Actor IPOGGrenadeThrower : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	Inventory.PickupMessage ""
+	Inventory.PickupSound ""
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_JumpIfInventory("IPOGGrenadeCooldown", 1, "Failure")
+			TNT1 A 0 A_JumpIfInventory("RocketAmmo", 1, 1)
+			Goto Failure
+			TNT1 A 0 A_TakeInventory("RocketAmmo", 1, TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"UseCoop")
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"UseCoop")
+			TNT1 A 0 A_FireCustomMissile("IPOGGrenade", 0, 0)
+			TNT1 A 0 A_GiveInventory("IPOGGrenadeCooldown", 1)
+			TNT1 A 0 ACS_NamedExecuteAlways("IPOGGrenadeCooldown", 0)
+			Fail
+		UseCoop:
+			TNT1 A 0 A_FireCustomMissile("IPOGGrenadeCoop", 0, 0)
+			TNT1 A 0 A_GiveInventory("IPOGGrenadeCooldown", 1)
+			TNT1 A 0 ACS_NamedExecuteAlways("IPOGGrenadeCooldown", 0)
+			Fail		
+		Failure:
+			TNT1 A 0
+			Fail	
+		}
+}

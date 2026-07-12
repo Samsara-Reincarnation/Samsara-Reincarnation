@@ -1,0 +1,119 @@
+actor "Stormtrooper Rifle" : SamsaraDarkForcesWeapon
+{
+    Inventory.PickupMessage "Blaster Rifle"
+    Weapon.UpSound "katarn/wepslct"
+    Weapon.SlotNumber 2
+    Weapon.SelectionOrder 800
+    Weapon.AmmoType "Clip"
+    Weapon.AmmoGive 30
+    Weapon.AmmoUse 1
+    Obituary "%k blasted %o down with the Stormtrooper Rifle."
+    Tag "Stormtrooper Laser Rifle"
+    +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
+    States
+    {
+      Spawn:
+        IRIF A -1
+        stop
+
+      Ready:
+        KRIF A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_Lower
+        KRIF A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        KRIF A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireFast")
+        TNT1 A 0 A_JumpIfInventory("KatarnFireRateUp",1,"FireFast")
+      FireNormal:
+        TNT1 A 0 A_GunFlash
+        KRIF B 2 Bright A_GiveInventory("SamsaraDarkForcesBlasterRifleAttackHandler")
+        KRIF A 4
+        KRIF AAAA 1 A_ReFire
+        goto Ready
+
+      FireFast:
+        TNT1 A 0 A_GunFlash
+        KRIF B 1 Bright A_GiveInventory("SamsaraDarkForcesBlasterRifleAttackHandler")
+        KRIF A 2
+        KRIF AA 1 A_ReFire
+        goto Ready
+
+      Flash:
+        TNT1 A 3 Bright A_Light2
+        TNT1 A 2 A_Light1
+        goto LightDone
+    }
+}
+
+actor SamsaraDarkForcesBlasterRifleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("katarn/rifshot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("blaster_laser",random(-2,2),false,6,0,0,random(-2,2))
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("blaster_laser2",random(-2,2),false,6,0,0,random(-2,2))
+        stop
+    }
+}
+
+actor blaster_laser
+{
+    Projectile
+    Radius 3
+    Height 3
+    Speed 64
+    Damage (20)
+    Obituary "%k blasted %o down with the Stormtrooper Rifle."
+    +FORCEXYBILLBOARD
+    +HITTRACER
+    +NOEXTREMEDEATH
+    +THRUGHOST
+    States
+    {
+      Spawn:
+	    LASR A -1 BRIGHT
+	    stop
+
+      Death:
+        TNT1 A 0 A_PlaySound("katarn/extiny",CHAN_VOICE)
+        TNT1 A 1 A_SpawnItemEx("spark_puff")
+        stop
+
+      XDeath:
+        TNT1 A 0 A_RearrangePointers(AAPTR_TRACER,AAPTR_NULL,AAPTR_NULL)
+        TNT1 A 0 A_SpawnItemEx("Switchable_FlyingBlood_NonViolent",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),33|SXF_TRANSFERPOINTERS)
+        goto Death
+    }
+}
+
+actor blaster_laser2 : blaster_laser
+{
+    Species "Player"
+    +THRUSPECIES
+}

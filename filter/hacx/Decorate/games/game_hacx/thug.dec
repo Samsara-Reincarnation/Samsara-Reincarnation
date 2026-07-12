@@ -19,8 +19,13 @@ actor HacxThug_Samsara : SamsaraMonsterHumanoid replaces Zombieman
     DamageFactor "DragonClaw", 1.5
 	// Balanced DamageFactors
 	DamageFactor "Pistol", 1.2
+	DamageFactor "DoomDamageTypePistol", 1.2
+	DamageFactor "DoomFist", 1.2
+	DamageFactor "DoomDamageTypeFist", 1.2
+	DamageFactor "PunchDagger", 1.2
 	DamageFactor "DukePistol", 1.2
 	DamageFactor "ZorchPistol", 1.2
+	DamageFactor "StrifePistol", 1.2
 	DamageFactor "MightyBoot", 1.5
     PainChance "MightyBoot", 255
 	Tag "Thug"
@@ -63,9 +68,9 @@ actor HacxThug_Samsara : SamsaraMonsterHumanoid replaces Zombieman
 			TNT1 A -1 A_Jump(256,"See")
 			wait
 		Death:
-		    TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-			POSS H 9
+		Death.Massacre:
+			POSS H 9 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			POSS I 7 A_Scream
 			POSS J 4 A_NoBlocking
 			POSS K 2
@@ -82,9 +87,9 @@ actor HacxThug_Samsara : SamsaraMonsterHumanoid replaces Zombieman
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
 		XDeath:
-		    TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-			POSS M 5
+		XDeath.Massacre:
+			POSS M 5 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			POSS N 5 A_XScream
 			POSS O 5 A_NoBlocking
 			POSS PQRST 5
@@ -258,6 +263,8 @@ actor HacxThug_Samsara_Shrink : HacxThug_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

@@ -1,0 +1,195 @@
+Actor Q3RocketLauncher : Q3Weapon
+{
+	Weapon.SlotNumber 5
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 5
+	Weapon.AmmoType "RocketAmmo"
+	Inventory.PickupMessage "Rocket Launcher"
+    Inventory.Icon "Q3CMPW07"
+	Obituary "%o ate %k's rocket."
+	Tag "Rocket Launcher"
+	+EXPLOSIVE
+	+FLOATBOB
+	States
+	{
+		Spawn:
+			Q399 A -1
+			stop
+
+		ReadyActual:
+			Q300 A 1 A_WeaponReady
+			loop
+
+		Deselect:
+			Q300 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			Q300 A 1 A_PlaySound("Quake3/Weapons/Change",CHAN_5)
+			Q301 ABCD 1
+            Q301 E 0
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			Q302 ABCD 1
+			goto ReadyActual
+
+		Fire:
+			Q303 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+			Q303 A 0 A_JumpIfInventory("RocketAmmo",1,"FireStart")
+			goto FireDry
+
+		FireDry:
+			Q300 A 0 A_ClearReFire
+			Q300 A 0 A_PlaySound("Quake3/Weapons/NoAmmo",CHAN_5)
+			Q300 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Q300 A 0 A_SelectWeapon("Q3Machinegun")
+			goto Deselect
+
+		FireStart:
+			Q303 A 0 A_AlertMonsters
+			Q303 A 0 A_GunFlash
+			Q303 A 0 A_GiveInventory("SamsaraQuake3RocketLauncherAttackHandler")
+			Q303 ABCDE 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Q303 F 13 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		Flash:
+			Q304 A 3 Bright
+			stop
+	}
+}
+
+actor SamsaraQuake3RocketLauncherAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Quake3/RocketLauncher/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_GiveInventory("Q3QuadDamageSound")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Q3Rocket",0,false,4,8)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Q3RocketCoop",0,false,4,8)
+        stop
+    }
+}
+
+Actor Q3Rocket
+{
+	Height 12
+	Radius 6
+	Speed 24
+	Damage (100)
+	Projectile
+	Decal "Q3ExplosiveImpact"
+	DamageType "Q3Explosive"
+	+FORCERADIUSDMG
+	+THRUGHOST
+	States
+	{
+		Spawn:
+			Q300 A 0 NoDelay ACS_NamedExecuteWithResult("Q3SpawnRocketFlare")
+		SpawnLoop:
+			Q300 A 0 A_PlaySound("Quake3/RocketLauncher/Fly",CHAN_VOICE,1.0,true)
+			Q300 ABCDEFGHIJKLMNOPQRSTUVWX 2 A_SpawnItemEx("Q3GrenadeSmoke")
+			loop
+
+		Death:
+			TNT1 A 0 A_PlaySound("Quake3/RocketLauncher/Explode",CHAN_VOICE)
+			TNT1 A 0 A_Explode(50,100,0)
+			TNT1 A 0 A_Explode(50,100)
+			TNT1 A 0 A_SpawnItemEx("Q3RocketBoom")
+			TNT1 A 0 A_JumpIf(abs(z - floorz) <= 4, "HitFloor")
+			TNT1 A 1 A_CheckCeiling("HitCeiling")
+			stop
+
+		HitFloor:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3SpawnDecal", 1)
+			TNT1 A 0 A_SetPitch(90)
+			TNT1 A 0 A_JumpIfCloser(32,"Thrust")
+			TNT1 A 1
+			stop
+
+		Thrust:
+			TNT1 A 1 A_GiveToTarget("Q3RocketJumpModifier")
+			stop
+
+		HitCeiling:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3SpawnDecal", 1, 1)
+			TNT1 A 0 A_SetPitch(-90)
+			TNT1 A 1
+			stop
+	}
+}
+
+Actor Q3RocketCoop : Q3Rocket
+{
+    +THRUSPECIES
+	Species "Player"
+	States
+	{
+		Death:
+			TNT1 A 0 A_PlaySound("Quake3/RocketLauncher/Explode",CHAN_VOICE)
+			TNT1 A 0 A_Explode(50,150,0)
+			TNT1 A 0 A_Explode(50,150)
+			TNT1 A 0 A_SpawnItemEx("Q3RocketBoom")
+			TNT1 A 0 A_JumpIf(abs(z - floorz) <= 4, "HitFloor")
+			TNT1 A 1 A_CheckCeiling("HitCeiling")
+			stop
+	}
+}
+
+actor Q3RocketJumpModifier : Trigger
+{
+	States
+	{
+	Pickup:
+		TNT1 A 0 ThrustThingZ(0,20,0,1)
+		stop
+	}
+}
+
+Actor Q3RocketFlare
+{
+	Height 10
+	Radius 5
+	RenderStyle Add
+	+NOINTERACTION
+	+BRIGHT
+	States
+	{
+		Spawn:
+			Q300 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			Loop
+	}
+}
+
+Actor Q3RocketBoom
+{
+	RenderStyle Add
+	Height 4
+	Radius 2
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	+BRIGHT
+	States
+	{
+		Spawn:
+			Q304 A 0 NoDelay ACS_NamedExecuteWithResult("Q3EffectLifeCycle", 0, 50, 0, 16)
+			Q304 ABCDEFGH 2
+			Q304 H 100
+			Stop
+	}
+}

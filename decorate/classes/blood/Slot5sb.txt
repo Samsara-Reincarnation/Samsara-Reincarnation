@@ -1,0 +1,283 @@
+Actor RemoteTNTSeamlessToken : TemporaryCounter { Inventory.MaxAmount 5 }
+Actor RemoteTNTNoDynamite : TemporaryBoolean {}
+Actor RemoteTNTDetonate : TemporaryBoolean {}
+Actor BloodRemoteTNT : CalebThrowableWeapon
+{
+	Inventory.PickupMessage "Picked up Remote Detonator"
+	Weapon.SelectionOrder 880
+	//Weapon.AmmoGive 5
+	Weapon.AmmoType "RocketAmmo"
+	Weapon.AmmoType2 "RocketAmmo"
+	Obituary "%k blew %o to smithereens with a remote bomb!"
+	Weapon.AmmoUse 1
+	Weapon.AmmoUse2 1
+	Weapon.SlotNumber 5
+	Weapon.SlotPriority 2
+	Inventory.PickupSound "Caleb/Weaponup"
+	+WEAPON.EXPLOSIVE
+	+WEAPON.NOALERT
+	+WEAPON.NOAUTOAIM
+	+WEAPON.AMMO_OPTIONAL
+	Tag "Remote Detonator"
+	States
+	{
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfNoAmmo("RaisingDetonator")
+		BRMT ABCDE 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReadyLoop+2
+	RaisingDetonator:
+		BRMT IJKL 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReadyAmmoless+2
+	RaisingDynamite:
+		TNT1 A 0 A_ClearReFire
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfNoAmmo("ReadyAmmoless")
+		TNT1 A 0 A_TakeInventory("RemoteTNTNoDynamite")
+		BRMT FGHDE 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReadyLoop
+	ReadyLoop:
+		TNT1 A 0 A_TakeInventory("RemoteTNTSeamlessToken")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfNoAmmo("ReadyAmmoless")
+		TNT1 A 0 A_JumpIfInventory("CalebReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("CalebWaiting",60,"WaitingTaunt")
+		BRMT M 3 A_WeaponReady
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT N 3 A_WeaponReady
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT O 3 A_WeaponReady
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT P 3 A_WeaponReady
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT Q 3 A_WeaponReady
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT R 3 A_WeaponReady
+		Loop
+	ReadyAmmoless:
+		TNT1 A 0 A_JumpIfInventory("CalebReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("CalebWaiting",60,"WaitingTaunt")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTNoDynamite",1,3)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",5,"ReadyAmmoless6")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",4,"ReadyAmmoless5")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",3,"ReadyAmmoless4")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",2,"ReadyAmmoless3")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",1,"ReadyAmmoless2")
+		Goto ReadyAmmoless1+5
+	ReadyAmmoless1:
+		TNT1 A 0 A_JumpIfInventory("CalebReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("CalebWaiting",60,"WaitingTaunt")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTNoDynamite",1,3)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyLoop")
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyLoop")
+		TNT1 A 0 A_TakeInventory("RemoteTNTSeamlessToken")
+		BRMT S 3 A_WeaponReady
+		Goto ReadyAmmoless2
+	ReadyAmmoless2:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT T 3 A_WeaponReady
+		Goto ReadyAmmoless3
+	ReadyAmmoless3:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT U 3 A_WeaponReady
+		Goto ReadyAmmoless4
+	ReadyAmmoless4:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT V 3 A_WeaponReady
+		Goto ReadyAmmoless5
+	ReadyAmmoless5:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT W 3 A_WeaponReady
+		Goto ReadyAmmoless6
+	ReadyAmmoless6:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT X 3 A_WeaponReady
+		Goto ReadyAmmoless1
+	Deselect:
+		TNT1 A 0 A_TakeInventory("RemoteTNTDetonate")
+		TNT1 A 0 A_TakeInventory("RemoteTNTSeamlessToken")
+		TNT1 A 0 A_TakeInventory("CalebInterpolateBar")
+		TNT1 A 0 A_TakeInventory("ThrowPower")
+		TNT1 A 0 A_TakeInventory("ThrowPowerBig")
+		TNT1 A 0 A_JumpIfNoAmmo("DeselectDetonator2")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTNoDynamite",1,"DeselectDetonator")
+		BRMT EYZ 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		BRMT "[]" 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Super::DeselectLoop
+	DeselectDetonator:
+		TNT1 A 0 A_TakeInventory("RemoteTNTNoDynamite")
+		Goto DeselectDetonator2
+	DeselectDetonator2:
+		BRMT LKJI 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Super::DeselectLoop
+	Select:
+		TNT1 A 0 A_JumpIfInventory("CalebLighterReadyDummy",1,"DeselectLighter")
+		TNT1 A 0 A_TakeInventory("ThrowPower")
+		TNT1 A 0 A_TakeInventory("ThrowPowerBig")
+		TNT1 A 0 A_TakeInventory("UsingPitchfork", 1)
+		//TNT1 A 0 A_JumpIfNoAmmo("ReadyAmmoless")
+		Goto Super::SelectLoop
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTNoDynamite",1,"Detonate")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfNoAmmo("OutOfAmmo")
+		TNT1 A 0 A_GiveInventory("CalebInterpolateBar")
+		Goto Hold
+	Detonate:
+		BRM2 Q 4 A_PlaySound("TNT/Remote",CHAN_WEAPON)
+		TNT1 A 0 A_TakeInventory("RemoteTNTNoDynamite")
+		BRM2 R 1 A_GiveInventory("RemoteTNTDetonate")
+		BRM2 R 1 A_TakeInventory("RemoteTNTDetonate")
+		BRM2 S 2
+		BRM2 T 1
+		Goto RaisingDynamite
+	Hold:
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",5,"Hold6")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",4,"Hold5")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",3,"Hold4")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",2,"Hold3")
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTSeamlessToken",1,"Hold2")
+		Goto Hold1
+	Hold1:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT M 3 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold2")
+		Goto Throw
+	Hold2:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT N 3 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold3")
+		Goto Throw
+	Hold3:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT O 3 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold4")
+		Goto Throw
+	Hold4:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT P 3 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold5")
+		Goto Throw
+	Hold5:
+		TNT1 A 0 A_GiveInventory("RemoteTNTSeamlessToken")
+		BRMT Q 3 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold6")
+		Goto Throw
+	Hold6:
+		TNT1 A 0 A_TakeInventory("RemoteTNTSeamlessToken")
+		BRMT R 3 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold1")
+		Goto Throw
+	Flash:
+		TNT1 A 0 A_GiveInventory("ThrowPower", 5)
+		TNT1 A 0 A_GiveInventory("ThrowPowerBig", 3)
+		TNT1 A 0 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("RemoteTNTNoDynamite",1,"RaisingDynamite")
+		TNT1 A 0 A_TakeInventory("RemoteTNTSeamlessToken")
+		TNT1 A 0 A_TakeInventory("CalebInterpolateBar")
+		TNT1 A 0 A_TakeInventory("ThrowPower")
+		BRMT E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		BRM2 UVW 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("RemoteTNTNoDynamite")
+		TNT1 A 0 A_GiveInventory("SamsaraBloodRemoteAttackHandler")
+		BRMT X 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReadyAmmoless
+	Spawn:
+		RAIR A -1
+		Stop
+	Throw:
+		BRM2 DEFGH 1
+		TNT1 A 0 A_TakeInventory("CalebInterpolateBar")
+		TNT1 A 0 A_PlayWeaponSound("TNT/Throw")
+		TNT1 A 0 A_GiveInventory("RemoteTNTNoDynamite")
+		BRM2 I 1 A_GiveInventory("SamsaraBloodRemoteAttackHandler")
+		BRM2 JKLMNOP 1
+		Goto ReadyAmmoless
+	OutOfAmmo:
+		TNT1 A 0 A_SelectWeapon("   Revolver   ")
+		Goto Deselect
+	}
+}
+
+Actor SamsaraBloodRemoteAttackHandler : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_TakeInventory("RocketAmmo", 1, TIF_NOTAKEINFINITE)
+			TNT1 A 0 A_JumpIfInventory("SPModeOn",1,3)
+			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
+			TNT1 A 0 A_FireCustomMissile("PlayerRemoteTNT",0,false,8,0)
+			Stop
+			TNT1 A 0 A_FireCustomMissile("PlayerRemoteTNT_Coop",0,false,8,0)
+			Stop
+	}
+}
+
+actor PlayerRemoteTNT : PlayerTimedTNT
+{
+	-EXPLODEONWATER
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_strength",CallACS("CalebThrowStrength"))
+		TNT1 A 0 ACS_NamedExecuteWithResult("CalebThrowDuration")
+		TNT1 A 0 A_ChangeVelocity((5+(user_strength))*(user_strength>0)*(sqrt(velx*velx + vely*vely)/5.0),0,(((5+(user_strength/2))*(sqrt(velx*velx + vely*vely)/5.0))+((5+(user_strength))*(velz/5.0)))*(user_strength>0),CVF_RELATIVE|CVF_REPLACE)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+		Goto See
+	See:
+		RTNT H 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT H 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT I 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT I 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT J 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT J 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT C 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT C 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT D 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT D 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT E 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT E 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT F 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT F 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT G 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		RTNT G 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target) TNT1 A 0 A_ScaleVelocity(0.9) TNT1 A 0 A_JumpIf(sqrt(velx*velx + vely*vely + velz*velz) < 2,"Stay")
+		Loop
+	Stay:
+		TNT1 A 0 A_ChangeFlag("HEXENBOUNCE",0)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+		Goto StayLoop
+	StayLoop:
+		RTNT AAAAAAAAABBBBBBBBB 1 A_JumpIfInventory("RemoteTNTDetonate",1,"Explode",AAPTR_Target)
+		Loop
+	}
+}
+
+actor PlayerRemoteTNT_Coop : PlayerRemoteTNT
+{
+	Species "Player"
+	+THRUSPECIES
+	+DONTHARMCLASS
+	+DONTHARMSPECIES
+	+MTHRUSPECIES
+	DamageType "DynamiteCoop"
+	States
+	{
+	Explode:
+		TNT1 A 0 A_CheckFloor("ExplodeFloor")
+		TNT1 A 0 A_SpawnItemEx("SamsaraBloodKaboom",0,0,0,0,0,1,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Goto BlowAway
+	ExplodeFloor:
+		TNT1 A 0 A_SpawnItemEx("SamsaraBloodFloorKaboom",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Goto BlowAway
+	BlowAway:
+		TNT1 A 0 A_RemoveChildren(true)
+		TNT1 A 0 A_SpawnItemEx("BlowerCoop",0,0,-2,0,0,-10,0,SXF_NOCHECKPOSITION)
+		Goto Super::ExplodeSound
+	}
+}

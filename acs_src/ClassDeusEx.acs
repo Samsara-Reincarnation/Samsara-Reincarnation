@@ -156,37 +156,32 @@ Script "DeusEx_DamageModifiers" (int damage)
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
 	//int pointblank = CheckInventory("DeusEx_PointBlank");
-	int shooterX = GetActorX(0);
-	int shooterY = GetActorY(0);
-	int shooterZ = GetActorZ(0);	
 	SetActivator(0,AAPTR_Tracer);
-	int monsterX = GetActorX(0);
-	int monsterY = GetActorY(0);
-	int monsterZ = GetActorZ(0);
-	int monsterdistance = magnitudeThree(monsterX*shooterX,monsterY*shooterY,monsterZ*shooterZ);
-	int monsterHealth = GetActorProperty(0,APROP_Health);
-	int monsterHeight = GetActorProperty(0,APROP_Height);
-	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
-	int monsterAngle = GetActorAngle(0);
-	int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
-	int angle = vang % 1.0;		
-	
+
 	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
 
-	if(monsterWidth > monsterHeight)
+	int monsterZ = GetActorZ(0);
+	int monsterHeight = GetActorProperty(0,APROP_Height);
+	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
+	int health = GetActorProperty(0,APROP_SpawnHealth);
+
+	if (health >= 1000)
 	{
-		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.55) && bulletZ < monsterZ + FixedMul(monsterHeight,0.75) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.45))
-		{			
+		damage = damage;
+	}
+	else if(monsterWidth > monsterHeight)
+	{
+		int relativeAngle = abs(relativeAngleToXY(0, bulletX, bulletY));
+
+		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.55) && bulletZ < monsterZ + FixedMul(monsterHeight,0.75) && (relativeAngle < 0.65 && relativeAngle > 0.45))
+		{
 			//8x? Absolutely not!!
-			damage *= 3;
-		}	
+			damage *= 2;
+		}
 	}
-	else
-	{
-		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.8))
-			damage *= 3;
-	}
-	
+	else if(bulletZ > monsterZ + FixedMul(monsterHeight,0.8))
+		damage *= 2;
+
 	SetResultValue(damage);
 }
 
@@ -196,25 +191,21 @@ Script "DeusEx_BackDamage" (int damage)
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
 	SetActivator(0,AAPTR_Tracer);
-	int monsterX = GetActorX(0);
-	int monsterY = GetActorY(0);
 	int monsterZ = GetActorZ(0);
 	int monsterHeight = GetActorProperty(0,APROP_Height);
-	int monsterAngle = GetActorAngle(0) - 0.5;
-	
-	int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
-	int angle = vang % 1.0;
+
+	int relativeAngle = abs(relativeAngleToXY(0, bulletX, bulletY) - 0.5);
 	int backdamage;
-	
-	if(bulletZ > monsterZ + (monsterHeight / 3) && (abs(monsterAngle - angle)) < 0.6 && (abs(monsterAngle - angle)) > 0.4)
+
+	if(bulletZ > monsterZ + (monsterHeight / 3) && relativeAngle < 0.6 && relativeAngle > 0.4)
 		backdamage = 5;
 	else
 		backdamage = 1;
-		
+
 	if(bulletZ > monsterZ + FixedMul(monsterHeight,0.8))
-		damage *= 3;
-	
-	SetResultValue(backdamage*damage);		
+		damage *= 2;
+
+	SetResultValue(backdamage*damage);
 }
 
 str DeusExSkillPoints[4] = { "DeusEx_LowTechPoints", "DeusEx_PistolPoints", "DeusEx_RiflePoints", "DeusEx_HeavyWeaponPoints" };
@@ -1081,7 +1072,7 @@ Script "DeusEx_Decorate" (int funct, int arg1, int arg2, int arg3)
 			Thing_ChangeTid(selectionTid,previousSelectionTid);
 			int afraid = GetActorProperty(0,APROP_Frightened);
 			int objectGravity = GetActorProperty(0,APROP_Gravity);
-			if(!((ClassifyActor(0) & ACTOR_MONSTER) && (musclestrength < 2 || (musclestrength == 4 && GetActorProperty(0,APROP_Height) > 56.0) || (musclestrength == 3 && GetActorProperty(0,APROP_Height) > 32.0))
+			if(!((ClassifyActor(0) & ACTOR_MONSTER) && (musclestrength < 3 || (musclestrength == 4 && GetActorProperty(0,APROP_Height) > 56.0) || (musclestrength == 3 && GetActorProperty(0,APROP_Height) > 40.0))
 			|| (ClassifyActor(0) & ACTOR_GENERIC) && (GetActorProperty(0,APROP_Mass) > 100 * musclestrength)))
 			{
 				SetActorProperty(0,APROP_Frightened,1);
@@ -1255,6 +1246,17 @@ Script "DeusEx_Decorate" (int funct, int arg1, int arg2, int arg3)
 			break;
 	}
 }	
+
+script "DeusEx_HasTarget" (void)
+{
+    SetActivator(0, AAPTR_TRACER);
+    SetActivator(0, AAPTR_TARGET);
+
+    bool isally = CheckInventory("SamsaraOST_IgnoreTarget");
+
+    if ((ClassifyActor(0) & ACTOR_ALIVE) && !isally && SetActivator(0, AAPTR_TARGET)) { SetResultValue(1); }
+    else { SetResultValue(0); }
+}
 
 Script "DeusEx_GibCreator" (void)
 {

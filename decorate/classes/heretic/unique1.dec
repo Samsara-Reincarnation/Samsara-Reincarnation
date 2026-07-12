@@ -1,0 +1,333 @@
+actor SamsaraHereticGrimBallistaAttackCount : Counter { Inventory.MaxAmount 4 }
+
+actor "Grim Ballista" : Weapon
+{
+    Weapon.Selectionorder 100
+    Weapon.Kickback 100
+	Inventory.PickUpSound "heretic/weaponget"
+    Weapon.SlotNumber 8
+    Weapon.YAdjust 16
+	Weapon.AmmoType "Shell"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 8
+    +INVENTORY.UNDROPPABLE
+    +WEAPON.NOAUTOAIM
+    Inventory.Pickupmessage "You got the Grim Ballista!"
+    Decal CrossbowScorch
+    DamageType "CorvusGrimBallista"
+    Obituary "$SAMSARA_CORVUS_OB_UNIQUE1"
+	Inventory.RestrictedTo "CorvusPlayer"
+    Tag "Grim Ballista"
+    States
+    {
+      Spawn:
+		WGRM A -1
+		stop
+
+      Ready:
+		TNT1 A 0 A_TakeInventory("CorvusHoldingSlot")
+		TNT1 A 0 A_GiveInventory("CorvusHoldingSlot",8)
+        GBLS AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady
+        TNT1 A 0 A_PlaySound("heretic/grimhbeat")
+        GBLS KKLLMMNNNNMMLLKK 1 A_WeaponReady
+        loop
+
+      Deselect:
+        GBLS A 1 A_Lower
+        loop
+
+      Select:
+        GBLS A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 A_TakeInventory("SamsaraHereticGrimBallistaAttackCount")
+      FireStart:
+        GBLS A 3 ACS_NamedExecuteWithResult("HereticTriggerCloneAttack")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto FireContinue
+        TNT1 A 0 A_GunFlash
+        goto FireContinue
+
+      FireContinue:
+        GBLS B 12 A_GiveInventory("SamsaraHereticGrimBallistaAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHereticGrimBallistaAttackCount",0,2)
+        TNT1 A 0 A_ReFire("FireStart")
+        goto FireFinish
+        TNT1 A 0 A_CheckReload
+        goto FireFinish
+
+      FireFinish:
+        GBLS C 4
+        GBLS D 3 
+        GBLS E 2 A_PlaySound("heretic/grimbload")
+        GBLS FG 2
+        GBLS HIJ 3
+        GBLS A 6
+        goto Ready
+
+      Flash:
+        TNT1 A 5 Bright A_Light1
+        TNT1 A 5 Bright A_Light2
+        goto LightDone
+    }
+}
+
+actor SamsaraHereticGrimBallistaAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("heretic/grimbshot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+      PickupAttackUnpoweredDM:
+        TNT1 AAAA 0 A_FireCustomMissile("GrimSpittle",random(-100,100)/10.0,false,0,-2,0,random(-70,70)/10.0)
+        TNT1 A 0 A_FireCustomMissile("GrimBolt",0,false) //A_FireBullets(0,0,1,random(1,8)*15,"SoulPuff",FBF_NORANDOM) //A_RailAttack(10000,0,0,None,None,RGF_SILENT,0,"SoulPuff")
+        goto PickupRecoil
+
+      PickupAttackUnpoweredCoop:
+        TNT1 AAAA 0 A_FireCustomMissile("GrimSpittleCoop",random(-100,100)/10.0,false,0,-2,0,random(-70,70)/10.0)
+        TNT1 A 0 A_FireCustomMissile("GrimBoltCoop",0,false)
+        goto PickupRecoil
+
+      // Powered
+      PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 AAAAAAAAAAAAAA 0 A_FireCustomMissile("GrimSpittle2",random(-100,100)/10.0,false,0,-2,0,random(-70,70)/10.0)
+        TNT1 A 0 A_FireBullets(0,0,1,25,"SoulPuff",FBF_NORANDOM|FBF_NOFLASH) //A_RailAttack(10000,0,0,None,None,RGF_SILENT,0,"SoulPuff")
+        goto PickupRecoil
+
+      PickupAttackPoweredCoop:
+        TNT1 AAAAAAAAAAAAAA 0 A_FireCustomMissile("GrimSpittle2Coop",random(-100,100)/10.0,false,0,-2,0,random(-70,70)/10.0)
+        TNT1 A 0 A_FireBullets(0,0,1,random(1,8)*20,"SoulPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupRecoil
+
+      // Recoil stuff
+      PickupRecoil:
+        TNT1 A 0 A_Recoil(5)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_JumpIfInventory("PowerHereticTome",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupStop")
+        TNT1 A 0 A_GiveInventory("SamsaraHereticGrimBallistaAttackCount")
+        stop
+    }
+}
+
+// Unpowered
+
+actor GrimBolt 
+{
+	Radius 8
+	Height 8
+	Speed 30
+	Damage 15
+	Scale 1.25
+	Projectile
+	RenderStyle Add
+	Obituary "$SAMSARA_CORVUS_OB_INSTAGIB"
+	DamageType "CorvusGrimBallista"
+    +BLOODSPLATTER
+	States
+	{
+	Spawn:
+		 FX03 K 3 A_SpawnItemEx("GrimSpittleTrail3",0,0,2,0,0,0,0,160)
+		 Loop
+
+	XDeath:
+        TNT1 A 0 A_SpawnItemEx("DamnedSoul",0,0,-16,0,0,25/10.0,random(0,360),0,0)		
+    Death:
+    Crash:
+        TNT1 A 0 A_PlaySound("heretic/grimbhit",CHAN_VOICE)
+		TNT1 A 0 A_Explode(40,40,0)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GrimSpittleTrail2",0,0,0,random(-400,400)/100.00,random(-400,400)/100.00,random(-400,400)/100.00,random(0,360),180)
+        GPF1 ABCDEFGHIJKLMNOPQR 1 bright A_SpawnItemEx("GrimSpittleTrail2",0,0,0,random(-400,400)/100.00,random(-400,400)/100.00,random(-400,400)/100.00,random(0,360),180)
+        GPF1 STUVWXYZ 2 bright
+        GPF2 ABC 2 bright
+        Stop	
+	}
+}
+
+actor GrimBoltCoop : GrimBolt
+{
+    Speed 45
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor DamnedSoul
+{
+    Radius 2
+    Height 2
+    Speed 1
+    Alpha 1
+    Scale 0.4
+    Projectile
+	RenderStyle Add
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+    Spawn:
+        DAMD A 0 Bright
+        TNT1 A 0 A_PlaySound("SoulScream",CHAN_VOICE)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GrimSpittleTrail2",0,0,random(0,16),random(-400,400)/100.00,random(-400,400)/100.00,random(-400,400)/100.00,random(0,360),180)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GrimSpittleTrail2",0,0,random(0,16),random(-400,400)/100.00,random(-400,400)/100.00,random(-400,400)/100.00,random(0,360),180)
+        DAMD A 3 Bright A_CStaffMissileSlither
+    FadeOut:
+        DAMD AA 1 Bright A_FadeOut(0.025)
+        TNT1 A 0 A_FadeOut(0.025)
+        DAMD A 1 Bright A_CStaffMissileSlither
+        loop
+    }
+}
+
+actor GrimSpittle
+{
+    Radius 4
+    Height 4
+    Speed 12
+    Damage 1
+    Projectile
+	RenderStyle Add
+    Obituary "$SAMSARA_CORVUS_OB_INSTAGIB"
+    +BLOODSPLATTER
+	DamageType "CorvusGrimBallista"
+    Alpha 0.7
+    Scale 0.35
+    States
+    {
+    Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("GrimSpittleTrail",0,0,2,0,0,0,0,160)
+        SOLT A 1 A_FadeOut(0.04)
+        loop
+    Death:
+    Crash:
+		TNT1 A 0
+		stop
+    }
+}
+
+actor GrimSpittleCoop : GrimSpittle
+{
+    Damage ((random(1,8)*1)+2)
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor GrimSpittleTrail
+{
+    Speed 12
+    Projectile
+    +CLIENTSIDEONLY
+    +MISSILE
+    -SOLID
+    +NOCLIP
+    Alpha 0.6
+    Scale 0.2
+	RenderStyle Add
+    States
+    {
+    Spawn:
+        SOLS AAAAAAAAABBBBBBBBBCCCCCCCCCDDDDDDDDDEEEEEEEEE 1 A_FadeOut(0.05)
+        stop
+    }
+}
+
+actor GrimSpittleTrail2 : GrimSpittleTrail { Scale 0.25 }
+actor GrimSpittleTrail3 : GrimSpittleTrail { Scale 1 }
+
+// Powered
+
+actor SoulPuff : BulletPuff
+{
+    +NOINTERACTION
+    +PUFFONACTORS
+    +ALWAYSPUFF
+    +FORCEXYBILLBOARD
+    DamageType "CorvusGrimBallista"
+    Alpha 0.95
+    Scale 0.7
+    YScale 0.5
+    VSpeed 0
+	RenderStyle Add
+    States
+    {
+    Spawn:
+        GPF1 A 0 Bright
+        TNT1 A 0 A_SpawnItemEx("DamnedSoul",0,0,-16,0,0,25/10.0,random(0,360),0,0)
+    Melee:
+    Crash:
+        TNT1 A 0 A_PlaySound("heretic/grimbhit",CHAN_VOICE)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GrimSpittleTrail2",0,0,0,random(-400,400)/100.00,random(-400,400)/100.00,random(-400,400)/100.00,random(0,360),180)
+        GPF1 ABCDEFGHIJKLMNOPQR 1 bright A_SpawnItemEx("GrimSpittleTrail2",0,0,0,random(-400,400)/100.00,random(-400,400)/100.00,random(-400,400)/100.00,random(0,360),180)
+        GPF1 STUVWXYZ 2 bright
+        GPF2 ABC 2 bright
+        Stop
+    }
+}
+
+actor SoulPuffCoop : SoulPuff { +MTHRUSPECIES }	
+
+actor GrimSpittle2 : GrimSpittle
+{
+    Damage (6)
+    Speed 16
+	+RIPPER
+}
+
+actor GrimSpittle2Coop : GrimSpittle2
+{
+    Damage (9)
+    Species "Player"
+    +THRUSPECIES
+}
+
+// Lesser powered (unused)
+
+actor GrimGhostFX1 : MummyFX1
+{
+	Speed 13
+	Damage (8)
+	DamageType "CorvusGrimBallista"
+	RenderStyle Add
+	States
+	{
+		Spawn:
+			FX15 H 5 Bright A_PlaySound("heretic/grimbhead")
+			FX15 J 5 Bright A_SeekerMissile(10, 20)
+			FX15 K 5 Bright A_PlaySound("heretic/grimbhead")
+			FX15 J 5 Bright A_SeekerMissile(10, 20)
+			Loop
+		Death:
+			FX15 LMNO 5 Bright
+			Stop
+	}
+}
+
+actor GrimGhostFX1B : GrimGhostFX1
+{
+    Damage 3
+    Species "Player"
+    +THRUSPECIES
+}

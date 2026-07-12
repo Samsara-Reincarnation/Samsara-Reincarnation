@@ -39,7 +39,8 @@ Actor POGreedPlayer : SamsaraPlayerPawnTotalGibRedBlood
 	damagefactor "slime", 1.080
 	damagefactor "bfg", 1.0
 	damagefactor "bfgspray", 1.0
-	damagefactor "disintegrate", 1.0
+	damagefactor "Disintegrate", 1.0
+	damagefactor "StrifeMauler", 1.0
 	damagefactor "electric", 1.011
 	DamageFactor "BFG", 1.0
 	DamageFactor "BFGSpray", 1.0
@@ -228,10 +229,10 @@ Actor POGreedPlayer : SamsaraPlayerPawnTotalGibRedBlood
 			TNT1 A 0 A_KillChildren
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
 			Goto DeathAnim
+		Death.Massacre:
+			TNT1 A 0 A_KillChildren
+			Goto DeathAnim
 		DeathAnim:
-			TNT1 A 0 A_TakeInventory("IPOGAtt2",999)
-			TNT1 A 0 A_TakeInventory("IPOGAtt3",999)
-			TNT1 A 0 A_TakeInventory("IPOGAtt4",999)	
 			TNT1 A 0 A_JumpIfInventory("IPoGMode",4,"DeathDominatrix")
 			TNT1 A 0 A_JumpIfInventory("IPoGMode",3,"DeathSpecimen")
 			TNT1 A 0 A_JumpIfInventory("IPoGMode",2,"DeathLizard")
@@ -475,6 +476,7 @@ Actor POGreedPlayer_Shrink : POGreedPlayer
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -483,12 +485,18 @@ Actor POGreedPlayer_Shrink : POGreedPlayer
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -503,6 +511,7 @@ Actor POGreedPlayer_Shrink : POGreedPlayer
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -590,6 +599,8 @@ Actor POGreedPlayer_Shrink : POGreedPlayer
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

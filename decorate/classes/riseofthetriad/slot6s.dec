@@ -1,0 +1,415 @@
+actor SMissileSplitToken : Boolean {}
+
+actor "Split Missile" : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You snagged a Split Missile!"
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 6
+	Weapon.SlotPriority 1
+    Weapon.SelectionOrder 1200
+    Weapon.AmmoType "SMissiles"
+    Weapon.AmmoGive 5
+    Weapon.AmmoUse 1
+    Obituary "%o was snagged by %k's Split Missile."
+    Tag "Split Missile Launcher"
+    +EXPLOSIVE
+    +IGNORESKILL
+    +NOAUTOFIRE
+    States
+    {
+      Spawn:
+        PSPL A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("UsingFirearm")
+        SPLI A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        SPLI A 1 A_Lower
+        loop
+
+      Select:
+        SPLI A 1 A_Raise
+        loop
+
+      Fire:
+        SPLI E 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTSplitMissileAttackHandler")
+        SPLI FG 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SPLI B 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SPLI CD 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        SPLI H 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi1Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch1")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi1
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi2Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch2")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi2
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi3Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch3")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi3
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi4Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch4")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi4
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
+
+      FireSemi1:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch1")
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi2:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch2")
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi3:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch3")
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi4:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch4")
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
+
+      FireForceSwitch1:
+        TNT1 A 0 A_ClearReFire
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch2:
+        TNT1 A 0 A_ClearReFire
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch3:
+        TNT1 A 0 A_ClearReFire
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch4:
+        TNT1 A 0 A_ClearReFire
+        SPLI A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+    }
+}
+
+actor SamsaraROTTSplitMissileAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SMissiles",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("SMissiles",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackAlternate")
+      // Original sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_PlaySound("split/shoot1",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalCoop")
+      PickupAttackOriginalDM:
+        TNT1 A 0 A_FireCustomMissile("SMissile",0,false,0,-8)
+        goto PickupFinish
+
+      PickupAttackOriginalCoop:
+        TNT1 A 0 A_FireCustomMissile("SMissileCoop",0,false,0,-8)
+        goto PickupFinish
+
+      // Alternate sounds
+      PickupAttackAlternate:
+        TNT1 A 0 A_PlaySound("split/shoot1/alt",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateCoop")
+      PickupAttackAlternateDM:
+        TNT1 A 0 A_FireCustomMissile("SMissileSoundAlternate",0,false,0,-8)
+        goto PickupFinish
+
+      PickupAttackAlternateCoop:
+        TNT1 A 0 A_FireCustomMissile("SMissileCoopSoundAlternate",0,false,0,-8)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("RoTTSplitMissile")
+        stop
+    }
+}
+
+actor SMissiles : Ammo
+{
+    Inventory.MaxAmount 25
+    Ammo.BackpackAmount 5 // skills with different AmmoFactor values and sv_doubleammo can still give extra regardless of +IGNORESKILL
+    Ammo.BackpackMaxAmount 50
+    Inventory.Icon "AMSMO0"
+    Tag "Split Missiles"
+    +IGNORESKILL
+}
+
+actor SamsaraROTTSplitMissileSplitting : Boolean {}
+
+actor SMissile
+{
+    Projectile
+    Radius 11
+    Height 6
+    Speed 40
+    Damage (0)
+    DamageType "RottExplosive"
+    ReactionTime 1
+    Scale 0.5
+    Decal "Scorch"
+    Obituary "%o was snagged by %k's Split Missile."
+    +BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +FORCERADIUSDMG
+    +THRUGHOST
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        M1SS A 0 Bright Light("ROTTROCKET")
+      SpawnStart:
+        TNT1 A 0 A_JumpIfInventory("SMissileSplitToken",1,"Split",AAPTR_TARGET)
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        M1SS A 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        loop
+
+      Split:
+        TNT1 A 0 A_PlaySound("split/split2",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_CustomMissile("SMissile1",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        TNT1 A 0 A_CustomMissile("SMissile2",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+      SplitFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraROTTSplitMissileSplitting")
+        TNT1 A 1 A_Countdown
+        wait
+
+      Death:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTSplitMissileSplitting",1,"DeathSplit")
+        TNT1 A 0 A_PlaySound("missile/die",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(100,64,XF_HURTSOURCE,false,32)
+      DeathFinish:
+        EXPL ABCDEFGHIJKLMNOPQRST 2 Bright Light("ROTTROCKETEXP")
+        stop
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+
+      DeathSplit:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor SMissile1 : SMissile
+{
+    ReactionTime 8
+    DeathSound "missile/die"
+    // these flags are used only in PVE
+    //+SCREENSEEKER
+    //+SEEKERMISSILE
+    States
+    {
+      Spawn:
+        M1SS A 0 Bright Light("ROTTROCKET")
+      SpawnStart:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_ChangeVelocity(5,-10,0,CVF_RELATIVE)
+        TNT1 A 0 A_SetAngle(-9+angle)
+        M1SS AAAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+      SpawnLoop:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_SeekerMissile(5,5,SMF_LOOK)
+        M1SS A 1 Bright A_CustomMissile("MissileTrail",0)
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(50,64,XF_HURTSOURCE,false,32)
+        goto DeathFinish
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor SMissile2 : SMissile1
+{
+    States
+    {
+      Spawn:
+        M1SS A 0 Bright Light("ROTTROCKET")
+      SpawnStart:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_ChangeVelocity(5,10,0,CVF_RELATIVE)
+        TNT1 A 0 A_SetAngle(9+angle)
+        M1SS AAAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        goto SpawnLoop
+    }
+}
+
+actor SMissileCoop : SMissile
+{
+    Damage (70)
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Split:
+        TNT1 A 0 A_PlaySound("split/split2",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_CustomMissile("SMissile1Coop",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        TNT1 A 0 A_CustomMissile("SMissile2Coop",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        goto SplitFinish
+    }
+}
+
+actor SMissile1Coop : SMissile1
+{
+    Damage (35)
+    Species "Player"
+    +SCREENSEEKER
+    +SEEKERMISSILE
+    +THRUSPECIES
+}
+
+actor SMissile2Coop : SMissile2
+{
+    Damage (35)
+    Species "Player"
+    +SCREENSEEKER
+    +SEEKERMISSILE
+    +THRUSPECIES
+}
+
+actor SMissileSoundAlternate : SMissile
+{
+    States
+    {
+      Split:
+        TNT1 A 0 A_PlaySound("split/split2/alt",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_CustomMissile("SMissile1SoundAlternate",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        TNT1 A 0 A_CustomMissile("SMissile2SoundAlternate",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        goto SplitFinish
+
+      Death:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTSplitMissileSplitting",1,"DeathSplit")
+        TNT1 A 0 A_PlaySound("missile/die/alt",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(100,64,XF_HURTSOURCE,false,32)
+        goto DeathFinish
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor SMissile1SoundAlternate : SMissileSoundAlternate
+{
+    ReactionTime 8
+    DeathSound "missile/die/alt"
+    // these flags are used only in PVE
+    //+SCREENSEEKER
+    //+SEEKERMISSILE
+    States
+    {
+      Spawn:
+        M1SS A 0 Bright Light("ROTTROCKET")
+      SpawnStart:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_ChangeVelocity(5,-10,0,CVF_RELATIVE)
+        TNT1 A 0 A_SetAngle(-9+angle)
+        M1SS AAAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+      SpawnLoop:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_SeekerMissile(5,5,SMF_LOOK)
+        M1SS A 1 Bright A_CustomMissile("MissileTrail",0)
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(50,64,XF_HURTSOURCE,false,32)
+        goto DeathFinish
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor SMissile2SoundAlternate : SMissile1SoundAlternate
+{
+    States
+    {
+      Spawn:
+        M1SS A 0 Bright Light("ROTTROCKET")
+      SpawnStart:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_ChangeVelocity(5,10,0,CVF_RELATIVE)
+        TNT1 A 0 A_SetAngle(9+angle)
+        M1SS AAAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        goto SpawnLoop
+    }
+}
+
+actor SMissileCoopSoundAlternate : SMissileSoundAlternate
+{
+    Damage (70)
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Split:
+        TNT1 A 0 A_PlaySound("split/split2/alt",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_CustomMissile("SMissile1CoopSoundAlternate",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        TNT1 A 0 A_CustomMissile("SMissile2CoopSoundAlternate",0,0,angle,CMF_TRACKOWNER|CMF_OFFSETPITCH|CMF_ABSOLUTEANGLE,180)
+        goto SplitFinish
+    }
+}
+
+actor SMissile1CoopSoundAlternate : SMissile1SoundAlternate
+{
+    Damage (35)
+    Species "Player"
+    +SCREENSEEKER
+    +SEEKERMISSILE
+    +THRUSPECIES
+}
+
+actor SMissile2CoopSoundAlternate : SMissile2SoundAlternate
+{
+    Damage (35)
+    Species "Player"
+    +SCREENSEEKER
+    +SEEKERMISSILE
+    +THRUSPECIES
+}

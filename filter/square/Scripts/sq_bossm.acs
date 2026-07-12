@@ -1,0 +1,219 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Boss Meter
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+
+/*****************************************************************************
+ * Defines and Map-scope variables.
+ ****************************************************************************/
+
+#define BOSS_MODE_NONE 0
+#define BOSS_MODE_ONE 1
+#define BOSS_MODE_MANY 2
+
+// Boss meter tracked Thing ID.
+int bossmeter_tid;
+// Boss meter type.
+int bossmeter_type;
+// Meter mode.
+int bossmeter_mode;
+// Boss meter total health.
+int bossmeter_health;
+// If in meter loop, set to 1.
+int bossmeter_in_loop;
+
+/*****************************************************************************
+ * Functions
+ ****************************************************************************/
+
+/**
+ * "Starts" the boss meter.
+ * tid: the Thing ids to track.
+ * bossMusic: if nonzero, set the boss music.
+ * type: boss meter type.
+ */
+function void BM_Start(int tid, int bossMusic, int type)
+{
+	if (bossMusic)
+		SetMusic("D_BOSS");
+	else // set to map music
+		SetMusic("*");
+
+	bossmeter_type = type;
+	bossmeter_tid = tid;
+	int count = ThingCount(0, bossmeter_tid);
+	if (count <= 0)
+	{
+		bossmeter_mode = BOSS_MODE_NONE;
+		bossmeter_health = 0;
+	}
+	else if (count == 1)
+	{
+		bossmeter_mode = BOSS_MODE_ONE;
+		bossmeter_health = GetActorProperty(bossmeter_tid, APROP_Health);
+	}
+	else
+	{
+		bossmeter_mode = BOSS_MODE_MANY;
+		bossmeter_health = count;
+	}
+}
+
+/**
+ * Clears the boss meter.
+ * noSetMusic: if nonzero, do not reset the music to the map music.
+ */
+function void BM_Clear(int noSetMusic)
+{
+	bossmeter_tid = 0;
+	bossmeter_type = 0;
+	bossmeter_mode = BOSS_MODE_NONE;
+	bossmeter_health = 0;
+	// set to map music
+	if (!noSetMusic)
+		SetMusic("*");
+}
+
+/**
+ * Gets the current boss meter values.
+ */
+function int BM_GetValue(void)
+{
+	switch (bossmeter_mode)
+	{
+		default:
+		case BOSS_MODE_NONE:
+			return 0;
+		case BOSS_MODE_ONE:
+			return max(GetActorProperty(bossmeter_tid, APROP_Health), 0);
+		case BOSS_MODE_MANY:
+			return ThingCount(0, bossmeter_tid);
+	}
+	return 0;
+}
+
+/**
+ * Checks if the boss meter should be displayed.
+ */
+function int BM_Check(void)
+{
+	return bossmeter_tid && bossmeter_mode && BM_GetValue();
+}
+
+/**
+ * Draws the Boss Meter.
+ */
+function void BM_Draw(void)
+{
+	SetHudSize(HUD_WIDTH, HUD_HEIGHT, 0);
+	
+	SetFont("SmallFont");
+	HudMessageBold(s:"Boss:"; HUDMSG_FADEOUT, HUD_BOSS_LABEL, CR_RED, 200.0, 16.0, 0.5, 1.5);
+	SetFont("BigFont");
+	switch (bossmeter_mode)
+	{
+		case BOSS_MODE_ONE:
+			if (bossmeter_health)
+				HudMessageBold(d: ((BM_GetValue() * 100) / bossmeter_health), s:"%"; HUDMSG_FADEOUT, HUD_BOSS_AMOUNT_LABEL, CR_WHITE, 200.0, 30.0, 0.5, 1.5);
+			else
+				HudMessageBold(d: 0, s:"%"; HUDMSG_FADEOUT, HUD_BOSS_AMOUNT_LABEL, CR_WHITE, 200.0, 30.0, 0.5, 1.5);
+			break;
+		case BOSS_MODE_MANY:
+			HudMessageBold(d: BM_GetValue(); HUDMSG_FADEOUT, HUD_BOSS_AMOUNT_LABEL, CR_WHITE, 200.0, 30.0, 0.5, 1.5);
+			break;
+	}
+}
+
+/*****************************************************************************
+ * Called by Other Scripts
+ ****************************************************************************/
+
+/**
+ * Script loop for the boss meter.
+ * Do not call directly!
+ */
+script "__BossMeter_Loop" (void)
+{
+	bossmeter_in_loop = TRUE;
+	while (BM_Check())
+	{
+		BM_Draw(); 
+		delay(1);
+	}
+	BM_Draw();
+	BM_Clear(0);
+	bossmeter_in_loop = FALSE;
+}
+
+ 
+/*****************************************************************************
+ * Evented Named Scripts
+ ****************************************************************************/
+
+/**
+ * Intitalizes map variables.
+ */
+script "__Init_BossMeter" OPEN
+{
+	bossmeter_tid = 0;
+	bossmeter_mode = BOSS_MODE_NONE;
+	bossmeter_health = 0;
+	bossmeter_in_loop = FALSE;	
+}
+ 
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * Script start for the boss meter.
+ * A single tagged thing shows the actor's health as a percentage.
+ * Multiple tagged things show the amount of things still alive.
+ * tid: the TID of the actors to track.
+ * bossMusic: if nonzero(TRUE), set the boss music.
+ * type: boss meter type.
+ *		0 - Default.
+ *		1 - Destructinator.
+ *		2 - Shadius.
+ */
+script "BossMeter_Start" (int tid, int bossMusic, int type)
+{
+	BM_Start(tid, bossMusic, type);
+	
+	if (!BM_Check())
+		terminate;
+
+	if (!bossmeter_in_loop)
+		ACS_NamedExecute("__BossMeter_Loop", 0, 0, 0, 0);
+}
+
+/**
+ * Ends the boss meter.
+ * noSetMusic: if nonzero (TRUE), do not reset the music to the map music.
+ */
+script "BossMeter_End" (int noSetMusic)
+{
+	BM_Clear(noSetMusic);
+}
+

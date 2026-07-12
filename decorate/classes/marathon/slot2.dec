@@ -1,0 +1,612 @@
+actor UsingShotguns: Boolean {}
+actor UsingDualShotguns: Boolean {}
+actor CanDualShotties: Boolean {}
+actor SamsaraMarathonShotgunAttackAmount : Counter { Inventory.MaxAmount 2 }
+
+actor "WSTE-M5 Combat Shotgun" : SamsaraMarathonWeapon
+{
+    Inventory.PickupMessage "You picked up a WSTE-M5 Combat Shotgun!"
+    Weapon.SlotNumber 2
+    Weapon.SelectionOrder 400
+    Weapon.AmmoType1 "WastemShell"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Shell"
+    Weapon.AmmoGive2 8
+    Tag "WSTE-M5 Combat Shotgun"
+    States
+    {
+      Spawn:
+        SHTY A -1
+        stop
+
+      // Single
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireActive",1,"LReadyInit")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyReloadable")
+      ReadyNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"ReadyNonReloadableAmmo")
+        goto ReadyNonReloadableNoAmmo
+
+      ReadyNonReloadableNoAmmo:
+        MSHT A 1 A_WeaponReady
+        goto ReadyNoAmmoCheck
+
+      ReadyNonReloadableAmmo:
+        MSHT A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReadyReloadableAllowReload")
+      ReadyReloadableDisallowReload:
+        MSHT A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyReloadableAllowReload:
+        TNT1 A 0 A_JumpIfInventory("WastemShell",0,"ReadyReloadableDisallowReload")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReadyReloadableDisallowReload
+        MSHT A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyAmmoCheck
+
+      ReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+        goto Ready
+
+      ReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("WastemShell",1,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireActive",1,"LDeselect")
+        TNT1 A 0 A_TakeInventory("SamsaraLevelSwitch_DualWielding")
+      DeselectLoop:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_Lower
+        MSHT A 1 A_Lower
+        goto Deselect
+
+      Select:
+        TNT1 A 0 A_TakeInventory("UsingFists")
+        TNT1 A 0 A_TakeInventory("UsingPistols")
+        TNT1 A 0 A_TakeInventory("UsingDualPistols")
+        TNT1 A 0 A_TakeInventory("UsingSMG")
+        TNT1 A 0 A_TakeInventory("UsingPacifier")
+        //TNT1 A 0 A_TakeInventory("UsingShotguns")
+        //TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("UsingFusionPistol")
+        TNT1 A 0 A_TakeInventory("UsingAssaultRifle")
+        TNT1 A 0 A_TakeInventory("UsingSpanker")
+        TNT1 A 0 A_TakeInventory("UsingToasty")
+        TNT1 A 0 A_TakeInventory("UsingWMC")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon")
+        TNT1 A 0 A_TakeInventory("UsingAlienWeapon2")
+        TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
+
+        TNT1 A 0 A_GiveInventory("UsingShotguns")
+        TNT1 A 0 A_JumpIfInventory("SamsaraLevelSwitch_DualWielding",1,"LSelect")
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireActive",1,"LSelect")
+      SelectLoop:
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("SamsaraLevelSwitch_DualWielding")
+        TNT1 A 0 A_TakeInventory("SamsaraSynthFireActive")
+        TNT1 A 0 A_Raise
+        MSHT A 1 A_Raise
+        goto Select
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireActive",1,"LReady")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"FireStart")
+        goto Ready
+
+      FireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("WastemShell",1,"FireStart")
+      FireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+        goto Ready
+
+      FireStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"Ready")
+        TNT1 A 0 A_AlertMonsters
+        MSHT A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonShotgunLeftAttackHandler")
+        MSHT A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_Light2
+        MSHT A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_Light1
+        MSHT B 4 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_Light0
+        MSHT CD 5 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // no ReloadMode 1 ready check for the time being
+        goto ReadyNoAmmoCheck
+
+      Reload:
+        MSHT F 4
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReloadFinish
+        TNT1 A 0 A_PlaySound("marathon/shotgun/reload")
+        goto ReloadFinish
+
+      ReloadFinish:
+        MSHT GH 4
+        MSHT IJ 5
+        MSHT A 3
+        goto Ready
+
+      ReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("WastemShell",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        TNT1 A 0 A_GiveInventory("WastemShell")
+        TNT1 A 0 A_PlaySound("marathon/shotgun/reload")
+        loop
+
+      // Dual Init
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,1)
+        goto Fire
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireActive",1,"LReady")
+        TNT1 A 0 A_GiveInventory("UsingDualShotguns")
+        TNT1 A 0 A_GiveInventory("SamsaraLevelSwitch_DualWielding")
+        TNT1 A 0 A_GiveInventory("SamsaraSynthFireActive")
+        MIWS ABCDEFGHIJK 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      // Dual
+      // Left Shotgun
+      LReadyInit:
+        TNT1 A 0 A_GunFlash("RReadyInit",GFF_NOEXTCHANGE)
+        RSHT A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      LReady:
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,1)
+        goto ForceSingleReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"LFire")
+        goto LReadyStart
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"LFire")
+        goto LReadyStart
+
+      LReadyStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"LReadyStartReloadable")
+      LReadyStartNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"LReadyStartNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"LReadyStartNonReloadableAmmo")
+        goto LReadyStartNonReloadableNoAmmo
+
+      LReadyStartNonReloadableNoAmmo:
+        RSHT A 1 A_WeaponReady(WRF_NOFIRE)
+        goto LReadyNoAmmoCheck
+
+      LReadyStartNonReloadableAmmo:
+        RSHT A 1 A_WeaponReady(WRF_NOFIRE)
+        goto LReadyAmmoCheck
+
+      LReadyStartReloadable:
+        RSHT A 1 A_WeaponReady(WRF_NOFIRE)
+        goto LReadyAmmoCheck
+
+      LReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"LReadyAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto LReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"LReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"LReload")
+        goto LReady
+
+      LReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto LReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"LReady")
+        TNT1 A 0 A_JumpIfInventory("WastemShell",1,"LReady")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"LReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"LReload")
+        goto LReady
+
+      LDeselect:
+        TNT1 A 0 A_TakeInventory("SamsaraLevelSwitch_DualWielding")
+        TNT1 A 0 A_TakeInventory("SamsaraSynthFireActive")
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,"LDeselectLoop")
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_GunFlash("LightDone",GFF_NOEXTCHANGE)
+        goto DeselectLoop
+
+      LDeselectLoop:
+        TNT1 A 0 A_JumpIfHealthLower(1,"LDeselectInstant")
+        TNT1 A 0 A_GunFlash("RDeselect",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_Lower
+        RSHT A 1 A_Lower
+        goto LDeselect
+
+      LDeselectInstant:
+        TNT1 A 0 A_GunFlash("LightDone",GFF_NOEXTCHANGE)
+        goto DeselectInstant
+
+      LSelect:
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,2)
+        TNT1 A 0 A_GunFlash("LightDone",GFF_NOEXTCHANGE)
+        goto SelectLoop
+        TNT1 A 0 A_GiveInventory("UsingDualShotguns")
+        TNT1 A 0 A_GiveInventory("SamsaraLevelSwitch_DualWielding")
+        TNT1 A 0 A_GiveInventory("SamsaraSynthFireActive")
+        TNT1 A 0 A_GunFlash("RSelect",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_Raise
+        RSHT A 1 A_Raise
+        goto Select
+
+      LFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"LFireReloadableReloadCheck")
+      LFireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"LFireStart")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"LFireStart")
+        goto LReadyStart
+
+      LFireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"LFireStart")
+        TNT1 A 0 A_JumpIfInventory("WastemShell",1,"LFireStart")
+      LFireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"LReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"LReload")
+        goto LReadyStart
+
+      LFireReloadableReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,1) // only allowed with modern reloading
+        goto LFireReloadable
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireReload",1,1) // holding attack + reload?
+        goto LFireReloadable
+        TNT1 A 0 A_JumpIfInventory("WastemShell",0,"LFireReloadable") // ignore if full on magazine or insufficient reserve
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"LReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"LReload")
+        goto LFireReloadable
+
+      LFireStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"LReadyStart")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraForcePlayerAttackState")
+        TNT1 A 0 A_AlertMonsters
+        RSHT A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonShotgunLeftAttackHandler")
+        RSHT A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_Light2
+        RSHT A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_Light1
+        RSHT B 4 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_Light0
+        RSHT CD 5 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        // no ReloadMode 1 ready check for the time being
+        goto LReadyNoAmmoCheck
+
+      LReload:
+        RSHT F 4
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"LReloadAmmo")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto LReloadFinish
+        TNT1 A 0 A_PlaySound("marathon/shotgun/reload")
+        goto LReloadFinish
+
+      LReloadFinish:
+        RSHT GH 4
+        RSHT IJ 5
+        RSHT A 3
+        goto LReady
+
+      LReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("WastemShell",0,"LReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto LReloadFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        TNT1 A 0 A_GiveInventory("WastemShell")
+        TNT1 A 0 A_PlaySound("marathon/shotgun/reload")
+        loop
+
+      // Right Shotgun
+      RReadyInit:
+        MIW2 A 1
+      RReady:
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,1)
+        goto RReadyStart
+        TNT1 A 0 A_JumpIfInventory("SamsaraReverseDualWieldFiring",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"RFire")
+        goto RReadyStart
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"RFire")
+        goto RReadyStart
+
+      RReadyStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"RReadyStartReloadable")
+      RReadyStartNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RReadyStartNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"RReadyStartNonReloadableAmmo")
+        goto RReadyStartNonReloadableNoAmmo
+
+      RReadyStartNonReloadableNoAmmo:
+        MIW2 A 1
+        goto RReadyNoAmmoCheck
+
+      RReadyStartNonReloadableAmmo:
+        MIW2 A 1
+        goto RReadyAmmoCheck
+
+      RReadyStartReloadable:
+        MIW2 A 1
+        goto RReadyAmmoCheck
+
+      RReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,1)
+        goto RReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"RReadyAmmoCheck")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto RReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"RReload")
+        goto RReady
+
+      RReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("CanDualShotties",1,1)
+        goto RReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto RReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"RReady")
+        TNT1 A 0 A_JumpIfInventory("WastemShellRight",1,"RReady")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"RReload")
+        goto RReady
+
+      RDeselect:
+        MIW2 A -1 A_Light0
+        stop
+
+      RSelect:
+        MIW2 A -1
+        stop
+
+      RFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"RFireReloadableReloadCheck")
+      RFireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RFireStart")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"RFireStart")
+        goto RReadyStart
+
+      RFireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"RFireStart")
+        TNT1 A 0 A_JumpIfInventory("WastemShellRight",1,"RFireStart")
+      RFireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"RReload")
+        goto RReadyStart
+
+      RFireReloadableReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,1) // only allowed with modern reloading
+        goto RFireReloadable
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireReload",1,1) // holding altattack + reload?
+        goto RFireReloadable
+        TNT1 A 0 A_JumpIfInventory("WastemShellRight",0,"RFireReloadable") // ignore if full on magazine or insufficient reserve
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RReload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"RReload")
+        goto RFireReloadable
+
+      RFireStart:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"RReadyStart")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraForcePlayerAttackState")
+        MIW2 A 2 A_AlertMonsters
+        MIW2 A 1 A_GiveInventory("SamsaraMarathonShotgunRightAttackHandler")
+        MIW2 A 1 A_Light2
+        MIW2 B 4 Bright A_Light1 
+        MIW2 C 5 Bright A_Light0
+        MIW2 D 5 Bright
+        // no ReloadMode 1 ready check for the time being
+        goto RReadyNoAmmoCheck
+
+      RReload:
+        MIW2 F 4
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"RReloadAmmo")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto RReloadFinish
+        TNT1 A 0 A_PlaySound("marathon/shotgun/reload")
+        goto RReloadFinish
+
+      RReloadFinish:
+        MIW2 GH 4
+        MIW2 IJ 5
+        MIW2 A 3
+        goto RReady
+
+      RReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("WastemShellRight",0,"RReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto RReloadFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        TNT1 A 0 A_GiveInventory("WastemShellRight")
+        TNT1 A 0 A_PlaySound("marathon/shotgun/reload")
+        loop
+
+      // Dual force remover
+      ForceSingleReady:
+        TNT1 A 0 A_TakeInventory("UsingDualShotguns")
+        TNT1 A 0 A_TakeInventory("SamsaraLevelSwitch_DualWielding")
+        TNT1 A 0 A_TakeInventory("SamsaraSynthFireActive")
+        TNT1 A 0 A_GunFlash("LightDone",GFF_NOEXTCHANGE)
+        goto Ready
+    }
+}
+
+actor SamsaraMarathonShotgunLeftAttackHandler : Trigger
+{
+    States
+    {
+      // Loop clearing/initializing stuff
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SamsaraMarathonShotgunAttackAmount") // reset
+      PickupInit:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonShotgunAttackAmount")
+        goto PickupAmmoCheck
+
+      // Ammo checking/taking stuff
+      PickupAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckReloadable")
+      PickupAmmoCheckNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      PickupAmmoCheckReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("WastemShell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("WastemShell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("marathon/shotgun/fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 AAAAA 0 A_FireCustomMissile("MarathonShotgunBullet",random(-4,4),false,0,0,0,random(-4,4))
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 AAAAA 0 A_FireCustomMissile("MarathonShotgunBulletCoop",random(-4,4),false,0,0,0,random(-4,4))
+        goto PickupFinish
+
+      PickupAttackCoopImproved:
+        TNT1 AAAAA 0 A_FireCustomMissile("MarathonShotgunBulletCoopImproved",random(-4,4),false,0,0,0,random(-4,4))
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonShotgunAttackAmount",0,"PickupStop")
+        goto PickupInit
+    }
+}
+
+actor SamsaraMarathonShotgunRightAttackHandler : Trigger
+{
+    States
+    {
+      // Loop clearing/initializing stuff
+      Pickup:
+        TNT1 A 0 A_TakeInventory("SamsaraMarathonShotgunAttackAmount") // reset
+      PickupInit:
+        TNT1 A 0 A_GiveInventory("SamsaraMarathonShotgunAttackAmount")
+        goto PickupAmmoCheck
+
+      // Ammo checking/taking stuff
+      PickupAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckReloadable")
+      PickupAmmoCheckNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      PickupAmmoCheckReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("WastemShellRight",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("WastemShellRight",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("marathon/shotgun/fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 AAAAA 0 A_FireCustomMissile("MarathonShotgunBullet",random(-4,4),false,0,0,0,random(-4,4))
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 AAAAA 0 A_FireCustomMissile("MarathonShotgunBulletCoop",random(-4,4),false,0,0,0,random(-4,4))
+        goto PickupFinish
+
+      PickupAttackCoopImproved:
+        TNT1 AAAAA 0 A_FireCustomMissile("MarathonShotgunBulletCoopImproved",random(-4,4),false,0,0,0,random(-4,4))
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_JumpIfInventory("SamsaraMarathonShotgunAttackAmount",0,"PickupStop")
+        goto PickupInit
+    }
+}
+
+actor WastemShell : Ammo
+{
+    Inventory.MaxAmount 2 // originally coded as a 10 round magazine with a burst count of 10; 1 round here translates to 5 rounds in marathon
+    Tag "WSTE-M5 Shells (Right)" // renamed from Shotgun Shells to avoid confusion with gzdoom's built-in tag for shells
+    +IGNORESKILL
+}
+
+actor WastemShellRight : Ammo
+{
+    Inventory.MaxAmount 2
+    Tag "WSTE-M5 Shells (Left)"
+    +IGNORESKILL
+}
+
+actor MarathonShotgunBullet : SamsaraMarathonBullet
+{
+    Damage (random(9,12))
+    DamageType "MarathonShotgun"
+    Obituary "$SAMSARA_MARATHON_OB_SLOT2"
+    +THRUGHOST
+}
+
+actor MarathonShotgunBulletCoop: MarathonShotgunBullet
+{
+    Radius 1
+    Height 1
+    Speed 80
+    Damage (random(10,12))
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor MarathonShotgunBulletCoopImproved : MarathonShotgunBulletCoop { Damage (random(9,15)) }
+
+Actor MarathonShotgunPickedUpX : MapCoordinate {}
+Actor MarathonShotgunPickedUpY : MapCoordinate {}
+Actor MarathonShotgunPickedUpZ : MapCoordinate {}
+actor MarathonShotgunLastPickupTime : Counter { Inventory.InterHubAmount 0 }
+actor MarathonShotgunLevelLimiter : Boolean {}

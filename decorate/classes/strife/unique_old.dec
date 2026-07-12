@@ -1,0 +1,158 @@
+actor StrifeMapScanner : CustomInventory
+{
+    +FLOORCLIP
+    +INVENTORY.UNDROPPABLE
+    +INVENTORY.INVBAR
+    Inventory.MaxAmount 1
+    Inventory.Icon "I_PMUP"
+    Inventory.PickupSound "strife/itemget"
+    Inventory.UseSound "strife/itempickup"
+    Inventory.PickupMessage "You picked up the Scanner."
+    Inventory.RestrictedTo "StrifeguyPlayer"
+    Tag "Map Scanner"
+    States
+    {
+    Spawn:
+        SMUP AB 6 Bright
+        Loop
+    Use:
+        TNT1 A 0 A_GiveInventory("AllMap",1)
+        TNT1 A 0 A_GiveInventory("StrifeScannerPower",1)
+        Stop
+    }
+}
+
+actor StrifeScannerPower : Scanner
+{
+    +FLOORCLIP
+    +INVENTORY.UNDROPPABLE
+    +INVENTORY.AUTOACTIVATE
+    -INVBAR
+    Inventory.MaxAmount 1
+    Inventory.Icon "I_PMUP"
+    Powerup.Type "Scanner"
+    Powerup.Duration -300
+    Inventory.PickupSound "strife/itemget"
+    Inventory.UseSound "strife/itempickup"
+    Inventory.PickupMessage "You picked up the Scanner."
+    States
+    {
+    Spawn:
+        SMUP AB 6 Bright
+        Loop
+    }
+}
+
+Actor StrifeBeaconItem5 : CustomInventory
+{
+    inventory.amount 0
+    inventory.maxamount 0
+    +INVENTORY.UNDROPPABLE
+    +INVENTORY.AUTOACTIVATE
+    +INVENTORY.ALWAYSPICKUP
+    -INVBAR
+    Inventory.PickupMessage "Beacon Item!"
+    Tag "Ally Beacon"
+    States
+    {
+    Use:
+        TNT1 A 0
+        TNT1 A 0 A_GiveInventory("StrifeBeaconItem2",1)
+        Stop
+    }
+}
+
+//Strife
+actor FriendlyRebel
+{
+    Health 100
+    MaxStepHeight 24
+    MaxDropoffHeight 24
+    PainChance 250
+    Speed 8
+    Radius 16
+    Height 50
+    Monster
+    +MISSILEMORE
+    +FLOORCLIP
+    +FRIENDLY
+    -SOLID
+    MinMissileChance 150
+    SeeSound "strife/rebel/sight"
+    PainSound "strife/rebel/pain"
+    DeathSound "strife/rebel/death"
+    ActiveSound "strife/rebel/active"
+    Obituary "%o was gunned down by the Rebel army."
+    Species "Player"
+    States
+    {
+    Spawn:
+        HMN1 AB 12 A_Look
+        Loop
+    See:
+        HMN1 AABBCCDD 3 A_Chase
+        loop
+    Missile:
+        HMN1 E 10 A_FaceTarget
+        TNT1 A 0 A_PlaySound("strife/riflefire")
+        HMN1 F 10 Bright A_CustomMissile("RebelBullet_5",32,0,random(-4,4))
+        TNT1 A 0 A_PlaySound("strife/riflefire")
+        HMN1 E 10 A_CustomMissile("RebelBullet_5",32,0,random(-4,4))
+        Goto See
+    Pain:
+        HMN1 O 3
+        HMN1 O 3 A_Pain
+        Goto See
+    Death.HexGreenFire:
+    Death.QuakeFire:
+    Death.FireExplosive:
+    Death.PhosFireCoop:
+    Burn:
+        SBRN A 3 Bright A_PlaySoundEx("strife/burndeath", CHAN_VOICE)
+        SBRN B 3 Bright A_DropFire
+        SBRN C 3 Bright A_Wander
+        SBRN D 3 Bright A_NoBlocking
+        SBRN E 5 Bright A_DropFire
+        SBRN FGH 5 Bright A_Wander
+        SBRN I 5 Bright A_DropFire
+        SBRN JKL 5 Bright A_Wander
+        SBRN M 5 Bright A_DropFire
+        SBRN NOPQPQ 5 Bright
+        SBRN RSTU 7 Bright
+        SBRN V -1
+        Stop
+    Disintegrate:
+    Death.StrifeMauler:
+        SDIS A 5 A_PlaySoundEx("strife/disruptdeath", CHAN_VOICE)
+        SDIS BC 5
+        SDIS D 5 A_NoBlocking
+        SDIS EF 5
+        SDIS GHIJ 4
+        TNT1 A -1
+        stop
+    Death:
+        HMN1 G 5
+        HMN1 H 5 A_Scream
+        HMN1 I 3 A_NoBlocking
+        HMN1 J 4
+        HMN1 KLM 3
+        HMN1 N -1
+        Stop
+    XDeath:
+        RGIB A 4 A_TossGib
+        RGIB B 4
+        TNT1 A 0 A_Playsound("Strife/GibDead")
+        RGIB C 3 A_NoBlocking
+        RGIB DEF 3 A_TossGib
+        RGIB G 3
+        RGIB H -1
+        Stop
+    Crush:
+        DIE1 A 0 A_Jump(128,"Crush2")
+        DIE1 A -1
+        Stop
+    Crush2:
+        DIE2 A -1
+        Stop
+    }
+}

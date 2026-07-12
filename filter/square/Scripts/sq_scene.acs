@@ -1,0 +1,538 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Cutscene code
+ * (C) BigBrik Games 2016 - 2018
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+
+/*****************************************************************************
+Square Cutscene LANGUAGE keys
+.............................
+
+CUTSCENE_XXX_WIDTH
+	(int) HUD size width.
+CUTSCENE_XXX_HEIGHT
+	(int) HUD size height.
+CUTSCENE_XXX_FADETIME
+	(int) Fading time in tics (35 tics = ~1 second).
+CUTSCENE_XXX_FADETYPE
+	(int) Fade type.
+	0 : No fade, Give Cutscene Item, Load first step.
+	1 : Fade in to opaque white for FADETIME/2 tics, Give Cutscene Item, Load first step, Fade white away for FADETIME/2 tics.
+	2 : Fade in to opaque black for FADETIME/2 tics, Give Cutscene Item, Load first step, Fade black away for FADETIME/2 tics.
+	3 : Start at opaque white, Give Cutscene Item, Load first step, Fade white away for FADETIME tics.
+	4 : Start at opaque black, Give Cutscene Item, Load first step, Fade black away for FADETIME tics.
+
+CUTSCENE_XXX_STEP_YYY_MUSIC
+	(string) Lumpname: change to song to play.
+CUTSCENE_XXX_STEP_YYY_SOUND	
+	(string) Sound name: sound to play.
+CUTSCENE_XXX_STEP_YYY_SOUND_TAG	
+	(int) Sound tag: If sound to play, this is the mapspot tag origin. Otherwise (tag = 0 or unspecified), play local.
+CUTSCENE_XXX_STEP_YYY_SOUND_LOOPING	
+	(int) Sound looping flag: If sound to play and from a spot, nonzero value means "loop the sound." Otherwise, not looped.
+CUTSCENE_XXX_STEP_YYY_STOP_SOUND
+	(int) Sound tag: Stops the sound playing at a spot tag.
+CUTSCENE_XXX_STEP_YYY_IMAGE
+	(string) Lumpname: next image.
+CUTSCENE_XXX_STEP_YYY_TWEENTICS
+	(int) Image is fade-tweened for an amount of tics (0 = no tweening).
+CUTSCENE_XXX_STEP_YYY_CLIP
+	(int) Voiceover Clip to play (captioned).
+CUTSCENE_XXX_STEP_YYY_TICS
+	(int) Ticks for this step directive (0 or less = process and move on).
+CUTSCENE_XXX_STEP_YYY_END
+	(int) If nonzero, end on this step.
+	
+*****************************************************************************/
+
+
+/*****************************************************************************
+ * Defines and Map-scope variables.
+ ****************************************************************************/
+
+#define HUD_CUTSCENE_OVERLAY_X			-68.1
+#define HUD_CUTSCENE_OVERLAY_Y			0.5
+ 
+#define CUTSCENE_ALL_PLAYERS 			-1
+#define CUTSCENE_FADETYPE_NONE 			0
+#define CUTSCENE_FADETYPE_WHITEINOUT	1
+#define CUTSCENE_FADETYPE_BLACKINOUT	2
+#define CUTSCENE_FADETYPE_WHITEOUT 		3
+#define CUTSCENE_FADETYPE_BLACKOUT 		4
+
+#define CUTSCENE_FADETYPE_NOEND_TYPES	5
+#define CUTSCENE_FADETYPE_WHITEINOUT_X	5
+
+#define CUTSCENE_CONCURRENT_LOOPING 	32
+#define CUTSCENE_SKIP_TICS 				35
+ 
+/** Current playing cutscene. */
+int cutscene_current_id;
+/** Current cutscene fade type. */
+int cutscene_fadetype;
+/** Current cutscene fade time in tics. */
+int cutscene_fadetime_tics;
+/** Current cutscene width. */
+int cutscene_width;
+/** Current cutscene height. */
+int cutscene_height;
+/** Current cutscene end script. */
+int cutscene_end_script;
+/** Current cutscene wait ticks. */
+int cutscene_current_wait_ticks;
+/** Current cutscene step. */
+int cutscene_current_step;
+/** Current image lump name. */
+str cutscene_current_image;
+/** Cutscene looping sound list. */
+int cutscene_looping_sound_tags[CUTSCENE_CONCURRENT_LOOPING];
+/** Cutscene looping sound list count. */
+int cutscene_looping_sound_count;
+
+
+/*****************************************************************************
+ * Important Functions
+ ****************************************************************************/
+
+/***** PRIVATE *****/
+ 
+// Swap values.
+function void __Cutscene_insert_loop_tag_swap(int index1, int index2)
+{
+	int temp = cutscene_looping_sound_tags[index1];
+	cutscene_looping_sound_tags[index1] = cutscene_looping_sound_tags[index2];
+	cutscene_looping_sound_tags[index2] = temp;
+}
+
+// Inserts a tag of a looping sound into the loop list.
+function int __Cutscene_insert_loop_tag(int tag)
+{
+	if (cutscene_looping_sound_count >= CUTSCENE_CONCURRENT_LOOPING)
+		return FALSE;
+	
+	int i = cutscene_looping_sound_count;
+	cutscene_looping_sound_count++;
+	cutscene_looping_sound_tags[i] = tag;
+	while (i > 0)
+	{
+		if (cutscene_looping_sound_tags[i-1] > cutscene_looping_sound_tags[i])
+			__Cutscene_insert_loop_tag_swap(i-1, i);
+		else
+			return TRUE;
+		i--;
+	}
+	return TRUE;
+}
+
+// Removes a tag of a looping sound from the loop list.
+function int __Cutscene_remove_loop_tag(int tag)
+{
+	int i = 0;
+	int removed = FALSE;
+	while (i < cutscene_looping_sound_count)
+	{
+		// early cutoff
+		if (tag < cutscene_looping_sound_tags[i])
+			return FALSE;
+		else if (tag == cutscene_looping_sound_tags[i])
+		{
+			removed = TRUE;
+			break;
+		}
+		i++;
+	}
+	
+	// shift
+	if (removed) 
+	{
+		while (i < cutscene_looping_sound_count - 1)
+		{
+			cutscene_looping_sound_tags[i] = cutscene_looping_sound_tags[i+1];
+			i++;
+		}
+		cutscene_looping_sound_count--;
+	}
+	
+	return removed;
+}
+
+// Stops all tags playing a looping sound and empties the tag list.
+function void __Cutscene_stop_looping(void)
+{
+	int i;
+	for (i = 0; i < cutscene_looping_sound_count; i++)
+	{
+		StopSound(cutscene_looping_sound_tags[i], CHAN_BODY);
+	}
+	cutscene_looping_sound_count = 0;
+}
+
+/***** PUBLIC *****/
+
+/**
+ * Resets current cutscene info.
+ */
+function void Cutscene_Reset (void)
+{
+	cutscene_current_id = 0;
+	cutscene_fadetype = 0;
+	cutscene_fadetime_tics = 0;
+	cutscene_width = 0;
+	cutscene_height = 0;
+	cutscene_current_step = -1;
+	cutscene_current_wait_ticks = 0;
+	cutscene_current_image = 0;
+	cutscene_end_script = 0;
+	__Cutscene_stop_looping();
+}
+
+/**
+ * Ends the current cutscene.
+ */
+function void Cutscene_Finish (void)
+{
+	Take_Item_All("CutsceneModeItem", 1);
+	Players_Freeze(OFF);
+
+	// Restore music.
+	SetMusic("*");
+	
+	// Clear images
+	HUDMessageBold(s:""; HUDMSG_PLAIN, HUD_CUTSCENE_IMAGE_BACK, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+	HUDMessageBold(s:""; HUDMSG_PLAIN, HUD_CUTSCENE_IMAGE_FRONT, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+	FadeTo(0, 0, 0, 0.0, 0.0);
+
+	if (cutscene_end_script)
+		ACS_Execute(cutscene_end_script, 0, 0, 0, 0);
+		
+	Cutscene_Reset();
+}
+
+/**
+ * Processes a single cutscene step.
+ */
+function void Cutscene_Step (int sceneId, int step)
+{
+	str nextImage;
+	str keyprefix = StrParam(s:"CUTSCENE_", d:sceneId, s:"_STEP_", d:step, s:"_");
+
+	str musicKey = StrParam(s:keyprefix, s:"MUSIC");
+	str soundKey = StrParam(s:keyprefix, s:"SOUND");
+	str soundSpotKey = StrParam(s:keyprefix, s:"SOUND_TAG");
+	str soundLoopingKey = StrParam(s:keyprefix, s:"SOUND_LOOPING");
+	str soundStopKey = StrParam(s:keyprefix, s:"STOP_SOUND");
+	str imageKey = StrParam(s:keyprefix, s:"IMAGE");
+	str tweenKey = StrParam(s:keyprefix, s:"TWEENTICS");
+	str clipKey = StrParam(s:keyprefix, s:"CLIP");
+	str ticsKey = StrParam(s:keyprefix, s:"TICS");
+	str endKey = StrParam(s:keyprefix, s:"END");
+
+	int tweenTics = ParseInt(StrParam(l:tweenKey));
+	int clipId = ParseInt(StrParam(l:clipKey));
+	int tics = ParseInt(StrParam(l:ticsKey));
+	int isEnd = ParseInt(StrParam(l:endKey));
+	int soundSpotId = ParseInt(StrParam(l:soundSpotKey));
+	int soundStopSpotId = ParseInt(StrParam(l:soundStopKey));
+	int soundLooping = ParseInt(StrParam(l:soundLoopingKey));
+	
+	// Is music changed on this step?
+	if (LanguageExist(musicKey))
+		SetMusic(StrParam(l:musicKey));
+
+	// Is a sound stopped on this step?
+	if (soundStopSpotId)
+	{
+		__Cutscene_remove_loop_tag(soundStopSpotId);
+		StopSound(soundStopSpotId, CHAN_BODY);
+	}
+		
+	// Is a sound played on this step?
+	if (LanguageExist(soundKey))
+	{
+		str soundName = StrParam(l:soundKey);
+		if (soundSpotId)
+		{
+			if (soundLooping)
+			{
+				PlaySound(soundSpotId, soundName, CHAN_BODY, 1.0, TRUE, ATTN_NORM, FALSE);
+				__Cutscene_insert_loop_tag(soundSpotId);
+			}
+			else
+				PlaySound(soundSpotId, soundName, CHAN_BODY, 1.0, FALSE, ATTN_NORM, FALSE);
+		}
+		else
+			AmbientSound(soundName, 127);
+	}
+
+	// Play a clip?
+	if (clipId)
+		ACS_NamedExecute("VO_PlayClip", 0, clipId, TRUE, 0);
+	
+	// Is an image switched on this step?
+	if (LanguageExist(imageKey))
+	{
+		nextImage = StrParam(l:imageKey);
+		SetHudSize(cutscene_width, cutscene_height, TRUE);
+		if (tweenTics)
+		{
+			tweenTics = FixedDiv((tweenTics << 16), 35.0);
+			// Draw old.
+			if (cutscene_current_image)
+			{
+				SetFont(cutscene_current_image);
+				HUDMessageBold(s:"A"; HUDMSG_PLAIN, HUD_CUTSCENE_IMAGE_BACK, CR_UNTRANSLATED, 0.5, 0.5, 0.0);
+			}
+			// Fade into new.
+			SetFont(nextImage);
+			HUDMessageBold(s:"A"; HUDMSG_FADEINOUT, HUD_CUTSCENE_IMAGE_FRONT, CR_UNTRANSLATED, 0.5, 0.5, (32767 << 16), tweenTics, 0.0);
+		}
+		else
+		{
+			SetFont(nextImage);
+			HUDMessageBold(s:"A"; HUDMSG_PLAIN, HUD_CUTSCENE_IMAGE_FRONT, CR_UNTRANSLATED, 0.5, 0.5, 0.0);
+		}
+		cutscene_current_image = nextImage;
+	}
+	
+	// Is the end?
+	if (isEnd)
+		Cutscene_End();
+	// set wait
+	else
+		cutscene_current_wait_ticks = tics;
+
+}
+
+/**
+ * Triggers the end of the current cutscene by setting an ending state.
+ */
+function void Cutscene_End (void)
+{
+	cutscene_current_id = 0;
+	cutscene_current_wait_ticks = 0;
+	HUDMessageBold(s:""; HUDMSG_PLAIN, HUD_CUTSCENE_SKIP_MESSAGE, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+}
+
+/**
+ * Triggers the end of the current cutscene by setting an ending state.
+ */
+function void Cutscene_SetBackground (int flag)
+{
+	SetHudSize(400, 300, TRUE);
+	SetFont("CSCBLACK");
+	if (flag)
+		HUDMessageBold(s:"A"; HUDMSG_PLAIN, HUD_CUTSCENE_BACKGROUND, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0);
+	else
+		HUDMessageBold(s:""; HUDMSG_PLAIN, HUD_CUTSCENE_BACKGROUND, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0);
+}
+
+
+/**
+ * Performs the cutscene's fadeout.
+ * Return: fade time delay in tics.
+ */
+function int Cutscene_FadeOut (void)
+{
+	SetHudSize(400, 300, TRUE);
+	int fadeDelay = 0;
+	int fadetimeFixedSecs = FixedDiv(cutscene_fadetime_tics << 16, 35.0);
+
+	switch (cutscene_fadetype)
+	{
+		case CUTSCENE_FADETYPE_WHITEINOUT:
+		case CUTSCENE_FADETYPE_WHITEINOUT_X:
+			SetFont("CSCWHITE");
+			HUDMessageBold(s:"A"; HUDMSG_FADEINOUT, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, (32767 << 16), FixedDiv(fadetimeFixedSecs, 2.0), 0.0);
+			fadeDelay = cutscene_fadetime_tics / 2;
+			break;
+		case CUTSCENE_FADETYPE_BLACKINOUT:
+			SetFont("CSCBLACK");
+			HUDMessageBold(s:"A"; HUDMSG_FADEINOUT, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, (32767 << 16), FixedDiv(fadetimeFixedSecs, 2.0), 0.0);
+			fadeDelay = cutscene_fadetime_tics / 2;
+			break;
+		case CUTSCENE_FADETYPE_WHITEOUT:
+			SetFont("CSCWHITE");
+			HUDMessageBold(s:"A"; HUDMSG_PLAIN, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0);
+			fadeDelay = 0;
+			break;
+		case CUTSCENE_FADETYPE_BLACKOUT:
+			SetFont("CSCBLACK");
+			HUDMessageBold(s:"A"; HUDMSG_PLAIN, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0);
+			fadeDelay = 0;
+			break;
+	}
+	
+	return fadeDelay;
+}
+
+/**
+ * Performs the cutscene's fadein.
+ */
+function void Cutscene_FadeIn (void)
+{
+	SetHudSize(400, 300, TRUE);
+	int fadetimeFixedSecs = FixedDiv(cutscene_fadetime_tics << 16, 35.0);
+	switch (cutscene_fadetype)
+	{
+		case CUTSCENE_FADETYPE_WHITEINOUT:
+		case CUTSCENE_FADETYPE_WHITEINOUT_X:
+			SetFont("CSCWHITE");
+			HUDMessageBold(s:"A"; HUDMSG_FADEOUT, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0, FixedDiv(fadetimeFixedSecs, 2.0));
+			break;
+		case CUTSCENE_FADETYPE_BLACKINOUT:
+			SetFont("CSCBLACK");
+			HUDMessageBold(s:"A"; HUDMSG_FADEOUT, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0, FixedDiv(fadetimeFixedSecs, 2.0));
+			break;
+		case CUTSCENE_FADETYPE_WHITEOUT:
+			SetFont("CSCWHITE");
+			HUDMessageBold(s:"A"; HUDMSG_FADEOUT, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0, fadetimeFixedSecs);
+			break;
+		case CUTSCENE_FADETYPE_BLACKOUT:
+			SetFont("CSCBLACK");
+			HUDMessageBold(s:"A"; HUDMSG_FADEOUT, HUD_CUTSCENE_FADE, CR_UNTRANSLATED, HUD_CUTSCENE_OVERLAY_X, HUD_CUTSCENE_OVERLAY_Y, 0.0, fadetimeFixedSecs);
+			break;
+	}
+	
+}
+
+
+/*****************************************************************************
+ * Called by Other Scripts
+ ****************************************************************************/
+
+// Processes events.
+script "__Cutscene_Process_Loop" (void)
+{
+	while (cutscene_current_id)
+	{
+		while (!cutscene_current_wait_ticks && cutscene_current_id)
+		{
+			cutscene_current_step++;
+			Cutscene_Step(cutscene_current_id, cutscene_current_step);
+		}
+		if (cutscene_current_wait_ticks)
+		{
+			delay(1);
+			cutscene_current_wait_ticks--;
+		}
+	}
+	
+	ACS_NamedTerminate("__Cutscene_Input_Loop", 0);
+
+	if (cutscene_fadetype < CUTSCENE_FADETYPE_NOEND_TYPES)
+	{
+		int fadeDelay = Cutscene_FadeOut();
+		if (fadeDelay)
+			delay(fadeDelay);
+		Cutscene_SetBackground(OFF);
+		Cutscene_FadeIn();
+	}
+		
+	Cutscene_Finish();
+}
+
+// Listens for skip.
+script "__Cutscene_Input_Loop" (void)
+{
+	int inp = 0;
+	int skip = 0;
+	do {
+		inp = GetAllPlayerInput(INPUT_BUTTONS) & BT_USE;
+		if (inp)
+		{
+			skip++;
+			if (skip == 1)
+				HUDMessageBold(l:"CUTSCENE_USETOSKIP"; HUDMSG_FADEOUT, HUD_CUTSCENE_SKIP_MESSAGE, CR_UNTRANSLATED, 1.0, 1.0, 4.0, 2.0);
+		}
+		delay(1);
+	} while (skip < CUTSCENE_SKIP_TICS);
+
+	Cutscene_End();
+}
+ 
+/*****************************************************************************
+ * Evented Named Scripts
+ ****************************************************************************/
+
+/**
+ * Intitalizes map variables.
+ */
+script "__Init_Cutscene" OPEN
+{
+	Cutscene_Reset();
+}
+
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * Starts a cutscene.
+ * cutsceneId: The cutscene id to start.
+ * scriptNumber: The script to call after the scene terminates.
+ */
+script "Cutscene_Start" (int cutsceneId, int scriptNumber)
+{
+	int width, height, fadetimeTics, fadetype, fadeDelay;
+
+	width = ParseInt(StrParam(l: StrParam(s:"CUTSCENE_", d:cutsceneId, s:"_WIDTH")));
+	height = ParseInt(StrParam(l: StrParam(s:"CUTSCENE_", d:cutsceneId, s:"_HEIGHT")));
+	fadetimeTics = ParseInt(StrParam(l: StrParam(s:"CUTSCENE_", d:cutsceneId, s:"_FADETIME")));
+	fadetype = ParseInt(StrParam(l: StrParam(s:"CUTSCENE_", d:cutsceneId, s:"_FADETYPE")));
+	
+	if (!width || !height)
+	{
+		Log(s:"ERROR! Cutscene id ", d:cutsceneId, s:" is missing width and height!");
+		terminate;
+	}
+
+	if (cutscene_current_id)
+		Cutscene_Finish();
+		
+	Cutscene_Reset();
+
+	cutscene_current_id = cutsceneId;
+	cutscene_width = width;
+	cutscene_height = height;
+	cutscene_fadetype = fadetype;
+	cutscene_fadetime_tics = fadetimeTics;
+	cutscene_current_wait_ticks = 0;
+	cutscene_current_image = 0;
+	cutscene_end_script = scriptNumber;
+
+	fadeDelay = Cutscene_FadeOut();
+	if (fadeDelay)
+		delay(fadeDelay);
+
+	Players_Freeze(ON);
+	Cutscene_SetBackground(ON);
+	ACS_NamedExecute("__Cutscene_Process_Loop", 0, 0, 0, 0);
+	ACS_NamedExecute("__Cutscene_Input_Loop", 0, 0, 0, 0);
+	
+	// Remove status bar.
+	Give_Item_All("CutsceneModeItem", 1);
+
+	Cutscene_FadeIn();
+
+}

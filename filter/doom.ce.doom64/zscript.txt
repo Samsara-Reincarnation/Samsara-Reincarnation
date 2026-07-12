@@ -1,19 +1,26 @@
 version "4.10"
 
-class D64TitlemapCyberdemon_Samsara : D64TitlemapCyberdemon replaces D64TitlemapCyberdemon
+class D64BigFire_Samsara : D64BigFire replaces D64BigFire
 {
 	States
 	{
-		Missile:
-            TNT1 A 0 a_jumpif(IsSmooth(), "SmoothMissile");
-			CYBR E 18 Bright A_SpawnProjectile("D64Rocket", 88, -31, 0, CMF_BADPITCH);
-			CYBR F 18 A_FaceTarget;
-			Loop;
-        SmoothMissile:
-            CYBR E 15 Bright A_SpawnProjectile("D64Rocket", 88, -31, 0, CMF_BADPITCH);
-			SCYB E 3 Bright;
-            CYBR F 18 A_FaceTarget;
-		    Loop;
+        Spawn:
+            TNT1 A 0 nodelay a_jumpif(hq_torches, "HQSpawn");
+            TNT1 A 0 a_jumpif(IsSmooth(), "SmoothSpawn");
+			FIRE ABCDE 3 BRIGHT;
+            Loop;
+        SmoothSpawn:
+            FIRE A 2 BRIGHT;
+            SFIR V 2 BRIGHT;
+            FIRE B 2 BRIGHT;
+            SFIR W 2 BRIGHT;
+            FIRE C 2 BRIGHT;
+            SFIR X 2 BRIGHT;
+            FIRE D 2 BRIGHT;
+            SFIR Y 2 BRIGHT;
+            FIRE E 2 BRIGHT;
+            SFIR Z 2 BRIGHT;
+            Loop;
 	}
 }
 
@@ -37,4 +44,55 @@ Class SamsaraDoom64CEHandler : EventHandler
             Players[e.PlayerNumber].Mo.A_SetSize(19, 64, True);
         }
     }
+}
+
+class SamsaraDoom64CEPostProcessor : LevelPostProcessor
+{
+    protected void Apply(Name checksum, String mapname)
+    {		
+		// For some reason, several pickups don't activate their TouchTrigger
+		// special, so a brute-force hack was used for those that are required
+		// to progress through the level. Until a better fix can be added, this
+		// means that custom Doom 64 CE maps using the special to hold off
+		// level progression won't be fully compatible with Samsara.
+		if(mapname == "MAP22")
+		{
+			AddThing(254, (-160.0, -736.0, 0.0)); // rocket launcher
+		}
+		if(mapname == "MAP25")
+		{
+			AddThing(255, (448.0, -896.0, 0.0)); // rocket ammo boxes
+		}
+		if(mapname == "REC04")
+		{
+			AddThing(256, (480.0, -1280.0, 0.0)); // chaingun
+		}
+		if(mapname == "REC05")
+		{
+			AddThing(257, (-512.0, 1152.0, 0.0)); // soulsphere
+		}
+		if(mapname == "REC06")
+		{
+			AddThing(258, (832.0, -1024.0, 0.0)); // plasma rifle
+		}
+		if(mapname == "REC07")
+		{
+			AddThing(259, (-1216.0, 896.0, 0.0)); // bfg 9000
+		}
+		if(mapname == "REC08")
+		{
+			AddThing(260, (-1632.0, 96.0, 0.0)); // rocket launcher
+		}
+		if(mapname == "REC09")
+		{
+			AddThing(261, (-2688.0, 352.0, 0.0)); // unmaker
+		}
+
+		// Some classes are too slow to make the jump to the blue key
+		// in LOST05, so the platform with it was lowered.
+		if(mapname == "LOST05")
+		{
+			OffsetSectorPlane(289, Sector.floor, -32);
+		}
+	}
 }

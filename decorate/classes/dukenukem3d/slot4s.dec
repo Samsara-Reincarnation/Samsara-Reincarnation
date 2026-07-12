@@ -1,0 +1,410 @@
+actor SamsaraDukeGoldenDesertEagleFire : Boolean {}
+actor SamsaraDukeGoldenDesertEagleReload : Boolean {}
+actor SamsaraDukeHasGoldenDesertEagle : Boolean {}
+
+actor "Golden Desert Eagle" : DukeWeapon
+{
+	Weapon.SlotNumber 4
+	Weapon.SlotPriority 1
+	Weapon.SelectionOrder 700
+	Weapon.AmmoType1 "DukeGoldEagleReload"
+	Weapon.AmmoUse1 1
+	Weapon.AmmoType2 "Clip"
+    //Weapon.AmmoGive2 60
+	Obituary "$SAMSARA_DUKE_OB_SLOT4S"
+	Inventory.Pickupmessage "You got the Golden Desert Eagle!"
+	Inventory.PickupSound "duke/weaponget"
+	weapon.upsound ""
+//  scale 0.7
+	+NOALERT
+	+INVENTORY.UNDROPPABLE
+	+WEAPON.AMMO_OPTIONAL
+	Tag "Golden Desert Eagle"
+	DamageType "DukeDamage"
+	States
+	{
+	Spawn:
+		PISP C -1
+		Stop
+
+	ReadyB:
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireA1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireA2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireA3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireA4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireA5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireA6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireA7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireA8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireA9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireA10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireA11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireA12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireA13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireA14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireA15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireA16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireA17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireA18")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSWITCH|WRF_NOBOB)
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyB")
+		Goto Ready
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReadyModernReloadable")
+	ReadyNonReloadable:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "ReadyNonReloadableLAB")
+		DKDG A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+	ReadyNonReloadableLAB:
+		DLDG A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+	ReadyModernReloadable:
+		TNT1 A 0 A_JumpIfInventory("DukeGoldEagleReload",0,"ReadyNonReloadable")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyModernReloadableCanReload")
+		TNT1 A 0 A_JumpIfInventory("Clip",7,"ReadyModernReloadableCanReload")
+		goto ReadyNonReloadable
+
+	ReadyModernReloadableCanReload:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "ReadyModernReloadableCanReloadLAB")
+		DKDG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+		goto ReadyAmmoCheck
+	ReadyModernReloadableCanReloadLAB:
+		DLDG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+		goto ReadyAmmoCheck
+
+	ReadyAmmoCheck:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+		goto Ready
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+		TNT1 A 0 A_JumpIfInventory("DukeGoldEagleReload",1,"Ready")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+		TNT1 A 0 A_JumpIfInventory("Clip",7,"Reload")
+		goto Ready
+
+	Deselect:
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "DeselectLAB")
+		DKDG A 0 A_TakeInventory("SamsaraDukeGoldenDesertEagleReload",1)
+		Goto Super::Deselect
+	DeselectLAB:
+		DLDG A 0 A_TakeInventory("SamsaraDukeGoldenDesertEagleReload",1)
+		Goto Super::Deselect
+
+	Select:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "SelectLAB")
+		TNT1 A 0 A_TakeInventory("SamsaraDukeGoldenDesertEagleReload",1)
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt1")
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		DKDG A 0 A_PlayWeaponSound("duke/adveagleup")
+		Goto Super::Select
+		
+	SelectLAB:
+		TNT1 A 0 A_TakeInventory("SamsaraDukeGoldenDesertEagleReload",1)
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt1")
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		DLDG A 0 A_PlayWeaponSound("duke/adveagleup")
+		Goto Super::Select
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+	FireNonReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireSecond")
+		TNT1 A 0 A_JumpIfInventory("Clip",7,"FireSecond")
+		goto Nothing
+
+	FireReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireSecond")
+		TNT1 A 0 A_JumpIfInventory("DukeGoldEagleReload",1,"FireSecond")
+	FireReloadableDryCheck:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+		TNT1 A 0 A_JumpIfInventory("Clip",7,"Reload")
+		goto Nothing
+
+	FireSecond:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "FireSecondLAB")
+		DKDG A 0 A_GiveInventory("DBSHOT",20)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		Goto ReadyA
+	FireSecondLAB:
+		DLDG A 0 A_GiveInventory("DBSHOT",20)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		Goto ReadyA
+
+	Reload:
+		TNT1 A 0 A_GiveInventory("SamsaraDukeGoldenDesertEagleReload",1)
+		TNT1 A 0 A_GiveInventory("DBSHOT",30)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireB1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireB2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireB3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireB4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireB5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireB6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireB7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireB8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireB9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireB10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireB11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireB12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireB13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireB14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireB15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireB16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireB17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireB18")
+		Goto ReadyB
+
+	Flash:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "FlashLAB")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDukeGoldenDesertEagleReload",1,"FlashReload")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"FlashFire")
+		DKDG A 14
+		stop
+	FlashLAB:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDukeGoldenDesertEagleReload",1,"FlashReload")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"FlashFire")
+		DLDG A 14
+		stop
+	FlashFire:
+		TNT1 A 0 A_TakeInventory("DukeWaiting")
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode",1,"FlashFireLAB")
+		DKDG A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeGoldenDesertEagleAttackHandler")
+		TNT1 A 0 A_Light1
+		DKDG B 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_Light0
+		DKDG C 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKDG DEFG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DKDG A 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+
+	FlashFireLAB:
+		DLDG A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeLABGoldenDesertEagleAttackHandler")
+		TNT1 A 0 A_Light1
+		DLDG B 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_Light0
+		DLDG C 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DLDG DEFG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DLDG A 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+
+	FlashReload:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "FlashReloadLAB")
+		TNT1 A 0 A_TakeInventory("SamsaraDukeGoldenDesertEagleReload",9)
+		TNT1 A 0 A_PlayWeaponSound("duke/adveagleload")
+		DKDG HI 2
+		DKDG JKLMNOPQRS 1
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+	FlashReloadFinish:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "FlashReloadFinishLAB")
+		DKDG "\][" 1
+		DKDG ZYXWV 1
+		DKDG UT 2
+		DKDG A 4 A_TakeInventory("DBSHOT",99)
+		Stop
+
+	FlashReloadLAB:
+		TNT1 A 0 A_TakeInventory("SamsaraDukeGoldenDesertEagleReload",9)
+		TNT1 A 0 A_PlayWeaponSound("duke/adveagleload")
+		DLDG HI 2
+		DLDG JKLMNOPQRS 1
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+	FlashReloadFinishLAB:
+		DLDG "\][" 1
+		DLDG ZYXWV 1
+		DLDG UT 2
+		DLDG A 4 A_TakeInventory("DBSHOT",99)
+		Stop
+
+	ReloadAmmo:
+		TNT1 A 0 A_JumpIfInventory("DukeGoldEagleReload",0,"FlashReloadFinish")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Clip",7,1)
+		goto FlashReloadFinish
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_TakeInventory("Clip",7)
+		TNT1 A 0 A_GiveInventory("DukeGoldEagleReload")
+		goto ReloadAmmo
+
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "NoAltFireForDuke64")
+		Goto Super::AltFire
+
+	AltFlash:
+		DKDG A 8 A_JumpIfInventory("DukeClassMode", 1, 1)
+		stop
+		DLDG A 8
+		stop
+
+	NoAltFireForDuke64:
+		TNT1 A 0
+		goto Ready
+
+	TauntWeaponSound:
+		TNT1 A 0 A_PlayWeaponSound("duke/adveagleup")
+		Goto Select
+
+	IntroTaunt:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "IntroTauntLAB")
+		Goto Super::IntroTaunt
+	IntroTauntLAB:
+		DLDG A 0
+		Goto Super::IntroTaunt
+
+	WaitingTaunt:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "WaitingTauntLAB")
+		Goto Super::WaitingTaunt
+	WaitingTauntLAB:
+		DLDG A 0
+		Goto Super::WaitingTaunt
+
+	GiveMoney:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "GiveMoneyLAB")
+		Goto Super::GiveMoney
+	GiveMoneyLAB:
+		DLDG A 0
+		Goto Super::GiveMoney
+
+	OutOfAmmo:
+		DKDG A 0 A_JumpIfInventory("DukeClassMode", 1, "OutOfAmmoLAB")
+		DKDG AA 1 A_TakeInventory("DBSHOT",99)
+		goto Nothing
+
+	OutOfAmmoLAB:
+		DLDG AA 1 A_TakeInventory("DBSHOT",99)
+		goto Nothing
+
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Glock 17")
+        goto Deselect
+	}
+}
+
+actor SamsaraDukeGoldenDesertEagleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",7,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",7)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DukeGoldEagleReload",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DukeGoldEagleReload",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("duke/adveagleshot",CHAN_WEAPON)
+        TNT1 A 0 A_FireCustomMissile("ShellCasingSpawner",0,false,5)
+        TNT1 A 0 A_JumpIfInventory("DMModeOn",1,"PickupAttackInaccurate")
+        TNT1 A 0 A_JumpIfTargetInLOS("PickupAttackAccurate")
+      // Inaccurate
+      PickupAttackInaccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackInaccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackInaccurateCoop")
+      PickupAttackInaccurateDM:
+        TNT1 A 0 A_FireBullets(4,3,-1,120,"DukeBulletPuff",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackInaccurateCoop:
+        TNT1 A 0 A_FireBullets(4,3,-1,120,"DukeBulletPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      // Accurate
+      PickupAttackAccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAccurateCoop")
+      PickupAttackAccurateDM:
+        TNT1 A 0 A_FireBullets(0,0,1,120,"DukeBulletPuff",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackAccurateCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,120,"DukeBulletPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+    }
+}
+
+actor SamsaraDukeLABGoldenDesertEagleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",7,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",7)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DukeGoldEagleReload",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DukeGoldEagleReload",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("duke/lab/adveagleshot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("DMModeOn",1,"PickupAttackInaccurate")
+        TNT1 A 0 A_JumpIfTargetInLOS("PickupAttackAccurate")
+      // Inaccurate
+      PickupAttackInaccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackInaccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackInaccurateCoop")
+      PickupAttackInaccurateDM:
+        TNT1 A 0 A_FireBullets(4,3,-1,120,"DukeBulletPuffBeach",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackInaccurateCoop:
+        TNT1 A 0 A_FireBullets(4,3,-1,120,"DukeBulletPuffBeachCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      // Accurate
+      PickupAttackAccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAccurateCoop")
+      PickupAttackAccurateDM:
+        TNT1 A 0 A_FireBullets(0,0,1,120,"DukeBulletPuffBeach",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+
+      PickupAttackAccurateCoop:
+        TNT1 A 0 A_FireBullets(0,0,1,120,"DukeBulletPuffBeachCoop",FBF_NORANDOM|FBF_NOFLASH)
+        stop
+    }
+}
+
+actor DukeGoldEagleReload : Ammo
+{
+    Inventory.MaxAmount 8
+    Tag "Golden Desert Eagle Magazine"
+    +IGNORESKILL
+}

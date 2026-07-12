@@ -18,7 +18,7 @@ actor QuakePlayer : SamsaraPlayerPawnNormalRedBlood
     Player.StartItem "IsSamsaraClass", 1
 	Player.StartItem "SamsaraTipsChecker", 1
     Player.StartItem "Shell", 25
-    Player.StartItem "Axe"
+    Player.StartItem "QuakeAxe"
     Player.ColorRange 211, 216
 	BloodType "Quake_NewParticles"	
     BounceFactor 0.35
@@ -197,8 +197,10 @@ actor QuakePlayer : SamsaraPlayerPawnNormalRedBlood
 			PL4B BCDEF 3
 			Goto Spawn   
 		Death:
-			"----" A 1 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
-			"----" A 0 A_Jump(256,"death1","death2","death3","death4","death5")
+			"----" A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
+			"----" A 1
+			"----" A 0 A_Jump(256,"Death1","Death2","Death3","Death4","Death5")
 		Death1:
 			PLY5 A 3
 			PLY5 B 3 A_PlayerScream
@@ -275,6 +277,13 @@ actor QuakePlayer : SamsaraPlayerPawnNormalRedBlood
 		XDeath:
 			TNT1 A 0 A_SpawnDebris("Quake_RangerHead")
 			TNT1 A 0 A_SpawnItemEx("QuakeGibSpawnerSilent",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_PlaySound("ranger/gib",CHAN_VOICE)
+			TNT1 A 1 A_ChangeFlag("SOLID",false)
+			TNT1 A -1
+			Stop
+		XDeath.Massacre:
+			TNT1 A 0 A_SpawnDebris("Quake_RangerHead")
+			TNT1 A 0 A_SpawnItemEx("QuakeGibSpawnerSilentMassacre",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_PlaySound("ranger/gib",CHAN_VOICE)
 			TNT1 A 1 A_ChangeFlag("SOLID",false)
 			TNT1 A -1
@@ -513,6 +522,7 @@ Actor QuakePlayer_Shrink : QuakePlayer
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -521,12 +531,18 @@ Actor QuakePlayer_Shrink : QuakePlayer
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -541,6 +557,7 @@ Actor QuakePlayer_Shrink : QuakePlayer
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -628,6 +645,8 @@ Actor QuakePlayer_Shrink : QuakePlayer
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Telefrag:
 		Death.Squish:
 		XDeath.Squish:
@@ -936,6 +955,20 @@ Actor QuakeMediumGibSpawner
 	}
 }
 
+Actor QuakeMediumGibSpawnerMassacre : QuakeMediumGibSpawner
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 AA 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 AA 0 A_SpawnDebris("Quake_GIB3",true)
+		TNT1 A 5 A_PlaySound("ranger/gib2")
+		stop
+	}
+}
+
 Actor QuakeLargeGibSpawner
 {
 	+CLIENTSIDEONLY
@@ -952,6 +985,20 @@ Actor QuakeLargeGibSpawner
 		TNT1 AAA 0 A_SpawnDebris("Quake_GIB2",true)
 		TNT1 AAA 0 A_SpawnDebris("Quake_GIB3",true)
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION||SXF_TRANSFERPOINTERS)
+		TNT1 A 5 A_PlaySound("ranger/gib2")
+		stop
+	}
+}
+
+Actor QuakeLargeGibSpawnerMassacre : QuakeLargeGibSpawner
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAA 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 AAA 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 AAA 0 A_SpawnDebris("Quake_GIB3",true)
 		TNT1 A 5 A_PlaySound("ranger/gib2")
 		stop
 	}
@@ -978,6 +1025,20 @@ Actor QuakeHugeGibSpawner
 	}
 }
 
+Actor QuakeHugeGibSpawnerMassacre : QuakeHugeGibSpawner
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAA 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 AAAA 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 AAAA 0 A_SpawnDebris("Quake_GIB3",true)
+		TNT1 A 5 A_PlaySound("ranger/gib2")
+		stop
+	}
+}
+
 Actor QuakeGibSpawnerSilent
 {
 	+CLIENTSIDEONLY
@@ -994,6 +1055,19 @@ Actor QuakeGibSpawnerSilent
 		TNT1 A 0 A_SpawnDebris("Quake_GIB2",true)
 		TNT1 A 0 A_SpawnDebris("Quake_GIB3",true)
 		TNT1 A 5 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION||SXF_TRANSFERPOINTERS)
+		stop
+	}
+}
+
+Actor QuakeGibSpawnerSilentMassacre : QuakeGibSpawnerSilent
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 A 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 A 5 A_SpawnDebris("Quake_GIB3",true)
 		stop
 	}
 }
@@ -1018,6 +1092,20 @@ Actor QuakeMediumGibSpawnerSilent
 	}
 }
 
+Actor QuakeMediumGibSpawnerSilentMassacre : QuakeMediumGibSpawnerSilent
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 AA 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 AA 0 A_SpawnDebris("Quake_GIB3",true)
+		TNT1 A 5
+		stop
+	}
+}
+
 Actor QuakeLargeGibSpawnerSilent
 {
 	+CLIENTSIDEONLY
@@ -1034,6 +1122,20 @@ Actor QuakeLargeGibSpawnerSilent
 		TNT1 AAA 0 A_SpawnDebris("Quake_GIB2",true)
 		TNT1 AAA 0 A_SpawnDebris("Quake_GIB3",true)
 		TNT1 A 5 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION||SXF_TRANSFERPOINTERS)
+		stop
+	}
+}
+
+Actor QuakeLargeGibSpawnerSilentMassacre : QuakeLargeGibSpawnerSilent
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAA 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 AAA 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 AAA 0 A_SpawnDebris("Quake_GIB3",true)
+		TNT1 A 5
 		stop
 	}
 }
@@ -1058,6 +1160,20 @@ Actor QuakeHugeGibSpawnerSilent
 	}
 }
 
+Actor QuakeHugeGibSpawnerSilentMassacre : QuakeHugeGibSpawnerSilent
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAA 0 A_SpawnDebris("Quake_GIB1",true)
+		TNT1 AAAA 0 A_SpawnDebris("Quake_GIB2",true)
+		TNT1 AAAA 0 A_SpawnDebris("Quake_GIB3",true)
+		TNT1 A 5
+		stop
+	}
+}
+
 actor QuakeClass: Boolean {}
 
 actor QuakeBullet: FastProjectile
@@ -1067,7 +1183,7 @@ actor QuakeBullet: FastProjectile
     Height 1
     Speed 320
     Projectile
-	DamageType "QuakeExplosive"
+	DamageType "QuakeDamage"
     Renderstyle "Normal"
     Species "Player"
     +BLOODSPLATTER
@@ -1214,3 +1330,14 @@ ACTOR Quake_BloodParticle
 }
 
 Actor AxeChecker : CustomInventory { Inventory.MaxAmount 99 }
+
+// "No self damage" powerup
+
+actor SamsaraRangerNoSelfDamage : SamsaraPowerupGiver { Powerup.Type "SamsaraRangerNoSelfDamage" }
+
+actor PowerSamsaraRangerNoSelfDamage : PowerProtection
+{
+	DamageFactor "QuakeExplosive", 0
+	DamageFactor "NotQuadded", 0
+	DamageFactor "QuakeElectric", 0
+}

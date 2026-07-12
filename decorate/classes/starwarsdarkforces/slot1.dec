@@ -1,0 +1,618 @@
+actor SamsaraDarkForcesThermalDetonatorSecondaryFiring : Boolean {}
+actor SamsaraDarkForcesThermalDetonatorThrowPower : Counter { Inventory.MaxAmount 18 }
+
+actor "Thermal Detonator" : SamsaraDarkForcesWeapon
+{
+    Inventory.PickupMessage "Thermal Detonators"
+    Weapon.SlotNumber 1
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 2200
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 5
+    Weapon.AmmoUse 1
+    Obituary "%k detonated %o with a Thermal Detonator."
+    Tag "Thermal Detonator"
+    +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
+    +EXPLOSIVE
+    +NOALERT
+    +NOAUTOAIM
+    +NOAUTOFIRE
+    States
+    {
+      Spawn:
+        IDET A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesThermalDetonatorThrowPower")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyAmmo")
+        goto ReadyNoAmmo
+
+      ReadyNoAmmo:
+        KDET D 1 A_WeaponReady
+        goto Ready
+
+      ReadyAmmo:
+        KDET A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesThermalDetonatorThrowPower")
+        TNT1 A 0 A_Lower
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectAmmo")
+        goto DeselectNoAmmo
+
+      DeselectNoAmmo:
+        KDET D 1 A_Lower
+        goto Deselect
+
+      DeselectAmmo:
+        KDET A 1 A_Lower
+        goto Deselect
+
+      Select:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesThermalDetonatorThrowPower")
+        TNT1 A 0 A_Raise
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectAmmo")
+        goto SelectNoAmmo
+
+      SelectNoAmmo:
+        KDET D 1 A_Raise
+        goto Select
+
+      SelectAmmo:
+        KDET A 1 A_Raise
+        goto Select
+
+      Fire:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesThermalDetonatorSecondaryFiring")
+        goto FireStart
+
+      AltFire:
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesThermalDetonatorSecondaryFiring")
+        goto FireStart
+
+      FireStart:
+        KDET E 3
+      FireCharge:
+        TNT1 A 8
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesThermalDetonatorThrowPower")
+        TNT1 A 0 A_ReFire("FireCharge")
+      FireRelease:
+        TNT1 A 3
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorSecondaryFiring",1,2)
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesThermalDetonatorPrimaryAttackHandler")
+        goto FireFinish
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesThermalDetonatorSecondaryAttackHandler")
+        goto FireFinish
+
+      FireFinish:
+        KDET D 14
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto Ready
+        KDET EA 7
+        TNT1 A 0 A_ReFire
+        goto Ready
+    }
+}
+
+actor SamsaraDarkForcesThermalDetonatorPrimaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",0,"PickupAttack18")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",16,"PickupAttack16")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",14,"PickupAttack14")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",12,"PickupAttack12")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",10,"PickupAttack10")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",8,"PickupAttack8")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",6,"PickupAttack6")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",4,"PickupAttack4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",2,"PickupAttack2")
+      // 0 throw power
+      PickupAttack0:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack0Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack0Coop")
+      PickupAttack0DM:
+        TNT1 A 0 A_FireCustomMissile("det_str1",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack0Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str1_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 2 throw power
+      PickupAttack2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack2Coop")
+      PickupAttack2DM:
+        TNT1 A 0 A_FireCustomMissile("det_str2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack2Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str2_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 4 throw power
+      PickupAttack4:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack4Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack4Coop")
+      PickupAttack4DM:
+        TNT1 A 0 A_FireCustomMissile("det_str3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack4Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str3_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 6 throw power
+      PickupAttack6:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack6Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack6Coop")
+      PickupAttack6DM:
+        TNT1 A 0 A_FireCustomMissile("det_str4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack6Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str4_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 8 throw power
+      PickupAttack8:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack8Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack8Coop")
+      PickupAttack8DM:
+        TNT1 A 0 A_FireCustomMissile("det_str5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack8Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str5_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 10 throw power
+      PickupAttack10:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack10Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack10Coop")
+      PickupAttack10DM:
+        TNT1 A 0 A_FireCustomMissile("det_str6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack10Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str6_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 12 throw power
+      PickupAttack12:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack12Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack12Coop")
+      PickupAttack12DM:
+        TNT1 A 0 A_FireCustomMissile("det_str7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack12Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str7_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 14 throw power
+      PickupAttack14:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack14Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack14Coop")
+      PickupAttack14DM:
+        TNT1 A 0 A_FireCustomMissile("det_str8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack14Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str8_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 16 throw power
+      PickupAttack16:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack16Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack16Coop")
+      PickupAttack16DM:
+        TNT1 A 0 A_FireCustomMissile("det_str9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack16Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str9_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 18 throw power
+      PickupAttack18:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack18Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack18Coop")
+      PickupAttack18DM:
+        TNT1 A 0 A_FireCustomMissile("det_str10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack18Coop:
+        TNT1 A 0 A_FireCustomMissile("det_str10_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesThermalDetonatorThrowPower")
+        stop
+    }
+}
+
+actor SamsaraDarkForcesThermalDetonatorSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",0,"PickupAttack18")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",16,"PickupAttack16")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",14,"PickupAttack14")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",12,"PickupAttack12")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",10,"PickupAttack10")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",8,"PickupAttack8")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",6,"PickupAttack6")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",4,"PickupAttack4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesThermalDetonatorThrowPower",2,"PickupAttack2")
+      // 0 throw power
+      PickupAttack0:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack0Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack0Coop")
+      PickupAttack0DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str1",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack0Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str1_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 2 throw power
+      PickupAttack2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack2Coop")
+      PickupAttack2DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack2Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str2_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 4 throw power
+      PickupAttack4:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack4Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack4Coop")
+      PickupAttack4DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack4Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str3_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 6 throw power
+      PickupAttack6:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack6Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack6Coop")
+      PickupAttack6DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack6Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str4_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 8 throw power
+      PickupAttack8:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack8Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack8Coop")
+      PickupAttack8DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack8Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str5_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 10 throw power
+      PickupAttack10:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack10Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack10Coop")
+      PickupAttack10DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack10Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str6_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 12 throw power
+      PickupAttack12:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack12Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack12Coop")
+      PickupAttack12DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack12Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str7_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 14 throw power
+      PickupAttack14:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack14Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack14Coop")
+      PickupAttack14DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack14Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str8_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 16 throw power
+      PickupAttack16:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack16Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack16Coop")
+      PickupAttack16DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack16Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str9_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 18 throw power
+      PickupAttack18:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttack18Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttack18Coop")
+      PickupAttack18DM:
+        TNT1 A 0 A_FireCustomMissile("det2_str10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack18Coop:
+        TNT1 A 0 A_FireCustomMissile("det2_str10_coop",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesThermalDetonatorThrowPower")
+        stop
+    }
+}
+
+actor detonator_katarn
+{
+    Projectile
+    Health 5
+    Radius 3
+    Height 3
+    Damage (0)
+    DamageType "Explosive"
+    Mass 50
+    Gravity 0.4
+    Scale 0.5
+    Obituary "%k detonated %o with a Thermal Detonator."
+    Tag "Thermal Detonator"
+    +FORCERADIUSDMG
+    +NOBLOOD
+    -NOGRAVITY
+    +SHOOTABLE
+    +THRUGHOST
+    States
+    {
+      Spawn:
+        PDET A -1
+        stop
+
+      Death:
+        TNT1 A 0 A_UnSetShootable
+        TNT1 A 0 A_PlaySound("katarn/exsmal",CHAN_VOICE)
+        TNT1 A 0 A_SpawnItemEx("explosion_small",0,0,0,0,0,0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetDamageType("Explosive") // in case it gets shot
+        TNT1 A 0 A_Explode(135,128,0,false)
+        TNT1 A 0 A_Explode(45,128,XF_HURTSOURCE,true)
+        TNT1 A 1 A_RadiusThrust(64,128)
+        stop
+    }
+}
+
+actor det_str1 : detonator_katarn { Speed 4 }
+actor det_str2 : detonator_katarn { Speed 8 }
+actor det_str3 : detonator_katarn { Speed 12 }
+actor det_str4 : detonator_katarn { Speed 16 }
+actor det_str5 : detonator_katarn { Speed 20 }
+actor det_str6 : detonator_katarn { Speed 24 }
+actor det_str7 : detonator_katarn { Speed 28 }
+actor det_str8 : detonator_katarn { Speed 32 }
+actor det_str9 : detonator_katarn { Speed 36 }
+actor det_str10 : detonator_katarn { Speed 40 }
+
+actor det_str1_coop : det_str1
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str2_coop : det_str2
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str3_coop : det_str3
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str4_coop : det_str4
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str5_coop : det_str5
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str6_coop : det_str6
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str7_coop : det_str7
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str8_coop : det_str8
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str9_coop : det_str9
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det_str10_coop : det_str10
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor detonator2_katarn : detonator_katarn
+{
+    ReactionTime 1
+    BounceType "Hexen"
+    BounceFactor 0.35
+    +BOUNCEONACTORS
+    +CANBOUNCEWATER
+    +MOVEWITHSECTOR
+    -NOBLOCKMAP
+    States
+    {
+      Spawn:
+        PDET A 105
+        PDET A 1 A_Countdown
+        wait
+
+      Death:
+        TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",true)
+        goto Super::Death
+    }
+}
+
+actor det2_str1 : detonator2_katarn { Speed 4 }
+actor det2_str2 : detonator2_katarn { Speed 8 }
+actor det2_str3 : detonator2_katarn { Speed 12 }
+actor det2_str4 : detonator2_katarn { Speed 16 }
+actor det2_str5 : detonator2_katarn { Speed 20 }
+actor det2_str6 : detonator2_katarn { Speed 24 }
+actor det2_str7 : detonator2_katarn { Speed 28 }
+actor det2_str8 : detonator2_katarn { Speed 32 }
+actor det2_str9 : detonator2_katarn { Speed 36 }
+actor det2_str10 : detonator2_katarn { Speed 40 }
+
+actor det2_str1_coop : det2_str1
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str2_coop : det2_str2
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str3_coop : det2_str3
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str4_coop : det2_str4
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str5_coop : det2_str5
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str6_coop : det2_str6
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str7_coop : det2_str7
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str8_coop : det2_str8
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str9_coop : det2_str9
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor det2_str10_coop : det2_str10
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor explosion_small
+{
+    Radius 6
+    Height 6
+    Scale 0.8
+    +CLIENTSIDEONLY
+    +NOGRAVITY
+    States
+    {
+      Spawn:
+        EXTH AB 2
+        EXTH CDEF 2 Bright
+        EXTH GHIJKL 2
+        stop
+    }
+}

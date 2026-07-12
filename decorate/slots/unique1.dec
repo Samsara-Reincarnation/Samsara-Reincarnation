@@ -1,0 +1,164 @@
+actor SamsaraUniquePickup1 : SamsaraUniquePickup
+{
+    States
+    {
+      Spawn:
+        UNIQ B 0 Bright NoDelay ACS_NamedExecuteWithResult("Samsara_SwitchableObject", 15)
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+        goto SpawnLoop
+
+      SpawnLoop:
+        "----" A 35 Bright ACS_NamedExecuteAlways("SamsaraClientClass", 0, -1)
+        loop
+
+      // Old-Style
+      NoGuy: UNIQ A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+
+      // Class-Specific
+      Doomguy:          DGBZ A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Doom64:           64BZ A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      DoomguyStr:
+        TNT1 A 0 A_ChangeFlag("FLOATBOB",false)
+        DGBZ A 35 A_SpawnItemEx("SamsaraDoomguyStrHRLDummy",0.1,0.1)
+        goto SpawnLoop
+      Chexguy:          CBRK ABCD 8 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Heretic:          WGRM A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Wolfguy:          WFLF A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      LostWolfguy:      WFLF B 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Totenkopf:        TK06 F 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Hexen:
+        TNT1 A 0 A_ChangeFlag("FLOATBOB",true)
+        PWBK A 35 //61 A_SpawnItemEx("SamsaraHexenMysticAmbitIncantDummy",0.1,0.1)
+        goto SpawnLoop
+      HexenClassic:     goto Hexen
+      HexenMage:        goto Hexen
+      HexenFighter:     goto Hexen
+      Dukeguy:          DKJT A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      BeachDukeguy:     goto Dukeguy
+      Duke64guy:        PDWP I 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Marathon:         AWPN A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Quake:            QLSC Z 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Rott:             PBAT A 35 Bright A_ChangeFlag("FLOATBOB",true) goto SpawnLoop
+      Blake:            BAMR A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      AOG:              goto Blake
+      Caleb:            VDLF A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Strifeguy:        UPGR FEDCBAGHIJKJIHGABCDE 2 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Erad:             D7X_ ABCDEFG 3 A_ChangeFlag("FLOATBOB",true) goto SpawnLoop
+      EradKamchak:      goto Erad
+      EradDan:          goto Erad
+      EradMarine:       goto Erad
+      C7:               7MN2 A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      RMR:              RM8Z H 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Katarn:           PDFU B 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      POGreed:          PPGU C 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Disruptor:        SQ72 X 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Witchaven:        WIN0 G 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      HalfLife:
+        HWU0 ABCDEFGHIJKLMNO 1 A_ChangeFlag("FLOATBOB",false)
+        HWU0 ABCDEFGHIJKLMNO 1 A_ChangeFlag("FLOATBOB",false)
+        goto SpawnLoop
+      HalfLifeLoadout1: OWU0 A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      SW:               HRT2 WX 24 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      CM:               CMUQ A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Jon:              WROR A 35 Bright A_ChangeFlag("FLOATBOB",true) goto SpawnLoop
+      RR:               R_HC J 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Bitterman:        Q2WP A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Demoness:         HX00 A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Bond:             GE00 Z 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Goldfinger:       GF00 Z 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Catacomb:
+        CT01 NO 4 Bright A_ChangeFlag("FLOATBOB",false)
+        CTAA ABGHMN 4 Bright A_ChangeFlag("FLOATBOB",false)
+        goto SpawnLoop
+      Painkiller:       PK99 A 35 Bright A_ChangeFlag("FLOATBOB",true) goto SpawnLoop
+      Unreal:           UN00 A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      RTCW:             RW98 A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Sarge:            Q399 A 35 A_ChangeFlag("FLOATBOB",true) goto SpawnLoop
+      Descent:          DS56 ABCDEFGHIJKLMNO 2 A_ChangeFlag("FLOATBOB",true) goto SpawnLoop
+      DeusEx:           DX03 A 35 A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+
+      // Hybrid
+      DoomSpecial:             UNIQ D 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      Doom64Special:           UNIQ U 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      DoomStrSpecial:          WHRL B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      ChexSpecial:             UNIQ C 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      HereticSpecial:          UNI2 Y 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      WolfSpecial:             UNIQ H 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      LostWolfSpecial:         UNI2 H 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      TotenkopfSpecial:        TK06 G 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      HexenSpecial:            UNIQ G 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      HexenClassicSpecial:     goto HexenSpecial
+      HexenMageSpecial:        goto HexenSpecial
+      HexenFighterSpecial:     goto HexenSpecial
+      DukeSpecial:             UNIQ E 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      BeachDukeSpecial:        goto DukeSpecial
+      Duke64Special:           PDJP A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      MarathonSpecial:         UNIQ I 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      QuakeSpecial:            UNIQ T 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      RottSpecial:             PRBT A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      BlakeSpecial:            UNQB B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      AOGSpecial:              goto BlakeSpecial
+      CalebSpecial:            UNQC C 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      StrifeSpecial:           UNI2 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      EradSpecial:             ERPS H 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      EradKamchakSpecial:      goto EradSpecial
+      EradDanSpecial:          goto EradSpecial
+      EradMarineSpecial:       goto EradSpecial
+      C7Special:               7MN2 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      RMRSpecial:              RMZ6 A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      KatarnSpecial:           PDFU A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      POGreedSpecial:          GN7Q Z 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      DisruptorSpecial:        SQ73 H 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      WitchavenSpecial:        UNIQ Y 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      HalfLifeSpecial:         UNIQ X 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      HalfLifeSpecialLoadout1: UNI2 X 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      SWSpecial:               PSW0 A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      CMSpecial:               CMPK A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      JonSpecial:              PSPK A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      RRSpecial:               RRPK O 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      BittermanSpecial:        Q2WP B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      DemonessSpecial:         HX00 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      BondSpecial:             GE00 Y 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      GoldfingerSpecial:       GF00 Y 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      CatacombSpecial:         CTUN A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      PainkillerSpecial:       PK99 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      UnrealSpecial:           UN00 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      RTCWSpecial:             RW98 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      SargeSpecial:            Q399 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      DescentSpecial:          GXUN A 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+      DeusExSpecial:           DX03 B 35 Bright A_ChangeFlag("FLOATBOB",false) goto SpawnLoop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraGiveUnique"), "PickupSuccess")
+        goto PickupFailure
+    }
+}
+
+actor SamsaraDoomguyStrHRLDummy : SamsaraUniquePickupDummy
+{
+    States
+    {
+      Spawn:
+        WHRL A 38
+        stop
+    }
+}
+
+actor SamsaraHexenMysticAmbitIncantDummy : SamsaraUniquePickupDummy
+{
+    +FLOATBOB
+    States
+    {
+      Spawn:
+        HRAD ABCDEFGHIJKLMNOP 4
+        stop
+    }
+}

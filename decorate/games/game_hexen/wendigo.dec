@@ -1,0 +1,216 @@
+actor IceGuy2 : SamsaraMonsterReincWendigo replaces IceGuy
+{
+	DamageFactor "QuakePistol", 1.5
+	DamageFactor "MarathonPistol", 1.5
+	DamageFactor "DukePistol", 3
+	DamageFactor "Pistol", 3
+	DamageFactor "DoomDamageTypePistol", 3
+	DamageFactor "DoomFist", 3
+	DamageFactor "DoomDamageTypeFist", 3
+	DamageFactor "PunchDagger", 3
+	DamageFactor "ZorchPistol", 3
+	DamageFactor "StrifePistol", 3
+	DamageFactor "Wraithverge", 1.2
+	DamageFactor "Normal", 1.15
+	DamageFactor "DoomDamageType", 1.15
+	DamageFactor "DoomDamageTypeStunner", 1.15
+	DamageFactor "DragonClaw", 1.45
+	DamageFactor "Mace", 1.15
+	DamageFactor "Zorch", 1.15
+	DamageFactor "PhasingZorch", 1.15
+	DamageFactor "BFG", 1.15
+	DamageFactor "DoomDamageTypeBFG", 1.15
+	DamageFactor "BFGSpray", 1.15
+	DamageFactor "DoomDamageTypeDevastator", 1.15
+	DamageFactor "Fire", 1.15
+	DamageFactor "DoomDamageTypeFire", 1.15
+	DamageFactor "DoomDamageTypeFireExplosive", 1.15
+	DamageFactor "MarathonFire", 1.15
+	DamageFactor "MarathonPlasmaFire", 1.15
+	DamageFactor "Ice", 1.15
+	DamageFactor "DoomDamageTypeIce", 1.15
+	DamageFactor "Disintegrate", 1.15
+	DamageFactor "StrifeMauler", 1.15
+	DamageFactor "DukeDamage", 1.15
+	DamageFactor "DukeExplosive", 1.05
+	DamageFactor "DukeIce", 1.2
+	DamageFactor "MightyBoot", 3
+	DamageFactor "Explosive", 1.15
+	DamageFactor "DoomDamageTypeExplosive", 1.15
+	DamageFactor "MarathonFusion", 1.15
+	DamageFactor "DoomPlasma", 1.15
+	DamageFactor "DoomDamageTypePlasma", 1.15
+	DamageFactor "DoomDamageTypeRepeater", 1.15
+	DamageFactor "CorvusCrossbow", 1.15
+	DamageFactor "CorvusHellstaff", 1.15
+	DamageFactor "CorvusHellstaffTomed", 1.15
+	DamageFactor "MarathonPlasma", 1.15
+	DamageFactor "BJSpear", 1.15
+	DamageFactor "WMCBeam", 1.15
+	DamageFactor "WMCNade", 1.15
+	PainChance "MightyBoot", 255
+	PainChance "ShrinkerDMG", 0
+	Tag "Wendigo"
+	States
+	{
+		See:
+			TNT1 A 0 A_SetTranslucent(1,0)
+			ICEY A 4 A_Chase
+			ICEY B 4 A_IceGuyChase
+			ICEY CD 4 A_Chase
+			Loop
+		Pain.MightyBoot:
+			TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+			TNT1 A 0 A_PlaySound("duke/kickhit",CHAN_BODY)
+			ICEY H 2 A_FaceTarget
+			TNT1 A 0 A_Recoil(14)
+			ICEY H 16 A_Pain
+			Goto See
+		Missile:
+			TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+			Goto Super::Missile
+		Death:
+		XDeath:
+			ICEY A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			ICEY A 0 A_GiveInventory("EnemyZorched",1)
+			ICEY A 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			ICEY A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
+			ICEY A 0 A_ChangeFlag("SOLID",false)
+			ICEY A 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2NoBlood",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A 1
+			Stop
+
+		// SamsaraMonsterReincWendigo states
+		Death.ZorchPistol:
+		Death.Zorch:
+		Death.ZorchKamikaze:
+		Death.PhasingZorch:
+		Death.ZorchSpectral:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_Stop
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_PlaySound("chex/zorch",CHAN_5)
+			"####" "#" 0 A_NoGravity
+			"####" "#" 3 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 3 A_SetTranslucent(0.9,0)
+			"####" "#" 0 A_ActiveSound
+			"####" "#" 3 A_SetTranslucent(0.8,0)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 3 A_SetTranslucent(0.7,0)
+			"####" "#" 3 A_SetTranslucent(0.6,0)
+			"####" "#" 3 A_SetTranslucent(0.5,0)
+			"####" "#" 3 A_SetTranslucent(0.4,0)
+			"####" "#" 3 A_SetTranslucent(0.3,0)
+			"####" "#" 3 A_SetTranslucent(0.2,0)
+			"####" "#" 3 A_SetTranslucent(0.1,0)
+			TNT1 A 1 A_SetTranslucent(1,0)
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+		Death.DukePlasma:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_Stop
+			"####" "#" 0 A_NoGravity
+			"####" "#" 1 A_NoBlocking
+			"####" "#" 0 A_Jump(218,2)
+			"####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 12)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 27 A_ActiveSound
+			TNT1 A 1 A_SetTranslucent(1,0)
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+		Death.RottDisintegrate:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_Stop
+			"####" "#" 0 A_NoGravity
+			"####" "#" 0 A_ActiveSound
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 3 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 8)
+			"####" "#" 3 A_SetTranslucent(0.9,0)
+			"####" "#" 3 A_SetTranslucent(0.8,0)
+			"####" "#" 3 A_SetTranslucent(0.7,0)
+			"####" "#" 3 A_SetTranslucent(0.6,0)
+			"####" "#" 3 A_SetTranslucent(0.5,0)
+			"####" "#" 3 A_SetTranslucent(0.4,0)
+			"####" "#" 3 A_SetTranslucent(0.3,0)
+			"####" "#" 3 A_SetTranslucent(0.2,0)
+			"####" "#" 3 A_SetTranslucent(0.1,0)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_Gravity
+			TNT1 A 0 A_NoBlocking
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+		Disintegrate:
+		Death.StrifeMauler:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_Stop
+			"####" "#" 0 A_NoGravity
+			"####" "#" 0 A_ActiveSound
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 3 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 10)
+			"####" "#" 3 A_SetTranslucent(0.9,0)
+			"####" "#" 3 A_SetTranslucent(0.8,0)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 3 A_SetTranslucent(0.7,0)
+			"####" "#" 3 A_SetTranslucent(0.6,0)
+			"####" "#" 3 A_SetTranslucent(0.5,0)
+			"####" "#" 2 A_SetTranslucent(0.4,0)
+			"####" "#" 2 A_SetTranslucent(0.3,0)
+			"####" "#" 2 A_SetTranslucent(0.2,0)
+			"####" "#" 2 A_SetTranslucent(0.1,0)
+			TNT1 A 1 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+		Death.Nuke:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
+			"####" "#" 0 A_Stop
+			"####" "#" 0 A_NoGravity
+			"####" "#" 0 A_ActiveSound
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 11)
+			"####" "#" 0 A_NoBlocking
+			"####" "#################" 3 A_FadeOut(0.05,0)
+			TNT1 A 0 A_Gravity
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+	}
+}
+
+// I remember once when I was visiting Treherne, I was staying at a motel for a
+// few days to be with Dad while he had a short break from touring with his band.
+// One early morning I went out on the back patio, unable to sleep, just watching
+// the snow fall down on the ground.
+// To this day, I still remember the sight of something moving in the forest.
+// I could never make out exactly what it was, thanks to me being ungodly tired
+// at the time, but I distinctly remember just seeing it made my skin crawl. It
+// seemed like humanoid shape, bent over and running around like a beast in the
+// woods. It was as if a guy had forgotten how to, well, be a guy and became a
+// critter instead.
+// Never understood what it was. Now that I'm familiar with urban legends, though,
+// sounds like it could have been a wendigo. Well, assuming they actually exist,
+// of course.
+// Still. Never liked them. Even these guys sometimes make my mind race back
+// to that memory, sending ice down my spine once again.
+
+// I guess all of this is irrelevant, though, isn't it?
+// Sorry, I just wanted to pad this page with something.

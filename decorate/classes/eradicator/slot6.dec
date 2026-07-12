@@ -1,0 +1,950 @@
+// Eleena Brynstaarl
+
+actor "Eleena Smoke Bomb" : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Smokebomb"
+    Weapon.SlotNumber 6
+    Weapon.SelectionOrder 1350
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 48
+    Weapon.AmmoUse 4
+    Obituary "%o was suffocated by %k's smokebomb."
+    Tag "Smoke Bomb"
+    +EXPLOSIVE
+    +NOAUTOAIM
+    States
+    {
+      Spawn:
+        ER07 B -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        ER07 A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        ER07 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        ER07 A 1 A_Raise
+        loop
+
+      // Unenhanced
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerEradEnWP",1,"FireEnhanced")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireEnhanced")
+      FireUnenhanced:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorSmokeBombUnenhancedAttackHandler")
+        goto FireContinue
+
+      // Enhanced
+      FireEnhanced:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorSmokeBombEnhancedAttackHandler")
+        goto FireContinue
+
+      FireContinue:
+        ER07 A 2 Bright
+        ER07 A 1 Offset(0,39)
+        ER07 A 1 Offset(0,45)
+        ER07 A 1 Offset(0,59)
+        ER07 A 1 Offset(0,55)
+        ER07 A 1 Offset(0,52)
+        ER07 A 2 Offset(0,49)
+        ER07 A 2 Offset(0,46)
+        ER07 A 2 Offset(0,44)
+        ER07 A 2 Offset(0,40)
+        ER07 A 2 Offset(0,38)
+        ER07 A 2 Offset(0,36)
+        ER07 A 2 Offset(0,34)
+        ER07 A 9 Offset(0,32)
+        ER07 A 3 A_ReFire
+        goto Ready
+
+      Flash:
+        ER06 B 2 Bright //A_Light0 // I feel like this was supposed to be a different value. I honestly don't know
+        goto LightDone
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorSmokeBombUnenhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("GrenadeB/FireB",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("EradSmokeBomb",0,false,0,0,0,6) //+range
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("EradSmokeBombCoop",0,false,0,0,0,6) //+range
+        stop
+    }
+}
+
+actor SamsaraEradicatorSmokeBombEnhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("GrenadeB/FireB",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("EradSmokeBomb2",0,false,0,0,0,6)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("EradSmokeBomb2Coop",0,false,0,0,0,6)
+        stop
+    }
+}
+
+actor EradSmokeBombLoopCount : Counter { Inventory.MaxAmount 20 }
+
+actor EradSmokeBomb
+{
+    Projectile
+    Radius 6
+    Height 6
+    Speed 12
+    Damage (40)
+    DamageType "EradExplosive2"
+    Gravity 0.15
+    Scale 0.5
+    DeathSound "GrenadeB/Boom"
+    +BOUNCEONCEILINGS
+    +BOUNCEONWALLS
+    +MOVEWITHSECTOR
+    -NOGRAVITY
+    States
+    {
+      Spawn:
+        ER76 B 0 Bright
+        TNT1 A 0 ThrustThingZ(0,8,0,1)
+      SpawnLoop:
+        ER76 BA 4 Bright
+        ER78 ZY 4 Bright
+        loop
+
+      Death:
+        TNT1 A 0 A_SpawnItemEx("EradPlasmaExplosion1B",0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_Explode(80,80,0)
+      DeathEmit:
+        TNT1 A 0 A_SetGravity(0.75)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",true)
+      DeathEmitLoop:
+        TNT1 A 0 A_JumpIfInventory("EradSmokeBombLoopCount",0,"DeathEmitEnd")
+        TNT1 A 0 A_GiveInventory("EradSmokeBombLoopCount")
+        TNT1 A 0 A_SpawnItemEx("EradSmokeBombSmoke",0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        ER78 Y 7 Bright A_Explode(8,64)
+        loop
+
+      DeathEmitEnd:
+        TNT1 A 0 A_PlaySound("GrenadeB/Boom",CHAN_VOICE)
+        TNT1 A 0 A_SetScale(0.6)
+      DeathFinish:
+        GLBB ABC 3 Bright
+        GLBB DEF 3 Bright A_FadeOut
+        stop
+    }
+}
+
+actor EradSmokeBombCoop : EradSmokeBomb
+{
+    Species "Player"
+    +NODAMAGETHRUST
+    +THRUSPECIES
+}
+
+actor EradSmokeBomb2 : EradSmokeBomb
+{
+    Gravity 0.075
+    States
+    {
+      Spawn:
+        ER76 B 0 Bright ThrustThingZ(0,8,0,1)
+        goto SpawnLoop
+
+      Death:
+        TNT1 A 0 A_SpawnItemEx("EradPlasmaExplosion1",0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_Explode(128,128,0)
+        TNT1 A 0 A_Explode(32,128)
+        goto DeathEmit
+    }
+}
+
+actor EradSmokeBomb2Coop : EradSmokeBomb2
+{
+    Species "Player"
+    +NODAMAGETHRUST
+    +THRUSPECIES
+}
+
+//It's too small. It needs to be bigger, and the visual feedback needs to improve
+actor EradSmokeBombSmoke
+{
+    Radius 1
+    Height 1
+    RenderStyle "Translucent"
+    Alpha 0.6
+    Scale 1.5
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        GLSB A 0 Bright
+        TNT1 A 0 ThrustThingZ(0,10,0,1)
+        TNT1 A 0 ThrustThing(random(0,256),random(1,4),0,0)
+        GLSB ABCABCABC 4 Bright
+        stop
+    }
+}
+
+actor EradSmokeBombExplosion
+{
+    Radius 1
+    Height 1
+    Scale 0.75
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        GLBB A 0 Bright //First state skipped
+        GLBB ABC 3 Bright
+        GLBB DEF 3 Bright A_FadeOut
+        stop
+    }
+}
+
+actor EradPlasmaExplosion1B : EradPlasmaExplosion1 { Scale 0.33 }
+
+// Kamchak/Alliance Commando
+
+actor "Napalm Charge" : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Napalm Charge"
+    Weapon.SlotNumber 6
+    Weapon.SelectionOrder 1350
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 48
+    Weapon.AmmoUse 4
+    Obituary "%k made a new scar on %o's face."
+    Tag "Napalm Charge"
+    +EXPLOSIVE
+    +NOAUTOAIM
+    States
+    {
+      Spawn:
+        ENC6 C -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        ENC6 A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        ENC6 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        ENC6 A 1 A_Raise
+        loop
+
+      // Unenhanced
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerEradEnWP",1,"FireEnhanced")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireEnhanced")
+      FireUnenhanced:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorNapalmChargeUnenhancedAttackHandler")
+        goto FireContinue
+
+      // Enhanced
+      FireEnhanced:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorNapalmChargeEnhancedAttackHandler")
+        goto FireContinue
+
+      FireContinue:
+        ENC6 A 2 Bright
+        ENC6 A 1 Offset(2,33)
+        ENC6 A 1 Offset(3,34)
+        ENC6 A 1 Offset(7,39)
+        ENC6 A 1 Offset(8,43)
+        ENC6 A 1 Offset(7,49)
+        ENC6 A 2 Offset(6,45)
+        ENC6 A 2 Offset(5,41)
+        ENC6 A 3 Offset(4,39)
+        ENC6 A 3 Offset(3,37)
+        ENC6 A 3 Offset(2,35)
+        ENC6 A 3 Offset(1,33)
+        ENC6 A 7 Offset(0,32)
+        ENC6 A 3 A_ReFire
+        goto Ready
+
+      Flash:
+        ENC6 B 2 Bright //A_Light0 // I feel like this was supposed to be a different value. I honestly don't know
+        goto LightDone
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorNapalmChargeUnenhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("GrenadeB/FireB",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("NapalmChargeGlass",0,false,0,0,0,6) //+range
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("NapalmChargeCoopGlass",0,false,0,0,0,6) //+range
+        stop
+    }
+}
+
+actor SamsaraEradicatorNapalmChargeEnhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("GrenadeB/FireB",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("NapalmChargeBrokenGlass",0,false,0,0,0,0)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("NapalmChargeBrokenGlassCoop",0,false,0,0,0,0)
+        stop
+    }
+}
+
+actor NapalmChargeGlass
+{
+    Projectile
+    Radius 13
+    Height 13
+    Speed 15
+    Damage (random(45,75))
+    DamageType "EradExplosive2"
+    Mass 20
+    Gravity 0.125
+    Scale 0.6
+    DeathSound "Erad/Glassbrk"
+    Obituary "%k made a new scar on %o's face."
+    -NOGRAVITY
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        ERP3 A 0 Bright Light("CATGREENBALLZ__")
+        TNT1 A 0 ThrustThingZ(0,3,0,1)
+      SpawnLoop:
+        ERP3 A 6 Bright Light("CATGREENBALLZ__") A_Recoil(-1)
+        ERP3 BCDEF 6 Bright Light("CATGREENBALLZ__")
+        loop
+
+      Death:
+        TNT1 A 0 A_SpawnDebris("GlassPiece1")
+        TNT1 A 0 A_SpawnDebris("GlassPiece2")
+        TNT1 A 0 A_SpawnDebris("GlassPiece3")
+        TNT1 A 0 A_SpawnDebris("GlassPiece4")
+        TNT1 A 0 A_SpawnDebris("GlassPiece5")
+        TNT1 AAAAAA 0 A_SpawnItemEx("EradGreenFire",0,0,0,random(-30,30)/10.00,random(-30,30)/10.00,random(50,150)/10.00)
+        TNT1 A 1 A_Explode(64,64)
+        stop
+    }
+}
+
+actor NapalmChargeCoopGlass : NapalmChargeGlass
+{
+    Species "Player"
+    +NODAMAGETHRUST
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_SpawnDebris("GlassPiece1")
+        TNT1 A 0 A_SpawnDebris("GlassPiece2")
+        TNT1 A 0 A_SpawnDebris("GlassPiece3")
+        TNT1 A 0 A_SpawnDebris("GlassPiece4")
+        TNT1 A 0 A_SpawnDebris("GlassPiece5")
+        TNT1 AAAAAA 0 A_SpawnItemEx("EradCoopGreenFire",0,0,0,random(-30,30)/10.00,random(-30,30)/10.00,random(50,150)/10.00)
+        TNT1 A 1 A_Explode(64,64,0)
+        stop
+    }
+}
+
+actor NapalmChargeBrokenGlass : NapalmChargeGlass
+{
+    Speed 30
+    +NOGRAVITY
+    States
+    {
+      Spawn:
+        ERP3 A 0 Bright Light("CATGREENBALLZ__")
+      SpawnLoop:
+        ERP3 A 6 Bright Light("CATGREENBALLZ__") A_Recoil(-1)
+        ERP3 BC 6 Bright Light("CATGREENBALLZ__")
+        ERP3 D 6 Bright Light("CATGREENBALLZ__") A_SpawnItemEx("EradGreenDrippedFire")
+        ERP3 EF 6 Bright Light("CATGREENBALLZ__")
+        TNT1 A 0 A_SpawnItemEx("EradGreenDrippedFire")
+        loop
+    }
+}
+
+actor NapalmChargeBrokenGlassCoop : NapalmChargeCoopGlass
+{
+    Speed 30
+    +NOGRAVITY
+    States
+    {
+      Spawn:
+        ERP3 A 0 Bright Light("CATGREENBALLZ__")
+      SpawnLoop:
+        ERP3 A 6 Bright Light("CATGREENBALLZ__") A_Recoil(-1)
+        ERP3 BC 6 Bright Light("CATGREENBALLZ__")
+        ERP3 D 6 Bright Light("CATGREENBALLZ__") A_SpawnItemEx("EradGreenDrippedFireCoop")
+        ERP3 EF 6 Bright Light("CATGREENBALLZ__")
+        TNT1 A 0 A_SpawnItemEx("EradGreenDrippedFireCoop")
+        loop
+    }
+}
+
+actor EradGreenFire
+{
+    Health 2
+    Radius 1
+    Height 1
+    Damage 8
+    DamageType "EradGreenFire"
+    //ReactionTime 8 // default
+    Scale 0.6
+    Obituary "%o didn't know that %k's green fire actually burns, too!"
+    +DONTSPLASH
+    +DROPOFF
+    +FORCERADIUSDMG
+    +MOVEWITHSECTOR
+    +NOBLOCKMAP
+    +NOBLOCKMONST
+    +NOBOSSRIP
+    +NODAMAGETHRUST
+    +NOTELEPORT
+    +RANDOMIZE
+    +RIPPER
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        ERP2 B 0 Bright Light("CATGREENBALLZ2__")
+        TNT1 A 0 A_Jump(200,"SpawnLoop")
+        TNT1 A 0 A_ChangeFlag("PAINLESS",true)
+      SpawnLoop:
+        TNT1 A 0 A_Countdown
+        ERP2 BCD 3 Bright Light("CATGREENBALLZ2__") A_Explode(1,32)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",false)
+        ERP2 E 3 Bright Light("CATGREENBALLZ2__") A_Explode(1,32)
+        TNT1 A 0 A_Countdown
+        ERP2 FABC 3 Bright Light("CATGREENBALLZ2__") A_Explode(1,32)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",true)
+        ERP2 DEF 3 Bright Light("CATGREENBALLZ2__") A_Explode(1,32)
+        loop
+
+      Death:
+        ERP2 FEDCBA 3 Bright Light("CATGREENBALLZ2__") A_FadeOut
+        stop
+    }
+}
+
+actor EradCoopGreenFire : EradGreenFire
+{
+    DamageType "EradCoopGreenFire"
+    Species "Player"
+    +CANNOTPUSH
+    +THRUSPECIES
+    States
+    {
+      Spawn:
+        ERP2 B 0 Bright Light("CATGREENBALLZ2__")
+        TNT1 A 0 A_Jump(200,"SpawnLoop")
+        TNT1 A 0 A_ChangeFlag("PAINLESS",true)
+      SpawnLoop:
+        TNT1 A 0 A_Countdown
+        ERP2 BCD 3 Bright Light("CATGREENBALLZ2__") A_Explode(2,48,0)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",false)
+        ERP2 E 3 Bright Light("CATGREENBALLZ2__") A_Explode(2,48,0)
+        TNT1 A 0 A_Countdown
+        ERP2 FABC 3 Bright Light("CATGREENBALLZ2__") A_Explode(2,48,0)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",true)
+        ERP2 DEF 3 Bright Light("CATGREENBALLZ2__") A_Explode(2,48,0)
+        loop
+    }
+}
+
+actor EradGreenDrippedFire : EradGreenFire
+{
+    ReactionTime 10
+    States
+    {
+      Spawn:
+        ERP3 G 0 Bright
+        TNT1 A 0 A_Jump(200,"SpawnLoop")
+        TNT1 A 0 A_ChangeFlag("PAINLESS",true)
+      SpawnLoop:
+        TNT1 A 0 A_Countdown
+        ERP3 GHI 3 Bright A_Explode(1,24)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",false)
+        ERP3 G 3 Bright A_Explode(1,24)
+        TNT1 A 0 A_Countdown
+        ERP3 HIGH 3 Bright A_Explode(1,24)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",true)
+        ERP3 I 3 Bright A_Explode(1,24)
+        loop
+
+      Death:
+        ERP3 GHIGHI 3 Bright A_FadeOut
+        stop
+    }
+}
+
+actor EradGreenDrippedFireCoop : EradCoopGreenFire
+{
+    ReactionTime 10
+    States
+    {
+      Spawn:
+        ERP3 G 0 Bright
+        TNT1 A 0 A_Jump(200,"SpawnLoop")
+        TNT1 A 0 A_ChangeFlag("PAINLESS",true)
+      SpawnLoop:
+        TNT1 A 0 A_Countdown
+        ERP3 GHI 3 Bright A_Explode(2,32,0)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",false)
+        ERP3 G 3 Bright A_Explode(2,32,0)
+        TNT1 A 0 A_Countdown
+        ERP3 HIGH 3 Bright A_Explode(2,32,0)
+        TNT1 A 0 A_ChangeFlag("FORCERADIUSDMG",true)
+        ERP3 I 3 Bright A_Explode(2,32,0)
+        loop
+
+      Death:
+        ERP3 GHIGHI 3 Bright A_FadeOut
+        stop
+    }
+}
+
+actor GlassPiece1
+{
+    Projectile
+    Health 2
+    Radius 1
+    Height 1
+    Speed 3
+    Gravity 0.8 // 0.125
+    BounceType "Doom"
+    Scale 0.68
+    +CLIENTSIDEONLY
+    +EXPLODEONWATER
+    +MOVEWITHSECTOR
+    +NOBLOCKMONST
+    -NOGRAVITY
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        ERG7 ABCDE 2
+        loop
+
+      Death:
+        ERG7 O 1 A_FadeOut
+        stop
+    }
+}
+
+actor GlassPiece2 : GlassPiece1
+{
+    States
+    {
+      Spawn:
+        ERG7 FGHIJKLMN 2
+        loop
+    }
+}
+
+actor GlassPiece3 : GlassPiece1
+{
+    States
+    {
+      Spawn:
+        ERG7 PQRSTU 2
+        loop
+    }
+}
+
+actor GlassPiece4 : GlassPiece1
+{
+    States
+    {
+      Spawn:
+        ERG7 VWXY 2
+        loop
+    }
+}
+
+actor GlassPiece5 : GlassPiece1
+{
+    States
+    {
+      Spawn:
+        ERG7 LMN 2
+        loop
+    }
+}
+
+// Dan Blaze
+
+actor "Ion Sphere" : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Ion Sphere"
+    Weapon.SlotNumber 6
+    Weapon.SelectionOrder 1350
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 48
+    Weapon.AmmoUse 4
+    Obituary "%o was electrocuted by %k's Ion Sphere."
+    Tag "Ion Sphere"
+    +EXPLOSIVE
+    +NOAUTOAIM
+    States
+    {
+      Spawn:
+        ER77 ABCDEFGHIJKLMNOPQRSTUVWXYZ 4 Bright
+        ER78 ABCDEFGHIJKLMNOPQRSTUVWX 4 Bright
+        loop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        ER08 A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        ER08 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        ER08 A 1 A_Raise
+        loop
+
+      // Unenhanced
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerEradEnWP",1,"FireEnhanced")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireEnhanced")
+      FireUnenhanced:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorIonSphereUnenhancedAttackHandler")
+        goto FireContinue
+
+      // Enhanced
+      FireEnhanced:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorIonSphereEnhancedAttackHandler")
+        goto FireContinue
+
+      FireContinue:
+        ER08 A 2 Bright
+        ER08 A 1 Bright Offset(0,39)
+        ER08 A 1 Bright Offset(0,45)
+        ER08 A 1 Offset(0,59)
+        ER08 A 1 Offset(0,55)
+        ER08 A 1 Offset(0,52)
+        ER08 A 2 Offset(0,49)
+        ER08 A 2 Offset(0,46)
+        ER08 A 2 Offset(0,44)
+        ER08 A 2 Offset(0,40)
+        ER08 A 2 Offset(0,38)
+        ER08 A 2 Offset(0,36)
+        ER08 A 2 Offset(0,34)
+        ER08 A 9 Offset(0,32)
+        ER08 A 3 A_ReFire
+        goto Ready
+
+      Flash:
+        ER08 B 2 Bright //A_Light0 // I feel like this was supposed to be a different value. I honestly don't know
+        ER08 C 1 Bright A_Light0
+        ER08 C 1 Bright
+        stop
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorIonSphereUnenhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("GrenadeB/FireB",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("EradIonSphereBolt",0,false,0,0,0,6) //+range
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("EradIonSphereBoltCoop",0,false,0,0,0,6) //+range
+        stop
+    }
+}
+
+actor SamsaraEradicatorIonSphereEnhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",4,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",4)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("GrenadeB/FireB",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("EradIonSphereBolt2",0,false,0,0,0,0)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("EradIonSphereBolt2Coop",0,false,0,0,0,0)
+        stop
+    }
+}
+
+actor EradIonSphereBolt
+{
+    Projectile
+    Radius 6
+    Height 6
+    Speed 18
+    Damage (80)
+    DamageType "EradShock"
+    Gravity 0.15
+    RenderStyle "Translucent"
+    Scale 0.5
+    DeathSound "Bolt/Spark1"
+    +MOVEWITHSECTOR
+    -NOGRAVITY
+    States
+    {
+      Spawn:
+        ER77 A 0 Bright
+        TNT1 A 0 ThrustThingZ(0,5,0,1)
+      SpawnLoop:
+        ER77 ABCDEFGHIJKLMNOPQRSTUVWXYZ 4 Bright
+        ER77 ABCDEFGHIJKLMNOPQRSTUVWX 4 Bright
+        loop
+
+      Death:
+        TNT1 A 0 A_SetTranslucent(0.5)
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_Explode(64,128,0)
+        TNT1 A 0 A_Explode(32,128)
+        TNT1 AAAAAA 0 A_SpawnItemEx("EradIonSphereSpark",0,0,0,frandom(-4,4),frandom(-4,4),frandom(-4,4),0,SXF_TRANSFERPOINTERS)
+      DeathFinish:
+        BNFR ABCDEF 4 Bright
+        stop
+    }
+}
+
+actor EradIonSphereBoltCoop : EradIonSphereBolt
+{
+    Species "Player"
+    +NODAMAGETHRUST
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_SetTranslucent(0.5)
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_Explode(64,128,0)
+        TNT1 A 0 A_Explode(32,128)
+        TNT1 AAAAAA 0 A_SpawnItemEx("EradIonSphereSparkCoop",0,0,0,frandom(-4,4),frandom(-4,4),frandom(-4,4),0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
+    }
+}
+
+actor EradIonSphereBolt2 : EradIonSphereBolt
+{
+    Speed 36
+    +NOGRAVITY
+    States
+    {
+      Spawn:
+        ER77 A 0 Bright
+        goto SpawnLoop
+
+      Death:
+        TNT1 A 0 A_SetTranslucent(0.5)
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_Explode(96,128,0)
+        TNT1 A 0 A_Explode(32,128)
+        TNT1 AAAAAAAAA 0 A_SpawnItemEx("EradIonSphereSpark",0,0,0,frandom(-4,4),frandom(-4,4),frandom(-4,4),0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
+    }
+}
+
+actor EradIonSphereBolt2Coop : EradIonSphereBolt2
+{
+    States
+    {
+      Death:
+        TNT1 A 0 A_SetTranslucent(0.5)
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_Explode(96,128,0)
+        TNT1 A 0 A_Explode(32,128)
+        TNT1 AAAAAAAAA 0 A_SpawnItemEx("EradIonSphereSparkCoop",0,0,0,frandom(-4,4),frandom(-4,4),frandom(-4,4),0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
+    }
+}
+
+actor EradIonSphereSpark
+{
+    Monster
+    Radius 3
+    Height 3
+    DamageType "EradShock"
+    ReactionTime 7
+    Scale 0.5
+    DeathSound "Bolt/Spark2"
+    -COUNTKILL
+    +DONTSPLASH
+    +DROPOFF
+    +FRIENDLY
+    +MOVEWITHSECTOR
+    +NOBLOCKMAP
+    +NOBLOCKMONST
+    +NODAMAGETHRUST
+    +NONSHOOTABLE
+    +NOTELEPORT
+    -SHOOTABLE
+    -SOLID
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        ER75 O 0 Bright NoDelay A_TransferPointer(AAPTR_TARGET,AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_FRIENDPLAYER)
+      SpawnLoop:
+        TNT1 A 0 A_SetAngle(angle+random(15,90))
+        TNT1 A 0 A_Recoil(frandom(-0.5,0.5))
+        ER75 OPQ 3 Bright A_Explode(5,40,0)
+        TNT1 A 0 A_Jump(90,"SpawnLoop")
+        TNT1 A 0 A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        ER73 A 4 Bright ThrustThingZ(0,1,0,0)
+        ER74 ZX 4 Bright
+        ER74 Y 4 Bright A_FadeOut
+        stop
+    }
+}
+
+actor EradIonSphereSparkCoop : EradIonSphereSpark
+{
+    Species "Player"
+    +DONTHARMSPECIES
+    +NODAMAGETHRUST
+    +THRUSPECIES
+}

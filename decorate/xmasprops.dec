@@ -1,0 +1,122 @@
+actor Samsara_XMAS_Snow
+{
+    RenderStyle "Translucent"
+    Alpha 0
+    +CLIENTSIDEONLY
+    +NOBLOCKMAP
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_Jump(256,1,2,3,4)
+        XMA3 A 0
+        goto SpawnStart
+        XMA3 B 0
+        goto SpawnStart
+        XMA3 C 0
+        goto SpawnStart
+        XMA3 D 0
+        goto SpawnStart
+
+      SpawnStart:
+        "####" "#########" 2 A_FadeIn(0.1)
+      SpawnLoop:
+        "####" "################################################################################################" 2 A_CheckFloor("Remove")
+      Remove:
+        "####" "#########" 2 A_FadeOut(0.1)
+        stop
+    }
+}
+
+actor SamsaraPinataPartyPerformanceContainer
+{
+    Height 24
+    Radius 12
+    Scale 0.25
+    +SPECIAL
+    States
+    {
+      // placeholders
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_Jump(256,1,2,3,4,5)
+        XMA4 A 0
+        goto SpawnStart
+        XMA5 A 0
+        goto SpawnStart
+        XMA6 A 0
+        goto SpawnStart
+        XMA7 A 0
+        goto SpawnStart
+        XMA8 A 0
+        goto SpawnStart
+
+      SpawnStart:
+        "####" A 5
+      SpawnLoop:
+        "####" A 2
+        "####" A 0 A_CheckRange(28,"SpawnLoop")
+      Open:
+        "####" A 2
+        "####" B 2 A_PlaySound("Samsara/OpenContainer",CHAN_VOICE)
+        "####" C 2
+        "####" D 2 ACS_NamedExecuteWithResult("Samsara_PinataHandler", health, accuracy, score, mass)
+        "####" EFGHIJ 2
+        "####" J 350
+        "####" J 1 A_FadeOut(0.05)
+        wait
+    }
+}
+
+actor SamsaraPinataPartyXmasGift : SamsaraPinataPartyPerformanceContainer
+{
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_Jump(256,1,2,3,4,5)
+        XMA4 A 0
+        goto SpawnStart
+        XMA5 A 0
+        goto SpawnStart
+        XMA6 A 0
+        goto SpawnStart
+        XMA7 A 0
+        goto SpawnStart
+        XMA8 A 0
+        goto SpawnStart
+
+      SpawnStart:
+        "####" A 5
+      SpawnLoop:
+        "####" A 2
+        "####" A 0 A_CheckRange(28,"SpawnLoop")
+      Open:
+        "####" A 2
+        "####" B 2 A_PlaySound("Samsara/OpenPresent",CHAN_VOICE)
+        "####" C 2
+        "####" D 2 ACS_NamedExecuteWithResult("Samsara_PinataHandler", health, accuracy, score, mass)
+        "####" EFGHIJ 2
+        "####" J 350
+        "####" J 1 A_FadeOut(0.05)
+        wait
+    }
+}
+
+actor SamsaraXmasCoal : CustomInventory
+{
+    Inventory.PickupMessage "$SAMSARA_XMASCOAL"
+    Inventory.PickupSound "Samsara/Naughty"
+    Scale 0.1
+    States
+    {
+      Spawn:
+        XMA8 K -1
+        stop
+
+      Pickup:
+        TNT1 A 0 Thing_Damage(0,1)
+        stop
+    }
+}

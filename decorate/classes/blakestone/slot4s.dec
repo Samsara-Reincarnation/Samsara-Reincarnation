@@ -1,0 +1,156 @@
+actor "Gatling Fusion Devastator" : SamsaraBStoneWeapon
+{
+    Inventory.PickupMessage "You got a Gatling Fusion Devastator!"
+    Inventory.PickupSound "wolfen/knifeget"
+    Weapon.SlotNumber 4
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 500
+    Weapon.AmmoType "Clip"
+    Weapon.AmmoGive 40
+    Weapon.AmmoUse 1
+    Obituary "%k ventilated %o with the Gatling Fusion Devastator."
+    Tag "Gatling Fusion Devastator"
+    States
+    {
+      Spawn:
+        WCHP A -1
+        stop
+
+      // Planet Strike
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("BlakeAOGToken",1,"ReadyAOG")
+      ReadyPS:
+        BGFD A 1 A_WeaponReady
+        goto Ready
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("BlakeAOGToken",1,"FireAOG")
+      FirePS:
+        BGFD B 3
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto HoldPS
+        TNT1 A 0 A_GunFlash
+        goto HoldPS
+
+      Hold:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_JumpIfInventory("BlakeAOGToken",1,"HoldAOG")
+      HoldPS:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"HoldPSSmooth")
+        BGFD C 3 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Hold2PS
+        TNT1 A 0 A_GunFlash
+        goto Hold2PS
+
+      Hold2PS:
+        BGFD D 3 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        BGFD E 6 A_ReFire
+        goto Ready
+
+      HoldPSSmooth:
+        BGFD C 2 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        BGFD F 1 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Hold2PSSmooth
+        TNT1 A 0 A_GunFlash
+        goto Hold2PSSmooth
+
+      Hold2PSSmooth:
+        BGFD D 2 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        BGFD G 1 Bright
+        BGFD E 4 A_ReFire
+        BGFD B 2
+        goto Ready
+
+      // Aliens Of Gold
+      ReadyAOG:
+        BGFD H 1 A_WeaponReady(WRF_NOBOB)
+        goto Ready
+
+      FireAOG:
+        BGFD I 3
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto HoldAOG
+        TNT1 A 0 A_GunFlash
+        goto HoldAOG
+
+      HoldAOG:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"HoldAOGSmooth")
+        BGFD J 3 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Hold2AOG
+        TNT1 A 0 A_GunFlash
+        goto Hold2AOG
+
+      Hold2AOG:
+        BGFD K 3 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        BGFD L 6 A_ReFire
+        goto Ready
+
+      HoldAOGSmooth:
+        BGFD J 2 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        BGFD M 1 Bright
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Hold2AOGSmooth
+        TNT1 A 0 A_GunFlash
+        goto Hold2AOGSmooth
+
+      Hold2AOGSmooth:
+        BGFD K 2 Bright A_GiveInventory("SamsaraBStoneGatlingFusionDevastatorAttackHandler")
+        BGFD N 1 Bright
+        BGFD L 4 A_ReFire
+        BGFD I 2
+        goto Ready
+    }
+}
+
+actor SamsaraBStoneGatlingFusionDevastatorAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("BPistol2/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(2,2,-1,6,"BlankPuffBlakeThruGhost",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,6,"BlankPuffBlakeBloodlessThruGhost",FBF_NOFLASH,120)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_FireBullets(0,0,1,6,"BlankPuffBlakeThruGhostCoop",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,2,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,384)
+        TNT1 A 0 A_FireBullets(0,0,1,2,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,320)
+        TNT1 A 0 A_FireBullets(0,0,1,2,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,2,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(0,0,1,2,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(0,0,1,2,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,64)
+        stop
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlakeThruGhostCoop",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,384)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessThruGhostCoop",FBF_NOFLASH,64)
+        stop
+    }
+}

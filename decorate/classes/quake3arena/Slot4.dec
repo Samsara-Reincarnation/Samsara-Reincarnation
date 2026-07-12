@@ -1,0 +1,491 @@
+actor SamsaraQuake3LightningGunLoopSoundCheck : Boolean {}
+actor Q3LightningGunConsumeAmmo : Counter { Inventory.MaxAmount 2 }
+
+Actor Q3LightningGun : Q3Weapon
+{
+	Weapon.SlotNumber 4
+	Weapon.SlotPriority 0
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 20
+	Weapon.AmmoType "Clip"
+	Inventory.PickupMessage "Lightning Gun"
+    Inventory.Icon "Q3CMPW06"
+	Obituary "%o was electrocuted by %k."
+	Tag "Lightning Gun"
+	+FLOATBOB
+	States
+	{
+		Spawn:
+			Q399 ABCDEFGH 2
+			loop
+
+		ReadyActual:
+			Q300 A 0 A_GiveInventory("SamsaraQuake3LightningGunIdleSoundStarter")
+			Q300 A 1 A_WeaponReady
+			loop
+
+		Deselect:
+			Q300 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			Q300 A 0 A_PlaySound("Quake3/Weapons/Change",CHAN_5)
+			Q300 A 1 A_GiveInventory("SamsaraQuake3LightningGunIdleSoundStarter")
+			Q301 ABCD 1
+            Q301 E 0
+		DeselectInstant:
+			TNT1 A 0 A_GiveInventory("SamsaraQuake3LightningGunLoopSoundStopper")
+			goto Super::DeselectInstant
+
+		Ready: // our "Select" state
+			Q302 AB 1 A_GiveInventory("SamsaraQuake3LightningGunIdleSoundStarter") // map change hack
+			Q302 CD 1
+			goto ReadyActual
+
+		Fire:
+			Q303 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+			Q303 A 0 A_JumpIfInventory("Clip",1,"FireStart")
+			goto FireDry
+
+		FireDry:
+			Q300 A 0 A_ClearReFire
+			Q300 A 0 A_PlaySound("Quake3/Weapons/NoAmmo",CHAN_5)
+			Q300 A 0 A_GiveInventory("SamsaraQuake3LightningGunIdleSoundStarter")
+			Q300 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Q300 A 0 A_SelectWeapon("Q3Machinegun")
+			goto Deselect
+
+		FireStart:
+			Q303 A 0 A_AlertMonsters
+			Q303 A 0 A_GiveInventory("SamsaraQuake3LightningGunFireSoundPlayer")
+			goto FireHoldContinue
+
+		FireHold:
+			Q303 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireHoldStart")
+			Q303 A 0 A_JumpIfInventory("Clip",1,"FireHoldStart")
+			goto FireDry
+
+		FireHoldStart:
+			Q303 A 0 A_AlertMonsters
+		FireHoldContinue:
+			Q303 A 0 A_GunFlash
+			Q303 A 0 A_GiveInventory("SamsaraQuake3LightningGunAttackHandler")
+			Q303 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			Q303 A 0 A_ReFire("FireHold")
+			goto ReadyActual
+
+		Flash:
+			Q304 A 1 Bright
+			stop
+	}
+}
+
+actor SamsaraQuake3LightningGunAttackHandler : Trigger
+{
+	States
+	{
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("Q3LightningGunConsumeAmmo",0,2)
+        TNT1 A 0 A_GiveInventory("Q3LightningGunConsumeAmmo")
+        goto PickupPlaySound
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        TNT1 A 0 A_TakeInventory("Q3LightningGunConsumeAmmo")
+        goto PickupPlaySound
+
+      // Sound stuff
+      PickupPlaySound:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPlaySoundOriginal")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPlaySoundTeamArena")
+      // Original/Revolution sounds
+      PickupPlaySoundOriginal:
+        TNT1 A 0 A_PlaySound("Quake3/LightningGun/Loop",CHAN_6,1.0,true)
+        TNT1 A 0 A_GiveInventory("SamsaraQuake3LightningGunLoopSoundCheck")
+        goto PickupAttack
+
+      // Team Arena sounds
+      PickupPlaySoundTeamArena:
+        TNT1 A 0 A_PlaySound("Quake3TeamArena/LightningGun/Loop",CHAN_6,1.0,true)
+        TNT1 A 0 A_GiveInventory("SamsaraQuake3LightningGunLoopSoundCheck")
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_GiveInventory("Q3QuadDamageSound")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackOriginal")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackTeamArena")
+      // Original/Revolution sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalCoop")
+      PickupAttackOriginalDM:
+        TNT1 A 0 A_FireCustomMissile("Q3LightningBeamDM",0,false,4)
+        stop
+
+      PickupAttackOriginalCoop:
+        TNT1 A 0 A_FireCustomMissile("Q3LightningBeamCoop",0,false,4)
+        stop
+
+      // Team Arena sounds
+      PickupAttackTeamArena:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackTeamArenaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackTeamArenaCoop")
+      PickupAttackTeamArenaDM:
+        TNT1 A 0 A_FireCustomMissile("Q3LightningBeamDMSoundTeamArena",0,false,4)
+        stop
+
+      PickupAttackTeamArenaCoop:
+        TNT1 A 0 A_FireCustomMissile("Q3LightningBeamCoopSoundTeamArena",0,false,4)
+        stop
+    }
+}
+
+actor SamsaraQuake3LightningGunIdleSoundStarter : Trigger
+{
+    States
+    {
+      // Sound starting stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("Quake3/Gauntlet/Idle",CHAN_6,0.75,true)
+        TNT1 A 0 A_GiveInventory("SamsaraQuake3LightningGunLoopSoundCheck")
+        stop
+    }
+}
+
+actor SamsaraQuake3LightningGunFireSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupOriginal")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupTeamArena")
+      // Original/Revolution sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("Quake3/LightningGun/Fire",CHAN_WEAPON)
+        stop
+
+      // Team Arena sounds
+      PickupTeamArena:
+        TNT1 A 0 A_PlaySound("Quake3TeamArena/LightningGun/Fire",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraQuake3LightningGunLoopSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuake3LightningGunLoopSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_6)
+        TNT1 A 0 A_StopSound(CHAN_6)
+        TNT1 A 0 A_TakeInventory("SamsaraQuake3LightningGunLoopSoundCheck")
+        stop
+    }
+}
+
+Actor Q3LightningBeam : FastProjectile
+{
+	Projectile
+	Height 4
+	Radius 2
+	Speed 256
+	Damage (6)
+	Decal "Q3LightningImpact"
+	DamageType "Q3Lightning"
+	+BLOODLESSIMPACT
+	+SKYEXPLODE
+	+HITTRACER
+	+DONTBLAST
+	+NOTIMEFREEZE
+	States
+	{
+		Spawn:
+			TNT1 A 3
+		Death:
+			TNT1 A 0 A_JumpIf(abs(z - floorz) <= 4, "HitFloor")
+			TNT1 A 0 A_CheckCeiling("HitCeiling")
+			TNT1 A 0 A_Jump(256,"DrawBeams") // for inheriting actors
+			goto DrawBeams
+
+		XDeath:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
+			TNT1 A 0 A_GiveInventory("Q3_BloodGenerator",1,AAPTR_TRACER)
+			TNT1 A 0 A_Jump(256,"DrawBeams") // for inheriting actors
+			goto DrawBeams
+
+		HitFloor:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3SpawnDecal", 2)
+			TNT1 A 0 A_SetPitch(90)
+			TNT1 A 0 A_Jump(256,"DrawBeams") // for inheriting actors
+			goto DrawBeams
+
+		HitCeiling:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3SpawnDecal", 2, 1)
+			TNT1 A 0 A_SetPitch(-90)
+			TNT1 A 0 A_Jump(256,"DrawBeams") // for inheriting actors
+			goto DrawBeams
+
+		DrawBeams:
+			TNT1 A 0 A_SpawnItemEx("Q3LightningCrackle")
+			TNT1 A 0 A_PlaySound("Quake3/LightningGun/Hit")
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 1)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 0)
+			TNT1 A 1
+			stop
+	}
+}
+
+Actor Q3LightningBeamCoop : Q3LightningBeam { +THRUSPECIES Species "Player" }
+
+Actor Q3LightningBeamDM : Q3LightningBeam { Damage (5) }
+
+Actor Q3LightningBeamSoundTeamArena : Q3LightningBeam
+{
+	States
+	{
+		DrawBeams:
+			TNT1 A 0 A_SpawnItemEx("Q3LightningCrackle")
+			TNT1 A 0 A_PlaySound("Quake3TeamArena/LightningGun/Hit")
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 1)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 0)
+			TNT1 A 1
+			stop
+	}
+}
+
+Actor Q3LightningBeamCoopSoundTeamArena : Q3LightningBeamCoop
+{
+	States
+	{
+		DrawBeams:
+			TNT1 A 0 A_SpawnItemEx("Q3LightningCrackle")
+			TNT1 A 0 A_PlaySound("Quake3TeamArena/LightningGun/Hit")
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 1)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 0)
+			TNT1 A 1
+			stop
+	}
+}
+
+Actor Q3LightningBeamDMSoundTeamArena : Q3LightningBeamDM
+{
+	States
+	{
+		DrawBeams:
+			TNT1 A 0 A_SpawnItemEx("Q3LightningCrackle")
+			TNT1 A 0 A_PlaySound("Quake3TeamArena/LightningGun/Hit")
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 1)
+			TNT1 A 0 ACS_NamedExecuteWithResult("Q3DrawLaser", 0, 0)
+			TNT1 A 1
+			stop
+	}
+}
+
+Actor Q3LightningCrackle
+{
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	+BRIGHT
+	Height 4
+	Radius 2
+	RenderStyle Add
+	States
+	{
+		Spawn:
+			Q300 A 0 NoDelay ACS_NamedExecuteWithResult("Q3EffectLifeCycle", 0, 50, -100, 15)
+			Q300 A 100
+			Stop
+	}
+}
+
+Actor Q3LightningSegmentL1
+{
+	+NOINTERACTION
+	+NOBLOCKMAP
+	+CLIENTSIDEONLY
+	+NOTIMEFREEZE
+	+BRIGHT
+	Radius 1
+	Height 1
+	RenderStyle Add
+	Alpha 1
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 A 1 A_FadeOut(0.05)
+			stop
+	}
+}
+
+Actor Q3LightningSegmentL2 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 B 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL3 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 C 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL4 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 D 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL5 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 E 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL6 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 F 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL7 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 G 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL8 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 H 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL9 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 I 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL10 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 J 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL11 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 K 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL12 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 L 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL13 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 M 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL14 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 N 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL15 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 O 1 A_FadeOut(0.05)
+			stop
+	}
+}
+Actor Q3LightningSegmentL16 : Q3LightningSegmentL1
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			RW00 P 1 A_FadeOut(0.05)
+			stop
+	}
+}
+
+Actor Q3LightningSegmentR1 : Q3LightningSegmentL1 {}
+Actor Q3LightningSegmentR2 : Q3LightningSegmentL2 {}
+Actor Q3LightningSegmentR3 : Q3LightningSegmentL3 {}
+Actor Q3LightningSegmentR4 : Q3LightningSegmentL4 {}
+Actor Q3LightningSegmentR5 : Q3LightningSegmentL5 {}
+Actor Q3LightningSegmentR6 : Q3LightningSegmentL6 {}
+Actor Q3LightningSegmentR7 : Q3LightningSegmentL7 {}
+Actor Q3LightningSegmentR8 : Q3LightningSegmentL8 {}
+Actor Q3LightningSegmentR9 : Q3LightningSegmentL9 {}
+Actor Q3LightningSegmentR10 : Q3LightningSegmentL10 {}
+Actor Q3LightningSegmentR11 : Q3LightningSegmentL11 {}
+Actor Q3LightningSegmentR12 : Q3LightningSegmentL12 {}
+Actor Q3LightningSegmentR13 : Q3LightningSegmentL13 {}
+Actor Q3LightningSegmentR14 : Q3LightningSegmentL14 {}
+Actor Q3LightningSegmentR15 : Q3LightningSegmentL15 {}
+Actor Q3LightningSegmentR16 : Q3LightningSegmentL16 {}

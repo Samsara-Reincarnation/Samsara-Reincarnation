@@ -1,0 +1,145 @@
+Actor WTSwordUpgrade : WTBoolean {}
+
+Actor WTFistActive : WTBoolean {}
+Actor WTFistAttack : WTBoolean {}
+Actor Witchaven_Dagger : WTWeapon
+{
+	Weapon.Slotnumber 0
+	Weapon.SelectionOrder 4000
+	Weapon.BobStyle Alpha
+	Weapon.BobRangeX 0.2
+	Weapon.BobRangeY 0.6
+	Weapon.BobSpeed 0.8	
+	+WEAPON.MELEEWEAPON
+	+WEAPON.NOALERT
+	+WEAPON.WIMPY_WEAPON
+	+INVENTORY.UNDROPPABLE
+	Tag "Dagger"
+	States
+	{
+	Spawn:
+		NULL A 0
+		stop
+	Select:
+		TNT1 A 0 A_GiveInventory("WTWeaponActive",1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Raise
+		TNT1 A 1 A_Raise
+		goto Select+1
+	Deselect:
+		TNT1 A 0 A_TakeInventory("WTWeaponActive",1)
+		TNT1 A 0 A_TakeInventory("WTShieldActive",1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Lower
+		TNT1 A 1 A_Lower
+		goto Deselect+2
+	Ready:
+	Draw:
+		WW02 ABCDEFGHIJKL 3
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+	WIdle:
+		WW02 M 1 A_WeaponReady
+		loop
+		
+	Fire:
+		WW02 A 0 A_JumpIfInventory("WTFallbackMeleeClip",1,2)
+		WW02 A 0 A_GiveInventory("WTFallbackMeleeClip",1)
+		goto SAttack
+		WW02 A 0 A_TakeInventory("WTFallbackMeleeClip",1)
+		goto SWAttack
+	WGrondovalIsKill:
+		TNT1 A 3
+		goto WIdle
+		
+	// Stab Attack	
+	SAttack:
+		WW02 N 3
+		WW02 OPQ 3
+		WW02 S 0 A_GiveInventory("WTShieldDisable",1)
+		WW02 R 3
+		WW02 A 0 A_PlayWeaponSound("ggen/swing2")
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"SAttackCoop")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"SAttackCoop")
+		WW02 S 3 A_FireCustomMissile("WTDaggerProjectile",0,0,0,8)
+		WW02 S 0 A_TakeInventory("WTShieldDisable",999)
+		WW02 RQP 3
+		WW02 M 3
+		WW02 M 0
+		goto WIdle
+
+	SAttackCoop:
+		WW02 S 3 A_FireCustomMissile("WTDaggerProjectileCoop",0,0,0,8)
+		WW02 S 0 A_TakeInventory("WTShieldDisable",999)
+		WW02 RQP 3
+		WW02 M 3
+		WW02 M 0
+		goto WIdle
+		
+	// Swing attack
+	SWAttack:
+		WW02 T 0 A_PlayWeaponSound("ggen/swing2")
+		WW02 T 4
+		WW02 U 0 A_GiveInventory("WTShieldDisable",1)
+		WW02 U 4
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"SWAttackCoop")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"SWAttackCoop")
+		WW02 V 4 A_FireCustomMissile("WTDaggerProjectileWeak",0,0,0,8)
+		TNT1 A 3
+		WW02 T 0 A_PlayWeaponSound("ggen/swing2")
+		WW02 V 2 A_FireCustomMissile("WTDaggerProjectileWeak",0,0,0,8)
+		WW02 V 0 A_TakeInventory("WTShieldDisable",999)
+		WW02 UT 4
+		goto WIdle
+
+	SWAttackCoop:
+		WW02 V 4 A_FireCustomMissile("WTDaggerProjectileWeakCoop",0,0,0,8)
+		TNT1 A 3
+		WW02 T 0 A_PlayWeaponSound("ggen/swing2")
+		WW02 V 2 A_FireCustomMissile("WTDaggerProjectileWeakCoop",0,0,0,8)
+		WW02 V 0 A_TakeInventory("WTShieldDisable",999)
+		WW02 UT 4
+		goto WIdle
+	}
+}
+
+Actor WTDaggerProjectile : WTMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(40,60)) // all damage values, except the fireballs, icicles, arrows, and magic spells, are there Witch 1 values *4. Enchantments do double what the normal attacks do.
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS"
+}
+
+actor WTDaggerProjectileCoop : WTDaggerProjectile
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+Actor WTDaggerProjectileWeak : WTMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(15,24))
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS"
+}
+
+actor WTDaggerProjectileWeakCoop : WTDaggerProjectileWeak
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+Actor WTMegaDaggerProjectile : WTMegaMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(80,120))
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS"
+}
+
+Actor WTMegaDaggerProjectileWeak : WTMegaMeleeProjectile
+{
+	Speed 96
+	+FORCEPAIN
+	Damage (random(40,64))
+	Obituary "$SAMSARA_WITCHAVEN_OB_FISTS"
+}

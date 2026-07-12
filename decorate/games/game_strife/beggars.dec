@@ -1,0 +1,169 @@
+// I've been here before...
+
+ACTOR BeggarB : SamsaraMonsterReincStrifeHumanoid replaces Beggar
+{
+	Health 20
+	PainChance 250
+	Speed 3
+	Radius 20
+	Height 56
+	Monster
+	+JUSTHIT
+	-COUNTKILL
+	+NOSPLASHALERT
+	MinMissileChance 150
+	MaxStepHeight 16
+	MaxDropoffHeight 32
+	Tag "$TAG_BEGGAR"
+	HitObituary "$OB_BEGGAR"
+	AttackSound "beggar/attack"
+	PainSound "beggar/pain"
+	DeathSound "beggar/death"
+	CrushPainSound "misc/pcrush"
+	States
+	{
+	Spawn:
+		BEGR A 10 A_Look
+		Loop
+	See:
+		BEGR AABBCC 4 A_Wander
+		Loop
+	Melee:
+		BEGR D 8
+		BEGR D 8 A_CustomMeleeAttack(2*random[PeasantAttack](1,5)+2)
+		BEGR E 1 A_Chase
+		BEGR D 8 A_SentinelRefire
+		Loop
+	Pain:
+		BEGR A 3 A_Pain
+		BEGR A 3 A_Chase
+		Goto Melee
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySound("duke/kickhit",CHAN_BODY)
+		BEGR A 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		BEGR A 16 A_Pain
+		Goto See
+	Death:
+		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+	Death.Massacre:
+		BEGR F 4 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		BEGR G 4 A_Scream
+		BEGR H 4
+		BEGR I 4 A_NoBlocking
+		BEGR JKLM 4
+		BEGR N -1
+		Stop
+	Death.CalebFire:
+	Death.LifeLeech:
+		TNT1 A 0 A_Jump(218, 2)
+		TNT1 A 0 A_GiveToTarget("CalebDMTaunt1", 1)
+		TNT1 A 0 A_SpawnItemEx("BloodBurningCorpse_Generic", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		TNT1 A 0 A_Stop
+		TNT1 A 5 A_NoBlocking
+		TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+		Stop
+	XDeath:
+		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+	XDeath.Massacre:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		BEGR F 5 A_TossGib
+		GIBS M 5 A_TossGib
+		GIBS N 5 A_XScream
+		GIBS O 5 A_NoBlocking
+		GIBS PQRS 4 A_TossGib
+		GIBS U 5
+		GIBS V -1
+		Stop
+	XDeath.PunchDagger:
+	XDeath.ElectricBolt:
+	XDeath.PoisonBolt:
+	XDeath.StrifeExplosive:
+	XDeath.StrifeSigil:
+		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		TNT1 AAA 0 A_SpawnItemEx("StrifeBloodSplatter", 0, 0, 24, frandom(0,10), frandom(0,10), frandom(0,15), frandom(0,10), SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		BEGR F 5 A_TossGib
+		TNT1 AAA 0 A_SpawnItemEx("StrifeBloodSplatter", 0, 0, 24, frandom(0,10), frandom(0,10), frandom(0,15), frandom(0,10), SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		GIBS M 5 A_TossGib
+		GIBS N 5 A_XScream
+		GIBS O 5 A_NoBlocking
+		TNT1 AAA 0 A_SpawnItemEx("StrifeBloodSplatter", 0, 0, 24, frandom(0,10), frandom(0,10), frandom(0,15), frandom(0,10), SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		GIBS P 4 A_TossGib
+		TNT1 AAA 0 A_SpawnItemEx("StrifeBloodSplatter", 0, 0, 24, frandom(0,10), frandom(0,10), frandom(0,15), frandom(0,10), SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		GIBS Q 4 A_TossGib
+		TNT1 AAA 0 A_SpawnItemEx("StrifeBloodSplatter", 0, 0, 24, frandom(0,10), frandom(0,10), frandom(0,15), frandom(0,10), SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		GIBS R 4 A_TossGib
+		TNT1 AAA 0 A_SpawnItemEx("StrifeBloodSplatter", 0, 0, 24, frandom(0,10), frandom(0,10), frandom(0,15), frandom(0,10), SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		GIBS S 4 A_TossGib
+		GIBS U 5
+		GIBS V -1
+		Stop
+	Burn:
+	Death.PhosFire:
+	Death.PhosFireCoop:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		BURN A 3 Bright Light("PHFIRE_FX1") A_PlaySound("human/imonfire",CHAN_VOICE)
+		BURN B 3 Bright Light("PHFIRE_FX2") A_SpawnItemEx("FireDroplet", 0, 0, 24, 0, 0, -1)
+		BURN C 3 Bright Light("PHFIRE_FX3") A_Wander
+		BURN D 3 Bright Light("PHFIRE_FX4") A_NoBlocking
+		BURN E 5 Bright Light("PHFIRE_FX5") A_SpawnItemEx("FireDroplet", 0, 0, 24, 0, 0, -1)
+		BURN F 5 Bright Light("PHFIRE_FX6") A_Wander
+		BURN G 5 Bright Light("PHFIRE_FX7") A_Wander
+		BURN H 5 Bright Light("PHFIRE_FX6") A_Wander
+		BURN I 5 Bright Light("PHFIRE_FX5") A_SpawnItemEx("FireDroplet", 0, 0, 24, 0, 0, -1)
+		BURN J 5 Bright Light("PHFIRE_FX4") A_Wander
+		BURN K 5 Bright Light("PHFIRE_FX3") A_Wander
+		BURN L 5 Bright Light("PHFIRE_FX2") A_Wander
+		BURN M 5 Bright Light("PHFIRE_FX1") A_SpawnItemEx("FireDroplet", 0, 0, 24, 0, 0, -1)
+		BURN N 5 Bright Light("PHFIRE_FX2")
+		BURN O 5 Bright Light("PHFIRE_FX3")
+		BURN P 5 Bright Light("PHFIRE_FX4")
+		BURN Q 5 Bright Light("PHFIRE_FX5")
+		BURN P 5 Bright Light("PHFIRE_FX4")
+		BURN Q 5 Bright Light("PHFIRE_FX5")
+		BURN R 7 Bright Light("PHFIRE_FX8")
+		BURN S 7 Bright Light("PHFIRE_FX9")
+		BURN T 7 Bright Light("PHFIRE_FX10")
+		BURN U 7 Bright Light("PHFIRE_FX11")
+		BURN V -1
+		Stop
+	Disintegrate:
+	Death.StrifeMauler:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		DISR A 5 A_PlaySound("misc/disruptordeath", CHAN_VOICE)
+		DISR BC 5
+		DISR D 5 A_NoBlocking
+		DISR EF 5
+		DISR GHIJ 4
+		TNT1 A -1
+		Stop
+	}
+}
+
+ACTOR Beggar1B : BeggarB replaces Beggar1		// Our bestest friend MacGuffin.
+{
+	ConversationID 38, 37, 38
+}
+
+ACTOR Beggar2B : BeggarB replaces Beggar2		// Some random bum.
+{
+	ConversationID 39, 38, 39
+}
+
+ACTOR Beggar3B : BeggarB replaces Beggar3
+{
+	ConversationID 40, 39, 40
+}
+
+ACTOR Beggar4B : BeggarB replaces Beggar4
+{
+	ConversationID 41, 40, 41
+}
+
+ACTOR Beggar5B : BeggarB replaces Beggar5
+{
+	ConversationID 42, 41, 42
+}

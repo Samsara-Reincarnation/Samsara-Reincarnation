@@ -1,0 +1,121 @@
+actor DoomExplosiveBarrel: ExplosiveBarrel replaces ExplosiveBarrel
+{
+    Tag "Explosive Barrel"
+	+DONTRIP
+	States
+	{
+	Death:
+		BEXP A 5 bright
+		TNT1 A 0 A_Scream
+		BEXP BC 5 bright
+		TNT1 A 0 A_SetDamageType("Explosive")
+	DeathContinue:
+		TNT1 A 0 A_Explode
+		TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",false)
+		BEXP DE 10 bright
+		TNT1 A 1050 bright A_BarrelDestroy
+		TNT1 A 5 A_Respawn
+		Wait
+
+	Death.ZorchPistol:
+	Death.Zorch:
+	Death.ZorchKamikaze:
+	Death.PhasingZorch:
+	Death.ZorchSpectral:
+		BEXP A 5 bright
+		TNT1 A 0 A_Scream
+		BEXP BC 5 bright
+		TNT1 A 0 A_SetDamageType("Zorch")
+		TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",true)
+		Goto DeathContinue
+	}
+}
+
+actor DoomEnemyBullet : FastProjectile
+{
+	Damage (Random(1,5)*3)
+	Radius 1
+	Height 1
+	Speed 320
+	Projectile
+	Renderstyle "Normal"
+	+BLOODSPLATTER
+	+THRUGHOST
+	+DOHARMSPECIES
+	DamageType "DoomBullet" //Added for Witchaven Onyx Ring
+	Alpha 1.0
+	Decal Bulletchip
+	States
+	{
+	Spawn:
+		TNT1 A 6
+		Stop
+
+	Death:
+		TNT1 A 1 A_SpawnItem("DoomBulletPuff")
+		Stop
+
+	XDeath:
+		TNT1 A 1 A_SpawnItemEx("DoomEnemyBulletInfight",0,0,0,0,0,0,0,32)
+		Stop
+
+	Crash:
+		TNT1 A 0 A_SpawnItem("DoomBulletPuff")
+		TNT1 A 1 A_SpawnItemEx("DoomEnemyBulletInfight",0,0,0,0,0,0,0,32)
+		Stop
+	}
+}
+
+actor DoomEnemyBulletInfight
+{
+	Radius 1
+	Height 1
+	Speed 0
+	DamageType "EnemyInfightDamage"
+	+FORCERADIUSDMG
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Explode((random(1,5)*3),16,0)
+		Stop
+	}
+}
+
+actor SpawnFire2
+{
+	Height 78
+	-SOLID
+	//+NOCLIP
+	+NOBLOCKMAP
+	+NOGRAVITY
+	RenderStyle Add
+	Alpha 0.5
+	States
+	{
+	Spawn:
+		DMP2 HIJKLMNO 4 bright
+		Stop
+	}
+}
+
+actor BulletPuffThruGhost : BulletPuff { +THRUGHOST }
+
+#include "decorate/games/game_doom/archvile.dec"
+#include "decorate/games/game_doom/barons.dec"
+#include "decorate/games/game_doom/bosses.dec"
+#include "decorate/games/game_doom/caco.dec"
+#include "decorate/games/game_doom/chinguy.dec"
+#include "decorate/games/game_doom/demons.dec"
+#include "decorate/games/game_doom/fatso.dec"
+#include "decorate/games/game_doom/imp.dec"
+#include "decorate/games/game_doom/nazi.dec"
+#include "decorate/games/game_doom/revenant.dec"
+#include "decorate/games/game_doom/shotguy.dec"
+#include "decorate/games/game_doom/soulpain.dec"
+#include "decorate/games/game_doom/spiders.dec"
+#include "decorate/games/game_doom/zombieman.dec"
+
+#include "decorate/games/game_doom/mbfhelperdog.dec"
+#include "decorate/games/game_doom/scriptedmarine.dec"
+#include "decorate/games/game_doom/stealth.dec"

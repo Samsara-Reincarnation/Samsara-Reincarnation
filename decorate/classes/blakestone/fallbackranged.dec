@@ -1,0 +1,133 @@
+actor SamsaraBStoneAutoChargePistolCooldown : Counter {}
+
+actor "Auto Charge Pistol" : SamsaraBStoneWeapon
+{
+    Inventory.PickupMessage "You got an Auto Charge Pistol!"
+    Inventory.PickupSound "wolfen/knifeget"
+    Weapon.SlotNumber 1
+    Weapon.SelectionOrder 1899
+    Obituary "%k overcharged %o with the Auto Charge Pistol."
+    Tag "Auto Charge Pistol"
+    +NOALERT
+    +WIMPY_WEAPON
+    States
+    {
+      Spawn:
+        BWP1 A -1
+        stop
+
+      // Planet Strike
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("BlakeAOGToken",1,"ReadyAOG")
+      ReadyPS:
+        TNT1 A 0 A_JumpIfInventory("SamsaraBStoneAutoChargePistolCooldown",1,2)
+        BPIS A 1 A_WeaponReady
+        goto Ready
+        BPIS A 1 A_WeaponReady(WRF_NOFIRE)
+        goto Ready
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("BlakeAOGToken",1,"FireAOG")
+      FirePS:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FirePSSmooth")
+        BPIS B 3
+        BPIS C 3 Bright A_GiveInventory("SamsaraBStoneAutoChargePistolAttackHandler")
+        BPIS DE 4
+      FireFinish:
+        TNT1 A 0 A_TakeInventory("SamsaraBStoneAutoChargePistolCooldown") // reset
+        TNT1 A 0 A_GiveInventory("SamsaraBStoneAutoChargePistolCooldown",15)
+        goto Ready
+
+      FirePSSmooth:
+        BPIS B 3
+        BPIS C 2 Bright A_GiveInventory("SamsaraBStoneAutoChargePistolAttackHandler")
+        9381 N 1
+        BPIS D 2
+        9381 O 3
+        9382 A 3
+        goto FireFinish
+
+      // Aliens Of Gold
+      ReadyAOG:
+        TNT1 A 0 A_JumpIfInventory("SamsaraBStoneAutoChargePistolCooldown",1,2)
+        BPIS F 1 A_WeaponReady(WRF_NOBOB)
+        goto Ready
+        BPIS F 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        goto Ready
+
+      FireAOG:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FireAOGSmooth")
+        BPIS G 3
+        BPIS H 3 Bright A_GiveInventory("SamsaraBStoneAutoChargePistolAttackHandler")
+        BPIS IJ 4
+        goto FireFinish
+
+      FireAOGSmooth:
+        BPIS G 3
+        BPIS H 2 Bright A_GiveInventory("SamsaraBStoneAutoChargePistolAttackHandler")
+        9381 A 1
+        BPIS I 2
+        9381 B 3
+        BPIS J 3
+        goto FireFinish
+    }
+}
+
+actor SamsaraBStoneAutoChargePistolAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("BPistol/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("BlakeSuperAutoCharge",1,"PickupUpgraded")
+      // Unupgraded
+      PickupUnupgraded:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupUnupgradedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupUnupgradedCoop")
+      PickupUnupgradedDM:
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlake",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlakeBloodless",FBF_NOFLASH,128)
+        stop
+
+      PickupUnupgradedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupUnupgradedCoopImproved")
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlakeCoop",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,128)
+        stop
+
+      PickupUnupgradedCoopImproved:
+        TNT1 A 0 A_FireBullets(0,0,1,8,"BlankPuffBlakeCoop",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,320)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,128)
+        stop
+
+      // Upgraded
+      PickupUpgraded:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupUpgradedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupUpgradedCoop")
+      PickupUpgradedDM:
+        TNT1 A 0 A_FireBullets(0,0,1,10,"BlankPuffBlake",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,10,"BlankPuffBlakeBloodless",FBF_NOFLASH,128)
+        stop
+
+      PickupUpgradedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupUpgradedCoopImproved")
+        TNT1 A 0 A_FireBullets(0,0,1,10,"BlankPuffBlakeCoop",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,10,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,10,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,128)
+        stop
+
+      PickupUpgradedCoopImproved:
+        TNT1 A 0 A_FireBullets(0,0,1,10,"BlankPuffBlakeCoop",FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,320)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(0,0,1,4,"BlankPuffBlakeBloodlessCoop",FBF_NOFLASH,64)
+        stop
+    }
+}

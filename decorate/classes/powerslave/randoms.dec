@@ -1,0 +1,1416 @@
+Actor AnubisWarriorReinc : SamsaraMonsterHumanoid
+{
+    health 135
+    radius 16
+    height 56
+    speed 6
+    scale 0.52
+    mass 400
+    painchance 96
+    obituary "%o was killed by an Anubis Warrior's fireball."
+    hitobituary "%o was clawed by an Anubis Warrior."
+    MONSTER
+    Species "Enemies"    
+    Tag "Anubis Zombie"
+    +FLOORCLIP
+    +NOINFIGHTING
+    +FRIENDLY
+    +NEVERTARGET
+    -COUNTKILL
+    +NOICEDEATH
+    seesound "anubis/sight"
+    activesound "anubis/active"
+    painsound "anubis/pain"
+    deathsound "anubis/death"
+    DamageFactor "CorvusCrossbow", 1.1
+    DamageFactor "DragonClaw", 1.5
+    DamageFactor "WitchMelee", 1.1
+    DamageFactor "DeusExSabot", 0.8
+    DamageFactor "DeusExSabotPistol", 0.8
+    PainChance "MightyBoot", 256
+    PainChance "CalebFire", 0
+    PainChance "WTMelee", 256
+    PainChance "WTMeleeIce", 256
+    PainChance "DoomDamageTypeStunner", 256
+    PainChance "Shock", 256
+    PainChance "Tesla", 256
+    States
+    {
+    Spawn:
+        ANUB A 0
+        ANUB A 0 ACS_NamedExecuteWithResult("PSAnubisDrum")
+    SpawnDrum:
+        ANU2 K 10 A_Jump(128,"Drum1","Drum2","Drum3")
+        Loop
+    Drum1:
+        ANU2 K 10
+        ANU2 J 10 A_Playsound("anubis/drum1",CHAN_6)
+        Goto SpawnDrum
+    Drum2:
+        ANU2 K 2
+        ANU2 J 2 A_Playsound("anubis/drum2",CHAN_6)
+        ANU2 K 2
+        ANU2 J 2 A_Playsound("anubis/drum2",CHAN_6)
+        ANU2 K 2
+        ANU2 J 2 A_Playsound("anubis/drum2",CHAN_6)
+        Goto SpawnDrum
+    Drum3:
+        ANU2 K 10
+        ANU2 J 10 A_Playsound("anubis/drum3",CHAN_6)
+        Goto SpawnDrum
+    Idle:
+    Spawn2:
+        ANUB A 5 A_Look
+        loop
+    See:
+        ANUB B 3 A_Chase
+        ANUB B 2 A_Chase
+        ANUB C 3 A_Chase
+        ANUB C 2 A_Chase("", "")
+        ANUB D 3 A_Chase
+        ANUB D 2 A_Chase
+        ANUB E 3 A_Chase
+        ANUB E 2 A_Chase("", "")
+        ANUB D 3 A_Chase
+        ANUB D 2 A_Chase("", "")
+        ANUB C 3 A_Chase
+        ANUB C 2 A_Chase
+        Loop
+    Melee:
+        TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+        ANUB FG 3 A_FaceTarget
+        ANUB H 3 A_CustomMeleeAttack(random(1, 3) * 4, "anubis/meleehit")
+        ANUB IJ 3 A_FaceTarget
+        ANU2 AB 3 A_FaceTarget
+        ANU2 C 3 A_CustomMeleeAttack(random(1, 3) * 4, "anubis/meleehit")
+        ANU2 DE 3 A_FaceTarget
+        goto See
+    Missile:
+        TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+        ANUB FG 4 A_FaceTarget
+        ANUB H 3 A_FaceTarget
+        ANUB I 3
+        ANUB J 3 A_CustomMissile("AnubisMissile",32,0)
+        ANUB JJ 3
+        goto See
+    Pain:
+        ANUB K 0 A_GiveInventory("AnubisDropDrum",1)
+        ANUB K 0 A_ChangeFlag("FRIENDLY",0)
+        ANUB K 0 A_ChangeFlag("NEVERTARGET",0)
+        ANUB K 2
+        ANUB L 2 A_Pain
+        ANUB MNML 2
+        goto See
+    Pain.MightyBoot:
+        TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+        TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+        ANUB K 2 A_FaceTarget
+        TNT1 A 0 A_Recoil(14)
+        ANUB K 16 A_Pain
+        Goto See
+    Death:
+        TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+    Death.Massacre:
+        ANUB K 0 A_GiveInventory("AnubisDropDrum",1)
+        TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)    
+        ANUB O 2 ThrustThingZ(0,16,0,0)
+        ANUB P 2
+        ANUB Q 4 A_Scream
+        ANUB RST 4
+        ANUB U 4 A_NoBlocking
+        ANUB U -1
+        Stop
+    XDeathForJon:
+    XDeath:
+        TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreXDeathEffect")
+    XDeath.Massacre:
+        ANUB K 0 A_GiveInventory("AnubisDropDrum",1)
+        TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)    
+        ANUB VV 3 A_Scream    
+        ANUB WW 3
+        TNT1 A 0 A_NoBlocking
+        ANUB X 3 A_PlaySound("anubis/xdeath", CHAN_BODY)
+        ANUB Y 0 A_CustomMissile("AnubisGib1",0+Random(24,45),0+Random(9,-9),0+Random(0,370),2,0+random(5,50))  
+        ANUB Y 0 A_CustomMissile("AnubisGib2",0+Random(24,45),0+Random(9,-9),0+Random(0,370),2,0+random(5,50))  
+        ANUB Y 0 A_CustomMissile("AnubisGib3",0+Random(24,45),0+Random(9,-9),0+Random(0,370),2,0+random(5,50))  
+        ANUB Y 0 A_CustomMissile("AnubisGib4",0+Random(24,45),0+Random(9,-9),0+Random(0,370),2,0+random(5,50))  
+        ANUB Y 3
+        ANUB Z 4
+        ANUB "[" 4
+        ANUB "[" -1
+        stop
+    Death.PSRAPower:
+    Death.PSRAPowerCoop:
+    Death.PSExplosive:
+    Death.PSExplosiveCoop:
+        TNT1 A 0 A_JumpIfHealthLower(-30, "XDeathForJon")
+    Death.PSBullet:
+        TNT1 A 0 A_Jump(218, "Death")
+        TNT1 A 0 A_GiveToTarget("JonDMTaunt1", 1)
+        TNT1 A -1 A_Jump(256,"Death")
+        Wait
+    Pain.Shock:
+    Pain.Tesla:
+        CBGS K 4 A_Pain
+        CBGS K 4
+        Goto See
+    Death.CalebFire:
+    Death.LifeLeech:
+        ANUB K 0 A_GiveInventory("AnubisDropDrum",1)
+        TNT1 A 0 A_Jump(218, 2)
+        TNT1 A 0 A_GiveToTarget("CalebDMTaunt1", 1)
+        TNT1 A 0 A_SpawnItemEx("BloodBurningCorpse_Generic", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_SETMASTER)
+        TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+        TNT1 A 0 A_NoBlocking
+        TNT1 A -1
+        stop
+    Pain.ShrinkerDMG:
+        ANUB L 0
+        "####" "#" 0 A_GiveInventory("AnubisDropDrum",1)
+        "####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
+        "####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
+        "####" "#" 0 A_ChangeFlag("NOPAIN", 1)
+        "####" "#" 0 A_ChangeFlag("NODAMAGE", 1)
+        "####" "#" 0 A_NoBlocking
+        "####" "#" 0 A_PlaySound("duke/shrink")
+        "####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+        "####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        "####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+        "####" "#" 4 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+        "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc_Shrink", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSPECIAL|SXF_TRANSFERAMBUSHFLAG|SXF_SETMASTER,0,tid)
+        TNT1 A 2
+        TNT1 A 0 Thing_Remove(0)
+        stop
+
+        // SamsaraMonsterHumanoid states
+        Pain.DoomDamageTypeStunner:
+            "####" "#" 2 A_ChangeFlag("NOPAIN",true)
+            "####" "#" 300 A_Pain
+            "####" "#" 0 A_ChangeFlag("NOPAIN",false)
+            "####" "#" -1 A_Jump(256,"See")
+            Wait
+        Pain.MightyBoot:
+            "####" "#" 0 A_ChangeFlag("NOPAIN",1)
+            "####" "#" 0 A_PlaySound("duke/kickhit",CHAN_BODY)
+            "####" "#" 2 A_FaceTarget
+            "####" "#" 0 A_Recoil(14)
+            "####" "#" 16 A_Pain
+            "####" "#" -1 A_Jump(256,"See")
+            Wait
+        Pain.LifeLeech:
+            "####" "#" 0 A_GiveInventory("SamsaraBloodLifeLeechHealthDrain",1,AAPTR_TARGET)
+            "####" "#" -1 A_Jump(256,"Pain")
+            Wait
+        Pain.Vodoo:
+            "####" "#" 0 A_GiveToTarget("Voodoo", 1)
+            "####" "#" -1 A_Jump(256,"Pain")
+            Wait
+        Pain.Shock:
+        Pain.Tesla:
+            TNT1 A -1 ACS_NamedExecuteWithResult("CalebTeslaSwitch")
+            Wait
+        CalebTesla1: CBGS Y 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla2: CBGS X 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla3: CBGS W 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla4: CBGS V 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla5: CBGS U 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla6: CBGS A 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla7: CBGS B 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla8: CBGS C 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla9: CBGS D 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla10: CBGS E 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla11: CBGS F 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla12: CBGS G 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla13: CBGS H 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla14: CBGS I 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla15: CBGS J 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla16: CBGS K 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla17: CBGS L 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla18: CBGS M 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla19: CBGS N 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla20: CBGS O 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla21: CBGS P 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla22: CBGS Q 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla23: CBGS R 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla24: CBGS S 0 A_Pain Goto CalebTeslaFinish
+        CalebTesla25: CBGS T 0 A_Pain Goto CalebTeslaFinish
+        CalebTeslaFinish:
+            "####" "#" 0 A_ChangeFlag("NOPAIN",1)
+            "####" "########################" 2 A_ChangeFlag("BRIGHT",CallACS("CalebTeslaBlink"))
+            "####" "#" 0 A_ChangeFlag("BRIGHT",0)
+            "####" "#" 0 A_ChangeFlag("NOPAIN",0)
+            "####" "#" -1 A_Jump(256,"See")
+            Wait
+        Pain.Hexen2RavenDamage:
+            "####" "#" 0 A_Jump(192,"Pain")
+            "####" "#" 0 A_SpawnItemEx("Hexen2GibSpawnerColorRavenStaff",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_SETMASTER|1048576)
+            "####" "#" -1 A_Jump(256,"Pain")
+            Wait
+        Pain.PainkillerIce:
+            "####" "#" 0 ACS_NamedExecuteWithResult("Painkiller_FlagStorage",1,1)
+            "####" "#" 0 ACS_NamedExecuteWithResult("Painkiller_FlagStorage",1,2)
+            "####" "#" 0 ACS_NamedExecuteWithResult("Painkiller_FlagStorage",1,3)
+            "####" "#" 0 A_ChangeFlag("NOPAIN",true)
+            "####" "#" 0 A_ChangeFlag("NOGRAVITY",false)
+            "####" "#" 0 A_ChangeFlag("NOBLOOD",true)
+            "####" "#" 0 A_StopSound(CHAN_BODY)
+            "####" "#" 0 A_PlaySound("Painkiller/Freezer/Freeze",CHAN_BODY)
+            "####" "#" 0 ACS_NamedExecuteAlways("Painkiller_Freeze",0,1)
+        PainkillerIceLoop:
+            "####" "#" 2
+            Loop
+        PainkillerIceThaw:
+            "####" "#" 0 A_PlaySound("Painkiller/Freezer/Unfreeze",CHAN_BODY)
+            "####" "#" 20
+            "####" "#" 0 A_ChangeFlag("NOPAIN",CallACS("Painkiller_FlagStorage",2,1))
+            "####" "#" 0 A_ChangeFlag("NOGRAVITY",CallACS("Painkiller_FlagStorage",2,2))
+            "####" "#" 0 A_ChangeFlag("NOBLOOD",CallACS("Painkiller_FlagStorage",2,3))
+            TNT1 A -1 A_Jump(256,"See")
+            Wait
+        Death.ZorchPistol:
+        Death.Zorch:
+        Death.ZorchKamikaze:
+        Death.PhasingZorch:
+        Death.ZorchSpectral:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            "####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            "####" "#" 0 A_Stop
+            "####" "#" 0 A_ChangeFlag("DONTGIB",1)
+            "####" "#" 0 A_PlaySound("chex/zorch",CHAN_5)
+            "####" "#" 0 A_NoGravity
+            "####" "#" 3 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 0)
+            "####" "#" 0 A_GiveInventory("EnemyZorched",1)
+            "####" "#" 3 A_SetTranslucent(0.9,0)
+            "####" "#" 0 A_Scream
+            "####" "#" 3 A_SetTranslucent(0.8,0)
+            "####" "#" 0 A_NoBlocking
+            "####" "#" 3 A_SetTranslucent(0.7,0)
+            "####" "#" 3 A_SetTranslucent(0.6,0)
+            "####" "#" 3 A_SetTranslucent(0.5,0)
+            "####" "#" 3 A_SetTranslucent(0.4,0)
+            "####" "#" 3 A_SetTranslucent(0.3,0)
+            "####" "#" 3 A_SetTranslucent(0.2,0)
+            "####" "#" 3 A_SetTranslucent(0.1,0)
+            TNT1 A 1 A_SetTranslucent(1,0)
+            TNT1 A 0 A_Gravity
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.ExpanderDMG:
+        XDeath.ExpanderDMG:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            "####" "#" 0 A_ChangeFlag("DONTGIB",1)
+            "####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
+            "####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
+            "####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
+            "####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
+            "####" "#" 0 A_PlaySound("duke/expand")
+            Goto ExpanderLoop
+        ExpanderLoop:
+            "####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
+            "####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
+            "####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
+            "####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
+            "####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
+            "####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPop")
+            Loop
+        ExpanderPop:
+            "####" "#" 10
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Basic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+            TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+            TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_Jump(96,2)
+            TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
+            TNT1 A 0 A_TakeInventory("ExpanderGrowthY", 40)
+            TNT1 A 0 A_TakeInventory("ExpanderGrowthX", 40)
+            TNT1 A 0 A_TakeInventory("ExpanderDoubleX", 40)
+            TNT1 A 0 A_SetScale((user_scalexoriginal)/65536.0, (user_scaleyoriginal)/65536.0)
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_SpawnItemEx("DukeGibPopSpawner", 0, 0, height*2, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.ExpanderDMGCoop:
+        XDeath.ExpanderDMGCoop:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            "####" "#" 0 A_ChangeFlag("DONTGIB",1)
+            "####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
+            "####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
+            "####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
+            "####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
+            "####" "#" 0 A_PlaySound("duke/expand")
+            Goto ExpanderLoopCoop
+        ExpanderLoopCoop:
+            "####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
+            "####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
+            "####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
+            "####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
+            "####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
+            "####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPopCoop")
+            Loop
+        ExpanderPopCoop:
+            "####" "#" 10
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Coop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+            TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+            TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_Jump(96,2)
+            TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
+            TNT1 A 0 A_TakeInventory("ExpanderGrowthY", 40)
+            TNT1 A 0 A_TakeInventory("ExpanderGrowthX", 40)
+            TNT1 A 0 A_TakeInventory("ExpanderDoubleX", 40)
+            TNT1 A 0 A_SetScale((user_scalexoriginal)/65536.0, (user_scaleyoriginal)/65536.0)
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_SpawnItemEx("DukeGibPopSpawner", 0, 0, height*2, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.DukePlasma:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            "####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            "####" "#" 0 A_ChangeFlag("DONTGIB",1)
+            "####" "#" 0 A_Stop
+            "####" "#" 0 A_NoGravity
+            "####" "#" 1 A_NoBlocking
+            "####" "#" 0 A_Jump(218,2)
+            "####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
+            "####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 12)
+            "####" "#" 0 A_GiveInventory("EnemyZorched",1)
+            "####" "#" 27 A_Scream
+            TNT1 A 1 A_SetTranslucent(1,0)
+            TNT1 A 0 A_Gravity
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.RottDisintegrate:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_ChangeFlag("DONTGIB",1)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoGravity
+            TNT1 A 0 A_Scream
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 7)
+            TNT1 A 0 A_Gravity
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Disintegrate:
+        Death.StrifeMauler:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
+            "####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            "####" "#" 0 A_ChangeFlag("DONTGIB",1)
+            "####" "#" 0 A_Stop
+            "####" "#" 0 A_NoGravity
+            "####" "#" 0 A_Scream
+            "####" "#" 0 A_GiveInventory("EnemyZorched",1)
+            "####" "#" 3 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 10)
+            "####" "#" 3 A_SetTranslucent(0.9,0)
+            "####" "#" 3 A_SetTranslucent(0.8,0)
+            "####" "#" 0 A_NoBlocking
+            "####" "#" 3 A_SetTranslucent(0.7,0)
+            "####" "#" 3 A_SetTranslucent(0.6,0)
+            "####" "#" 3 A_SetTranslucent(0.5,0)
+            "####" "#" 2 A_SetTranslucent(0.4,0)
+            "####" "#" 2 A_SetTranslucent(0.3,0)
+            "####" "#" 2 A_SetTranslucent(0.2,0)
+            "####" "#" 2 A_SetTranslucent(0.1,0)
+            TNT1 A 1 A_SetTranslucent(1,0)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+            TNT1 A 0 A_Gravity
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.Nuke:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound", 1)
+            "####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            "####" "#" 0 A_ChangeFlag("DONTGIB",1)
+            "####" "#" 0 A_Stop
+            "####" "#" 0 A_NoGravity
+            "####" "#" 0 A_Scream
+            "####" "#" 0 A_GiveInventory("EnemyZorched",1)
+            "####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 11)
+            "####" "#" 0 A_NoBlocking
+            "####" "#################" 3 A_FadeOut(0.05,0)
+            TNT1 A 0 A_Gravity
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.GETank:
+            TNT1 A 0 A_PlaySound("Goldeneye/Tank/Squish",CHAN_6)
+            TNT1 A 0 A_PlaySound("Goldeneye/MaleScream",CHAN_5)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.WolfenFlamethrower:
+        Death.HexGreenFire:
+        Death.PGFire:
+        Death.QuakeFire:
+        Death.WTRangedFire:
+        Death.DoomDamageTypeFire:
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.TotenkopfFire:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 2)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.HexenQuietusFire:
+            TNT1 A -1 ACS_NamedExecuteWithResult("HexenQuietusFireDamage")
+            Wait
+        Death.MarathonFire:
+        Death.MarathonPlasmaFire:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 3)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.RottFire:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItem("BurningSkeleton")
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.CalebFire:
+        Death.LifeLeech:
+            TNT1 A 0 A_Jump(218, "Burn")
+            TNT1 A 0 A_GiveToTarget("CalebDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.PhosFire:
+        Death.PhosFireCoop:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.EradGreenFire:
+        Death.EradCoopGreenFire:
+            TNT1 A 0 A_Jump(218,"Burn")
+            TNT1 A 0 A_GiveToTarget("EleenaDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.PSFire:
+            TNT1 A 0 A_Jump(218, "Burn")
+            TNT1 A 0 A_GiveToTarget("JonDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+		Death.RTCWFire:
+			TNT1 A 0 A_PlaySound("RTCW/Enemy/Burn",CHAN_7,1.0)
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+        Death.DeusExPistolFire:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
+            TNT1 A -1 A_Jump(256, "Burn")
+            Wait
+		Death.HexenMedusa:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			"####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			"####" "#" 0 A_GiveInventory("EnemyZorched",1)
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 101)
+			"####" "#" 0 A_PlaySound("Hexen/StoneTurn",CHAN_7)
+			"####" "#" 69 A_ChangeFlag("SOLID",false)
+			"####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 17)
+			TNT1 A 0 A_PlaySound("Hexen/StoneBreak",CHAN_7)
+			TNT1 A 0 A_SetTranslucent(1,0)
+			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_Gravity
+			TNT1 A -1
+			Stop
+        Death.DukeIce:
+            "####" "#" 0 A_Jump(218,"Ice")
+            "####" "#" 0 A_GiveToTarget("DukeKillTaunt",1)
+        Ice:
+        Death.HexenIce:
+        Death.WTMeleeIce:
+        Death.WTRangedIce:
+        Death.Ice:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            "####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            "####" "#" 0 A_GiveInventory("EnemyZorched",1)
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            "####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
+            "####" "#" 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+            "####" "#" 69 A_ChangeFlag("SOLID",false)
+            "####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_SetTranslucent(1,0)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+            TNT1 A 0 A_NoBlocking
+            TNT1 A 0 A_Gravity
+            TNT1 A -1
+            Stop
+        Death.DoomDamageTypeIce:
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            "####" "#" 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            "####" "#" 0 A_GiveInventory("EnemyZorched",1)
+            "####" "#" 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            "####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
+            "####" "#" 0 A_ChangeFlag("SOLID",false)
+            "####" "#" 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_SetTranslucent(1,0)
+            TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
+            TNT1 A 0 A_NoBlocking
+            TNT1 A 0 A_Gravity
+            TNT1 A -1
+            Stop
+        Death.FireExplosive:
+        Death.DoomDamageTypeFireExplosive:
+            TNT1 A 0 A_Jump(128,2)
+            TNT1 A 0 A_JumpIfHealthLower(-100,"XDeath")
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.DukeExplosive:
+            TNT1 A 0 A_JumpIfHealthLower(-3, "DukeGibStart")
+        Death.DukeDamage:
+        Death.DukePistol:
+            TNT1 A 0 A_Jump(218,"Death")
+            TNT1 A 0 A_GiveToTarget("DukeKillTaunt",1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.MightyBoot:
+            TNT1 A 0 A_PlaySound("duke/kickhit",CHAN_BODY)
+            TNT1 A 0 A_Jump(64,"Death")
+            TNT1 A 0 A_GiveToTarget("DukeBootTaunt",1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        DukeGibStart:
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 A 0 A_SpawnItemEx("DukeGib_ColorSpawner",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|1048576)
+            TNT1 A 0 A_Jump(96,"XDeath")
+            TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.CalebNapalm:
+        Death.Vodoo:
+        Death.VoodooPuff:
+        Death.DynamiteCoop:
+        Death.Dynamite:
+        Death.Shock:
+            TNT1 A 0 A_JumpIfHealthLower(-25, "XDeathForCaleb")
+        Death.Tesla:
+        Death.CalebBullet:
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_GiveToTarget("CalebDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        XDeathForCaleb:
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 A 0 A_SpawnItemEx("CalebGibSpawner",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|1048576)
+            TNT1 A 0 A_Jump(96,"XDeath")
+            TNT1 A 0 A_GiveToTarget("CalebDMTaunt1",1)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        XDeath.PunchDagger:
+        XDeath.ElectricBolt:
+        XDeath.PoisonBolt:
+        XDeath.StrifeExplosive:
+        XDeath.StrifeSigil:
+            TNT1 A 0 A_SpawnItemEx("StrifeGibSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.EradExplosive:
+        Death.EradNova:
+        Death.EradShock:
+        Death.EradExplosive2:
+            TNT1 A 0 A_JumpIfHealthLower(-5,"XDeathForCatBitch")
+        Death.EradDisc:
+        Death.EradPiercingDart:
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_GiveToTarget("EleenaDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        XDeathForCatBitch:
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 AAAAA 0 A_SpawnItemEx("EleGibs1", 0, 0, random(8, 56), random(-4, 4), 0, random(0, 6), 0, SXF_USEBLOODCOLOR)
+            TNT1 AAAAA 0 A_SpawnItemEx("EradBloodDrop",0, 0, 32, random(3.0,5.0),random(3.0,5.0),random(0.0,10.0),random(0.0,360.0), SXF_ABSOLUTEANGLE|SXF_USEBLOODCOLOR, 0)
+            TNT1 A 0 A_Jump(96,"XDeath")
+            TNT1 A 0 A_GiveToTarget("EleenaGibTaunt",1)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.SWFist:
+            TNT1 A 0 A_GiveToTarget("SWLoWangBloody", 1)
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_SpawnItemEx("SWFisted")
+            TNT1 A 0 A_GiveToTarget("LoWangDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.SWKatana:
+            TNT1 A 0 A_GiveToTarget("SWLoWangBloody", 1)
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_SpawnItemEx("SWKatanad")
+            TNT1 A 0 A_GiveToTarget("LoWangDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.SWShuriken:
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_SpawnItemEx("SWShurikend")
+            TNT1 A 0 A_GiveToTarget("LoWangDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.SWSticky:
+        Death.SWStickyCoop:
+        Death.SWGrenade:
+        Death.SWNuke:
+        Death.SWRocket:
+        Death.SWRailgun:
+        Death.SWRailgunCoop:
+        Death.SWNukeCoop:
+            TNT1 A 0 A_JumpIfHealthLower(-3,"XDeathForWang")
+        Death.SWBullet:
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_GiveToTarget("LoWangDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.SWFlame:
+        Death.SWFlame2:
+        Death.SWFlame2Coop:
+        Death.SWFlame3:
+            TNT1 A 0 A_JumpIfHealthLower(-3,"XDeathForWang")
+            TNT1 A 0 A_Jump(218, "Burn")
+            TNT1 A 0 A_GiveToTarget("LoWangDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        XDeathForWang:
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 A 0 A_SpawnItemEx("SWHumanGibSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_Jump(218, "XDeath")
+            TNT1 A 0 A_GiveToTarget("LoWangDMTaunt2",1)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.LeonardDamage2:
+        Death.LeonardDamage3:
+            TNT1 A 0 A_JumpIfHealthLower(-20, "XDeathForLeonard")
+        Death.RRBullet:
+        Death.LeonardDamage0:
+        Death.LeonardDamage1:
+            TNT1 A 0 A_Jump(218, "Death")
+            TNT1 A 0 A_GiveToTarget("LeonardDMTaunt1", 1)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        XDeathForLeonard:
+            TNT1 A 0 A_ChangeFlag("SOLID",false)
+            TNT1 A 0 A_SpawnItemEx("RRGibSpawner",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|1048576)
+            TNT1 A 0 A_Jump(96,"XDeath")
+            TNT1 A 0 A_GiveToTarget("LeonardGibTaunt",1)
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.Painkiller:
+        Death.PainkillerBullet:
+        Death.PainkillerElectro:
+        Death.PainkillerExplosive:
+        Death.PainkillerShuriken:
+        Death.PainkillerDemon:
+            TNT1 A 0 ACS_NamedExecuteAlways("Painkiller_MonsterKill")
+            TNT1 A 0 A_JumpIf(CallACS("Painkiller_IsItGibbed")==1,"PainkillerGib")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.PainkillerFire:
+            TNT1 A 0 ACS_NamedExecuteAlways("Painkiller_MonsterKill")
+            TNT1 A 0 A_JumpIf(CallACS("Painkiller_IsItGibbed")==1,"PainkillerGib")
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.PainkillerStake:
+            "####" "#" 0 A_GiveInventory("Painkiller_RunStake",1)
+            "####" "#" 0 A_JumpIf(CallACS("Painkiller_StakeShatter",1)==0,"Death.Painkiller")
+            "####" "#" 0 ACS_NamedExecuteAlways("Painkiller_MonsterKill")
+            "####" "#" 0 A_JumpIf(CallACS("Painkiller_IsItGibbed")==1,"PainkillerGib")
+            "####" "#" 0 A_Scream
+            "####" "#" 0 A_NoBlocking
+            "####" "#" 0 A_FaceTarget
+            "####" "#" -1 A_Jump(256,"StakeDeath")
+            Wait
+        StakeDeath:
+            "####" "#" 2
+            Loop
+        PainkillerGib:
+            TNT1 A 0 A_PlaySound("Painkiller/Gib",CHAN_BODY)
+            TNT1 A 0 ACS_NamedExecuteWithResult("Painkiller_GibCreator")
+            TNT1 A -1 A_Jump(256,"XDeath")
+            Wait
+        Death.DeusExMelee:
+        Death.DeusExStunned:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 0)
+            TNT1 A -1 A_Jump(256, "Death")
+            Wait
+        Death.DeusExLAM:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 0)
+            TNT1 A -1 A_Jump(256, "DeusXDeath")
+            Wait
+        Death.DeusExPistol:
+        Death.DeusExKnockedOut:
+        Death.DeusExPoisonEffect:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
+            TNT1 A -1 A_Jump(256, "Death")
+            Wait
+        Death.DeusExSabotPistol:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 1)
+            TNT1 A 0 A_JumpIfHealthLower(-50, "DeusXDeath")
+            TNT1 A -1 A_Jump(256, "Death")
+            Wait
+        Death.DeusExSabot:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 2)
+            TNT1 A 0 A_JumpIfHealthLower(-50, "DeusXDeath")
+            TNT1 A -1 A_Jump(256, "Death")
+            Wait
+        Death.DeusExRifleShot:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 2)
+            TNT1 A -1 A_Jump(256, "Death")
+            Wait
+        Death.DeusExRifleExploded:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 2)
+            TNT1 A -1 A_Jump(256, "DeusXDeath")
+            Wait
+        Death.DeusExFlamed:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+            TNT1 A 0 A_JumpIfHealthLower(-40, "DeusXDeath")
+            TNT1 A -1 A_Jump(256, "Burn")
+            Wait
+        Death.DeusExBurned:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+            TNT1 A 0 A_JumpIfHealthLower(-40, "DeusXDeath")
+            TNT1 A -1 A_Jump(256, "Death")
+            Wait
+        Death.DeusExExploded:
+            TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+        Death.DeusExDroneExploded:
+        DeusXDeath:
+            TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_GibCreator")
+            TNT1 A -1 A_Jump(256, "XDeath")
+            Wait
+        Death.QuakeDamage:
+        Death.QuakePistol:
+        Death.QuakeElectric:
+        Death.NotQuadded:
+        Death.QuakeExplosive:
+        Death.QuakeLaser:
+            TNT1 A 0 A_JumpIfHealthLower(-50, "XDeathForRanger")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        XDeath.QuakeDamage:
+        XDeath.QuakePistol:
+        XDeath.QuakeElectric:
+        XDeath.NotQuadded:
+        XDeath.QuakeExplosive:
+        XDeath.QuakeLaser:
+        XDeathForRanger:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+            TNT1 A 0 A_SpawnItemEx("QuakeGibSpawner",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|1048576)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.RottExplosive:
+            TNT1 A 0 A_JumpIfHealthLower(-3,"XDeathForROTT")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        XDeath.RottExplosive:
+        XDeathForROTT:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+            TNT1 A 0 A_SpawnItemEx("RottGibbedMan",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_Jump(128, 2)
+            TNT1 A 0 A_GiveToTarget("LudicrousGibsItem", 1)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.HLLaser:
+        Death.HLExplosive:
+        Death.HLRPGExplosive:
+            TNT1 A 0 A_JumpIfHealthLower(-20, "Death.FreemanGibs")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.HLEgon:
+        Death.FreemanGibs:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+            TNT1 A 0 A_SpawnItemEx("HLGenericGibSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.BittermanDamage:
+            TNT1 A 0 A_JumpIfHealthLower(-50, "XDeathForBitterman")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.BittermanFire:
+            TNT1 A 0 A_JumpIfHealthLower(-50, "XDeathForBitterman")
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.BittermanTrap:
+        XDeathForBitterman:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("Q2ColorGibSpawner",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|1048576)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.Hexen2Damage:
+        Death.Hexen2Electric:
+            TNT1 A 0 A_JumpIfHealthLower(-50,"XDeathForDemoness")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.Hexen2Fire:
+            TNT1 A 0 A_JumpIfHealthLower(-50,"XDeathForDemoness")
+            TNT1 A -1 A_Jump(256,"Burn")
+            Wait
+        Death.Hexen2Extreme:
+        Death.Hexen2ElectricExtreme:
+        XDeathForDemoness:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 A_PlaySound("Hexen2/Gib", CHAN_5)
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+            TNT1 A 0 A_SpawnItemEx("Hexen2GibSpawnerColor",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION|SXF_SETMASTER|1048576)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.UnrealDamage:
+        Death.UnrealPlasma:
+        Death.UnrealSludge:
+        Death.ASMDShockTrace:
+        Death.UnrealExplosive:
+        Death.UnrealRazor:
+            TNT1 A 0 A_JumpIfHealthLower(-20, "UnrealXDeath")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.UnrealExtreme:
+        Death.UnrealRedeemer:
+        Death.UnrealShredded:
+        UnrealXDeath:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("UnrealGenericGibSpawnerM", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER|1048576)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.RTCWVenomBullet:
+            TNT1 A 0 A_JumpIfHealthLower(-50,"RTCWXDeath")
+            TNT1 A 0 A_SpawnItemEx("RTCW_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.RTCWExplosive:
+        RTCWXDeath:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+        RTCWXDeath2:
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("RTCW_GibSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER|1048576)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+        Death.Q3Explosive:
+        Death.Q3Energy:
+            "####" "#" 0 A_JumpIfHealthLower(-20,"XDeath.Q3Explosive")
+            TNT1 A -1 A_Jump(256,"Death")
+            Wait
+        Death.Q3BFG:
+        XDeath.Q3Explosive:
+        XDeath.Q3Energy:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+            TNT1 A 0 A_SpawnItemEx("Q3GibGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER|1048576)
+            TNT1 A 0 A_Stop
+            TNT1 A 0 A_NoBlocking
+            TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+            Stop
+    }
+}
+
+actor AnubisWarriorReinc_Shrink : AnubisWarriorReinc
+{
+    +FRIGHTENED
+    +NOTRIGGER
+    -SHOOTABLE
+    +THRUACTORS
+    +NORADIUSDMG
+    +VULNERABLE
+    +QUICKTORETALIATE
+    +COUNTKILL
+    -NOGRAVITY
+    +NODAMAGE
+    +NOPAIN
+    MaxStepHeight 0
+    MaxDropOffHeight 0
+    MeleeRange 16
+    Height 16
+    Health 1
+    Speed 1
+    PainChance "ShrinkDMG", 0
+    DamageFactor "ShrinkDMG", 0.0
+    PainChance "ExpanderDMG", 0
+    DamageFactor "ExpanderDMG", 0.0
+    States
+    {
+        Spawn:
+            TNT1 A 0
+            TNT1 A 0 A_JumpIfInventory("ShrunkToken",1,"SpawnLoop")
+            TNT1 A 0 A_SetUserVar("user_scalex", scalex*65536.0)
+            TNT1 A 0 A_SetUserVar("user_scaley", scaley*65536.0)
+            TNT1 A 0 A_SetScale(scalex*0.2,scaley*0.2) // setting the scale in ACS does work, but the actor shows up at normal size for a split second
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_Shrinker", 0, 1)
+            ANUB L 10
+            Goto See
+        SpawnLoop:
+            ANUB A 5 A_Look
+            Loop
+        See:
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB B 3 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB B 2 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB C 3 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB C 2 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB D 3 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB D 2 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB E 3 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB E 2 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB D 3 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB D 2 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB C 3 A_Chase("","")
+            "####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+            "####" "#" 0 A_Jump(256, 2)
+            "####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+            ANUB C 2 A_Chase("","")
+            "####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+            Loop
+        Forget:
+            "####" "#" 0 A_ClearTarget
+            Goto See
+        Grow:
+            "####" "#" 4 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(1.0*(user_scalex/65536.0),1.0*(user_scaley/65536.0))
+            "####" "#" 0 A_SpawnItemEx("AnubisWarriorReinc", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_TRANSFERPOINTERS|SXF_TRANSFERAMBUSHFLAG|SXF_SETMASTER,0,tid)
+            TNT1 A 0 A_GiveToChildren("ShrunkPropertyTransfer",1)
+            TNT1 A 0 A_GiveToChildren("ShrunkPropertyTransfer",1)
+            TNT1 A 2 Thing_Remove(0)
+            stop
+        Squish:
+            "####" "#" 0 A_GiveInventory("SquishToken", 1)
+            "####" "#" 0 A_JumpIfInTargetInventory("DukeStomp", 1, 2)
+            "####" "#" 0 A_Jump(256,3)
+            "####" "#" 2 
+            "####" "#" 0 A_Jump(256,3)
+            "####" "#" 0 
+            "####" "#" 2 A_Die("Squish")
+            "####" "#" 0
+            loop
+        Death:
+        XDeath:
+        Death.Massacre:
+        XDeath.Massacre:
+        Death.Squish:
+        XDeath.Squish:
+            TNT1 A 0 A_Jump(64,2)
+            TNT1 A 0 A_GiveToTarget("DukeBootTaunt",1)
+            TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+            TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+            TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+            stop
+        DukeStomp:
+            "####" "#" 0 A_GiveToTarget("DukeStomp", 1)
+            Goto Squish
+    }
+}
+
+actor AnubisWarriorReinc_ShrinkEffect : AnubisWarriorReinc
+{
+    -ISMONSTER
+    -COUNTKILL
+    -SHOOTABLE
+    -SOLID
+    +NOINTERACTION
+    -NOGRAVITY
+    +CLIENTSIDEONLY    
+    Renderstyle Translucent
+    Alpha 0.4
+    States
+    {
+        Spawn:
+            ANUB L 0
+            ANUB L 0 A_SetUserVar("user_scalex", scalex*65536.0)
+            ANUB L 0 A_SetUserVar("user_scaley", scaley*65536.0)
+            "####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+            "####" "#" 1 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+            Stop
+    }
+}
+
+Actor AnubisMissile
+{
+    height 8
+    radius 6
+    damage 5
+    speed 20
+    scale 0.70
+    seesound "anubis/fireball"
+    RenderStyle SoulTrans
+    PROJECTILE
+    +STRIFEDAMAGE
+    +MISSILE
+    states
+    {
+    Spawn:
+    ANFB ABC 3 Bright
+    loop
+    Death:
+    ANFB DEFG 4 Bright
+    stop
+    }
+}
+
+Actor AnubisGib1
+{
+    BounceFactor 0.38
+    +DOOMBOUNCE
+    Speed 8
+    Projectile
+    Scale 0.75
+    +CLIENTSIDEONLY    
+    -NOGRAVITY
+    -NOBLOCKMAP
+    states
+    {
+    Spawn:
+    TNT1 A 0
+    TNT1 A 0 ThrustThingZ(0,random(10,60),0,1)
+    ANU2 FFFFFFFFFFFFFFF 2
+    Death:
+    ANU2 F 300
+    ANU2 F 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Death")
+    ANU2 F 1 A_FadeOut
+    wait
+    }
+}
+
+Actor AnubisGib2 : AnubisGib1
+{
+    states
+    {
+    Spawn:
+    TNT1 A 0
+    TNT1 A 0 ThrustThingZ(0,random(10,60),0,1)
+    ANU2 GGGGGGGGGGGGGGG 2
+    Death:
+    ANU2 G 300
+    ANU2 G 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Death")
+    ANU2 G 1 A_FadeOut
+    wait
+    }
+}
+
+Actor AnubisGib3 : AnubisGib1
+{
+    states
+    {
+    Spawn:
+    TNT1 A 0
+    TNT1 A 0 ThrustThingZ(0,random(10,60),0,1)
+    ANU2 HHHHHHHHHHHHHHH 2
+    Death:
+    ANU2 H 300
+    ANU2 H 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Death")
+    ANU2 H 1 A_FadeOut
+    wait
+    }
+}
+
+Actor AnubisGib4 : AnubisGib1
+{
+    states
+    {
+    Spawn:
+    TNT1 A 0
+    TNT1 A 0 ThrustThingZ(0,random(10,60),0,1)
+    ANU2 IIIIIIIIIIIIIII 2
+    Death:
+    ANU2 I 300
+    ANU2 I 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Death")
+    ANU2 I 1 A_FadeOut
+    wait
+    }
+}
+
+Actor AnubisDropDrum : Boolean {}
+
+Actor AnubisDrum
+{
+    +NOGRAVITY
+    +NODAMAGE
+    -SOLID
+    +NOBLOOD
+    PainChance 255
+    Health 1
+    Height 24
+    Radius 12
+    Scale 0.5
+    States
+    {
+        Spawn:
+            ANU2 L 0 A_JumpIfInventory("AnubisDropDrum",1,"DropDrum",AAPTR_Tracer)
+            ANU2 L 1 A_Warp(AAPTR_Tracer,0,0,15,0,WARPF_NOCHECKPOSITION)
+            Loop
+        DropDrum:
+            ANU2 L 0 A_ChangeFlag("NOGRAVITY",0)
+            ANU2 L 0 A_ChangeFlag("SHOOTABLE",1)
+            ANU2 L 0 A_TakeInventory("AnubisDropDrum",1,0,AAPTR_TRACER)
+        DropDrumLoop:
+            ANU2 L 1
+            Loop
+        Pain:
+            ANU2 L 0 A_PlaySound("anubis/drum",CHAN_6)
+            ANU2 L 0 ThrustThingZ(0,16,0,0)
+            ANU2 L 0 A_ChangeFlag("NOPAIN",1)
+            ANU2 L 15
+            ANU2 L 0 A_ChangeFlag("NOPAIN",0)
+            Goto DropDrumLoop
+    }
+}
+
+Actor PSHaremGirl1
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 ABC 6
+            PS60 ABC 6
+            Loop
+    }
+}
+
+Actor PSHaremGirl2
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 EFGH 6 ThrustThing(angle*256/360 + 64,1,0,0)
+            PS60 EFGH 6 ThrustThing(angle*256/360 - 64,1,0,0)
+            Loop
+    }
+}
+
+Actor PSHaremGirl3
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 I 6
+            Loop
+    }
+}
+
+Actor PSHaremGirl4
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 J 6
+            Loop
+    }
+}
+
+Actor PSHaremGirl5
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 K 6
+            Loop
+    }
+}
+
+Actor PSHaremGirl6
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 L 6
+            Loop
+    }
+}
+
+Actor PSHaremGirl7
+{
+    -SHOOTABLE
+    -SOLID
+    -NOGRAVITY
+    Scale 0.5
+    Height 52
+    Radius 20
+    States
+    {
+        Spawn:
+            PS60 M 6
+            Loop
+    }
+}

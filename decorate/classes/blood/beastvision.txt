@@ -1,0 +1,39 @@
+actor CalebVision: Boolean {}
+actor CalebVisionFuel: Counter { Inventory.MaxAmount 100 }
+
+actor SamsaraBeastVision : CustomInventory
+{
+    Inventory.UseSound ""
+    Inventory.Icon "INBEAST"
+    Inventory.MaxAmount 1
+    Inventory.InterHubAmount 1
+    Inventory.RestrictedTo "Caleb"
+    Tag "Beast Vision"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,"UseActivateCheck")
+        TNT1 A 0 A_JumpIfInventory("CalebVisionFuel",1,"UseActivateCheck")
+        TNT1 A 0 A_RailWait // in case someone tries to use it without actually having fuel
+        stop
+
+      UseActivateCheck:
+        TNT1 A 0 A_JumpIfInventory("CalebVision",1,"UseDeactivate")
+      UseActivate:
+        TNT1 A 0 A_PlaySound("Caleb/Powerup",CHAN_ITEM)
+        TNT1 A 0 A_GiveInventory("CalebVision")
+        TNT1 A 0 A_GiveInventory("CalebNightVision")
+        TNT1 A 0 ACS_NamedExecuteAlways("CalebBeastVisionDrain")
+        fail
+
+      UseDeactivate:
+        //TNT1 A 0 A_PlaySound("Caleb/Powerup",CHAN_ITEM)
+        TNT1 A 0 A_TakeInventory("CalebVision")
+        TNT1 A 0 A_TakeInventory("PowerLightAmp")
+        fail
+    }
+}
+
+actor CalebNightVision : Infrared { Powerup.Duration 0x7FFFFFFF }

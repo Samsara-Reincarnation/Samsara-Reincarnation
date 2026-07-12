@@ -1,0 +1,481 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Intermission scripts.
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+* Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+
+/*****************************************************************************
+ * Intermission defines and Map-scope variables.
+ ****************************************************************************/
+
+#define INTER_STATS_KILLS 0
+#define INTER_STATS_ITEMS 1
+#define INTER_STATS_SECRETS 2
+
+#define INTER_STATS_DIVISOR 25
+
+#define INTER_SPECIAL_NONE 0
+#define INTER_SPECIAL_SECRETEXIT 1
+#define INTER_SPECIAL_E1END 2
+#define INTER_SPECIAL_E2END 3
+#define INTER_SPECIAL_E3END 4
+
+#define INTER_SPECIAL_PPMAP 5
+#define INTER_SPECIAL_PPMAP_0 5 // red
+#define INTER_SPECIAL_PPMAP_1 6 // orange
+#define INTER_SPECIAL_PPMAP_2 7 // yellow
+#define INTER_SPECIAL_PPMAP_3 8 // green
+#define INTER_SPECIAL_PPMAP_4 9 // indigo
+#define INTER_SPECIAL_PPMAP_5 10 // violet
+#define INTER_SPECIAL_PPMAP_6 11 // cow
+#define INTER_SPECIAL_PPMAP_END 12
+
+
+/** Intermission time to use. */
+int inter_time;
+/** Intermission camera tag. */
+int inter_camera_tag;
+/** Intermission skip delay scalar. */
+int inter_delay_scalar;
+/** Intermission blurbs complete flag. */
+int inter_finished;
+/** Intermission HUD fade mode (changed on skip). */
+int inter_fadein;
+/** Intermission kill percent. */
+int inter_kills_pcnt;
+/** Intermission items percent. */
+int inter_items_pcnt;
+/** Intermission secrets percent. */
+int inter_secrets_pcnt;
+/** Intermission special flag. */
+int inter_special_type;
+
+str inter_stats_strings[3][6] = 
+{
+	// Kills. (0%, 25%, 50%, 75%, 100%)
+	{
+		"INTER_KILLS0",
+		"INTER_KILLS1",
+		"INTER_KILLS1",
+		"INTER_KILLS2",
+		"INTER_KILLS3",
+		"INTER_KILLS4",
+	},
+	// Items. (0%, 25%, 50%, 75%, 100%)
+	{
+		"INTER_ITEMS0",
+		"INTER_ITEMS1",
+		"INTER_ITEMS1",
+		"INTER_ITEMS2",
+		"INTER_ITEMS3",
+		"INTER_ITEMS4",
+	},
+	// Secrets. (0%, 25%, 50%, 75%, 100%)
+	{
+		"INTER_SECRETS0",
+		"INTER_SECRETS1",
+		"INTER_SECRETS1",
+		"INTER_SECRETS2",
+		"INTER_SECRETS3",
+		"INTER_SECRETS4",
+	}
+};
+
+/*****************************************************************************
+ * Functions
+ ****************************************************************************/
+
+/**
+ * Plays a different sound depending on whether or not an
+ * intermission percentage counter ended on 100 or not.
+ */
+function void Intermission_CounterEndSound(int pct)
+{
+	if (pct < 100)
+		AmbientSound("intermission/tickend", 127);
+	else
+		AmbientSound("intermission/bell", 127);
+}
+
+function int Intermission_GetMessageIndex(int pct)
+{
+	if (pct > 0)
+	{
+		int i = pct / INTER_STATS_DIVISOR;
+		return i + 1;
+	}
+	
+	return 0;
+}
+
+/**
+ * Initializes the map variables.
+ */
+script "__Init_Intermission" OPEN
+{
+	inter_delay_scalar = 1;
+	inter_finished = FALSE;
+	inter_fadein = HUDMSG_FADEINOUT;
+	inter_kills_pcnt = 0;
+	inter_items_pcnt = 0;
+	inter_secrets_pcnt = 0;
+	inter_special_type = 0;	
+}
+
+/*****************************************************************************
+ * Called by Other Scripts
+ ****************************************************************************/
+
+script "__Intermission_ShowStats" (int isTimeAttack)
+{
+	// Clear boss meter.
+	ACS_NamedExecute("BossMeter_End", 0, 1);
+
+	inter_kills_pcnt = percent(GetLevelInfo(LEVELINFO_KILLED_MONSTERS), GetLevelInfo(LEVELINFO_TOTAL_MONSTERS));
+	inter_items_pcnt = percent(GetLevelInfo(LEVELINFO_FOUND_ITEMS), GetLevelInfo(LEVELINFO_TOTAL_ITEMS));
+	inter_secrets_pcnt = percent(GetLevelInfo(LEVELINFO_FOUND_SECRETS), GetLevelInfo(LEVELINFO_TOTAL_SECRETS));
+
+	Players_Freeze(ON);
+	
+	// White out fade.
+	AmbientSound("intermission/whoosh", 127);
+	FadeRange(255, 255, 255, 0.0, 255, 255, 255, 1.0, 0.5);
+	delay(18);
+
+	Reset_All_Player_Powerups();
+	Give_Item_All("IntermissionModeItem", 1);
+	
+	SetMusic("NULLMUS"); // turn off music.
+
+	// Switch to other camera (if tag provided. else, fade to violet).
+	if (inter_camera_tag > 0)
+	{
+		ChangeCamera(inter_camera_tag, 1, 0);
+		FadeRange(255, 255, 255, 1.0, 255, 255, 255, 0.0, 0.5);
+	}
+	else
+	{
+		FadeRange(255, 255, 255, 1.0, 111, 0, 107, 1.0, 0.5);
+	}
+
+	delay(18);
+
+	// Start listening for "use".
+	ACS_NamedExecute("__Intermission_Input_Listen", 0, isTimeAttack);
+
+	// Start printing the scoreboard.
+	SetHudSize(HUD_WIDTH, HUD_HEIGHT, 1);
+	
+	SetFont("BigFont");
+	if (inter_special_type == INTER_SPECIAL_E1END)
+		SetMusic("D_E1END");
+	else if (inter_special_type == INTER_SPECIAL_E2END)
+		SetMusic("D_E2END");
+	else if (inter_special_type == INTER_SPECIAL_E3END)
+		SetMusic("D_E3END");
+	else
+		SetMusic("D_INTERM");
+
+	delay(inter_delay_scalar * 10);
+	HudMessageBold(n: PRINTNAME_LEVELNAME; inter_fadein, HUD_INTER_LABEL_LEVELNAME, CR_WHITE, 30.1, 35.0, 9999.0, 1.0);
+	delay(inter_delay_scalar * 10);
+	HudMessageBold(l:"INTER_CLEARED"; inter_fadein, HUD_INTER_LABEL_CLEARED, CR_RED, 30.1, 55.0, 9999.0, 1.0);
+
+	SetFont("SmallFont");
+
+	delay(inter_delay_scalar * 10);
+	HudMessageBold(l:"INTER_ENEMIES"; inter_fadein, HUD_INTER_LABEL_ENEMIES, CR_WHITE, 30.1, 80.0, 9999.0, 1.0);
+
+	delay(inter_delay_scalar * 10);
+	HudMessageBold(l:"INTER_ITEMS"; inter_fadein, HUD_INTER_LABEL_ITEMS, CR_WHITE, 30.1, 100.0, 9999.0, 1.0);
+
+	delay(inter_delay_scalar * 10);
+	HudMessageBold(l:"INTER_SECRETS"; inter_fadein, HUD_INTER_LABEL_SECRETS, CR_WHITE, 30.1, 120.0, 9999.0, 1.0);
+
+	delay(inter_delay_scalar * 10);
+	HudMessageBold(l:"INTER_TIME"; inter_fadein, HUD_INTER_LABEL_LEVELTIME, CR_WHITE, 30.1, 140.0, 9999.0, 1.0);
+
+	SetFont("BigFont");
+
+	int dly = 0;
+
+	// Kills counter
+	dly = 35;
+	while (inter_delay_scalar && dly-- > 0) 
+		delay(inter_delay_scalar);
+		
+	for(int k = 0; k <= inter_kills_pcnt; ++k)
+	{
+		HudMessageBold(d:k, s:"%"; HUDMSG_PLAIN, HUD_INTER_KILLS, CR_UNTRANSLATED, 150.1, 80.0, 0.0, 1.0);
+		delay(inter_delay_scalar * 1);
+		// play tick every third tic (plus first)
+		if (inter_delay_scalar && k % 3 == 0) 
+			AmbientSound("intermission/tick", 127);
+	}
+	if (inter_delay_scalar)
+	{
+		Intermission_CounterEndSound(inter_kills_pcnt);
+	}
+
+	SetFont("SmallFont");
+	HudMessageBold(l:inter_stats_strings[INTER_STATS_KILLS][Intermission_GetMessageIndex(inter_kills_pcnt)]; HUDMSG_PLAIN, HUD_INTER_KILLSTR, CR_WHITE, 206.1, 80.0, 0.0, 1.0);
+	SetFont("BigFont");
+
+	// Items counter
+	dly = 35;
+	while (inter_delay_scalar && dly-- > 0) 
+		delay(inter_delay_scalar);
+
+	for(int i = 0; i <= inter_items_pcnt; ++i)
+	{
+		HudMessageBold(d:i, s:"%"; HUDMSG_PLAIN, HUD_INTER_ITEMS, CR_UNTRANSLATED, 150.1, 100.0, 0.0, 1.0);
+		delay(inter_delay_scalar * 1);
+		// play tick every third tic (plus first)
+		if (inter_delay_scalar && i % 3 == 0) 
+			AmbientSound("intermission/tick", 127);
+	}
+	if (inter_delay_scalar)
+	{
+		Intermission_CounterEndSound(inter_items_pcnt);
+	}
+
+	SetFont("SmallFont");
+	HudMessageBold(l:inter_stats_strings[INTER_STATS_ITEMS][Intermission_GetMessageIndex(inter_items_pcnt)]; HUDMSG_PLAIN, HUD_INTER_ITEMSTR, CR_WHITE, 206.1, 100.0, 0.0, 1.0);
+	SetFont("BigFont");
+
+	// Secrets counter
+	dly = 35;
+	while (inter_delay_scalar && dly-- > 0) 
+		delay(inter_delay_scalar);
+
+	for(int s = 0; s <= inter_secrets_pcnt; ++s)
+	{
+		HudMessageBold(d:s, s:"%"; HUDMSG_PLAIN, HUD_INTER_SECRETS, CR_UNTRANSLATED, 150.1, 120.0, 0.0, 1.0);
+		delay(inter_delay_scalar * 1);
+		// play tick every third tic (plus first)
+		if (inter_delay_scalar && s % 3 == 0) 
+			AmbientSound("intermission/tick", 127);
+	}
+	if (inter_delay_scalar)
+	{
+		Intermission_CounterEndSound(inter_secrets_pcnt);
+	}
+	
+	// Woo-Hoo!
+	if (inter_kills_pcnt == 100
+		&& inter_secrets_pcnt == 100
+		&& inter_items_pcnt == 100)
+		AmbientSound("player/square/woohoo", 127);
+	
+	SetFont("SmallFont");
+	HudMessageBold(l:inter_stats_strings[INTER_STATS_SECRETS][Intermission_GetMessageIndex(inter_secrets_pcnt)]; HUDMSG_PLAIN, HUD_INTER_SECRETSTR, CR_WHITE, 206.1, 120.0, 0.0, 1.0);
+	SetFont("BigFont");
+
+	// Print time
+	dly = 35;
+	while (inter_delay_scalar && dly-- > 0) 
+		delay(inter_delay_scalar);
+	HudMessageBold(s:Format_TickTimeFull(inter_time); HUDMSG_PLAIN, HUD_INTER_LEVELTIME, CR_UNTRANSLATED, 150.1, 140.0, 0.0, 1.0);
+	if (inter_delay_scalar)
+	{
+		Intermission_CounterEndSound(0);
+	}
+	
+	dly = 35;
+	while (inter_delay_scalar && dly-- > 0) 
+		delay(inter_delay_scalar);
+	
+	// Print par
+	int partime = GetLevelInfo(LEVELINFO_PAR_TIME) % 36000 * 35;
+	int bbtime = GetLevelInfo(LEVELINFO_PAR_TIME) / 36000 * 35;
+
+	int parcolor;
+	str parstring;
+
+	if (inter_time < partime) 
+	{ 
+		parcolor = CR_GOLD; 
+		parstring = "INTER_PARBEATEN"; 
+	}
+	else
+	{ 
+		parcolor = CR_PURPLE; 
+		parstring = "INTER_PARTIME";
+	}
+
+	SetFont("BigFont");
+	HudMessageBold(s:Format_TickTime(partime); HUDMSG_PLAIN, HUD_INTER_PARTIME, parcolor, 150.1, 160.0, 0.0);
+	SetFont("SmallFont");
+	HudMessageBold(l:parstring; HUDMSG_PLAIN, HUD_INTER_LABEL_PARTIME, parcolor, 30.1, 160.0, 0.0);
+
+	if (inter_time < bbtime) 
+	{ 
+		parcolor = CR_GOLD; 
+		parstring = "INTER_BBBEATEN"; 
+	}
+	else
+	{ 
+		parcolor = CR_PURPLE; 
+		parstring = "INTER_BBTIME";
+	}
+		
+	SetFont("BigFont");
+	HudMessageBold(s:Format_TickTime(bbtime); HUDMSG_PLAIN, HUD_INTER_BBTIME, parcolor, 150.1, 180.0, 0.0);
+	SetFont("SmallFont");
+	HudMessageBold(l:parstring; HUDMSG_PLAIN, HUD_INTER_LABEL_BBTIME, parcolor, 30.1, 180.0, 0.0);
+
+	if (inter_delay_scalar && (inter_time < bbtime || inter_time < partime))
+		Intermission_CounterEndSound(100);
+	else
+		Intermission_CounterEndSound(0);
+	
+	dly = 35;
+	while (inter_delay_scalar && dly-- > 0) 
+		delay(inter_delay_scalar);
+
+	inter_finished = TRUE;
+
+	while (TRUE)
+	{
+		HudMessageBold(l:"INTER_USEFORNEXT"; HUDMSG_PLAIN, HUD_INTER_LABEL_NEXT, CR_WHITE, 30.1, 220.0, 999.0);
+		HudMessageBold(l:"INTER_USEFORNEXT"; HUDMSG_FADEINOUT, HUD_INTER_LABEL_NEXT_OV, CR_PURPLE, 30.1, 220.0, 0.0, 0.5, 0.5);
+		if (isTimeAttack)
+		{
+			HudMessageBold(l:"TIMEATK_FIRETOREPLAY"; HUDMSG_PLAIN, HUD_INTER_LABEL_REPLAY, CR_WHITE, 30.1, 230.0, 999.0);
+			HudMessageBold(l:"TIMEATK_FIRETOREPLAY"; HUDMSG_FADEINOUT, HUD_INTER_LABEL_REPLAY_OV, CR_PURPLE, 30.1, 230.0, 0.0, 0.5, 0.5);
+		}
+		delay(35);
+	}
+}
+
+/**
+ * Starts listening for input during the intermission.
+ * Called by script "Intermission_EndLevel". Do not call directly.
+ */
+script "__Intermission_Input_Listen" (int isTimeAttack)
+{
+	while (TRUE)
+	{
+		int inp = 0;
+		do {
+			inp = GetAllPlayerInput(INPUT_BUTTONS) & (BT_USE | BT_RELOAD);
+			if (!inp)
+				delay(1);
+		} while (!inp);
+		
+		if (inter_finished)
+		{
+			int ppmap;
+			
+			// if not cluster intermission ending, blank music.
+			if (inter_special_type < INTER_SPECIAL_E1END)
+				SetMusic("NULLMUS");
+				
+			Players_Freeze(OFF);
+			Take_Item_All("IntermissionModeItem", 1);
+
+			if (isTimeAttack && (inp & BT_RELOAD))
+			{
+				Teleport_NewMap(GetLevelInfo(LEVELINFO_LEVELNUM), 0, FALSE);
+				terminate;
+			}
+			else
+			{
+				if (inter_special_type == INTER_SPECIAL_SECRETEXIT)
+				{
+					Exit_Secret(0);
+					terminate;
+				}
+				// Send back to the lobby.
+				else if (inter_special_type >= INTER_SPECIAL_PPMAP && inter_special_type < INTER_SPECIAL_PPMAP_END)
+				{
+					G_PPMapCompletion[inter_special_type - INTER_SPECIAL_PPMAP] = TRUE;
+					ppmap = ParseInt(StrParam(l:"PP_LOBBY_LEVELNUM"));
+					Teleport_NewMap(ppmap, 0, FALSE);
+					terminate;
+				}
+				// Should be hit first after Prism key collect.
+				else if (G_PPExit)
+				{
+					G_PPExit = FALSE; // reset
+					ppmap = ParseInt(StrParam(l:"PP_LOBBY_LEVELNUM"));
+					Teleport_NewMap(ppmap, 0, FALSE);
+					terminate;
+				}
+				else
+				{
+					Exit_Normal(0);
+					terminate;
+				}
+			}
+		}
+		else
+		{
+			inter_delay_scalar = 0;
+			inter_fadein = HUDMSG_PLAIN;
+			AmbientSound("weapons/rocklx", 127);
+		}
+		delay(35);
+	}
+	
+}
+
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * End level intermission script for maps.
+ * specialType: change behavior slightly based on value.
+ * cameraTID: if > 0, this is the BASE TID to use for the intermission camera.
+ *		If none is specified, the screen fades to a purple color after whiteout.
+ * cameraRandomStride: the range for the other TIDs to randomly pick from in
+ * 		order to pick a random camera from a set of contiguously-tagged cameras. 
+ *		A value of 0 implies no randomness.
+ * - The picked TID is [ cameraTID + Random(0, cameraRandomStride) ].
+ */
+script "Intermission_EndLevel" (int specialType, int cameraTID, int cameraRandomStride)
+{
+	inter_time = Timer();
+	inter_camera_tag = cameraTID + Random(0, cameraRandomStride);
+	inter_special_type = specialType;
+		
+	ACS_NamedExecute("__Intermission_ShowStats", 0, FALSE);
+}
+
+/**
+ * End level intermission script for maps.
+ * secret: if nonzero, the secret level is next. Else, the normal one is.
+ * cameraTID: if > 0, this is the BASE TID to use for the intermission camera.
+ *		If none is specified, the screen fades to a purple color after whiteout.
+ * - The picked TID is [ cameraTID + Random(0, cameraRandomStride) ].
+ */
+script "Intermission_EndTimeAttack" (int time, int cameraTID)
+{
+	inter_time = time;
+	inter_camera_tag = cameraTID;
+	inter_special_type = 0;
+		
+	ACS_NamedExecute("__Intermission_ShowStats", 0, TRUE);
+}

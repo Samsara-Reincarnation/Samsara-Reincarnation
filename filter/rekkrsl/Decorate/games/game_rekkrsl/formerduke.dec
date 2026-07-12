@@ -51,9 +51,9 @@ Actor RERRKFormerDuke_Samsara : SamsaraMonsterDemonicTotalGib replaces Fatso 673
 		CYBR F 4 Bright A_FatAttack3
 		goto See
 	Death:
-		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-		CYBR Q 3
+	Death.Massacre:
+		CYBR Q 3 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 		CYBR Q 3 A_Scream
 		CYBR RST 6
 		CYBR U 6 A_Fall
@@ -277,6 +277,8 @@ actor RERRKFormerDuke_Samsara_Shrink : RERRKFormerDuke_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

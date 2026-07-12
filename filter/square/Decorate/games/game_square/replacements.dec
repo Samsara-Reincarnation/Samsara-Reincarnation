@@ -1,0 +1,117 @@
+Actor SamsaraSlotOne_Square : RandomSpawner replaces PaintGuns { DropItem "SamsaraSlotOnePickup" }
+Actor SamsaraSlotTwo_Square : RandomSpawner replaces Shotbow { DropItem "SamsaraSlotTwoPickup" }
+Actor SamsaraSlotThree_Square : RandomSpawner replaces Quadcannon { DropItem "SamsaraSlotThreePickup" }
+Actor SamsaraSlotFour_Square : RandomSpawner replaces Oozi { DropItem "SamsaraSlotFourPickup" }
+Actor SamsaraSlotFour_Square2 : RandomSpawner replaces Oozis { DropItem "SamsaraSlotFourPickup" }
+Actor SamsaraSlotFourSkulltag_Square : RandomSpawner replaces PaintCannon { DropItem "SamsaraSlotFourSkulltagPickup" }
+Actor SamsaraSlotFive_Square : RandomSpawner replaces HellShellLauncher { DropItem "SamsaraSlotFivePickup" }
+Actor SamsaraSlotSix_Square : RandomSpawner replaces Sceptre { DropItem "SamsaraSlotSixPickup" }
+Actor SamsaraUniquePickupRandom_Square : RandomSpawner replaces Defibrillator { DropItem "SamsaraUniquePickupRandom" }
+
+Actor SamsaraHealPack0_Square : HealPack0 replaces Soda { }
+Actor SamsaraHealPack0_Square2 : HealPack0 replaces BadCake { }
+Actor SamsaraHealPack0Dump_Square : HealPack0Dump replaces Cake { }
+Actor SamsaraHealPack0Dump_Square2 : HealPack0Dump replaces BadBurger { }
+Actor SamsaraHealPack1_Square : HealPack1 replaces Burger { }
+Actor SamsaraHealPack1_Square2 : HealPack1 replaces BadLemonade { }
+Actor SamsaraHealPack1_Square3 : HealPack1 replaces BadPie { }
+Actor SamsaraHealPack2_Square : HealPack2 replaces Lemonade { }
+Actor SamsaraHealPack2_Square2 : HealPack2 replaces Pie { }
+Actor SamsaraHealPack3_Square2 : HealPack2 replaces BadFizzoPop { }
+Actor SamsaraSuperHealth_Square : SuperHealth replaces CircoolAid { } // original item did not have +COUNTITEM
+Actor SamsaraSuperHealth_Square2 : SuperHealth replaces HappySphere { +COUNTITEM }
+Actor SamsaraMegaPack_Square : MegaPack replaces SillySphere { +COUNTITEM }
+Actor SamsaraMegaPack_Square2 : MegaPack replaces SillySphereNotItem { }
+
+Actor BadCircoolAid_Samsara replaces BadCircoolAid
+{
+    +NOTIMEFREEZE // allow the scripts to process during time freeze
+    +THRUACTORS // not a pickup, but just in case
+    States
+    {
+      Spawn:
+        TNT1 AA 0 NoDelay ACS_NamedExecuteWithResult("Samsara_SpawnItem", 2, 1, 0)
+        stop
+    }
+}
+
+Actor FizzoPop_Samsara : BadCircoolAid_Samsara replaces FizzoPop { }
+
+Actor SamsaraArmorPack1_Square : ArmorPack1 replaces ArmorCardboard { }
+Actor SamsaraArmorPack2_Square : ArmorPack2 replaces ArmorWood { }
+Actor SamsaraArmorPack3_Square : ArmorPack3 replaces ArmorBrick { }
+Actor SamsaraArmorPack4_Square : ArmorPack4 replaces ArmorDiamond { }
+Actor SamsaraArmorPack5_Square : ArmorPack5 replaces ArmorThunderbox { }
+
+Actor SamsaraAmmo1Small_Square : Ammo1Small replaces PaintAmmo { }
+Actor SamsaraAmmo1Small_Square2 : Ammo1Small replaces PaintAmmo2 { }
+Actor SamsaraAmmo1Small_Square3 : Ammo1Small replaces OoziAmmo { }
+Actor SamsaraAmmo1Small_Square4 : Ammo1Small replaces OoziAmmo2 { }
+Actor SamsaraAmmo1SmallReplacingPaintGun_Square : Ammo1Small replaces PaintGun { }
+Actor SamsaraAmmo2Small_Square : Ammo2Small replaces ShotboltAmmo { }
+Actor SamsaraAmmo2Small_Square2 : Ammo2Small replaces ShotboltAmmo2 { }
+Actor SamsaraAmmo3Small_Square : Ammo3Small replaces HellshellAmmo { }
+Actor SamsaraAmmo4Small_Square : Ammo4Small replaces MarbleAmmo { }
+Actor SamsaraAmmo4Small_Square2 : Ammo4Small replaces MarbleAmmo2 { }
+Actor SamsaraAmmo1Big_Square : Ammo1Big replaces PaintAmmoBig { }
+Actor SamsaraAmmo1Big_Square2 : Ammo1Big replaces PaintAmmoBig2 { }
+Actor SamsaraAmmo1Big_Square3 : Ammo1Big replaces OoziAmmoBig { }
+Actor SamsaraAmmo1Big_Square4 : Ammo1Big replaces OoziAmmoBig2 { }
+Actor SamsaraAmmo2Big_Square : Ammo2Big replaces ShotboltAmmoBig { }
+Actor SamsaraAmmo2Big_Square2 : Ammo2Big replaces ShotboltAmmoBig2 { }
+Actor SamsaraAmmo3Big_Square : Ammo3Big replaces HellShellAmmoBig { }
+Actor SamsaraAmmo3Big_Square2 : Ammo3Big replaces Goonades { }
+Actor SamsaraAmmo3Big_Square3 : Ammo3Big replaces GoonadesVO { }
+Actor SamsaraAmmo4Big_Square : Ammo4Big replaces MarbleAmmoBig { }
+Actor SamsaraAmmo4Big_Square2 : Ammo4Big replaces MarbleAmmoBig2 { }
+
+Actor SamsaraSmallAmmoCombo_Square : AmmoComboSmall replaces AmmoCase
+{
+    States
+    {
+      Spawn:
+        CLIP B 0
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        CLIP B -1 A_ChangeFlag("NOTIMEFREEZE",false)
+        stop
+    }
+}
+
+Actor SamsaraSmallAmmoCombo_Square2 : SamsaraSmallAmmoCombo_Square replaces AmmoCase2 { }
+
+Actor SamsaraAmmoBackpack_Square : AmmoBackpack replaces SquareBackpack { }
+
+Actor SamsaraFlightPickup_Square : SamsaraFlightPickup replaces HolySphere { +COUNTITEM }
+Actor SamsaraLesserTome_Square : SamsaraLesserTome replaces DevilSphere { +COUNTITEM }
+Actor SamsaraSpeedBooster_Square : SamsaraSpeedBooster replaces Powerzade { +COUNTITEM }
+Actor SamsaraSpeedBooster_Square2 : SamsaraSpeedBooster replaces PowerzadeNotItem { }
+Actor SamsaraBioSuit_Square : BioSuit replaces EnviroSuit { }
+Actor SamsaraInvulnPowerup_Square : InvulnPowerup replaces HotSauce { +COUNTITEM }
+Actor SamsaraAllmap_Square : SamsaraAllmap replaces Locationator { +COUNTITEM }
+
+// Until a new powerup can be made for this specific case, I'll just re-use the fish tanks
+actor FishTank_Samsara : FishTank replaces FishTank 2030 { Powerup.Color "b0 b0 b0" 0.2 SpawnID 78 }
+actor FishTankSpawner_Samsara : FishTankSpawner replaces FishTankSpawner 2150 { Powerup.Color "b0 b0 b0" 0.2 }
+
+// Fixes for Skulltag actor DoomEdNum conflicts, probably could've been done better, but oh well
+Actor Crack_Samsara : Crack replaces Crack 5011 { }
+Actor SnowSpawner_Samsara : SnowSpawner replaces SnowSpawner 5012 { }
+Actor RainSpawner_Samsara : RainSpawner replaces RainSpawner 5013 { }
+Actor DripSpawner_Samsara : DripSpawner replaces DripSpawner 5014 { }
+Actor BubbleSpawner_Samsara : BubbleSpawner replaces BubbleSpawner 5015 { }
+
+// Just in case
+actor DefibrillatorVO_Samsara : SamsaraUniquePickupRandom_Square replaces DefibrillatorVO { }
+actor PaintGunVO_Samsara : SamsaraAmmo1SmallReplacingPaintGun_Square replaces PaintGunVO { }
+actor PaintGunsVO_Samsara : SamsaraSlotOne_Square replaces PaintGunsVO { }
+actor OoziVO_Samsara : SamsaraSlotFour_Square replaces OoziVO { }
+actor OozisVO_Samsara : SamsaraSlotFour_Square2 replaces OozisVO { }
+actor ShotbowVO_Samsara : SamsaraSlotTwo_Square replaces ShotbowVO { }
+actor QuadcannonVO_Samsara : SamsaraSlotThree_Square replaces QuadcannonVO { }
+actor PaintCannonVO_Samsara : SamsaraSlotFourSkulltag_Square replaces PaintCannonVO { }
+actor HellShellLauncherVO_Samsara : SamsaraSlotFive_Square replaces HellShellLauncherVO { }
+actor SceptreVO_Samsara : SamsaraSlotSix_Square replaces SceptreVO { }
+Actor SamsaraBioSuit_Square2 : BioSuit replaces EnviroSpawner { Inventory.RespawnTics 175 +INVENTORY.ALWAYSRESPAWN }

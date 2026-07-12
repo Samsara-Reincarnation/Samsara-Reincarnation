@@ -1,0 +1,241 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Prism Palace
+ * (C) BigBrik Games 2014 - 2018
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+
+#define PRISM_KEY_COUNT 6
+
+/*****************************************************************************
+ * Important Functions
+ ****************************************************************************/
+
+/**
+ *	Looks in the LANGUAGE lumps for the next map number on a
+ *  Prism Key pickup, but if not found, uses GetLevelInfo(LEVELINFO_LEVELNUM) + 1 instead.
+ *	The lookup key is a maparg called "PPKEY_NEXTMAP".
+ */
+function int PP_GetNextMap (void)
+{
+	int nextmap = GetMapArgInt("PPKEY_NEXTMAP");
+
+	if (!nextmap)
+		nextmap = GetLevelInfo(LEVELINFO_LEVELNUM) + 1;
+	
+	return nextmap;
+}
+
+/**
+ *	Opens a portal for prism keys.
+ */
+function void PP_OpenPortal(int lineTag, int sectorTag, int alreadyOpen)
+{
+	SetLineTexture(lineTag, SIDE_FRONT, TEXTURE_MIDDLE, "SW2LOCKS");
+	if (!alreadyOpen)
+		Door_Open(sectorTag, 16, 0);
+	else
+		Ceiling_RaiseInstant(sectorTag, 0, 128 / 8);
+} 
+
+/*****************************************************************************
+ * Actor-called Scripts
+ ****************************************************************************/
+
+/**
+ * Returns how many Prism Palace Maps were collected (used by actor code).
+ */
+script "PP_GetKeyTakenCount" (void)
+{
+	SetResultValue(G_PPKeyTakenCount);
+}
+
+/**
+ * Called on Prism Key Pickup.
+ * Changes Exit Textures and sets the next Prism Palace exit.
+ */
+script "PP_CollectKey" (void)
+{
+	G_PPNextMap = PP_GetNextMap();
+	G_PPExit = TRUE;
+	switch (G_PPKeyTakenCount)
+	{
+		case 0:
+			ReplaceTextures("EXIT1", "PPEXIT01");
+			ReplaceTextures("EXIT2", "PPEXIT02");
+			ReplaceTextures("EXITILE1", "PPEXTL01");
+			ReplaceTextures("EXITILE2", "PPEXTL02");
+			ReplaceTextures("EXITILE3", "PPEXTL03");
+			ReplaceTextures("EXITILE4", "PPEXTL04");
+			G_PPKeyTakenCount++;
+			break;
+		case 1:
+			ReplaceTextures("EXIT1", "PPEXIT11");
+			ReplaceTextures("EXIT2", "PPEXIT12");
+			ReplaceTextures("EXITILE1", "PPEXTL11");
+			ReplaceTextures("EXITILE2", "PPEXTL12");
+			ReplaceTextures("EXITILE3", "PPEXTL13");
+			ReplaceTextures("EXITILE4", "PPEXTL14");
+			G_PPKeyTakenCount++;
+			break;
+		case 2:
+			ReplaceTextures("EXIT1", "PPEXIT21");
+			ReplaceTextures("EXIT2", "PPEXIT22");
+			ReplaceTextures("EXITILE1", "PPEXTL21");
+			ReplaceTextures("EXITILE2", "PPEXTL22");
+			ReplaceTextures("EXITILE3", "PPEXTL23");
+			ReplaceTextures("EXITILE4", "PPEXTL24");
+			G_PPKeyTakenCount++;
+			break;
+		case 3:
+			ReplaceTextures("EXIT1", "PPEXIT31");
+			ReplaceTextures("EXIT2", "PPEXIT32");
+			ReplaceTextures("EXITILE1", "PPEXTL31");
+			ReplaceTextures("EXITILE2", "PPEXTL32");
+			ReplaceTextures("EXITILE3", "PPEXTL33");
+			ReplaceTextures("EXITILE4", "PPEXTL34");
+			G_PPKeyTakenCount++;
+			break;
+		case 4:
+			ReplaceTextures("EXIT1", "PPEXIT41");
+			ReplaceTextures("EXIT2", "PPEXIT42");
+			ReplaceTextures("EXITILE1", "PPEXTL41");
+			ReplaceTextures("EXITILE2", "PPEXTL42");
+			ReplaceTextures("EXITILE3", "PPEXTL43");
+			ReplaceTextures("EXITILE4", "PPEXTL44");
+			G_PPKeyTakenCount++;
+			break;
+		case 5:
+			ReplaceTextures("EXIT1", "PPEXIT51");
+			ReplaceTextures("EXIT2", "PPEXIT52");
+			ReplaceTextures("EXITILE1", "PPEXTL51");
+			ReplaceTextures("EXITILE2", "PPEXTL52");
+			ReplaceTextures("EXITILE3", "PPEXTL53");
+			ReplaceTextures("EXITILE4", "PPEXTL54");
+			G_PPKeyTakenCount++;
+			break;
+		default:
+			ReplaceTextures("EXITILE1", "PPEXTL61");
+			ReplaceTextures("EXITILE2", "PPEXTL62");
+			ReplaceTextures("EXITILE3", "PPEXTL63");
+			ReplaceTextures("EXITILE4", "PPEXTL64");
+			break;
+	}
+	
+}
+
+/*****************************************************************************
+ * Invokable End-User Named Scripts
+ ****************************************************************************/
+
+/**
+ * Changes the line textures of key locks in the palace depending on what's unlocked,
+ * and also opens doors. Lines and doors are sequential, corresponding to keys.
+ * startingLineTag: starting line tag.
+ * startingSectorTag: starting sector tag.
+ */
+script "PP_ReopenPortals" (int startingLineTag, int startingSectorTag)
+{
+	int c = 0;
+
+	for (int i = 0; i < PRISM_KEY_COUNT; i++)
+	{
+		if (G_PPKeyInsertion[i])
+			PP_OpenPortal(startingLineTag + i, startingSectorTag + i, TRUE);
+		if (G_PPMapCompletion[i])
+			c++;
+	}
+		
+	// Cow Door
+	if (c == PRISM_KEY_COUNT)
+		Door_Open(startingSectorTag + PRISM_KEY_COUNT, 16, 0);
+
+}
+
+/**
+ * Opens doors in the palace depending on what's unlocked.
+ * keyId: the id of the keyslot (0 to PRISM_KEY_COUNT-1).
+ * lineTag: line tag to change the lock texture for.
+ * sectorTag: sector tag to open the corresponding door.
+ */
+script "PP_InsertKey" (int keyId, int lineTag, int sectorTag)
+{
+	if (keyId >= G_PPKeyTakenCount)
+		terminate;
+	
+	G_PPKeyInsertion[keyId] = TRUE;
+	PP_OpenPortal(lineTag, sectorTag, FALSE);
+}
+
+/**
+ * A teleport to newmap that fades the teleport into a color and plays the WHOOSH!
+ * colorId: the color. (1 - 6 is red to violet, anything else = white)
+ * map: the level number of the map to teleport to.
+ */
+script "PP_TeleportToMap" (int colorId, int map)
+{
+	AmbientSound("intermission/whoosh", 127);
+
+	switch (colorId)
+	{
+		case 1:
+			FadeTo(255, 13, 13, 1.0, 0.5);
+			break;
+		case 2:
+			FadeTo(247, 127, 64, 1.0, 0.5);
+			break;
+		case 3:
+			FadeTo(255, 220, 63, 1.0, 0.5);
+			break;
+		case 4:
+			FadeTo(0, 214, 24, 1.0, 0.5);
+			break;
+		case 5:
+			FadeTo(51, 51, 255, 1.0, 0.5);
+			break;
+		case 6:
+			FadeTo(240, 0, 240, 1.0, 0.5);
+			break;
+		default:
+			FadeTo(255, 255, 255, 1.0, 0.5);
+			break;
+	}
+	
+	delay(45);
+	Teleport_NewMap(map, 0, FALSE);
+
+}
+
+/**
+ * A teleport to newmap that brings you back to the main adventure's next map.
+ */
+script "PP_TeleportToAdventure" (void)
+{
+	AmbientSound("intermission/whoosh", 127);
+	FadeTo(255, 255, 255, 1.0, 0.5);
+	delay(45);
+	// capture and clear.
+	int next = G_PPNextMap;
+	G_PPNextMap = 0;
+	Teleport_NewMap(next, 0, FALSE);
+}

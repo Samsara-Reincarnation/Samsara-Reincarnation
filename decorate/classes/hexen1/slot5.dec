@@ -1,0 +1,1056 @@
+// Parias (Reincarnation)
+
+actor "Ice Fang" : SamsaraHexenWeapon
+{
+    Inventory.PickupMessage "Frost Fang"
+    Weapon.SlotNumber 5
+    Weapon.SelectionOrder 900
+    Weapon.YAdjust -10
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 25
+    Weapon.AmmoUse 3
+    Obituary "$SAMSARA_HEXEN_OB_SLOT5_1"
+    Tag "Ice Fang"
+    +BLOODSPLATTER
+    States
+    {
+      Spawn:
+        H117 A -1
+        stop
+
+      Ready:
+        H117 B 1 A_WeaponReady
+        loop
+
+      Deselect:
+        H117 B 1 A_Lower
+        loop
+
+      Select:
+        H117 B 1 A_Raise
+        loop
+
+      Fire:
+        H117 B 3
+        H117 C 4 Bright
+        H117 D 5 Bright
+        /*TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto FireContinue
+        TNT1 AAAA 0 A_SpawnItemEx("SamsaraHexenFrostFangFog2",16,0,32,0.5,0,frandom(-0.5,0.5),random(-50,50),SXF_CLIENTSIDE)
+        goto FireContinue*/
+
+      FireContinue:
+        H117 E 6 Bright A_GiveInventory("SamsaraHexenFrostFangAttackHandler")
+        H117 D 1 Bright Offset(0,60)
+        H117 D 1 Bright Offset(0,55)
+        H117 D 1 Bright Offset(0,50)
+        H117 D 1 Bright Offset(0,45)
+        H117 D 1 Bright Offset(0,40)
+        H117 D 1 Bright Offset(0,35)
+        H117 C 5 Bright
+        H117 B 4
+        goto Ready
+    }
+}
+
+actor SamsaraHexenFrostFangAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",3)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Hexen/FrostFang/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+      PickupAttackUnpoweredDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangBall",0,false,-4)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangBall",0,false,4)
+        stop
+
+      PickupAttackUnpoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangBallCoop",0,false,-4)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangBallCoop",0,false,4)
+        stop
+
+      // Powered
+      PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,-8,-10)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,8,-10)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,10,0)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,-10,0)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBall",0,false,0,8)
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,-8,-10)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,8,-10)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,10,0)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,-10,0)
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenFrostFangTwisterBallCoop",0,false,0,8)
+        stop
+    }
+}
+
+/*actor SamsaraHexenFrostFangFog2
+{
+    Radius 1
+    Height 1
+    RenderStyle "Add"
+    Alpha 0.2
+    XScale 0.6
+    YScale 0.4
+    +NOCLIP
+    +NOGRAVITY
+    States
+    {
+      Spawn:
+        H118 A 4 A_FadeOut(0.03)
+        loop
+    }
+}*/
+
+// Unpowered
+
+actor SamsaraHexenFrostFangBall : IceGuyFX
+{
+    Speed 20
+    Damage 5
+    DamageType "HexenIce"
+    DeathSound "Hexen/FrostFang/Hit"
+    +ACTIVATEIMPACT
+    +ACTIVATEPCROSS
+    +BLOODSPLATTER
+    States
+    {
+      Spawn:
+        ICPR ABC 3 Bright Light("ICEFANGBALL") A_SpawnItemEx("IceFXPuff",0,0,2)
+        loop
+
+      Death:
+        ICPR D 4 Bright Light("ICEFANGBALL_X1") A_Explode(80,128,0)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,-135,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,-90,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,-45,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,0,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,45,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,90,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,135,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShard",8,0,180,CMF_TRACKOWNER)
+      DeathFinish:
+        ICPR E 4 Bright Light("ICEFANGBALL_X2")
+        ICPR F 4 Bright Light("ICEFANGBALL_X3")
+        ICPR G 4 Bright Light("ICEFANGBALL_X4")
+        ICPR H 3 Bright
+        stop
+    }
+}
+
+actor SamsaraHexenFrostFangBallCoop : SamsaraHexenFrostFangBall
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        ICPR D 4 Bright Light("ICEFANGBALL_X1") A_Explode(80,128,0)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,-135,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,-90,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,-45,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,0,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,45,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,90,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,135,CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("SamsaraHexenFrostFangShardCoop",8,0,180,CMF_TRACKOWNER)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenFrostFangShard : FrostMissileDM { Damage (random(1,4)) }
+
+actor SamsaraHexenFrostFangShardCoop : FrostMissile2 { Damage (random(1,4)) }
+
+// Powered
+
+actor SamsaraHexenFrostFangTwisterBall : SamsaraHexenFrostFangBall
+{
+    States
+    {
+      Death:
+        ICPR D 4 Bright Light("ICEFANGBALL_X1") A_Explode(80,128,0)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenFrostFangTwister",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        //Do Stuff here
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenFrostFangTwisterBallCoop : SamsaraHexenFrostFangTwisterBall
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        ICPR D 4 Bright Light("ICEFANGBALL_X1") A_Explode(80,128,0)
+        TNT1 A 0 A_SpawnItemEx("SamsaraHexenFrostFangTwisterCoop",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        goto DeathFinish
+    }
+}
+
+actor SamsaraHexenFrostFangTwister
+{
+    Projectile
+    Radius 24
+    Height 24
+    Speed 4
+    DamageType "HexenIce"
+    ReactionTime 25
+    MaxStepHeight 32
+    BounceType "Hexen"
+    BounceFactor 0
+    RenderStyle "Translucent"
+    Alpha 0.85
+    DeathSound "Hexen/FreezeRay"
+    +NOEXPLODEFLOOR
+    -NOGRAVITY
+    +SEEKERMISSILE
+    +STEPMISSILE
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        H117 I 3 Bright Light("ICEFANGBALL_X1") NoDelay A_PlaySound("Hexen/Blizzard",CHAN_BODY,1,true,0.5)
+        H117 JKL 3 Bright Light("ICEFANGBALL_X1")
+      SpawnLoop:
+        TNT1 A 0 ThrustThing(random(0,256),1)
+        TNT1 A 0 A_SeekerMissile(0,30,SMF_LOOK,256,1)
+        H117 F 3 Bright Light("ICEFANGBALL_X2") A_Explode(2,32,0)
+        TNT1 A 0 ThrustThing(random(0,256),1)
+        TNT1 A 0 A_SeekerMissile(0,30,SMF_LOOK,256,1)
+        H117 G 3 Bright Light("ICEFANGBALL_X2") A_Explode(2,32,0)
+        TNT1 A 0 ThrustThing(random(0,256),1)
+        TNT1 A 0 A_SeekerMissile(0,30,SMF_LOOK,256,1)
+        H117 H 3 Bright Light("ICEFANGBALL_X2") A_Explode(2,32,0)
+        TNT1 A 0 A_Countdown
+        loop
+
+      Death:
+        H117 L 3 Bright Light("ICEFANGBALL_X1") A_Scream
+        H117 KJI 3 Bright Light("ICEFANGBALL_X1")
+        stop
+    }
+}
+
+actor SamsaraHexenFrostFangTwisterCoop : SamsaraHexenFrostFangTwister
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+// Parias (Classic)/Baratus
+
+actor SamsaraHexenHammerOfRetributionMeleePuffSpawned : Boolean {}
+
+actor "Hammer of Retribution" : SamsaraHexenWeapon
+{
+    Inventory.PickupMessage "Hammer of Retribution"
+    Weapon.SlotNumber 5
+    Weapon.SelectionOrder 900
+    Weapon.YAdjust -10
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 25
+    Weapon.AmmoUse 3
+    Obituary "$SAMSARA_HEXEN_OB_SLOT5_1"
+    Tag "Hammer of Retribution"
+    +AMMO_OPTIONAL
+    +BLOODSPLATTER
+    +EXPLOSIVE
+    +MELEEWEAPON
+    +NOALERT
+    States
+    {
+      Spawn:
+        WFHM A -1
+        stop
+
+      // Parias (Classic)
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"ReadyFighter")
+      ReadyClericClassic:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyClericClassicAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"ReadyClericClassicAmmo")
+        goto ReadyClericClassicNoAmmo
+
+      ReadyClericClassicNoAmmo:
+        FHMR A 1 A_WeaponReady
+        goto Ready
+
+      ReadyClericClassicAmmo:
+        FHMR F 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR F 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR F 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR G 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR G 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR G 1 Bright A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"DeselectFighter")
+      DeselectClericClassic:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectClericClassicAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"DeselectClericClassicAmmo")
+        goto DeselectClericClassicNoAmmo
+
+      DeselectClericClassicNoAmmo:
+        FHMR A 1 A_Lower
+        goto Deselect
+
+      DeselectClericClassicAmmo:
+        FHMR F 1 Bright A_Lower
+        goto Deselect
+
+      Select:
+        TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"SelectFighter")
+      SelectClericClassic:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectClericClassicAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"SelectClericClassicAmmo")
+        goto SelectClericClassicNoAmmo
+
+      SelectClericClassicNoAmmo:
+        FHMR A 1 A_Raise
+        goto Select
+
+      SelectClericClassicAmmo:
+        FHMR F 1 Bright A_Raise
+        goto Select
+
+      Fire:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned")
+        TNT1 A 0 A_JumpIfInventory("HexenClassMode",3,"FireFighter")
+      FireClericClassic:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"FireClericClassicAmmo")
+        goto FireClericClassicNoAmmo
+
+      FireClericClassicNoAmmo:
+        FHMR B 6 Offset(5,0)
+        FHMR C 3 Offset(5,0) A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
+        FHMR D 3 Offset(5,0)
+        FHMR E 2 Offset(5,0)
+        goto FireClericClassicContinue
+
+      FireClericClassicAmmo:
+        FHMR H 6 Offset(5,0) Bright
+        FHMR I 3 Offset(5,0) Bright A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
+        FHMR J 3 Offset(5,0) Bright
+        FHMR K 2 Offset(5,0) Bright
+        goto FireClericClassicContinue
+
+      FireClericClassicContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenHammerOfRetributionRangedAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicContinueAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"FireClericClassicContinueAmmo")
+        goto FireClericClassicContinueNoAmmo
+
+      FireClericClassicContinueNoAmmo:
+        FHMR E 10 Offset(5,150)
+        goto FireClericClassicFinish
+
+      FireClericClassicContinueAmmo:
+        FHMR K 10 Offset(5,150) Bright
+        goto FireClericClassicFinish
+
+      FireClericClassicFinish:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireClericClassicFinishAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"FireClericClassicFinishAmmo")
+        goto FireClericClassicFinishNoAmmo
+
+      FireClericClassicFinishNoAmmo:
+        FHMR A 1 Offset(0,60)
+        FHMR A 1 Offset(0,55)
+        FHMR A 1 Offset(0,50)
+        FHMR A 1 Offset(0,45)
+        FHMR A 1 Offset(0,40)
+        FHMR A 2 Offset(0,35)
+        goto Ready
+
+      FireClericClassicFinishAmmo:
+        FHMR F 1 Bright Offset(0,60)
+        FHMR F 1 Bright Offset(0,55)
+        FHMR F 1 Bright Offset(0,50)
+        FHMR F 1 Bright Offset(0,45)
+        FHMR F 1 Bright Offset(0,40)
+        FHMR F 2 Bright Offset(0,35)
+        goto Ready
+
+      // Baratus
+      ReadyFighter:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyFighterAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"ReadyFighterAmmo")
+        goto ReadyFighterNoAmmo
+
+      ReadyFighterNoAmmo:
+        FHMR A 1 A_WeaponReady
+        goto Ready
+
+      ReadyFighterAmmo:
+        FHMR F 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR F 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR F 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR G 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR G 1 Bright A_WeaponReady
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto Ready
+        FHMR G 1 Bright A_WeaponReady
+        goto Ready
+
+      DeselectFighter:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectFighterAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"DeselectFighterAmmo")
+        goto DeselectFighterNoAmmo
+
+      DeselectFighterNoAmmo:
+        FHMR A 1 A_Lower
+        goto Deselect
+
+      DeselectFighterAmmo:
+        FHMR F 1 Bright A_Lower
+        goto Deselect
+
+      SelectFighter:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectFighterAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"SelectFighterAmmo")
+        goto SelectFighterNoAmmo
+
+      SelectFighterNoAmmo:
+        FHMR A 1 A_Raise
+        goto Select
+
+      SelectFighterAmmo:
+        FHMR F 1 Bright A_Raise
+        goto Select
+
+      FireFighter:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"FireFighterAmmo")
+        goto FireFighterNoAmmo
+
+      FireFighterNoAmmo:
+        H105 B 6 Offset(5,0)
+        H105 C 3 Offset(5,0) A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
+        H105 D 3 Offset(5,0)
+        FHMR E 2 Offset(5,0)
+        goto FireFighterContinue
+
+      FireFighterAmmo:
+        H106 L 6 Offset(5,0) Bright
+        H106 M 3 Offset(5,0) Bright A_GiveInventory("SamsaraHexenHammerOfRetributionMeleeAttackHandler")
+        H106 N 3 Offset(5,0) Bright
+        FHMR K 2 Offset(5,0) Bright
+        goto FireFighterContinue
+
+      FireFighterContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenHammerOfRetributionRangedAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterContinueAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"FireFighterContinueAmmo")
+        goto FireFighterContinueNoAmmo
+
+      FireFighterContinueNoAmmo:
+        FHMR E 10 Offset(5,150)
+        goto FireFighterFinish
+
+      FireFighterContinueAmmo:
+        FHMR K 10 Offset(5,150) Bright
+        goto FireFighterFinish
+
+      FireFighterFinish:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFighterFinishAmmo")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,"FireFighterFinishAmmo")
+        goto FireFighterFinishNoAmmo
+
+      FireFighterFinishNoAmmo:
+        FHMR A 1 Offset(0,60)
+        FHMR A 1 Offset(0,55)
+        FHMR A 1 Offset(0,50)
+        FHMR A 1 Offset(0,45)
+        FHMR A 1 Offset(0,40)
+        FHMR A 2 Offset(0,35)
+        goto Ready
+
+      FireFighterFinishAmmo:
+        FHMR F 1 Bright Offset(0,60)
+        FHMR F 1 Bright Offset(0,55)
+        FHMR F 1 Bright Offset(0,50)
+        FHMR F 1 Bright Offset(0,45)
+        FHMR F 1 Bright Offset(0,40)
+        FHMR F 2 Bright Offset(0,35)
+        goto Ready
+    }
+}
+
+// Melee
+
+actor SamsaraHexenHammerOfRetributionMeleeAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(random(60,113),true,0,"SamsaraHexenHammerPuff",144)
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch(random(60,113)*3,true,0,"SamsaraHexenHammerPuff",144)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(90,170),true,0,"SamsaraHexenHammerPuffCoop",144)
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch(random(90,170)*3,true,0,"SamsaraHexenHammerPuffCoop",144)
+        stop
+    }
+}
+
+actor SamsaraHexenHammerPuff : HammerPuff
+{
+    +NOTIMEFREEZE
+    +PUFFGETSOWNER
+    States
+    {
+      Spawn:
+        FHFX S 0 NoDelay A_GiveInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned",1,AAPTR_TARGET)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+        goto Super::Spawn
+    }
+}
+
+actor SamsaraHexenHammerPuffCoop : SamsaraHexenHammerPuff { +MTHRUSPECIES }
+
+// Ranged
+
+actor SamsaraHexenHammerOfRetributionRangedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenHammerOfRetributionMeleePuffSpawned",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",3)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+      // Unpowered
+      PickupAttackUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnpoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnpoweredCoop")
+      PickupAttackUnpoweredDM:
+        TNT1 A 0 A_JumpIfInventory("RJingModeOn",1,"PickupAttackUnpoweredDMRJ")
+        TNT1 A 0 A_FireCustomMissile("HammerMissileDM",0,false)
+        stop
+
+      PickupAttackUnpoweredDMRJ:
+        TNT1 A 0 A_FireCustomMissile("HammerMissileDMRJ",0,false)
+        stop
+
+      PickupAttackUnpoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("RJingModeOn",1,"PickupAttackUnpoweredCoopRJ")
+        TNT1 A 0 A_FireCustomMissile("HammerMissile2",0,false)
+        stop
+
+      PickupAttackUnpoweredCoopRJ:
+        TNT1 A 0 A_FireCustomMissile("HammerMissile2RJ",0,false)
+        stop
+
+      // Powered
+      PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("HammerMissilePowered",0,false)
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("HammerMissilePoweredCoop",0,false)
+        stop
+    }
+}
+
+// Unpowered
+
+actor HammerMissileDM : HammerMissile
+{
+    DamageType "FireExplosive"
+    Decal "Scorch"
+    Obituary "$SAMSARA_HEXEN_OB_SLOT5_2"
+    +BLOODSPLATTER
+    +FORCERADIUSDMG
+    +THRUGHOST
+    States
+    {
+      Spawn:
+        FHFX A 2 Bright Light("THROWHAMMER")
+        FHFX B 2 Bright Light("THROWHAMMER") A_PlaySound("FighterHammerContinuous")
+        FHFX CDEFGH 2 Bright Light("THROWHAMMER")
+        loop
+
+      Death:
+        FHFX I 3 Bright Light("THROWHAMMER_X1") A_SetTranslucent(1,1)
+        FHFX J 3 Bright Light("THROWHAMMER_X2")
+        TNT1 A 0 A_Explode(128,128,0)
+      DeathFinish:
+        FHFX K 3 Bright Light("THROWHAMMER_X3")
+        FHFX LM 3 Bright Light("THROWHAMMER_X4")
+        FHFX N 3 Light("THROWHAMMER_X4")
+        FHFX OP 3 Bright Light("THROWHAMMER_X4")
+        FHFX Q 3 Bright Light("THROWHAMMER_X5")
+        FHFX R 3 Bright Light("THROWHAMMER_X6")
+        stop
+    }
+}
+
+actor HammerMissileDMRJ : HammerMissileDM
+{
+    States
+    {
+      Death:
+        FHFX I 3 Bright Light("THROWHAMMER_X1") A_SetTranslucent(1,1)
+        FHFX J 3 Bright Light("THROWHAMMER_X2")
+        TNT1 A 0 A_Explode(128,128)
+        goto DeathFinish
+    }
+}
+
+actor HammerMissile2 : HammerMissileDM
+{
+    Damage 20
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor HammerMissile2RJ : HammerMissileDMRJ
+{
+    Damage 20
+    Species "Player"
+    +THRUSPECIES
+}
+
+// Powered
+
+actor HammerMissilePowered : HammerMissileDM
+{
+    Damage 20 // should we keep it like this for PVP?
+    States
+    {
+      Spawn:
+        FHFX A 2 Bright Light("THROWHAMMER") A_SpawnItemEx("HammerMissileTrail")
+        TNT1 A 0 A_PlaySound("FighterHammerContinuous")
+        FHFX BCDEFGH 2 Bright Light("THROWHAMMER") A_SpawnItemEx("HammerMissileTrail")
+        loop
+
+      Death:
+        FHFX I 3 Bright Light("THROWHAMMER_X1") A_SetTranslucent(1,1)
+        FHFX J 3 Bright Light("THROWHAMMER_X2")
+        TNT1 A 0 A_Explode(128,192,0)
+      DeathFinish:
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",-48,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",48,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",0,-48,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        FHFX K 3 Bright Light("THROWHAMMER_X3") A_SpawnItemEx("HexenHammerMissileExplosion",0,48,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",-96,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",96,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",0,-96,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        FHFX L 3 Bright Light("THROWHAMMER_X4") A_SpawnItemEx("HexenHammerMissileExplosion",0,96,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",-144,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",144,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",0,-144,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        FHFX M 3 Bright Light("THROWHAMMER_X4") A_SpawnItemEx("HexenHammerMissileExplosion",0,144,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",-192,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",192,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SpawnItemEx("HexenHammerMissileExplosion",0,-192,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        FHFX N 3 Light("THROWHAMMER_X4") A_SpawnItemEx("HexenHammerMissileExplosion",0,192,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        FHFX OP 3 Bright Light("THROWHAMMER_X4")
+        FHFX Q 3 Bright Light("THROWHAMMER_X5")
+        FHFX R 3 Bright Light("THROWHAMMER_X6")
+        stop
+    }
+}
+
+actor HammerMissilePoweredCoop : HammerMissilePowered
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor HammerMissileTrail
+{
+    Radius 4
+    Height 8
+    RenderStyle "Add"
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        CFFX NO 4 Bright Light("CFLAME1")
+        CFFX O 1 A_FadeOut(0.05)
+        wait
+    }
+}
+
+actor HexenHammerMissileExplosion
+{
+    Projectile
+    Radius 4
+    Height 8
+    DamageType "FireExplosive"
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        MSP1 G 0 Bright Light("BSBALL") NoDelay A_PlaySound("FighterHammerExplodePowered",CHAN_VOICE,1,false,0.33)
+        TNT1 A 0 A_Quake(5,35,0,512,"nosoundforyoubitch")
+        TNT1 A 0 A_Explode(50,50,0)
+        MSP1 GHIJKLMNOP 3 Bright Light("BSBALL") A_Explode(10,50,0)
+        stop
+    }
+}
+
+// Daedolon
+
+actor SamsaraHexenViscerelaghPoweredSoundPlaying : Boolean {}
+
+actor Viscerelagh : SamsaraHexenWeapon
+{
+    Inventory.PickupMessage "Viscerelagh"
+    Weapon.SlotNumber 5
+    Weapon.SelectionOrder 900
+    //Weapon.YAdjust 20
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 25
+    Weapon.AmmoUse 1
+    Obituary "$SAMSARA_HEXEN_OB_SLOT5_1"
+    Tag "Viscerelagh"
+    +BLOODSPLATTER
+    +NOALERT
+    States
+    {
+      Spawn:
+        H107 A -1
+        stop
+
+      Ready:
+        H107 B 1 A_WeaponReady
+        loop
+
+      Deselect:
+        H107 B 1 A_Lower
+        loop
+
+      Select:
+        H107 B 1 A_Raise
+        loop
+
+      // Unpowered
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto NoAmmoSwitch
+        TNT1 A 0 A_AlertMonsters
+        H107 D 4 A_PlaySound("Hexen/Viscerelagh/Charge",CHAN_WEAPON)
+        H107 E 4 Bright Offset(0,30)
+        H107 F 4 Bright Offset(0,28)
+        H107 G 4 Bright Offset(0,26)
+        H107 H 6 Bright Offset(0,38) A_GiveInventory("SamsaraHexenViscerelaghAttackHandler")
+        H107 G 4 Bright Offset(0,36) A_PlaySound("Hexen/Viscerelagh/CoolDown")
+        H107 F 4 Bright Offset(0,34)
+        H107 B 20 Offset(0,33)
+        goto Ready
+
+      // Powered
+      FirePowered:
+        TNT1 A 0 A_AlertMonsters
+        H107 D 4 A_PlaySound("Hexen/Viscerelagh/Charge",CHAN_WEAPON)
+        H107 E 4 Bright Offset(0,30)
+        H107 F 4 Bright Offset(0,28)
+        H107 G 4 Bright Offset(0,26)
+        goto FireLoopPowered
+
+      FireLoopInitPowered:
+        TNT1 A 0 A_AlertMonsters
+      FireLoopPowered:
+        H107 H 6 Bright Offset(0,38) A_GiveInventory("SamsaraHexenViscerelaghPoweredAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,2)
+        TNT1 A 0 A_CheckReload
+        goto FireFinishPowered
+        TNT1 A 0 A_ReFire("FireLoopInitPowered")
+        goto FireFinishPowered
+
+      FireFinishPowered:
+        TNT1 A 0 A_TakeInventory("SamsaraHexenViscerelaghPoweredSoundPlaying")
+        H107 G 4 Bright Offset(0,36) A_PlaySound("Hexen/Viscerelagh/CoolDown")
+        H107 F 4 Bright Offset(0,34)
+        H107 B 20 Offset(0,33)
+        goto Ready
+
+      // "No ammo" switch
+      NoAmmoSwitch:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Sapphire Wand")
+        goto Deselect
+    }
+}
+
+// Unpowered
+
+actor SamsaraHexenViscerelaghAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",3)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenViscerelaghBall",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("SamsaraHexenViscerelaghBallCoop",0,false)
+        stop
+    }
+}
+
+actor SamsaraHexenViscerelaghBall
+{
+    Projectile
+    Radius 8
+    Height 12
+    Speed 30
+    Damage 10
+    DamageType "HexenViscerelagh"
+    Scale 1.5
+    SeeSound "Hexen/Viscerelagh/Fire"
+    DeathSound "Hexen/Viscerelagh/Hit"
+    //Decal "BigBloodSmear"
+    +BLOODSPLATTER
+    States
+    {
+      Spawn:
+        H108 ABCDEF 2 Bright Light("BLOODSCEPTERBALL") //H108 AABBCCDDEEFF 1 Bright A_SpawnItemEx("SamsaraHexenViscerelaghTrail",random(-5,5),random(-6,6),random(-6,6),0,0,0,0,SXF_CLIENTSIDE)
+        loop
+
+      Death:
+      Crash:
+        TNT1 A 0 A_Explode(150,150,0)
+        TNT1 A 1 A_SpawnItemEx("SamsaraHexenViscerelaghBallDeath",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        stop
+
+      XDeath:
+        TNT1 A 0 A_PlaySound("ClericCStaffHitThing")
+        TNT1 A 0 A_GiveInventory("SamsaraHexenViscerelaghBallHealthDrain",1,AAPTR_TARGET)
+        goto Crash
+    }
+}
+
+actor SamsaraHexenViscerelaghBallCoop : SamsaraHexenViscerelaghBall
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+      Crash:
+        TNT1 A 0 A_Explode(200,200,0)
+        TNT1 A 1 A_SpawnItemEx("SamsaraHexenViscerelaghBallDeath",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        stop
+
+      XDeath:
+        TNT1 A 0 A_PlaySound("ClericCStaffHitThing")
+        TNT1 A 0 A_GiveInventory("SamsaraHexenViscerelaghBallHealthDrain",1,AAPTR_TARGET)
+        goto Crash
+    }
+}
+
+actor SamsaraHexenViscerelaghBallHealthDrain : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", random(2,4), 200)
+        stop
+    }
+}
+
+actor SamsaraHexenViscerelaghBallDeath
+{
+    Radius 1
+    Height 1
+    RenderStyle "Translucent"
+    Alpha 0.8
+    Scale 0.5
+    +NOCLIP
+    +NOGRAVITY
+    States
+    {
+      Spawn:
+        H108 GHIJKL 3 Bright Light("BLOODSCEPTERBALL")
+        H108 L 2 Bright Light("BLOODSCEPTERBALL") A_FadeOut(0.05)
+        wait
+    }
+}
+
+// Powered
+
+actor SamsaraHexenViscerelaghPoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        //TNT1 A 0 A_JumpIfInventory("SamsaraHexenViscerelaghPoweredSoundPlaying",1,2)
+        //TNT1 A 0 ACS_NamedExecuteWithResult("HexenPoweredViscerelaghSound") // also gives the token
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 AA 0 A_FireCustomMissile("SamsaraHexenViscerelaghMiniBall",random(-3,3),false,0,random(-3,3))
+        stop
+
+      PickupAttackCoop:
+        TNT1 AA 0 A_FireCustomMissile("SamsaraHexenViscerelaghMiniBallCoop",random(-3,3),false,0,random(-3,3))
+        stop
+    }
+}
+
+actor SamsaraHexenViscerelaghMiniBall : SamsaraHexenViscerelaghBall
+{
+    Radius 6
+    Height 9
+    Speed 35
+    Damage 5
+    Scale 0.5
+    States
+    {
+      Spawn:
+        H108 ABCDEF 2 Bright Light("BLOODSCEPTERBALLMINI")
+        loop
+
+      Death:
+      Crash:
+        TNT1 A 0 A_Explode(30,96,0)
+        TNT1 A 1 A_SpawnItemEx("SamsaraHexenViscerelaghMiniBallDeath",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        stop
+
+      XDeath:
+        TNT1 A 0 A_PlaySound("ClericCStaffHitThing")
+        TNT1 A 0 A_GiveInventory("SamsaraHexenViscerelaghBallHealthDrain",1,AAPTR_TARGET)
+        goto Crash
+    }
+}
+
+actor SamsaraHexenViscerelaghMiniBallCoop : SamsaraHexenViscerelaghMiniBall
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+      Crash:
+        TNT1 A 0 A_Explode(40,96,0)
+        TNT1 A 1 A_SpawnItemEx("SamsaraHexenViscerelaghMiniBallDeath",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        stop
+
+      XDeath:
+        TNT1 A 0 A_PlaySound("ClericCStaffHitThing")
+        TNT1 A 0 A_GiveInventory("SamsaraHexenViscerelaghBallHealthDrain",1,AAPTR_TARGET)
+        goto Crash
+    }
+}
+
+actor SamsaraHexenViscerelaghMiniBallDeath : SamsaraHexenViscerelaghBallDeath
+{
+    Scale 0.33
+    States
+    {
+      Spawn:
+        H108 GHIJKL 2 Bright Light("BLOODSCEPTERBALLMINI")
+        H108 L 1 Bright Light("BLOODSCEPTERBALLMINI") A_FadeOut(0.1)
+        wait
+    }
+}

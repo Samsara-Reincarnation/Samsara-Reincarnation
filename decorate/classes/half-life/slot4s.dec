@@ -1,0 +1,401 @@
+Actor HLUzi : HLWeapon
+{
+    Inventory.PickupMessage "You got the Uzi!"
+    Inventory.Icon "HLCMPUZI"
+    Weapon.SlotNumber 4
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 2300
+    Weapon.AmmoType1 "HLUziCounter"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Clip"
+    Weapon.AmmoGive2 32
+    Tag "Uzi"
+    States
+    {
+      Spawn:
+        HW40 Z -1
+        stop
+
+      // Gordon Freeman
+      ReadyActual:
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+      ReadyActualNonReloadable:
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualNonReloadableShephard")
+        HW00 A 2 A_WeaponReady
+        goto ReadyActualJump
+
+      ReadyActualReloadable:
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualReloadableShephard")
+        HW00 A 2 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyActualJump
+
+      ReadyActualJump:
+        HW00 A 0 A_Jump(4,"ReadyActualAmmoCheck")
+        HW00 A 0 A_Jump(3,"ReadyActualAmmoCheck")
+        HW00 A 0 A_Jump(2,"ReadyActualAmmoCheck")
+        HW00 A 0 A_Jump(1,"ReadyActualIdle1","ReadyActualIdle2")
+        goto ReadyActualAmmoCheck
+
+      ReadyActualIdle1:
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle1Reloadable")
+      ReadyActualIdle1NonReloadable:
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1NonReloadableShephard")
+        HW00 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        HW01 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        HW02 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        HW03 ABCDEFGHIJKLM 1 A_WeaponReady
+        goto ReadyActual
+
+      ReadyActualIdle1Reloadable:
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1ReloadableShephard")
+        HW00 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW01 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW02 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW03 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyActual
+
+      ReadyActualIdle2:
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle2Reloadable")
+      ReadyActualIdle2NonReloadable:
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2NonReloadableShephard")
+        HW00 A 1 A_WeaponReady
+        HW03 "NOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        HW04 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        HW05 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        HW06 AB 1 A_WeaponReady
+        goto ReadyActual
+
+      ReadyActualIdle2Reloadable:
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2ReloadableShephard")
+        HW00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW03 "NOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW04 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW05 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        HW06 AB 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyActual
+
+      ReadyActualAmmoCheck:
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReadyActual
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+        HW00 A 0 A_JumpIfInventory("HLUziCounter",1,"ReadyActual")
+        goto ReloadCheck
+
+      Select:
+        TNT1 A 0 A_TakeInventory("freeman_fistselected")
+        TNT1 A 0 A_TakeInventory("freeman_pistolselected")
+        TNT1 A 0 A_TakeInventory("freeman_slot1selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot2selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot3selected")
+        TNT1 A 0 A_GiveInventory("freeman_slot4selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot5selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot6selected")
+        TNT1 A 0 A_TakeInventory("freeman_slot7selected")
+        TNT1 A 0 A_TakeInventory("freeman_uniqueselected")
+        TNT1 A 0 A_TakeInventory("freeman_unique2selected")
+        TNT1 A 0 A_TakeInventory("freeman_unique3selected")
+        goto Super::Select
+
+      Ready: // our "Select" state
+        // deploy sound played every time single uzi (both animations) is brought up in sc 3.0, let's not do that for this state
+        TNT1 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyShephard")
+        HW11 GIKMO 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW11 Q 0 A_PlaySound("halflife/uzi_deploy1")
+        HW11 "QSUWY[]" 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        HW12 "BDFHJLNPRTVXZ\" 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        goto ReadyActual
+
+      Fire:
+        HW00 A 0 A_JumpIfInventory("HLOriginalKeySwitcherOpen",1,"ReadyActual")
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        HW00 A 0 A_JumpIfInventory("Clip",1,"FireWaterCheck")
+        goto FireDry
+
+      FireReloadable:
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        HW00 A 0 A_JumpIfInventory("HLUziCounter",1,"FireWaterCheck")
+        goto FireDry
+
+      FireWaterCheck:
+        HW00 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        HW00 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto FireStart
+
+      FireDry:
+        HW00 A 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        HW00 A 0 A_ClearReFire
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireDryShephard")
+        HW00 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      Hold:
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"HoldReloadable")
+      HoldNonReloadable:
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"HoldWaterCheck")
+        HW00 A 0 A_JumpIfInventory("Clip",1,"HoldWaterCheck")
+        goto HoldDry
+
+      HoldReloadable:
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"HoldWaterCheck")
+        HW00 A 0 A_JumpIfInventory("HLUziCounter",1,"HoldWaterCheck")
+        goto HoldDry
+
+      HoldWaterCheck:
+        HW00 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        HW00 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"HoldDry")
+        goto FireStart
+
+      HoldDry:
+        HW10 L 0 A_PlaySound("halflife/weaponempty",CHAN_6)
+        HW10 L 0 A_ClearReFire
+        HW10 L 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"HoldDryShephard")
+        HW10 LNPR 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 "TVXZ\" 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireStart:
+        HW00 A 0 A_AlertMonsters
+        HW00 A 0 A_GiveInventory("SamsaraHalfLifeUziAttackHandler")
+        HW00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"FireStartShephard")
+        HW10 I 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 J 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 L 0 A_ReFire HW10 L 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 N 0 A_ReFire HW10 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 P 0 A_ReFire HW10 P 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 R 0 A_ReFire HW10 R 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 T 0 A_ReFire HW10 T 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 V 0 A_ReFire HW10 V 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 X 0 A_ReFire HW10 X 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 Z 0 A_ReFire HW10 Z 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HW10 "\" 0 A_ReFire HW10 "\" 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      Reload:
+      ReloadCheck:
+        HW00 A 0 A_JumpIfInventory("HLUziCounter",0,"ReadyActual")
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+        HW00 A 0 A_JumpIfInventory("Clip",1,"ReloadStart")
+        goto ReadyActual
+
+      ReloadStart:
+        HW06 C 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReloadStartShephard")
+        HW06 "CFILORUX[" 1 A_WeaponReady(WRF_NOFIRE)
+        HW07 ADG 1 A_WeaponReady(WRF_NOFIRE)
+        HW07 J 0 A_PlaySound("halflife/uzi_reload1")
+        HW07 "JMPSVY\" 1 A_WeaponReady(WRF_NOFIRE)
+        HW08 "BEHKNQTWZ]" 1 A_WeaponReady(WRF_NOFIRE)
+        HW09 CF 1 A_WeaponReady(WRF_NOFIRE)
+        HW09 I 0 A_PlaySound("halflife/uzi_reload2")
+        HW09 "ILOPRUX[" 1 A_WeaponReady(WRF_NOFIRE)
+        HW0A AD 1 A_WeaponReady(WRF_NOFIRE)
+        HW0A G 0 A_PlaySound("halflife/uzi_reload3")
+        HW0A "GJMPSVY\" 1 A_WeaponReady(WRF_NOFIRE)
+        HW0B "BEHKNQTWZ]" 1 A_WeaponReady(WRF_NOFIRE)
+        HW0C C 1 A_WeaponReady(WRF_NOFIRE)
+        HW0C F 0 A_PlaySound("halflife/uzi_reload4")
+        HW0C "FILORUX[" 1 A_WeaponReady(WRF_NOFIRE)
+        HW0D "ADGJMPSVY\" 1 A_WeaponReady(WRF_NOFIRE)
+        HW0E AB 1 A_WeaponReady(WRF_NOFIRE)
+        HW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        HW00 A 0
+        goto ReadyActual
+
+      ReloadAmmo:
+        HW00 A 0 A_JumpIfInventory("HLUziCounter",0,"ReloadFinish")
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        HW00 A 0 A_JumpIfInventory("Clip",1,1)
+        goto ReloadFinish
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        HW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        HW00 A 0 A_TakeInventory("Clip",1)
+        HW00 A 0 A_GiveInventory("HLUziCounter")
+        loop
+
+      // Adrian Shephard
+      ReadyActualNonReloadableShephard:
+        0P00 A 2 A_WeaponReady
+        goto ReadyActualJump
+
+      ReadyActualReloadableShephard:
+        0P00 A 2 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyActualJump
+
+      ReadyActualIdle1NonReloadableShephard:
+        0P00 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        0P01 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        0P02 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        0P03 ABCDEFGHIJKLM 1 A_WeaponReady
+        goto ReadyActual
+
+      ReadyActualIdle1ReloadableShephard:
+        0P00 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P01 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P02 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P03 ABCDEFGHIJKLM 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyActual
+
+      ReadyActualIdle2NonReloadableShephard:
+        0P00 A 1 A_WeaponReady
+        0P03 "NOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        0P04 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        0P05 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady
+        0P06 AB 1 A_WeaponReady
+        goto ReadyActual
+
+      ReadyActualIdle2ReloadableShephard:
+        0P00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P03 "NOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P04 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P05 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P06 AB 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyActual
+
+      ReadyShephard:
+        0P11 GIKMO 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        0P11 Q 0 A_PlaySound("halflife/uzi_deploy1")
+        0P11 "QSUWY[]" 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        0P12 "BDFHJLNPRTVXZ\" 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+        goto ReadyActual
+
+      FireDryShephard:
+        0P00 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      HoldDryShephard:
+        0P10 LNPR 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 "TVXZ\" 1 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActualAmmoCheck
+
+      FireStartShephard:
+        0P10 I 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 J 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 L 0 A_ReFire 0P10 L 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 N 0 A_ReFire 0P10 N 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 P 0 A_ReFire 0P10 P 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 R 0 A_ReFire 0P10 R 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 T 0 A_ReFire 0P10 T 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 V 0 A_ReFire 0P10 V 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 X 0 A_ReFire 0P10 X 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 Z 0 A_ReFire 0P10 Z 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        0P10 "\" 0 A_ReFire 0P10 "\" 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      ReloadStartShephard:
+        0P06 "CFILORUX[" 1 A_WeaponReady(WRF_NOFIRE)
+        0P07 ADG 1 A_WeaponReady(WRF_NOFIRE)
+        0P07 J 0 A_PlaySound("halflife/uzi_reload1")
+        0P07 "JMPSVY\" 1 A_WeaponReady(WRF_NOFIRE)
+        0P08 "BEHKNQTWZ]" 1 A_WeaponReady(WRF_NOFIRE)
+        0P09 CF 1 A_WeaponReady(WRF_NOFIRE)
+        0P09 I 0 A_PlaySound("halflife/uzi_reload2")
+        0P09 "ILOPRUX[" 1 A_WeaponReady(WRF_NOFIRE)
+        0P0A AD 1 A_WeaponReady(WRF_NOFIRE)
+        0P0A G 0 A_PlaySound("halflife/uzi_reload3")
+        0P0A "GJMPSVY\" 1 A_WeaponReady(WRF_NOFIRE)
+        0P0B "BEHKNQTWZ]" 1 A_WeaponReady(WRF_NOFIRE)
+        0P0C C 1 A_WeaponReady(WRF_NOFIRE)
+        0P0C F 0 A_PlaySound("halflife/uzi_reload4")
+        0P0C "FILORUX[" 1 A_WeaponReady(WRF_NOFIRE)
+        0P0D "ADGJMPSVY\" 1 A_WeaponReady(WRF_NOFIRE)
+        0P0E AB 1 A_WeaponReady(WRF_NOFIRE)
+        0P00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoShephard")
+      ReloadFinishShephard:
+        0P00 A 0
+        goto ReadyActual
+
+      ReloadAmmoShephard:
+        0P00 A 0 A_JumpIfInventory("HLUziCounter",0,"ReloadFinishShephard")
+        0P00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        0P00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        0P00 A 0 A_JumpIfInventory("Clip",1,1)
+        goto ReloadFinishShephard
+        0P00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        0P00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        0P00 A 0 A_TakeInventory("Clip",1)
+        0P00 A 0 A_GiveInventory("HLUziCounter")
+        loop
+    }
+}
+
+actor SamsaraHalfLifeUziAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("HLUziCounter",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("HLUziCounter",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("halflife/uzi_shoot",CHAN_WEAPON)
+        TNT1 A 0 A_FireCustomMissile("HLBrassShellCaser",0,false)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("HLUziBullet",random(-15,15)/10.0,false,5,5,0,random(-15,15)/10.0)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("HLUziBulletCoop",random(-15,15)/10.0,false,5,5,0,random(-15,15)/10.0)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 ACS_NamedExecuteAlways("HalfLifeRecoil", 0, 4)
+        stop
+    }
+}
+
+actor HLUziCounter : Ammo
+{
+    Inventory.MaxAmount 32
+    Tag "Uzi Magazine"
+    +IGNORESKILL
+}
+
+Actor HLUziBullet : HLBullet {
+    +THRUGHOST
+    Damage (0)
+    Scale 0.5
+    States
+    {
+        Crash:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",16),8,!XF_HURTSOURCE,0,8)
+            Goto Super::Death
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",16),8,!XF_HURTSOURCE,0,8)
+            Goto Super::XDeath
+    }
+}
+Actor HLUziBulletCoop : HLBulletCoop {
+    +THRUGHOST
+    Damage (0)
+    Scale 0.5
+    States
+    {
+        Crash:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",16),8,!XF_HURTSOURCE,0,8)
+            Goto Super::Death
+        XDeath:
+            TNT1 A 0 A_Explode(CallACS("HalfLife_BulletDamage",16),8,!XF_HURTSOURCE,0,8)
+            Goto Super::XDeath
+    }
+}

@@ -1,0 +1,410 @@
+actor FlemoidusCycloptisCommonusV3_2 : SamsaraMonsterFlemoid 58
+{
+	Game Chex
+	SpawnID 9
+	Health 200 // Previously 150
+	PainChance 180
+	Speed 10
+	Radius 30
+	Height 56
+	Mass 400
+	// SamsaraMonsterRobotic damagefactors
+	DamageFactor "CorvusCrossbow", 1.1
+	DamageFactor "DragonClaw", 1.5
+	DamageFactor "WitchMelee", 1.1
+	DamageFactor "ElectricBolt", 2.0
+	DamageFactor "PoisonBolt", 0
+	DamageFactor "MarathonFusion", 2.0
+	DamageFactor "Tesla", 2.0
+	DamageFactor "DeusExPistol", 0.8
+	DamageFactor "DeusExRifleShot", 0.8
+	DamageFactor "DeusExPoisonEffect", 0
+	DamageFactor "DeusExKnockedOut", 0
+	DamageFactor "DeusExMelee", 0.8
+	DamageFactor "DeusExSabot", 1.2
+	DamageFactor "DeusExSabotPistol", 1.2
+	DamageFactor "DeusExFlamed", 0.8
+	DamageFactor "DeusExBurned", 0.8
+	PainChance "MightyBoot", 255
+	PainChance "CalebFire", 0
+	PainChance "WTMelee", 255
+	PainChance "WTMeleeIce", 255
+	PainChance "DoomDamageTypeStunner", 256
+	DamageFactor "Flem", 0.0
+	DamageFactor "Slime", 0.0  //in chex3.exe the slam now has slime damagetype
+	Monster
+	+FLOORCLIP +FASTER +FASTMELEE
+	+DONTGIB
+	+NOTDMATCH
+	+FLOAT
+	+NOGRAVITY
+	+NOTDMATCH
+	+NOICEDEATH
+	SeeSound "spectre/sight"
+	AttackSound "spectre/melee"
+	PainSound "spectre/pain"
+	DeathSound "spectre/death"
+	ActiveSound "spectre/active"
+	Obituary "$OB_CYCLOPTIS"
+	Tag "Flemoidus Cycloptis Commonus"
+	BloodColor "6f ef 67"
+	States
+	{
+	Spawn:
+		CYCL AB 10 A_Look
+		Loop
+	See:
+		CYCL AABBCCDD 2 A_Chase
+		Loop
+	Melee:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		CYCL EF 8 A_FaceTarget
+		CYCL G 8 A_CustomMeleeAttack(random[sargattack](1,10)*4, "", "", "Flem", false)
+		Goto See
+	Pain:
+		CYCL A 2 A_SpawnDebris("FlemoidGib",1)
+		CYCL A 2 A_Pain
+		Goto See
+	Pain.ZorchPistol:
+	Pain.Zorch:
+	Pain.PhasingZorch:
+	Pain.ZorchKamikaze:
+		CYCL H 2
+		CYCL H 2 A_Pain
+		Goto See
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySound("duke/kickhit",CHAN_BODY)
+		CYCL A 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		CYCL A 16 A_Pain
+		Goto See
+	XDeath:
+	Death:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_PlaySound("flemdie",CHAN_VOICE)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnDebris("FlemoidGib",1)
+		TNT1 A 0 A_SpawnItemEx("CyclopsBody",0,0,25,random(-1,1),random(-1,1),random(-1,4))//A_CustomMissile("CyclopsBody",15,0,random(-180,180))//A_SpawnItem("CyclopsBody")
+		TNT1 AAA 0 A_CustomMissile("CyclopsArm",0,0,random(-180,180),2,random(0,90))//A_SpawnDebris("CyclopsArm",1)
+		TNT1 A -1
+		Stop
+	Death.ZorchPistol:
+	Death.Zorch:
+	Death.PhasingZorch:
+	Death.ZorchKamikaze:
+		CYCL I 8 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		CYCL J 8 A_Scream
+		CYCL K 4
+		CYCL L 4 A_NoBlocking
+		CYCL M 4
+		CYCL N -1
+		Stop
+	Pain.ShrinkerDMG:
+		CYCL A 0
+		"####" "#" 0 A_SetUserVar("user_Scalex", Scalex*65536.0)
+		"####" "#" 0 A_SetUserVar("user_Scaley", Scaley*65536.0)
+		"####" "#" 0 A_ChangeFlag("NOPAIN", 1)
+		"####" "#" 0 A_ChangeFlag("NODAMAGE", 1)
+		"####" "#" 0 A_NoBlocking
+		"####" "#" 0 A_PlaySound("duke/shrink")
+		"####" "#" 1 A_SetScale(0.95*(user_Scalex/65536.0),0.95*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.9*(user_Scalex/65536.0),0.9*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.85*(user_Scalex/65536.0),0.85*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.8*(user_Scalex/65536.0),0.8*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.75*(user_Scalex/65536.0),0.75*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.7*(user_Scalex/65536.0),0.7*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.65*(user_Scalex/65536.0),0.65*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.6*(user_Scalex/65536.0),0.6*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.55*(user_Scalex/65536.0),0.55*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.5*(user_Scalex/65536.0),0.5*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.45*(user_Scalex/65536.0),0.45*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.4*(user_Scalex/65536.0),0.4*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.35*(user_Scalex/65536.0),0.35*(user_Scaley/65536.0))
+		"####" "#" 1 A_SetScale(0.3*(user_Scalex/65536.0),0.3*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 A_SetScale(0.25*(user_Scalex/65536.0),0.25*(user_Scaley/65536.0))
+		"####" "#" 4 A_SetScale(0.2*(user_Scalex/65536.0),0.2*(user_Scaley/65536.0))
+		"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2_Shrink", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSPECIAL|SXF_TRANSFERAMBUSHFLAG|SXF_SETMASTER,0,tid)
+		TNT1 A 2
+		TNT1 A 0 Thing_Remove(0)
+		Stop
+
+		// SamsaraMonsterFlemoid states
+		ExpanderPop:
+			"####" "#" 10
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Basic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_Jump(96,2)
+			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
+			TNT1 A 0 A_TakeInventory("ExpanderGrowthY", 40)
+			TNT1 A 0 A_TakeInventory("ExpanderGrowthX", 40)
+			TNT1 A 0 A_TakeInventory("ExpanderDoubleX", 40)
+			TNT1 A 0 A_SetScale((user_scalexoriginal)/65536.0, (user_scaleyoriginal)/65536.0)
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_PlaySound("flemdie",CHAN_VOICE)
+			TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnDebris("FlemoidGib",1)
+			TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+		ExpanderPopCoop:
+			"####" "#" 10
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Coop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_Jump(96,2)
+			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
+			TNT1 A 0 A_TakeInventory("ExpanderGrowthY", 40)
+			TNT1 A 0 A_TakeInventory("ExpanderGrowthX", 40)
+			TNT1 A 0 A_TakeInventory("ExpanderDoubleX", 40)
+			TNT1 A 0 A_SetScale((user_scalexoriginal)/65536.0, (user_scaleyoriginal)/65536.0)
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_PlaySound("flemdie",CHAN_VOICE)
+			TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnDebris("FlemoidGib",1)
+			TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
+	}
+}
+
+actor FlemoidusCycloptisCommonusV3_2_Shrink : FlemoidusCycloptisCommonusV3_2
+{
+	+FRIGHTENED
+	+NOTRIGGER
+	-SHOOTABLE
+	+THRUACTORS
+	+NORADIUSDMG
+	+VULNERABLE
+	+QUICKTORETALIATE
+	+COUNTKILL
+	-NOGRAVITY
+	+NODAMAGE
+	+NOPAIN
+	MaxStepHeight 0
+	MaxDropOffHeight 0
+	MeleeRange 16
+	Height 16
+	Health 1
+	Speed 1
+	PainChance "ShrinkDMG", 0
+	DamageFactor "ShrinkDMG", 0.0
+	PainChance "ExpanderDMG", 0
+	DamageFactor "ExpanderDMG", 0.0
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIfInventory("ShrunkToken",1,"SpawnLoop")
+			TNT1 A 0 A_SetUserVar("user_Scalex", Scalex*65536.0)
+			TNT1 A 0 A_SetUserVar("user_Scaley", Scaley*65536.0)
+			TNT1 A 0 A_SetScale(Scalex*0.2,Scaley*0.2) // setting the Scale in ACS does work, but the actor shows up at normal size for a split second
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_Shrinker", 0, 1)
+			CYCL A 10
+			Goto See
+		SpawnLoop:
+			CYCL AB 10 A_Look
+			Loop
+		See:
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL A 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL A 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL B 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL B 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL C 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL C 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL D 2 A_Chase("","")
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			CYCL D 2 A_Chase("","")
+			"####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+			Loop
+		Forget:
+			"####" "#" 0 A_ClearTarget
+			Goto See
+		Grow:
+			"####" "#" 4 A_SetScale(0.25*(user_Scalex/65536.0),0.25*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_Scalex/65536.0),0.3*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.35*(user_Scalex/65536.0),0.35*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_Scalex/65536.0),0.4*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.45*(user_Scalex/65536.0),0.45*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_Scalex/65536.0),0.5*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.55*(user_Scalex/65536.0),0.55*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_Scalex/65536.0),0.6*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.65*(user_Scalex/65536.0),0.65*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_Scalex/65536.0),0.7*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.75*(user_Scalex/65536.0),0.75*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_Scalex/65536.0),0.8*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.85*(user_Scalex/65536.0),0.85*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_Scalex/65536.0),0.9*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.95*(user_Scalex/65536.0),0.95*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(1.0*(user_Scalex/65536.0),1.0*(user_Scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("FlemoidusCycloptisCommonusV3_2", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_TRANSFERPOINTERS|SXF_TRANSFERAMBUSHFLAG|SXF_SETMASTER,0,tid)
+			TNT1 A 0 A_GiveToChildren("ShrunkPropertyTransfer",1)
+			TNT1 A 0 A_GiveToChildren("ShrunkPropertyTransfer",1)
+			TNT1 A 2 Thing_Remove(0)
+			Stop
+		Squish:
+			"####" "#" 0 A_GiveInventory("SquishToken", 1)
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeStomp", 1, 2)
+			"####" "#" 0 A_Jump(256,3)
+			"####" "#" 2
+			"####" "#" 0 A_Jump(256,3)
+			"####" "#" 0
+			"####" "#" 2 A_Die("Squish")
+			"####" "#" 0
+			Loop
+		Death:
+		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
+		Death.Squish:
+		XDeath.Squish:
+			TNT1 A 0 A_Jump(64,2)
+			TNT1 A 0 A_GiveToTarget("DukeBootTaunt",1)
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			Stop
+		DukeStomp:
+			"####" "#" 0 A_GiveToTarget("DukeStomp", 1)
+			Goto Squish
+	}
+}
+
+actor FlemoidusCycloptisCommonusV3_2_ShrinkEffect : FlemoidusCycloptisCommonusV3_2
+{
+	-ISMONSTER
+	-COUNTKILL
+	-SHOOTABLE
+	-SOLID
+	+NOINTERACTION
+	-NOGRAVITY
+	+CLIENTSIDEONLY
+	RenderStyle Translucent
+	Alpha 0.4
+	States
+	{
+		Spawn:
+			CYCL A 0
+			CYCL A 0 A_SetUserVar("user_Scalex", Scalex*65536.0)
+			CYCL A 0 A_SetUserVar("user_Scaley", Scaley*65536.0)
+			"####" "#" 1 A_SetScale(0.95*(user_Scalex/65536.0),0.95*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_Scalex/65536.0),0.9*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.85*(user_Scalex/65536.0),0.85*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_Scalex/65536.0),0.8*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.75*(user_Scalex/65536.0),0.75*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_Scalex/65536.0),0.7*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.65*(user_Scalex/65536.0),0.65*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_Scalex/65536.0),0.6*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.55*(user_Scalex/65536.0),0.55*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_Scalex/65536.0),0.5*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.45*(user_Scalex/65536.0),0.45*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_Scalex/65536.0),0.4*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.35*(user_Scalex/65536.0),0.35*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_Scalex/65536.0),0.3*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.25*(user_Scalex/65536.0),0.25*(user_Scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.2*(user_Scalex/65536.0),0.2*(user_Scaley/65536.0))
+			Stop
+	}
+}
+
+actor CyclopsBody : ArmoredBipedicusBody
+{
+	BounceCount 5
+	+SKYEXPLODE
+	States
+	{
+	Spawn:
+		CYCD A 10
+		Loop
+
+	Death:
+		CYCD A -1
+		Stop
+	}
+}
+
+actor CyclopsArm : QuadrumpusArm1
+{
+	BounceFactor 0.65
+	BounceCount 7
+	Mass 50
+	Speed 4
+	+SKYEXPLODE
+	States
+	{
+	Spawn:
+		TNT1 A 0 ThrustThingZ (0, 24, 0, 1)
+
+	Spawn2:
+		CYRM ABCDEFGH 5
+		Loop
+
+	Death:
+		TNT1 A 0 A_Jump(256,"Death1","Death2","Death3","Death4")
+
+	Death1:
+		CYRM C -1
+		Stop
+
+	Death2:
+		CYRM G -1
+		Stop
+
+	Death3:
+		CYRM I -1
+		Stop
+
+	Death4:
+		CYRM J -1
+		Stop
+	}
+}

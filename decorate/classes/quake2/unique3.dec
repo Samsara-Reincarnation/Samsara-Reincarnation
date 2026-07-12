@@ -1,0 +1,234 @@
+actor SamsaraQuake2RailgunLoopSoundCheck : Boolean {}
+
+actor Q2Railgun : Q2Weapon
+{
+    Inventory.PickupMessage "Railgun"
+    Inventory.Icon "Q2CMPW08"
+    Weapon.SlotNumber 9
+    Weapon.SelectionOrder 300
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 50
+    Weapon.AmmoUse 10
+    Decal "RailScorch"
+    Tag "Railgun"
+    States
+    {
+      Spawn:
+        Q2WP A -1
+        stop
+
+      ReadyActual:
+        RLG1 A 0 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStarter")
+        RLG1 A 1 A_WeaponReady
+        RLG1 A 0 A_Jump(32,1)
+        loop
+        RLG1 A 0 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStarter")
+        RLG1 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 5 A_WeaponReady
+        RLG2 ABCDEFGHI 5 A_WeaponReady
+        loop
+
+      Deselect:
+        RLG1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        RLG1 A 3 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStarter")
+        RLG0 TUVWX 3
+      DeselectInstant:
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStopper")
+        goto Super::DeselectInstant
+
+      Ready: // our "Select" state
+        TNT1 A 0 A_TakeInventory("Q2WeaponIndex")
+        TNT1 A 0 A_GiveInventory("Q2WeaponIndex",8)
+        RLG0 A 0 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStarter")
+        RLG0 A 1 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,1)
+        RLG0 A 3 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStarter") // map change hack
+        RLG0 BCD 4
+        goto ReadyActual
+
+      Fire:
+        RLG0 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        RLG0 E 0 A_JumpIfInventory("Cell",10,"FireStart")
+        goto FireDry
+
+      FireDry:
+        RLG1 A 0 A_ClearReFire
+        RLG1 A 0 A_PlaySound("Q2Weapons/NoAmmo",CHAN_5)
+        RLG1 A 0 A_SelectWeapon("Q2Blaster")
+        goto Deselect
+
+      FireStart:
+        RLG0 E 0 A_GiveInventory("SamsaraQuake2RailgunLoopSoundStarter")
+        RLG0 E 0 A_GiveInventory("SamsaraQuake2RailgunAttackHandler")
+        RLG0 E 0 A_GunFlash // have to place it here for recoil
+        RLG0 E 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        RLG0 FGH 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        RLG0 I 0 A_GiveInventory("SamsaraQuake2RailgunLoadSoundPlayer")
+        RLG0 IJKLMNOPQRS 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+
+      Flash:
+        TNT1 A 0 A_Light2
+        TNT1 A 0 A_JumpIfInventory("SamsaraRecoilIsDisabled",1,"FlashNoRecoil")
+        goto FlashRecoil
+
+      FlashNoRecoil:
+        TNT1 AAAAAA 1
+        TNT1 A 1 A_Light1
+        TNT1 AAAA 1
+        goto LightDone
+
+      FlashRecoil:
+        TNT1 A 1 A_SetPitch(pitch-5)
+        TNT1 AAAAA 1 A_SetPitch(pitch+0.5)
+        TNT1 A 0 A_Light1
+        TNT1 AAAAA 1 A_SetPitch(pitch+0.5)
+        goto LightDone
+    }
+}
+
+actor SamsaraQuake2RailgunAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupDetectionCheck")
+        TNT1 A 0 A_JumpIfInventory("Cell",10,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",10)
+        goto PickupDetectionCheck
+
+      // Detection checking stuff
+      PickupDetectionCheck:
+        TNT1 A 0 A_JumpIfInventory("PowerSilencer",1,"PickupPlaySoundUndetected")
+        TNT1 A 0 A_JumpIfTargetInLOS("PickupPlaySoundDetected",72,JLOSF_TARGETLOS)
+        goto PickupPlaySoundUndetected
+
+      // Undetected
+      // Sound stuff
+      PickupPlaySoundUndetected:
+        TNT1 A 0 A_JumpIfInventory("PowerSilencer",1,4)
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailFire",CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraQuake2SilentFired")
+        goto PickupAttackUndetected
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailFire",CHAN_WEAPON,0.25,false,ATTN_STATIC)
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2SilentFired")
+        goto PickupAttackUndetected
+
+      // Attack stuff
+      PickupAttackUndetected:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUndetectedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUndetectedCoop")
+      PickupAttackUndetectedDM:
+        TNT1 A 0 A_RailAttack(200,5,false,"2F677F","White",RGF_SILENT|RGF_FULLBRIGHT,1,"Q2RailgunPuff")
+        stop
+
+      PickupAttackUndetectedCoop:
+        TNT1 A 0 A_RailAttack(300,5,false,"2F677F","White",RGF_SILENT|RGF_FULLBRIGHT,1,"Q2RailgunPuff_Coop")
+        stop
+
+      // Detected
+      // Sound stuff
+      PickupPlaySoundDetected:
+        TNT1 A 0 A_JumpIfInventory("PowerSilencer",1,4)
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailFire",CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraQuake2SilentFired")
+        goto PickupAttackDetected
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailFire",CHAN_WEAPON,0.25,false,ATTN_STATIC)
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2SilentFired")
+        goto PickupAttackDetected
+
+      // Attack stuff
+      PickupAttackDetected:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackDetectedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackDetectedCoop")
+      PickupAttackDetectedDM:
+        TNT1 A 0 A_RailAttack(100,5,false,"2F677F","White",RGF_SILENT|RGF_FULLBRIGHT,1,"Q2RailgunPuff")
+        stop
+
+      PickupAttackDetectedCoop:
+        TNT1 A 0 A_RailAttack(150,5,false,"2F677F","White",RGF_SILENT|RGF_FULLBRIGHT,1,"Q2RailgunPuff_Coop")
+        stop
+    }
+}
+
+actor SamsaraQuake2RailgunLoadSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRerelease")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuake2SilentFired",1,2)
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailGunReload")
+        stop
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailGunReload",CHAN_BODY,0.25,false,ATTN_STATIC)
+        stop
+
+      // Rerelease sounds
+      PickupRerelease:
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuake2SilentFired",1,2)
+        TNT1 A 0 A_PlaySound("Q2Weapons/Rerelease/RailGunReload")
+        stop
+        TNT1 A 0 A_PlaySound("Q2Weapons/Rerelease/RailGunReload",CHAN_BODY,0.25,false,ATTN_STATIC)
+        stop
+    }
+}
+
+actor SamsaraQuake2RailgunLoopSoundStarter : Trigger
+{
+    States
+    {
+      // Sound starting stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRerelease")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("Q2Weapons/RailGunLoop",CHAN_6,0.5,true)
+        goto PickupFinish
+
+      // Rerelease sounds
+      PickupRerelease:
+        TNT1 A 0 A_PlaySound("Q2Weapons/Rerelease/RailGunLoop",CHAN_6,0.5,true)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraQuake2RailgunLoopSoundCheck")
+        stop
+    }
+}
+
+actor SamsaraQuake2RailgunLoopSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuake2RailgunLoopSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_6)
+        TNT1 A 0 A_StopSound(CHAN_6)
+        TNT1 A 0 A_TakeInventory("SamsaraQuake2RailgunLoopSoundCheck")
+        stop
+    }
+}
+
+actor Q2RailgunPuff : Q2BulletPuff
+{
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor Q2RailgunPuff_Coop : Q2RailgunPuff
+{
+    //+ALLOWTHRUFLAGS // doesn't exist in zandronum yet
+    +MTHRUSPECIES
+}

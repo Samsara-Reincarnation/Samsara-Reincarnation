@@ -3646,44 +3646,64 @@ Model "Goldfinger_PPKSilenced"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4 
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE03 A 0 5
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE03 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE03 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE03 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE03 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE03 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE03 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE03 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE03 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "pp7silenced_flash.md3"
@@ -3707,44 +3727,64 @@ Model "Goldfinger_PPKSilenced"
    FrameIndex GE11 E 0 4 
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
-   FrameIndex GE12 D 0 0
-   Offset 0 0 -20
-   FrameIndex GE12 E 0 0
-   Offset 0 0 -24
-   FrameIndex GE12 F 0 0
-   Offset 0 0 -28
-   FrameIndex GE12 G 0 0
-   Offset 0 0 -32
-   FrameIndex GE12 H 0 0
-   Offset 0 0 -36
-   FrameIndex GE12 I 0 0
-   Offset 0 0 0
-   
+   PitchOffset -12
    Offset 0 0 -4
-   FrameIndex GE13 A 0 5
+   FrameIndex GE12 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE12 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE12 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE12 G 0 0
+   PitchOffset -24
    Offset 0 0 -8
+   FrameIndex GE12 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE12 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+ 
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE13 A 0 5
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE13 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE13 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE13 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE13 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE13 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE13 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE13 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE13 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "pp7silenced_flash.md3"
@@ -3817,44 +3857,64 @@ Model "Goldfinger_PPK"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE03 A 0 5
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE03 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE03 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE03 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE03 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE03 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE03 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE03 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE03 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "pp7_flash.md3"
@@ -3878,44 +3938,64 @@ Model "Goldfinger_PPK"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
-   FrameIndex GE12 D 0 0
-   Offset 0 0 -20
-   FrameIndex GE12 E 0 0
-   Offset 0 0 -24
-   FrameIndex GE12 F 0 0
-   Offset 0 0 -28
-   FrameIndex GE12 G 0 0
-   Offset 0 0 -32
-   FrameIndex GE12 H 0 0
-   Offset 0 0 -36
-   FrameIndex GE12 I 0 0
-   Offset 0 0 0
-   
+   PitchOffset -12
    Offset 0 0 -4
-   FrameIndex GE13 A 0 5
+   FrameIndex GE12 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE12 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE12 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE12 G 0 0
+   PitchOffset -24
    Offset 0 0 -8
+   FrameIndex GE12 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE12 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+ 
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE13 A 0 5
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE13 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE13 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE13 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE13 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE13 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE13 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE13 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE13 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "pp7_flash.md3"
@@ -3988,44 +4068,64 @@ Model "Goldfinger_ColtM1911"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE03 A 0 5
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE03 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE03 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE03 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE03 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE03 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE03 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE03 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE03 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "colt_flash.md3"
@@ -4049,44 +4149,64 @@ Model "Goldfinger_ColtM1911"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
-   FrameIndex GE12 D 0 0
-   Offset 0 0 -20
-   FrameIndex GE12 E 0 0
-   Offset 0 0 -24
-   FrameIndex GE12 F 0 0
-   Offset 0 0 -28
-   FrameIndex GE12 G 0 0
-   Offset 0 0 -32
-   FrameIndex GE12 H 0 0
-   Offset 0 0 -36
-   FrameIndex GE12 I 0 0
-   Offset 0 0 0
-   
+   PitchOffset -12
    Offset 0 0 -4
-   FrameIndex GE13 A 0 5
+   FrameIndex GE12 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE12 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE12 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE12 G 0 0
+   PitchOffset -24
    Offset 0 0 -8
+   FrameIndex GE12 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE12 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+ 
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE13 A 0 5
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE13 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE13 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE13 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE13 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE13 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE13 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE13 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE13 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "colt_flash.md3"
@@ -4185,44 +4305,64 @@ Model "Goldfinger_LugerP08"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4 
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE03 A 0 5
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE03 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE03 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE03 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE03 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE03 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE03 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE03 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE03 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "luger_flash.md3"
@@ -4246,44 +4386,64 @@ Model "Goldfinger_LugerP08"
    FrameIndex GE11 E 0 4 
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
-   FrameIndex GE12 D 0 0
-   Offset 0 0 -20
-   FrameIndex GE12 E 0 0
-   Offset 0 0 -24
-   FrameIndex GE12 F 0 0
-   Offset 0 0 -28
-   FrameIndex GE12 G 0 0
-   Offset 0 0 -32
-   FrameIndex GE12 H 0 0
-   Offset 0 0 -36
-   FrameIndex GE12 I 0 0
-   Offset 0 0 0
-   
+   PitchOffset -12
    Offset 0 0 -4
-   FrameIndex GE13 A 0 5
+   FrameIndex GE12 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE12 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE12 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE12 G 0 0
+   PitchOffset -24
    Offset 0 0 -8
+   FrameIndex GE12 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE12 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+ 
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE13 A 0 5
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE13 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE13 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE13 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE13 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE13 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE13 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE13 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE13 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "luger_flash.md3"
@@ -4356,44 +4516,64 @@ Model "Goldfinger_WaltherP38"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4 
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE03 A 0 5
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE03 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE03 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE03 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE03 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE03 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE03 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE03 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE03 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "p38_flash.md3"
@@ -4417,44 +4597,64 @@ Model "Goldfinger_WaltherP38"
    FrameIndex GE11 E 0 4 
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
-   FrameIndex GE12 D 0 0
-   Offset 0 0 -20
-   FrameIndex GE12 E 0 0
-   Offset 0 0 -24
-   FrameIndex GE12 F 0 0
-   Offset 0 0 -28
-   FrameIndex GE12 G 0 0
-   Offset 0 0 -32
-   FrameIndex GE12 H 0 0
-   Offset 0 0 -36
-   FrameIndex GE12 I 0 0
-   Offset 0 0 0
-   
+   PitchOffset -12
    Offset 0 0 -4
-   FrameIndex GE13 A 0 5
+   FrameIndex GE12 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE12 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE12 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE12 G 0 0
+   PitchOffset -24
    Offset 0 0 -8
+   FrameIndex GE12 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE12 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+ 
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE13 A 0 5
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE13 B 0 5
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE13 C 0 5
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE13 D 0 5
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE13 E 0 5
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE13 F 0 5
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE13 G 0 5
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE13 H 0 5
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE13 I 0 5
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "p38_flash.md3"
@@ -4530,24 +4730,34 @@ Model "Goldfinger_AK47"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "ak47_flash.md3"
@@ -4572,24 +4782,34 @@ Model "Goldfinger_AK47"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -22 0 -4
+   PitchOffset -3
+   Offset -22 0 -1
    FrameIndex GE12 A 0 0
-   Offset -22 0 -8
+   PitchOffset -6
+   Offset -22 0 -2
    FrameIndex GE12 B 0 0
-   Offset -22 0 -12
+   PitchOffset -9
+   Offset -22 0 -3
    FrameIndex GE12 C 0 0
-   Offset -22 0 -16
+   PitchOffset -12
+   Offset -22 0 -4
    FrameIndex GE12 D 0 0
-   Offset -22 0 -20
+   PitchOffset -15
+   Offset -22 0 -5
    FrameIndex GE12 E 0 0
-   Offset -22 0 -24
+   PitchOffset -18
+   Offset -22 0 -6
    FrameIndex GE12 F 0 0
-   Offset -22 0 -28
+   PitchOffset -21
+   Offset -22 0 -7
    FrameIndex GE12 G 0 0
-   Offset -22 0 -32
+   PitchOffset -24
+   Offset -22 0 -8
    FrameIndex GE12 H 0 0
-   Offset -22 0 -36
+   PitchOffset -27
+   Offset -22 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -22 0 0
 
    Model 1 "ak47_flash.md3"
@@ -4666,33 +4886,43 @@ Model "Goldfinger_UZI"
    FrameIndex GE01 E 0 4
    FrameIndex GE01 E 1 4
 
-   Offset 0 0 -8
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
    FrameIndex GE02 A 1 0
-   Offset 0 0 -16
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
    FrameIndex GE02 B 1 0
-   Offset 0 0 -24
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
    FrameIndex GE02 C 1 0
-   Offset 0 0 -32
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
    FrameIndex GE02 D 1 0
-   Offset 0 0 -40
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
    FrameIndex GE02 E 1 0
-   Offset 0 0 -48
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
    FrameIndex GE02 F 1 0
-   Offset 0 0 -56
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
    FrameIndex GE02 G 1 0
-   Offset 0 0 -64
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
    FrameIndex GE02 H 1 0
-   Offset 0 0 -72
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
    FrameIndex GE02 I 1 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 2 "uzi_flash.md3"
@@ -4700,6 +4930,32 @@ Model "Goldfinger_UZI"
    FrameIndex GE01 A 0 0
    FrameIndex GE01 A 1 0
    FrameIndex GE01 A 2 0
+}
+
+model Goldfinger_AK47Tracer
+{
+	Path "models/goldeneye/effects"
+	model 0 "bullettracer.md3"
+	skin 0 "bullettracer.png"
+	scale 2.0 0.5 0.5
+	//Offset -48 0 0
+	Offset 0 0 8
+	PITCHFROMMOMENTUM
+
+	FrameIndex GE00 A 0 0
+}
+
+model Goldfinger_AK47TracerCoop
+{
+	Path "models/goldeneye/effects"
+	model 0 "bullettracer.md3"
+	skin 0 "bullettracer.png"
+	scale 2.0 0.5 0.5
+	//Offset -48 0 0
+	Offset 0 0 8
+	PITCHFROMMOMENTUM
+
+	FrameIndex GE00 A 0 0
 }
 
 //y moves 4
@@ -4724,33 +4980,43 @@ Model "Goldfinger_UZI"
    FrameIndex GE11 E 1 4
 
    // My hand is forced
-   Offset -22 0 -8
+   PitchOffset -3
+   Offset -22 0 -1
    FrameIndex GE12 A 0 0
    FrameIndex GE12 A 1 0
-   Offset -22 0 -16
+   PitchOffset -6
+   Offset -22 0 -2
    FrameIndex GE12 B 0 0
    FrameIndex GE12 B 1 0
-   Offset -22 0 -24
+   PitchOffset -9
+   Offset -22 0 -3
    FrameIndex GE12 C 0 0
    FrameIndex GE12 C 1 0
-   Offset -22 0 -32
+   PitchOffset -12
+   Offset -22 0 -4
    FrameIndex GE12 D 0 0
    FrameIndex GE12 D 1 0
-   Offset -22 0 -40
+   PitchOffset -15
+   Offset -22 0 -5
    FrameIndex GE12 E 0 0
    FrameIndex GE12 E 1 0
-   Offset -22 0 -48
+   PitchOffset -18
+   Offset -22 0 -6
    FrameIndex GE12 F 0 0
    FrameIndex GE12 F 1 0
-   Offset -22 0 -56
+   PitchOffset -21
+   Offset -22 0 -7
    FrameIndex GE12 G 0 0
    FrameIndex GE12 G 1 0
-   Offset -22 0 -64
+   PitchOffset -24
+   Offset -22 0 -8
    FrameIndex GE12 H 0 0
    FrameIndex GE12 H 1 0
-   Offset -22 0 -72
+   PitchOffset -27
+   Offset -22 0 -9
    FrameIndex GE12 I 0 0
    FrameIndex GE12 I 1 0
+   PitchOffset 0
    Offset -22 0 0
 
    Model 1 "uzi_flash.md3"
@@ -4843,24 +5109,34 @@ Model "Goldfinger_MP40"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "mp40_flash.md3"
@@ -4885,24 +5161,34 @@ Model "Goldfinger_MP40"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -22 0 -4
+   PitchOffset -3
+   Offset -22 0 -1
    FrameIndex GE12 A 0 0
-   Offset -22 0 -8
+   PitchOffset -6
+   Offset -22 0 -2
    FrameIndex GE12 B 0 0
-   Offset -22 0 -12
+   PitchOffset -9
+   Offset -22 0 -3
    FrameIndex GE12 C 0 0
-   Offset -22 0 -16
+   PitchOffset -12
+   Offset -22 0 -4
    FrameIndex GE12 D 0 0
-   Offset -22 0 -20
+   PitchOffset -15
+   Offset -22 0 -5
    FrameIndex GE12 E 0 0
-   Offset -22 0 -24
+   PitchOffset -18
+   Offset -22 0 -6
    FrameIndex GE12 F 0 0
-   Offset -22 0 -28
+   PitchOffset -21
+   Offset -22 0 -7
    FrameIndex GE12 G 0 0
-   Offset -22 0 -32
+   PitchOffset -24
+   Offset -22 0 -8
    FrameIndex GE12 H 0 0
-   Offset -22 0 -36
+   PitchOffset -27
+   Offset -22 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -22 0 0
 
    Model 1 "mp40_flash.md3"
@@ -4973,24 +5259,34 @@ Model "Goldfinger_Thompson"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "thompson_flash.md3"
@@ -5015,24 +5311,34 @@ Model "Goldfinger_Thompson"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -26 0 -4
+   PitchOffset -3
+   Offset -26 0 -1
    FrameIndex GE12 A 0 0
-   Offset -26 0 -8
+   PitchOffset -6
+   Offset -26 0 -2
    FrameIndex GE12 B 0 0
-   Offset -26 0 -12
+   PitchOffset -9
+   Offset -26 0 -3
    FrameIndex GE12 C 0 0
-   Offset -26 0 -16
+   PitchOffset -12
+   Offset -26 0 -4
    FrameIndex GE12 D 0 0
-   Offset -26 0 -20
+   PitchOffset -15
+   Offset -26 0 -5
    FrameIndex GE12 E 0 0
-   Offset -26 0 -24
+   PitchOffset -18
+   Offset -26 0 -6
    FrameIndex GE12 F 0 0
-   Offset -26 0 -28
+   PitchOffset -21
+   Offset -26 0 -7
    FrameIndex GE12 G 0 0
-   Offset -26 0 -32
+   PitchOffset -24
+   Offset -26 0 -8
    FrameIndex GE12 H 0 0
-   Offset -26 0 -36
+   PitchOffset -27
+   Offset -26 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -26 0 0
 
    Model 1 "thompson_flash.md3"
@@ -5103,24 +5409,34 @@ Model "Goldfinger_ThompsonDrum"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "thompson_flash.md3"
@@ -5144,25 +5460,34 @@ Model "Goldfinger_ThompsonDrum"
    FrameIndex GE11 D 0 3
    FrameIndex GE11 E 0 4
 
-   // My hand is forced
-   Offset -26 0 -4
+   PitchOffset -3
+   Offset -26 0 -1
    FrameIndex GE12 A 0 0
-   Offset -26 0 -8
+   PitchOffset -6
+   Offset -26 0 -2
    FrameIndex GE12 B 0 0
-   Offset -26 0 -12
+   PitchOffset -9
+   Offset -26 0 -3
    FrameIndex GE12 C 0 0
-   Offset -26 0 -16
+   PitchOffset -12
+   Offset -26 0 -4
    FrameIndex GE12 D 0 0
-   Offset -26 0 -20
+   PitchOffset -15
+   Offset -26 0 -5
    FrameIndex GE12 E 0 0
-   Offset -26 0 -24
+   PitchOffset -18
+   Offset -26 0 -6
    FrameIndex GE12 F 0 0
-   Offset -26 0 -28
+   PitchOffset -21
+   Offset -26 0 -7
    FrameIndex GE12 G 0 0
-   Offset -26 0 -32
+   PitchOffset -24
+   Offset -26 0 -8
    FrameIndex GE12 H 0 0
-   Offset -26 0 -36
+   PitchOffset -27
+   Offset -26 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -26 0 0
 
    Model 1 "thompson_flash.md3"
@@ -5239,33 +5564,43 @@ Model "Goldfinger_M14"
    FrameIndex GE01 E 0 4
    FrameIndex GE01 E 1 4
 
-   Offset 0 0 -8
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
    FrameIndex GE02 A 1 0
-   Offset 0 0 -16
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
    FrameIndex GE02 B 1 0
-   Offset 0 0 -24
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
    FrameIndex GE02 C 1 0
-   Offset 0 0 -32
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
    FrameIndex GE02 D 1 0
-   Offset 0 0 -40
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
    FrameIndex GE02 E 1 0
-   Offset 0 0 -48
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
    FrameIndex GE02 F 1 0
-   Offset 0 0 -56
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
    FrameIndex GE02 G 1 0
-   Offset 0 0 -64
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
    FrameIndex GE02 H 1 0
-   Offset 0 0 -72
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
    FrameIndex GE02 I 1 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 2 "m14_flash.md3"
@@ -5297,33 +5632,43 @@ Model "Goldfinger_M14"
    FrameIndex GE11 E 1 4
 
    // My hand is forced
-   Offset -22 0 -8
+   PitchOffset -3
+   Offset -22 0 -1
    FrameIndex GE12 A 0 0
    FrameIndex GE12 A 1 0
-   Offset -22 0 -16
+   PitchOffset -6
+   Offset -22 0 -2
    FrameIndex GE12 B 0 0
    FrameIndex GE12 B 1 0
-   Offset -22 0 -24
+   PitchOffset -9
+   Offset -22 0 -3
    FrameIndex GE12 C 0 0
    FrameIndex GE12 C 1 0
-   Offset -22 0 -32
+   PitchOffset -12
+   Offset -22 0 -4
    FrameIndex GE12 D 0 0
    FrameIndex GE12 D 1 0
-   Offset -22 0 -40
+   PitchOffset -15
+   Offset -22 0 -5
    FrameIndex GE12 E 0 0
    FrameIndex GE12 E 1 0
-   Offset -22 0 -48
+   PitchOffset -18
+   Offset -22 0 -6
    FrameIndex GE12 F 0 0
    FrameIndex GE12 F 1 0
-   Offset -22 0 -56
+   PitchOffset -21
+   Offset -22 0 -7
    FrameIndex GE12 G 0 0
    FrameIndex GE12 G 1 0
-   Offset -22 0 -64
+   PitchOffset -24
+   Offset -22 0 -8
    FrameIndex GE12 H 0 0
    FrameIndex GE12 H 1 0
-   Offset -22 0 -72
+   PitchOffset -27
+   Offset -22 0 -9
    FrameIndex GE12 I 0 0
    FrameIndex GE12 I 1 0
+   PitchOffset 0
    Offset -22 0 0
 
    Model 1 "m14_flash.md3"
@@ -5442,24 +5787,34 @@ Model "Goldfinger_Shotgun"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "shotgun_flash.md3"
@@ -5484,24 +5839,34 @@ Model "Goldfinger_Shotgun"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -22 0 -4
+   PitchOffset -3
+   Offset -22 0 -1
    FrameIndex GE12 A 0 0
-   Offset -22 0 -8
+   PitchOffset -6
+   Offset -22 0 -2
    FrameIndex GE12 B 0 0
-   Offset -22 0 -12
+   PitchOffset -9
+   Offset -22 0 -3
    FrameIndex GE12 C 0 0
-   Offset -22 0 -16
+   PitchOffset -12
+   Offset -22 0 -4
    FrameIndex GE12 D 0 0
-   Offset -22 0 -20
+   PitchOffset -15
+   Offset -22 0 -5
    FrameIndex GE12 E 0 0
-   Offset -22 0 -24
+   PitchOffset -18
+   Offset -22 0 -6
    FrameIndex GE12 F 0 0
-   Offset -22 0 -28
+   PitchOffset -21
+   Offset -22 0 -7
    FrameIndex GE12 G 0 0
-   Offset -22 0 -32
+   PitchOffset -24
+   Offset -22 0 -8
    FrameIndex GE12 H 0 0
-   Offset -22 0 -36
+   PitchOffset -27
+   Offset -22 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -22 0 0
 
    Model 1 "shotgun_flash.md3"
@@ -5572,24 +5937,34 @@ Model "Goldfinger_OverUnder"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "overunder_flash.md3"
@@ -5614,24 +5989,34 @@ Model "Goldfinger_OverUnder"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -23.5 0 -4
+   PitchOffset -3
+   Offset -23.5 0 -1
    FrameIndex GE12 A 0 0
-   Offset -23.5 0 -8
+   PitchOffset -6
+   Offset -23.5 0 -2
    FrameIndex GE12 B 0 0
-   Offset -23.5 0 -12
+   PitchOffset -9
+   Offset -23.5 0 -3
    FrameIndex GE12 C 0 0
-   Offset -23.5 0 -16
+   PitchOffset -12
+   Offset -23.5 0 -4
    FrameIndex GE12 D 0 0
-   Offset -23.5 0 -20
+   PitchOffset -15
+   Offset -23.5 0 -5
    FrameIndex GE12 E 0 0
-   Offset -23.5 0 -24
+   PitchOffset -18
+   Offset -23.5 0 -6
    FrameIndex GE12 F 0 0
-   Offset -23.5 0 -28
+   PitchOffset -21
+   Offset -23.5 0 -7
    FrameIndex GE12 G 0 0
-   Offset -23.5 0 -32
+   PitchOffset -24
+   Offset -23.5 0 -8
    FrameIndex GE12 H 0 0
-   Offset -23.5 0 -36
+   PitchOffset -27
+   Offset -23.5 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -23.5 0 0
 
    Model 1 "overunder_flash.md3"
@@ -5702,24 +6087,34 @@ Model "Goldfinger_Kar98k"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "kar98k_flash.md3"
@@ -5744,24 +6139,34 @@ Model "Goldfinger_Kar98k"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -23.5 0 -4
+   PitchOffset -3
+   Offset -23.5 0 -1
    FrameIndex GE12 A 0 0
-   Offset -23.5 0 -8
+   PitchOffset -6
+   Offset -23.5 0 -2
    FrameIndex GE12 B 0 0
-   Offset -23.5 0 -12
+   PitchOffset -9
+   Offset -23.5 0 -3
    FrameIndex GE12 C 0 0
-   Offset -23.5 0 -16
+   PitchOffset -12
+   Offset -23.5 0 -4
    FrameIndex GE12 D 0 0
-   Offset -23.5 0 -20
+   PitchOffset -15
+   Offset -23.5 0 -5
    FrameIndex GE12 E 0 0
-   Offset -23.5 0 -24
+   PitchOffset -18
+   Offset -23.5 0 -6
    FrameIndex GE12 F 0 0
-   Offset -23.5 0 -28
+   PitchOffset -21
+   Offset -23.5 0 -7
    FrameIndex GE12 G 0 0
-   Offset -23.5 0 -32
+   PitchOffset -24
+   Offset -23.5 0 -8
    FrameIndex GE12 H 0 0
-   Offset -23.5 0 -36
+   PitchOffset -27
+   Offset -23.5 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -23.5 0 0
 
    Model 1 "kar98k_flash.md3"
@@ -5832,24 +6237,34 @@ Model "Goldfinger_M1Garand"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "M1Garand_flash.md3"
@@ -5874,24 +6289,34 @@ Model "Goldfinger_M1Garand"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -23.5 0 -4
+   PitchOffset -3
+   Offset -23.5 0 -1
    FrameIndex GE12 A 0 0
-   Offset -23.5 0 -8
+   PitchOffset -6
+   Offset -23.5 0 -2
    FrameIndex GE12 B 0 0
-   Offset -23.5 0 -12
+   PitchOffset -9
+   Offset -23.5 0 -3
    FrameIndex GE12 C 0 0
-   Offset -23.5 0 -16
+   PitchOffset -12
+   Offset -23.5 0 -4
    FrameIndex GE12 D 0 0
-   Offset -23.5 0 -20
+   PitchOffset -15
+   Offset -23.5 0 -5
    FrameIndex GE12 E 0 0
-   Offset -23.5 0 -24
+   PitchOffset -18
+   Offset -23.5 0 -6
    FrameIndex GE12 F 0 0
-   Offset -23.5 0 -28
+   PitchOffset -21
+   Offset -23.5 0 -7
    FrameIndex GE12 G 0 0
-   Offset -23.5 0 -32
+   PitchOffset -24
+   Offset -23.5 0 -8
    FrameIndex GE12 H 0 0
-   Offset -23.5 0 -36
+   PitchOffset -27
+   Offset -23.5 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -23.5 0 0
 
    Model 1 "M1Garand_flash.md3"
@@ -5966,33 +6391,43 @@ Model "Goldfinger_M1Carbine"
    FrameIndex GE01 E 0 4
    FrameIndex GE01 E 1 4
 
-   Offset 0 0 -8
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
    FrameIndex GE02 A 1 0
-   Offset 0 0 -16
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
    FrameIndex GE02 B 1 0
-   Offset 0 0 -24
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
    FrameIndex GE02 C 1 0
-   Offset 0 0 -32
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
    FrameIndex GE02 D 1 0
-   Offset 0 0 -40
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
    FrameIndex GE02 E 1 0
-   Offset 0 0 -48
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
    FrameIndex GE02 F 1 0
-   Offset 0 0 -56
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
    FrameIndex GE02 G 1 0
-   Offset 0 0 -64
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
    FrameIndex GE02 H 1 0
-   Offset 0 0 -72
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
    FrameIndex GE02 I 1 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 2 "m1carbine_flash.md3"
@@ -6022,33 +6457,43 @@ Model "Goldfinger_M1Carbine"
    FrameIndex GE11 E 1 4
 
    // My hand is forced
-   Offset -22 0 -8
+   PitchOffset -3
+   Offset -22 0 -1
    FrameIndex GE12 A 0 0
    FrameIndex GE12 A 1 0
-   Offset -22 0 -16
+   PitchOffset -6
+   Offset -22 0 -2
    FrameIndex GE12 B 0 0
    FrameIndex GE12 B 1 0
-   Offset -22 0 -24
+   PitchOffset -9
+   Offset -22 0 -3
    FrameIndex GE12 C 0 0
    FrameIndex GE12 C 1 0
-   Offset -22 0 -32
+   PitchOffset -12
+   Offset -22 0 -4
    FrameIndex GE12 D 0 0
    FrameIndex GE12 D 1 0
-   Offset -22 0 -40
+   PitchOffset -15
+   Offset -22 0 -5
    FrameIndex GE12 E 0 0
    FrameIndex GE12 E 1 0
-   Offset -22 0 -48
+   PitchOffset -18
+   Offset -22 0 -6
    FrameIndex GE12 F 0 0
    FrameIndex GE12 F 1 0
-   Offset -22 0 -56
+   PitchOffset -21
+   Offset -22 0 -7
    FrameIndex GE12 G 0 0
    FrameIndex GE12 G 1 0
-   Offset -22 0 -64
+   PitchOffset -24
+   Offset -22 0 -8
    FrameIndex GE12 H 0 0
    FrameIndex GE12 H 1 0
-   Offset -22 0 -72
+   PitchOffset -27
+   Offset -22 0 -9
    FrameIndex GE12 I 0 0
    FrameIndex GE12 I 1 0
+   PitchOffset 0
    Offset -22 0 0
 
    Model 2 "m1carbine_flash.md3"
@@ -6167,24 +6612,34 @@ Model "Goldfinger_AR7"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
 }
 
@@ -6204,24 +6659,34 @@ Model "Goldfinger_AR7"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -23.5 0 -4
+   PitchOffset -3
+   Offset -23.5 0 -1
    FrameIndex GE12 A 0 0
-   Offset -23.5 0 -8
+   PitchOffset -6
+   Offset -23.5 0 -2
    FrameIndex GE12 B 0 0
-   Offset -23.5 0 -12
+   PitchOffset -9
+   Offset -23.5 0 -3
    FrameIndex GE12 C 0 0
-   Offset -23.5 0 -16
+   PitchOffset -12
+   Offset -23.5 0 -4
    FrameIndex GE12 D 0 0
-   Offset -23.5 0 -20
+   PitchOffset -15
+   Offset -23.5 0 -5
    FrameIndex GE12 E 0 0
-   Offset -23.5 0 -24
+   PitchOffset -18
+   Offset -23.5 0 -6
    FrameIndex GE12 F 0 0
-   Offset -23.5 0 -28
+   PitchOffset -21
+   Offset -23.5 0 -7
    FrameIndex GE12 G 0 0
-   Offset -23.5 0 -32
+   PitchOffset -24
+   Offset -23.5 0 -8
    FrameIndex GE12 H 0 0
-   Offset -23.5 0 -36
+   PitchOffset -27
+   Offset -23.5 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -23.5 0 0
 }
 
@@ -6320,33 +6785,43 @@ Model "Goldfinger_SmithWesson22"
    FrameIndex GE01 F 0 5
    FrameIndex GE01 F 1 5
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
    FrameIndex GE02 A 1 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
    FrameIndex GE02 B 1 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
    FrameIndex GE02 C 1 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
    FrameIndex GE02 D 1 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
    FrameIndex GE02 E 1 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
    FrameIndex GE02 F 1 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
    FrameIndex GE02 G 1 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
    FrameIndex GE02 H 1 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
    FrameIndex GE02 I 1 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 2 "sw22_flash.md3"
@@ -6377,33 +6852,43 @@ Model "Goldfinger_SmithWesson22"
    FrameIndex GE11 F 1 5
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
    FrameIndex GE12 A 1 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
    FrameIndex GE12 B 1 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
    FrameIndex GE12 C 1 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE12 D 0 0
    FrameIndex GE12 D 1 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE12 E 0 0
    FrameIndex GE12 E 1 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE12 F 0 0
    FrameIndex GE12 F 1 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE12 G 0 0
    FrameIndex GE12 G 1 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE12 H 0 0
    FrameIndex GE12 H 1 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE12 I 0 0
    FrameIndex GE12 I 1 0
+   PitchOffset 0
    Offset 0 0 0
 
    Model 2 "sw22_flash.md3"
@@ -6418,7 +6903,7 @@ Model "Goldfinger_SmithWesson22"
 	Path "models/goldfinger/sw22"
 	Model 0 "sw22.md3"
 	Model 1 "sw22_text.md3"
-	Path "models/goldeneye/leftarm"
+	Path "models/goldfinger/leftarm"
     Model 2 "leftarm.md3"
     Scale -1.0 1.0 1.0
 
@@ -6523,24 +7008,34 @@ Model "Goldfinger_SmithWesson36"
    FrameIndex GE01 E 0 4
    FrameIndex GE01 F 0 5
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "sw36_flash.md3"
@@ -6564,24 +7059,34 @@ Model "Goldfinger_SmithWesson36"
    FrameIndex GE11 F 0 5
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE12 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE12 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE12 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE12 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE12 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "sw36_flash.md3"
@@ -6594,7 +7099,7 @@ Model "Goldfinger_SmithWesson36"
 {
 	Path "models/goldfinger/sw36"
 	Model 0 "sw36.md3"
-	Path "models/goldeneye/leftarm"
+	Path "models/goldfinger/leftarm"
     Model 1 "leftarm.md3"
     Scale -1.0 1.0 1.0
 
@@ -6653,24 +7158,34 @@ Model "Goldfinger_GoldMagnum"
    FrameIndex GE01 E 0 4
    FrameIndex GE01 F 0 5
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "goldmagnum_flash.md3"
@@ -6694,24 +7209,34 @@ Model "Goldfinger_GoldMagnum"
    FrameIndex GE11 F 0 5
 
    // My hand is forced
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE12 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE12 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE12 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE12 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE12 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset 0 0 0
 
    Model 1 "goldmagnum_flash.md3"
@@ -6724,7 +7249,7 @@ Model "Goldfinger_GoldMagnum"
 {
 	Path "models/goldfinger/goldmagnum"
 	Model 0 "goldmagnum.md3"
-	Path "models/goldeneye/leftarm"
+	Path "models/goldfinger/leftarm"
     Model 1 "leftarm.md3"
     Scale -1.0 1.0 1.0
 
@@ -6780,33 +7305,43 @@ Model "Goldfinger_Laser"
    FrameIndex GE00 A 0 0
    FrameIndex GE00 A 1 0
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
    FrameIndex GE02 A 1 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
    FrameIndex GE02 B 1 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
    FrameIndex GE02 C 1 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
    FrameIndex GE02 D 1 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
    FrameIndex GE02 E 1 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
    FrameIndex GE02 F 1 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
    FrameIndex GE02 G 1 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
    FrameIndex GE02 H 1 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
    FrameIndex GE02 I 1 0
+   PitchOffset 0
    Offset 0 0 0
 
    Model 2 "laser_flash.md3"
@@ -6826,33 +7361,43 @@ Model "Goldfinger_Laser"
    FrameIndex GE10 A 0 0
    FrameIndex GE10 A 1 0
 
-   Offset -33 0 -4
+   PitchOffset -3
+   Offset -33 0 -1
    FrameIndex GE12 A 0 0
    FrameIndex GE12 A 1 0
-   Offset -33 0 -8
+   PitchOffset -6
+   Offset -33 0 -2
    FrameIndex GE12 B 0 0
    FrameIndex GE12 B 1 0
-   Offset -33 0 -12
+   PitchOffset -9
+   Offset -33 0 -3
    FrameIndex GE12 C 0 0
    FrameIndex GE12 C 1 0
-   Offset -33 0 -16
+   PitchOffset -12
+   Offset -33 0 -4
    FrameIndex GE12 D 0 0
    FrameIndex GE12 D 1 0
-   Offset -33 0 -20
+   PitchOffset -15
+   Offset -33 0 -5
    FrameIndex GE12 E 0 0
    FrameIndex GE12 E 1 0
-   Offset -33 0 -24
+   PitchOffset -18
+   Offset -33 0 -6
    FrameIndex GE12 F 0 0
    FrameIndex GE12 F 1 0
-   Offset -33 0 -28
+   PitchOffset -21
+   Offset -33 0 -7
    FrameIndex GE12 G 0 0
    FrameIndex GE12 G 1 0
-   Offset -33 0 -32
+   PitchOffset -24
+   Offset -33 0 -8
    FrameIndex GE12 H 0 0
    FrameIndex GE12 H 1 0
-   Offset -33 0 -36
+   PitchOffset -27
+   Offset -33 0 -9
    FrameIndex GE12 I 0 0
    FrameIndex GE12 I 1 0
+   PitchOffset 0
    Offset -33 0 0
 
    Model 2 "laser_flash.md3"
@@ -6866,7 +7411,7 @@ Model "Goldfinger_Laser"
 	Path "models/goldfinger/laser"
 	Model 0 "laser.md3"
 	Model 1 "laser_coils.md3"
-	Path "models/goldeneye/leftarm"
+	Path "models/goldfinger/leftarm"
     Model 2 "leftarm.md3"
     Scale -1.0 1.0 1.0
 
@@ -6972,24 +7517,34 @@ Model "Goldfinger_SuperBazooka"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -12
+   PitchOffset -5
+   Offset 0 0 -2
    FrameIndex GE02 A 0 0
-   Offset 0 0 -24
+   PitchOffset -10
+   Offset 0 0 -4
    FrameIndex GE02 B 0 0
-   Offset 0 0 -36
+   PitchOffset -15
+   Offset 0 0 -6
    FrameIndex GE02 C 0 0
-   Offset 0 0 -48
+   PitchOffset -20
+   Offset 0 0 -8
    FrameIndex GE02 D 0 0
-   Offset 0 0 -60
+   PitchOffset -25
+   Offset 0 0 -10
    FrameIndex GE02 E 0 0
-   Offset 0 0 -72
+   PitchOffset -30
+   Offset 0 0 -12
    FrameIndex GE02 F 0 0
-   Offset 0 0 -84
+   PitchOffset -35
+   Offset 0 0 -14
    FrameIndex GE02 G 0 0
-   Offset 0 0 -96
+   PitchOffset -40
+   Offset 0 0 -16
    FrameIndex GE02 H 0 0
-   Offset 0 0 -108
+   PitchOffset -45
+   Offset 0 0 -18
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
 }
 
@@ -7009,24 +7564,34 @@ Model "Goldfinger_SuperBazooka"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -41 0 -12
+   PitchOffset -5
+   Offset -41 0 -2
    FrameIndex GE12 A 0 0
-   Offset -41 0 -24
+   PitchOffset -10
+   Offset -41 0 -4
    FrameIndex GE12 B 0 0
-   Offset -41 0 -36
+   PitchOffset -15
+   Offset -41 0 -6
    FrameIndex GE12 C 0 0
-   Offset -41 0 -48
+   PitchOffset -20
+   Offset -41 0 -8
    FrameIndex GE12 D 0 0
-   Offset -41 0 -60
+   PitchOffset -25
+   Offset -41 0 -10
    FrameIndex GE12 E 0 0
-   Offset -41 0 -72
+   PitchOffset -30
+   Offset -41 0 -12
    FrameIndex GE12 F 0 0
-   Offset -41 0 -84
+   PitchOffset -35
+   Offset -41 0 -14
    FrameIndex GE12 G 0 0
-   Offset -41 0 -96
+   PitchOffset -40
+   Offset -41 0 -16
    FrameIndex GE12 H 0 0
-   Offset -41 0 -108
+   PitchOffset -45
+   Offset -41 0 -18
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -41 0 0
 }
 
@@ -7110,24 +7675,34 @@ Model "Goldfinger_M79"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
    
    Model 1 "m79_flash.md3"
@@ -7152,24 +7727,34 @@ Model "Goldfinger_M79"
    FrameIndex GE11 E 0 4
 
    // My hand is forced
-   Offset -23.5 0 -4
+   PitchOffset -3
+   Offset -23.5 0 -1
    FrameIndex GE12 A 0 0
-   Offset -23.5 0 -8
+   PitchOffset -6
+   Offset -23.5 0 -2
    FrameIndex GE12 B 0 0
-   Offset -23.5 0 -12
+   PitchOffset -9
+   Offset -23.5 0 -3
    FrameIndex GE12 C 0 0
-   Offset -23.5 0 -16
+   PitchOffset -12
+   Offset -23.5 0 -4
    FrameIndex GE12 D 0 0
-   Offset -23.5 0 -20
+   PitchOffset -15
+   Offset -23.5 0 -5
    FrameIndex GE12 E 0 0
-   Offset -23.5 0 -24
+   PitchOffset -18
+   Offset -23.5 0 -6
    FrameIndex GE12 F 0 0
-   Offset -23.5 0 -28
+   PitchOffset -21
+   Offset -23.5 0 -7
    FrameIndex GE12 G 0 0
-   Offset -23.5 0 -32
+   PitchOffset -24
+   Offset -23.5 0 -8
    FrameIndex GE12 H 0 0
-   Offset -23.5 0 -36
+   PitchOffset -27
+   Offset -23.5 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset -23.5 0 0
    
    Model 1 "m79_flash.md3"
@@ -7240,24 +7825,34 @@ Model "Goldfinger_OddJobHat"
    FrameIndex GE01 D 0 3
    FrameIndex GE01 E 0 4
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
 
    //Fire Center Flash
@@ -7279,24 +7874,34 @@ Model "Goldfinger_OddJobHat"
    FrameIndex GE11 D 0 3
    FrameIndex GE11 E 0 4
    
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE12 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE12 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE12 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE12 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE12 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE12 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE12 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE12 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE12 I 0 0
+   PitchOffset 0
    Offset 0 0 0
 
    //Fire Center Flash
@@ -7307,7 +7912,7 @@ Model "Goldfinger_OddJobHat"
 {
 	Path "models/goldfinger/oddjobhat"
 	Model 0 "oddjobhat.md3"
-	Path "models/goldeneye/leftarm"
+	Path "models/goldfinger/leftarm"
     Model 1 "leftarm.md3"
     Scale -1.0 1.0 1.0
 
@@ -7769,30 +8374,287 @@ Model "Goldfinger_WatchDetonator"
    FrameIndex GE01 C 0 3
    FrameIndex GE01 D 0 4
 
-   Offset 0 0 -4
+   PitchOffset -3
+   Offset 0 0 -1
    FrameIndex GE02 A 0 0
-   Offset 0 0 -8
+   PitchOffset -6
+   Offset 0 0 -2
    FrameIndex GE02 B 0 0
-   Offset 0 0 -12
+   PitchOffset -9
+   Offset 0 0 -3
    FrameIndex GE02 C 0 0
-   Offset 0 0 -16
+   PitchOffset -12
+   Offset 0 0 -4
    FrameIndex GE02 D 0 0
-   Offset 0 0 -20
+   PitchOffset -15
+   Offset 0 0 -5
    FrameIndex GE02 E 0 0
-   Offset 0 0 -24
+   PitchOffset -18
+   Offset 0 0 -6
    FrameIndex GE02 F 0 0
-   Offset 0 0 -28
+   PitchOffset -21
+   Offset 0 0 -7
    FrameIndex GE02 G 0 0
-   Offset 0 0 -32
+   PitchOffset -24
+   Offset 0 0 -8
    FrameIndex GE02 H 0 0
-   Offset 0 0 -36
+   PitchOffset -27
+   Offset 0 0 -9
    FrameIndex GE02 I 0 0
+   PitchOffset 0
    Offset 0 0 0
-
 }
 
 Model "Goldfinger_WatchDetonator"
 {
+	Path "models/goldfinger/leftarm"
+    Model 1 "leftarm.md3"
+    Scale -1.0 1.0 1.0
+
+	FrameIndex GE14 A 0 0
+	FrameIndex GE14 A 1 0
+	FrameIndex GE14 B 0 0
+	FrameIndex GE14 B 1 1
+	FrameIndex GE14 C 0 0
+	FrameIndex GE14 C 1 2
+	FrameIndex GE14 D 0 0
+	FrameIndex GE14 D 1 3
+	FrameIndex GE14 E 0 0
+	FrameIndex GE14 E 1 4
+	FrameIndex GE14 F 0 0
+	FrameIndex GE14 F 1 5
+	FrameIndex GE14 G 0 0
+	FrameIndex GE14 G 1 6
+	FrameIndex GE14 H 0 0
+	FrameIndex GE14 H 1 7
+	FrameIndex GE14 I 0 0
+	FrameIndex GE14 I 1 8
+	FrameIndex GE14 J 0 0
+	FrameIndex GE14 J 1 9
+	FrameIndex GE14 K 0 0
+	FrameIndex GE14 K 1 10
+	FrameIndex GE14 L 0 0
+	FrameIndex GE14 L 1 11
+	FrameIndex GE14 M 0 0
+	FrameIndex GE14 M 1 12
+	FrameIndex GE14 N 0 0
+	FrameIndex GE14 N 1 13
+	FrameIndex GE14 O 0 0
+	FrameIndex GE14 O 1 14
+	FrameIndex GE14 P 0 0
+	FrameIndex GE14 P 1 15
+	FrameIndex GE14 Q 0 0
+	FrameIndex GE14 Q 1 16
+	FrameIndex GE14 R 0 0
+	FrameIndex GE14 R 1 17
+	FrameIndex GE14 S 0 0
+	FrameIndex GE14 S 1 18
+	FrameIndex GE14 T 0 0
+	FrameIndex GE14 T 1 19
+}
+
+Model "Goldeneye_Slapper"
+{
+	Path "models/goldfinger/leftarm"
+    Model 1 "leftarm.md3"
+    Scale -1.0 1.0 1.0
+
+	FrameIndex GF14 A 0 0
+	FrameIndex GF14 A 1 0
+	FrameIndex GF14 B 0 0
+	FrameIndex GF14 B 1 1
+	FrameIndex GF14 C 0 0
+	FrameIndex GF14 C 1 2
+	FrameIndex GF14 D 0 0
+	FrameIndex GF14 D 1 3
+	FrameIndex GF14 E 0 0
+	FrameIndex GF14 E 1 4
+	FrameIndex GF14 F 0 0
+	FrameIndex GF14 F 1 5
+	FrameIndex GF14 G 0 0
+	FrameIndex GF14 G 1 6
+	FrameIndex GF14 H 0 0
+	FrameIndex GF14 H 1 7
+	FrameIndex GF14 I 0 0
+	FrameIndex GF14 I 1 8
+	FrameIndex GF14 J 0 0
+	FrameIndex GF14 J 1 9
+	FrameIndex GF14 K 0 0
+	FrameIndex GF14 K 1 10
+	FrameIndex GF14 L 0 0
+	FrameIndex GF14 L 1 11
+	FrameIndex GF14 M 0 0
+	FrameIndex GF14 M 1 12
+	FrameIndex GF14 N 0 0
+	FrameIndex GF14 N 1 13
+	FrameIndex GF14 O 0 0
+	FrameIndex GF14 O 1 14
+	FrameIndex GF14 P 0 0
+	FrameIndex GF14 P 1 15
+	FrameIndex GF14 Q 0 0
+	FrameIndex GF14 Q 1 16
+	FrameIndex GF14 R 0 0
+	FrameIndex GF14 R 1 17
+	FrameIndex GF14 S 0 0
+	FrameIndex GF14 S 1 18
+	FrameIndex GF14 T 0 0
+	FrameIndex GF14 T 1 19
+}
+
+Model "Goldfinger_GolfClub"
+{
+   Path "models/goldfinger/golfclub"
+   Model 0 "golfclub.md3"
+   Scale -1.0 1.0 1.0
+
+   FrameIndex GE00 A 0 0
+   FrameIndex GE01 B 0 1
+   FrameIndex GE01 C 0 2
+   FrameIndex GE01 D 0 3
+   FrameIndex GE01 E 0 4
+   FrameIndex GE01 F 0 5
+   FrameIndex GE01 G 0 6
+   FrameIndex GE01 H 0 7
+   FrameIndex GE01 I 0 8
+   FrameIndex GE01 J 0 9
+   FrameIndex GE01 K 0 10
+   FrameIndex GE01 L 0 11
+   FrameIndex GE01 M 0 12
+   FrameIndex GE01 N 0 13
+   FrameIndex GE01 O 0 14
+   FrameIndex GE01 P 0 15
+   FrameIndex GE01 Q 0 16
+   FrameIndex GE01 R 0 17
+   FrameIndex GE01 S 0 18
+   FrameIndex GE02 A 0 19
+   FrameIndex GE02 B 0 20
+   FrameIndex GE02 C 0 21
+   FrameIndex GE02 D 0 22
+   FrameIndex GE02 E 0 23
+   FrameIndex GE02 F 0 24
+   FrameIndex GE02 G 0 25
+   FrameIndex GE02 H 0 26
+   FrameIndex GE02 I 0 27
+   FrameIndex GE02 J 0 28
+   FrameIndex GE02 K 0 29
+   FrameIndex GE02 L 0 30
+   FrameIndex GE02 M 0 31
+   FrameIndex GE02 N 0 32
+   FrameIndex GE02 O 0 33
+   FrameIndex GE02 P 0 34
+   FrameIndex GE02 Q 0 35
+   FrameIndex GE02 R 0 36
+
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE03 A 0 0
+   PitchOffset -6
+   Offset 0 0 -2
+   FrameIndex GE03 B 0 0
+   PitchOffset -9
+   Offset 0 0 -3
+   FrameIndex GE03 C 0 0
+   PitchOffset -12
+   Offset 0 0 -4
+   FrameIndex GE03 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE03 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE03 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE03 G 0 0
+   PitchOffset -24
+   Offset 0 0 -8
+   FrameIndex GE03 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE03 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+}
+
+Model "Goldfinger_GolfClub"
+{
+   Path "models/goldfinger/golfclub"
+   Model 0 "golfclub.md3"
+   Scale 1.0 1.0 1.0
+
+   FrameIndex GE10 A 0 0
+   FrameIndex GE11 B 0 1
+   FrameIndex GE11 C 0 2
+   FrameIndex GE11 D 0 3
+   FrameIndex GE11 E 0 4
+   FrameIndex GE11 F 0 5
+   FrameIndex GE11 G 0 6
+   FrameIndex GE11 H 0 7
+   FrameIndex GE11 I 0 8
+   FrameIndex GE11 J 0 9
+   FrameIndex GE11 K 0 10
+   FrameIndex GE11 L 0 11
+   FrameIndex GE11 M 0 12
+   FrameIndex GE11 N 0 13
+   FrameIndex GE11 O 0 14
+   FrameIndex GE11 P 0 15
+   FrameIndex GE11 Q 0 16
+   FrameIndex GE11 R 0 17
+   FrameIndex GE11 S 0 18
+   FrameIndex GE12 A 0 19
+   FrameIndex GE12 B 0 20
+   FrameIndex GE12 C 0 21
+   FrameIndex GE12 D 0 22
+   FrameIndex GE12 E 0 23
+   FrameIndex GE12 F 0 24
+   FrameIndex GE12 G 0 25
+   FrameIndex GE12 H 0 26
+   FrameIndex GE12 I 0 27
+   FrameIndex GE12 J 0 28
+   FrameIndex GE12 K 0 29
+   FrameIndex GE12 L 0 30
+   FrameIndex GE12 M 0 31
+   FrameIndex GE12 N 0 32
+   FrameIndex GE12 O 0 33
+   FrameIndex GE12 P 0 34
+   FrameIndex GE12 Q 0 35
+   FrameIndex GE12 R 0 36
+
+   PitchOffset -3
+   Offset 0 0 -1
+   FrameIndex GE13 A 0 0
+   PitchOffset -6
+   Offset 0 0 -2
+   FrameIndex GE13 B 0 0
+   PitchOffset -9
+   Offset 0 0 -3
+   FrameIndex GE13 C 0 0
+   PitchOffset -12
+   Offset 0 0 -4
+   FrameIndex GE13 D 0 0
+   PitchOffset -15
+   Offset 0 0 -5
+   FrameIndex GE13 E 0 0
+   PitchOffset -18
+   Offset 0 0 -6
+   FrameIndex GE13 F 0 0
+   PitchOffset -21
+   Offset 0 0 -7
+   FrameIndex GE13 G 0 0
+   PitchOffset -24
+   Offset 0 0 -8
+   FrameIndex GE13 H 0 0
+   PitchOffset -27
+   Offset 0 0 -9
+   FrameIndex GE13 I 0 0
+   PitchOffset 0
+   Offset 0 0 0
+}
+
+Model "Goldfinger_GolfClub"
+{
+	Path "models/goldfinger/golfclub"
+	Model 0 "golfclub.md3"
 	Path "models/goldfinger/leftarm"
     Model 1 "leftarm.md3"
     Scale -1.0 1.0 1.0
@@ -7969,6 +8831,102 @@ model SamsaraSlotOneDrop
     Scale 0.8 0.8 0.8
 
 	FrameIndex GF00 X 0 0
+}
+
+Model SamsaraSlotOnePickup
+{
+	Path "models/goldfinger/golfclub/pickup"
+	Model 0 "golfclub.md3"
+    Scale 15.0 15.0 15.0
+
+	FrameIndex GF01 Z 0 0
+}
+
+Model SamsaraSlotOnePickup
+{
+	Path "models/goldfinger/golfclub/pickup"
+	Model 0 "golfclub_hybrid.md3"
+	Model 1 "hybrid.md2"
+	skin 1 "slot1y.png"
+	Scale 0.8 0.8 0.8
+	AngleOffset 180
+
+	FrameIndex GF01 Y 0 0
+	FrameIndex GF01 Y 1 0
+}
+
+model SamsaraSlotOnePickup
+{
+    Path "models"
+    Model 0 "slots/hybrid.md2"
+    Skin 0 "slots/slot1n.png"
+    Scale 0.8 0.8 0.8
+
+	FrameIndex GF01 X 0 0
+}
+
+Model SamsaraSlotOneNoStay
+{
+	Path "models/goldfinger/golfclub/pickup"
+	Model 0 "golfclub.md3"
+    Scale 15.0 15.0 15.0
+
+	FrameIndex GF01 Z 0 0
+}
+
+Model SamsaraSlotOneNoStay
+{
+	Path "models/goldfinger/golfclub/pickup"
+	Model 0 "golfclub_hybrid.md3"
+	Model 1 "hybrid.md2"
+	skin 1 "slot1y.png"
+	Scale 0.8 0.8 0.8
+	AngleOffset 180
+
+	FrameIndex GF01 Y 0 0
+	FrameIndex GF01 Y 1 0
+}
+
+model SamsaraSlotOneNoStay
+{
+    Path "models"
+    Model 0 "slots/hybrid.md2"
+    Skin 0 "slots/slot1n.png"
+    Scale 0.8 0.8 0.8
+
+	FrameIndex GF01 X 0 0
+}
+
+Model SamsaraSlotOneDrop
+{
+	Path "models/goldfinger/golfclub/pickup"
+	Model 0 "golfclub.md3"
+    Scale 15.0 15.0 15.0
+
+	FrameIndex GF01 Z 0 0
+}
+
+Model SamsaraSlotOneDrop
+{
+	Path "models/goldfinger/golfclub/pickup"
+	Model 0 "golfclub_hybrid.md3"
+	Model 1 "hybrid.md2"
+	skin 1 "slot1y.png"
+	Scale 0.8 0.8 0.8
+	AngleOffset 180
+
+	FrameIndex GF01 Y 0 0
+	FrameIndex GF01 Y 1 0
+}
+
+model SamsaraSlotOneDrop
+{
+    Path "models"
+    Model 0 "slots/hybrid.md2"
+    Skin 0 "slots/slot1n.png"
+    Scale 0.8 0.8 0.8
+
+	FrameIndex GF01 X 0 0
 }
 
 model SamsaraSlotTwoPickup
@@ -9239,4 +10197,100 @@ Model SamsaraUniquePickup3
 
 	FrameIndex GF00 Y 0 0
 	FrameIndex GF00 Y 1 0
+}
+
+Model Goldeneye_TankWeapon
+{
+	Path "models/goldfinger/leftarm"
+    Model 1 "leftarm.md3"
+    Scale -1.0 1.0 1.0
+
+	FrameIndex GF14 A 0 0
+	FrameIndex GF14 A 1 0
+	FrameIndex GF14 B 0 0
+	FrameIndex GF14 B 1 1
+	FrameIndex GF14 C 0 0
+	FrameIndex GF14 C 1 2
+	FrameIndex GF14 D 0 0
+	FrameIndex GF14 D 1 3
+	FrameIndex GF14 E 0 0
+	FrameIndex GF14 E 1 4
+	FrameIndex GF14 F 0 0
+	FrameIndex GF14 F 1 5
+	FrameIndex GF14 G 0 0
+	FrameIndex GF14 G 1 6
+	FrameIndex GF14 H 0 0
+	FrameIndex GF14 H 1 7
+	FrameIndex GF14 I 0 0
+	FrameIndex GF14 I 1 8
+	FrameIndex GF14 J 0 0
+	FrameIndex GF14 J 1 9
+	FrameIndex GF14 K 0 0
+	FrameIndex GF14 K 1 10
+	FrameIndex GF14 L 0 0
+	FrameIndex GF14 L 1 11
+	FrameIndex GF14 M 0 0
+	FrameIndex GF14 M 1 12
+	FrameIndex GF14 N 0 0
+	FrameIndex GF14 N 1 13
+	FrameIndex GF14 O 0 0
+	FrameIndex GF14 O 1 14
+	FrameIndex GF14 P 0 0
+	FrameIndex GF14 P 1 15
+	FrameIndex GF14 Q 0 0
+	FrameIndex GF14 Q 1 16
+	FrameIndex GF14 R 0 0
+	FrameIndex GF14 R 1 17
+	FrameIndex GF14 S 0 0
+	FrameIndex GF14 S 1 18
+	FrameIndex GF14 T 0 0
+	FrameIndex GF14 T 1 19
+}
+
+Model Goldfinger_DB5MachineGuns
+{
+	Path "models/goldfinger/leftarm"
+    Model 1 "leftarm.md3"
+    Scale -1.0 1.0 1.0
+
+	FrameIndex GF14 A 0 0
+	FrameIndex GF14 A 1 0
+	FrameIndex GF14 B 0 0
+	FrameIndex GF14 B 1 1
+	FrameIndex GF14 C 0 0
+	FrameIndex GF14 C 1 2
+	FrameIndex GF14 D 0 0
+	FrameIndex GF14 D 1 3
+	FrameIndex GF14 E 0 0
+	FrameIndex GF14 E 1 4
+	FrameIndex GF14 F 0 0
+	FrameIndex GF14 F 1 5
+	FrameIndex GF14 G 0 0
+	FrameIndex GF14 G 1 6
+	FrameIndex GF14 H 0 0
+	FrameIndex GF14 H 1 7
+	FrameIndex GF14 I 0 0
+	FrameIndex GF14 I 1 8
+	FrameIndex GF14 J 0 0
+	FrameIndex GF14 J 1 9
+	FrameIndex GF14 K 0 0
+	FrameIndex GF14 K 1 10
+	FrameIndex GF14 L 0 0
+	FrameIndex GF14 L 1 11
+	FrameIndex GF14 M 0 0
+	FrameIndex GF14 M 1 12
+	FrameIndex GF14 N 0 0
+	FrameIndex GF14 N 1 13
+	FrameIndex GF14 O 0 0
+	FrameIndex GF14 O 1 14
+	FrameIndex GF14 P 0 0
+	FrameIndex GF14 P 1 15
+	FrameIndex GF14 Q 0 0
+	FrameIndex GF14 Q 1 16
+	FrameIndex GF14 R 0 0
+	FrameIndex GF14 R 1 17
+	FrameIndex GF14 S 0 0
+	FrameIndex GF14 S 1 18
+	FrameIndex GF14 T 0 0
+	FrameIndex GF14 T 1 19
 }

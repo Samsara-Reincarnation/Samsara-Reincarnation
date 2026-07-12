@@ -1,0 +1,94 @@
+actor "AlienDualBlaster" : Corridor7WeaponBase
+{
+    Inventory.PickupMessage "You got the Alien Dual-Blaster!"
+    Weapon.SlotNumber 4
+    Weapon.SelectionOrder 1600
+    Weapon.YAdjust 11
+    Weapon.AmmoType1 "Clip"
+    Weapon.AmmoGive1 30
+    Weapon.AmmoUse1 1
+    Obituary "%o was on the wrong side of %k's dual-blaster."
+    Tag "Alien Dual Blaster"
+    States
+    {
+      Spawn:
+        7DU2 A -1
+        stop
+
+      Ready:
+        C7DU A 1 A_WeaponReady
+        loop
+
+      Fire:
+        TNT1 A 0 A_AlertMonsters
+        C7DU AEFG 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto HoldStart
+        TNT1 A 0 A_GunFlash
+        goto HoldStart
+
+      Hold:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_GunFlash
+      HoldStart:
+        TNT1 A 0 A_GiveInventory("SamsaraCorridor7AlienDualBlasterAttackHandler")
+        C7DU C 3 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        goto Hold2Start
+        TNT1 A 0 A_GunFlash
+        goto Hold2Start
+
+      Hold2Start:
+        TNT1 A 0 A_GiveInventory("SamsaraCorridor7AlienDualBlasterAttackHandler")
+        C7DU D 3 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
+        C7DU GFEA 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      AltFire:
+        C7DU A 0
+        goto AltFireMine
+    }
+}
+
+actor SamsaraCorridor7AlienDualBlasterAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("C7/DualBlaster",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(3,3,-1,random(4,16),"BlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodless",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodless",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_FireBullets(3,3,-1,random(4,16),"BlankPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_FireBullets(3,3,-1,random(4,16),"BlankPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,256)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,192)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,128)
+        TNT1 A 0 A_FireBullets(3,3,-1,random(2,8),"BlankPuffBloodlessCoop",FBF_NORANDOM|FBF_NOFLASH,64)
+        stop
+    }
+}

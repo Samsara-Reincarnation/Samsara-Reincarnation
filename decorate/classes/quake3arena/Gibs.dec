@@ -1,0 +1,178 @@
+Actor Q3_BloodGenerator : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_CheckFlag("NOBLOOD","PickupStop")
+			TNT1 A 0 A_SpawnItemEx("Server_FlyingBloodSpawner",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Q3BloodSpray",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),frandom(0.25,0.5)*sin(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(-0.5,0.5)*cos(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
+			stop
+	}
+}
+
+Actor Q3Gib
+{
+	Height 8
+	Radius 4
+	Gravity 0.5
+	Speed 16
+	Projectile
+	-NOGRAVITY
+	+CLIENTSIDEONLY
+	States
+	{
+		Spawn:
+			Q300 A 3 A_SpawnItemEx("Q3BloodSpurt",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION)
+			Q300 A 0 A_SetAngle(angle+frandom(1.0,5.0))
+			Q300 A 0 A_SetPitch(pitch+frandom(1.0,5.0))
+			Loop
+		Death:
+			Q300 A 0 A_JumpIf(abs(z - floorz) <= 4,"HitFloor")
+			Q300 A 0 A_CheckCeiling("HitCeiling")
+			Goto Finish
+		HitFloor:
+			Q300 A 0 ACS_NamedExecuteWithResult("Q3SpawnDecal",4)
+			Goto Finish
+		HitCeiling:
+			Q300 A 0 ACS_NamedExecuteWithResult("Q3SpawnDecal",4,1)
+			Goto Finish
+		Finish:
+			Q300 A 0 A_ChangeFlag("MOVEWITHSECTOR",1)
+			Q300 A 0 A_PlaySound("Quake3/Gib/Impact",CHAN_BODY)
+		Finish2:
+			Q300 A 350
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Finish2")
+			Q300 A 1 A_FadeOut(0.05)
+			wait
+	}
+}
+
+Actor Q3Gib_Abdomen : Q3Gib {}
+Actor Q3Gib_Arm : Q3Gib {}
+Actor Q3Gib_Brain : Q3Gib {}
+Actor Q3Gib_Chest : Q3Gib {}
+Actor Q3Gib_Fist : Q3Gib {}
+Actor Q3Gib_Foot : Q3Gib {}
+Actor Q3Gib_Forearm : Q3Gib {}
+Actor Q3Gib_Intestine : Q3Gib {}
+Actor Q3Gib_Leg : Q3Gib {}
+Actor Q3Gib_Skull : Q3Gib {}
+
+Actor Q3GibGenerator
+{
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraZScript", 0, 2)
+			TNT1 A 0 A_PlaySound("Quake3/Gib/Splatter",CHAN_5)
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Abdomen",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Arm",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Brain",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Chest",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Fist",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Foot",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Forearm",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Intestine",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Leg",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Skull",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			Stop
+	}
+}
+
+Actor Q3GibGeneratorMassacre : Q3GibGenerator
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraZScript", 0, 2)
+			TNT1 A 0 A_PlaySound("Quake3/Gib/Splatter",CHAN_5)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Abdomen",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Arm",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Brain",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Chest",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Fist",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Foot",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Forearm",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Intestine",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 AA 0 A_SpawnItemEx("Q3Gib_Leg",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			TNT1 A 0 A_SpawnItemEx("Q3Gib_Skull",0,0,frandom(0.0,32.0),frandom(2.0,12.0),0,frandom(2.0,8.0),random(0,359),SXF_TRANSFERTRANSLATION)
+			Stop
+	}
+}
+
+Actor Q3BloodSpurt
+{
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+CLIENTSIDEONLY
+	Renderstyle Translucent
+	Height 4
+	Radius 2
+	Scale 0.25
+	Alpha 0.5
+	States
+	{
+		Spawn:
+			Q309 A 0 NoDelay ACS_NamedExecuteWithResult("Q3EffectLifeCycle",0,50,-16,35)
+			Q309 A 100
+			Stop
+	}
+}
+
+Actor Q3BloodSpray
+{
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	Height 4
+	Radius 2
+	Scale 0.25
+	States
+	{
+		Spawn:
+			Q301 ABCDE 2
+			Stop
+	}
+}
+
+Actor Q3BloodDecalFloor
+{
+	Height 2
+	Radius 4
+	Scale 32.0
+	Renderstyle Translucent
+	+NOINTERACTION
+	+MOVEWITHSECTOR
+	+CLIENTSIDEONLY
+	States
+	{
+		Spawn:
+			Q300 A 0
+			Q300 A 350
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Spawn")
+			goto Fadeout
+		Fadeout:
+			Q300 A 1 A_FadeOut(0.05)
+			wait
+		Remove:
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor Q3BloodDecalCeiling : Q3BloodDecalFloor
+{
+	States
+	{
+		Spawn:
+			Q300 A 0 NoDelay A_JumpIf(CallACS("IsThisSky")==1,"Remove")
+			Goto Spawn2
+		Spawn2:
+			Q300 A 350
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Spawn2")
+			goto Fadeout
+	}
+}

@@ -1,0 +1,202 @@
+actor "Concussion Rifle" : SamsaraDarkForcesWeapon
+{
+    Inventory.PickupMessage "Concussion Rifle"
+    Weapon.UpSound "katarn/wepslct"
+    Weapon.SlotNumber 6
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 500
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 60
+    Weapon.AmmoUse 10
+    Obituary "%k ripped apart %o with the concussion rifle."
+    Tag "Stouker Concussion Rifle"
+    +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
+    +EXPLOSIVE
+    +NOAUTOFIRE
+    States
+    {
+      Spawn:
+        ICON A -1
+        stop
+
+      Ready:
+        KCON A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_Lower
+        KCON A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        KCON A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireFast")
+        TNT1 A 0 A_JumpIfInventory("KatarnFireRateUp",1,"FireFast")
+      FireNormal:
+        TNT1 A 0 A_GunFlash
+        KCON B 10 Bright A_GiveInventory("SamsaraDarkForcesConcussionRifleAttackHandler")
+        KCON C 1 Bright
+        KCON C 3
+        KCON A 14
+        KCON A 2 A_ReFire
+        goto Ready
+
+      FireFast:
+        TNT1 A 0 A_GunFlash
+        KCON B 5 Bright A_GiveInventory("SamsaraDarkForcesConcussionRifleAttackHandler")
+        KCON C 1 Bright
+        KCON C 2
+        KCON A 7
+        KCON A 1 A_ReFire
+        goto Ready
+
+      Flash:
+        TNT1 A 1 A_Light2
+        TNT1 A 1 A_Light1
+        goto LightDone
+    }
+}
+
+actor SamsaraDarkForcesConcussionRifleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",10,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",10)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("katarn/conshot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("concussion_projectile",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("concussion_projectile2",0,false)
+        stop
+    }
+}
+
+actor concussion_projectile : FastProjectile
+{
+    Projectile
+    Radius 3
+    Height 3
+    Speed 200
+    Damage (30)
+    DamageType "Laser"
+    Obituary "%k ripped apart %o with the concussion rifle."
+    +DONTBLAST
+    +DONTREFLECT
+    +DONTSPLASH
+    +FLOORHUGGER
+    +FORCERADIUSDMG
+    +OLDRADIUSDMG
+    States
+    {
+      Spawn:
+        TNT1 A -1
+        stop
+
+      Death:
+        TNT1 A 0 A_PlaySound("katarn/exmiss",CHAN_VOICE)
+        TNT1 A 0 A_RadiusGive("concussion_bfgsplash_giver",160,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET)
+        TNT1 A 0 A_Explode(30,160,XF_HURTSOURCE,0,160)
+        TNT1 A 0 A_Explode(30,160,0,0,160)
+      DeathFinish:
+        EXCN A 1
+        EXCN BC 1 Bright
+        EXCN DEFGH 2 Bright
+        stop
+    }
+}
+
+actor concussion_projectile2
+{
+    Projectile
+    Radius 3
+    Height 3
+    Speed 60
+    Damage (30)
+    DamageType "Laser"
+    Obituary "%k ripped apart %o with the concussion rifle."
+    Species "Player"
+    +DONTBLAST
+    +DONTREFLECT
+    +DONTSPLASH
+    +FLOORHUGGER
+    +FORCERADIUSDMG
+    +OLDRADIUSDMG
+    +THRUSPECIES
+    States
+    {
+      Spawn:
+        TNT1 A -1
+        stop
+
+      Death:
+        TNT1 A 0 A_PlaySound("katarn/exmiss",CHAN_VOICE)
+        TNT1 A 0 A_RadiusGive("concussion_bfgsplash2_giver",196,RGF_MONSTERS)
+        TNT1 A 0 A_Explode(30,196,XF_HURTSOURCE,0,196)
+        TNT1 A 0 A_Explode(60,196,0,0,196)
+      DeathFinish:
+        EXCN A 1
+        EXCN BC 1 Bright
+        EXCN DEFGH 2 Bright
+        stop
+    }
+}
+
+actor concussion_bfgsplash_giver : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("concussion_bfgsplash",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        stop
+    }
+}
+
+actor concussion_bfgsplash2_giver : concussion_bfgsplash_giver
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SpawnItemEx("concussion_bfgsplash2",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+        stop
+    }
+}
+
+actor concussion_bfgsplash
+{
+    DamageType "Laser"
+    +FORCERADIUSDMG
+    +NOBLOCKMAP
+    +NOGRAVITY
+    +NOTIMEFREEZE
+    +OLDRADIUSDMG
+    States
+    {
+      Spawn:
+        EXCN A 0
+        TNT1 A 0 A_Explode(30,32,0)
+        EXCN A 1 A_ChangeFlag("NOTIMEFREEZE",false)
+        EXCN BC 1 Bright
+        EXCN DEFGH 2 Bright
+        stop
+    }
+}
+
+actor concussion_bfgsplash2 : concussion_bfgsplash { +MTHRUSPECIES }

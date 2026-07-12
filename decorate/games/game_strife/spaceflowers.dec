@@ -1,0 +1,651 @@
+// Admit it, they /are/ space flowers.
+
+actor AlienSpectre1B : SamsaraMonsterReincAlienSpectre replaces AlienSpectre1
+{
+	Game Strife
+	ConversationID 67,-1,-1
+	Health 1000
+	Painchance 250
+	Speed 12
+	Radius 64
+	Height 64
+	FloatSpeed 5
+	Mass 1000
+	MinMissileChance 150
+	RenderStyle Translucent
+	Alpha 0.666
+	SeeSound "alienspectre/sight"
+	AttackSound "alienspectre/blade"
+	PainSound "alienspectre/pain"
+	DeathSound "alienspectre/death"
+	ActiveSound "alienspectre/active"
+	Obituary "$OB_ALIENSPECTRE"
+	+NOGRAVITY
+	+FLOAT
+	+SHADOW
+	+NOTDMATCH
+	+DONTMORPH
+	+NOBLOCKMONST
+	+INCOMBAT
+	+LOOKALLAROUND
+	+NOICEDEATH
+	+BOSSDEATH
+	+BOSS
+	+NOBLOOD
+	+SPECIAL
+	+SPECTRAL
+	DamageFactor "StrifeSigil", 1
+	DamageFactor "Spectral", 1
+	DamageFactor "SpectralLow", 1
+	DamageFactor "DukeSpectral", 1
+	DamageFactor "ZorchSpectral", 1
+	DamageFactor "SpectralNoQuad", 1
+	DropItem "None"
+	Tag "Spectre"
+	Args 1
+	States
+	{
+	Spawn:
+		ALN1 A 10 A_Look
+		ALN1 B 10 A_SentinelBob
+		Loop
+	See:
+		TNT1 A 0 A_GiveInventory("SamsaraBossSightTaunt")
+	See2:
+		ALN1 AB 4 bright A_Chase
+		ALN1 C 4 bright A_SentinelBob
+		ALN1 DEF 4 bright A_FastChase
+		ALN1 G 4 bright A_SentinelBob
+		ALN1 HIJ 4 bright A_Chase
+		ALN1 K 4 bright A_SentinelBob
+		Loop
+	Melee:
+		ALN1 J 4 Bright A_FaceTarget
+		ALN1 I 4 Bright A_CustomMeleeAttack((random[SpectreMelee](0,255)&9)*5)
+		ALN1 H 4 Bright
+		Goto See2
+	Missile:
+		ALN1 J 4 Bright A_FaceTarget
+		ALN1 I 4 Bright A_SpotLightning
+		ALN1 H 4 Bright
+		Goto See2+10
+	Pain:
+		ALN1 J 2 A_Pain
+		Goto See2+6
+	Death:
+	Disintegrate:
+	Death.StrifeMauler:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		AL1P A 6 bright A_SpectreChunkSmall
+		AL1P B 6 bright A_Scream
+		AL1P C 6 bright A_SpectreChunkSmall
+		AL1P DE 6 bright
+		AL1P F 6 bright A_SpectreChunkSmall
+		AL1P G 6 bright
+		AL1P H 6 bright A_SpectreChunkSmall
+		AL1P IJK 6 bright
+		AL1P LM 5 bright
+		AL1P N 5 bright A_SpectreChunkLarge
+		AL1P OPQ 5 bright
+		AL1P R 5 bright ACS_NamedExecuteAlways("SamsaraSpectres", 0, args[0])
+		Stop
+	Vanish:
+		TNT1 AAAAA 0 A_SpectreChunkSmall
+		TNT1 A 0 A_UnsetShootable
+		ALN1 J 1 A_SetTranslucent(0.5,1)
+		ALN1 J 1 A_SetTranslucent(0.4,1)
+		ALN1 J 1 A_SetTranslucent(0.3,1)
+		ALN1 J 1 A_SetTranslucent(0.2,1)
+		ALN1 J 1 A_SetTranslucent(0.1,1)
+		TNT1 A 1
+	Wandering:
+		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 A 1 A_Pain
+		TNT1 A 0 A_Jump(64,"SpawnFake")
+		TNT1 A 0 A_Jump(128,"Wandering")
+		ALN1 J 1 A_Explode(64,64)
+		ALN1 J 1 A_SetTranslucent(0.1,1)
+		ALN1 J 1 A_SetTranslucent(0.2,1)
+		ALN1 J 1 A_SetTranslucent(0.3,1)
+		ALN1 J 1 A_SetTranslucent(0.4,1)
+		ALN1 J 1 A_SetTranslucent(0.5,1)
+		ALN1 J 1 A_SetTranslucent(0.666,1)
+		ALN1 A 1 A_SetShootable
+		Goto See2
+	SpawnFake:
+		TNT1 A 1 A_SpawnItemEx("AlienSpectreFake",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+		Goto Wandering
+	}
+}
+
+actor AlienSpectreFake : SamsaraMonsterReincAlienSpectreFake
+{
+	Game Strife
+	ConversationID 67
+	Health 300
+	Painchance 150
+	Speed 12
+	Radius 64
+	Height 64
+	FloatSpeed 5
+	Mass 1000
+	MinMissileChance 150
+	Renderstyle Add
+	Alpha 0.666
+	Scale 0.45
+	SeeSound "alienspectre/sight"
+	AttackSound "alienspectre/blade"
+	PainSound "alienspectre/pain"
+	DeathSound "alienspectre/death"
+	ActiveSound "alienspectre/active"
+	Obituary "$OB_ALIENSPECTRE"
+	+NOGRAVITY
+	+FLOAT
+	-SHADOW
+	+NOTDMATCH
+	+DONTMORPH
+	+NOBLOCKMONST
+	+INCOMBAT
+	+LOOKALLAROUND
+	+NOICEDEATH
+	+SPECIAL
+	+SPECTRAL
+	+NOBLOOD
+	-BOSSDEATH
+	-BOSS
+	-DONTRIP
+	DamageFactor "StrifeSigil", 1
+	DamageFactor "Spectral", 1
+	DamageFactor "SpectralLow", 1
+	DamageFactor "DukeSpectral", 1
+	DamageFactor "ZorchSpectral", 1
+	DamageFactor "SpectralNoQuad", 1
+	DropItem "None"
+	Tag "Spectre"
+	Args 1
+	Translation "32:63=1:31", "64:79=1:31", "160:191=1:31", "192:223=1:31", "80:95=1:31", "128:143=1:31"
+	States
+	{
+	Spawn:
+		ALN1 A 10 A_Look
+		ALN1 B 10 A_SentinelBob
+		Loop
+	See:
+		ALN1 AB 4 bright A_Chase
+		ALN1 C 4 bright A_SentinelBob
+		ALN1 DEF 4 bright A_FastChase
+		ALN1 G 4 bright A_SentinelBob
+		ALN1 HIJ 4 bright A_Chase
+		ALN1 K 4 bright A_SentinelBob
+		Loop
+	Melee:
+	Missile:
+		ALN1 J 3 bright A_FaceTarget
+		ALN1 I 3 bright A_SkullAttack
+		ALN1 HK 3 bright
+		Goto Missile+2
+	Pain:
+		ALN1 J 2 A_Pain
+		Goto See
+	Death:
+	Disintegrate:
+	Death.StrifeMauler:
+		AL1P A 6 bright ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		AL1P B 6 bright A_Scream
+		ALN1 J 4 A_SetTranslucent(0.6,0)
+		SPID I 0 A_Scream
+		ALN1 J 4 A_SetTranslucent(0.5,0)
+		SPID I 0 A_NoBlocking
+		ALN1 J 4 A_SetTranslucent(0.45,0)
+		ALN1 J 4 A_SetTranslucent(0.4,0)
+		ALN1 J 4 A_SetTranslucent(0.3,0)
+		ALN1 J 4 A_SetTranslucent(0.25,0)
+		ALN1 J 4 A_SetTranslucent(0.2,0)
+		ALN1 J 4 A_SetTranslucent(0.1,0)
+		ALN1 J 4 A_SetTranslucent(0.05,0)
+		TNT1 A 1 A_SetTranslucent(1,0)
+		Stop
+	}
+}
+
+actor AlienSpectreFake2 : AlienSpectreFake
+{
+	Health 125
+}
+
+actor AlienSpectre2B : AlienSpectre1B replaces AlienSpectre2
+{
+	ConversationID 70
+	DropItem "None"
+	Args 2
+	DamageFactor "StrifeSigil", 1
+	DamageFactor "Spectral", 1
+	DamageFactor "SpectralLow", 1
+	DamageFactor "DukeSpectral", 1
+	DamageFactor "ZorchSpectral", 1
+	DamageFactor "SpectralNoQuad", 1
+	States
+	{
+	Missile:
+		ALN1 F 3 A_FaceTarget
+		ALN1 I 3 A_CustomMissile("SpectralLightningH3", 32, 0)
+		ALN1 E 3
+		Goto See2+10
+	}
+}
+
+actor AlienSpectre3B : AlienSpectre1B replaces AlienSpectre3
+{
+	ConversationID 71
+	+SPAWNCEILING
+	Speed 8 // Original has Speed 12, but all animation frames increased to duration 5.
+	DropItem "None"
+	Args 3
+	DamageFactor "StrifeSigil", 1
+	DamageFactor "Spectral", 1
+	DamageFactor "SpectralLow", 1
+	DamageFactor "DukeSpectral", 1
+	DamageFactor "ZorchSpectral", 1
+	DamageFactor "SpectralNoQuad", 1
+	States
+	{
+	Spawn:
+		TNT1 A 5 ACS_NamedExecuteWithResult("SamsaraSpectres", -2)
+		Loop
+
+	Missile:
+		ALN1 F 3 A_FaceTarget
+		ALN1 I 3 A_Spectre3Attack
+		ALN1 E 3
+		Goto See2+10
+	}
+}
+
+actor AlienSpectre4B : AlienSpectre1B replaces AlienSpectre4
+{
+	ConversationID 72
+	DropItem "None"
+	Args 4
+	DamageFactor "StrifeSigil", 1
+	DamageFactor "Spectral", 1
+	DamageFactor "SpectralLow", 1
+	DamageFactor "DukeSpectral", 1
+	DamageFactor "ZorchSpectral", 1
+	DamageFactor "SpectralNoQuad", 1
+	States
+	{
+	Missile:
+		ALN1 F 3 A_FaceTarget
+		ALN1 I 3 A_CustomMissile("SpectralLightningBigV2", 32, 0)
+		ALN1 E 3
+		Goto See2+10
+	}
+}
+
+actor AlienSpectre5B : AlienSpectre1B replaces AlienSpectre5
+{
+	Game Strife
+	ConversationID 73
+	DropItem "None"
+	Args 5
+	DamageFactor "StrifeSigil", 1
+	DamageFactor "Spectral", 1
+	DamageFactor "SpectralLow", 1
+	DamageFactor "DukeSpectral", 1
+	DamageFactor "ZorchSpectral", 1
+	DamageFactor "SpectralNoQuad", 1
+	States
+	{
+	Missile:
+		ALN1 F 3 A_FaceTarget
+		ALN1 I 3 A_CustomMissile("SpectralLightningBigBall2", 32, 0)
+		ALN1 E 3
+		Goto See2+10
+	}
+}
+
+// The Entity. Right. This is gonna be interesting.
+actor EntityBoss2 : SamsaraMonsterReincEntityBoss replaces EntityBoss
+{
+	Game Strife
+	ConversationID 74,-1,-1
+	Health 7500
+	Painchance 50
+	Speed 13
+	Radius 130
+	Height 200
+	FloatSpeed 5
+	Mass 1000
+	Monster
+	MinMissileChance 150
+	RenderStyle Translucent
+	Alpha 0.5
+	SeeSound "entity/sight"
+	AttackSound "entity/melee"
+	PainSound "entity/pain"
+	DeathSound "entity/death"
+	ActiveSound "entity/active"
+	Obituary "$OB_ENTITY"
+	Tag "Entity"
+	+DONTMORPH
+	+FLOAT
+	+INCOMBAT
+	+INVULNERABLE
+	+LOOKALLAROUND
+	+NOBLOCKMONST
+	+NOBLOOD
+	+NODAMAGE
+	+NOGRAVITY
+	+NOICEDEATH
+	+NOPAIN
+	+NOTARGET
+	+NOTDMATCH
+    +NOTIMEFREEZE
+	+SHADOW
+	-SOLID
+	+SPECIAL
+	+SPECTRAL
+	States
+	{
+      Spawn:
+        MNAM A 0
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBossMonologue", 4)
+        goto Spawn2
+
+      SpawnMonologue:
+        MNAM A 80 A_SetTranslucent(0)
+        TNT1 A 0 A_SetTranslucent(0.05)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.1)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.15)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.2)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.25)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.3)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.35)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.4)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.45)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        MNAM AAAAAAAAAAAAAA 1 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,random(1,4),0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetTranslucent(0.5)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraSetRenderStyle", 64) // STYLE_Translucent
+        TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,4,0,SXF_CLIENTSIDE)
+        TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,4,0,SXF_CLIENTSIDE)
+        TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,4,0,SXF_CLIENTSIDE)
+        TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,4,0,SXF_CLIENTSIDE)
+        TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("StarSparkle",random(-32,32),random(-32,32),random(0,8),0,0,4,0,SXF_CLIENTSIDE)
+        MNAM A 140 // for extra dialogue
+        MNAM A 100
+        goto Spawn2
+
+      Spawn2: // special "intro" state
+        MNAM A 100 A_GiveInventory("SamsaraBossMonologueFlagsDisabler")
+        MNAM B 60 Bright
+        MNAM CDEFGHIJKL 4 Bright
+      Spawn2Loop:
+        MNAL A 4 Bright A_Look
+        MNAL B 4 Bright A_SentinelBob
+        loop
+
+      Idle:
+        TNT1 A 0 A_GiveInventory("SamsaraBossMonologueFlagsDisabler")
+        goto Spawn2Loop
+
+	See:
+		TNT1 A 0 A_GiveInventory("SamsaraBossMonologueFlagsDisabler")
+		TNT1 A 0 A_GiveInventory("SamsaraBossSightTaunt")
+	See2:
+		MNAL AB 4 bright A_FastChase
+		MNAL C 4 bright A_SentinelBob
+		MNAL DEF 4 bright A_FastChase
+		MNAL G 4 bright A_SentinelBob
+		MNAL HIJ 4 bright A_FastChase
+		MNAL K 4 bright A_SentinelBob
+		Loop
+	Melee:
+		MNAL J 3 bright A_FaceTarget
+		MNAL I 3 bright A_CustomMeleeAttack((random[SpectreMelee](0, 255)&9)*5)
+		MNAL C 3 bright
+		Goto See2+2
+	Missile:
+		MNAL F 3 bright A_FaceTarget
+		MNAL I 3 bright A_EntityAttack
+		MNAL E 3 bright A_FastChase
+		TNT1 A 0 A_ChangeFlag("REFLECTIVE",0)
+		MNAL A 0 A_SentinelRefire
+		Goto See2+10
+	Pain:
+		TNT1 A 0 A_SpectreChunkSmall
+		MNAL J 1 A_Pain
+		MNAL J 1 A_Explode(64,64)
+		TNT1 A 0 A_ChangeFlag("REFLECTIVE",1)
+		TNT1 A 0 A_Jump(128,"Vanish")
+		Goto See2+6
+	Death:
+	Disintegrate:
+	Death.StrifeMauler:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		MNAL L 7 bright A_SpectreChunkSmall
+		MNAL M 7 bright A_Scream
+		MNAL NO 7 bright A_SpectreChunkSmall
+		MNAL P 7 bright A_SpectreChunkLarge
+		MNAL Q 64 bright A_SpectreChunkSmall
+		MNAL Q 6 bright A_EntityDeath
+		Stop
+	Vanish:
+		TNT1 AAAAA 0 A_SpectreChunkSmall
+		TNT1 A 0 A_UnsetShootable
+		//MNAL J 1 A_SetTranslucent(0.5,1)
+		MNAL J 1 A_SetTranslucent(0.4,1)
+		MNAL J 1 A_SetTranslucent(0.3,1)
+		MNAL J 1 A_SetTranslucent(0.2,1)
+		MNAL J 1 A_SetTranslucent(0.1,1)
+		TNT1 A 1
+	Wandering:
+		TNT1 AAAAAAAAAA 1 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 A 0 A_Jump(128,"SpawnFake")
+		TNT1 A 0 A_Jump(128,"Wandering")
+		ALN1 J 1 A_Explode(64,64)
+		ALN1 J 1 A_SetTranslucent(0.1,1)
+		ALN1 J 1 A_SetTranslucent(0.2,1)
+		ALN1 J 1 A_SetTranslucent(0.3,1)
+		ALN1 J 1 A_SetTranslucent(0.4,1)
+		ALN1 J 1 A_SetTranslucent(0.5,1)
+		//ALN1 J 1 A_SetTranslucent(0.666,1)
+		ALN1 A 1 A_SetShootable
+		Goto See2
+	SpawnFake:
+		TNT1 A 1 A_SpawnItemEx("AlienSpectreFake2",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+		Goto Wandering
+	}
+}
+
+actor EntitySecond2 : SamsaraMonsterReincSubEntity replaces EntitySecond
+{
+	ConversationID 75,-1,-1
+	Health 990
+	Painchance 255
+	Speed 14
+	Radius 130
+	Height 200
+	FloatSpeed 5
+	Mass 1000
+	Monster
+	+SPECIAL
+	+NOGRAVITY
+	+FLOAT
+	+SHADOW
+	+NOTDMATCH
+	+DONTMORPH
+	+NOBLOCKMONST
+	+INCOMBAT
+	+LOOKALLAROUND
+	+SPECTRAL
+	+NOICEDEATH
+	+NOBLOOD
+	MinMissileChance 150
+	RenderStyle Translucent
+	Alpha 0.25
+	SeeSound "alienspectre/sight"
+	AttackSound "alienspectre/blade"
+	PainSound "alienspectre/pain"
+	DeathSound "alienspectre/death"
+	ActiveSound "alienspectre/active"
+	Obituary "$OB_ENTITY"
+	Tag "Sub-Entity"
+	States
+	{
+	Spawn:
+		MNAL R 10 Bright A_Look
+		Loop
+	See:
+		MNAL R 5 Bright A_SentinelBob
+		MNAL ST 5 Bright A_Chase
+		MNAL U 5 Bright A_SentinelBob
+		MNAL V 5 Bright A_Chase
+		MNAL W 5 Bright A_SentinelBob
+		Loop
+	Melee:
+		MNAL S 4 Bright A_FaceTarget
+		MNAL R 4 Bright A_CustomMeleeAttack((random[SpectreMelee](0,255)&9)*5)
+		MNAL T 4 Bright A_SentinelBob
+		Goto See+1
+	Missile:
+		MNAL W 4 Bright A_FaceTarget
+		MNAL U 4 Bright A_CustomMissile("SpectralLightningH3",32,0)
+		MNAL V 4 Bright A_SentinelBob
+		Goto See+4
+	Pain:
+		MNAL R 2 Bright A_Pain
+		Goto See
+	Death:
+	Disintegrate:
+	Death.StrifeMauler:
+		TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+		MDTH A 3 Bright A_Scream
+		MDTH B 3 Bright A_TossGib
+		MDTH C 3 Bright A_NoBlocking
+		MDTH DEFGHIJKLMN 3 Bright A_TossGib
+		MDTH O 3 Bright A_SubEntityDeath
+		Stop
+	}
+}
+
+actor SamsaraOracle: Oracle replaces Oracle
+{
+	ConversationID 65
+	Tag "Oracle"
+	+NOICEDEATH
+	States
+	{
+	Spawn:
+		ORCL A 1 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraSpectres", -3) == 1, "Death")
+		Loop
+	Death:
+		ORCL BCDEFGHIJK 5
+		ORCL L 5 A_NoBlocking
+		ORCL M 5
+		ORCL N 5 ACS_NamedExecuteWithResult("SamsaraSpectres", -1)
+		ORCL OP 5
+		ORCL Q -1
+		Stop
+	}
+}

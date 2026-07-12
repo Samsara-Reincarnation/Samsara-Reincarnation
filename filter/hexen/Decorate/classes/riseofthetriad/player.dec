@@ -53,6 +53,7 @@ Actor IPFreeley : SamsaraPlayerPawnNormalRedBlood
     DamageFactor "MarathonPlasmaFire", 0.999
     DamageFactor "Slime", 0.964
     DamageFactor "Disintegrate", 0.9
+    DamageFactor "StrifeMauler", 0.9
     DamageFactor "Poison", 0.921
     DamageFactor "WolfenFlamethrower", 0.9
     DamageFactor "DukeDamage", 0.9
@@ -221,6 +222,7 @@ Actor IPFreeley : SamsaraPlayerPawnNormalRedBlood
 			goto Spawn
 		Death:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
 			TNT1 A 0 A_JumpIfInventory("RottMode", 4, "DeathDoug")
 			TNT1 A 0 A_JumpIfInventory("RottMode", 3, "DeathLorelei")
 			TNT1 A 0 A_JumpIfInventory("RottMode", 2, "DeathThi")
@@ -309,6 +311,7 @@ Actor IPFreeley : SamsaraPlayerPawnNormalRedBlood
 			Goto See
 		XDeath:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreXDeathEffect")
+		XDeath.Massacre:
 			TNT1 A 0 A_SpawnItemEx("RottGibbedMan",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Jump(128,2)
 			TNT1 A 0 A_GiveToTarget("LudicrousGibsItem", 1)
@@ -529,6 +532,7 @@ Actor IPFreeley_Shrink : IPFreeley
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -537,12 +541,18 @@ Actor IPFreeley_Shrink : IPFreeley
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -557,6 +567,7 @@ Actor IPFreeley_Shrink : IPFreeley
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -644,6 +655,8 @@ Actor IPFreeley_Shrink : IPFreeley
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

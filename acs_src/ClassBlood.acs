@@ -122,7 +122,11 @@ Script "CalebRetrieveLifeLeech" (int infinite)
 
 	if (CheckInventory("CalebClass") && isAlive)
 	{
-		GiveInventory("LifeLeech", 1);
+        str storedammoname = "Cell";
+        int storedammo = CheckInventory(storedammoname);
+
+        SetInventory("LifeLeech", 1);
+        SetInventory(storedammoname, storedammo);
         if (!infinite) { GiveInventory("Ammo4IgnoreSkill", 30); }
 		SetActorState(lifeLeechTid,"Death",1);
 		GiveInventory("GotWeapon7",1);
@@ -352,7 +356,7 @@ script "CalebBeastVisionDrain" (void)
 		}
 	}
 
-	if (!CheckInventory("CalebVisionFuel") && !CheckInventory("SamsaraHasInfiniteInventory")) { SetInventory("BeastVision", 0); }
+	if (!CheckInventory("CalebVisionFuel") && !CheckInventory("SamsaraHasInfiniteInventory")) { SetInventory("SamsaraBeastVision", 0); }
 }
 
 script "CalebTetheredEffect" (int type) clientside

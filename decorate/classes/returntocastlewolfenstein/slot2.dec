@@ -1,0 +1,291 @@
+actor RTCW_MP40Spread : Counter { Inventory.MaxAmount 4 }
+
+Actor RTCW_MP40 : RTCW_Weapon
+{
+	Weapon.SlotNumber 2
+	Weapon.SlotPriority 0
+	Weapon.SelectionOrder 1100
+	Weapon.AmmoType1 "RTCW_MP40Magazine"
+	Weapon.AmmoUse1 1
+	Weapon.AmmoType2 "Clip"
+	Weapon.AmmoGive2 16
+	Obituary "%o was killed (mp40) by %k."
+	Inventory.PickupMessage "MP40"
+    Inventory.Icon "CWCMPW04"
+	Tag "MP-40"
+	States
+	{
+		Spawn:
+			RW98 A -1
+			stop
+
+		ReadyActual:
+			RW00 A 0 A_TakeInventory("RTCW_MP40Spread")
+			RW00 A 0 A_JumpIfInventory("RTCW_Kicking",1,"Kicking")
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+		ReadyActualNonReloadable:
+			RW00 A 1 A_WeaponReady
+			goto ReadyActualAmmoCheck
+
+		ReadyActualReloadable:
+			RW00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			goto ReadyActualAmmoCheck
+
+		ReadyActualAmmoCheck:
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+			goto ReadyActual
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+			RW00 A 0 A_JumpIfInventory("RTCW_MP40Magazine",1,"ReadyActual")
+			goto ReloadCheck
+
+		Deselect:
+			RW00 G 0 A_TakeInventory("RTCW_MP40Spread")
+			RW00 G 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			RW00 G 2 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			RW00 HIJK 2
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			RW00 A 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW00 A 0 A_GiveInventory("RTCW_WeaponToken",8)
+			RW00 L 2 A_TakeInventory("RTCW_MP40Spread")
+			RW00 MNO 2
+			goto ReadyActual
+
+		Fire:
+			RW00 B 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+		FireNonReloadable:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+			RW00 B 0 A_JumpIfInventory("Clip",1,"FireStart")
+			goto FireDry
+
+		FireReloadable:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+			RW00 B 0 A_JumpIfInventory("RTCW_MP40Magazine",1,"FireStart")
+		FireReloadableDryCheck:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			RW00 B 0 A_JumpIfInventory("Clip",1,"ReloadStart")
+			goto FireDry
+
+		FireDry:
+			RW00 A 0 A_ClearReFire
+			RW00 A 0 A_GiveInventory("SamsaraRTCWWeaponDrySoundPlayer")
+			RW00 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_SelectWeapon("RTCW_Luger")
+			goto Deselect
+
+		FireUnderwater:
+			RW00 A 0 A_ClearReFire
+			RW00 A 0 A_GiveInventory("SamsaraRTCWWeaponUnderwaterSoundPlayer")
+			RW00 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		FireStart:
+			RW00 B 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
+			RW00 B 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireUnderwater")
+			RW00 B 0 A_GiveInventory("RTCW_FiringToken",1)
+			RW00 B 0 A_GiveInventory("RTCW_BlazkoWeaponAlert",1)
+			RW00 B 0 A_GunFlash("FireFlash")
+			RW00 B 0 A_GiveInventory("SamsaraRTCWMP40AttackHandler")
+			RW00 B 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 C 0 A_Jump(219,2)
+			RW00 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto FireFinish
+			RW00 C 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto FireFinish
+
+		FireFinish:
+			RW00 D 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 B 0 A_ReFire
+			goto ReadyActual
+
+		FireFlash:
+			TNT1 A 0 A_Jump(256,1,2)
+			RW03 B 2 Bright
+			stop
+			RW04 B 2 Bright
+			stop
+
+		Reload:
+		ReloadCheck:
+			RW00 A 0 A_JumpIfInventory("RTCW_MP40Magazine",0,"ReadyActual")
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			RW00 A 0 A_JumpIfInventory("Clip",1,"ReloadStart")
+			goto ReadyActual
+
+		ReloadStart:
+			RW00 Q 0 A_GiveInventory("SamsaraRTCWMP40ReloadSoundPlayer1")
+			//RW00 Q 0 A_JumpIfInventory("RTCW_MP40Magazine",1,1)
+			goto ReloadStartAmmoless
+			RW00 "QRSTUVWXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 ABCDEFGHIJKLMNOPQRSTU 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW02 EFG 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+			goto ReloadFinish
+
+		ReloadStartAmmoless:
+			RW00 "QRSTUVWXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 ABCDEFGHIJKLMNOPQR 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 STU 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 V 0 A_GiveInventory("SamsaraRTCWMP40ReloadSoundPlayer2")
+			RW01 "VWXYZ[\]" 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW02 ABCDEFG 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+			goto ReloadFinish
+
+		ReloadFinish:
+			RW00 A 0
+			goto ReadyActual
+
+		ReloadAmmo:
+			RW00 A 0 A_JumpIfInventory("RTCW_MP40Magazine",0,"ReloadFinish")
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW00 A 0 A_JumpIfInventory("Clip",1,1)
+			goto ReloadFinish
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW00 A 0 A_TakeInventory("Clip",1)
+			RW00 A 0 A_GiveInventory("RTCW_MP40Magazine")
+			loop
+
+		Kicking:
+			RW00 A 0 A_GunFlash("KickingFoot")
+		KickingDelay:
+			RW00 A 18 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_TakeInventory("RTCW_Kicking",1)
+			goto ReadyActual
+	}
+}
+
+actor SamsaraRTCWMP40AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RTCW_MP40Magazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RTCW_MP40Magazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackRTCWConsole")
+      // Original sounds
+      PickupAttackRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/MP40/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWPCCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWPCCoop")
+      PickupAttackRTCWPCDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracer",CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0),false,4,9,0,CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0))
+        goto PickupFinish
+
+      PickupAttackRTCWPCCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoop",CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0),false,4,9,0,CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0))
+        goto PickupFinish
+
+      // Console sounds
+      PickupAttackRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCWConsole/MP40/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWConsoleCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWConsoleCoop")
+      PickupAttackRTCWConsoleDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerSoundConsole",CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0),false,4,9,0,CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0))
+        goto PickupFinish
+
+      PickupAttackRTCWConsoleCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoopSoundConsole",CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0),false,4,9,0,CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0))
+        goto PickupFinish
+
+      // Enemy Territory sounds
+      PickupAttackET:
+        TNT1 A 0 A_PlaySound("RTCWET/MP40/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackETCoop")
+      PickupAttackETDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerSoundET",CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0),false,4,9,0,CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0))
+        goto PickupFinish
+
+      PickupAttackETCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoopSoundET",CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0),false,4,9,0,CallACS("RTCW_Decorate", 1)*frandom(-1.0,1.0))
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_GiveInventory("RTCW_MP40Spread")
+        stop
+    }
+}
+
+actor SamsaraRTCWMP40ReloadSoundPlayer1 : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRTCWConsole")
+      // Original sounds
+      PickupRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/MP40/Reload",CHAN_6)
+        stop
+
+      // Console sounds
+      PickupRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCWConsole/MP40/Reload",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/MP40/Reload",CHAN_6)
+        stop
+    }
+}
+
+actor SamsaraRTCWMP40ReloadSoundPlayer2 : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRTCWConsole")
+      // Original sounds
+      PickupRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/MP40/Reload2",CHAN_6)
+        stop
+
+      // Console sounds
+      PickupRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCWConsole/MP40/Reload2",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/MP40/Reload2",CHAN_6)
+        stop
+    }
+}
+
+actor RTCW_MP40Magazine : Ammo
+{
+	Inventory.MaxAmount 32
+	Tag "MP-40 Magazine"
+	+IGNORESKILL
+}

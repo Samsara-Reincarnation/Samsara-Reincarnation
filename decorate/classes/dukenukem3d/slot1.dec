@@ -1,0 +1,1850 @@
+actor DukePipebombSpeed : Counter { Inventory.MaxAmount 100 }
+actor DukeThrownPipebomb : Boolean {}
+actor DukePipebombHold : DukeThrownPipebomb {}
+actor DukePipebombFired : DukeThrownPipebomb {}
+actor DukePipebombNoAmmoFired : DukeThrownPipebomb {}
+actor DukeKaboom : Boolean {}
+
+actor Pipebombs : DukeWeapon
+{
+	Weapon.SlotNumber 1
+	Weapon.SelectionOrder 2200
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 5
+	Weapon.AmmoType "RocketAmmo"
+	//Obituary "%k gave %o the pipe."
+	Inventory.Pickupmessage "You got the Pipebombs!"
+	Inventory.PickupSound "duke/itemget"
+	//scale 0.5
+	+NOALERT
+	+INVENTORY.UNDROPPABLE
+	+WEAPON.AMMO_OPTIONAL
+	+WEAPON.EXPLOSIVE
+	+WEAPON.NOAUTOAIM
+	Tag "Pipebombs"
+	States
+	{
+	Spawn:
+		WPBM A -1
+		Stop
+
+	ReadyB:
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireB1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireB2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireB3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireB4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireB5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireB6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireB7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireB8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireB9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireB10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireB11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireB12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireB13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireB14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireB15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireB16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireB17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireB18")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 AA 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSWITCH)
+		TNT1 A 0 A_ReFire
+		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"ReadyB")
+		Goto ReadyA
+	ReadyA:
+		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"ReadyB")
+		Goto Super::ReadyA
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		goto Ready3
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"ReadyB")
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"ReadyB")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		TNT1 A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"Ready2")
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, 4)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 2)
+		DKPB A 1 A_WeaponReady
+		Loop
+		DKPA A 1 A_WeaponReady
+		Loop
+		D6PB A 1 A_WeaponReady
+		Loop
+	Ready2:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "Ready2_64")
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+		DKPB O 1 A_WeaponReady
+		Loop
+	Ready2_64:
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+		D6PB J 1 A_WeaponReady
+		Loop
+	Ready3:
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"Ready2")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+
+	Deselect:
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+		TNT1 A 0 A_TakeInventory("DukePipebombHold",1)
+		TNT1 A 0 A_TakeInventory("DukePipebombFired",1)
+		TNT1 A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"DeselectDetonator")
+		TNT1 A 0 A_TakeInventory("DukeThrownPipebomb",1)
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		Goto Super::Deselect
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "Deselect64")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 1, "DeselectLAB")
+		Goto Super::Deselect
+	Deselect64:
+		D6PB A 0
+		Goto Super::Deselect
+	DeselectLAB:
+		DKPA A 0
+		Goto Super::Deselect
+	DeselectDetonator:
+        TNT1 A 0 A_TakeInventory("DukeThrownPipebomb")
+		DKPB O 0 A_JumpIfInventory("DukeClassMode",2,1)
+		Goto Super::Deselect
+		D6PB J 0
+		Goto Super::Deselect
+
+	Select:
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+		TNT1 A 0 A_TakeInventory("DukeThrownPipebomb",1)
+		TNT1 A 0 A_TakeInventory("DukePipebombHold",1)
+		TNT1 A 0 A_TakeInventory("DukePipebombFired",1)
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		Goto Super::Select
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "Select64")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 1, "SelectLAB")
+		Goto Super::Select
+	Select64:
+		D6PB A 0
+		Goto Super::Select
+	SelectLAB:
+		DKPA A 0
+		Goto Super::Select
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"FireD")
+		TNT1 A 0 A_JumpIfNoAmmo("OutOfAmmo")
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"FireB")
+		TNT1 A 0 A_JumpIfInventory("DukePipebombFired",1,"ReadyB")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyB")
+		TNT1 A 0 A_GiveInventory("DBSHOT",1)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireA1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireA2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireA3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireA4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireA5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireA6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireA7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireA8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireA9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireA10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireA11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireA12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireA13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireA14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireA15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireA16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireA17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireA18")
+		Goto ReadyA
+
+	FireB:
+		TNT1 A 0 A_GiveInventory("DBSHOT1",3)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireB1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireB2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireB3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireB4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireB5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireB6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireB7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireB8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireB9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireB10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireB11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireB12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireB13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireB14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireB15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireB16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireB17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireB18")
+		Goto ReadyB
+
+	FireC:
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireA1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireA2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireA3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireA4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireA5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireA6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireA7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireA8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireA9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireA10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireA11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireA12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireA13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireA14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireA15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireA16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireA17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireA18")
+		Goto ReadyA
+
+	FireD:
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireA1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireA2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireA3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireA4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireA5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireA6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireA7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireA8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireA9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireA10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireA11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireA12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireA13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireA14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireA15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireA16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireA17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireA18")
+		Goto ReadyA
+
+	Flash:
+		TNT1 A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"Fire2")
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"FlashHold")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"FlashHold")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"FlashA")
+		stop
+	Flash2:
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		Goto FlashHold
+	FlashA:
+		TNT1 A 0 A_JumpIfInventory("DukePipebombFired",1,"Flash2")
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"FlashHold")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"FlashHold")
+		TNT1 A 0 A_GiveInventory("DBSHOT",60)
+		TNT1 A 0 A_GiveInventory("DukePipebombFired",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "FlashA64")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FlashALAB")
+		DKPB AABCDE 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPB E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukePipebombFired",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombHold",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DKPB E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("DBSHOT1",3)
+		Goto FlashHold
+	FlashALAB:
+		DKPA AABCDE 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPA E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukePipebombFired",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombHold",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DKPA E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("DBSHOT1",3)
+		Goto FlashHold
+	FlashA64:
+		D6PB AABCDE 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		D6PB E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukePipebombFired",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombHold",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		D6PB E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("DBSHOT1",3)
+		Goto FlashHold
+
+	FlashHold:
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		TNT1 A 0 A_TakeInventory("DukePipebombFired",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "FlashHold64")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FlashHoldLAB")
+		DKPB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		DKPB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		DKPB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		DKPB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		goto Release
+	FlashHoldLAB:
+		DKPA F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		DKPA F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		DKPA F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		DKPA F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Release
+	FlashHold64:
+		D6PB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		D6PB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		D6PB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT1",1)
+		TNT1 A 0 A_GiveInventory("DukePipebombSpeed",1)
+		D6PB F 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Release
+
+	Release:
+		TNT1 A 0 A_TakeInventory("DBSHOT1",99)
+		TNT1 A 0 A_GiveInventory("DBSHOT",60)
+		TNT1 A 0 A_TakeInventory("DukeKaboom",9)
+		TNT1 A 0 A_TakeInventory("DukePipebombHold",9)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "Release64")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DKPB FFGH 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReleaseConsider
+		DKPA FFGH 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReleaseConsider
+	Release64:
+		D6PB FFGH 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReleaseConsider
+	ReleaseConsider:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "ReleaseConsider64")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "ReleaseConsiderLAB")
+		DKPB I 1
+		DKPB I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReleaseSpeed1
+	ReleaseConsiderLAB:
+		DKPA I 1
+		DKPA I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReleaseSpeed1
+	ReleaseConsider64:
+		D6PB I 1
+		D6PB I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto ReleaseSpeed1
+	ReleaseSpeed1:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, 4)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 2)
+		TNT1 A 0 A_GiveInventory("SamsaraDukePipebombAttackHandler")
+		goto ReleaseFinish
+		TNT1 A 0 A_GiveInventory("SamsaraDukeLABPipebombAttackHandler")
+		goto ReleaseFinish
+		TNT1 A 0 A_GiveInventory("SamsaraDuke64PipebombAttackHandler")
+		goto ReleaseFinish
+	ReleaseFinish:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "ReleaseFinish64")
+		DKPB J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPB JKLMNN 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 2
+		goto DetonatorRaise
+	ReleaseFinish64:
+		DKPB J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPB JKLMNN 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 2
+		goto DetonatorRaise64
+	DetonatorRaise:
+		DKPB VUTSRO 1
+		DKPB O 2 A_TakeInventory("DBSHOT",99)
+		Stop
+	DetonatorRaise64:
+		D6PB WVUTSR 1
+		D6PB Q 2 A_TakeInventory("DBSHOT",99)
+		Stop
+
+	Fire2:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "Fire2_64")
+		TNT1 A 0 A_GiveInventory("DBSHOT",99)
+		DKPB OPQ 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("DukeKaboom",1)
+		DKPB QP 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPB O 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukeThrownPipebomb",1)
+		TNT1 A 0 A_TakeInventory("DukeKaboom",1)
+		DKPB ORSTUV 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukeThrownPipebomb",1)
+		TNT1 A 0 A_JumpIfNoAmmo("Fire3")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "Fire2LAB")
+		DKPB EDCBAA 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPB A 2 A_TakeInventory("DBSHOT",99)
+		Stop
+	Fire2LAB:
+		DKPA EDCBAA 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DKPA A 2 A_TakeInventory("DBSHOT",99)
+		Stop
+	Fire2_64:
+		TNT1 A 0 A_GiveInventory("DBSHOT",99)
+		D6PB K 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("DukeKaboom",1)
+		D6PB J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		D6PB Q 7 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukeThrownPipebomb",1)
+		TNT1 A 0 A_TakeInventory("DukeKaboom",1)
+		D6PB RSTUVW 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DukeThrownPipebomb",1)
+		TNT1 A 0 A_JumpIfNoAmmo("Fire3")
+		D6PB EDCBAA 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		D6PB A 2 A_TakeInventory("DBSHOT",99)
+		Stop
+
+	Fire3:
+		TNT1 A 3 A_TakeInventory("DBSHOT",99)
+		Stop
+
+	OutOfAmmo:
+		TNT1 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		goto Nothing
+
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Glock 17")
+        goto Deselect
+
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "NoAltFireForDuke64")
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("DBSHOT1",1,"AltFireB")
+		TNT1 A 0 A_JumpIfInventory("DukePipeBombHold",1,"AltFireB")
+		Goto Super::AltFire
+
+	AltFireB:
+		TNT1 A 0 A_JumpIfInventory("DB1",1,"AltFireB1")
+		TNT1 A 0 A_JumpIfInventory("DB2",1,"AltFireB2")
+		TNT1 A 0 A_JumpIfInventory("DB3",1,"AltFireB3")
+		TNT1 A 0 A_JumpIfInventory("DB4",1,"AltFireB4")
+		TNT1 A 0 A_JumpIfInventory("DB5",1,"AltFireB5")
+		TNT1 A 0 A_JumpIfInventory("DB6",1,"AltFireB6")
+		TNT1 A 0 A_JumpIfInventory("DB7",1,"AltFireB7")
+		TNT1 A 0 A_JumpIfInventory("DB8",1,"AltFireB8")
+		TNT1 A 0 A_JumpIfInventory("DB9",1,"AltFireB9")
+		TNT1 A 0 A_JumpIfInventory("DB10",1,"AltFireB10")
+		TNT1 A 0 A_JumpIfInventory("DB11",1,"AltFireB11")
+		TNT1 A 0 A_JumpIfInventory("DB12",1,"AltFireB12")
+		TNT1 A 0 A_JumpIfInventory("DB13",1,"AltFireB13")
+		TNT1 A 0 A_JumpIfInventory("DB14",1,"AltFireB14")
+		TNT1 A 0 A_JumpIfInventory("DB15",1,"AltFireB15")
+		TNT1 A 0 A_JumpIfInventory("DB16",1,"AltFireB16")
+		TNT1 A 0 A_JumpIfInventory("DB17",1,"AltFireB17")
+		TNT1 A 0 A_JumpIfInventory("DB18",1,"AltFireB18")
+		TNT1 A 0 A_GiveInventory("DukeKicking",1)
+		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate",0,3)
+		TNT1 A 0 A_GiveInventory("DB1",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB1")
+		TNT1 A 0 A_TakeInventory("DB1",1)
+		Goto Super::AltFireA2
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB1")
+		TNT1 A 0 A_TakeInventory("DB1",1)
+		Goto Super::AltFireA2
+	AltFireB1:
+		TNT1 A 0 A_TakeInventory("DB1",1)
+		TNT1 A 0 A_GiveInventory("DB2",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB2")
+		TNT1 A 0 A_TakeInventory("DB2",1)
+		Goto Super::AltFireA3
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB2")
+		TNT1 A 0 A_TakeInventory("DB2",1)
+		Goto Super::AltFireA3
+	AltFireB2:
+		TNT1 A 0 A_TakeInventory("DB2",1)
+		TNT1 A 0 A_GiveInventory("DB3",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB3")
+		TNT1 A 0 A_TakeInventory("DB3",1)
+		Goto Super::AltFireA4
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB3")
+		TNT1 A 0 A_TakeInventory("DB3",1)
+		Goto Super::AltFireA4
+	AltFireB3:
+		TNT1 A 0 A_TakeInventory("DB3",1)
+		TNT1 A 0 A_GiveInventory("DB4",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB4")
+		TNT1 A 0 A_TakeInventory("DB4",1)
+		Goto Super::AltFireA5
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB4")
+		TNT1 A 0 A_TakeInventory("DB4",1)
+		Goto Super::AltFireA5
+	AltFireB4:
+		TNT1 A 0 A_TakeInventory("DB4",1)
+		TNT1 A 0 A_GiveInventory("DB5",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB5")
+		TNT1 A 0 A_TakeInventory("DB5",1)
+		Goto Super::AltFireA6
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB5")
+		TNT1 A 0 A_TakeInventory("DB5",1)
+		Goto Super::AltFireA6
+	AltFireB5:
+		TNT1 A 0 A_TakeInventory("DB5",1)
+		TNT1 A 0 A_GiveInventory("DB6",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB6")
+		TNT1 A 0 A_TakeInventory("DB6",1)
+		Goto Super::AltFireA7
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB6")
+		TNT1 A 0 A_TakeInventory("DB6",1)
+		Goto Super::AltFireA7
+	AltFireB6:
+		TNT1 A 0 A_TakeInventory("DB6",1)
+		TNT1 A 0 A_GiveInventory("DB7",1)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeMightyFootAttackHandler")
+		Goto AltFireB6End
+	AltFireB6End:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB7")
+		TNT1 A 0 A_TakeInventory("DB7",1)
+		Goto Super::AltFireA8
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB7")
+		TNT1 A 0 A_TakeInventory("DB7",1)
+		Goto Super::AltFireA8
+	AltFireB7:
+		TNT1 A 0 A_TakeInventory("DB7",1)
+		TNT1 A 0 A_GiveInventory("DB8",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB8")
+		TNT1 A 0 A_TakeInventory("DB8",1)
+		Goto Super::AltFireA9
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB8")
+		TNT1 A 0 A_TakeInventory("DB8",1)
+		Goto Super::AltFireA9
+	AltFireB8:
+		TNT1 A 0 A_TakeInventory("DB8",1)
+		TNT1 A 0 A_GiveInventory("DB9",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB9")
+		TNT1 A 0 A_TakeInventory("DB9",1)
+		Goto Super::AltFireA10
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB9")
+		TNT1 A 0 A_TakeInventory("DB9",1)
+		Goto Super::AltFireA10
+	AltFireB9:
+		TNT1 A 0 A_TakeInventory("DB9",1)
+		TNT1 A 0 A_GiveInventory("DB10",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB10")
+		TNT1 A 0 A_TakeInventory("DB10",1)
+		Goto Super::AltFireA11
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB10")
+		TNT1 A 0 A_TakeInventory("DB10",1)
+		Goto Super::AltFireA11
+	AltFireB10:
+		TNT1 A 0 A_TakeInventory("DB10",1)
+		TNT1 A 0 A_GiveInventory("DB11",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB11")
+		TNT1 A 0 A_TakeInventory("DB11",1)
+		Goto Super::AltFireA12
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB11")
+		TNT1 A 0 A_TakeInventory("DB11",1)
+		Goto Super::AltFireA12
+	AltFireB11:
+		TNT1 A 0 A_TakeInventory("DB11",1)
+		TNT1 A 0 A_GiveInventory("DB12",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB12")
+		TNT1 A 0 A_TakeInventory("DB12",1)
+		Goto Super::AltFireA13
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB12")
+		TNT1 A 0 A_TakeInventory("DB12",1)
+		Goto Super::AltFireA13
+	AltFireB12:
+		TNT1 A 0 A_TakeInventory("DB12",1)
+		TNT1 A 0 A_GiveInventory("DB13",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB13")
+		TNT1 A 0 A_TakeInventory("DB13",1)
+		Goto Super::AltFireA14
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB13")
+		TNT1 A 0 A_TakeInventory("DB13",1)
+		Goto Super::AltFireA14
+	AltFireB13:
+		TNT1 A 0 A_TakeInventory("DB13",1)
+		TNT1 A 0 A_GiveInventory("DB14",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT D 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB14")
+		TNT1 A 0 A_TakeInventory("DB14",1)
+		Goto Super::AltFireA15
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT H 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB14")
+		TNT1 A 0 A_TakeInventory("DB14",1)
+		Goto Super::AltFireA15
+	AltFireB14:
+		TNT1 A 0 A_TakeInventory("DB14",1)
+		TNT1 A 0 A_GiveInventory("DB15",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT D 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB15")
+		TNT1 A 0 A_TakeInventory("DB15",1)
+		Goto Super::AltFireA16
+		DNBT H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB15")
+		TNT1 A 0 A_TakeInventory("DB15",1)
+		Goto Super::AltFireA16
+	AltFireB15:
+		TNT1 A 0 A_TakeInventory("DB15",1)
+		TNT1 A 0 A_GiveInventory("DB16",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB16")
+		TNT1 A 0 A_TakeInventory("DB16",1)
+		Goto Super::AltFireA17
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB16")
+		TNT1 A 0 A_TakeInventory("DB16",1)
+		Goto Super::AltFireA17
+	AltFireB16:
+		TNT1 A 0 A_TakeInventory("DB16",1)
+		TNT1 A 0 A_GiveInventory("DB17",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB17")
+		TNT1 A 0 A_TakeInventory("DB17",1)
+		Goto Super::AltFireA18
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB17")
+		TNT1 A 0 A_TakeInventory("DB17",1)
+		Goto Super::AltFireA18
+	AltFireB17:
+		TNT1 A 0 A_TakeInventory("DB17",1)
+		TNT1 A 0 A_GiveInventory("DB18",1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 5)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB18")
+		TNT1 A 0 A_TakeInventory("DB18",1)
+		Goto ReadyA
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOSECONDARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"AltFireB18")
+		TNT1 A 0 A_TakeInventory("DB18",1)
+		Goto ReadyA
+	AltFireB18:
+		TNT1 A 0 A_TakeInventory("DB18",1)
+		TNT1 A 0 A_TakeInventory("DukeKicking",9)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 4)
+		DNBT C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT C 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"ReadyB")
+		Goto ReadyA
+		DNBT G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DNBT G 1 A_WeaponReady(WRF_NOPRIMARY|WRF_NOSWITCH)
+		TNT1 A 0 A_JumpIfInventory("DukePipebombHold",1,"ReadyB")
+		Goto ReadyA
+
+	AltFlash:
+		TNT1 A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"AltFlash2")
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+		goto AltFlash3
+		DKPB A 8 A_JumpIfInventory("DukeClassMode", 1, 1)
+		stop
+		DKPA A 8
+		stop
+
+	AltFlash2:
+		DKPB O 2
+		stop
+
+	AltFlash3:
+		TNT1 A 2
+		stop
+
+	NoAltFireForDuke64:
+		TNT1 A 0
+		goto Ready
+
+	TauntWeaponSound:
+		TNT1 A 0
+		Goto Select
+
+	IntroTaunt:
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "IntroTaunt64")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 1, "IntroTauntLAB")
+		Goto Super::IntroTaunt
+	IntroTaunt64:
+		D6PB A 0
+		Goto Super::IntroTaunt
+	IntroTauntLAB:
+		DKPA A 0
+		Goto Super::IntroTaunt
+
+	WaitingTaunt:
+		DKPB A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"WaitingTauntDetonator")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "IntroTaunt64")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 1, "WaitingTauntLAB")
+		Goto Super::WaitingTaunt
+	WaitingTaunt64:
+		D6PB A 0
+		Goto Super::WaitingTaunt
+	WaitingTauntLAB:
+		DKPA A 0
+		Goto Super::WaitingTaunt
+	WaitingTauntDetonator:
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "WaitingTauntDetonator64")
+		DKPB O 0
+		Goto Super::WaitingTaunt
+	WaitingTauntDetonator64:
+		D6PB J 0
+		Goto Super::WaitingTaunt
+
+	GiveMoney:
+		DKPB A 0 A_JumpIfInventory("DukeThrownPipebomb",1,"GiveMoneyDetonator")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "GiveMoney64")
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 1, "GiveMoneyLAB")
+		Goto Super::GiveMoney
+	GiveMoney64:
+		D6PB A 0
+		Goto Super::GiveMoney
+	GiveMoneyLAB:
+		DKPA J 0
+		Goto Super::GiveMoney
+	GiveMoneyDetonator:
+		DKPB A 0 A_JumpIfInventory("DukeClassMode", 2, "GiveMoneyDetonator64")
+		DKPB O 0
+		Goto Super::GiveMoney
+	GiveMoneyDetonator64:
+		D6PB J 0
+		Goto Super::GiveMoney
+	}
+}
+
+// Original
+
+actor SamsaraDukePipebombAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",0,"PickupAttack100")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",90,"PickupAttack90")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",80,"PickupAttack80")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",70,"PickupAttack70")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",60,"PickupAttack60")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",50,"PickupAttack50")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",40,"PickupAttack40")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",30,"PickupAttack30")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",20,"PickupAttack20")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",10,"PickupAttack10")
+      // 0% charge
+      PickupAttack0:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack0Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack0Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 10% charge
+      PickupAttack10:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack10Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack10Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 20% charge
+      PickupAttack20:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack20Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack20Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 30% charge
+      PickupAttack30:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack30Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack30Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 40% charge
+      PickupAttack40:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack40Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack40Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 50% charge
+      PickupAttack50:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack50Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack50Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 60% charge
+      PickupAttack60:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack60Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack60Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 70% charge
+      PickupAttack70:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack70Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack70Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 80% charge
+      PickupAttack80:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack80Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack80Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 90% charge
+      PickupAttack90:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack90Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack90Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 100% charge
+      PickupAttack100:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack100Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebomb11",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack100Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombInfinite11",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_TakeInventory("DukePipebombSpeed")
+        TNT1 A 0 A_GiveInventory("DukeThrownPipebomb")
+        stop
+    }
+}
+
+actor DukePipebomb
+{
+	BounceSound "duke/pipebomb"
+	DamageType "DukeExplosive"
+	Speed 16
+	Radius 10
+	Height 8
+	Health 5
+	Species "Player"
+	Obituary "$SAMSARA_DUKE_OB_SLOT1"
+	Gravity 0.8
+	DamageFactor "MightyBoot", 0.0
+	BounceFactor 0.7
+	BounceCount 3
+	Scale 0.2
+    Tag "Pipebomb"
+	PROJECTILE
+	+NOBLOOD
+	+SHOOTABLE
+	-NOBLOCKMAP
+	-NOLIFTDROP
+	-NOGRAVITY
+	+NOTELEPORT
+	-TELESTOMP
+	+MOVEWITHSECTOR
+	+BOUNCEONACTORS
+	BounceType "Doom"
+	-EXPLODEONWATER
+	+CANBOUNCEWATER
+	+FORCERADIUSDMG
+	+THRUGHOST
+	+THRUSPECIES
+    +NOTARGETSWITCH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInTargetInventory ("SPModeOn",1,"Spawn2")
+		TNT1 A 0 A_JumpIfInTargetInventory ("CoopModeOn",1,"Spawn2")
+		TNT1 A 0 A_ChangeFlag ("THRUSPECIES",0)
+	Spawn2:
+		PBOM AABB 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+
+	Death:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1) //for r3827 compatibility
+		TNT1 A 0 A_PlaySound("duke/pipebomb",CHAN_VOICE)
+		TNT1 A 0 A_Jump(256,"Death1","Death2")
+
+	Death1:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM A 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		TNT1 A 0 A_JumpIfCloser(20,"Remove1")
+		Loop
+
+	Death2:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM B 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		TNT1 A 0 A_JumpIfCloser(20,"Remove2")
+		Loop
+
+	Explode:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",0) //This must be cleared when we get here so double explosions don't happen!
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_PlaySound("duke/explosion", CHAN_WEAPON, 1.0, 0, ATTN_NORM)
+		TNT1 A 0 A_PlaySound("duke/pipeexplosion", 5, 0.5, 0, ATTN_NORM)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("PipebombFrag",random(-1,1),random(-1,1),random(26,56),random(-2,2),random(-2,2),random(5,15),random(-180,180),SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("RPGExplosion",0,0,3,0,0,0,0,SXF_NOCHECKPOSITION)//A_SpawnItem("RPGExplosion")
+        TNT1 A 0 A_SetDamageType("DukeExplosive")
+		TNT1 A 0 A_CheckFloor(2)
+		TNT1 A 1 A_Explode(280,210) // Pipebombs have 1.5 the radius of the rockets.
+		Stop
+		TNT1 A 1 A_Explode(140,210)
+		Stop
+
+	Remove1:
+		PBOM A 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death1")
+		Goto RemoveEnd
+
+	Remove2:
+		PBOM B 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death2")
+		Goto RemoveEnd
+
+	RemoveEnd:
+		TNT1 A 0 A_GiveToTarget("SamsaraDukePipebombAmmoRefund")
+		TNT1 A 0 Thing_Remove(0)
+		Stop
+	}
+}
+
+actor DukePipebomb2 : DukePipebomb { Speed 17 }
+actor DukePipebomb3 : DukePipebomb { Speed 18 }
+actor DukePipebomb4 : DukePipebomb { Speed 19 }
+actor DukePipebomb5 : DukePipebomb { Speed 20 }
+actor DukePipebomb6 : DukePipebomb { Speed 21 }
+actor DukePipebomb7 : DukePipebomb { Speed 22 }
+actor DukePipebomb8 : DukePipebomb { Speed 23 }
+actor DukePipebomb9 : DukePipebomb { Speed 24 }
+actor DukePipebomb10 : DukePipebomb { Speed 25 }
+actor DukePipebomb11 : DukePipebomb { Speed 26 }
+
+actor DukePipebombInfinite : DukePipebomb
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInTargetInventory ("SPModeOn",1,"Spawn2")
+		TNT1 A 0 A_JumpIfInTargetInventory ("CoopModeOn",1,"Spawn2")
+		TNT1 A 0 A_ChangeFlag ("THRUSPECIES",0)
+	Spawn2:
+		PBOM AABB 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+
+	Death:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1) //for r3827 compatibility
+		TNT1 A 0 A_PlaySound("duke/pipebomb",CHAN_VOICE)
+		TNT1 A 0 A_Jump(256,"Death1","Death2")
+
+	Death1:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM A 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		Loop
+
+	Death2:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM B 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		Loop
+	}
+}
+
+actor DukePipebombInfinite2 : DukePipebombInfinite { Speed 17 }
+actor DukePipebombInfinite3 : DukePipebombInfinite { Speed 18 }
+actor DukePipebombInfinite4 : DukePipebombInfinite { Speed 19 }
+actor DukePipebombInfinite5 : DukePipebombInfinite { Speed 20 }
+actor DukePipebombInfinite6 : DukePipebombInfinite { Speed 21 }
+actor DukePipebombInfinite7 : DukePipebombInfinite { Speed 22 }
+actor DukePipebombInfinite8 : DukePipebombInfinite { Speed 23 }
+actor DukePipebombInfinite9 : DukePipebombInfinite { Speed 24 }
+actor DukePipebombInfinite10 : DukePipebombInfinite { Speed 25 }
+actor DukePipebombInfinite11 : DukePipebombInfinite { Speed 26 }
+
+actor PipebombFrag
+{
+	Health 4
+	Speed 2
+	Mass 0
+	BounceFactor 0.45
+	BounceCount 4
+	+MISSILE
+	+DOOMBOUNCE
+	+FLOORCLIP
+	+DONTSPLASH
+	+CLIENTSIDEONLY
+	+MOVEWITHSECTOR
+	+BOUNCEONACTORS
+	+NOTELEPORT
+	+NOTARGET
+	//Scale 0.75
+	States
+	{
+	Spawn:
+		PBMF ABCD 3
+		Loop
+
+	Death:
+		TNT1 A 0 A_Jump(255, "Death1","Death2","Death3","Death4")
+
+	Death1:
+		PBMF A 1050
+		Stop
+
+	Death2:
+		PBMF B 1050
+		Stop
+
+	Death3:
+		PBMF C 1050
+		Stop
+
+	Death4:
+		PBMF D 1050
+		Stop
+	}
+}
+
+actor SamsaraDukePipebombAmmoRefund : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_PlaySound("duke/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 A_GiveInventory("SamsaraAmmoPickupBlend")
+        TNT1 A 0 A_GiveInventory("Ammo3IgnoreSkill",1)
+        stop
+    }
+}
+
+// Life's A Beach
+
+actor SamsaraDukeLABPipebombAttackHandler : SamsaraDukePipebombAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",0,"PickupAttack100")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",90,"PickupAttack90")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",80,"PickupAttack80")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",70,"PickupAttack70")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",60,"PickupAttack60")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",50,"PickupAttack50")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",40,"PickupAttack40")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",30,"PickupAttack30")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",20,"PickupAttack20")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",10,"PickupAttack10")
+      // 0% charge
+      PickupAttack0:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack0Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack0Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 10% charge
+      PickupAttack10:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack10Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack10Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 20% charge
+      PickupAttack20:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack20Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack20Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 30% charge
+      PickupAttack30:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack30Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack30Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 40% charge
+      PickupAttack40:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack40Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack40Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 50% charge
+      PickupAttack50:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack50Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack50Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 60% charge
+      PickupAttack60:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack60Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack60Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 70% charge
+      PickupAttack70:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack70Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack70Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 80% charge
+      PickupAttack80:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack80Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack80Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 90% charge
+      PickupAttack90:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack90Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack90Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 100% charge
+      PickupAttack100:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack100Infinite")
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeach11",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack100Infinite:
+        TNT1 A 0 A_FireCustomMissile("DukePipebombBeachInfinite11",0,false,2,0,0,15)
+        goto PickupFinish
+    }
+}
+
+actor DukePipebombBeach : DukePipebomb
+{
+	BounceSound "duke/pipebomb2"
+    Tag "Pineapple"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInTargetInventory ("SPModeOn",1,"Spawn2")
+		TNT1 A 0 A_JumpIfInTargetInventory ("CoopModeOn",1,"Spawn2")
+		TNT1 A 0 A_ChangeFlag ("THRUSPECIES",0)
+	Spawn2:
+		PBOM CCDD 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+
+	Death:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1) //for r3827 compatibility
+		TNT1 A 0 A_PlaySound("duke/pipebomb2",CHAN_VOICE)
+		TNT1 A 0 A_Jump(256,"Death1","Death2")
+
+	Death1:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM C 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		TNT1 A 0 A_JumpIfCloser(20,"Remove1")
+		Loop
+
+	Death2:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM D 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		TNT1 A 0 A_JumpIfCloser(20,"Remove2")
+		Loop
+
+	Remove1:
+		PBOM C 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death1")
+		Goto RemoveEnd
+
+	Remove2:
+		PBOM D 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death2")
+		Goto RemoveEnd
+	}
+}
+
+actor DukePipebombBeach2 : DukePipebombBeach { Speed 17 }
+actor DukePipebombBeach3 : DukePipebombBeach { Speed 18 }
+actor DukePipebombBeach4 : DukePipebombBeach { Speed 19 }
+actor DukePipebombBeach5 : DukePipebombBeach { Speed 20 }
+actor DukePipebombBeach6 : DukePipebombBeach { Speed 21 }
+actor DukePipebombBeach7 : DukePipebombBeach { Speed 22 }
+actor DukePipebombBeach8 : DukePipebombBeach { Speed 23 }
+actor DukePipebombBeach9 : DukePipebombBeach { Speed 24 }
+actor DukePipebombBeach10 : DukePipebombBeach { Speed 25 }
+actor DukePipebombBeach11 : DukePipebombBeach { Speed 26 }
+
+actor DukePipebombBeachInfinite : DukePipebombBeach
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInTargetInventory ("SPModeOn",1,"Spawn2")
+		TNT1 A 0 A_JumpIfInTargetInventory ("CoopModeOn",1,"Spawn2")
+		TNT1 A 0 A_ChangeFlag ("THRUSPECIES",0)
+	Spawn2:
+		PBOM CCDD 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+
+	Death:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1) //for r3827 compatibility
+		TNT1 A 0 A_PlaySound("duke/pipebomb2",CHAN_VOICE)
+		TNT1 A 0 A_Jump(256,"Death1","Death2")
+
+	Death1:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM C 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		Loop
+
+	Death2:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		PBOM D 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		Loop
+	}
+}
+
+actor DukePipebombBeachInfinite2 : DukePipebombBeachInfinite { Speed 17 }
+actor DukePipebombBeachInfinite3 : DukePipebombBeachInfinite { Speed 18 }
+actor DukePipebombBeachInfinite4 : DukePipebombBeachInfinite { Speed 19 }
+actor DukePipebombBeachInfinite5 : DukePipebombBeachInfinite { Speed 20 }
+actor DukePipebombBeachInfinite6 : DukePipebombBeachInfinite { Speed 21 }
+actor DukePipebombBeachInfinite7 : DukePipebombBeachInfinite { Speed 22 }
+actor DukePipebombBeachInfinite8 : DukePipebombBeachInfinite { Speed 23 }
+actor DukePipebombBeachInfinite9 : DukePipebombBeachInfinite { Speed 24 }
+actor DukePipebombBeachInfinite10 : DukePipebombBeachInfinite { Speed 25 }
+actor DukePipebombBeachInfinite11 : DukePipebombBeachInfinite { Speed 26 }
+
+// Duke Nukem 64
+
+actor SamsaraDuke64PipebombAttackHandler : SamsaraDukePipebombAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",0,"PickupAttack100")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",90,"PickupAttack90")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",80,"PickupAttack80")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",70,"PickupAttack70")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",60,"PickupAttack60")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",50,"PickupAttack50")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",40,"PickupAttack40")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",30,"PickupAttack30")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",20,"PickupAttack20")
+        TNT1 A 0 A_JumpIfInventory("DukePipebombSpeed",10,"PickupAttack10")
+      // 0% charge
+      PickupAttack0:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack0Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack0Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 10% charge
+      PickupAttack10:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack10Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack10Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite2",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 20% charge
+      PickupAttack20:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack20Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack20Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite3",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 30% charge
+      PickupAttack30:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack30Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack30Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite4",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 40% charge
+      PickupAttack40:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack40Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack40Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite5",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 50% charge
+      PickupAttack50:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack50Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack50Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite6",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 60% charge
+      PickupAttack60:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack60Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack60Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite7",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 70% charge
+      PickupAttack70:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack70Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack70Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite8",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 80% charge
+      PickupAttack80:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack80Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack80Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite9",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 90% charge
+      PickupAttack90:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack90Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack90Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite10",0,false,2,0,0,15)
+        goto PickupFinish
+
+      // 100% charge
+      PickupAttack100:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack100Infinite")
+        TNT1 A 0 A_FireCustomMissile("Duke64Pipebomb11",0,false,2,0,0,15)
+        goto PickupFinish
+
+      PickupAttack100Infinite:
+        TNT1 A 0 A_FireCustomMissile("Duke64PipebombInfinite11",0,false,2,0,0,15)
+        goto PickupFinish
+    }
+}
+
+actor Duke64Pipebomb
+{
+	BounceSound "duke/pipebomb"
+	DamageType "DukeExplosive"
+	Speed 16
+	Radius 10
+	Height 8
+	Health 5
+	Species "Player"
+	Obituary "$SAMSARA_DUKE_OB_SLOT1"
+	Gravity 0.8
+	DamageFactor "MightyBoot", 0.0
+	BounceFactor 0.7
+	BounceCount 3
+	Scale 0.2
+    Tag "Pipebomb"
+	PROJECTILE
+	+NOBLOOD
+	+SHOOTABLE
+	-NOBLOCKMAP
+	-NOLIFTDROP
+	-NOGRAVITY
+	+NOTELEPORT
+	-TELESTOMP
+	+MOVEWITHSECTOR
+	+BOUNCEONACTORS
+	BounceType "Doom"
+	-EXPLODEONWATER
+	+CANBOUNCEWATER
+	+FORCERADIUSDMG
+	+THRUGHOST
+	+THRUSPECIES
+    +NOTARGETSWITCH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInTargetInventory ("SPModeOn",1,"Spawn3")
+		TNT1 A 0 A_JumpIfInTargetInventory ("CoopModeOn",1,"Spawn3")
+		TNT1 A 0 A_ChangeFlag ("Thruspecies",0)
+	Spawn2:
+		PBOM EE 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		PBOM FF 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+	Spawn3:
+		PBOM EE 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		PBOM FF 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+
+	Death:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1) //for r3827 compatibility
+		TNT1 A 0 A_PlaySound("duke/pipebomb",CHAN_VOICE)
+		TNT1 A 0 A_Jump(256,"Death1","Death2")
+
+	Death1:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		PBOM E 1
+		TNT1 A 0 A_JumpIfCloser(20,"Remove1")
+		Loop
+
+	Death2:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		PBOM F 1
+		TNT1 A 0 A_JumpIfCloser(20,"Remove2")
+		Loop
+
+	Explode:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",0) //This must be cleared when we get here so double explosions don't happen!
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_PlaySound("duke64/explosion", 6, 1.0, 0, ATTN_NONE)
+		TNT1 A 0 A_SpawnItemEx("SmallExplosionFireRing",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("SmallExplosionFireBall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("Duke64SmallExplosionSmoke")
+		TNT1 AAAAAA 0 A_SpawnItemEx("PipebombFrag64",random(-1,1),random(-1,1),random(4,8),random(-4,4),random(-4,4),random(5,10),random(-180,180),SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("PipebombFrag64_2",random(-1,1),random(-1,1),random(4,8),random(-4,4),random(-4,4),random(5,10),random(-180,180),SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+        TNT1 A 0 A_SetDamageType("DukeExplosive")
+		TNT1 A 0 A_CheckFloor(3)
+		TNT1 A 0 A_Explode(256,192) // Pipebombs have 1.5 the radius of the rockets.
+		TNT1 A 1 A_SpawnItemEx("MLExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Stop
+		TNT1 A 0 A_Explode(128,192)
+		TNT1 A 1 A_SpawnItemEx("MLExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Stop
+
+	Remove1:
+		TNT1 A 0 A_JumpIfInTargetInventory("RocketAmmo",0,"Death1")
+		PBOM E 1
+		TNT1 A 0 A_GiveToTarget("SamsaraDukePipebombAmmoRefund")
+		TNT1 A 0 Thing_Remove(0)
+		Stop
+
+	Remove2:
+		TNT1 A 0 A_JumpIfInTargetInventory("RocketAmmo",0,"Death2")
+		PBOM F 1
+		TNT1 A 0 A_GiveToTarget("SamsaraDukePipebombAmmoRefund")
+		TNT1 A 0 Thing_Remove(0)
+		Stop
+	}
+}
+
+actor Duke64Pipebomb2 : Duke64Pipebomb { Speed 17 }
+actor Duke64Pipebomb3 : Duke64Pipebomb { Speed 18 }
+actor Duke64Pipebomb4 : Duke64Pipebomb { Speed 19 }
+actor Duke64Pipebomb5 : Duke64Pipebomb { Speed 20 }
+actor Duke64Pipebomb6 : Duke64Pipebomb { Speed 21 }
+actor Duke64Pipebomb7 : Duke64Pipebomb { Speed 22 }
+actor Duke64Pipebomb8 : Duke64Pipebomb { Speed 23 }
+actor Duke64Pipebomb9 : Duke64Pipebomb { Speed 24 }
+actor Duke64Pipebomb10 : Duke64Pipebomb { Speed 25 }
+actor Duke64Pipebomb11 : Duke64Pipebomb { Speed 26 }
+
+actor Duke64PipebombInfinite : Duke64Pipebomb
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInTargetInventory ("SPModeOn",1,"Spawn3")
+		TNT1 A 0 A_JumpIfInTargetInventory ("CoopModeOn",1,"Spawn3")
+		TNT1 A 0 A_ChangeFlag ("Thruspecies",0)
+	Spawn2:
+		PBOM EE 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		PBOM FF 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+	Spawn3:
+		PBOM EE 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		PBOM FF 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Death")
+		Loop
+
+	Death:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1) //for r3827 compatibility
+		TNT1 A 0 A_PlaySound("duke/pipebomb",CHAN_VOICE)
+		TNT1 A 0 A_Jump(256,"Death1","Death2")
+
+	Death1:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		PBOM E 1
+		Loop
+
+	Death2:
+		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
+		TNT1 A 0 A_Gravity
+		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
+		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		PBOM F 1
+		Loop
+	}
+}
+
+actor Duke64PipebombInfinite2 : Duke64PipebombInfinite { Speed 17 }
+actor Duke64PipebombInfinite3 : Duke64PipebombInfinite { Speed 18 }
+actor Duke64PipebombInfinite4 : Duke64PipebombInfinite { Speed 19 }
+actor Duke64PipebombInfinite5 : Duke64PipebombInfinite { Speed 20 }
+actor Duke64PipebombInfinite6 : Duke64PipebombInfinite { Speed 21 }
+actor Duke64PipebombInfinite7 : Duke64PipebombInfinite { Speed 22 }
+actor Duke64PipebombInfinite8 : Duke64PipebombInfinite { Speed 23 }
+actor Duke64PipebombInfinite9 : Duke64PipebombInfinite { Speed 24 }
+actor Duke64PipebombInfinite10 : Duke64PipebombInfinite { Speed 25 }
+actor Duke64PipebombInfinite11 : Duke64PipebombInfinite { Speed 26 }
+
+Actor SmallExplosionFireRing : Duke64FireRing
+{
+	States
+	{
+		Spawn:
+			D6FR A 2
+			D6FR AAAAAAAAAA 2 A_SetScale(scalex+0.11)
+			Goto Fade
+		Fade:
+			D6FR A 0 A_FadeOut(0.1)
+			D6FR A 2 A_SetScale(scalex+0.11)
+			Loop
+	}
+}
+
+Actor SmallExplosionFireBall : Duke64Fireball
+{
+	States
+	{
+		Spawn:
+			D6FB A 2
+			D6FB AAAAAAAAAA 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.1)
+			Goto Fade
+		Fade:
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex-0.1)
+			Loop
+	}
+}
+
+Actor Duke64SmallExplosionSmoke
+{
+	Height 2
+	Radius 2
+	Renderstyle Translucent
+	Scale 0.5
+	+NOINTERACTION
+	+NOGRAVITY
+	States
+	{
+		Spawn:
+			DKSX S 0
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			DKSX S 0 A_Fadeout(0.025) DKSX S 2 A_SetScale(scalex+0.125)
+			Stop
+	}
+}
+
+actor PipebombFrag64
+{
+	Health 4
+	Speed 2
+	Mass 0
+	BounceFactor 0.45
+	BounceCount 2
+	+MISSILE
+	+DOOMBOUNCE
+	+FLOORCLIP
+	+DONTSPLASH
+	+CLIENTSIDEONLY
+	+MOVEWITHSECTOR
+	+BOUNCEONACTORS
+	+NOTELEPORT
+	+NOTARGET
+	//Scale 0.75
+	States
+	{
+	Spawn:
+		DNPS ABCDEFGHI 3
+		Loop
+
+	Death:
+		TNT1 A 1
+		Stop
+	}
+}
+
+actor PipebombFrag64_2 : PipebombFrag64
+{
+	States
+	{
+	Spawn:
+		DNPS JKLM 3
+		Loop
+	}
+}

@@ -54,10 +54,16 @@ actor WalkingPredator_Samsara : SamsaraMonsterBeastBoss replaces Cyberdemon
 			CYBR F 12 bright A_CyberAttack
 			goto See
 		Death:
-			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
-			SKEL M 7
+			SKEL M 7 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			SKEL N 7 A_Scream
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffectForBosses",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)	
+			SKEL O 7 A_Fall
+			SKEL P 7
+			SKEL Q -1
+			Stop
+		Death.Massacre:
+			SKEL M 7 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			SKEL N 7 A_Scream
 			SKEL O 7 A_Fall
 			SKEL P 7
 			SKEL Q -1

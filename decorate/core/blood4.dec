@@ -1,0 +1,1089 @@
+// LEVEL 4: BOLOGNESE GIBS (brutal gibs)
+// ========================
+
+Actor Bolognese_FlyingBloodTrail : GenericGoreActor
+{
+	Scale 0.25
+	RenderStyle Translucent
+	Alpha 0.8
+	Gravity 0.4
+	Speed 2
+	//Decal BloodSplat
+	+MISSILE
+	+THRUACTORS
+	+BOUNCEONWALLS
+	-MOVEWITHSECTOR
+	States
+	{
+	Spawn:
+		BLHT ABCDEFG 1
+		BLHT H 1 A_FadeOut(0.02)
+		Wait
+	Death:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Bolognese_FlyingBlood : GenericGoreActor
+{
+	Scale 0.4
+	Speed 4
+	Radius 8
+	Height 1
+	Alpha 0.6
+	+MISSILE
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Live")
+		Goto Spawn1
+	Spawn1:
+		TNT1 A 0 A_SetScale(-0.4, 0.4)
+		Goto Live
+	Spawn2:
+		TNT1 A 0 A_SetScale(-0.45, -0.45)
+		Goto Live
+	Spawn3:
+		TNT1 A 0 A_SetScale(0.5, -0.5)
+		Goto Live
+	Live:
+		BLHT BCDEFG 1
+		BLHT HHHHH 100
+		Stop
+	Death:
+		TNT1 A 0 A_PlaySound("bolognese/blooddrop2")
+		TNT1 A 1 A_CheckFloor("DeathFloor")
+		Stop
+	DeathFloor:
+		XDT1 E 2 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XDT1 FGHIJKL 2
+		Stop
+	NoSpawn:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Bolognese_BloodSpot : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Mass 1
+	+FLOORCLIP
+	+THRUACTORS
+	Alpha 0.99
+	Scale 0.5
+	Decal BloodSplat
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_CheckFloor("SpawnNormally")
+		Stop
+	SpawnNormally:
+		TNT1 A 0 A_Jump(256, "SpawnAFrameOnly", "SpawnBFrameOnly", "SpawnCFrameOnly", "SpawnDFrameOnly")
+		Goto SpawnAFrameOnly
+	SpawnAFrameOnly:
+		BPDL A 0
+		Goto Super::FadeGore
+	SpawnBFrameOnly:
+		BPDL B 0
+		Goto Super::FadeGore
+	SpawnCFrameOnly:
+		BPDL C 0
+		Goto Super::FadeGore
+	SpawnDFrameOnly:
+		BPDL D 0
+		Goto Super::FadeGore
+	Death:
+		TNT1 A 0 A_NoBlocking
+		Stop
+	}
+}
+
+Actor Bolognese_MinuscleBloodSpot : Bolognese_BloodSpot { Scale 0.25 }
+
+Actor Bolognese_WallBlood : GenericGoreActor
+{
+	Scale 0.6
+	Speed 7
+	Health 1
+	Radius 8
+	Height 1
+	Gravity 0.7
+	Damage 0
+	DamageType Blood
+	Decal BloodSmear
+	+MISSILE
+	+THRUACTORS
+	-FORCEXYBILLBOARD
+	-MOVEWITHSECTOR
+	States
+	{
+	Spawn:
+		TNT1 AAAA 4
+		Loop
+	Death:
+		TNT1 A 3
+		Stop
+	}
+}
+
+Actor Bolognese_CeilingBlood : Bolognese_FlyingBlood
+{
+	+BOUNCEONWALLS
+	+THRUACTORS
+	-SKYEXPLODE
+	Speed 15
+	Gravity 0.0
+	Radius 1
+	Height 1
+	States
+	{
+	Spawn:
+		TNT1 A 6
+		Stop
+	Death:
+		TNT1 A 0 A_CheckCeiling("IsOnCeiling")
+		Stop
+	IsOnCeiling:
+		TNT1 A 1 A_SpawnItemEx("Bolognese_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Melee:
+	XDeath:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor Bolognese_CeilingBloodSpot : GenericGoreActorFadeOut
+{
+	+CEILINGHUGGER
+	+MISSILE
+	+THRUACTORS
+	-FORCEXYBILLBOARD
+	-MOVEWITHSECTOR
+	-SKYEXPLODE
+	Height 1
+	Radius 2
+	Mass 0
+	Scale 0.5
+	Gravity 0.0
+	Renderstyle Normal
+	Alpha 0.9
+	States
+	{
+	Spawn:
+		BPDL A 1
+		BPDL A 0 A_SpawnItemEx("Bolognese_DripingBloodLeavesPool",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		BPDL A 0 A_SpawnItemEx("Bolognese_CeilBloodTinyBloodSpawner",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_CeilBloodTinyBloodSpawner : Bolognese_FlyingBlood
+{
+	+NOGRAVITY
+	+THRUACTORS
+	+NOCLIP
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 A_SpawnItemEx("Bolognese_DripingBloodLeavesPool",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 5 A_SpawnItemEx("Bolognese_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 10 A_SpawnItemEx("Bolognese_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 16 A_SpawnItemEx("Bolognese_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 AAAAAAAAAAAAAA 24 A_SpawnItemEx("Bolognese_BloodDripingFromCeiling",random(-5,5),random(-5,5),0,0,0,-5,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Bolognese_BloodDripingFromCeiling : Bolognese_FlyingBlood
+{
+	-NOGRAVITY
+	-FORCEXYBILLBOARD
+	+FORCEYBILLBOARD
+	Gravity 1.0
+	Radius 4
+	Height 1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		BSPX K 500 A_Jump(230, "NoSpawn")
+		Loop
+	Death:
+		TNT1 A 0 A_PlaySound("bolognese/blooddrop2")
+		TNT1 A 0 A_Stop
+		BSPX LMNOPQ 2
+		Stop
+	}
+}
+
+Actor Bolognese_DripingBloodLeavesPool : Bolognese_BloodDripingFromCeiling
+{
+	States
+	{
+	Spawn:
+		BSPX K 4
+		Loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_MinuscleBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_PlaySound("bolognese_blooddrop2")
+		BSPX LMNOPQ 2
+		Stop
+	}
+}
+
+Actor Bolognese_XDeath1 : GenericGoreActorFadeOut
+{
+	Radius 1
+	Height 1
+	Speed 12
+	Scale 1.0
+	+MISSILE
+	+THRUGHOST
+	+THRUACTORS
+	+FLOORCLIP
+	-DONTSPLASH
+	-FORCEXYBILLBOARD
+	Mass 1
+	States
+	{
+	Spawn:
+		BLDT AAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("Bolognese_LiquidBloodTrail",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		XDT1 E 3 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XDT1 FGHIJKL 3
+		Stop
+	}
+}
+
+Actor Bolognese_LiquidBloodTrail : Bolognese_FlyingBlood
+{
+	Scale 0.4
+	Gravity 0.4
+	States
+	{
+	Spawn:
+		BRTL ABC 2
+		Stop
+	Death:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Bolognese_XDeath2 : Bolognese_XDeath1
+{
+	+DONTSPLASH
+	Radius 2
+	Height 2
+	Gravity 0.4
+	DeathSound "bolognese/xdeath2"
+	//Decal BloodSplat
+	Scale 1.1
+	States
+	{
+	Spawn:
+		XMT1 ABCDEFGH 2 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,180),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_CheckFloor("SpawnFloor")
+		TNT1 A 0 A_CheckCeiling("SpawnCeiling")
+		TNT1 A 0 A_SpawnItemEx("Bolognese_SmearingXDeath2",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	SpawnFloor:
+		XMT1 M 1
+		XMT1 M 0 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	SpawnCeiling:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_CeilXDeath2",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_SpawnItemEx("Bolognese_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Bolognese_SmearingXDeath2 : GenericGoreActorFadeOut
+{
+	Radius 1
+	Height 1
+	Mass 1
+	Scale 1.0
+	+NOGRAVITY
+	+THRUGHOST
+	States
+	{
+	Spawn:
+		XMT1 N 10
+		XMT1 N 0 ThrustThingZ(0, 1, 1, 1)
+		XMT1 N 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		Goto Spawn1
+	Spawn1:
+		XMT1 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn2:
+		XMT1 NNNNNNNNNNNNNNNNNNNNNNNN 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn3:
+		XMT1 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn4:
+		XMT1 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 2 A_CheckFloor("Rest")
+		Goto Death
+	Death:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_XDeath2NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Rest:
+		XMT1 M 1
+		XMT1 M 0 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_CeilXDeath2 : Bolognese_BloodSpot
+{
+	PROJECTILE
+	+MISSILE
+	+SPAWNCEILING
+	+MOVEWITHSECTOR
+	+NOGRAVITY
+	+DONTSPLASH
+	+CEILINGHUGGER
+	RenderStyle Normal
+	Scale 1.1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Live1", "Live2", "Live3")
+		Goto Live1
+	Live1:
+		XMT1 IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII 5 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Live2:
+		XMT1 IIIIIIIIIIIIIIIIIIIIIIIII 5 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Live3:
+		XMT1 IIIIIIIIIIIIIIIII 5 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Fall:
+		XMT1 JJJKKLL 2
+		TNT1 A 0 A_SpawnItemEx("Bolognese_XDeath2NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Bolognese_XDeath2NoStick : Bolognese_XDeath2
+{
+	Speed 0
+	Gravity 0.4
+	DeathSound "bolognese/xdeath2"
+	Radius 1
+	Height 0
+	States
+	{
+	Spawn:
+		XMT1 FFFGGH 2
+		Goto Live
+	Live:
+		XMT1 A 0 A_CheckFloor("Death")
+		XMT1 ABCDEFGH 3 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		XMT1 MMMMMMM 0 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XMT1 M 4
+		XMT1 M 0 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_XDeath3 : Bolognese_XDeath2
+{
+	DeathSound "bolognese/xdeath3"
+	//Decal BloodSplat
+	Scale 1.1
+	States
+	{
+	Spawn:
+		XMT2 ABCDEFGH 3 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,180),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_CheckFloor("SpawnFloor")
+		TNT1 A 0 A_CheckCeiling("SpawnCeiling")
+		TNT1 A 0 A_SpawnItemEx("Bolognese_SmearingXDeath3",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	SpawnFloor:
+		XMT2 I 1
+		XMT2 I 0 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	SpawnCeiling:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_CeilXDeath3",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		TNT1 A 0 A_SpawnItemEx("Bolognese_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	}
+}
+
+Actor Bolognese_SmearingXDeath3 : Bolognese_SmearingXDeath2
+{
+	States
+	{
+	Spawn:
+		XME2 G 10
+		XME2 G 0 ThrustThingZ(0,1,1,1)
+		XME2 G 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		Goto Spawn1
+	Spawn1:
+		XMT2 OOOOOOOOOOOOOOOO 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn2:
+		XMT2 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn3:
+		XMT2 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn4:
+		XMT2 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 2 A_CheckFloor("Rest")
+		Goto Death
+	Death:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_XDeath3NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Rest:
+		XMT2 I 1
+		XMT2 I 0 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_CeilXDeath3 : Bolognese_CeilXDeath2
+{
+	States
+	{
+	Spawn:
+	Death:
+	Crash:
+		TNT1 A 0 A_Jump(256, "Live1", "Live2", "Live3")
+		Goto Live1
+	Live1:
+		XMT2 JJJJJJJJJJJJJJJJJ 4 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Live2:
+		XMT2 JJJJJJJJJJJJJJJJJJJJJJJJJJJ 4 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Live3:
+		XMT2 JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ 4 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Fall:
+		XMT2 JJJJKKKLLM 2
+		XMT2 M 2 A_SpawnItemEx("Bolognese_XDeath3NoStick",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XMT2 MN 2
+		Stop
+	}
+}
+
+Actor Bolognese_XDeath3NoStick : Bolognese_XDeath2NoStick
+{
+	States
+	{
+	Spawn:
+		XMT2 O 3 A_CheckFloor("Death")
+		Loop
+	Death:
+		XMT2 IIIIIII 0 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XMT2 I 4
+		XMT2 I 0 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_XDeath4 : Bolognese_XDeath2
+{
+	DeathSound "bolognese/xdeath3"
+	Scale 1.0
+	+DOOMBOUNCE
+	BounceFactor 0.01
+	Gravity 1.0
+	WallBounceFactor 0.2
+	States
+	{
+	Spawn:
+		XDB6 AAAAAA 3 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		XDB6 B 1
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_SmallBrainPiece : Bolognese_XDeath2
+{
+	Radius 2
+	Height 2
+	Speed 10
+	Scale 0.4
+	Decal None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Spawn4", "Fly")
+	Spawn1:
+		TNT1 A 0 A_SetScale(0.2, 0.2)
+		Goto Fly
+	Spawn2:
+		TNT1 A 0 A_SetScale(-0.5, 0.5)
+		Goto Fly
+	Spawn3:
+		TNT1 A 0 A_SetScale(-0.3, 0.3)
+		Goto Fly
+	Spawn4:
+		TNT1 A 0 A_SetScale(-0.2, 0.2)
+		Goto Fly
+	Fly:
+		XDB5 ABCDEFGH 2
+		Loop
+	Death:
+		TNT1 A 0 A_CheckFloor("Rest")
+		TNT1 A 0 A_CheckCeiling("SpawnCeil")
+		TNT1 A 0 A_SpawnItemEx("Bolognese_SmearingBrain", 0, 0, 0, 0, 0, 0, 0, SXF_TRANSFERSCALE|SXF_TRANSFERTRANSLATION)
+		Stop
+	SpawnCeil:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_SmallBrainPieceCeil", 0, 0, 0, 0, 0, 0, 0, SXF_TRANSFERSCALE|SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("Bolognese_CeilingBloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Stop
+	Rest:
+		XDT5 O 1
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_SmallBrainPieceCeil : Bolognese_CeilXDeath2
+{
+	Scale 0.4
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Live1", "Live2", "Live3")
+		Goto Live1
+	Live1:
+		XDB5 JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ 4 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Live2:
+		XDB5 JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ 4 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Live3:
+		XDB5 JJJJJJJJJJJJJJJ 4 ThrustThingZ(0, 20, 0, 1)
+		Goto Fall
+	Fall:
+		TNT1 A 0 A_SpawnItemEx("Bolognese_SmallBrainPieceFalling", 0, 0, 0, 0, 0, -2, 0, SXF_TRANSFERSCALE|SXF_TRANSFERTRANSLATION)
+		Stop
+	}
+}
+
+Actor Bolognese_SmallBrainPieceFalling : Bolognese_SmallBrainPiece
+{
+	States
+	{
+	Spawn:
+		XDB5 P -1
+		Loop
+	Death:
+		XDB5 O 1
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_SmearingBrain : GenericGoreActorFadeOut
+{
+	Radius 2
+	Height 2
+	Speed 10
+	Mass 1
+	Scale 0.4
+	+NOGRAVITY
+	+THRUGHOST
+	-DONTSPLASH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Spawn2", "Spawn3", "Spawn4")
+		Goto Spawn1
+	Spawn1:
+		XDB5 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn2:
+		XDB5 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn3:
+		XDB5 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP 2 A_CheckFloor("Rest")
+		Goto Death
+	Spawn4:
+		XDB5 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP 2 A_CheckFloor("Rest")
+		Goto Death
+	Death:
+	Rest:
+		TNT1 A 0 A_Gravity
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		XDB5 P 0 A_CheckFloor("Sleep")
+		XDB5 P 2 ThrustThingZ(0,-2,0,1)
+		Loop
+	Sleep:
+		XDB5 K 1
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_XDeath5 : Bolognese_XDeath2
+{
+	DeathSound "bolognese/xdeath3"
+	Scale 1.0
+	Gravity 0.6
+	Speed 4
+	States
+	{
+	Spawn:
+		XME5 A 3 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,180),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XME5 B 4 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto FadeGore
+	FadeGore:
+		"####" "#" 800
+		"####" "#" 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate",13) == 1, "FadeGore")
+		"####" "#" 1 A_FadeOut(0.1)
+		Wait
+	}
+}
+
+Actor Bolognese_XDeath6 : Bolognese_XDeath5
+{
+	States
+	{
+	Spawn:
+		XME5 C 3 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,360),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Loop
+	Death:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("Bolognese_FlyingBloodTrail",0,0,0,0,0,0,random(0,180),SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		XME5 D 4 A_SpawnItemEx("Bolognese_BloodSpot",0,0,0,0,0,0,0,SAMSARA_UNBLOCKED_RECOLOR_FLAGS)
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_Guts : GenericGoreActorFadeOut
+{
+	Radius 8
+	Height 12
+	Speed 6
+	Mass 1
+	BounceFactor 0.4
+	BounceCount 15
+	RenderStyle Translucent
+	Alpha 0.9
+	+BOUNCEONWALLS
+	+BOUNCEONCEILINGS
+	+MISSILE
+	-EXPLODEONWATER
+	//Decal BloodSplat
+	Scale 1.0
+	Gravity 0.4
+	States
+	{
+	Spawn:
+		XMT3 A 1
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Spawn4")
+		Goto Spawn1
+	Spawn1:
+		TNT1 A 0 A_SetScale(0.9, 0.8)
+		Goto Live
+	Spawn2:
+		TNT1 A 0 A_SetScale(-1.0, 1.0)
+		Goto Live
+	Spawn3:
+		TNT1 A 0 A_SetScale(1.2, 1.0)
+		Goto Live
+	Spawn4:
+		TNT1 A 0 A_SetScale(-0.6, 1.0)
+		Goto Live
+	Live:
+		XMT3 H -1
+		Loop
+	Death:
+		XMT3 HIJ 3
+		Goto Rest
+	Rest:
+		TNT1 A 0 A_Jump(256, "Rest1", "Rest2")
+		Goto Rest1
+	Rest1:
+		XMT3 K 0
+		Goto Super::FadeGore
+	Rest2:
+		XMT3 L 0
+		Goto Super::FadeGore
+	DoNothing:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Bolognese_GibEyeball : GenericGoreActor
+{
+	Radius 2
+	Height 2
+	Speed 6
+	Mass 1
+	//Decal BloodSplat
+	BounceFactor 0.5
+	+DOOMBOUNCE
+	+MISSILE
+	+FLOORCLIP
+	-FORCEXYBILLBOARD
+	Scale 0.8
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Death")
+		BRIB EFGH 4
+		Loop
+	Death:
+		BRIB E 1
+		Goto Rest
+	Rest:
+		TNT1 A 0 A_Jump(256, "Rest1", "Rest2", "Rest3", "Rest4")
+		Goto Rest1
+	Rest1:
+		BRIB E 0
+		Goto FadeGore
+	Rest2:
+		BRIB F 0
+		Goto FadeGore
+	Rest3:
+		BRIB G 0
+		Goto FadeGore
+	Rest4:
+		BRIB H 0
+		Goto FadeGore
+	FadeGore:
+		"####" "#" 800
+		"####" "#" 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate",13) == 1, "FadeGore")
+		"####" "#" 1 A_FadeOut(0.1)
+		Wait
+	}
+}
+
+Actor Bolognese_Bloodmist : Bolognese_FlyingBlood
+{
+	+BOUNCEONWALLS
+	Scale 0.8
+	Radius 2
+	Height 2
+	Speed 8
+	Gravity 0.6
+	Alpha 0.6
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Live")
+		Goto Spawn1
+	Spawn1:
+		TNT1 A 0 A_SetScale(-0.8, 0.8)
+		Goto Live
+	Spawn2:
+		TNT1 A 0 A_SetScale(-0.9, -0.9)
+		Goto Live
+	Spawn3:
+		TNT1 A 0 A_SetScale(0.7, -0.7)
+		Goto Live
+	Live:
+		BLHT BCDEFG 1
+		BLHT HHHHH 100
+		Stop
+	Death:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor Bolognese_BloodmistExtraBig : Bolognese_Bloodmist
+{
+	Scale 1.5
+	Speed 5
+	Gravity 0.4
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3", "Live")
+		Goto Spawn1
+	Spawn1:
+		TNT1 A 0 A_SetScale(-1.6, 1.6)
+		Goto Live
+	Spawn2:
+		TNT1 A 0 A_SetScale(-1.5, -1.6)
+		Goto Live
+	Spawn3:
+		TNT1 A 0 A_SetScale(1.4, -1.5)
+		Goto Live
+	}
+}
+
+Actor Bolognese_BloodmistSpray : Bolognese_Bloodmist
+{
+	Scale 1.0
+	Gravity 0.4
+	States
+	{
+	Spawn:
+		BSPR ABCDEFGH 2
+		BSPR H 200
+		Stop
+	}
+}
+
+Actor Bolognese_SuperGore : GenericGoreActor
+{
+	//Decal BloodSplat
+	Alpha 0.6
+	-ALLOWPARTICLES
+	-EXPLODEONWATER
+	-MOVEWITHSECTOR
+	+NOCLIP
+	+THRUACTORS
+	Gravity 0.1
+	Scale 0.5
+	Speed 3
+	States
+	{
+	Spawn:
+		B1OR ABCDEFG 4
+		Stop
+	}
+}
+
+Actor Bolognese_SuperGoreMist : Bolognese_SuperGore
+{
+	Scale 0.6
+	Speed 3
+	+NOGRAVITY
+}
+
+Actor Bolognese_SuperGoreBig : Bolognese_SuperGore
+{
+	Scale 0.6
+	Speed 6
+}
+
+Actor Bolognese_SuperGoreMistTiny : Bolognese_SuperGore
+{
+	Scale 0.15
+	Alpha 0.7
+	Speed 0
+	+NOGRAVITY
+	States
+	{
+	Spawn:
+		BLOR EFGHIJK 2
+		Stop
+	}
+}
+
+Actor Bolognese_GrowingBloodPool : Bolognese_BloodSpot
+{
+	Radius 1
+	Height 1
+	Mass 1
+	Health 600
+	RenderStyle Normal
+	Alpha 1.0
+	+MISSILE
+	Scale 0.3
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Splash")
+		TNT5 A 3 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraDecorate",14) == 1, "Splash")
+		TNT5 A 1 A_SetScale(0.33, 0.33)
+		TNT5 A 1 A_SetScale(0.36, 0.36)
+		TNT5 A 1 A_SetScale(0.39, 0.39)
+		TNT5 A 1 A_SetScale(0.42, 0.42)
+		TNT5 A 1 A_SetScale(0.45, 0.45)
+		TNT5 A 1 A_SetScale(0.48, 0.48)
+		TNT5 A 1 A_SetScale(0.50, 0.50)
+		TNT5 A 2 A_SetScale(0.53, 0.53)
+		TNT5 A 2 A_SetScale(0.56, 0.56)
+		TNT5 A 2 A_SetScale(0.59, 0.59)
+		TNT5 A 2 A_SetScale(0.62, 0.62)
+		TNT5 A 2 A_SetScale(0.65, 0.65)
+		TNT5 A 2 A_SetScale(0.68, 0.68)
+		TNT5 A 2 A_SetScale(0.70, 0.70)
+		TNT5 A 3 A_SetScale(0.73, 0.73)
+		TNT5 A 3 A_SetScale(0.76, 0.76)
+		TNT5 A 3 A_SetScale(0.79, 0.79)
+		TNT5 A 3 A_SetScale(0.82, 0.82)
+		TNT5 A 3 A_SetScale(0.85, 0.85)
+		TNT5 A 3 A_SetScale(0.88, 0.88)
+		TNT5 A 3 A_SetScale(0.90, 0.90)
+		TNT5 A 3 A_SetScale(0.93, 0.93)
+		TNT5 A 3 A_SetScale(0.96, 0.96)
+		TNT5 A 3 A_SetScale(0.99, 0.99)
+		TNT5 A 3 A_SetScale(1.02, 1.02)
+		TNT5 A 3 A_SetScale(1.05, 1.05)
+		TNT5 A 3 A_SetScale(1.08, 1.08)
+		TNT5 A 3 A_SetScale(1.11, 1.11)
+		Goto Super::FadeGore
+	Splash:
+		BLDT A 0
+		Stop
+	 }
+}
+
+Actor Bolognese_OnlineSound1
+{
+	+NOCLIP
+	-SOLID
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 A_PlaySound("bolognese/xdeath5",CHAN_5)
+		Stop
+	}
+}
+
+Actor Bolognese_OnlineSound2
+{
+	+NOCLIP
+	-SOLID
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 A_PlaySound("bolognese/gib",CHAN_5)
+		Stop
+	}
+}
+
+Actor Bolognese_OnlineSound3
+{
+	+NOCLIP
+	-SOLID
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 A_PlaySound("bolognese/icebreak",CHAN_5)
+		Stop
+	}
+}
+
+Actor Bolognese_OnlineSound4
+{
+	+NOCLIP
+	-SOLID
+	+CLIENTSIDEONLY
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 A_PlaySound("bolognese/gib",CHAN_5,0.75)
+		Stop
+	}
+}
+
+Actor Bolognese_IceChunk1 : GenericGoreActorFadeOut
+{
+	Radius 4
+	Height 4
+	Speed 8
+	Scale 1.0
+	Mass 1
+	+MISSILE
+	-FORCEXYBILLBOARD
+	-DONTSPLASH
+	+THRUACTORS
+	BounceType "Doom"
+	Alpha 1
+	BounceFactor 0.4
+	Mass 1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Death")
+		XME5 EFGH 3
+		Loop
+	Death:
+		XME5 E 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_IceChunk2 : Bolognese_IceChunk1
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Death")
+		XME5 IJKL 3
+		Loop
+	Death:
+		XME5 I 0
+		Goto Super::FadeGore
+	}
+}
+
+Actor Bolognese_IceChunk3 : Bolognese_IceChunk1
+{
+	BounceType "None"
+	Speed 6
+	Gravity 0.4
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_JumpIf(waterlevel > 1, "Death")
+		XME5 MNOP 3
+		Loop
+	Death:
+		XME5 M 0
+		Goto Super::FadeGore
+	}
+}

@@ -1,0 +1,208 @@
+actor DrunkMissiles : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You recovered a Drunk Missile!"
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 6
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 900
+    Weapon.AmmoType "DMissiles"
+    Weapon.AmmoGive 10
+    Weapon.AmmoUse 1
+    Obituary "%o sobered up once %k drunk missiled %h."
+    Tag "Drunk Missile Launcher"
+    +EXPLOSIVE
+    +IGNORESKILL
+    States
+    {
+      Spawn:
+        PDNK A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("UsingFirearm")
+        DRNK A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        DRNK A 1 A_Lower
+        loop
+
+      Select:
+        DRNK A 1 A_Raise
+        loop
+
+      Fire:
+        DRNK BCD 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDrunkMissileAttackHandler")
+        DRNK E 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        DRNK F 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        DRNK G 3 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi1Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch1")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi1
+        DRNK H 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi2Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch2")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi2
+        DRNK A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi3Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch3")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi3
+        DRNK A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      FireSemi1:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch1")
+        DRNK H 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi2:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch2")
+        DRNK A 3 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi3:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch3")
+        DRNK A 3 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
+
+      FireForceSwitch1:
+        TNT1 A 0 A_ClearReFire
+        DRNK H 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch2:
+        TNT1 A 0 A_ClearReFire
+        DRNK A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch3:
+        TNT1 A 0 A_ClearReFire
+        DRNK A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+    }
+}
+
+actor SamsaraROTTDrunkMissileAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DMissiles",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DMissiles",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackAlternate")
+      // Original sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_PlaySound("drunk/shoot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalCoop")
+      PickupAttackOriginalDM:
+        TNT1 AAAAA 0 A_FireCustomMissile("DrunkM",0,false,1,-8)
+        stop
+
+      PickupAttackOriginalCoop:
+        TNT1 AAAAA 0 A_FireCustomMissile("DrunkMCoop",0,false,1,-8)
+        stop
+
+      // Alternate sounds
+      PickupAttackAlternate:
+        TNT1 A 0 A_PlaySound("drunk/shoot/alt",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateCoop")
+      PickupAttackAlternateDM:
+        TNT1 AAAAA 0 A_FireCustomMissile("DrunkMSoundAlternate",0,false,1,-8)
+        stop
+
+      PickupAttackAlternateCoop:
+        TNT1 AAAAA 0 A_FireCustomMissile("DrunkMCoopSoundAlternate",0,false,1,-8)
+        stop
+    }
+}
+
+actor DMissiles : Ammo
+{
+    Inventory.MaxAmount 50
+    Ammo.BackpackAmount 8 // skills with different AmmoFactor values and sv_doubleammo can still give extra regardless of +IGNORESKILL
+    Ammo.BackpackMaxAmount 100
+    Inventory.Icon "AMSMD0"
+    Tag "Drunk Missiles"
+    +IGNORESKILL
+}
+
+actor DrunkM
+{
+    Projectile
+    Radius 11
+    Height 6
+    Speed 28
+    Damage (0) //(25)
+    DamageType "RottExplosive"
+    Scale 0.5
+    DeathSound "god/bang"
+    Decal "Scorch"
+    Obituary "%o sobered up once %k drunk missiled %h."
+    +BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +FORCERADIUSDMG
+    +THRUGHOST
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        FMIS A 0 Bright Light("ROTTROCKET")
+      SpawnStart:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_ChangeVelocity(0,frandom(-4,4),frandom(-2,2),CVF_RELATIVE)
+        FMIS AAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        TNT1 A 0 A_SeekerMissile(5,20,SMF_LOOK)
+        TNT1 A 0 A_ChangeVelocity(0,frandom(-4,4),frandom(-2,2),CVF_RELATIVE)
+        FMIS AAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        TNT1 A 0 A_SeekerMissile(5,20,SMF_LOOK)
+        TNT1 A 0 A_ChangeVelocity(0,frandom(-4,4),frandom(-2,2),CVF_RELATIVE)
+        FMIS AAAA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        TNT1 A 0 A_SeekerMissile(5,20,SMF_LOOK)
+      SpawnLoop:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        TNT1 A 0 A_SeekerMissile(5,20,SMF_LOOK)
+        TNT1 A 0 A_ChangeVelocity(0,frandom(-4,4),frandom(-2,2),CVF_RELATIVE)
+        FMIS AA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        TNT1 A 0 A_SeekerMissile(10,20,SMF_LOOK)
+        TNT1 A 0 A_ChangeVelocity(0,frandom(-4,4),frandom(-2,2),CVF_RELATIVE)
+        FMIS AA 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(32,48,XF_HURTSOURCE,false,20)
+      DeathFinish:
+        EXPL ABCDEFGHIJKLMNOPQRST 2 Bright Light("ROTTROCKETEXP")
+        stop
+
+      Crash:
+        TNT1 A 0 A_Jump(200,"Death")
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor DrunkMCoop : DrunkM
+{
+    Species "Player"
+    +SEEKERMISSILE
+    +THRUSPECIES
+}
+
+actor DrunkMSoundAlternate : DrunkM { DeathSound "god/bang/alt" }
+
+actor DrunkMCoopSoundAlternate : DrunkMSoundAlternate
+{
+    Species "Player"
+    +SEEKERMISSILE
+    +THRUSPECIES
+}

@@ -1,0 +1,127 @@
+actor "Zorch Propulsor" : Weapon
+{
+    Weapon.SelectionOrder 2500
+    Weapon.SlotNumber 5
+    Inventory.PickUpSound "chex/weaponget"
+    Weapon.AmmoUse 1
+    Weapon.AmmoGive 2
+    Weapon.AmmoType "RocketAmmo"
+    +WEAPON.NOAUTOFIRE
+    //+AMMO_OPTIONAL
+    +INVENTORY.UNDROPPABLE
+    +EXPLOSIVE // doom carryover
+    Inventory.PickupMessage "You got the Zorch Propulsor!"
+	Inventory.RestrictedTo "ChexWarrior"
+    Tag "Zorch Propulsor"
+    States
+    {
+      Spawn:
+        LAUC A -1
+        stop
+
+      Ready:
+        MISC A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        MISC A 1 A_Lower
+        loop
+
+      Select:
+        MISC A 1 A_Raise
+        loop
+
+      Fire:
+        MISC B 8 A_GunFlash
+        MISC B 12 A_GiveInventory("SamsaraChexZorchPropulsorAttackHandler")
+        MISC A 6
+        TNT1 A 0 A_ReFire
+        goto Ready
+
+      Flash:
+        MCSF A 3 Bright A_Light1
+        MCSF B 4 Bright
+        MCSF CD 4 Bright A_Light2
+        goto LightDone
+    }
+}
+
+actor SamsaraChexZorchPropulsorAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("RJingModeOn",1,"PickupAttackDMRJ")
+        TNT1 A 0 A_FireCustomMissile("ChexRocket",0,false)
+        stop
+
+      PickupAttackDMRJ:
+        TNT1 A 0 A_FireCustomMissile("ChexRocketRJ",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("RJingModeOn",1,"PickupAttackCoopRJ")
+        TNT1 A 0 A_FireCustomMissile("ChexRocket2",0,false)
+        stop
+
+      PickupAttackCoopRJ:
+        TNT1 A 0 A_FireCustomMissile("ChexRocket2RJ",0,false)
+        stop
+    }
+}
+
+actor ChexRocket
+{
+    Radius 11
+    Height 8
+    Speed 20
+    Damage 20
+    Projectile
+    +RANDOMIZE
+    +BLOODLESSIMPACT
+    +BRIGHT
+    SeeSound "chex/rocklf"
+    DeathSound "chex/rocklx"
+    Obituary "$SAMSARA_CHEX_OB_SLOT5"
+    //SelfObituary "$OB_ROCKET"
+    DamageType "Zorch"
+    States
+    {
+      Spawn:
+        CMIS A -1 Bright Light("CROCKET")
+        stop
+
+      Death:
+        TNT1 A 0 A_Explode(128,128,0)
+      DeathFinish:
+        CMIS B 8 Bright Light("CROCKET_X1")
+        CMIS C 6 Bright Light("CROCKET_X2")
+        CMIS D 4 Bright Light("CROCKET_X3")
+        stop
+    }
+}
+
+actor ChexRocketRJ : ChexRocket
+{
+    States
+    {
+      Death:
+        TNT1 A 0 A_Explode(128,128)
+        goto DeathFinish
+    }
+}
+
+actor ChexRocket2 : ChexRocket { +THRUSPECIES Species "Player" }
+actor ChexRocket2RJ : ChexRocketRJ { +THRUSPECIES Species "Player" }

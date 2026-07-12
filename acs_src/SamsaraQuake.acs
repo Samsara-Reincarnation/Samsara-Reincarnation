@@ -1,13 +1,18 @@
 // Scripts placed here due to the presence of UnloadingNow
 
-script "SamsaraMegaHealth" (int hpcount, int hpPerSec, int delayTics) //259 -- SAMSARA_MEGAHEALTH // used by quake 1, quake 2, and hexen 2
+script "SamsaraMegaHealth" (int hpcount, int hpcountmax, int hpPerSec, int delayTics) //259 -- SAMSARA_MEGAHEALTH // used by the three quakes and hexen 2
 {
     int hpGiven = GetActorProperty(0, APROP_Health);
     int startHealth = hpGiven;
     int hpCap = getMaxHealth(0);
 
     if (GetCVar("samsara_nohealthcap")) { hpCap = INTMAX; }
-    else if (hpCap < 250) { hpCap = 250; }
+    else
+    {
+        if (hpcountmax < 250 && CheckInventory("SamsaraHasProsperity")) { hpcountmax = 250; }
+
+        if (hpCap < hpcountmax) { hpCap = hpcountmax; }
+    }
 
     SetActorProperty(0, APROP_Health, min(hpGiven + hpcount, hpCap));
     hpGiven = GetActorProperty(0, APROP_Health) - hpGiven;
@@ -18,7 +23,7 @@ script "SamsaraMegaHealth" (int hpcount, int hpPerSec, int delayTics) //259 -- S
 
     while (1)
     {
-        if (CheckInventory("QuakeRegenTimer") || CheckInventory("SamsaraHasProsperity") || GetCVar("sv_degeneration"))
+        if (CheckInventory("QuakeRegenTimer") || CheckInventory("PowerQ3RegenerationDummy") || CheckInventory("SamsaraHasProsperity") || GetCVar("sv_degeneration"))
         {
             Delay(1);
             continue;
@@ -51,14 +56,14 @@ script "SamsaraMegaHealth" (int hpcount, int hpPerSec, int delayTics) //259 -- S
     }
 }
 
-script "SamsaraQPowers" (int startTime, int respawning) //636 -- SAMSARA_QPOWERS // used by quake 1
+script "SamsaraQPowers" (int startTime, int respawning) //636 -- SAMSARA_QPOWERS // used by quake 1 and quake 3
 {
     int pln = PlayerNumber();
     int quadTimer,  oQuadTimer;
     int regenTimer, oRegenTimer;
     int invisTimer, oInvisTimer;
     int pentTimer,  oPentTimer;
-	int bioTimer,  oBioTimer;
+    int bioTimer,  oBioTimer;
     int health, oHealth, regenPulse, oPulse;
     int regenX, regenY;
     int healthGiven, healthMax;
@@ -75,409 +80,600 @@ script "SamsaraQPowers" (int startTime, int respawning) //636 -- SAMSARA_QPOWERS
         {
             if (samsaraClassNum() == CLASS_WITCHAVEN) { SetActorProperty(0, APROP_Health, max(health, 100 + CheckInventory("SamsaraWitchavenHealthIncrease") + baseHealthUpgrade)); }
             else if (samsaraClassNum() == CLASS_DEMONESS) { SetActorProperty(0, APROP_Health, max(health, 70 + CheckInventory("Hexen2HealthAdd") + baseHealthUpgrade)); }
-            else if (samsaraClassNum() != CLASS_QUAKE) { SetActorProperty(0, APROP_Health, max(health, 100 + baseHealthUpgrade)); }
+            else if (samsaraClassNum() != CLASS_QUAKE && samsaraClassNum() != CLASS_QUAKE3) { SetActorProperty(0, APROP_Health, max(health, 100 + baseHealthUpgrade)); }
         } else if (GetCVar("samsara_restorehealth") == 1) {
             if (samsaraClassNum() == CLASS_WITCHAVEN) { SetActorProperty(0, APROP_Health, max(health, (100 + CheckInventory("SamsaraWitchavenHealthIncrease") + baseHealthUpgrade) / 2)); }
             else if (samsaraClassNum() == CLASS_DEMONESS) { SetActorProperty(0, APROP_Health, max(health, (70 + CheckInventory("Hexen2HealthAdd") + baseHealthUpgrade) / 2)); }
-            else if (samsaraClassNum() != CLASS_QUAKE) { SetActorProperty(0, APROP_Health, max(health, (100 + baseHealthUpgrade) / 2)); }
+            else if (samsaraClassNum() != CLASS_QUAKE && samsaraClassNum() != CLASS_QUAKE3) { SetActorProperty(0, APROP_Health, max(health, (100 + baseHealthUpgrade) / 2)); }
         }
     }
 
-    if (samsaraClassNum() != CLASS_QUAKE) { terminate; }
+    if (samsaraClassNum() != CLASS_QUAKE && samsaraClassNum() != CLASS_QUAKE3) { terminate; }
 
-    quadTimer   = CheckQuad();
-    regenTimer  = CheckInventory("QuakeRegenTimer");
-    invisTimer  = CheckInventory("QuakeInvisTimer");
-    pentTimer   = CheckInventory("QuakePentTimer");
-	bioTimer   = CheckInventory("QuakeBioTimer");
-
-    health = GetActorProperty(0, APROP_Health);
-
-    while (ServerEnterTimes[pln] == startTime)
+    if (samsaraClassNum() == CLASS_QUAKE)
     {
-        oHealth = health;
+        quadTimer   = CheckQuad();
+        regenTimer  = CheckInventory("QuakeRegenTimer");
+        invisTimer  = CheckInventory("QuakeInvisTimer");
+        pentTimer   = CheckInventory("QuakePentTimer");
+        bioTimer   = CheckInventory("QuakeBioTimer");
+
         health = GetActorProperty(0, APROP_Health);
 
-        if (health <= 0)
+        while (ServerEnterTimes[pln] == startTime)
         {
-            if (CheckInventory("SamsaraHasDisabledInventoryCooldown")) { TakeInventory("QuakeQuadTimer", 0x7FFFFFFF); }
-            else
+            oHealth = health;
+            health = GetActorProperty(0, APROP_Health);
+
+            if (health <= 0)
             {
-                quadTimer = CheckQuad(); 
-                TakeInventory("QuakeQuadTimer", quadTimer);
+                if (CheckInventory("SamsaraHasDisabledInventoryCooldown")) { TakeInventory("QuakeQuadTimer", 0x7FFFFFFF); }
+                else
+                {
+                    quadTimer = CheckQuad();
+                    TakeInventory("QuakeQuadTimer", quadTimer);
+                }
+
+                if (!CheckInventory("QuakeQuadTimer") || CheckQuad() > 0 || CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad")) { SetInventory("SamsaraQuadDamageCooldownDisplay", 0); }
+                else { SetInventory("SamsaraQuadDamageCooldownDisplay", CheckInventory("QuakeQuadTimer") / 35 + 1); }
+
+                TakeInventory("QuakeRegenTimer", 0x7FFFFFFF);
+                TakeInventory("QuakeInvisTimer", 0x7FFFFFFF);
+                TakeInventory("QuakePentTimer", 0x7FFFFFFF);
+                TakeInventory("QuakeBioTimer", 0x7FFFFFFF);
+
+                Delay(1);
+                continue;
             }
 
+            oQuadTimer = quadTimer;
+            quadTimer  = CheckQuad();
+
+            oRegenTimer = regenTimer;
+            regenTimer  = CheckInventory("QuakeRegenTimer");
+
+            oInvisTimer = invisTimer;
+            invisTimer  = CheckInventory("QuakeInvisTimer");
+
+            oPentTimer = pentTimer;
+            pentTimer  = CheckInventory("QuakePentTimer");
+
+            oBioTimer = bioTimer;
+            bioTimer  = CheckInventory("QuakeBioTimer");
+
+            offset = 1;
+            opowercount = powercount;
+            powercount = 0;
+            powercount += (quadTimer > 0);
+            powercount += (regenTimer > 0);
+            powercount += (invisTimer > 0);
+            powercount += (pentTimer > 0);
+            powercount += (bioTimer > 0);
+
+            /*
+             * Quad shit
+             */
+
+            if (quadTimer - 35 > oQuadTimer)
+            {
+                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { AmbientSound("quakeweps/dmc/quadon", 127); } // Deathmatch Classic
+                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { AmbientSound("quakeweps/rerelease/quadon", 127); } // Rerelease
+                else { AmbientSound("quakeweps/quadon", 127); } // Original
+            }
+
+            if (quadTimer > 0)
+            {
+                if (quadTimer % 35 == 0 || oQuadTimer < quadTimer || (opowercount != powercount))
+                {
+                    SetHudSize(320, 200, 1);
+                    SetFont("Q1P1ICO1");
+                    HudMessage(s:"A"; HUDMSG_FADEOUT, 58101, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
+                    SetHudSize(320, 200, 1);
+                    SetFont("QUAKCONP");
+                    HudMessage(d:(quadTimer+34) / 35;  HUDMSG_FADEOUT, 58102 , CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.5, 1.0);
+                }
+
+                offset++;
+
+                if (oQuadTimer <= 0 || oHealth <= 0) { GiveInventory("QuadDamagePower", 1); }
+            }
+            else
+            {
+                if (CheckInventory("DoNotQuad")) { TakeInventory("DoNotQuad", 1); }
+
+                if (quadTimer == 0)
+                {
+                    HudMessage(s:""; HUDMSG_PLAIN, 58101, CR_UNTRANSLATED, 0, 0, 1);
+                    HudMessage(s:""; HUDMSG_PLAIN, 58102, CR_UNTRANSLATED, 0, 0, 1);
+                }
+                TakeInventory("QuadDamagePower", 1);
+
+                if (CheckInventory("SamsaraHasDisabledInventoryCooldown"))
+                {
+                    TakeInventory("QuakeQuadTimer", 0x7FFFFFFF);
+                    if (!CheckInventory("QuakeQuadTimer") || CheckQuad() > 0 || CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad")) { SetInventory("SamsaraQuadDamageCooldownDisplay", 0); }
+                    else { SetInventory("SamsaraQuadDamageCooldownDisplay", CheckInventory("QuakeQuadTimer") / 35 + 1); }
+                }
+            }
+
+            if (quadTimer == 105)
+            {
+                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/quadoff", 127); } // Deathmatch Classic
+                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/quadoff", 127); } // Rerelease
+                else { LocalAmbientSound("quakeweps/quadoff", 127); } // Original
+            }
+
+            if ((quadTimer % 35 == 0) && (quadTimer / 35 <= 3) && (quadTimer > 0))
+            {
+                FadeRange(0, 64, 255, 0.25, 0, 64, 255, 0, 0.33);
+            }
+
+            if (quadTimer == -QUAD_THRESHOLD)
+            {
+                if (CheckInventory("CantQuad") && CheckInventory("QuadDamageItem") && GetCVar("samsara_permaquad") && !CheckInventory("SamsaraHasDisabledInventoryCooldown") && !UnloadingNow)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/quadready", 96); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/quadready", 96); } // Rerelease
+                    else { LocalAmbientSound("quakeweps/quadready", 96); } // Original
+                    FadeRange(0, 64, 255, 0.25, 0, 64, 255, 0, 0.33);
+
+                    //SetHudSize(320, 200, 1);
+                    //SetFont("QUADICO2");
+                    //HudMessage(s:"Quad Damage Recharged"; HUDMSG_FADEOUT, 58103, CR_UNTRANSLATED, 1.5, 0.5, 0.0, 1.0);
+                }
+
+                TakeInventory("CantQuad", 0x7FFFFFFF);
+            }
+            else
+            {
+                GiveInventory("CantQuad", 1);
+            }
+
+            /*
+             * Pentagram shit
+             */
+
+            if (pentTimer - 35 > oPentTimer)
+            {
+                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { AmbientSound("quakeweps/dmc/pentagramon", 127); } // Deathmatch Classic
+                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { AmbientSound("quakeweps/rerelease/pentagramon", 127); } // Rerelease
+                else { AmbientSound("quakeweps/pentagramon", 127); } // Original
+            }
+
+            if (pentTimer > 0)
+            {
+                if (pentTimer % 35 == 0 || oPentTimer < pentTimer || powercount != opowercount)
+                {
+                    SetHudSize(320, 200, 1);
+                    SetFont("Q1P3ICO1");
+                    HudMessage(s:"A"; HUDMSG_FADEOUT, 58107, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
+                    SetHudSize(320, 200, 1);
+                    SetFont("QUAKCONP");
+                    HudMessage(d:(pentTimer+34) / 35;  HUDMSG_FADEOUT, 58108, CR_UNTRANSLATED, 300.2, PY320 - (POFF320*offset), 1.5, 1.0);
+                }
+
+                offset++;
+
+                if (pentTimer == 105)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/pentagramout", 127); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/pentagramout", 127); } // Rerelease
+                    else { LocalAmbientSound("quakeweps/pentagramout", 127); } // Original
+                }
+                else if (Timer() % 140 == 0)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/pentagram", 96); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/pentagram", 96); } // Rerelease
+                    else { ActivatorSound("quakeweps/pentagram", 96); } // Original
+                }
+
+                if (oPentTimer <= 0 || oHealth <= 0) { GiveInventory("QuakePentagram", 1); }
+            }
+            else
+            {
+                if (oPentTimer != 0)
+                {
+                    HudMessage(s:""; HUDMSG_PLAIN, 58107, CR_UNTRANSLATED, 0, 0, 1);
+                    HudMessage(s:""; HUDMSG_PLAIN, 58108, CR_UNTRANSLATED, 0, 0, 1);
+                    TakeInventory("QuakePentagram", 0x7FFFFFFF);
+                }
+            }
+
+            /*
+             * Regen shit
+             */
+
+            if (regenTimer != 0)
+            {
+                if (regenTimer - 35 > oRegenTimer)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/regenup", 127); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/regenup", 127); } // Rerelease
+                    else { ActivatorSound("quakeweps/regenup", 127); } // Original
+                }
+                regenX = 320 - (regenPulse * 18);
+                regenY = 200 - (regenPulse * 18);
+
+                if (regenTimer % 35 == 0 || regenPulse != 0 || oPulse != 0 || oRegenTimer < regenTimer || (opowercount != powercount))
+                {
+                    SetHudSize(320, 200, 1); // SetHudSize(regenX, regenY, 1);
+                    regenX = ftoi(regenX * REGEN_CENTER_X);
+                    regenY = ftoi(regenY * REGEN_CENTER_Y) - ftoi(regenY * (REGEN_OFFSET * offset));
+
+                    SetFont("Q1P5ICO1");
+                    HudMessage(s:"A"; HUDMSG_FADEOUT, 58103, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.25, 0.25); //itof(regenX) + 0.4, itof(regenY)
+                    SetHudSize(320, 200, 1);
+                    SetFont("QUAKCONP");
+                    HudMessage(d:(regenTimer+34) / 35;  HUDMSG_FADEOUT, 58104, CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.25, 0.25);
+                    // the +34 was added so that the regen pulse didn't prematurely lower the seconds display by one
+                }
+
+                offset++;
+
+                oPulse = regenPulse;
+                regenPulse = max(0, regenPulse - 1);
+
+                if (regenTimer % 35 == 18 && !isDead(0))
+                {
+                    healthMax = getMaxHealth(0);
+
+                    if (GetCVar("samsara_nohealthcap")) { healthMax = INTMAX; }
+                    else if (healthMax < 250) { healthMax = 250; }
+
+                    if (health >= 100) { giveHealthMax(5, healthMax); }
+                    else if (health + 10 >= 100)
+                    {
+                        SetActorProperty(0, APROP_Health, 100);
+                        giveHealthMax(5, healthMax);
+                    }
+                    else { giveHealthMax(15, healthMax); }
+
+                    if (GetActorProperty(0, APROP_Health) > health)
+                    {
+                        FadeRange(255, 128, 128, 0.1, 255, 0, 0, 0.0, 0.3333);
+                        if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/regen", 127); } // Deathmatch Classic
+                        else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/regen", 127); } // Rerelease
+                        else { ActivatorSound("quakeweps/regen", 127); } // Original
+                        regenPulse = 12;
+                    }
+
+                    if (!GetCVar("samsara_nohealthcap")) { healthGiven += max(GetActorProperty(0, APROP_Health) - health, 0); }
+                    health = GetActorProperty(0, APROP_Health);
+                }
+
+                if (regenTimer == 105)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/regenout", 127); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/regenout", 127); } // Rerelease
+                    else { LocalAmbientSound("quakeweps/regenout", 127); } // Original
+                }
+            }
+            else if (CheckInventory("SamsaraHasProsperity") || GetCVar("sv_degeneration"))
+            {
+                regenTimer = 0;
+            }
+            else
+            {
+                if (oRegenTimer != 0)
+                {
+                    HudMessage(s:""; HUDMSG_PLAIN, 58103, CR_UNTRANSLATED, 0, 0, 1);
+                    HudMessage(s:""; HUDMSG_PLAIN, 58104, CR_UNTRANSLATED, 0, 0, 1);
+                }
+
+                if (health <= getMaxHealth(0)) { healthGiven = 0; }
+
+                if (Timer() % 35 == 0 && healthGiven > 0 && (health - 1 >= getMaxHealth(0)))
+                {
+                    SetActorProperty(0, APROP_Health, health - 1);
+                }
+            }
+
+            /*
+             * Invis shit
+             */
+
+            if (invisTimer - 35 > oInvisTimer)
+            {
+                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/invison", 127); } // Deathmatch Classic
+                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/invison", 127); } // Rerelease
+                else { ActivatorSound("quakeweps/invison", 127); } // Original
+            }
+
+            if (invisTimer > 0)
+            {
+                if (invisTimer % 35 == 0 || oInvisTimer < invisTimer || powercount != opowercount)
+                {
+                    SetHudSize(320, 200, 1);
+                    SetFont("Q1P2ICO1");
+                    HudMessage(s:"A"; HUDMSG_FADEOUT, 58105, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
+                    SetHudSize(320, 200, 1);
+                    SetFont("QUAKCONP");
+                    HudMessage(d:(invisTimer+34) / 35;  HUDMSG_FADEOUT, 58106, CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.5, 1.0);
+                }
+
+                offset++;
+
+                if (invisTimer % 105 == 0)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/inviswhisper", 127); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/inviswhisper", 127); } // Rerelease
+                    else { LocalAmbientSound("quakeweps/inviswhisper", 127); } // Original
+                }
+
+                if (invisTimer == 105)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/invisout", 127); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/invisout", 127); } // Rerelease
+                    else { LocalAmbientSound("quakeweps/invisout", 127); } // Original
+                }
+
+                if (oInvisTimer <= 0 || oHealth <= 0) { GiveInventory("QuakeInvisibility", 1); }
+            }
+            else
+            {
+                if (oInvisTimer != 0)
+                {
+                    HudMessage(s:""; HUDMSG_PLAIN, 58105, CR_UNTRANSLATED, 0, 0, 1);
+                    HudMessage(s:""; HUDMSG_PLAIN, 58106, CR_UNTRANSLATED, 0, 0, 1);
+                    GiveInventory("QuakeInvisibilityOff", 1);
+                }
+            }
+
+            /*
+             * Biosuit shit
+             */
+
+            if (bioTimer - 35 > oBioTimer)
+            {
+                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/biosuiton", 127); } // Deathmatch Classic
+                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/biosuiton", 127); } // Rerelease
+                else { ActivatorSound("quakeweps/biosuiton", 127); } // Original
+            }
+
+            if (bioTimer > 0)
+            {
+                if (bioTimer % 35 == 0 || oBioTimer < bioTimer || powercount != opowercount)
+                {
+                    SetHudSize(320, 200, 1);
+                    SetFont("Q1P4ICO1");
+                    HudMessage(s:"A"; HUDMSG_FADEOUT, 58109, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
+                    SetHudSize(320, 200, 1);
+                    SetFont("QUAKCONP");
+                    HudMessage(d:(bioTimer+34) / 35;  HUDMSG_FADEOUT, 58110, CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.5, 1.0);
+                }
+
+                offset++;
+
+                if (bioTimer == 105)
+                {
+                    if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/biosuitoff", 127); } // Deathmatch Classic
+                    else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/biosuitoff", 127); } // Rerelease
+                    else { LocalAmbientSound("quakeweps/biosuitoff", 127); } // Original
+                }
+
+                if (oBioTimer <= 0 || oHealth <= 0) { GiveInventory("QuakeBiosuit", 1); }
+            }
+            else
+            {
+                if (oBioTimer != 0)
+                {
+                    HudMessage(s:""; HUDMSG_PLAIN, 58109, CR_UNTRANSLATED, 0, 0, 1);
+                    HudMessage(s:""; HUDMSG_PLAIN, 58110, CR_UNTRANSLATED, 0, 0, 1);
+                    TakeInventory("QuakeBiosuit", 0x7FFFFFFF);
+                }
+            }
+
+            TakeInventory("QuakeQuadTimer", 1);
             if (!CheckInventory("QuakeQuadTimer") || CheckQuad() > 0 || CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad")) { SetInventory("SamsaraQuadDamageCooldownDisplay", 0); }
             else { SetInventory("SamsaraQuadDamageCooldownDisplay", CheckInventory("QuakeQuadTimer") / 35 + 1); }
 
-            TakeInventory("QuakeRegenTimer", 0x7FFFFFFF);
-            TakeInventory("QuakeInvisTimer", 0x7FFFFFFF);
-            TakeInventory("QuakePentTimer", 0x7FFFFFFF);
-			TakeInventory("QuakeBioTimer", 0x7FFFFFFF);
+            TakeInventory("QuakeRegenTimer", 1);
+            TakeInventory("QuakeInvisTimer", 1);
+            TakeInventory("QuakePentTimer", 1);
+            TakeInventory("QuakeBioTimer", 1);
+
+            if (UnloadingNow)
+            {
+                SetActorProperty(0, APROP_Health, middle(health, getMaxHealth(0), health - healthGiven));
+
+                health = GetActorProperty(0, APROP_Health);
+
+                baseHealthUpgrade = CheckInventory("SamsaraExtraBaseSpawnHealth") + CheckInventory("SamsaraExtraBaseSpawnHealthDeterminant") + CheckInventory("SamsaraExtraBaseSpawnHealthPermanent");
+
+                if (GetCVar("samsara_restorehealth") >= 2) { SetActorProperty(0, APROP_Health, max(health, 100 + baseHealthUpgrade)); } // getMaxHealth(0)
+                else { SetActorProperty(0, APROP_Health, max(health, (100 + baseHealthUpgrade) / 2)); } // getMaxHealth(0) / 2
+                break;
+            }
 
             Delay(1);
-            continue;
         }
+    } else if (samsaraClassNum() == CLASS_QUAKE3) {
+        regenTimer = GetActorPowerupTics(0, "PowerQ3RegenerationDummy");
 
-        oQuadTimer = quadTimer;
-        quadTimer  = CheckQuad();
+        health = GetActorProperty(0, APROP_Health);
 
-        oRegenTimer = regenTimer;
-        regenTimer  = CheckInventory("QuakeRegenTimer");
-
-        oInvisTimer = invisTimer;
-        invisTimer  = CheckInventory("QuakeInvisTimer");
-
-        oPentTimer = pentTimer;
-        pentTimer  = CheckInventory("QuakePentTimer");
-		
-        oBioTimer = bioTimer;
-        bioTimer  = CheckInventory("QuakeBioTimer");
-
-        offset = 1;
-        opowercount = powercount;
-        powercount = 0;
-        powercount += (quadTimer > 0);
-        powercount += (regenTimer > 0);
-        powercount += (invisTimer > 0);
-        powercount += (pentTimer > 0);
-		powercount += (bioTimer > 0);
-
-        /*
-         * Quad shit
-         */
-
-        if (quadTimer - 35 > oQuadTimer)
+        while (ServerEnterTimes[pln] == startTime)
         {
-            if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { AmbientSound("quakeweps/dmc/quadon", 127); } // Deathmatch Classic
-            else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { AmbientSound("quakeweps/rerelease/quadon", 127); } // Rerelease
-            else { AmbientSound("quakeweps/quadon", 127); } // Original
-        }
-
-        if (quadTimer > 0)
-        {
-            if (quadTimer % 35 == 0 || oQuadTimer < quadTimer || (opowercount != powercount))
-            {
-                SetHudSize(320, 200, 1);
-                SetFont("Q1P1ICO1");
-                HudMessage(s:"A"; HUDMSG_FADEOUT, 58101, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
-                SetHudSize(320, 200, 1);
-                SetFont("QUAKCONP");
-                HudMessage(d:(quadTimer+34) / 35;  HUDMSG_FADEOUT, 58102 , CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.5, 1.0);
-            }
-
-            offset++;
-
-            if (oQuadTimer <= 0 || oHealth <= 0) { GiveInventory("QuadDamagePower", 1); }
-        }
-        else
-        {
-            if (CheckInventory("DoNotQuad")) { TakeInventory("DoNotQuad", 1); }
-
-            if (quadTimer == 0)
-            {
-                HudMessage(s:""; HUDMSG_PLAIN, 58101, CR_UNTRANSLATED, 0, 0, 1);
-                HudMessage(s:""; HUDMSG_PLAIN, 58102, CR_UNTRANSLATED, 0, 0, 1);
-            }
-            TakeInventory("QuadDamagePower", 1);
-
-            if (CheckInventory("SamsaraHasDisabledInventoryCooldown"))
-            {
-                TakeInventory("QuakeQuadTimer", 0x7FFFFFFF);
-                if (!CheckInventory("QuakeQuadTimer") || CheckQuad() > 0 || CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad")) { SetInventory("SamsaraQuadDamageCooldownDisplay", 0); }
-                else { SetInventory("SamsaraQuadDamageCooldownDisplay", CheckInventory("QuakeQuadTimer") / 35 + 1); }
-            }
-        }
-
-        if (quadTimer == 105)
-        {
-            if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/quadoff", 127); } // Deathmatch Classic
-            else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/quadoff", 127); } // Rerelease
-            else { LocalAmbientSound("quakeweps/quadoff", 127); } // Original
-        }
-
-        if ((quadTimer % 35 == 0) && (quadTimer / 35 <= 3) && (quadTimer > 0))
-        {
-            FadeRange(0, 64, 255, 0.25, 0, 64, 255, 0, 0.33);
-        }
-
-        if (quadTimer == -QUAD_THRESHOLD)
-        {
-            if (CheckInventory("CantQuad") && CheckInventory("QuadDamageItem") && GetCVar("samsara_permaquad") && !CheckInventory("SamsaraHasDisabledInventoryCooldown") && !UnloadingNow)
-            {
-                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/quadready", 96); } // Deathmatch Classic
-                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/quadready", 96); } // Rerelease
-                else { LocalAmbientSound("quakeweps/quadready", 96); } // Original
-				FadeRange(0, 64, 255, 0.25, 0, 64, 255, 0, 0.33);
-
-                //SetHudSize(320, 200, 1);
-                //SetFont("QUADICO2");
-                //HudMessage(s:"Quad Damage Recharged"; HUDMSG_FADEOUT, 58103, CR_UNTRANSLATED, 1.5, 0.5, 0.0, 1.0);
-            }
-
-            TakeInventory("CantQuad", 0x7FFFFFFF);
-        }
-        else
-        {
-            GiveInventory("CantQuad", 1);
-        }
-
-        /*
-         * Pentagram shit
-         */
-
-        if (pentTimer - 35 > oPentTimer)
-        {
-            if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { AmbientSound("quakeweps/dmc/pentagramon", 127); } // Deathmatch Classic
-            else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { AmbientSound("quakeweps/rerelease/pentagramon", 127); } // Rerelease
-            else { AmbientSound("quakeweps/pentagramon", 127); } // Original
-        }
-
-        if (pentTimer > 0)
-        {
-            if (pentTimer % 35 == 0 || oPentTimer < pentTimer || powercount != opowercount)
-            {
-                SetHudSize(320, 200, 1);
-                SetFont("Q1P3ICO1");
-                HudMessage(s:"A"; HUDMSG_FADEOUT, 58107, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
-                SetHudSize(320, 200, 1);
-                SetFont("QUAKCONP");
-                HudMessage(d:(pentTimer+34) / 35;  HUDMSG_FADEOUT, 58108, CR_UNTRANSLATED, 300.2, PY320 - (POFF320*offset), 1.5, 1.0);
-            }
-
-            offset++;
-
-            if (pentTimer == 105)
-            {
-                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/pentagramout", 127); } // Deathmatch Classic
-                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/pentagramout", 127); } // Rerelease
-                else { LocalAmbientSound("quakeweps/pentagramout", 127); } // Original
-            }
-            else if (Timer() % 140 == 0)
-            {
-                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/pentagram", 96); } // Deathmatch Classic
-                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/pentagram", 96); } // Rerelease
-                else { ActivatorSound("quakeweps/pentagram", 96); } // Original
-            }
-
-            if (oPentTimer <= 0 || oHealth <= 0) { GiveInventory("QuakePentagram", 1); }
-        }
-        else
-        {
-            if (oPentTimer != 0)
-            {
-                HudMessage(s:""; HUDMSG_PLAIN, 58107, CR_UNTRANSLATED, 0, 0, 1);
-                HudMessage(s:""; HUDMSG_PLAIN, 58108, CR_UNTRANSLATED, 0, 0, 1);
-                TakeInventory("QuakePentagram", 0x7FFFFFFF);
-            }
-        }
-
-        /*
-         * Regen shit
-         */
-
-        if (regenTimer != 0)
-        {
-			if (regenTimer - 35 > oRegenTimer)
-			{
-				if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/regenup", 127); } // Deathmatch Classic
-				else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/regenup", 127); } // Rerelease
-				else { ActivatorSound("quakeweps/regenup", 127); } // Original
-			}
-            regenX = 320 - (regenPulse * 18);
-            regenY = 200 - (regenPulse * 18);
-
-            if (regenTimer % 35 == 0 || regenPulse != 0 || oPulse != 0 || oRegenTimer < regenTimer || (opowercount != powercount))
-            {
-                SetHudSize(320, 200, 1); // SetHudSize(regenX, regenY, 1);
-                regenX = ftoi(regenX * REGEN_CENTER_X);
-                regenY = ftoi(regenY * REGEN_CENTER_Y) - ftoi(regenY * (REGEN_OFFSET * offset));
-
-                SetFont("Q1P5ICO1");
-                HudMessage(s:"A"; HUDMSG_FADEOUT, 58103, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.25, 0.25); //itof(regenX) + 0.4, itof(regenY)
-                SetHudSize(320, 200, 1);
-                SetFont("QUAKCONP");
-                HudMessage(d:(regenTimer+34) / 35;  HUDMSG_FADEOUT, 58104, CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.25, 0.25);
-                // the +34 was added so that the regen pulse didn't prematurely lower the seconds display by one
-            }
-
-            offset++;
-
-            oPulse = regenPulse;
-            regenPulse = max(0, regenPulse - 1);
-
-            if (regenTimer % 35 == 18 && !isDead(0))
-            {
-                healthMax = getMaxHealth(0);
-
-                if (GetCVar("samsara_nohealthcap")) { healthMax = INTMAX; }
-                else if (healthMax < 250) { healthMax = 250; }
-
-                if (health >= 100) { giveHealthMax(5, healthMax); }
-                else if (health + 10 >= 100)
-                {
-                    SetActorProperty(0, APROP_Health, 100);
-                    giveHealthMax(5, healthMax);
-                }
-                else { giveHealthMax(15, healthMax); }
-
-                if (GetActorProperty(0, APROP_Health) > health)
-                {
-                    FadeRange(255, 128, 128, 0.1, 255, 0, 0, 0.0, 0.3333);
-					if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/regen", 127); } // Deathmatch Classic
-					else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/regen", 127); } // Rerelease
-					else { ActivatorSound("quakeweps/regen", 127); } // Original
-                    regenPulse = 12;
-                }
-
-                if (!GetCVar("samsara_nohealthcap")) { healthGiven += max(GetActorProperty(0, APROP_Health) - health, 0); }
-                health = GetActorProperty(0, APROP_Health);
-            }
-
-            if (regenTimer == 105)
-            {
-				if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/regenout", 127); } // Deathmatch Classic
-				else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/regenout", 127); } // Rerelease
-				else { LocalAmbientSound("quakeweps/regenout", 127); } // Original
-            }
-        }
-        else if (CheckInventory("SamsaraHasProsperity") || GetCVar("sv_degeneration"))
-        {
-            regenTimer = 0;
-        }
-        else
-        {
-            if (oRegenTimer != 0)
-            {
-                HudMessage(s:""; HUDMSG_PLAIN, 58103, CR_UNTRANSLATED, 0, 0, 1);
-                HudMessage(s:""; HUDMSG_PLAIN, 58104, CR_UNTRANSLATED, 0, 0, 1);
-            }
-
-            if (health <= getMaxHealth(0)) { healthGiven = 0; }
-
-            if (Timer() % 35 == 0 && healthGiven > 0 && (health - 1 >= getMaxHealth(0)))
-            {
-                SetActorProperty(0, APROP_Health, health - 1);
-            }
-        }
-
-        /*
-         * Invis shit
-         */
-
-        if (invisTimer - 35 > oInvisTimer)
-        {
-            if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/invison", 127); } // Deathmatch Classic
-            else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/invison", 127); } // Rerelease
-            else { ActivatorSound("quakeweps/invison", 127); } // Original
-        }
-
-        if (invisTimer > 0)
-        {
-            if (invisTimer % 35 == 0 || oInvisTimer < invisTimer || powercount != opowercount)
-            {
-                SetHudSize(320, 200, 1);
-                SetFont("Q1P2ICO1");
-                HudMessage(s:"A"; HUDMSG_FADEOUT, 58105, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
-                SetHudSize(320, 200, 1);
-                SetFont("QUAKCONP");
-                HudMessage(d:(invisTimer+34) / 35;  HUDMSG_FADEOUT, 58106, CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.5, 1.0);
-            }
-
-            offset++;
-
-            if (invisTimer % 105 == 0)
-            {
-                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/inviswhisper", 127); } // Deathmatch Classic
-                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/inviswhisper", 127); } // Rerelease
-                else { LocalAmbientSound("quakeweps/inviswhisper", 127); } // Original
-            }
-
-            if (invisTimer == 105)
-            {
-                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/invisout", 127); } // Deathmatch Classic
-                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/invisout", 127); } // Rerelease
-                else { LocalAmbientSound("quakeweps/invisout", 127); } // Original
-            }
-
-            if (oInvisTimer <= 0 || oHealth <= 0) { GiveInventory("QuakeInvisibility", 1); }
-        }
-        else
-        {
-            if (oInvisTimer != 0)
-            {
-                HudMessage(s:""; HUDMSG_PLAIN, 58105, CR_UNTRANSLATED, 0, 0, 1);
-                HudMessage(s:""; HUDMSG_PLAIN, 58106, CR_UNTRANSLATED, 0, 0, 1);
-                GiveInventory("QuakeInvisibilityOff", 1);
-            }
-        }
-		
-        /*
-         * Biosuit shit
-         */
-
-        if (bioTimer - 35 > oBioTimer)
-        {
-            if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { ActivatorSound("quakeweps/dmc/biosuiton", 127); } // Deathmatch Classic
-            else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { ActivatorSound("quakeweps/rerelease/biosuiton", 127); } // Rerelease
-            else { ActivatorSound("quakeweps/biosuiton", 127); } // Original
-        }
-
-        if (bioTimer > 0)
-        {
-            if (bioTimer % 35 == 0 || oBioTimer < bioTimer || powercount != opowercount)
-            {
-                SetHudSize(320, 200, 1);
-                SetFont("Q1P4ICO1");
-                HudMessage(s:"A"; HUDMSG_FADEOUT, 58109, CR_UNTRANSLATED, 311.0, PY320 - (POFF320 * offset), 1.5, 1.0);
-                SetHudSize(320, 200, 1);
-                SetFont("QUAKCONP");
-                HudMessage(d:(bioTimer+34) / 35;  HUDMSG_FADEOUT, 58110, CR_UNTRANSLATED, 300.2, PY320 - (POFF320 * offset), 1.5, 1.0);
-            }
-
-            offset++;
-
-            if (bioTimer == 105)
-            { 
-                if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/biosuitoff", 127); } // Deathmatch Classic
-                else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/biosuitoff", 127); } // Rerelease
-                else { LocalAmbientSound("quakeweps/biosuitoff", 127); } // Original
-            }
-
-            if (oBioTimer <= 0 || oHealth <= 0) { GiveInventory("QuakeBiosuit", 1); }
-        }
-        else
-        {
-            if (oBioTimer != 0)
-            {
-                HudMessage(s:""; HUDMSG_PLAIN, 58109, CR_UNTRANSLATED, 0, 0, 1);
-                HudMessage(s:""; HUDMSG_PLAIN, 58110, CR_UNTRANSLATED, 0, 0, 1);
-                TakeInventory("QuakeBiosuit", 0x7FFFFFFF);
-            }
-        }
-
-        TakeInventory("QuakeQuadTimer", 1);
-        if (!CheckInventory("QuakeQuadTimer") || CheckQuad() > 0 || CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad")) { SetInventory("SamsaraQuadDamageCooldownDisplay", 0); }
-        else { SetInventory("SamsaraQuadDamageCooldownDisplay", CheckInventory("QuakeQuadTimer") / 35 + 1); }
-
-        TakeInventory("QuakeRegenTimer", 1);
-        TakeInventory("QuakeInvisTimer", 1);
-        TakeInventory("QuakePentTimer", 1);
-        TakeInventory("QuakeBioTimer", 1);
-
-        if (UnloadingNow)
-        {
-            SetActorProperty(0, APROP_Health, middle(health, getMaxHealth(0), health - healthGiven));
-
+            oHealth = health;
             health = GetActorProperty(0, APROP_Health);
 
-            baseHealthUpgrade = CheckInventory("SamsaraExtraBaseSpawnHealth") + CheckInventory("SamsaraExtraBaseSpawnHealthDeterminant") + CheckInventory("SamsaraExtraBaseSpawnHealthPermanent");
+            if (health <= 0)
+            {
+                Delay(1);
+                continue;
+            }
 
-            if (GetCVar("samsara_restorehealth") >= 2) { SetActorProperty(0, APROP_Health, max(health, 100 + baseHealthUpgrade)); } // getMaxHealth(0)
-            else { SetActorProperty(0, APROP_Health, max(health, (100 + baseHealthUpgrade) / 2)); } // getMaxHealth(0) / 2
-            break;
+            oRegenTimer = regenTimer;
+            regenTimer  = GetActorPowerupTics(0, "PowerQ3RegenerationDummy");
+
+            /*
+             * Regen shit
+             */
+
+            if (regenTimer != 0)
+            {
+                //if (regenTimer - 35 > oRegenTimer) { ActivatorSound("quakeweps/regenup", 127); }
+
+                if (regenTimer % 35 == 0 && !isDead(0))
+                {
+                    healthMax = getMaxHealth(0);
+
+                    if (GetCVar("samsara_nohealthcap")) { healthMax = INTMAX; }
+                    else if (healthMax < 250 && CheckInventory("SamsaraHasProsperity")) { healthMax = 250; }
+                    else if (healthMax < 200) { healthMax = 200; }
+
+                    if (health >= 100) { giveHealthMax(5, healthMax); }
+                    else if (health + 10 >= 100)
+                    {
+                        SetActorProperty(0, APROP_Health, 100);
+                        giveHealthMax(5, healthMax);
+                    }
+                    else { giveHealthMax(15, healthMax); }
+
+                    if (GetActorProperty(0, APROP_Health) > health) { PlaySound(0, "Quake3/Items/RegenActive", CHAN_7); }
+
+                    if (!GetCVar("samsara_nohealthcap")) { healthGiven += max(GetActorProperty(0, APROP_Health) - health, 0); }
+                    health = GetActorProperty(0, APROP_Health);
+                }
+
+                //if (regenTimer == 105) { LocalAmbientSound("quakeweps/regenout", 127); }
+            }
+            else if (CheckInventory("SamsaraHasProsperity") || GetCVar("sv_degeneration")) { regenTimer = 0; }
+            else
+            {
+                if (health <= getMaxHealth(0)) { healthGiven = 0; }
+
+                if (Timer() % 35 == 0 && healthGiven > 0 && (health - 1 >= getMaxHealth(0))) { SetActorProperty(0, APROP_Health, health - 1); }
+            }
+
+            if (UnloadingNow)
+            {
+                SetActorProperty(0, APROP_Health, middle(health, getMaxHealth(0), health - healthGiven));
+
+                health = GetActorProperty(0, APROP_Health);
+
+                baseHealthUpgrade = CheckInventory("SamsaraExtraBaseSpawnHealth") + CheckInventory("SamsaraExtraBaseSpawnHealthDeterminant") + CheckInventory("SamsaraExtraBaseSpawnHealthPermanent");
+
+                if (GetCVar("samsara_restorehealth") >= 2) { SetActorProperty(0, APROP_Health, max(health, 100 + baseHealthUpgrade)); } // getMaxHealth(0)
+                else if (GetCVar("samsara_restorehealth") == 1) { SetActorProperty(0, APROP_Health, max(health, (100 + baseHealthUpgrade) / 2)); } // getMaxHealth(0) / 2
+                break;
+            }
+
+            Delay(1);
+        }
+    }
+}
+
+script "SamsaraQuake2QuadDamageInit" (int cooldowntimer)
+{
+    GiveInventory("SamsaraQuake2QuadDamageCooldownStored", 1);
+
+    if (CheckInventory("PowerQ2QuadDamage"))
+    {
+        GiveInventory("PowerQ2QuadDamageGiver", 1);
+        terminate; // don't execute the upcoming cooldown more than once
+    }
+    else { GiveInventory("PowerQ2QuadDamageGiver", 1); }
+
+    if (cooldowntimer < 0) { cooldowntimer = 0; }
+
+    while (CheckInventory("PowerQ2QuadDamage"))
+    {
+        if (!CheckInventory("SamsaraQuake2QuadDamageCooldownStored") || CheckInventory("SamsaraHasDisabledInventoryCooldown") || UnloadingNow)
+        {
+            SetInventory("SamsaraQuake2QuadDamageCooldown", 0);
+            SetInventory("SamsaraQuake2QuadDamageCooldownDisplay", 0);
+        } else {
+            SetInventory("SamsaraQuake2QuadDamageCooldown", cooldowntimer);
+            SetInventory("SamsaraQuake2QuadDamageCooldownDisplay", !GetCVar("samsara_permaquad") ? 0 : CheckInventory("SamsaraQuake2QuadDamageCooldown") / 35 + 1);
         }
 
         Delay(1);
     }
+
+    // just in case
+    if (!CheckInventory("SamsaraQuake2QuadDamageCooldown") || CheckInventory("SamsaraHasDisabledInventoryCooldown"))
+    {
+        SetInventory("SamsaraQuake2QuadDamageCooldown", 0);
+        SetInventory("SamsaraQuake2QuadDamageCooldownDisplay", 0);
+        SetInventory("SamsaraQuake2QuadDamageCooldownStored", 0);
+        terminate;
+    }
+
+    do
+    {
+        Delay(1);
+
+        if (!isDead(0)) { TakeInventory("SamsaraQuake2QuadDamageCooldown", 1); }
+        SetInventory("SamsaraQuake2QuadDamageCooldownDisplay", CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad") ? 0 : CheckInventory("SamsaraQuake2QuadDamageCooldown") / 35 + 1);
+    } until (CheckInventory("PowerQ2QuadDamage") || !CheckInventory("SamsaraQuake2QuadDamageCooldown") || CheckInventory("SamsaraHasDisabledInventoryCooldown"));
+
+    if (CheckInventory("PowerQ2QuadDamage")) { terminate; }
+
+    if (CheckInventory("Q2QuadDamage") && CheckInventory("SamsaraQuake2QuadDamageCooldownStored") && GetCVar("samsara_permaquad") && !CheckInventory("SamsaraHasDisabledInventoryCooldown") && !UnloadingNow)
+    {
+        LocalAmbientSound("Q2Misc/QuadDamage/Ready", 96);
+        FadeRange(0, 64, 255, 0.25, 0, 64, 255, 0, 0.33);
+    }
+
+    // also precautionary
+    SetInventory("SamsaraQuake2QuadDamageCooldown", 0);
+    SetInventory("SamsaraQuake2QuadDamageCooldownDisplay", 0);
+    SetInventory("SamsaraQuake2QuadDamageCooldownStored", 0);
+}
+
+script "SamsaraQuake3QuadDamageInit" (int cooldowntimer)
+{
+    if (CheckInventory("PowerQ3QuadDamageFactor"))
+    {
+        GiveInventory("Q3QuadDamageFactor", 1);
+        terminate; // don't execute the upcoming cooldown more than once
+    }
+    else { GiveInventory("Q3QuadDamageFactor", 1); }
+
+    if (cooldowntimer < 0) { cooldowntimer = 0; }
+
+    while (CheckInventory("PowerQ3QuadDamageFactor"))
+    {
+        if (CheckInventory("SamsaraHasDisabledInventoryCooldown") || UnloadingNow)
+        {
+            SetInventory("SamsaraQuake3QuadDamageCooldown", 0);
+            SetInventory("SamsaraQuake3QuadDamageCooldownDisplay", 0);
+        } else {
+            SetInventory("SamsaraQuake3QuadDamageCooldown", cooldowntimer);
+            SetInventory("SamsaraQuake3QuadDamageCooldownDisplay", !GetCVar("samsara_permaquad") ? 0 : CheckInventory("SamsaraQuake3QuadDamageCooldown") / 35 + 1);
+        }
+
+        Delay(1);
+    }
+
+    // just in case
+    if (!CheckInventory("SamsaraQuake3QuadDamageCooldown") || CheckInventory("SamsaraHasDisabledInventoryCooldown"))
+    {
+        SetInventory("SamsaraQuake3QuadDamageCooldown", 0);
+        SetInventory("SamsaraQuake3QuadDamageCooldownDisplay", 0);
+        terminate;
+    }
+
+    do
+    {
+        Delay(1);
+
+        if (!isDead(0)) { TakeInventory("SamsaraQuake3QuadDamageCooldown", 1); }
+        SetInventory("SamsaraQuake3QuadDamageCooldownDisplay", CheckInventory("SamsaraHasDisabledInventoryCooldown") || !GetCVar("samsara_permaquad") ? 0 : CheckInventory("SamsaraQuake3QuadDamageCooldown") / 35 + 1);
+    } until (CheckInventory("PowerQ3QuadDamageFactor") || !CheckInventory("SamsaraQuake3QuadDamageCooldown") || CheckInventory("SamsaraHasDisabledInventoryCooldown"));
+
+    if (CheckInventory("PowerQ3QuadDamageFactor")) { terminate; }
+
+    if (CheckInventory("Q3QuadDamageItem") && GetCVar("samsara_permaquad") && !CheckInventory("SamsaraHasDisabledInventoryCooldown") && !UnloadingNow)
+    {
+        LocalAmbientSound("Quake3/Items/QuadDamageReady", 96);
+        SetHudSize(240, 180, 1);
+        SetFont("Q3QUAD");
+        HudMessage(s:"A"; HUDMSG_FADEOUT, 0, CR_UNTRANSLATED, 215.4, 102.0, 0.0, 1.0);
+    }
+
+    // also precautionary
+    SetInventory("SamsaraQuake3QuadDamageCooldown", 0);
+    SetInventory("SamsaraQuake3QuadDamageCooldownDisplay", 0);
 }

@@ -1,0 +1,208 @@
+Actor RTCW_Knife : RTCW_Weapon
+{
+	Weapon.SlotNumber 0
+	Weapon.SelectionOrder 2000
+	Obituary "%o was knifed by %k."
+	Inventory.PickupMessage "Knife"
+    Inventory.Icon "CWCMPW01"
+	Tag "Knife"
+	+MELEEWEAPON
+    +WIMPY_WEAPON
+	States
+	{
+		Spawn:
+			RW98 A -1
+			stop
+
+		ReadyActual:
+			RW00 A 0 A_JumpIfInventory("RTCW_Kicking",1,"Kicking")
+			RW00 A 1 A_WeaponReady
+			loop
+
+		Deselect:
+			RW00 G 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			RW00 G 2 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			RW00 HIJK 2
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			RW00 A 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW00 L 2 A_GiveInventory("RTCW_WeaponToken",1)
+			RW00 MNO 2
+            goto ReadyActual
+
+		Fire:
+			RW00 B 0 A_GiveInventory("SamsaraRTCWKnifeShankSoundPlayer")
+			RW00 B 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 D 0 A_GiveInventory("SamsaraRTCWKnifeAttackHandler")
+			RW00 D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 EF 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		Kicking:
+			RW00 A 0 A_GunFlash("KickingFoot")
+		KickingDelay:
+			RW00 A 18 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_TakeInventory("RTCW_Kicking",1)
+			goto ReadyActual
+	}
+}
+
+actor SamsaraRTCWKnifeAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupRTCWCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupRTCWCoop")
+      PickupRTCWDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_KnifeAttack",0,false)
+        stop
+
+      PickupRTCWCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_KnifeAttackCoop",0,false)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupETCoop")
+      PickupETDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_KnifeAttackSoundET",0,false)
+        stop
+
+      PickupETCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_KnifeAttackCoopSoundET",0,false)
+        stop
+    }
+}
+
+actor SamsaraRTCWKnifeShankSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Knife/Shank",CHAN_WEAPON)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Knife/Shank",CHAN_WEAPON)
+        stop
+    }
+}
+
+Actor RTCW_KnifeAttack : FastProjectile
+{
+	Height 4
+	Radius 2
+	Speed 48
+	Damage (0)
+	Renderstyle Add
+	DamageType "RTCWKnife"
+	Decal "RTCW_BulletMark"
+	+HITTRACER
+	+FORCERADIUSDMG
+	+NODAMAGETHRUST
+	+NOEXTREMEDEATH
+    +NOTIMEFREEZE
+    +DONTBLAST
+	States
+	{
+		Spawn:
+			TNT1 AA 1
+			Stop
+
+		Death:
+			TNT1 A 0 A_PlaySound("RTCW/Knife/HitWall")
+		DeathFinish:
+			TNT1 A 0 A_CheckFloor("DeathFinishFloor")
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("RTCW_BulletParticle",0,0,0,frandom(-0.5,0.5),frandom(-0.5,0.5),frandom(-0.25,-0.75))
+			TNT1 A 1
+			Stop
+		DeathFinishFloor:
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("RTCW_BulletParticle",0,0,0,frandom(-0.5,0.5),frandom(-0.5,0.5),frandom(0.25,0.75))
+			TNT1 A 1
+			Stop
+
+		XDeath:
+			TNT1 A 0 A_PlaySound("RTCW/Knife/Hit")
+		XDeathFinish:
+			TNT1 A 0 A_Explode(CallACS("RTCW_KnifeDamage"),4,!XF_HURTSOURCE,0,4)
+			TNT1 A 0 A_FaceTarget(0,0)
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
+			TNT1 A 0 A_GiveInventory("RTCW_BloodGenerator",1,AAPTR_TRACER)
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor RTCW_KnifeAttackCoop : RTCW_KnifeAttack { +THRUSPECIES Species "Player" }
+
+Actor RTCW_KnifeAttackSoundET : RTCW_KnifeAttack
+{
+	States
+	{
+		Death:
+			TNT1 A 0 A_PlaySound("RTCWET/Knife/HitWall")
+			goto DeathFinish
+
+		XDeath:
+			TNT1 A 0 A_PlaySound("RTCWET/Knife/Hit")
+			goto XDeathFinish
+	}
+}
+
+Actor RTCW_KnifeAttackCoopSoundET : RTCW_KnifeAttackCoop
+{
+	States
+	{
+		Death:
+			TNT1 A 0 A_PlaySound("RTCWET/Knife/HitWall")
+			goto DeathFinish
+
+		XDeath:
+			TNT1 A 0 A_PlaySound("RTCWET/Knife/Hit")
+			goto XDeathFinish
+	}
+}
+
+Actor RTCW_KnifeHintPuff
+{
+	Height 4
+	Radius 2
+	+PUFFONACTORS
+	+PUFFGETSOWNER
+	+NOINTERACTION
+	+NOTRIGGER
+	+BLOODLESSIMPACT
+	+HITTRACER
+	+DONTSPLASH
+    +NOTIMEFREEZE
+	States
+	{
+		Spawn:
+		Melee:
+		XDeath:
+			TNT1 A 0 NoDelay A_JumpIf(CallACS("RTCW_KnifeDamage",1)==1,"ShowHint")
+			TNT1 A 2
+			Stop
+		Crash:
+			TNT1 A 1
+			Stop
+		ShowHint:
+			TNT1 A 1 ACS_NamedExecuteWithResult("RTCW_Decorate",44)
+			Stop
+	}
+}
+
+Actor RTCW_KnifeHintPuffCoop : RTCW_KnifeHintPuff { +MTHRUSPECIES }

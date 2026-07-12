@@ -73,6 +73,7 @@ Actor PettonEverhail : SamsaraPlayerPawnTotalGibRedBlood
 	DamageFactor "MarathonFusion", 0.5
 	DamageFactor "ElectricBolt", 0.5
 	DamageFactor "Tesla", 0.5
+	DamageFactor "WolfenElectric", 0.5
 	DamageFactor "QuakeElectric", 0.5
 	DamageFactor "Hexen2Electric", 0.5
 	DamageFactor "Plasma", 0.5
@@ -120,8 +121,10 @@ Actor PettonEverhail : SamsaraPlayerPawnTotalGibRedBlood
 			CTPL H 4 A_Pain
 			Goto Spawn
 		Death:
-		XDeath:	
-			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")	  
+		XDeath:
+			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
+		XDeath.Massacre:
 			CTPL H 10 A_PlayerScream
 			CTPL I 10 A_NoBlocking
 			CTPL J -1
@@ -209,6 +212,7 @@ Actor PettonEverhail_Shrink : PettonEverhail
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -217,12 +221,18 @@ Actor PettonEverhail_Shrink : PettonEverhail
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -237,6 +247,7 @@ Actor PettonEverhail_Shrink : PettonEverhail
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -324,6 +335,8 @@ Actor PettonEverhail_Shrink : PettonEverhail
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

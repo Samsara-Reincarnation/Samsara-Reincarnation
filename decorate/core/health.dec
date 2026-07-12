@@ -1,0 +1,2369 @@
+// Health Stuff (unused)
+/*actor FiniteHealth : Health { Inventory.Amount 1 }
+actor FiniteHealth100 : Health { Inventory.Amount 1 Inventory.MaxAmount 100 }
+actor FiniteHealth125 : Health { Inventory.Amount 1 Inventory.MaxAmount 125 }
+actor FiniteHealth150 : Health { Inventory.Amount 1 Inventory.MaxAmount 150 }
+actor FiniteHealth175 : Health { Inventory.Amount 1 Inventory.MaxAmount 175 }
+actor FiniteHealth200 : Health { Inventory.Amount 1 Inventory.MaxAmount 200 }
+actor FiniteHealth250 : Health { Inventory.Amount 1 Inventory.MaxAmount 250 }
+actor FiniteHealth300 : Health { Inventory.Amount 1 Inventory.MaxAmount 300 }
+actor FiniteHealth350 : Health { Inventory.Amount 1 Inventory.MaxAmount 350 }
+actor FiniteHealth400 : Health { Inventory.Amount 1 Inventory.MaxAmount 400 }
+actor InfiniteHealth : Health { Inventory.Amount 1 Inventory.MaxAmount 0x7FFFFFFF }
+actor InfiniteHealth25 : Health { Inventory.Amount 25 Inventory.MaxAmount 0x7FFFFFFF }*/
+
+// Health Pickup Base
+actor SamsaraHealthPickup : CustomInventory
+{
+    RenderStyle "Add"
+    +FLOATBOB
+    +NOTIMEFREEZE // allow the checks and sprite to process during time freeze
+    +QUIET
+    +THRUACTORS // don't allow picking up until the checks are done
+    States
+    {
+      // Spawn code
+      Spawn:
+        TNT1 A 0
+      SpawnGameModeCheck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 19), "SpawnNothing") // Prevent spawning in LMS
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 29), "SpawnNothing") // Prevent spawning in instagib
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 32), "SpawnNothing") // Prevent spawning with health disabled
+      SpawnActualInit:
+        TNT1 A 1 A_Jump(256,"SpawnActual")
+        loop
+
+      SpawnActual:
+        TNT1 A 0
+        stop
+
+      SpawnNothing:
+        TNT1 A 0 A_ChangeFlag("COUNTITEM",false)
+        stop
+
+      // Pickup code
+      Pickup:
+        TNT1 A 0
+        fail
+
+      PickupFail:
+        TNT1 A 0
+        fail
+
+      PickupStop:
+        TNT1 A 0
+        stop
+    }
+}
+
+actor SamsaraHealthPickupBlend : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PickupFlashesAreDisabled",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupMarathon")
+        TNT1 A 0 A_SetBlend("D7BA45",0.3,4)
+        stop
+
+      PickupMarathon:
+        TNT1 A 0 A_SetBlend("F0F8FF",0.3,4) // Light Alice Blue
+        stop
+    }
+}
+
+// Health Bonus (x1)
+actor HealPack0 : SamsaraHealthPickup
+{
+    Alpha 0.9
+    Scale 0.25
+    States
+    {
+      Spawn:
+        MEDI A 0 Bright Light("SAMSARA_HEALTH_CRUMB")
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        MEDI A 35 Bright Light("SAMSARA_HEALTH_CRUMB") ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 4, 100, 90)
+        loop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 200), "PickupDisplay")
+        fail
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 0, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack0pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("DisruptorClass",1,"PickupSuccessDisruptor")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1, 200)
+        stop
+
+      PickupSuccessDisruptor:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1, 200)
+        TNT1 A 0 A_GiveInventory("DisruptorPSIEnergy",1)
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+      PickupSuccessDeusExTrained:
+      PickupSuccessDeusExProficient:
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 2, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 1)
+        stop
+    }
+}
+
+actor DoomHealPack0 : HealPack0 replaces HealthBonus {}
+actor ChexHealPack0 : HealPack0 replaces GlassOfWater {}
+actor HereticHealPack0 : HealPack0 replaces GoldWandAmmo {}
+actor HexenHealPack0 : HealPack0 replaces ArtiPoisonBag {}
+
+// Maximum Health Bonus (x1)
+actor MaxHealthBonus : HealthBonus 5090 // skulltag compatibility
+{
+    Game Doom
+    Game Raven
+    SpawnID 166
+}
+
+actor MaxHealPack0 : SamsaraHealthPickup
+{
+    Alpha 0.9
+    Scale 0.25
+    States
+    {
+      Spawn:
+        MEDI B 0 Bright Light("SAMSARA_MAX_HEALTH")
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        MEDI B 35 Bright Light("SAMSARA_MAX_HEALTH") ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 4, 100, 90)
+        loop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 200, 1), "PickupDisplay")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasMaxHealth",50,"PickupFail")
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 1, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack0pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("DisruptorClass",1,"PickupSuccessDisruptor")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerSpawnHealthAdjust", 1, 1, 6, 50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1, 200, 1)
+        stop
+
+      PickupSuccessDisruptor:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerSpawnHealthAdjust", 1, 1, 6, 50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1, 200, 1)
+        TNT1 A 0 A_GiveInventory("DisruptorPSIEnergy",1)
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+      PickupSuccessDeusExTrained:
+      PickupSuccessDeusExProficient:
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerSpawnHealthAdjust", 1, 1, 6, 50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1, 200, 1)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerSpawnHealthAdjust", 2, 1, 6, 50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 2, 200, 1)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 1)
+        stop
+    }
+}
+
+actor SkulltagMaxHealPack0 : MaxHealPack0 replaces MaxHealthBonus {}
+
+// Health Bonus (x4)
+actor HealPack0Dump : SamsaraHealthPickup
+{
+    Alpha 0.9
+    Scale 0.3
+    States
+    {
+      Spawn:
+        MEDI V 0 Bright Light("SAMSARA_HEALTH_CRUMB")
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        MEDI V 35 Bright Light("SAMSARA_HEALTH_CRUMB") ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 4, 100, 90)
+        loop
+
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 200), "PickupDisplay")
+        fail
+
+      PickupDisplay:
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 2, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack0pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("DisruptorClass",1,"PickupSuccessDisruptor")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 4, 200)
+        stop
+
+      PickupSuccessDisruptor:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 4, 200)
+        TNT1 A 0 A_GiveInventory("DisruptorPSIEnergy",4)
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 4, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExTrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 5, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExProficient:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 6, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 7, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 8, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 4)
+        stop
+    }
+}
+
+actor HereticHealPack0Dump : HealPack0Dump replaces GoldWandHefty {}
+
+// Stimpack
+actor HealPack1 : SamsaraHealthPickup
+{
+    Alpha 0.9
+    Scale 0.5
+    States
+    {
+      Spawn:
+        MED2 A 0 Bright Light("SAMSARA_GREEN_HEALTH")
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        MED2 A 35 Bright Light("SAMSARA_GREEN_HEALTH") ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 4, 100, 90)
+        loop
+
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupStrife")
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "PickupDisplay")
+        fail
+
+      PickupStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("StrifeStimpack2",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupDisplay:
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupDisplayStrife")
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 3, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack1pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayStrifeInstant")
+        TNT1 A 0 A_JumpIfInventory("StrifeStimpack2",0,"PickupDisplayStrifeInstant")
+        goto PickupDisplayStrifeInventory
+
+      PickupDisplayStrifeInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 3, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayStrifeInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 3, 1)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupSuccessStrife")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 10)
+        stop
+
+      PickupSuccessStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("StrifeStimpack2",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("StrifeStimpack2")
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 10)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExTrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 12)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExProficient:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 15)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 17)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 20)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 10)
+        stop
+    }
+}
+
+actor DoomHealPack1 : HealPack1 replaces Stimpack {}
+actor ChexHealPack1 : HealPack1 replaces BowlOfFruit {}
+actor RavenHealPack1 : HealPack1 replaces CrystalVial {}
+
+actor SamsaraHealPack1Inventory : CustomInventory
+{
+    Inventory.UseSound ""
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "UsePlaySound")
+        fail
+
+      UsePlaySound:
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"UsePlaySoundStrife")
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        goto UseSuccess
+
+      UsePlaySoundStrife:
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 10)
+        goto UseFinish
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor StrifeStimpack2 : SamsaraHealPack1Inventory
+{
+    Inventory.Icon "I_STMP"
+    Inventory.MaxAmount 15
+    Inventory.InterHubAmount 15
+    Inventory.RestrictedTo "StrifeguyPlayer"
+    Tag "Med Patch"
+}
+
+// Medikit
+actor HealPack2 : SamsaraHealthPickup
+{
+    Alpha 0.9
+    Scale 0.75
+    States
+    {
+      Spawn:
+        MED3 A 0 Bright Light("SAMSARA_RED_HEALTH")
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        MED3 A 35 Bright Light("SAMSARA_RED_HEALTH") ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 4, 100, 90)
+        loop
+
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupHexen1")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupStrife")
+        TNT1 A 0 A_JumpIfInventory("POGreedClass",1,"PickupIPOG")
+        TNT1 A 0 A_JumpIfInventory("WitchavenClass",1,"PickupWitchaven")
+        TNT1 A 0 A_JumpIfInventory("CMClass",1,"PickupCyberMage")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupRedneck")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"PickupHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupCatacomb")
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "PickupDisplay")
+        fail
+
+      PickupHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupHexen1:
+        goto PickupHeretic
+
+      PickupStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("StrifePortMedikit",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupIPOG:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("Medtube",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupWitchaven:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("WTHealthPhial",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupCyberMage:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("CybermageMedkit",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      // Leonard needs special treatment due to his health pickups being a combination
+      // of regular pickups and inventory items
+      PickupRedneck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("RRCowPie",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIfInventory("RRBubbaBeer",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 1, "PickupDefault")
+        fail
+
+      PickupHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask3",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupCatacomb:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_SmallHealthPotion",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupDefault")
+        fail
+
+      PickupDisplay:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupDisplayHexen1")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupDisplayStrife")
+        TNT1 A 0 A_JumpIfInventory("POGreedClass",1,"PickupDisplayIPOG")
+        TNT1 A 0 A_JumpIfInventory("WitchavenClass",1,"PickupDisplayWitchaven")
+        TNT1 A 0 A_JumpIfInventory("CMClass",1,"PickupDisplayCyberMage")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupDisplayRedneck")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"PickupDisplayHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupDisplayCatacomb")
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack2pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask",0,"PickupDisplayHereticInstant")
+        goto PickupDisplayHereticInventory
+
+      PickupDisplayHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayHereticInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 1)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayHexen1:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayHexen1Instant")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask",0,"PickupDisplayHexen1Instant")
+        goto PickupDisplayHexen1Inventory
+
+      PickupDisplayHexen1Instant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("hexen/artiget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayHexen1Inventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 1)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("hexen/artiget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayStrifeInstant")
+        TNT1 A 0 A_JumpIfInventory("StrifePortMedikit",0,"PickupDisplayStrifeInstant")
+        goto PickupDisplayStrifeInventory
+
+      PickupDisplayStrifeInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayStrifeInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 2)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayIPOG:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayIPOGInstant")
+        TNT1 A 0 A_JumpIfInventory("Medtube",0,"PickupDisplayIPOGInstant")
+        goto PickupDisplayIPOGInventory
+
+      PickupDisplayIPOGInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("greed/pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayIPOGInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 3)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("greed/pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayWitchaven:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayWitchavenInstant")
+        TNT1 A 0 A_JumpIfInventory("WTHealthPhial",0,"PickupDisplayWitchavenInstant")
+        goto PickupDisplayWitchavenInventory
+
+      PickupDisplayWitchavenInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("gpickup/phial",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayWitchavenInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 4)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("gpickup/phial",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayCyberMage:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayCyberMageInstant")
+        TNT1 A 0 A_JumpIfInventory("CybermageMedkit",0,"PickupDisplayCyberMageInstant")
+        goto PickupDisplayCyberMageInventory
+
+      PickupDisplayCyberMageInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("misc/cm_pkup3",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayCyberMageInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 5)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("misc/cm_pkup3",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayRedneck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayRedneckInstant")
+        TNT1 A 0 A_JumpIfInventory("RRCowPie",0,1)
+        goto PickupDisplayRedneckInventory
+        TNT1 A 0 A_JumpIfInventory("RRBubbaBeer",0,"PickupDisplayRedneckInstant")
+        goto PickupDisplayRedneckInventory
+
+      PickupDisplayRedneckInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 6)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RR/Wpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      // Leonard's pickup messages need special treatment due to being given a random item.
+      // This determines which item to jump to.
+      PickupDisplayRedneckInventory:
+        TNT1 A 0 A_Jump(256,"PickupDisplayRedneckInventoryCowPie","PickupDisplayRedneckInventoryBeer")
+      PickupDisplayRedneckInventoryCowPie:
+        TNT1 A 0 A_JumpIfInventory("RRCowPie",0,"PickupDisplayRedneckInventory")
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 7)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RR/Wpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccessRedneckInventoryCowPie
+
+      PickupDisplayRedneckInventoryBeer:
+        TNT1 A 0 A_JumpIfInventory("RRBubbaBeer",0,"PickupDisplayRedneckInventory")
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 8)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RR/Wpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccessRedneckInventoryBeer
+
+      PickupDisplayHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayHexen2Instant")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask3",0,"PickupDisplayHexen2Instant")
+        goto PickupDisplayHexen2Inventory
+
+      PickupDisplayHexen2Instant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Hexen2/ArtifactPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayHexen2Inventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, random(9,10))
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Hexen2/ArtifactPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayCatacomb:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayCatacombInstant")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_SmallHealthPotion",0,"PickupDisplayCatacombInstant")
+        goto PickupDisplayCatacombInventory
+
+      PickupDisplayCatacombInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Catacomb/ItemGet5",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayCatacombInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 5, 11)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Catacomb/ItemGet5",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupSuccessHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupSuccessHexen1")
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupSuccessDuke")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupSuccessStrife")
+        TNT1 A 0 A_JumpIfInventory("POGreedClass",1,"PickupSuccessIPOG")
+        TNT1 A 0 A_JumpIfInventory("WitchavenClass",1,"PickupSuccessWitchaven")
+        TNT1 A 0 A_JumpIfInventory("CMClass",1,"PickupSuccessCyberMage")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupSuccessRedneck")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"PickupSuccessHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupSuccessCatacomb")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 25)
+        stop
+
+      PickupSuccessHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("PortQuartzFlask")
+        stop
+
+      PickupSuccessHexen1:
+        goto PickupSuccessHeretic
+
+      PickupSuccessDuke:
+        TNT1 A 0 A_JumpIfHealthLower(25,1)
+        goto PickupSuccessDefault
+        TNT1 A 0 A_GiveInventory("DukeHealthTaunt")
+        goto PickupSuccessDefault
+
+      PickupSuccessStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("StrifePortMedikit",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("StrifePortMedikit")
+        stop
+
+      PickupSuccessIPOG:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("Medtube",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("Medtube")
+        stop
+
+      PickupSuccessWitchaven:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("WTHealthPhial",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("WTHealthPhial")
+        stop
+
+      PickupSuccessCyberMage:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("CybermageMedkit",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("CybermageMedkit")
+        stop
+
+      PickupSuccessRedneck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessRedneckInstant")
+        TNT1 A 0 A_JumpIfInventory("RRCowPie",0,1)
+        goto PickupSuccessRedneckInventory
+        TNT1 A 0 A_JumpIfInventory("RRBubbaBeer",0,"PickupSuccessRedneckInstant")
+        goto PickupSuccessRedneckInventory
+
+      PickupSuccessRedneckInstant:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 30)
+        stop
+
+      PickupSuccessRedneckInventory:
+        TNT1 A 0 A_Jump(256,"PickupSuccessRedneckInventoryCowPie","PickupSuccessRedneckInventoryBeer")
+      PickupSuccessRedneckInventoryCowPie:
+        TNT1 A 0 A_JumpIfInventory("RRCowPie",0,"PickupSuccessRedneckInventory")
+        TNT1 A 0 A_GiveInventory("RRCowPie",6)
+        stop
+
+      PickupSuccessRedneckInventoryBeer:
+        TNT1 A 0 A_JumpIfInventory("RRBubbaBeer",0,"PickupSuccessRedneckInventory")
+        TNT1 A 0 A_GiveInventory("RRBubbaBeer",6)
+        stop
+
+      PickupSuccessHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("PortQuartzFlask3",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("PortQuartzFlask3")
+        stop
+
+      PickupSuccessCatacomb:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessDefault")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_SmallHealthPotion",0,"PickupSuccessDefault")
+        TNT1 A 0 A_GiveInventory("Catacomb_SmallHealthPotion")
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 25)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExTrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 32)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExProficient:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 38)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 43)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 50)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 25)
+        stop
+    }
+}
+
+actor DoomHealPack2 : HealPack2 replaces Medikit {}
+actor ChexHealPack2 : HealPack2 replaces BowlOfVegetables {}
+actor RavenHealPack2 : HealPack2 replaces ArtiHealth {}
+
+actor SamsaraHealPack2Inventory : CustomInventory
+{
+    Inventory.UseSound ""
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "UsePlaySound")
+        fail
+
+      UsePlaySound:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"UsePlaySoundHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"UsePlaySoundHexen1")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"UsePlaySoundStrife")
+        // no use sound for IPOG characters
+        TNT1 A 0 A_JumpIfInventory("WitchavenClass",1,"UsePlaySoundWitchaven")
+        TNT1 A 0 A_JumpIfInventory("CMClass",1,"UsePlaySoundCyberMage")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"UsePlaySoundRedneck") // Leonard has multiple healing items
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"UsePlaySoundHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"UsePlaySoundCatacomb")
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        goto UseSuccess
+
+      UsePlaySoundHeretic:
+        TNT1 A 0 A_PlaySound("heretic/itemuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundHexen1:
+        TNT1 A 0 A_PlaySound("hexen/artiuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundStrife:
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundWitchaven:
+        TNT1 A 0 A_PlaySound("gplayer/drink",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundCyberMage:
+        TNT1 A 0 A_PlaySound("CM/Switch",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundRedneck:
+        goto UseSuccess
+
+      UsePlaySoundHexen2:
+        TNT1 A 0 A_PlaySound("Hexen2/ArtiUse",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundCatacomb:
+        TNT1 A 0 A_PlaySound("Catacomb/PotionUse",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"UseSuccessRedneck") // Leonard has multiple healing items
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 25)
+        goto UseFinish
+
+      UseSuccessRedneck:
+        goto UseSuccessDefault
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor PortQuartzFlask : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "ARTIQRTZ"
+    Inventory.MaxAmount 16
+    Inventory.InterHubAmount 16
+    Inventory.RestrictedTo "CorvusPlayer", "HexenPlayer"
+    Tag "Quartz Flask"
+}
+
+actor StrifePortMedikit : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "I_MDKT"
+    Inventory.MaxAmount 15
+    Inventory.InterHubAmount 15
+    Inventory.RestrictedTo "StrifeguyPlayer"
+    Tag "Medical Kit"
+}
+
+actor Medtube : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "IMEDZ0"
+    Inventory.MaxAmount 20
+    Inventory.InterHubAmount 20
+    Inventory.RestrictedTo "POGreedPlayer"
+    Tag "Medtube"
+}
+
+actor WTHealthPhial : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "WIN0B0"
+    Inventory.MaxAmount 10
+    Inventory.InterHubAmount 10
+    Inventory.RestrictedTo "GrondovalPlayer"
+    Tag "Health Potion"
+}
+
+actor CybermageMedkit : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "CMHKA0"
+    Inventory.MaxAmount 15
+    Inventory.InterHubAmount 15
+    Inventory.RestrictedTo "CMPlayer"
+    Tag "Regen Pak"
+}
+
+actor SamsaraLeonardCowPieLoopCount : Counter { Inventory.MaxAmount 5 }
+
+actor RRCowPie : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "RRCOWPIE"
+    Inventory.MaxAmount 6
+    Inventory.InterHubAmount 6
+    Inventory.RestrictedTo "Leonard"
+    Tag "Cow Pie"
+    States
+    {
+      UsePlaySoundRedneck:
+        TNT1 A 0 A_PlaySound("Leonard/Munch",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccessRedneck:
+        TNT1 A 0 A_TakeInventory("SamsaraLeonardCowPieLoopCount") // reset
+      UseSuccessRedneckLoop:
+        TNT1 A 0 A_GiveInventory("SamsaraLeonardCowPieLoopCount")
+        TNT1 A 0 A_TakeInventory("RRDrunkAmount",1)
+        TNT1 A 0 A_GiveInventory("RRFoodAmount")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraLeonardCowPieLoopCount",0,"UseFinish")
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "UseSuccessRedneckLoop")
+        goto UseFinish
+    }
+}
+
+actor SamsaraLeonardBeerLoopCount : Counter { Inventory.MaxAmount 5 }
+
+actor RRBubbaBeer : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "RRBEER"
+    Inventory.MaxAmount 6
+    Inventory.InterHubAmount 6
+    Inventory.RestrictedTo "Leonard"
+    Tag "Bubba Beer"
+    States
+    {
+      UsePlaySoundRedneck:
+        TNT1 A 0 A_PlaySound("Leonard/Chug",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccessRedneck:
+        TNT1 A 0 A_TakeInventory("SamsaraLeonardBeerLoopCount") // reset
+      UseSuccessRedneckLoop:
+        TNT1 A 0 A_GiveInventory("SamsaraLeonardBeerLoopCount")
+        TNT1 A 0 A_TakeInventory("RRFoodAmount",1)
+        TNT1 A 0 A_GiveInventory("RRDrunkAmount")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraLeonardBeerLoopCount",0,"UseFinish")
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "UseSuccessRedneckLoop")
+        goto UseFinish
+    }
+}
+
+actor PortQuartzFlask3 : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "H2INVT04"
+    Inventory.MaxAmount 16
+    Inventory.InterHubAmount 16
+    Inventory.RestrictedTo "Demoness"
+    Tag "Quartz Flask"
+}
+
+actor Catacomb_SmallHealthPotion : SamsaraHealPack2Inventory
+{
+    Inventory.Icon "CTAAD0"
+    Inventory.MaxAmount 99
+    Inventory.InterHubAmount 5
+    Inventory.RestrictedTo "PettonEverhail"
+    Tag "Blue Potion"
+}
+
+// Soulsphere
+actor SuperHealth : SamsaraHealthPickup
+{
+    Inventory.PickupFlash "PickupFlash"
+    Alpha 0.95
+    Scale 0.75
+    States
+    {
+      Spawn:
+        SOUL A 0 Bright Light("SAMSARA_SUPER_HEALTH")
+      SpawnDropCheck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 1, 1), 1)
+        goto SpawnGameModeCheck
+        TNT1 A 0 A_ChangeFlag("COUNTITEM",false)
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        SOUL A 2 Bright Light("SAMSARA_SUPER_HEALTH") ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 4, 100, 95)
+        SOUL BCDEFGHI 2 Bright Light("SAMSARA_SUPER_HEALTH")
+        loop
+
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupHexen1")
+        TNT1 A 0 A_JumpIfInventory("CalebClass",1,"PickupBlood")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupStrife")
+        TNT1 A 0 A_JumpIfInventory("RMRClass",1,"PickupRMR")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupRedneck")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"PickupHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupCatacomb")
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        goto PickupDisplay
+
+      PickupHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupHereticInstant")
+        fail
+
+      PickupHereticInstant:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "PickupDisplay")
+        fail
+
+      PickupHexen1:
+        goto PickupHeretic
+
+      PickupBlood:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("CalebDoctorsBag",0,"PickupDefault")
+        goto PickupDisplay
+
+      PickupStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupStrifeInstant")
+        TNT1 A 0 A_JumpIfInventory("StrifeSurgeryKit2",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupStrifeInstant")
+        fail
+
+      PickupStrifeInstant:
+        goto PickupHereticInstant
+
+      PickupRMR:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupRMRInstant")
+        TNT1 A 0 A_JumpIfInventory("RMROxygenRecycler",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupRMRInstant")
+        fail
+
+      PickupRMRInstant:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "PickupDisplay")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPlayerOxygenAdjuster", 0, -1, 0), "PickupDisplay")
+        fail
+
+      PickupRedneck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDefault")
+        TNT1 A 0 A_JumpIfInventory("RRCheapasswhiskey",0,"PickupDefault")
+        goto PickupDisplay
+
+      PickupHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupHexen2Instant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth3",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupHexen2Instant")
+        fail
+
+      PickupHexen2Instant:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 250), "PickupDisplay")
+        fail
+
+      PickupCatacomb:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupCatacombInstant")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_LargeHealthPotion",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupCatacombInstant")
+        fail
+
+      PickupCatacombInstant:
+        goto PickupHereticInstant
+
+      PickupDisplay:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupDisplayHexen1")
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupDisplayDuke")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupDisplayMarathon")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupDisplayQuake1")
+        TNT1 A 0 A_JumpIfInventory("CalebClass",1,"PickupDisplayBlood")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupDisplayStrife")
+        TNT1 A 0 A_JumpIfInventory("RMRClass",1,"PickupDisplayRMR")
+        TNT1 A 0 A_JumpIfInventory("DisruptorClass",1,"PickupDisplayDisruptor")
+        TNT1 A 0 A_JumpIfInventory("SWClass",1,"PickupDisplayShadowWarrior")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupDisplayRedneck")
+        TNT1 A 0 A_JumpIfInventory("BittermanClass",1,"PickupDisplayQuake2")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"PickupDisplayHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupDisplayCatacomb")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupDisplayQuake3")
+        TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
+        goto PickupDisplayDefault
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack3pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth",0,"PickupDisplayHereticInstant")
+        goto PickupDisplayHereticInventory
+
+      PickupDisplayHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayHereticInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 1)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayHexen1:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayHexen1Instant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth",0,"PickupDisplayHexen1Instant")
+        goto PickupDisplayHexen1Inventory
+
+      PickupDisplayHexen1Instant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("hexen/artiget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayHexen1Inventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 1)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("hexen/artiget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayDuke:
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",2,"PickupDisplayDuke64")
+        TNT1 A 0 A_JumpIfInventory("DukeClassMode",1,"PickupDisplayDukeLAB")
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 2)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("duke/atomhealth",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayDukeLAB:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 3)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("duke/atomhealth",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayDuke64:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 2)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("duke64/atomhealth",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayMarathon:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("marathon/bigitemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayQuake1:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("quakeweps/megahealthSA",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayBlood:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayBloodInstant")
+        TNT1 A 0 A_JumpIfInventory("CalebDoctorsBag",0,"PickupDisplayBloodInstant")
+        goto PickupDisplayBloodInventory
+
+      PickupDisplayBloodInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 4)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Caleb/HeartPU",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayBloodInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 5)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Caleb/Weapup02",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayStrifeInstant")
+        TNT1 A 0 A_JumpIfInventory("StrifeSurgeryKit2",0,"PickupDisplayStrifeInstant")
+        goto PickupDisplayStrifeInventory
+
+      PickupDisplayStrifeInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayStrifeInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 6)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayRMR:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayRMRInstant")
+        TNT1 A 0 A_JumpIfInventory("RMROxygenRecycler",0,"PickupDisplayRMRInstant")
+        goto PickupDisplayRMRInventory
+
+      PickupDisplayRMRInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RMR/pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayRMRInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 7)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RMR/pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayDisruptor:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 8)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("healpack3pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayShadowWarrior:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 9)
+        TNT1 A 0 ACS_NamedExecuteAlways("SWFortuneCookie")
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("item/SWpickupbig",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayRedneck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayRedneckInstant")
+        TNT1 A 0 A_JumpIfInventory("RRCheapasswhiskey",0,"PickupDisplayRedneckInstant")
+        goto PickupDisplayRedneckInventory
+
+      PickupDisplayRedneckInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 10)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RR/Wpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayRedneckInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 11)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("RR/Wpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayQuake2:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Q2Misc/m_health",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayHexen2Instant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth3",0,"PickupDisplayHexen2Instant")
+        goto PickupDisplayHexen2Inventory
+
+      PickupDisplayHexen2Instant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Hexen2/ArtifactPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayHexen2Inventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, random(12,13))
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Hexen2/ArtifactPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayCatacomb:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayCatacombInstant")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_LargeHealthPotion",0,"PickupDisplayCatacombInstant")
+        goto PickupDisplayCatacombInventory
+
+      PickupDisplayCatacombInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Catacomb/ItemGet4",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayCatacombInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 14)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Catacomb/ItemGet4",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupDisplayQuake3:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 7, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Quake3/Items/MegaHealth",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 0)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupSuccessHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupSuccessHexen1")
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupSuccessDuke")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupSuccessQuake1")
+        TNT1 A 0 A_JumpIfInventory("CalebClass",1,"PickupSuccessBlood")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"PickupSuccessStrife")
+        TNT1 A 0 A_JumpIfInventory("RMRClass",1,"PickupSuccessRMR")
+        TNT1 A 0 A_JumpIfInventory("DisruptorClass",1,"PickupSuccessDisruptor")
+        TNT1 A 0 A_JumpIfInventory("SWClass",1,"PickupSuccessShadowWarrior")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"PickupSuccessRedneck")
+        TNT1 A 0 A_JumpIfInventory("BittermanClass",1,"PickupSuccessQuake2")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"PickupSuccessHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"PickupSuccessCatacomb")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupSuccessQuake3")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100, 200)
+        stop
+
+      PickupSuccessHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth",0,"PickupSuccessHereticInstant")
+        goto PickupSuccessHereticInventory
+
+      PickupSuccessHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100)
+        stop
+
+      PickupSuccessHereticInventory:
+        TNT1 A 0 A_GiveInventory("PortSuperHealth")
+        stop
+
+      PickupSuccessHexen1:
+        goto PickupSuccessHeretic
+
+      PickupSuccessDuke:
+        TNT1 A 0 A_JumpIfHealthLower(25,1)
+        goto PickupSuccessDukeHealth
+        TNT1 A 0 A_GiveInventory("DukeHealthTaunt")
+        goto PickupSuccessDukeHealth
+
+      PickupSuccessDukeHealth:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 50, 200)
+        stop
+
+      PickupSuccessQuake1:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessQuake1Infinite")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraMegaHealth", 100, 250, 1, 175)
+        stop
+
+      PickupSuccessQuake1Infinite:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100, 250)
+        stop
+
+      PickupSuccessBlood:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessBloodInstant")
+        TNT1 A 0 A_JumpIfInventory("CalebDoctorsBag",0,"PickupSuccessBloodInstant")
+        goto PickupSuccessBloodInventory
+
+      PickupSuccessBloodInstant:
+        goto PickupSuccessDefault
+
+      PickupSuccessBloodInventory:
+        TNT1 A 0 A_GiveInventory("CalebDoctorsBag",100)
+        stop
+
+      PickupSuccessStrife:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessStrifeInstant")
+        TNT1 A 0 A_JumpIfInventory("StrifeSurgeryKit2",0,"PickupSuccessStrifeInstant")
+        goto PickupSuccessStrifeInventory
+
+      PickupSuccessStrifeInstant:
+        goto PickupSuccessHereticInstant
+
+      PickupSuccessStrifeInventory:
+        TNT1 A 0 A_GiveInventory("StrifeSurgeryKit2")
+        stop
+
+      PickupSuccessRMR:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessRMRInstant")
+        TNT1 A 0 A_JumpIfInventory("RMROxygenRecycler",0,"PickupSuccessRMRInstant")
+        goto PickupSuccessRMRInventory
+
+      PickupSuccessRMRInstant:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 1, -1, 1)
+        stop
+
+      PickupSuccessRMRInventory:
+        TNT1 A 0 A_GiveInventory("RMROxygenRecycler")
+        stop
+
+      PickupSuccessDisruptor:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 50, 200)
+        TNT1 A 0 A_GiveInventory("DisruptorPSIEnergy",50)
+        stop
+
+      PickupSuccessShadowWarrior:
+        goto PickupSuccessDukeHealth
+
+      PickupSuccessRedneck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessRedneckInstant")
+        TNT1 A 0 A_JumpIfInventory("RRCheapasswhiskey",0,"PickupSuccessRedneckInstant")
+        goto PickupSuccessRedneckInventory
+
+      PickupSuccessRedneckInstant:
+        goto PickupSuccessDukeHealth
+
+      PickupSuccessRedneckInventory:
+        TNT1 A 0 A_GiveInventory("RRCheapasswhiskey",50)
+        stop
+
+      PickupSuccessQuake2:
+        goto PickupSuccessQuake1
+
+      PickupSuccessHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessHexen2Instant")
+        TNT1 A 0 A_JumpIfInventory("PortSuperHealth3",0,"PickupSuccessHexen2Instant")
+        goto PickupSuccessHexen2Inventory
+
+      PickupSuccessHexen2Instant:
+        goto PickupSuccessQuake1
+
+      PickupSuccessHexen2Inventory:
+        TNT1 A 0 A_GiveInventory("PortSuperHealth3")
+        stop
+
+      PickupSuccessCatacomb:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessCatacombInstant")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_LargeHealthPotion",0,"PickupSuccessCatacombInstant")
+        goto PickupSuccessCatacombInventory
+
+      PickupSuccessCatacombInstant:
+        goto PickupSuccessHereticInstant
+
+      PickupSuccessCatacombInventory:
+        TNT1 A 0 A_GiveInventory("Catacomb_LargeHealthPotion")
+        stop
+
+      PickupSuccessQuake3:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessQuake3Infinite")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraMegaHealth", 100, 200, 1, 175)
+        stop
+
+      PickupSuccessQuake3Infinite:
+        goto PickupSuccessDefault
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_GiveInventory("DeusEx_AugmentationBioEnergyCell")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExTrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 125, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExProficient:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 150, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 175, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 200, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 100)
+        stop
+    }
+}
+
+actor DoomSuperHealth : SuperHealth replaces Soulsphere { +COUNTITEM }
+actor ChexSuperHealth : SuperHealth replaces SuperchargeBreakfast { +COUNTITEM }
+actor RavenSuperHealth : SuperHealth replaces ArtiSuperHealth { +COUNTITEM }
+
+actor SamsaraSuperHealthPickupBlend : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PickupFlashesAreDisabled",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupMarathon")
+        TNT1 A 0 A_SetBlend("D7BA45",0.3,4)
+        stop
+
+      PickupMarathon:
+        TNT1 A 0 A_SetBlend("F0F8FF",0.5,7) // Light Alice Blue
+        stop
+    }
+}
+
+actor SamsaraSuperHealthInventory : CustomInventory
+{
+    Inventory.UseSound ""
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("RMRClass",1,"UseRMR")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"UseHexen2")
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "UsePlaySound")
+        fail
+
+      UseRMR:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), "UsePlaySound")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPlayerOxygenAdjuster", 0, -1, 0), "UsePlaySound")
+        fail
+
+      UseHexen2:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 250), "UsePlaySound")
+        fail
+
+      UsePlaySound:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"UsePlaySoundHeretic")
+        TNT1 A 0 A_JumpIfInventory("HexenClass",1,"UsePlaySoundHexen1")
+        TNT1 A 0 A_JumpIfInventory("CalebClass",1,"UsePlaySoundBlood")
+        TNT1 A 0 A_JumpIfInventory("StrifeClass",1,"UsePlaySoundStrife")
+        TNT1 A 0 A_JumpIfInventory("RMRClass",1,"UsePlaySoundRMR")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"UsePlaySoundRedneck")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"UsePlaySoundHexen2")
+        TNT1 A 0 A_JumpIfInventory("CatacombClass",1,"UsePlaySoundCatacomb")
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        goto UseSuccess
+
+      UsePlaySoundHeretic:
+        TNT1 A 0 A_PlaySound("heretic/itemuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundHexen1:
+        TNT1 A 0 A_PlaySound("hexen/artiuse",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundBlood:
+        TNT1 A 0 A_PlaySound("Caleb/HeartPU",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundStrife:
+        TNT1 A 0 A_PlaySound("strife/itempickup",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundRMR:
+        TNT1 A 0 A_PlaySound("RMR/useitem",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundRedneck:
+        TNT1 A 0 A_PlaySound("Leonard/Chug",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundHexen2:
+        TNT1 A 0 A_PlaySound("Hexen2/ArtiUse",CHAN_ITEM)
+        goto UseSuccess
+
+      UsePlaySoundCatacomb:
+        TNT1 A 0 A_PlaySound("Catacomb/PotionUse",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_JumpIfInventory("CalebClass",1,"UseSuccessBlood")
+        TNT1 A 0 A_JumpIfInventory("RMRClass",1,"UseSuccessRMR")
+        TNT1 A 0 A_JumpIfInventory("RRClass",1,"UseSuccessRedneck")
+        TNT1 A 0 A_JumpIfInventory("Hexen2Class",1,"UseSuccessHexen2")
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100)
+        goto UseFinish
+
+      UseSuccessBlood:
+        TNT1 A 0 A_TakeInventory("SamsaraCalebDoctorsBagLoopCount") // reset
+      UseSuccessBloodLoop:
+        TNT1 A 0 A_GiveInventory("SamsaraCalebDoctorsBagLoopCount")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraCalebDoctorsBagLoopCount",0,"UseFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,2)
+        TNT1 A 0 A_JumpIfInventory("CalebDoctorsBag",2,1)
+        goto UseFinish
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), 1)
+        goto UseFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,"UseSuccessBloodLoop")
+        TNT1 A 0 A_TakeInventory("CalebDoctorsBag",1)
+        loop
+
+      UseSuccessRMR:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 1, -1, 1)
+        goto UseFinish
+
+      UseSuccessRedneck:
+        TNT1 A 0 A_TakeInventory("SamsaraLeonardWhiskeyLoopCount") // reset
+      UseSuccessRedneckLoop:
+        TNT1 A 0 A_GiveInventory("SamsaraLeonardWhiskeyLoopCount")
+        TNT1 A 0 A_TakeInventory("RRFoodAmount",1)
+        TNT1 A 0 A_GiveInventory("RRDrunkAmount")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraLeonardWhiskeyLoopCount",0,"UseFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,2)
+        TNT1 A 0 A_JumpIfInventory("RRCheapasswhiskey",2,1)
+        goto UseFinish
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1), 1)
+        goto UseFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,"UseSuccessRedneckLoop")
+        TNT1 A 0 A_TakeInventory("RRCheapasswhiskey",1)
+        loop
+
+      UseSuccessHexen2:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "UseSuccessHexen2Infinite")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraMegaHealth", 100, 250, 1, 175)
+        goto UseFinish
+
+      UseSuccessHexen2Infinite:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 100, 250)
+        goto UseFinish
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor PortSuperHealth : SamsaraSuperHealthInventory
+{
+    Inventory.Icon "ARTISPHL"
+    Inventory.MaxAmount 5
+    Inventory.InterHubAmount 5
+    Inventory.RestrictedTo "CorvusPlayer", "HexenPlayer"
+    Tag "Mystic Urn"
+}
+
+actor SamsaraCalebDoctorsBagLoopCount : Counter { Inventory.MaxAmount 100 }
+
+actor CalebDoctorsBag : SamsaraSuperHealthInventory
+{
+    Inventory.Icon "ARTIBLDH"
+    Inventory.MaxAmount 100
+    Inventory.InterHubAmount 100
+    Inventory.RestrictedTo "Caleb"
+    Tag "Doctor's Bag"
+}
+
+actor StrifeSurgeryKit2 : SamsaraSuperHealthInventory
+{
+    Inventory.Icon "I_FULL"
+    Inventory.MaxAmount 5
+    Inventory.InterHubAmount 5
+    Inventory.RestrictedTo "StrifeguyPlayer"
+    Tag "Surgery Kit"
+}
+
+actor RMROxygenRecycler: SamsaraSuperHealthInventory
+{
+    Inventory.Icon "RM8ZA0"
+    Inventory.MaxAmount 3
+    Inventory.InterHubAmount 3
+    Inventory.RestrictedTo "RebelMoonCommando"
+    Tag "Oxygen Recycler"
+}
+
+actor SamsaraLeonardWhiskeyLoopCount : Counter { Inventory.MaxAmount 10 }
+
+actor RRCheapasswhiskey : SamsaraSuperHealthInventory
+{
+    Inventory.Icon "RRWHISKY"
+    Inventory.MaxAmount 100
+    Inventory.InterHubAmount 100
+    Inventory.RestrictedTo "Leonard"
+    Tag "Cheap Ass Whiskey"
+}
+
+actor PortSuperHealth3 : SamsaraSuperHealthInventory
+{
+    Inventory.Icon "H2INVT05"
+    Inventory.MaxAmount 5
+    Inventory.InterHubAmount 5
+    Inventory.RestrictedTo "Demoness"
+    Tag "Mystic Urn"
+}
+
+actor Catacomb_LargeHealthPotion : SamsaraSuperHealthInventory
+{
+    Inventory.Icon "CTAAF0"
+    Inventory.MaxAmount 99
+    Inventory.InterHubAmount 5
+    Inventory.RestrictedTo "PettonEverhail"
+    Tag "Purple Potion"
+}
+
+// Megasphere
+actor MegaPack : SamsaraHealthPickup
+{
+    Inventory.PickupFlash "PickupFlash"
+    RenderStyle "Normal"
+    Scale 0.75
+    States
+    {
+      Spawn:
+        FELD A 0 Bright Light("SAMSARA_MEGA_PACK")
+      SpawnDropCheck:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 1, 1), 1)
+        goto SpawnGameModeCheck
+        TNT1 A 0 A_ChangeFlag("COUNTITEM",false)
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
+      SpawnActualAnim:
+        FELD ABCDEFGHI 2 Bright Light("SAMSARA_MEGA_PACK")
+        loop
+
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupHeretic")
+        TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
+        goto PickupDefault
+
+      PickupDefault:
+        goto PickupDisplay
+
+      PickupHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("CorvusMegasphere",0,1)
+        goto PickupDisplay
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 69, 0) >= 2, "PickupHereticInstant")
+        fail
+
+      PickupHereticInstant:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 200), "PickupDisplay")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraArmorCapCheck", 11), "PickupFail")
+        goto PickupDisplay
+
+      PickupDisplay:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 42) >= 5, "PickupDisplayNone")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 42) == 3, "PickupDisplayMarathon")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 42) == 2, "PickupDisplayQuake") // shared
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 42) == 1, "PickupDisplayQuake")
+      PickupDisplayNormal:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayNormalHeretic")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupDisplayNormalMarathon")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupDisplayNormalQuake1")
+        TNT1 A 0 A_JumpIfInventory("EradClass",1,"PickupDisplayNormalEradicator")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupDisplayNormalQuake3")
+        TNT1 A 0 A_Jump(256,"PickupDisplayNormalDefault") // for inheriting actors
+        goto PickupDisplayNormalDefault
+
+      PickupDisplayNormalDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNormalHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayNormalHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("CorvusMegasphere",0,"PickupDisplayNormalHereticInstant")
+        goto PickupDisplayNormalHereticInventory
+
+      PickupDisplayNormalHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 4)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNormalHereticInventory:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 8)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNormalMarathon:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 9)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNormalQuake1:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 13)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        // pickup sound handled through ACS
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNormalEradicator:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 17)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNormalQuake3:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 21)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 ACS_NamedExecuteAlways("Q3_Announcer", 0, 4) //A_PlaySound("Quake3/Items/Regeneration",CHAN_ITEM)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayQuake:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayQuakeHeretic")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupDisplayQuakeMarathon")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupDisplayQuakeQuake1")
+        TNT1 A 0 A_JumpIfInventory("EradClass",1,"PickupDisplayQuakeEradicator")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupDisplayQuakeQuake3")
+        TNT1 A 0 A_Jump(256,"PickupDisplayQuakeDefault") // for inheriting actors
+        goto PickupDisplayQuakeDefault
+
+      PickupDisplayQuakeDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 1)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayQuakeHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayQuakeHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("CorvusMegasphere",0,"PickupDisplayQuakeHereticInstant")
+        goto PickupDisplayQuakeHereticInventory
+
+      PickupDisplayQuakeHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 5)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayQuakeHereticInventory:
+        goto PickupDisplayNormalHereticInventory
+
+      PickupDisplayQuakeMarathon:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 10)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayQuakeQuake1:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 14)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        // pickup sound handled through ACS
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayQuakeEradicator:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 18)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayQuakeQuake3:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 22)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 ACS_NamedExecuteAlways("Q3_Announcer", 0, 4) //A_PlaySound("Quake3/Items/Regeneration",CHAN_ITEM)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayMarathon:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayMarathonHeretic")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupDisplayMarathonMarathon")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupDisplayMarathonQuake1")
+        TNT1 A 0 A_JumpIfInventory("EradClass",1,"PickupDisplayMarathonEradicator")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupDisplayMarathonQuake3")
+        TNT1 A 0 A_Jump(256,"PickupDisplayMarathonDefault") // for inheriting actors
+        goto PickupDisplayMarathonDefault
+
+      PickupDisplayMarathonDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 2)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayMarathonHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayMarathonHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("CorvusMegasphere",0,"PickupDisplayMarathonHereticInstant")
+        goto PickupDisplayMarathonHereticInventory
+
+      PickupDisplayMarathonHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 6)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayMarathonHereticInventory:
+        goto PickupDisplayNormalHereticInventory
+
+      PickupDisplayMarathonMarathon:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 11)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayMarathonQuake1:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 15)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        // pickup sound handled through ACS
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayMarathonEradicator:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 19)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayMarathonQuake3:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 23)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 ACS_NamedExecuteAlways("Q3_Announcer", 0, 4) //A_PlaySound("Quake3/Items/Regeneration",CHAN_ITEM)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNone:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayNoneHeretic")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupDisplayNoneMarathon")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupDisplayNoneQuake1")
+        TNT1 A 0 A_JumpIfInventory("EradClass",1,"PickupDisplayNoneEradicator")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupDisplayNoneQuake3")
+        TNT1 A 0 A_Jump(256,"PickupDisplayNoneDefault") // for inheriting actors
+        goto PickupDisplayNoneDefault
+
+      PickupDisplayNoneDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 3)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNoneHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupDisplayNoneHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("CorvusMegasphere",0,"PickupDisplayNoneHereticInstant")
+        goto PickupDisplayNoneHereticInventory
+
+      PickupDisplayNoneHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 7)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("heretic/itemget",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNoneHereticInventory:
+        goto PickupDisplayNormalHereticInventory
+
+      PickupDisplayNoneMarathon:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 12)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNoneQuake1:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 16)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        // pickup sound handled through ACS
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNoneEradicator:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 20)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupDisplayNoneQuake3:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 9, 24)
+        TNT1 A 0 A_GiveInventory("SamsaraSuperHealthPickupBlend")
+        TNT1 A 0 ACS_NamedExecuteAlways("Q3_Announcer", 0, 4) //A_PlaySound("Quake3/Items/Regeneration",CHAN_ITEM)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 1)
+        goto PickupSuccess
+
+      PickupSuccess:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupSuccessHeretic")
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,"PickupSuccessDuke")
+        TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupSuccessMarathon")
+        TNT1 A 0 A_JumpIfInventory("QuakeClass",1,"PickupSuccessQuake1")
+        TNT1 A 0 A_JumpIfInventory("EradClass",1,"PickupSuccessEradicator")
+        TNT1 A 0 A_JumpIfInventory("DisruptorClass",1,"PickupSuccessDisruptor")
+        TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupSuccessQuake3")
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupSuccessDeusEx")
+        TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
+        goto PickupSuccessDefault
+
+      PickupSuccessDefault:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 200, 200)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11)
+        stop
+
+      PickupSuccessHeretic:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 22), "PickupSuccessHereticInstant")
+        TNT1 A 0 A_JumpIfInventory("CorvusMegasphere",0,"PickupSuccessHereticInstant")
+        goto PickupSuccessHereticInventory
+
+      PickupSuccessHereticInstant:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 200, 200)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, -200)
+        stop
+
+      PickupSuccessHereticInventory:
+        TNT1 A 0 A_GiveInventory("CorvusMegasphere")
+        stop
+
+      PickupSuccessDuke:
+        TNT1 A 0 A_JumpIfHealthLower(25,1)
+        goto PickupSuccessDefault
+        TNT1 A 0 A_GiveInventory("DukeHealthTaunt")
+        goto PickupSuccessDefault
+
+      PickupSuccessMarathon:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 300, 300)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, -300, -300)
+        stop
+
+      PickupSuccessQuake1:
+        TNT1 A 0 A_GiveInventory("QuakeRegenGiver")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11)
+        stop
+
+      PickupSuccessEradicator:
+        goto PickupSuccessMarathon
+
+      PickupSuccessDisruptor:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 200, 200)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11)
+        TNT1 A 0 A_GiveInventory("DisruptorPSIEnergy",100)
+        stop
+
+      PickupSuccessQuake3:
+        TNT1 A 0 A_GiveInventory("Q3RegenerationDummy")
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11)
+        stop
+
+      PickupSuccessDeusEx:
+        TNT1 A 0 A_GiveInventory("DeusEx_AugmentationBioEnergyCell")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",0,"PickupSuccessDeusExMaster")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",3,"PickupSuccessDeusExAdvanced")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",2,"PickupSuccessDeusExProficient")
+        TNT1 A 0 A_JumpIfInventory("DeusEx_MedicineSkill",1,"PickupSuccessDeusExTrained")
+      PickupSuccessDeusExUntrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 200, 200)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExTrained:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 250, 250)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, 50, 50)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExProficient:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 300, 300)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, 100, 100)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExAdvanced:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 350, 350)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, 150, 150)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExMaster:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 400, 400)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, 200, 200)
+        goto PickupSuccessDeusExFinish
+
+      PickupSuccessDeusExFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_Decorate", 25, 200)
+        stop
+    }
+}
+
+actor DoomMegaPack : MegaPack replaces Megasphere { +COUNTITEM }
+actor HexenMegaPack : MegaPack replaces ArtiDarkServant { +COUNTITEM }
+
+actor SamsaraMegaPackInventory : CustomInventory
+{
+    Inventory.UseSound ""
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_Jump(256,"UseDefault") // for inheriting actors
+        goto UseDefault
+
+      UseDefault:
+        TNT1 A 0 A_JumpIfHealthLower(CallACS("SamsaraPlayerHealer", -1, 200), "UsePlaySound")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraArmorCapCheck", 11), "UseFail")
+        goto UsePlaySound
+
+      UsePlaySound:
+        TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"UsePlaySoundHeretic")
+        TNT1 A 0 A_Jump(256,"UsePlaySoundDefault") // for inheriting actors
+        goto UsePlaySoundDefault
+
+      UsePlaySoundDefault:
+        goto UseSuccess
+
+      UsePlaySoundHeretic:
+        TNT1 A 0 A_PlaySound("megapackpickup",CHAN_ITEM)
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 A_Jump(256,"UseSuccessDefault") // for inheriting actors
+        goto UseSuccessDefault
+
+      UseSuccessDefault:
+        TNT1 A 0 A_SetBlend("White",0.1,2)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 200, 200)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 11, -200)
+        goto UseFinish
+
+      UseFinish:
+        TNT1 A 0 A_RailWait
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
+actor CorvusMegasphere : SamsaraMegaPackInventory
+{
+    Inventory.Icon "ARTIFELD"
+    Inventory.MaxAmount 16
+    Inventory.InterHubAmount 16
+    Inventory.RestrictedTo "CorvusPlayer"
+    Tag "Unbound Megasphere"
+}
+
+actor QuakeRegenTimer: Counter {}
+
+actor QuakeRegenGiver: Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_GiveInventory("QuakeRegenTimer",1050)
+        stop
+    }
+}
+
+// Pie
+actor BecauseTermSaidSo : HealPack1
+{
+    RenderStyle "Normal"
+    Alpha 1
+    Scale 0.75
+    -FLOATBOB
+    States
+    {
+      Spawn:
+        PIEE E 0
+        goto SpawnGameModeCheck
+
+      SpawnActual:
+        TNT1 A 0 A_ChangeFlag("THRUACTORS",false)
+        PIEE E -1 A_ChangeFlag("NOTIMEFREEZE",false)
+        stop
+
+      PickupStrife:
+        goto PickupDefault
+
+      PickupDisplay:
+        TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupDisplayDeusEx")
+        goto Super::PickupDisplay // all other classes still checked
+
+      PickupDisplayDefault:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 12, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("Samsara/PiePickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupDisplayStrife:
+        goto PickupDisplayDefault
+
+      PickupDisplayDeusEx:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 0, 12, 0)
+        TNT1 A 0 A_GiveInventory("SamsaraHealthPickupBlend")
+        TNT1 A 0 A_PlaySound("DeusEx/JC/Burp",CHAN_VOICE|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 A_PlaySound("Samsara/PiePickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        goto PickupSuccess
+
+      PickupSuccessStrife:
+        goto PickupSuccessDefault
+    }
+}

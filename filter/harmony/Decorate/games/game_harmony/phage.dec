@@ -44,9 +44,9 @@ actor WalkingPhage_Samsara : SamsaraMonsterBeastTotalGib replaces Arachnotron
 			BOSS F 1 A_SpidRefire
 			goto Missile+2
 		Death:
-			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)	
-			SSWV N 7
+		Death.Massacre:
+			SSWV N 7 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			SSWV O 7 A_PlaySound("weapons/sshotl")
 			SSWV P 6 A_Fall
 			SSWV QR 5
@@ -256,6 +256,8 @@ actor WalkingPhage_Samsara_Shrink : WalkingPhage_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

@@ -1,0 +1,96 @@
+actor CantQuad : Boolean {}
+actor DoNotQuad : Boolean {}
+actor QuakeQuadTimer : Counter {}
+actor SamsaraQuadDamageCooldownDisplay : Counter {}
+actor StopBreakingEverything_Quad : Boolean {}
+actor SamsaraQuakeQuadDamageDisablePlayerSound : Boolean {}
+
+actor QuadDamagePickup : Trigger
+{
+    States
+    {
+      Spawn:
+        QUDD A -1
+        stop
+
+      Pickup:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraDecorate", 7, 1050, 1)
+        stop
+    }
+}
+
+actor QuadDamageItem : CustomInventory
+{
+    Inventory.UseSound ""
+    Inventory.Icon "QUADICON"
+    Inventory.MaxAmount 1
+    Inventory.InterHubAmount 1
+    Inventory.RestrictedTo "QuakePlayer"
+    Tag "Quad Damage"
+    +INVBAR
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("StopBreakingEverything_Quad",1,"UseFail")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasDisabledInventoryCooldown",1,"UseSuccess")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 64), 1)
+        goto UseSuccess
+        TNT1 A 0 A_JumpIfInventory("CantQuad",1,"NoU")
+        goto UseSuccess
+
+      UseSuccess:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraDecorate", 7, 1050)
+        TNT1 A 0 A_GiveInventory("StopBreakingEverything_Quad")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 64), "UseFail")
+        stop
+
+      UseFail:
+        TNT1 A 0
+        fail
+
+      NoU:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 17, 8)
+        fail
+    }
+}
+
+actor QuadDamagePower : PowerDamage
+{
+    Powerup.Duration 0x7FFFFFFF
+    Powerup.Color "00 50 FF", 0.15
+    DamageFactor "Normal", 4
+    DamageFactor "QuakeExplosive", 4
+    DamageFactor "QuakeElectric", 4
+    DamageFactor "QuakeQuadded", 4 // this isn't really used
+    DamageFactor "NotQuadded", 1
+    DamageFactor "SpectralNoQuad", 1
+    DamageFactor "EnemyInfightDamage", 0
+}
+
+actor SamsaraQuakeQuadDamageFireSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("QuadDamagePower",1,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupDMC")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRerelease")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("quakeweps/quadfire",CHAN_7)
+        stop
+
+      // Rerelease sounds
+      PickupRerelease:
+        TNT1 A 0 A_PlaySound("quakeweps/rerelease/quadfire",CHAN_7)
+        stop
+
+      // Deathmatch Classic sounds
+      PickupDMC:
+        TNT1 A 0 A_PlaySound("quakeweps/dmc/quadfire",CHAN_7)
+        stop
+    }
+}

@@ -1,0 +1,1098 @@
+Actor Bubba
+{
+	YScale 0.32
+	XScale 0.32
+	Height 52
+	Mass 150
+	Radius 16
+	Health 100
+    Tag "Bubba"
+	+FLOORCLIP
+	+SOLID
+	+SHOOTABLE
+	+FRIENDLY
+	+ISMONSTER
+	-COUNTKILL
+	+NOBLOODDECALS
+	Painsound "Bubba/Hurt"
+	Deathsound "Bubba/Hurt"
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	Painchance 224
+	Painchance "LeonardDamage0", 0
+	DamageFactor "LeonardDamage0", 100.0
+	States
+	{
+		Spawn: // Scratch
+			TNT1 A 0
+			BUBA ABCDEFGHIJKL 6
+			TNT1 A 0 A_Jump(224, "Picknose")
+			Goto Piss
+		Picknose:
+			TNT1 A 0 A_Playsound("Bubba/Picknose",CHAN_NOPAUSE)
+			BUBA MNOPQ 6
+			BUBA RSTU 6
+			TNT1 A 0 A_Playsound("Bubba/Hey",CHAN_NOPAUSE)
+			TNT1 A 0 A_Jump(224, "Spawn")
+			Goto Piss
+		Piss:
+			TNT1 A 0 A_Playsound("Bubba/Piss",CHAN_NOPAUSE)
+			BUBT ABCDEFGHIJKLM 6
+			TNT1 A 0 A_Jump(128,3)
+			TNT1 A 0 A_Playsound("Bubba/Hey",CHAN_NOPAUSE)
+			TNT1 A 0 A_Jump(256,2)
+			TNT1 A 0 A_Playsound("Bubba/Leonard",CHAN_NOPAUSE)
+			BUBT NOPQR 6
+			Goto Spawn
+		Pain:
+			TNT1 A 0 A_Playsound("Bubba/Hurt", CHAN_NOPAUSE)
+			BUBP ABCDEF 5
+			Goto Spawn
+		Pain.LeonardDamage0:
+			TNT1 A 0 A_Playsound("Bubba/Hurt", CHAN_NOPAUSE)
+			BUBP ABCDEF 5
+			//TNT1 A 0 A_GiveInventory("BubbaDropper", 1, AAPTR_MASTER) grr...
+			TNT1 A 0 ACS_NamedExecuteAlways("BubbaGiver", 0, 0)
+			stop
+		Death.LeonardDamage0:
+			"####" "#" 0 A_Playsound("Bubba/Hurt", CHAN_NOPAUSE)
+			"####" "#" 0 ACS_NamedExecuteAlways("RRBubbaLevelEnd")
+			"####" "#" 70
+			stop
+		Death:
+			BUBD ABCDEFGHIJK 5
+			BUBD K -1
+			stop
+	}
+}
+
+Actor BubbaElvis
+{
+	YScale 0.32
+	XScale 0.32
+	Height 52
+	Mass 150
+	Radius 16
+	Health 100
+    Tag "Bubba"
+	+FLOORCLIP
+	+SOLID
+	+SHOOTABLE
+	+FRIENDLY
+	+ISMONSTER
+	-COUNTKILL
+	+NOBLOODDECALS
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	Painchance "LeonardDamage0", 0
+	Painsound "Bubba/Hurt"
+	DamageFactor "LeonardDamage0", 100.0
+	States
+	{
+		Spawn: //Sing
+			TNT1 A 0
+			TNT1 A 0 A_Playsound("Bubba/Elvis",CHAN_NOPAUSE)
+			BUBE "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 4
+			BUE2 A 1
+			BUBE "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 4
+			BUE2 A 1
+			loop
+		Pain.LeonardDamage0:
+			TNT1 A 0 A_Playsound("Bubba/Hurt", CHAN_NOPAUSE)
+			TNT1 A 0 A_StopSound(CHAN_NOPAUSE)
+			BUE2 A 1
+			//TNT1 A 0 A_GiveInventory("BubbaElvisDropper", 1, AAPTR_MASTER) grr...
+			TNT1 A 0 ACS_NamedExecuteAlways("BubbaGiver", 0, 1)
+			stop
+		Death.LeonardDamage0:
+			"####" "#" 0 A_Playsound("Bubba/Hurt", CHAN_NOPAUSE)
+			"####" "#" 0 ACS_NamedExecuteAlways("RRBubbaLevelEnd")
+			"####" "#" 70
+			stop
+		Death:
+		XDeath:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		Death.Massacre:
+		XDeath.Massacre:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)  
+			TNT1 A 0 A_SpawnItemEx("LeonardBlood_RR") 
+			TNT1 A 0 A_CustomMissile("MiscGib1_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib2_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib3_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib4_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib5_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib6_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))	
+			TNT1 AAAAA 0 A_CustomMissile("MiscGib7_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))	
+			TNT1 A 5 A_NoBlocking
+			TNT1 A -1 
+			Stop
+	}
+}
+
+ACTOR BubbaFreezer : PowerupGiver
+{
+   	Inventory.MaxAmount 0
+	Powerup.Duration -5
+	Powerup.Type TimeFreezer
+	+INVENTORY.AUTOACTIVATE
+	+INVENTORY.ALWAYSPICKUP
+    States
+    {
+		Spawn:
+			TNT1 A 2
+			Loop
+    }
+}
+
+actor BubbaDropper : CustomInventory
+{
+	Inventory.MaxAmount 1
+	Inventory.Icon "BUBAA0"
+	+INVENTORY.UNDROPPABLE
+	YScale 0.32
+	XScale 0.32
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			BUBA A 1
+			loop
+		Use:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("Bubba",32,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+			stop
+	}
+}
+
+actor BubbaElvisDropper : CustomInventory
+{
+	Inventory.MaxAmount 1
+	Inventory.Icon "BUBEA0"
+	+INVENTORY.UNDROPPABLE
+	YScale 0.32
+	XScale 0.32
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			BUBE A 1
+			loop
+		Use:
+			TNT1 A 0
+			TNT1 A 0 A_SpawnItemEx("BubbaElvis",32,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_SETMASTER)
+			stop
+	}
+}
+
+actor BubbaDistractor : CustomInventory
+{
+  states
+  {
+  Pickup:
+    //TNT1 A 0 A_ClearTarget
+	TNT1 A 0 Thing_Hate (0, 3602, 0)
+    stop
+  }
+}
+
+actor BubbaTerrorizer : CustomInventory
+{
+  states
+  {
+  Pickup:
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	stop
+  }
+}
+
+actor BubbaUnTerrorizer : CustomInventory
+{
+  states
+  {
+  Pickup:
+    //TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",0)
+	stop
+  }
+}
+
+actor RedneckRampage_Cow : SamsaraMiscCharAnimalStatic
+{
+	Monster
+	-COUNTKILL
+	+NOBLOODDECALS
+	Height 48
+	Radius 24
+	Health 250
+	Mass 50000
+	Scale 0.5
+	Tag "Cow"
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	GibHealth -20
+	States
+	{
+		Spawn:
+			RRCW A 0
+			RRCW A 0 A_Jump(128, 2)
+			RRCW A 0 A_Playsound("Cow/Moo", CHAN_VOICE)
+			RRCW ABCD 6
+			RRCW A 0 A_Jump(128, "ContinueHeadUp")
+			Goto Eat
+		Eat:	
+			RRCW KLMN 6
+		EatLoop:
+			RRCW OP 6
+			RRCW A 0 A_Jump(248, "EatStop")
+			Loop
+		EatStop:
+			RRCW NMLK 6
+			Goto Spawn
+		ContinueHeadUp:
+			RRCW A 0
+			RRCW ABCD 6
+			RRCW A 0 A_Jump(128, "Eat")
+			Loop
+		Death:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		Death.Massacre:
+			RRCW A 0 A_NoBlocking
+			RRCW EFGHIJ 6
+			RRCW J -1
+			stop		
+		XDeath:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		XDeath.Massacre:
+			TNT1 A 0 A_NoBlocking
+			TNT1 AA 0 A_SpawnItemEX("RRGibSpawner")
+			TNT1 A -1
+			Stop
+		Death.LeonardDamage2:
+		Death.LeonardDamage3:
+			TNT1 A 0 A_JumpIfHealthLower(-20, "XDeathForLeonard")
+		Death.RRBullet:
+		Death.LeonardDamage0:
+		Death.LeonardDamage1:	
+			TNT1 A 0 A_Jump(218, "Death")
+			TNT1 A 0 A_GiveToTarget("LeonardDMTaunt1", 1)
+			TNT1 A -1 A_Jump(256,"Death")
+			wait
+		XDeathForLeonard:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_Jump(96,"XDeath")
+			TNT1 A 0 A_GiveToTarget("LeonardGibTaunt",1)
+			TNT1 A -1 A_Jump(256,"XDeath")
+			wait	
+		Pain.ShrinkerDMG:
+			RRCW A 0
+			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			"####" "#" 0 A_ChangeFlag("NOPAIN", 1)
+			"####" "#" 0 A_ChangeFlag("NODAMAGE", 1)
+			"####" "#" 0 A_NoBlocking
+			"####" "#" 0 A_PlaySound("duke/shrink")
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+			"####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 4 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow_Shrink", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSPECIAL|SXF_TRANSFERAMBUSHFLAG|SXF_SETMASTER,0,tid)
+			TNT1 A 2
+			TNT1 A 0 Thing_Remove(0)
+			stop
+	}
+}
+
+actor RedneckRampage_Cow_Shrink : RedneckRampage_Cow
+{
+	+FRIGHTENED
+	+NOTRIGGER
+	-SHOOTABLE
+	+THRUACTORS
+	+NORADIUSDMG
+	+VULNERABLE
+	+QUICKTORETALIATE
+	-COUNTKILL
+	-NOGRAVITY
+	+NODAMAGE
+	+NOPAIN
+	MaxStepHeight 0
+	MaxDropOffHeight 0
+	MeleeRange 16
+	Height 16
+	Health 1
+	Speed 0
+	PainChance "ShrinkDMG", 0
+	DamageFactor "ShrinkDMG", 0.0
+	PainChance "ExpanderDMG", 0
+	DamageFactor "ExpanderDMG", 0.0
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIfInventory("ShrunkToken",1,"SpawnLoop")
+			TNT1 A 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			TNT1 A 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			TNT1 A 0 A_SetScale(scalex*0.2,scaley*0.2) // setting the scale in ACS does work, but the actor shows up at normal size for a split second
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_Shrinker", 0, 1)
+			RRCW A 10
+			Goto See
+		SpawnLoop:
+			RRCW A 10 A_Look
+			Loop
+		See:
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW A 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW B 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW C 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW D 6
+			"####" "#" 0 A_Jump(128, "ContinueHeadUp")
+			"####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+			Goto Eat
+		Eat:
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW K 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW L 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW M 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW N 6
+			"####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+		EatLoop:
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW O 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW P 6
+			"####" "#" 0 A_Jump(248, "EatStop")
+			"####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+			Loop
+		EatStop:
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW N 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW M 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW L 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW K 6
+			"####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+			Goto Spawn
+		ContinueHeadUp:
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW A 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW B 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW C 6
+			"####" "#" 0 A_JumpIfInTargetInventory("ChexClass", 1, 5) // this is supposed to be child friendly
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeClass", 1, 3)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("Squish")
+			"####" "#" 0 A_Jump(256, 2)
+			"####" "#" 0 A_JumpIfTargetInSideMeleeRange("DukeStomp")
+			RRCW D 6
+			"####" "#" 0 A_Jump(128, "Eat")
+			"####" "#" 0 A_JumpIf(CallACS("Samsara_Shrinker", 3) == 0, "Forget")
+			Loop
+		Forget:
+			"####" "#" 0 A_ClearTarget
+			Goto See
+		Grow:
+			"####" "#" 4 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(1.0*(user_scalex/65536.0),1.0*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RedneckRampage_Cow", 0, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_TRANSFERPOINTERS|SXF_TRANSFERAMBUSHFLAG|SXF_SETMASTER,0,tid)
+			TNT1 A 0 A_GiveToChildren("ShrunkPropertyTransfer",1)
+			TNT1 A 0 A_GiveToChildren("ShrunkPropertyTransfer",1)
+			TNT1 A 2 Thing_Remove(0)
+			stop
+		Squish:
+			"####" "#" 0 A_GiveInventory("SquishToken", 1)
+			"####" "#" 0 A_JumpIfInTargetInventory("DukeStomp", 1, 2)
+			"####" "#" 0 A_Jump(256,3)
+			"####" "#" 2 
+			"####" "#" 0 A_Jump(256,3)
+			"####" "#" 0 
+			"####" "#" 2 A_Die("Squish")
+			"####" "#" 0
+			loop
+		Death:
+		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
+		Death.Squish:
+		XDeath.Squish:
+			TNT1 A 0 A_Jump(64,2)
+			TNT1 A 0 A_GiveToTarget("DukeBootTaunt",1)
+			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			stop
+		DukeStomp:
+			"####" "#" 0 A_GiveToTarget("DukeStomp", 1)
+			Goto Squish
+	}
+}
+
+actor RedneckRampage_Cow_ShrinkEffect : RedneckRampage_Cow
+{
+	-ISMONSTER
+	-COUNTKILL
+	-SHOOTABLE
+	-SOLID
+	+NOINTERACTION
+	+CLIENTSIDEONLY	
+	-NOGRAVITY
+	Renderstyle Translucent
+	Alpha 0.4
+	States
+	{
+		Spawn:
+			RRCW A 0
+			RRCW A 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			RRCW A 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+			Stop
+	}
+}
+
+actor RedneckRampage_Chicken : SamsaraMiscCharAnimalStaticTotalGib
+{
+	Monster
+	-COUNTKILL
+	+FRIENDLY
+	+NOBLOODDECALS
+	Height 24
+	Radius 12
+	Health 12
+	Mass 20
+	Scale 0.33
+	Tag "Chicken"
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	GibHealth -25
+	DeathSound "RRChicken/Death"
+	Speed 2
+	PainChance "ShrinkerDMG", 0
+	States
+	{
+		Spawn:
+			RRCH A 1
+			Goto Roam
+		Roam:
+			RRCH A 0 A_Jump(240,2)
+			RRCH A 0 A_Playsound("RRChicken/Roaming", CHAN_VOICE)
+			RRCH ABCDEFG 4 A_Wander
+			Loop
+		Death:
+		XDeath:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		Death.Massacre:
+		XDeath.Massacre:
+			TNT1 A 0 A_CustomMissile("MiscGib1_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 AAAAAAAA 0 A_SpawnItemEx("RRCOCKFEATHER",0,0,0,random(-60,60)/20.00,random(-60,60)/20.00,random(5,20)/10.00)
+			TNT1 A 0 A_Scream
+			TNT1 A -1
+			stop
+		Death.LeonardDamage2:
+		Death.LeonardDamage3:
+		Death.RRBullet:
+		Death.LeonardDamage0:
+		Death.LeonardDamage1:	
+		XDeathForLeonard:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_Jump(96,2)
+			TNT1 A 0 A_GiveToTarget("LeonardDMTaunt1",1)
+			TNT1 A -1 A_Jump(256,"Death")
+			wait
+	}
+}
+
+actor RedneckRampage_Pig : SamsaraMiscCharAnimalStaticTotalGib
+{
+	Monster
+	-COUNTKILL
+	+NOBLOODDECALS
+	Height 24
+	Radius 16
+	Health 75
+	Mass 100
+	Scale 0.33
+	Tag "Pig"
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	GibHealth -75
+	DeathSound "RRPig/Death"
+	PainSound "RRPig/Pain"
+	Painchance 255
+	Speed 2
+	PainChance "ShrinkerDMG", 0
+	States
+	{
+		Spawn:
+			RRPG A 1
+			Goto Roam
+		Roam:
+			RRPG A 0 A_Jump(96, "EatStart")
+			RRPG A 6 A_Wander		RRPG A 0 A_LookEx(LOF_NOJUMP, 0,0,0,0)
+			RRPG B 6 A_Wander		RRPG A 0 A_LookEx(LOF_NOJUMP, 0,0,0,0)
+			RRPG C 6 A_Wander		RRPG A 0 A_LookEx(LOF_NOJUMP, 0,0,0,0)
+			RRPG D 6 A_Wander		RRPG A 0 A_LookEx(LOF_NOJUMP, 0,0,0,0)
+			RRPG E 6 A_Wander		RRPG A 0 A_LookEx(LOF_NOJUMP, 0,0,0,0)
+			RRPG F 6 A_Wander		RRPG A 0 A_LookEx(LOF_NOJUMP, 0,0,0,0)
+			RRPG A 0 A_Playsound("RRPig/Grunt", CHAN_VOICE)
+			Loop
+		EatStart:
+			RRPG LKJI 6
+		EatLoop:
+			RRPG A 0 A_Playsound("RRPig/Eat", CHAN_VOICE)
+			RRPG A 0 A_Jump(32, "EatStop")
+			RRPG GHGHGHGHG 6 
+			Loop
+		EatStop:
+			RRPG IJKL 6
+			Goto Roam
+		Chase:
+			RRPG A 3 A_Chase("Melee","")
+			RRPG B 3 A_Chase("Melee","")
+			RRPG C 3 A_Chase("Melee","")
+			RRPG D 3 A_Chase("Melee","")
+			RRPG E 3 A_Chase("Melee","")
+			RRPG F 3 A_Chase("Melee","")
+			RRPG A 3 A_Chase("Melee","")
+			RRPG B 3 A_Chase("Melee","")
+			RRPG C 3 A_Chase("Melee","")
+			RRPG D 3 A_Chase("Melee","")
+			RRPG E 3 A_Chase("Melee","")
+			RRPG F 3 A_Chase("Melee","")
+			RRPG A 0 A_Playsound("RRPig/Grunt", CHAN_VOICE)
+			Loop
+		Melee:
+			RRPG MNO 6
+			RRPG A 0 A_CustomMeleeAttack(1)
+			RRPG PQ 6
+			Goto Chase
+		Pain:
+			RRPG A 0 A_Pain
+			Goto Chase
+		Death:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		Death.Massacre:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)  
+			TNT1 A 0 A_CustomMissile("MiscGib1_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib2_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib3_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib4_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib5_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
+			TNT1 A 0 A_CustomMissile("MiscGib6_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))	
+			TNT1 AAAAA 0 A_CustomMissile("MiscGib7_RR",0+Random(30,60),0+Random(35,-35),0+Random(0,370))	
+			TNT1 A 0 A_Scream
+			TNT1 A 5 A_NoBlocking
+			TNT1 A -1 
+			Stop
+		Death.LeonardDamage2:
+		Death.LeonardDamage3:
+		Death.RRBullet:
+		Death.LeonardDamage0:
+		Death.LeonardDamage1:	
+		XDeathForLeonard:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_Jump(96,2)
+			TNT1 A 0 A_GiveToTarget("LeonardDMTaunt1",1)
+			TNT1 A -1 A_Jump(256,"Death")
+			wait
+	}
+}
+
+Actor FriendlyTurdMinion 
+{
+    obituary "%o got killed by pieces of crap thrown by a Turd Minion!"
+    hitobituary "A turd minion gave major infections to %o!"
+    scale 0.3
+    radius 10
+    height 33
+    health 100
+    mass 5000
+    painchance 50
+	+FLOORCLIP
+	+FRIENDLY
+	-SOLID
+	+MISSILEMORE
+	+MISSILEEVENMORE
+    meleedamage 3
+    bloodcolor "87 57 33"
+    speed 4.5
+    painsound "Minion/Pain"
+    deathsound "leonard/xdeath"
+    activesound "Minion/Idle"
+	seesound "Minion/See"
+	Species "Player"	
+    Monster	
+    States
+    {
+    Spawn:
+		_URD R 4 A_Look
+		loop
+    See:
+		_URD AA 2 A_Chase
+		_URD BB 2 A_Chase("","",CHF_NOPLAYACTIVE)
+		_URD CC 2 A_Chase
+		_URD DD 2 A_Chase("","",CHF_NOPLAYACTIVE)
+		_URD EE 2 A_Chase
+		_URD FF 2 A_Chase("","",CHF_NOPLAYACTIVE)
+		_URD GG 2 A_Chase
+		_URD HH 2 A_Chase("","",CHF_NOPLAYACTIVE)
+		_URD A 0 A_Jump(20,"JumpBitch")
+		Loop
+	JumpBitch:
+		TNT1 A 0 A_ChangeFlag(NOPAIN,1)
+		_URD A 0 A_PlaySound("Minion/Freakout")
+		_URD STUVWXWVUTSTUVWXWVUTS 2
+		TNT1 A 0 A_Jump(100,"see")
+		_URD YZ 4
+		_URD Y 0 A_Recoil(-6)
+		_URD Y 4 ThrustThingZ(0,25,0,0)
+		_URD "[" 3
+	JumpingLoop:
+		_URD A 1 A_CheckFloor("WTFIsThis")
+		Loop
+	WTFIsThis:
+		_URD "[" 3
+		_URD YZY 3
+		TNT1 A 0 A_ChangeFlag(NOPAIN,0)	
+		Goto See	
+    Missile:
+		TNT1 A 0 A_ChangeFlag(NOPAIN,1)	
+		_URD IJKLMN 3 A_FaceTarget
+		_URD O 3 A_CustomMissile("FriendlyTurdCrapball",18,0,0)
+		_URD QR 3
+		TNT1 A 0 A_ChangeFlag(NOPAIN,0)	
+		goto See
+    Melee:	
+		TNT1 A 0 A_ChangeFlag(NOPAIN,1)	
+		_URD A 0 A_Jump(64,"Melee2")
+		_URD "[" 3 A_FaceTarget
+		_URD A 3 A_FaceTarget
+		_URD Z 3 A_MeleeAttack
+		TNT1 A 0 A_ChangeFlag(NOPAIN,0)	
+		goto See
+	Melee2:
+		TNT1 A 0 A_FaceTarget
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,0)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,45)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,90)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,135)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,180)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,225)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,270)
+		TNT1 AAAA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,315)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,0)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,45)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,90)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,135)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,180)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,225)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,270)
+		TNT1 AA 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,315)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,0)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,45)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,90)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,135)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,180)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,225)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,270)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,315)  
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,0)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,45)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,90)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,135)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,180)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,225)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,270)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,315)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,0)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,45)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,90)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,135)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,180)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,225)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,270)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,315)  
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,0)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,45)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,90)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,135)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,180)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,225)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,270)
+		TNT1 A 1 A_CustomMissile("FriendlyTurdMinionFreakout",0,0,315)
+		TNT1 A 0 A_Jump(20,"XDeath")
+		TNT1 A 0 A_ChangeFlag(NOPAIN,0)	
+		Goto see
+   Pain:
+		_URD A 0 A_Pain
+		Goto See
+   Death:
+   XDeath:	
+		TNT1 A 0 A_Scream
+		TNT1 A 0 A_NoBlocking 
+		TNT1 A 0 A_CustomMissile("FriendlyTurdMinionHead",0+Random(20,50),0+Random(25,-25),0+Random(0,370))
+		TNT1 A 0 A_CustomMissile("FriendlyTurdMinionEye",0+Random(20,50),0+Random(25,-25),0+Random(0,370))
+		TNT1 A 0 A_CustomMissile("FriendlyTurdMinionlimb",0+Random(20,50),0+Random(25,-25),0+Random(0,370))
+		TNT1 A 0 A_CustomMissile("FriendlyTurdMinionlimb",0+Random(20,50),0+Random(25,-25),0+Random(0,370))
+		TNT1 A 0 A_CustomMissile("FriendlyTurdMinionlimb",0+Random(20,50),0+Random(25,-25),0+Random(0,370))
+		TNT1 A 0 A_CustomMissile("FriendlyTurdMinionlimb",0+Random(20,50),0+Random(25,-25),0+Random(0,370))
+		TNT1 A 5 A_FadeOut
+		stop
+    }
+}
+
+Actor FriendlyTurdCrapball
+{
+    scale 0.3
+    height 6
+    radius 3
+    speed 25
+    damage (Random(1,3)*5)
+    +MISSILE
+	Species "Player"
+	+THRUSPECIES
+    PROJECTILE
+    states
+    {
+    Spawn:
+		U_RG ABCD 3 
+		loop
+    Death:
+		TNT1 A 5 
+		stop
+    }
+}
+
+Actor FriendlyTurdMinionFreakout
+{
+    scale 0.3
+    speed 0.8
+	Damage (Random(1,3)*5)
+    +MISSILE
+    +NOCLIP 
+	Species "Player"
+	+THRUSPECIES
+    PROJECTILE
+    states
+    {
+    Spawn:
+		_URD X 2
+		stop
+    }
+}
+
+Actor FriendlyTurdMinionHead
+{
+    radius 6
+    height 5
+    scale 0.2
+    speed 10
+    +MISSILE
+	+CLIENTSIDEONLY
+	-SOLID
+    states
+    {
+    Spawn:
+		TNT1 A 0
+		_URG A 0 A_Gravity	
+	SpawnLoop:
+		_URG ABCDE 4
+		Loop
+	Crash:
+    Death:
+		TNT1 A 5
+		stop
+    }
+}
+
+Actor FriendlyTurdMinionEye
+{
+    scale 0.15
+    radius 6
+    height 5
+    speed 10
+    +MISSILE
+	+CLIENTSIDEONLY
+	-SOLID	
+    states
+    {
+    Spawn:
+		TNT1 A 0
+		_URG A 0 A_Gravity	
+	SpawnLoop:
+		_URG FGHIJ 4
+		loop
+	Crash:
+    Death:
+		TNT1 A 5
+		stop
+    }
+}
+
+Actor FriendlyTurdMinionlimb
+{
+    scale 0.29
+    radius 6
+    height 5
+    speed 10
+    +MISSILE
+	+CLIENTSIDEONLY
+	-SOLID	
+    states
+    {
+    Spawn:
+		TNT1 A 0
+		_URG A 0 A_Gravity	
+	SpawnLoop:
+		_URG KLMNO 4
+		loop
+	Crash:
+    Death:
+		TNT1 A 5
+		stop  
+    }
+}
+
+Actor BubbaGivesYouMotorcycle : Inventory { Inventory.MaxAmount 1 Inventory.InterHubAmount 1 }
+
+Actor RRBanjoConcert
+{
+	Radius 8
+	Height 8
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			TNT1 A 0 NoDelay ACS_NamedExecuteWithResult("RRBanjoConcert")
+			TNT1 A 2
+			Stop
+	}
+}
+
+Actor RRBanjoConcertCup
+{
+	Radius 4
+	Height 8
+	+THRUACTORS
+	-NOGRAVITY
+	Scale 0.075
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_Jump(256,"Track2","Track3")
+		Track1:
+			TNT1 A 0 A_Playsound("Banjo/Track1",CHAN_7,1.0,1,3)
+			Goto Exist
+		Track2:
+			TNT1 A 0 A_Playsound("Banjo/Track2",CHAN_7,1.0,1,3)
+			Goto Exist
+		Track3:
+			TNT1 A 0 A_Playsound("Banjo/Track3",CHAN_7,1.0,1,3)
+			Goto Exist
+		Exist:
+			RRBJ I 35
+			Loop
+	}
+}
+
+Actor RRBanjoSign
+{
+	Radius 6
+	Height 12
+	+THRUACTORS
+	-NOGRAVITY
+	Scale 0.25
+	States
+	{
+		Spawn:
+			RR00 A 35
+			Loop
+	}
+}
+
+Actor RRBanjoCoot
+{
+	Monster
+	Height 56
+	Radius 20
+	Health 1000000
+	Mass 10000000
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	Tag "Groovy Old Coot"
+	PainSound "BanjoCoot/Pain"
+	Painchance 255
+	Scale 0.31
+	+FRIENDLY
+	+NODAMAGE
+	-COUNTKILL
+	-SOLID
+	+NOBLOODDECALS
+	States
+	{
+		Spawn:
+			RRBJ ABCDE 6
+			Loop
+		Pain:
+			TNT1 A 0 A_Pain
+			Goto Spawn
+		Death:
+			TNT1 A 1
+			Stop
+	}
+}
+
+Actor RRBanjoBillyRayJeeter
+{
+	Monster
+	Height 56
+	Radius 20
+	Health 1000000
+	Mass 10000000
+	BloodType "LeonardBlood_RR"
+	Bloodcolor "ba 2c 10"
+	PainSound "BanjoBilly/Pain"
+	Tag "Billy Ray Jeeter"
+	Painchance 255
+	Scale 0.35
+	+FRIENDLY
+	+NODAMAGE
+	-COUNTKILL
+	-SOLID
+	+NOBLOODDECALS
+	States
+	{
+		Spawn:
+			RRBJ FGH 6
+			Loop
+		Pain:
+			TNT1 A 0 A_Pain
+			Goto Spawn
+		Death:
+			TNT1 A 1
+			Stop
+	}
+}

@@ -43,9 +43,9 @@ actor Critter_Samsara : SamsaraMonsterBeastTotalGib replaces BaronOfHell
 			BOSS A -1 A_Jump(256,"See")
 			wait
 		Death:
-			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
-			BOSS I 8
+		Death.Massacre:
+			BOSS I 8 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
 			BOSS J 8 A_Scream
 			BOSS K 8
 			BOSS L 8 A_Fall
@@ -267,6 +267,8 @@ actor Critter_Samsara_Shrink : Critter_Samsara
 			loop
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_Jump(64,2)

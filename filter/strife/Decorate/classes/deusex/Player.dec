@@ -16,16 +16,16 @@ Actor JCDenton : SamsaraPlayerPawnNormalRedBlood
 	Player.StartItem "SamsaraTipsChecker", 1
 	Player.StartItem "Clip", 50
 	Player.StartItem "DeusEx_BioEnergy", 100
-	Player.StartItem "DeusEx_GlockMagazine", 6
-	Player.StartItem "DeusEx_MiniXBowMagazine", 8
-	Player.StartItem "DeusEx_ShotgunMagazine", 5
+	Player.StartItem "DeusEx_GlockMagazine", 4
+	Player.StartItem "DeusEx_MiniXBowMagazine", 6
+	Player.StartItem "DeusEx_ShotgunMagazine", 4
 	Player.StartItem "DeusEx_AssShotgunMagazine", 12
 	Player.StartItem "DeusEx_AssaultGunMagazine", 30
 	Player.StartItem "DeusEx_GEPGunMagazine", 1
 	Player.StartItem "DeusEx_FlamethrowerMagazine", 100
 	Player.StartItem "DeusEx_PlasmaRifleMagazine", 16
 	Player.StartItem "DeusEx_SniperMagazine", 6
-	Player.StartItem "DeusEx_StealthMagazine", 10
+	Player.StartItem "DeusEx_StealthMagazine", 7
 	Player.StartItem "DeusEx_Augmentation_InfoLink", 1
 	Player.StartItem "DeusEx_Augmentation_IFF", 1
 	Player.StartItem "DeusEx_Augmentation_Light", 1
@@ -783,6 +783,10 @@ Actor JCDenton : SamsaraPlayerPawnNormalRedBlood
 			"####" "#" 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			"####" "#" 0 A_Jump(128,"DeathBack")
 			Goto DeathFront
+		Death.Massacre:
+			"####" "#" 0 A_JumpIf(waterlevel>1,"SwimDeath")
+			"####" "#" 0 A_Jump(128,"DeathBack")
+			Goto DeathFront
 		DeathFront:
 			"####" "#" 0 A_JumpIfInventory("DeusEx_LAMEquipped",1,"LAMDeathFront")
 			"####" "#" 0 A_JumpIfInventory("DeusEx_LAWEquipped",1,"LAWDeathFront")
@@ -831,6 +835,7 @@ Actor JCDenton : SamsaraPlayerPawnNormalRedBlood
 		DeusXDeath:
 		XDeath:
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|1048576)
+		XDeath.Massacre:
 			TNT1 A 0 ACS_NamedExecuteWithResult("DeusEx_GibCreator")
 			TNT1 A 0 A_PlayerScream
 			TNT1 A -1
@@ -5553,6 +5558,7 @@ Actor JCDenton_Shrink : JCDenton
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -5561,12 +5567,18 @@ Actor JCDenton_Shrink : JCDenton
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -5581,6 +5593,7 @@ Actor JCDenton_Shrink : JCDenton
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -5668,6 +5681,8 @@ Actor JCDenton_Shrink : JCDenton
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

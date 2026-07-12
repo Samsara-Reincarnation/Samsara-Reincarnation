@@ -1,0 +1,2836 @@
+actor SamsaraDukeHasSlot7 : Boolean {}
+actor SamsaraDuke64HasSlot7 : Boolean {}
+actor DevastatorSide: Boolean {}
+actor Duke64HoldFlash : Boolean {}
+actor Duke64PlasmaCharge : Counter { Inventory.MaxAmount 150 }
+actor SamsaraDuke64PlasmaCannonLoopSoundCheck : Boolean {}
+actor SamsaraDuke64PlasmaCannonHoldState : Counter { Inventory.MaxAmount 4 }
+actor SamsaraDuke64PlasmaCannonChargedFlashTargetHack : Boolean {}
+
+actor "Devastator Weapon" : DukeWeapon
+{
+	Weapon.SlotNumber 7
+	Weapon.SlotPriority 0
+	Weapon.SelectionOrder 2800
+	Weapon.AmmoUse 2
+	Weapon.AmmoGive 30 // Originally 15, increased because of the double ammo usage.
+	Weapon.AmmoType "Cell"
+	// Obituary "%k devastated %o."
+	Inventory.Pickupmessage "You got the Devastator!"
+	Inventory.PickupSound "duke/weaponget"
+	Weapon.UpSound ""
+	// Scale 0.9
+	+NOALERT
+	+INVENTORY.UNDROPPABLE
+	+WEAPON.BFG
+	+WEAPON.EXPLOSIVE
+	Tag "Devastator"
+	States
+	{
+	Spawn:
+		DEVP A -1
+		Stop
+
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"ReadyA")
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeWaiting",0,"WaitingTaunt")
+		TNT1 A 0 A_JumpIfInventory("DukeGiveMoney",1,"GiveMoney")
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+        TNT1 A 0 A_TakeInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, 4)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, 2)
+		DDEV A 1 A_WeaponReady
+		Loop
+		DDEV N 1 A_WeaponReady
+		Loop
+		D6PC A 1 A_WeaponReady
+		Loop
+
+	Deselect:
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_TakeInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck",1,1)
+        goto DeselectCheck
+        TNT1 A 0 A_PlaySound("silence",CHAN_5)
+        TNT1 A 0 A_StopSound(CHAN_5)
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck")
+        goto DeselectCheck
+    DeselectCheck:
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 2, "Deselect64")
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 1, "DeselectLAB")
+		Goto Super::Deselect
+	Deselect64:
+		D6PC A 0
+		Goto Super::Deselect
+	DeselectLAB:
+		DDEV N 0
+		Goto Super::Deselect
+
+	Select:
+		TNT1 A 0 A_JumpIfInventory("DukeReady",1,"IntroTaunt1")
+		TNT1 A 0 A_GunFlash("FlashBlank",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_TakeInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck")
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 2, "Select64")
+		DDEV A 0 A_PlayWeaponSound("duke/weaponget")
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 1, "SelectLAB")
+		Goto Super::Select
+	Select64:
+		TNT1 A 0 A_PlayWeaponSound("duke64/wepselect")
+		D6PC A 0
+		Goto Super::Select
+	SelectLAB:
+		DDEV N 0
+		Goto Super::Select
+
+	Fire:
+		TNT1 A 0 A_TakeInventory("DukeWaiting")
+		TNT1 A 0 A_JumpIfInventory("DukeStomp", 1, "Stomp")
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "Fire64")
+		TNT1 A 0 A_GiveInventory("DBSHOT",30)
+		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+		Goto ReadyA
+
+	Flash:
+		TNT1 A 0 A_JumpIfInventory("DBSHOT",1,"FireRight")
+		stop
+	FireRight:
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_JumpIfInventory("DevastatorSide", 1, "FireLeft")
+		TNT1 A 0 A_GiveInventory("DevastatorSide", 1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FireRightLAB")
+		DDEV H 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_Light1
+		TNT1 A 0 A_GiveInventory("SamsaraDukeDevastatorAttackHandler1")
+		DDEV I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_Light0
+		DDEV J 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeDevastatorAttackHandler2")
+		Goto FireRightEnd
+	FireRightEnd:
+		DDEV J 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DDEV KLM 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DDEV A 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+	FireRightLAB:
+		DDEV U 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_Light1
+		TNT1 A 0 A_GiveInventory("SamsaraDukeLABDevastatorAttackHandler1")
+		DDEV V 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_Light0
+		DDEV W 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeLABDevastatorAttackHandler2")
+		Goto FireRightLABEnd
+	FireRightLABEnd:
+		DDEV W 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DDEV XYZ 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DDEV N 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+	FireLeft:
+		TNT1 A 0 A_TakeInventory("DevastatorSide", 1)
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "FireLeftLAB")
+		DDEV B 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_Light1
+		TNT1 A 0 A_GiveInventory("SamsaraDukeDevastatorAttackHandler1")
+		DDEV C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_Light0
+		DDEV D 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeDevastatorAttackHandler2")
+		Goto FireLeftEnd
+	FireLeftEnd:
+		DDEV D 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DDEV EFG 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DDEV A 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+	FireLeftLAB:
+		DDEV O 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",1)
+		TNT1 A 0 A_Light1
+		TNT1 A 0 A_GiveInventory("SamsaraDukeLABDevastatorAttackHandler1")
+		DDEV P 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_Light0
+		DDEV Q 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraDukeLABDevastatorAttackHandler2")
+		Goto FireLeftLABEnd
+	FireLeftLABEnd:
+		DDEV Q 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		DDEV RST 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		DDEV N 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Stop
+
+	Fire64:
+		TNT1 A 0 A_GiveInventory("DBSHOT",30)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+		goto OutOfAmmo64
+		TNT1 A 0 A_GiveInventory("Duke64HoldFlash",1)
+		TNT1 A 0 A_PlaySound("duke64/plasmacharge",5)
+		D6PC A 4 A_GiveInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck")
+		D6PC A 0 A_GunFlash("Flash64",GFF_NOEXTCHANGE)
+		TNT1 A 0 A_ReFire("Hold64")
+		Goto Fire64_Attack
+
+	Flash64:
+		TNT1 A 0 A_Jump(256,"Flash64_1","Flash64_2","Flash64_3","Flash64_4","Flash64_5","Flash64_6","Flash64_7","Flash64_8","Flash64_9","Flash64_10","Flash64_11","Flash64_12","Flash64_13","Flash64_14")
+	Flash64_1:
+		D6PC A 1
+		Goto Flash64_HoldCheck
+	Flash64_2:
+		D6PC B 1
+		Goto Flash64_HoldCheck
+	Flash64_3:
+		D6PC C 1
+		Goto Flash64_HoldCheck
+	Flash64_4:
+		D6PC D 1
+		Goto Flash64_HoldCheck
+	Flash64_5:
+		D6PC E 1
+		Goto Flash64_HoldCheck
+	Flash64_6:
+		D6PC F 1
+		Goto Flash64_HoldCheck
+	Flash64_7:
+		D6PC G 1
+		Goto Flash64_HoldCheck
+	Flash64_8:
+		D6PC H 1
+		Goto Flash64_HoldCheck
+	Flash64_9:
+		D6PC I 1
+		Goto Flash64_HoldCheck
+	Flash64_10:
+		D6PC J 1
+		Goto Flash64_HoldCheck
+	Flash64_11:
+		D6PC K 1
+		Goto Flash64_HoldCheck
+	Flash64_12:
+		D6PC L 1
+		Goto Flash64_HoldCheck
+	Flash64_13:
+		D6PC M 1
+		Goto Flash64_HoldCheck
+	Flash64_14:
+		D6PC N 1
+		Goto Flash64_HoldCheck
+	Flash64_HoldCheck:
+		TNT1 A 0 A_JumpIfInventory("Duke64HoldFlash",1,"Flash64")
+		Stop
+	Hold64:
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",150,"HoldSound")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",90,"HoldMax5")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",80,"HoldMax4")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",70,"HoldMax3")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",60,"HoldMax2")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",50,"HoldMax1")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",40,"Hold36")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",38,"Hold35")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",36,"Hold34")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",34,"Hold33")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",62,"Hold32")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",32,"Hold31")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",58,"Hold30")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",30,"Hold29")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",54,"Hold28")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",28,"Hold27")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",50,"Hold26")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",26,"Hold25")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",46,"Hold24")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",24,"Hold23")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",42,"Hold22")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",22,"Hold21")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",38,"Hold20")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",20,"Hold19")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",34,"Hold18")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",18,"Hold17")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",30,"Hold16")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",16,"Hold15")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",26,"Hold14")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",14,"Hold13")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",22,"Hold12")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",12,"Hold11")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",18,"Hold10")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",10,"Hold9")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",14,"Hold8")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",8,"Hold7")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",10,"Hold6")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",6,"Hold5")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",6,"Hold4")
+		TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",4,"Hold3")
+		//TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",2,"Hold2")
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold_2")
+	Hold_1:
+		PB01 A 1 bright
+		Goto HoldContinued
+	Hold_2:
+		PB01 B 1 bright
+		Goto HoldContinued
+	Hold_3:
+		PB01 C 1 bright
+		Goto HoldContinued
+	Hold_4:
+		PB01 D 1 bright
+		Goto HoldContinued
+	Hold2:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold2_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold2_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold2_2")
+	Hold2_1:
+		PB02 A 1 bright
+		Goto HoldContinued
+	Hold2_2:
+		PB02 B 1 bright
+		Goto HoldContinued
+	Hold2_3:
+		PB02 C 1 bright
+		Goto HoldContinued
+	Hold2_4:
+		PB02 D 1 bright
+		Goto HoldContinued
+	Hold3:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold3_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold3_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold3_2")
+	Hold3_1:
+		PB03 A 1 bright
+		Goto HoldContinued
+	Hold3_2:
+		PB03 B 1 bright
+		Goto HoldContinued
+	Hold3_3:
+		PB03 C 1 bright
+		Goto HoldContinued
+	Hold3_4:
+		PB03 D 1 bright
+		Goto HoldContinued
+	Hold4:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold4_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold4_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold4_2")
+	Hold4_1:
+		PB04 A 1 bright
+		Goto HoldContinued
+	Hold4_2:
+		PB04 B 1 bright
+		Goto HoldContinued
+	Hold4_3:
+		PB04 C 1 bright
+		Goto HoldContinued
+	Hold4_4:
+		PB04 D 1 bright
+		Goto HoldContinued
+	Hold5:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold5_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold5_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold5_2")
+	Hold5_1:
+		PB05 A 1 bright
+		Goto HoldContinued
+	Hold5_2:
+		PB05 B 1 bright
+		Goto HoldContinued
+	Hold5_3:
+		PB05 C 1 bright
+		Goto HoldContinued
+	Hold5_4:
+		PB05 D 1 bright
+		Goto HoldContinued
+	Hold6:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold6_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold6_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold6_2")
+	Hold6_1:
+		PB06 A 1 bright
+		Goto HoldContinued
+	Hold6_2:
+		PB06 B 1 bright
+		Goto HoldContinued
+	Hold6_3:
+		PB06 C 1 bright
+		Goto HoldContinued
+	Hold6_4:
+		PB06 D 1 bright
+		Goto HoldContinued
+	Hold7:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold7_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold7_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold7_2")
+	Hold7_1:
+		PB07 A 1 bright
+		Goto HoldContinued
+	Hold7_2:
+		PB07 B 1 bright
+		Goto HoldContinued
+	Hold7_3:
+		PB07 C 1 bright
+		Goto HoldContinued
+	Hold7_4:
+		PB07 D 1 bright
+		Goto HoldContinued
+	Hold8:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold8_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold8_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold8_2")
+	Hold8_1:
+		PB08 A 1 bright
+		Goto HoldContinued
+	Hold8_2:
+		PB08 B 1 bright
+		Goto HoldContinued
+	Hold8_3:
+		PB08 C 1 bright
+		Goto HoldContinued
+	Hold8_4:
+		PB08 D 1 bright
+		Goto HoldContinued
+	Hold9:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold9_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold9_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold9_2")
+	Hold9_1:
+		PB09 A 1 bright
+		Goto HoldContinued
+	Hold9_2:
+		PB09 B 1 bright
+		Goto HoldContinued
+	Hold9_3:
+		PB09 C 1 bright
+		Goto HoldContinued
+	Hold9_4:
+		PB09 D 1 bright
+		Goto HoldContinued
+	Hold10:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold10_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold10_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold10_2")
+	Hold10_1:
+		PB10 A 1 bright
+		Goto HoldContinued
+	Hold10_2:
+		PB10 B 1 bright
+		Goto HoldContinued
+	Hold10_3:
+		PB10 C 1 bright
+		Goto HoldContinued
+	Hold10_4:
+		PB10 D 1 bright
+		Goto HoldContinued
+	Hold11:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold11_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold11_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold11_2")
+	Hold11_1:
+		PB11 A 1 bright
+		Goto HoldContinued
+	Hold11_2:
+		PB11 B 1 bright
+		Goto HoldContinued
+	Hold11_3:
+		PB11 C 1 bright
+		Goto HoldContinued
+	Hold11_4:
+		PB11 D 1 bright
+		Goto HoldContinued
+	Hold12:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold12_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold12_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold12_2")
+	Hold12_1:
+		PB12 A 1 bright
+		Goto HoldContinued
+	Hold12_2:
+		PB12 B 1 bright
+		Goto HoldContinued
+	Hold12_3:
+		PB12 C 1 bright
+		Goto HoldContinued
+	Hold12_4:
+		PB12 D 1 bright
+		Goto HoldContinued
+	Hold13:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold13_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold13_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold13_2")
+	Hold13_1:
+		PB13 A 1 bright
+		Goto HoldContinued
+	Hold13_2:
+		PB13 B 1 bright
+		Goto HoldContinued
+	Hold13_3:
+		PB13 C 1 bright
+		Goto HoldContinued
+	Hold13_4:
+		PB13 D 1 bright
+		Goto HoldContinued
+	Hold14:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold14_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold14_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold14_2")
+	Hold14_1:
+		PB14 A 1 bright
+		Goto HoldContinued
+	Hold14_2:
+		PB14 B 1 bright
+		Goto HoldContinued
+	Hold14_3:
+		PB14 C 1 bright
+		Goto HoldContinued
+	Hold14_4:
+		PB14 D 1 bright
+		Goto HoldContinued
+	Hold15:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold15_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold15_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold15_2")
+	Hold15_1:
+		PB15 A 1 bright
+		Goto HoldContinued
+	Hold15_2:
+		PB15 B 1 bright
+		Goto HoldContinued
+	Hold15_3:
+		PB15 C 1 bright
+		Goto HoldContinued
+	Hold15_4:
+		PB15 D 1 bright
+		Goto HoldContinued
+	Hold16:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold16_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold16_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold16_2")
+	Hold16_1:
+		PB16 A 1 bright
+		Goto HoldContinued
+	Hold16_2:
+		PB16 B 1 bright
+		Goto HoldContinued
+	Hold16_3:
+		PB16 C 1 bright
+		Goto HoldContinued
+	Hold16_4:
+		PB16 D 1 bright
+		Goto HoldContinued
+	Hold17:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold17_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold17_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold17_2")
+	Hold17_1:
+		PB17 A 1 bright
+		Goto HoldContinued
+	Hold17_2:
+		PB17 B 1 bright
+		Goto HoldContinued
+	Hold17_3:
+		PB17 C 1 bright
+		Goto HoldContinued
+	Hold17_4:
+		PB17 D 1 bright
+		Goto HoldContinued
+	Hold18:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold18_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold18_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold18_2")
+	Hold18_1:
+		PB18 A 1 bright
+		Goto HoldContinued
+	Hold18_2:
+		PB18 B 1 bright
+		Goto HoldContinued
+	Hold18_3:
+		PB18 C 1 bright
+		Goto HoldContinued
+	Hold18_4:
+		PB18 D 1 bright
+		Goto HoldContinued
+	Hold19:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold19_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold19_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold19_2")
+	Hold19_1:
+		PB19 A 1 bright
+		Goto HoldContinued
+	Hold19_2:
+		PB19 B 1 bright
+		Goto HoldContinued
+	Hold19_3:
+		PB19 C 1 bright
+		Goto HoldContinued
+	Hold19_4:
+		PB19 D 1 bright
+		Goto HoldContinued
+	Hold20:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold20_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold20_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold20_2")
+	Hold20_1:
+		PB20 A 1 bright
+		Goto HoldContinued
+	Hold20_2:
+		PB20 B 1 bright
+		Goto HoldContinued
+	Hold20_3:
+		PB20 C 1 bright
+		Goto HoldContinued
+	Hold20_4:
+		PB20 D 1 bright
+		Goto HoldContinued
+	Hold21:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold21_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold21_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold21_2")
+	Hold21_1:
+		PB21 A 1 bright
+		Goto HoldContinued
+	Hold21_2:
+		PB21 B 1 bright
+		Goto HoldContinued
+	Hold21_3:
+		PB21 C 1 bright
+		Goto HoldContinued
+	Hold21_4:
+		PB21 D 1 bright
+		Goto HoldContinued
+	Hold22:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold22_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold22_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold22_2")
+	Hold22_1:
+		PB22 A 1 bright
+		Goto HoldContinued
+	Hold22_2:
+		PB22 B 1 bright
+		Goto HoldContinued
+	Hold22_3:
+		PB22 C 1 bright
+		Goto HoldContinued
+	Hold22_4:
+		PB22 D 1 bright
+		Goto HoldContinued
+	Hold23:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold23_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold23_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold23_2")
+	Hold23_1:
+		PB23 A 1 bright
+		Goto HoldContinued
+	Hold23_2:
+		PB23 B 1 bright
+		Goto HoldContinued
+	Hold23_3:
+		PB23 C 1 bright
+		Goto HoldContinued
+	Hold23_4:
+		PB23 D 1 bright
+		Goto HoldContinued
+	Hold24:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold24_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold24_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold24_2")
+	Hold24_1:
+		PB24 A 1 bright
+		Goto HoldContinued
+	Hold24_2:
+		PB24 B 1 bright
+		Goto HoldContinued
+	Hold24_3:
+		PB24 C 1 bright
+		Goto HoldContinued
+	Hold24_4:
+		PB24 D 1 bright
+		Goto HoldContinued
+	Hold25:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold25_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold25_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold25_2")
+	Hold25_1:
+		PB25 A 1 bright
+		Goto HoldContinued
+	Hold25_2:
+		PB25 B 1 bright
+		Goto HoldContinued
+	Hold25_3:
+		PB25 C 1 bright
+		Goto HoldContinued
+	Hold25_4:
+		PB25 D 1 bright
+		Goto HoldContinued
+	Hold26:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold26_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold26_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold26_2")
+	Hold26_1:
+		PB26 A 1 bright
+		Goto HoldContinued
+	Hold26_2:
+		PB26 B 1 bright
+		Goto HoldContinued
+	Hold26_3:
+		PB26 C 1 bright
+		Goto HoldContinued
+	Hold26_4:
+		PB26 D 1 bright
+		Goto HoldContinued
+	Hold27:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold27_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold27_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold27_2")
+	Hold27_1:
+		PB27 A 1 bright
+		Goto HoldContinued
+	Hold27_2:
+		PB27 B 1 bright
+		Goto HoldContinued
+	Hold27_3:
+		PB27 C 1 bright
+		Goto HoldContinued
+	Hold27_4:
+		PB27 D 1 bright
+		Goto HoldContinued
+	Hold28:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold28_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold28_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold28_2")
+	Hold28_1:
+		PB28 A 1 bright
+		Goto HoldContinued
+	Hold28_2:
+		PB28 B 1 bright
+		Goto HoldContinued
+	Hold28_3:
+		PB28 C 1 bright
+		Goto HoldContinued
+	Hold28_4:
+		PB28 D 1 bright
+		Goto HoldContinued
+	Hold29:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold29_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold29_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold29_2")
+	Hold29_1:
+		PB29 A 1 bright
+		Goto HoldContinued
+	Hold29_2:
+		PB29 B 1 bright
+		Goto HoldContinued
+	Hold29_3:
+		PB29 C 1 bright
+		Goto HoldContinued
+	Hold29_4:
+		PB29 D 1 bright
+		Goto HoldContinued
+	Hold30:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold30_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold30_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold30_2")
+	Hold30_1:
+		PB30 A 1 bright
+		Goto HoldContinued
+	Hold30_2:
+		PB30 B 1 bright
+		Goto HoldContinued
+	Hold30_3:
+		PB30 C 1 bright
+		Goto HoldContinued
+	Hold30_4:
+		PB30 D 1 bright
+		Goto HoldContinued
+	Hold31:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold31_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold31_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold31_2")
+	Hold31_1:
+		PB31 A 1 bright
+		Goto HoldContinued
+	Hold31_2:
+		PB31 B 1 bright
+		Goto HoldContinued
+	Hold31_3:
+		PB31 C 1 bright
+		Goto HoldContinued
+	Hold31_4:
+		PB31 D 1 bright
+		Goto HoldContinued
+	Hold32:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold32_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold32_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold32_2")
+	Hold32_1:
+		PB32 A 1 bright
+		Goto HoldContinued
+	Hold32_2:
+		PB32 B 1 bright
+		Goto HoldContinued
+	Hold32_3:
+		PB32 C 1 bright
+		Goto HoldContinued
+	Hold32_4:
+		PB32 D 1 bright
+		Goto HoldContinued
+	Hold33:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold33_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold33_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold33_2")
+	Hold33_1:
+		PB33 A 1 bright
+		Goto HoldContinued
+	Hold33_2:
+		PB33 B 1 bright
+		Goto HoldContinued
+	Hold33_3:
+		PB33 C 1 bright
+		Goto HoldContinued
+	Hold33_4:
+		PB33 D 1 bright
+		Goto HoldContinued
+	Hold34:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold34_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold34_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold34_2")
+	Hold34_1:
+		PB34 A 1 bright
+		Goto HoldContinued
+	Hold34_2:
+		PB34 B 1 bright
+		Goto HoldContinued
+	Hold34_3:
+		PB34 C 1 bright
+		Goto HoldContinued
+	Hold34_4:
+		PB34 D 1 bright
+		Goto HoldContinued
+	Hold35:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold35_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold35_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold35_2")
+	Hold35_1:
+		PB35 A 1 bright
+		Goto HoldContinued
+	Hold35_2:
+		PB35 B 1 bright
+		Goto HoldContinued
+	Hold35_3:
+		PB35 C 1 bright
+		Goto HoldContinued
+	Hold35_4:
+	 	PB35 D 1 bright
+		Goto HoldContinued
+	Hold36:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"Hold36_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"Hold36_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"Hold36_2")
+	Hold36_1:
+		PB36 A 1 bright
+		Goto HoldContinued
+	Hold36_2:
+		PB36 B 1 bright
+		Goto HoldContinued
+	Hold36_3:
+		PB36 C 1 bright
+		Goto HoldContinued
+	Hold36_4:
+		PB36 D 1 bright
+		Goto HoldContinued
+	HoldSound:
+        TNT1 A 0 A_PlaySound("duke64/plasmahold",CHAN_5,1.0,true)
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"HoldSound_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"HoldSound_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"HoldSound_2")
+	HoldSound_1:
+		PB41 A 1 bright
+		Goto HoldContinued
+	HoldSound_2:
+		PB41 B 1 bright
+		Goto HoldContinued
+	HoldSound_3:
+		PB41 C 1 bright
+		Goto HoldContinued
+	HoldSound_4:
+		PB41 D 1 bright
+		Goto HoldContinued
+	HoldMax1:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"HoldMax1_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"HoldMax1_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"HoldMax1_2")
+	HoldMax1_1:
+		PB37 A 1 bright
+		Goto HoldContinued
+	HoldMax1_2:
+		PB37 B 1 bright
+		Goto HoldContinued
+	HoldMax1_3:
+		PB37 C 1 bright
+		Goto HoldContinued
+	HoldMax1_4:
+		PB37 D 1 bright
+		Goto HoldContinued
+	HoldMax2:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"HoldMax2_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"HoldMax2_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"HoldMax2_2")
+	HoldMax2_1:
+		PB38 A 1 bright
+		Goto HoldContinued
+	HoldMax2_2:
+		PB38 B 1 bright
+		Goto HoldContinued
+	HoldMax2_3:
+		PB38 C 1 bright
+		Goto HoldContinued
+	HoldMax2_4:
+		PB38 D 1 bright
+		Goto HoldContinued
+	HoldMax3:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"HoldMax3_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"HoldMax3_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"HoldMax3_2")
+	HoldMax3_1:
+		PB39 A 1 bright
+		Goto HoldContinued
+	HoldMax3_2:
+		PB39 B 1 bright
+		Goto HoldContinued
+	HoldMax3_3:
+		PB39 C 1 bright
+		Goto HoldContinued
+	HoldMax3_4:
+		PB39 D 1 bright
+		Goto HoldContinued
+	HoldMax4:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"HoldMax4_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"HoldMax4_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"HoldMax4_2")
+	HoldMax4_1:
+		PB40 A 1 bright
+		Goto HoldContinued
+	HoldMax4_2:
+		PB40 B 1 bright
+		Goto HoldContinued
+	HoldMax4_3:
+		PB40 C 1 bright
+		Goto HoldContinued
+	HoldMax4_4:
+		PB40 D 1 bright
+		Goto HoldContinued
+	HoldMax5:
+        TNT1 A 0 A_GiveInventory("Duke64PlasmaCharge")
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonHoldState")
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonHoldState",random(1,4))
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",0,"HoldMax5_4")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",3,"HoldMax5_3")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonHoldState",2,"HoldMax5_2")
+	HoldMax5_1:
+		PB41 A 1 bright
+		Goto HoldContinued
+	HoldMax5_2:
+		PB41 B 1 bright
+		Goto HoldContinued
+	HoldMax5_3:
+		PB41 C 1 bright
+		Goto HoldContinued
+	HoldMax5_4:
+		PB41 D 1 bright
+		Goto HoldContinued
+	HoldContinued:
+		TNT1 A 0 A_ReFire("Hold64")
+	Fire64_Attack:
+        TNT1 A 0 A_PlaySound("silence",CHAN_5)
+		TNT1 A 0 A_StopSound(CHAN_5)
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck")
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonAttackHandler")
+	Fire64_Finish:
+		TNT1 A 0 A_TakeInventory("Duke64HoldFlash",1)
+		TNT1 A 0 A_TakeInventory("DBSHOT",99)
+		D6PC A 1 BRIGHT A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		Goto Ready
+
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "NoAltFireForDuke64")
+		Goto Super::AltFire
+
+	AltFlash:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "AltFlash64")
+		DDEV A 8 A_JumpIfInventory("DukeClassMode", 1, 1)
+		Stop
+		DDEV N 8
+		Stop
+
+	AltFlash64:
+		TNT1 A 0
+		stop
+
+	NoAltFireForDuke64:
+		TNT1 A 0
+		goto Ready
+
+	TauntWeaponSound:
+		TNT1 A 0 A_JumpIfInventory("DukeClassMode", 2, "TauntWeaponSound64")
+		TNT1 A 0 A_PlayWeaponSound("duke/weaponget")
+		Goto Select
+
+	TauntWeaponSound64:
+		TNT1 A 0 A_PlayWeaponSound("duke64/wepselect")
+		Goto Select
+
+	IntroTaunt:
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 2, "IntroTaunt64")
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 1, "IntroTauntLAB")
+		Goto Super::IntroTaunt
+	IntroTaunt64:
+		D6PC A 0
+		Goto Super::IntroTaunt
+	IntroTauntLAB:
+		DDEV N 0
+		Goto Super::IntroTaunt
+
+	WaitingTaunt:
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 2, "WaitingTaunt64")
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 1, "WaitingTauntLAB")
+		Goto Super::WaitingTaunt
+	WaitingTaunt64:
+		D6PC A 0
+		Goto Super::WaitingTaunt
+	WaitingTauntLAB:
+		DDEV N 0
+		Goto Super::WaitingTaunt
+
+	GiveMoney:
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 2, "GiveMoney64")
+		DDEV A 0 A_JumpIfInventory("DukeClassMode", 1, "GiveMoneyLAB")
+		Goto Super::GiveMoney
+	GiveMoney64:
+		D6PC A 0
+		Goto Super::GiveMoney
+	GiveMoneyLAB:
+		DDEV N 0
+		Goto Super::GiveMoney
+
+	OutOfAmmo64:
+		D6PC AA 1 A_TakeInventory("DBSHOT",99)
+		goto Nothing
+
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Glock 17")
+        goto Deselect
+	}
+}
+
+// Original
+
+actor SamsaraDukeDevastatorAttackHandler1 : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("duke/rocketfire",CHAN_WEAPON)
+        TNT1 A 0 A_PlaySound("duke/freezeshot",CHAN_5)
+        TNT1 A 0 A_JumpIfInventory("DevastatorSide",1,"PickupAttackRight")
+      // Left
+      PickupAttackLeft:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLeftCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLeftCoop")
+      PickupAttackLeftDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocket",random(-280,280)/100.00,false,-5,0,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackLeftCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketCoop",random(-280,280)/100.00,false,-5,0,0,random(-100,100)/100.00)
+        stop
+
+      // Right
+      PickupAttackRight:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocket",random(-280,280)/100.00,false,5,0,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketCoop",random(-280,280)/100.00,false,5,0,0,random(-100,100)/100.00)
+        stop
+    }
+}
+
+actor SamsaraDukeDevastatorAttackHandler2 : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("duke/rocketfire",CHAN_WEAPON)
+        TNT1 A 0 A_PlaySound("duke/freezeshot",CHAN_5)
+        TNT1 A 0 A_JumpIfInventory("DevastatorSide",1,"PickupAttackRight")
+      // Left
+      PickupAttackLeft:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLeftCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLeftCoop")
+      PickupAttackLeftDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocket",random(-280,280)/100.00,false,-6,2,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackLeftCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketCoop",random(-280,280)/100.00,false,-6,2,0,random(-100,100)/100.00)
+        stop
+
+      // Right
+      PickupAttackRight:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocket",random(-280,280)/100.00,false,6,2,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketCoop",random(-280,280)/100.00,false,6,2,0,random(-100,100)/100.00)
+        stop
+    }
+}
+
+actor DukeDevastatorRocket
+{
+	Radius 3
+	Height 2
+	Speed 38
+	Damage (0)
+	Projectile
+	Obituary "$SAMSARA_DUKE_OB_SLOT7"
+	Scale 0.2
+	Decal DoomImpScorch
+	DamageType "DukeExplosive"
+	+FORCERADIUSDMG
+	States
+	{
+		Spawn:
+			RPGX A -1 Bright Light("DUKE3D_DEVASTATOR_ROCKET")
+			stop
+
+		XDeath:
+		Crash:
+			TNT1 A 0 A_Explode(48,96,0)
+		Death:
+			TNT1 A 0 A_Explode(48,96)
+			TNT1 A 0 A_PlaySoundEx("duke/explosion2", CHAN_WEAPON, 0, -1)
+			TNT1 A 0 A_PlaySound("duke/explosion", 5, 1.0, 0, ATTN_NORM)
+			TNT1 A 1 A_SpawnItemEx("DevastatorExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			Stop
+	}
+}
+
+actor DukeDevastatorRocketCoop : DukeDevastatorRocket { +THRUSPECIES Species "Player" }
+
+actor DevastatorExplosion : RPGExplosion
+{
+    Scale 0.1
+    +CLIENTSIDEONLY
+    States
+    {
+      Spawn:
+        RPGX B 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
+        RPGX C 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X2")
+        RPGX D 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X3")
+        RPGX E 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X4")
+        RPGX F 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X5")
+        RPGX G 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X6")
+        RPGX H 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X7")
+        RPGX I 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X8")
+        RPGX J 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X9")
+        RPGX K 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X10")
+        RPGX L 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X11")
+        RPGX M 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X12")
+        RPGX N 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X13")
+        RPGX O 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X14")
+        RPGX P 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X15")
+        RPGX Q 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X16")
+        RPGX R 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X17")
+        RPGX S 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X18")
+        RPGX T 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X19")
+        RPGX U 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X20")
+        RPGX V 2 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X21")
+        stop
+    }
+}
+
+// Life's A Beach
+
+actor SamsaraDukeLABDevastatorAttackHandler1 : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("duke/rocketfire2",CHAN_WEAPON)
+        TNT1 A 0 A_PlaySound("duke/freezeshot2",CHAN_5)
+        TNT1 A 0 A_JumpIfInventory("DevastatorSide",1,"PickupAttackRight")
+      // Left
+      PickupAttackLeft:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLeftCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLeftCoop")
+      PickupAttackLeftDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeach",random(-280,280)/100.00,false,-5,0,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackLeftCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeachCoop",random(-280,280)/100.00,false,-5,0,0,random(-100,100)/100.00)
+        stop
+
+      // Right
+      PickupAttackRight:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeach",random(-280,280)/100.00,false,5,0,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeachCoop",random(-280,280)/100.00,false,5,0,0,random(-100,100)/100.00)
+        stop
+    }
+}
+
+actor SamsaraDukeLABDevastatorAttackHandler2 : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("duke/rocketfire2",CHAN_WEAPON)
+        TNT1 A 0 A_PlaySound("duke/freezeshot2",CHAN_5)
+        TNT1 A 0 A_JumpIfInventory("DevastatorSide",1,"PickupAttackRight")
+      // Left
+      PickupAttackLeft:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLeftCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLeftCoop")
+      PickupAttackLeftDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeach",random(-280,280)/100.00,false,-6,2,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackLeftCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeachCoop",random(-280,280)/100.00,false,-6,2,0,random(-100,100)/100.00)
+        stop
+
+      // Right
+      PickupAttackRight:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeach",random(-280,280)/100.00,false,6,2,0,random(-100,100)/100.00)
+        stop
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireCustomMissile("DukeDevastatorRocketBeachCoop",random(-280,280)/100.00,false,6,2,0,random(-100,100)/100.00)
+        stop
+    }
+}
+
+actor DukeDevastatorRocketBeach : DukeDevastatorRocket
+{
+	States
+	{
+	Spawn:
+		RPGX W -1 Bright
+		stop
+	}
+}
+
+actor DukeDevastatorRocketBeachCoop : DukeDevastatorRocketBeach { +THRUSPECIES Species "Player" }
+
+// Duke Nukem 64
+
+actor SamsaraDuke64PlasmaCannonAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1) // charged attacks could be called with less than intended amount
+        goto PickupFinish
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",112,"PickupCharged33")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",109,"PickupCharged32")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",106,"PickupCharged31")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",102,"PickupCharged30")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",101,"PickupCharged29")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",98,"PickupCharged28")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",95,"PickupCharged27")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",91,"PickupCharged26")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",87,"PickupCharged25")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",84,"PickupCharged24")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",81,"PickupCharged23")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",77,"PickupCharged22")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",74,"PickupCharged21")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",71,"PickupCharged20")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",67,"PickupCharged19")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",63,"PickupCharged18")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",60,"PickupCharged17")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",56,"PickupCharged16")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",53,"PickupCharged15")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",50,"PickupCharged14")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",46,"PickupCharged13")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",43,"PickupCharged12")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",39,"PickupCharged11")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",36,"PickupCharged10")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",32,"PickupCharged9")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",29,"PickupCharged8")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",26,"PickupCharged7")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",21,"PickupCharged6")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",17,"PickupCharged5")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",14,"PickupCharged4")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",11,"PickupCharged3")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",8,"PickupCharged2")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",4,"PickupCharged1")
+      // I'll feel more comfortable adding this comment for convenience. structuring...
+      PickupUncharged: TNT1 A 0 A_TakeInventory("Cell", 3) goto PickupPlaySound // Uncharged
+      PickupCharged1:  TNT1 A 0 A_TakeInventory("Cell", 3) goto PickupPlaySound // Charge level 1
+      PickupCharged2:  TNT1 A 0 A_TakeInventory("Cell", 4) goto PickupPlaySound // Charge level 2
+      PickupCharged3:  TNT1 A 0 A_TakeInventory("Cell", 5) goto PickupPlaySound // Charge level 3
+      PickupCharged4:  TNT1 A 0 A_TakeInventory("Cell", 6) goto PickupPlaySound // Charge level 4
+      PickupCharged5:  TNT1 A 0 A_TakeInventory("Cell", 7) goto PickupPlaySound // Charge level 5
+      PickupCharged6:  TNT1 A 0 A_TakeInventory("Cell", 8) goto PickupPlaySound // Charge level 6
+      PickupCharged7:  TNT1 A 0 A_TakeInventory("Cell", 9) goto PickupPlaySound // Charge level 7
+      PickupCharged8:  TNT1 A 0 A_TakeInventory("Cell",10) goto PickupPlaySound // Charge level 8
+      PickupCharged9:  TNT1 A 0 A_TakeInventory("Cell",11) goto PickupPlaySound // Charge level 9
+      PickupCharged10: TNT1 A 0 A_TakeInventory("Cell",12) goto PickupPlaySound // Charge level 10
+      PickupCharged11: TNT1 A 0 A_TakeInventory("Cell",13) goto PickupPlaySound // Charge level 11
+      PickupCharged12: TNT1 A 0 A_TakeInventory("Cell",14) goto PickupPlaySound // Charge level 12
+      PickupCharged13: TNT1 A 0 A_TakeInventory("Cell",15) goto PickupPlaySound // Charge level 13
+      PickupCharged14: TNT1 A 0 A_TakeInventory("Cell",16) goto PickupPlaySound // Charge level 14
+      PickupCharged15: TNT1 A 0 A_TakeInventory("Cell",17) goto PickupPlaySound // Charge level 15
+      PickupCharged16: TNT1 A 0 A_TakeInventory("Cell",18) goto PickupPlaySound // Charge level 16
+      PickupCharged17: TNT1 A 0 A_TakeInventory("Cell",19) goto PickupPlaySound // Charge level 17
+      PickupCharged18: TNT1 A 0 A_TakeInventory("Cell",20) goto PickupPlaySound // Charge level 18
+      PickupCharged19: TNT1 A 0 A_TakeInventory("Cell",21) goto PickupPlaySound // Charge level 19
+      PickupCharged20: TNT1 A 0 A_TakeInventory("Cell",22) goto PickupPlaySound // Charge level 20
+      PickupCharged21: TNT1 A 0 A_TakeInventory("Cell",23) goto PickupPlaySound // Charge level 21
+      PickupCharged22: TNT1 A 0 A_TakeInventory("Cell",24) goto PickupPlaySound // Charge level 22
+      PickupCharged23: TNT1 A 0 A_TakeInventory("Cell",25) goto PickupPlaySound // Charge level 23
+      PickupCharged24: TNT1 A 0 A_TakeInventory("Cell",26) goto PickupPlaySound // Charge level 24
+      PickupCharged25: TNT1 A 0 A_TakeInventory("Cell",27) goto PickupPlaySound // Charge level 25
+      PickupCharged26: TNT1 A 0 A_TakeInventory("Cell",28) goto PickupPlaySound // Charge level 26
+      PickupCharged27: TNT1 A 0 A_TakeInventory("Cell",29) goto PickupPlaySound // Charge level 27
+      PickupCharged28: TNT1 A 0 A_TakeInventory("Cell",30) goto PickupPlaySound // Charge level 28
+      PickupCharged29: TNT1 A 0 A_TakeInventory("Cell",30) goto PickupPlaySound // Charge level 29
+      PickupCharged30: TNT1 A 0 A_TakeInventory("Cell",31) goto PickupPlaySound // Charge level 30
+      PickupCharged31: TNT1 A 0 A_TakeInventory("Cell",32) goto PickupPlaySound // Charge level 31
+      PickupCharged32: TNT1 A 0 A_TakeInventory("Cell",33) goto PickupPlaySound // Charge level 32
+      PickupCharged33: TNT1 A 0 A_TakeInventory("Cell",34) goto PickupPlaySound // Charge level 33
+
+      // Sound stuff
+      PickupPlaySound:
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",101,2)
+        TNT1 A 0 A_PlaySound("duke64/plasmafire",CHAN_WEAPON)
+        goto PickupAttack
+        TNT1 A 0 A_PlaySound("duke64/plasmarelease",CHAN_WEAPON)
+        goto PickupAttack
+
+      // CRY
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",112,"PickupAttackCharged33")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",109,"PickupAttackCharged32")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",106,"PickupAttackCharged31")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",102,"PickupAttackCharged30")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",101,"PickupAttackCharged29")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",98,"PickupAttackCharged28")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",95,"PickupAttackCharged27")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",91,"PickupAttackCharged26")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",87,"PickupAttackCharged25")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",84,"PickupAttackCharged24")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",81,"PickupAttackCharged23")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",77,"PickupAttackCharged22")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",74,"PickupAttackCharged21")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",71,"PickupAttackCharged20")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",67,"PickupAttackCharged19")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",63,"PickupAttackCharged18")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",60,"PickupAttackCharged17")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",56,"PickupAttackCharged16")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",53,"PickupAttackCharged15")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",50,"PickupAttackCharged14")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",46,"PickupAttackCharged13")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",43,"PickupAttackCharged12")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",39,"PickupAttackCharged11")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",36,"PickupAttackCharged10")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",32,"PickupAttackCharged9")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",29,"PickupAttackCharged8")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",26,"PickupAttackCharged7")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",21,"PickupAttackCharged6")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",17,"PickupAttackCharged5")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",14,"PickupAttackCharged4")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",11,"PickupAttackCharged3")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",8,"PickupAttackCharged2")
+        TNT1 A 0 A_JumpIfInventory("Duke64PlasmaCharge",4,"PickupAttackCharged1")
+      // Uncharged
+      PickupAttackUncharged:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnchargedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnchargedCoop")
+      PickupAttackUnchargedDM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackUnchargedCoop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShotCoop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 1
+      PickupAttackCharged1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged1Coop")
+      PickupAttackCharged1DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot2",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged1Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot2Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 2
+      PickupAttackCharged2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged2Coop")
+      PickupAttackCharged2DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot3",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged2Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot3Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 3
+      PickupAttackCharged3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged3Coop")
+      PickupAttackCharged3DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot4",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged3Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot4Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 4
+      PickupAttackCharged4:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged4Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged4Coop")
+      PickupAttackCharged4DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot5",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged4Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot5Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 5
+      PickupAttackCharged5:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged5Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged5Coop")
+      PickupAttackCharged5DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot6",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged5Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot6Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 6
+      PickupAttackCharged6:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged6Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged6Coop")
+      PickupAttackCharged6DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot7",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged6Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot7Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 7
+      PickupAttackCharged7:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged7Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged7Coop")
+      PickupAttackCharged7DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot8",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged7Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot8Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 8
+      PickupAttackCharged8:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged8Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged8Coop")
+      PickupAttackCharged8DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot9",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged8Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot9Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 9
+      PickupAttackCharged9:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged9Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged9Coop")
+      PickupAttackCharged9DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot10",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged9Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot10Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 10
+      PickupAttackCharged10:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged10Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged10Coop")
+      PickupAttackCharged10DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot11",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged10Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot11Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 11
+      PickupAttackCharged11:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged11Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged11Coop")
+      PickupAttackCharged11DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot12",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged11Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot12Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 12
+      PickupAttackCharged12:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged12Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged12Coop")
+      PickupAttackCharged12DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot13",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged12Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot13Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 13
+      PickupAttackCharged13:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged13Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged13Coop")
+      PickupAttackCharged13DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot14",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged13Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot14Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 14
+      PickupAttackCharged14:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged14Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged14Coop")
+      PickupAttackCharged14DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot15",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged14Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot15Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 15
+      PickupAttackCharged15:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged15Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged15Coop")
+      PickupAttackCharged15DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot16",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged15Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot16Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 16
+      PickupAttackCharged16:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged16Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged16Coop")
+      PickupAttackCharged16DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot17",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged16Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot17Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 17
+      PickupAttackCharged17:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged17Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged17Coop")
+      PickupAttackCharged17DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot18",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged17Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot18Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 18
+      PickupAttackCharged18:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged18Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged18Coop")
+      PickupAttackCharged18DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot19",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged18Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot19Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 19
+      PickupAttackCharged19:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged19Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged19Coop")
+      PickupAttackCharged19DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot20",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged19Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot20Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 20
+      PickupAttackCharged20:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged20Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged20Coop")
+      PickupAttackCharged20DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot21",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged20Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot21Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 21
+      PickupAttackCharged21:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged21Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged21Coop")
+      PickupAttackCharged21DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot22",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged21Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot22Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 22
+      PickupAttackCharged22:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged22Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged22Coop")
+      PickupAttackCharged22DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot23",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged22Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot23Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 23
+      PickupAttackCharged23:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged23Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged23Coop")
+      PickupAttackCharged23DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot24",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged23Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot24Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 24
+      PickupAttackCharged24:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged24Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged24Coop")
+      PickupAttackCharged24DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot25",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged24Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot25Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 25
+      PickupAttackCharged25:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged25Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged25Coop")
+      PickupAttackCharged25DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot26",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged25Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot26Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 26
+      PickupAttackCharged26:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged26Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged26Coop")
+      PickupAttackCharged26DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot27",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged26Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot27Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 27
+      PickupAttackCharged27:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged27Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged27Coop")
+      PickupAttackCharged27DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot28",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged27Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot28Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 28
+      PickupAttackCharged28:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged28Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged28Coop")
+      PickupAttackCharged28DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot29",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged28Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaShot29Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 29
+      PickupAttackCharged29:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged29Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged29Coop")
+      PickupAttackCharged29DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged29Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaChargedCoop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 30
+      PickupAttackCharged30:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged30Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged30Coop")
+      PickupAttackCharged30DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged1",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged30Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged1Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 31
+      PickupAttackCharged31:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged31Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged31Coop")
+      PickupAttackCharged31DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged2",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged31Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged2Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 32
+      PickupAttackCharged32:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged32Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged32Coop")
+      PickupAttackCharged32DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged3",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged32Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged3Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Charge level 33
+      PickupAttackCharged33:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCharged33Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCharged33Coop")
+      PickupAttackCharged33DM:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged4",0,false,4,0)
+        goto PickupFinish
+
+      PickupAttackCharged33Coop:
+        TNT1 A 0 A_FireCustomMissile("Duke64PlasmaCharged4Coop",0,false,4,0)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_TakeInventory("Duke64PlasmaCharge")
+        stop
+    }
+}
+
+actor Duke64PlasmaShot
+{
+	Radius 12
+	Height 8
+	Speed 30
+	Damage (30)
+	Projectile
+	Obituary "$SAMSARA_DUKE_OB_SLOT5"
+	Scale 0.5
+	Decal Scorch
+	DamageType "DukePlasma"
+	+FORCERADIUSDMG
+	States
+	{
+	Spawn:
+		PCPX ABCD 2 bright Light("DUKE64_PLASMACANNON_SHOT")
+		loop
+	Death:
+		TNT1 A 0 A_Explode(30,128,0)
+	DeathEffects:
+		TNT1 A 0 A_PlaySound("duke64/explosion", 6, 1.0, 0, ATTN_NONE)
+	DeathFinish:
+		TNT1 A 1 A_SpawnItemEx("Duke64PlasmaExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Stop
+	}
+}
+
+actor Duke64PlasmaShot2 : Duke64PlasmaShot
+{
+	Damage (60)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(60,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot3 : Duke64PlasmaShot
+{
+	Damage (90)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(90,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot4 : Duke64PlasmaShot
+{
+	Damage (121)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(121,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot5 : Duke64PlasmaShot
+{
+	Damage (151)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(151,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot6 : Duke64PlasmaShot
+{
+	Damage (181)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(181,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot7 : Duke64PlasmaShot
+{
+	Damage (212)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(212,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot8 : Duke64PlasmaShot
+{
+	Damage (242)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(242,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot9 : Duke64PlasmaShot
+{
+	Damage (272)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(272,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot10 : Duke64PlasmaShot
+{
+	Damage (303)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(303,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot11 : Duke64PlasmaShot
+{
+	Damage (333)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(333,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot12 : Duke64PlasmaShot
+{
+	Damage (363)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(363,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot13 : Duke64PlasmaShot
+{
+	Damage (393)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(393,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot14 : Duke64PlasmaShot
+{
+	Damage (424)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(424,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot15 : Duke64PlasmaShot
+{
+	Damage (454)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(454,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot16 : Duke64PlasmaShot
+{
+	Damage (484)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(484,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot17 : Duke64PlasmaShot
+{
+	Damage (515)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(515,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot18 : Duke64PlasmaShot
+{
+	Damage (545)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(545,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot19 : Duke64PlasmaShot
+{
+	Damage (575)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(575,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot20 : Duke64PlasmaShot
+{
+	Damage (606)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(606,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot21 : Duke64PlasmaShot
+{
+	Damage (636)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(636,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot22 : Duke64PlasmaShot
+{
+	Damage (666)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(666,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot23 : Duke64PlasmaShot
+{
+	Damage (696)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(696,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot24 : Duke64PlasmaShot
+{
+	Damage (727)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(727,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot25 : Duke64PlasmaShot
+{
+	Damage (757)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(757,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot26 : Duke64PlasmaShot
+{
+	Damage (787)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(787,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot27 : Duke64PlasmaShot
+{
+	Damage (818)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(818,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot28 : Duke64PlasmaShot
+{
+	Damage (848)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(848,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot29 : Duke64PlasmaShot
+{
+	Damage (878)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(878,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged : Duke64PlasmaShot
+{
+	Damage (878)
+	Scale 1
+	States
+	{
+	Spawn:
+		PCPX ABCD 2 bright Light("DUKE64_PLASMACANNON_CHARGED_SHOT")
+		loop
+	Death:
+		TNT1 A 0 A_Explode(878,330,0,0,165)
+	DeathEffects:
+		TNT1 A 0 A_PlaySound("duke64/plasmaexplode", 6, 1.0, 0, ATTN_NONE)
+		TNT1 A 0 A_RadiusGive("Duke64PlasmaChargedFlash",15000,RGF_PLAYERS)
+	DeathFinish:
+		TNT1 A 0 A_SpawnItemEx("Duke64PlasmaChargedFireRing",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("Duke64PlasmaChargedFireBall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("Duke64PlasmaExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Stop
+	}
+}
+
+actor Duke64PlasmaCharged1 : Duke64PlasmaCharged
+{
+	Damage (909)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(909,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged2 : Duke64PlasmaCharged
+{
+	Damage (939)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(939,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged3 : Duke64PlasmaCharged
+{
+	Damage (969)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(969,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged4 : Duke64PlasmaCharged
+{
+	Damage (1000)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(1000,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShotCoop : Duke64PlasmaShot
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Duke64PlasmaShot2Coop : Duke64PlasmaShotCoop
+{
+	Damage (60)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(60,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot3Coop : Duke64PlasmaShotCoop
+{
+	Damage (90)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(90,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot4Coop : Duke64PlasmaShotCoop
+{
+	Damage (121)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(121,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot5Coop : Duke64PlasmaShotCoop
+{
+	Damage (151)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(151,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot6Coop : Duke64PlasmaShotCoop
+{
+	Damage (181)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(181,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot7Coop : Duke64PlasmaShotCoop
+{
+	Damage (212)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(212,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot8Coop : Duke64PlasmaShotCoop
+{
+	Damage (242)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(242,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot9Coop : Duke64PlasmaShotCoop
+{
+	Damage (272)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(272,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot10Coop : Duke64PlasmaShotCoop
+{
+	Damage (303)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(303,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot11Coop : Duke64PlasmaShotCoop
+{
+	Damage (333)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(333,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot12Coop : Duke64PlasmaShotCoop
+{
+	Damage (363)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(363,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot13Coop : Duke64PlasmaShotCoop
+{
+	Damage (393)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(393,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot14Coop : Duke64PlasmaShotCoop
+{
+	Damage (424)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(424,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot15Coop : Duke64PlasmaShotCoop
+{
+	Damage (454)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(454,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot16Coop : Duke64PlasmaShotCoop
+{
+	Damage (484)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(484,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot17Coop : Duke64PlasmaShotCoop
+{
+	Damage (515)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(515,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot18Coop : Duke64PlasmaShotCoop
+{
+	Damage (545)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(545,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot19Coop : Duke64PlasmaShotCoop
+{
+	Damage (575)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(575,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot20Coop : Duke64PlasmaShotCoop
+{
+	Damage (606)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(606,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot21Coop : Duke64PlasmaShotCoop
+{
+	Damage (636)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(636,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot22Coop : Duke64PlasmaShotCoop
+{
+	Damage (666)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(666,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot23Coop : Duke64PlasmaShotCoop
+{
+	Damage (696)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(696,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot24Coop : Duke64PlasmaShotCoop
+{
+	Damage (727)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(727,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot25Coop : Duke64PlasmaShotCoop
+{
+	Damage (757)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(757,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot26Coop : Duke64PlasmaShotCoop
+{
+	Damage (787)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(787,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot27Coop : Duke64PlasmaShotCoop
+{
+	Damage (818)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(818,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot28Coop : Duke64PlasmaShotCoop
+{
+	Damage (848)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(848,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaShot29Coop : Duke64PlasmaShotCoop
+{
+	Damage (878)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(878,128,0)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaChargedCoop : Duke64PlasmaShotCoop
+{
+	Damage (878)
+	Scale 1
+	States
+	{
+	Spawn:
+		PCPX ABCD 2 bright Light("DUKE64_PLASMACANNON_CHARGED_SHOT")
+		loop
+	Death:
+		TNT1 A 0 A_Explode(878,330,0,0,165)
+	DeathEffects:
+		TNT1 A 0 A_PlaySound("duke64/plasmaexplode", 6, 1.0, 0, ATTN_NONE)
+        TNT1 A 0 A_GiveInventory("SamsaraDuke64PlasmaCannonChargedFlashTargetHack",1,AAPTR_TARGET)
+		TNT1 A 0 A_RadiusGive("Duke64PlasmaChargedFlashCoop",15000,RGF_PLAYERS)
+        TNT1 A 0 A_TakeInventory("SamsaraDuke64PlasmaCannonChargedFlashTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
+	DeathFinish:
+		TNT1 A 0 A_SpawnItemEx("Duke64PlasmaChargedFireRing",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("Duke64PlasmaChargedFireBall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		TNT1 A 1 A_SpawnItemEx("Duke64PlasmaExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Stop
+	}
+}
+
+actor Duke64PlasmaCharged1Coop : Duke64PlasmaChargedCoop
+{
+	Damage (909)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(909,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged2Coop : Duke64PlasmaChargedCoop
+{
+	Damage (939)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(939,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged3Coop : Duke64PlasmaChargedCoop
+{
+	Damage (969)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(969,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+actor Duke64PlasmaCharged4Coop : Duke64PlasmaChargedCoop
+{
+	Damage (1000)
+	States
+	{
+	Death:
+		TNT1 A 0 A_Explode(1000,330,0,0,165)
+		Goto DeathEffects
+	}
+}
+
+Actor Duke64PlasmaChargedFireRing : Duke64FireRing
+{
+	+BRIGHT
+	Scale 1
+	States
+	{
+		Spawn:
+			D6FR A 1
+			D6FR AAAAAAAAAA 1 A_SetScale(scalex+2.0)
+			Goto Fade
+		Fade:
+			D6FR A 0 A_FadeOut(0.1)
+			D6FR A 1 A_SetScale(scalex+2.0)
+			Loop
+	}
+}
+
+Actor Duke64PlasmaChargedFireBall : Duke64Fireball
+{
+	+BRIGHT
+	Scale 1
+	States
+	{
+		Spawn:
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X1")
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X2") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X3") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X4") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X5") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X6") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X7") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X8") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X9") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X10") A_SetScale(scalex+0.5)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X11") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X12") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X13") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X14") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X15") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X16") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X17") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X18") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X19") A_SetScale(scalex+0.5)
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 Light("DUKE64_PLASMA_CHARGED_FIREBALL_X20") A_SetScale(scalex+0.5)
+			Goto Fade
+		Fade:
+			D6FB A 0 A_FadeOut(0.1)
+			D6FB A 2 A_SetScale(scalex+0.5)
+			Loop
+	}
+}
+
+actor Duke64PlasmaExplosion
+{
+	+NOINTERACTION
+	Scale 0.6
+	States
+	{
+	Spawn:
+		PCPX E 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X1")
+		PCPX F 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X2")
+		PCPX G 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X3")
+		PCPX H 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X4")
+		PCPX I 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X5")
+		PCPX J 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X6")
+		PCPX K 2 Bright Light("DUKE64_PLASMACANNON_SHOT_X7")
+		stop
+	}
+}
+
+Actor Duke64PlasmaEffectSmall : ZorchEffectSmall
+{
+	Scale 0.6
+	States
+	{
+		Spawn:
+			PDFX ABCDEFGHIJK 4 BRIGHT
+			Stop
+	}
+}
+
+actor Duke64PlasmaChargedFlash : Trigger
+{
+    States
+    {
+      Pickup:
+		TNT1 A 0 A_SetBlend("White",1,75)
+		stop
+    }
+}
+
+actor Duke64PlasmaChargedFlashCoop : Duke64PlasmaChargedFlash
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDuke64PlasmaCannonChargedFlashTargetHack",1,"Super::Pickup")
+		stop
+    }
+}

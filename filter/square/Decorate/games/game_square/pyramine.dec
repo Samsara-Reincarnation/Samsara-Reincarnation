@@ -1,0 +1,109 @@
+actor Pyramine_Samsara : SquareMonster_Samsara2 replaces Pyramine
+{
+	Health 120
+	Radius 18
+	Height 48
+	Speed 15
+	FastSpeed 20
+	ReactionTime 20
+	PainChance 64
+	Mass 2000
+  
+	+DONTBLAST
+	+NOBLOOD
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+QUICKTORETALIATE
+
+	Obituary "$OB_PYRAMINE"
+	SeeSound ""
+	PainSound "pyramine/pain"
+	DeathSound "pyramine/death"
+	Tag "Pyramine"
+	SpawnID 38
+
+	DamageFactor "Vacuum", 0.0
+  
+	var int user_revealed;
+
+	States
+	{
+	Spawn:
+		PYRM A 0
+		PYRM A 0 A_JumpIf(user_revealed > 0, "LookLoop2")
+		PYRM A 0 A_ChangeFlag("SOLID", FALSE)
+		PYRM A 0 A_ChangeFlag("SHOOTABLE", FALSE)
+		PYRM A 0 A_SetUserVar("user_revealed", 0)
+	// Fall through
+	LookLoop:
+		PYRM A 10 A_LookEx(LOF_NOSOUNDCHECK, 0.0, args[0], 0, args[1])
+		Loop
+	LookLoop2:
+		PYRM B 10 A_LookEx(0, 0, 0, 0, 0, "SeeLoop")
+		Loop
+	See:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		PYRM F 0 A_PlaySound("pyramine/sight")
+		PYRM F 0 A_ChangeFlag("SOLID", TRUE)
+		PYRM F 0 A_ChangeFlag("SHOOTABLE", TRUE)
+		PYRM F 0 A_SetUserVar("user_revealed", 1)
+		PYRM F 0 Bright A_SpawnItem("GibSpawnerPyramineSee")
+		PYRM FG 4
+		PYRM H 0 Bright A_SpawnItem("GibSpawnerPyramineSee")
+		PYRM HI 4
+		PYRM B 10 A_FaceTarget
+	// Fall through
+	SeeLoop:
+		PYRM B 4 A_Chase
+		Loop
+	Melee:
+		PYRM C -1 A_Die("Massacre")
+		Loop
+	Missile:
+		PYRM B 0 A_FaceTarget
+		PYRM B 0 A_PlaySound("pyramine/attack")
+		PYRM BCBCB 4 A_FaceTarget
+		PYRM B 0 A_PlaySound("pyramine/dash")
+	DashLoop:
+		PYRM B 0 A_FaceTarget
+		PYRM B 0 A_SpawnItemEx("PyramineDashDust", -8)
+		PYRM B 4 A_Recoil(-15)
+		PYRM B 0 A_JumpIfCloser(64, "Melee")
+		PYRM C 0 A_FaceTarget
+		PYRM C 0 A_SpawnItemEx("PyramineDashDust", -8)
+		PYRM C 4 A_Recoil(-15)
+		PYRM C 0 A_JumpIfCloser(64, "Melee")
+		PYRM B 0 A_FaceTarget
+		PYRM B 0 A_SpawnItemEx("PyramineDashDust", -8)
+		PYRM B 4 A_Recoil(-15)
+		PYRM B 0 A_JumpIfCloser(64, "Melee")
+		PYRM C 0 A_FaceTarget
+		PYRM C 0 A_SpawnItemEx("PyramineDashDust", -8)
+		PYRM C 4 A_Recoil(-15)
+		PYRM C 0 A_JumpIfCloser(64, "Melee")
+		Goto SeeLoop
+	Pain:
+		PYRM B 2 A_Pain
+		PYRM DBD 2
+		Goto SeeLoop
+	Pain.MightyBoot:
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_PlaySoundEx("duke/kickhit","body",0,0)
+		PYRM B 2 A_FaceTarget
+		TNT1 A 0 A_Recoil(14)
+		PYRM B 16 A_Pain
+		Goto SeeLoop
+	Death:
+		PYRM C 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+	Death.Massacre:
+		PYRM C 0 A_Scream
+		PYRM C 0 Bright A_SpawnItemEx("CrystalGibSpawner")
+		PYRM C 0 Bright A_SpawnItemEx("PyramineExplosion")
+		PYRM C 2 Bright A_SpawnItemEx("MibSpawnerPyramine")
+		PYRM E 0 A_NoBlocking
+		PYRM EE 1 Bright A_SpawnItemEx("ExplosionSilent", random(-20,20), random(-20,20), random(20,30))
+		PYRM EEEEEEEE 2 A_SpawnItemEx("Smoke", frandom[SquareEffectRandom](-7.0,7.0), frandom[SquareEffectRandom](-7.0,7.0), 8.0, 0, 0, 2)
+		PYRM E -1
+		Stop
+	}
+}

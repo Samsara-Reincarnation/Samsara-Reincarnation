@@ -69,3 +69,13 @@ script "SamsaraStrifeSigilAngleSet" (void) CLIENTSIDE
 
     SetActorAngle(0, CheckInventory("SamsaraStrifeSigilMode3OriginalAngle"));
 }
+
+Script "StrifeSpawnDecal" (int ceiling)
+{
+	str extension = ceiling ? "Ceiling" : "Floor";
+	int zCoord = ceiling ? GetActorCeilingZ(0) : GetActorFloorZ(0);
+	int newTid = UniqueTid();
+
+	SpawnForced(strparam(s:"StrifeBloodDecal",s:extension),GetActorX(0),GetActorY(0),zCoord,newTid);
+	Thing_SetTranslation(newTid,-1);
+}

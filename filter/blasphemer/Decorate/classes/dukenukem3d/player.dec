@@ -9,6 +9,8 @@ actor DukePlayer : SamsaraPlayerPawnNormalColoredBlood
 	Player.StartItem "IsSamsaraClass", 1
 	Player.StartItem "SamsaraTipsChecker", 1
 	Player.StartItem "Clip", 50
+	Player.StartItem "DukePistolDumDumReload", 0 // custom hud purposes
+	Player.StartItem "DukeM16ReloadAmmo", 40
 	Player.StartItem "DukeGoldEagleReload", 8
 	Player.SoundClass "DukePlayer"
 	Player.ForwardMove 0.95, 0.925
@@ -41,6 +43,7 @@ actor DukePlayer : SamsaraPlayerPawnNormalColoredBlood
 	DamageFactor "MarathonPlasmaFire", 1.62
 	DamageFactor "Slime", 1.054
 	DamageFactor "Disintegrate", 1.1
+	DamageFactor "StrifeMauler", 1.1
 	DamageFactor "Poison", 1.033
 	DamageFactor "WolfenFlamethrower", 1.1
 	DamageFactor "DukeDamage", 1.1
@@ -279,7 +282,7 @@ actor DukePlayer : SamsaraPlayerPawnNormalColoredBlood
 			TNT1 A 0 A_Jump(256,"Spawn")
 			DUKE I 1 A_Pain
 			TNT1 A 0 A_Jump(256,"Spawn")
-			64DU I 1 A_Pain
+			64DU A 1 A_Pain
 			Goto Spawn
 		Pain.Shock:
 		Pain.Tesla:
@@ -287,6 +290,7 @@ actor DukePlayer : SamsaraPlayerPawnNormalColoredBlood
 			Goto See
 		Death:
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		Death.Massacre:
 			DUKE A 0 A_JumpIfInventory("DukeClassMode", 2, "Death64")
 			TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "DeathBeach")
 			DUK2 A 10
@@ -351,6 +355,7 @@ actor DukePlayer : SamsaraPlayerPawnNormalColoredBlood
 			Stop
 		XDeath:
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|1048576)
+		XDeath.Massacre:
 			DUKE A 0 A_JumpIfInventory("DukeClassMode", 2, "XDeath64")
 			TNT1 A 0 A_JumpIfInventory("DukeClassMode", 1, "XDeathBeach")
 			DUKE A 5
@@ -640,6 +645,7 @@ Actor DukePlayer_Shrink : DukePlayer
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -648,12 +654,18 @@ Actor DukePlayer_Shrink : DukePlayer
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -668,6 +680,7 @@ Actor DukePlayer_Shrink : DukePlayer
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -755,6 +768,8 @@ Actor DukePlayer_Shrink : DukePlayer
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
@@ -888,9 +903,9 @@ actor Duke64_ShrinkEffect : DukePlayer
 	States
 	{
 		Spawn:
-			64DU I 0
-			64DU I 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			64DU I 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			64DU A 0
+			64DU A 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			64DU A 0 A_SetUserVar("user_scaley", scaley*65536.0)
 			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
 			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
 			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
@@ -1094,7 +1109,7 @@ actor BuildFireTrail2 : BuildFireTrail
 
 actor BuildFireTrail3 : BuildFireTrail { -LOWGRAVITY Speed 4 }
 actor BuildFireTrail4 : BuildFireTrail2 { -LOWGRAVITY Speed 4 }
-actor DukeClass : Inventory { -INVBAR +INVENTORY.UNDROPPABLE Inventory.MaxAmount 1 }
+actor DukeClass : Boolean {}
 
 actor DukeBulletPuff : BulletPuff
 {
@@ -1104,6 +1119,7 @@ actor DukeBulletPuff : BulletPuff
 	VSpeed 0
 	-SOLID
 	+PUFFONACTORS
+	+THRUGHOST
 	Decal DukeBulletChip
 	States
 	{
@@ -1112,17 +1128,14 @@ actor DukeBulletPuff : BulletPuff
 		TNT1 A 0 A_Jump(224,2)
 		TNT1 A 0 A_PlaySound("duke/bulletricochet")
 		TNT1 A 1 A_SpawnItemEx("DukeBootPuff",0,0,0,0,0,1,0,32)
-		DKPF EFGH 3 BRIGHT
-		Stop
+		DKPF EF 3 Bright Light("DUKE3D_PUFF_X1")
+		DKPF G 3 Bright Light("DUKE3D_PUFF_X2")
+		DKPF H 3 Bright Light("DUKE3D_PUFF_X3")
+		stop
 	}
 }
 
-actor DukeBulletPuffCoop : DukeBulletPuff
-{
-	Species "Player"
-	+THRUSPECIES
-	+MTHRUSPECIES
-}
+actor DukeBulletPuffCoop : DukeBulletPuff { +MTHRUSPECIES }
 
 actor DukeBulletPuffBeach : DukeBulletPuff
 {
@@ -1132,17 +1145,11 @@ actor DukeBulletPuffBeach : DukeBulletPuff
 	Spawn:
 		TNT1 A 0
 		TNT1 A 1 A_SpawnItemEx("DukeBootPuffBeach",0,0,0,0,0,1,0,32)
-		//DKPF EFGH 3 BRIGHT
-		Stop
+		stop
 	}
 }
 
-Actor DukeBulletPuffBeachCoop : DukeBulletPuffBeach
-{
-	Species "Player"
-	+THRUSPECIES
-	+MTHRUSPECIES
-}
+Actor DukeBulletPuffBeachCoop : DukeBulletPuffBeach { +MTHRUSPECIES }
 
 ACTOR DukeGiveMoney : Inventory
 {
@@ -1191,10 +1198,14 @@ Actor DukeNukemTeleport
 	States
 	{
 		Spawn:
-			TNT1 A 0
-			FRZX D 2 Bright A_Playsound("Duke/Teleport", CHAN_5)
-			FRZX EFGHI 2 Bright
-			Stop
+			FRZX D 0 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X1")
+			FRZX D 2 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X1") A_PlaySound("Duke/Teleport",CHAN_5)
+			FRZX E 2 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X2")
+			FRZX F 2 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X3")
+			FRZX G 2 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X4")
+			FRZX H 2 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X5")
+			FRZX I 2 Bright Light("DUKE3D_FREEZETHROWER_DEATH_X6")
+			stop
 	}
 }
 

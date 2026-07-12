@@ -333,7 +333,7 @@ Script "Hexen2_Hud" (void)
 
 		if(CheckInventory("Hexen2Level") < 12)
 		{
-			if(CheckInventory("Hexen2Experience") > Hexen2_NextLevelXP[CheckInventory("Hexen2Level")-1])
+			if(CheckInventory("Hexen2Experience") >= Hexen2_NextLevelXP[CheckInventory("Hexen2Level")-1])
 			{
 				randomincrease = random(8,11)*2;
 				SetAmmoCapacity("Clip", GetAmmoCapacity("Clip")+randomincrease);
@@ -362,7 +362,7 @@ Script "Hexen2_Hud" (void)
 		}
 		else
 		{
-			if(CheckInventory("Hexen2Experience") > Hexen2_NextLevelXP[10]+(192700*(CheckInventory("Hexen2Level")-11)))
+			if(CheckInventory("Hexen2Experience") >= Hexen2_NextLevelXP[10]+(192700*(CheckInventory("Hexen2Level")-11)))
 			{
 				SetAmmoCapacity("Clip", GetAmmoCapacity("Clip")+6);
 				SetAmmoCapacity("Cell", GetAmmoCapacity("Cell")+8);
@@ -387,20 +387,32 @@ Script "Hexen2_Hud" (void)
 		}
 		
 		//Demon glide
-		if(CheckInventory("Hexen2Level") >= 6)
+        bool gliding;
+
+		if (CheckInventory("Hexen2Level") >= 6 && buttons & BT_Jump && !isDead(0))
 		{
-			if(buttons & BT_Jump)
-			{
-				GiveInventory("Hexen2DemonessGlide",1);
-				SetActorProperty(0, APROP_Gravity, 0.5);
-			}
-			else
-			{
-				TakeInventory("Hexen2DemonessGlide",1);
-				if (GetCVar("samsara_nocustomgravity")) { SetActorProperty(0, APROP_Gravity, 1.0); }
-				else { SetActorProperty(0, APROP_Gravity, 0.8125); }
-			}
+            if (!gliding)
+            {
+                PlaySound(0, "Hexen2/Fwoomp", CHAN_5);
+                gliding = true;
+            }
+
+			SetActorProperty(0, APROP_Gravity, 0.5);
+
+            if (CheckInventory("ForceSOGravity")) { SetActorProperty(0, APROP_Gravity, 0.15); } // no gravity changes here for now
+		} else {
+            if (gliding) { gliding = false; }
+
+			if (GetCVar("samsara_nocustomgravity")) { SetActorProperty(0, APROP_Gravity, 1.0); }
+			else { SetActorProperty(0, APROP_Gravity, 0.8125); }
+
+            if (CheckInventory("ForceNormalGravity")) { SetActorProperty(0, APROP_Gravity, 1.0); }
+            else if (CheckInventory("ForceSOGravity")) { SetActorProperty(0, APROP_Gravity, 0.15); }
+            else if (CheckInventory("ForceRangerGravity")) { SetActorProperty(0, APROP_Gravity, 0.75); }
+            else if (CheckInventory("ForceEleenaGravity")) { SetActorProperty(0, APROP_Gravity, 0.68); }
+            else if (CheckInventory("ForceDemonessGravity")) { SetActorProperty(0, APROP_Gravity, 0.8125); }
 		}
+
 		if(CheckInventory("Hexen2TomeOfPowerCooldown") && second == 0)
 			TakeInventory("Hexen2TomeOfPowerCooldown",1);
 		
@@ -449,7 +461,7 @@ Script "Hexen2_DrawExperienceBar" (void) clientside
 	SetHudSize(208,200,0);
 	HudMessage(s:"a";HUDMSG_PLAIN|HUDMSG_LAYER_UNDERHUD,951,0,104.0,196.0,0.1);
 	SetHudSize(210,200,0);
-	SetHUDClipRect(41,192,128-(FixedMul(128,experiencegaugeoffset)),8);
+	if (CheckInventory("Hexen2Level") < 100) { SetHUDClipRect(41,192,128-(FixedMul(128,experiencegaugeoffset)),8); }
 	SetFont("HX2XPBAR");
 	HudMessage(s:"a";HUDMSG_PLAIN|HUDMSG_LAYER_UNDERHUD,950,0,105.0,196.0,0.1);
 	SetHUDClipRect(0,0,0,0);

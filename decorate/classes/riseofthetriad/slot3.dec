@@ -1,0 +1,270 @@
+actor HeatSeeker : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You have a Heat-Seeker!"
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 3
+    Weapon.SelectionOrder 1400
+    Weapon.AmmoType "HSMissiles"
+    Weapon.AmmoGive 10
+    Weapon.AmmoUse 1
+    Obituary "%o couldn't evade %k's heatseeker."
+    Tag "Heat Seeker"
+    +EXPLOSIVE
+    +IGNORESKILL
+    States
+    {
+      Spawn:
+        PHSE A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("UsingFirearm")
+        HSEE A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        HSEE A 1 A_Lower
+        loop
+
+      Select:
+        HSEE A 1 A_Raise
+        loop
+
+      Fire:
+        HSEE B 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTHeatSeekerAttackHandler")
+        HSEE C 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        HSEE DEFG 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi1Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch1")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi1
+        HSEE H 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi2Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch2")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi2
+        HSEE A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi3Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch3")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi3
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi4Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch4")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi4
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi5Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch5")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi5
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi6Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch6")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi6
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireSemi7Check:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch7")
+        TNT1 A 0 A_ReFire(1)
+        goto FireSemi7
+        HSEE A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      FireSemi1:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch1")
+        HSEE H 1 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi2:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch2")
+        HSEE A 1 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi3:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch3")
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi4:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch4")
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi5:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch5")
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi6:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch6")
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH)
+      FireSemi7:
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"FireForceSwitch7")
+        HSEE A 1 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
+
+      FireForceSwitch1:
+        TNT1 A 0 A_ClearReFire
+        HSEE H 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch2:
+        TNT1 A 0 A_ClearReFire
+        HSEE A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch3:
+        TNT1 A 0 A_ClearReFire
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch4:
+        TNT1 A 0 A_ClearReFire
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch5:
+        TNT1 A 0 A_ClearReFire
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch6:
+        TNT1 A 0 A_ClearReFire
+        HSEE A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+      FireForceSwitch7:
+        TNT1 A 0 A_ClearReFire
+        HSEE A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+    }
+}
+
+actor SamsaraROTTHeatSeekerAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("HSMissiles",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("HSMissiles",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackAlternate")
+      // Original sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_PlaySound("hseek/shoot",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalCoop")
+      PickupAttackOriginalDM:
+        TNT1 A 0 A_FireCustomMissile("HSMissile",0,false,0,-8)
+        stop
+
+      PickupAttackOriginalCoop:
+        TNT1 A 0 A_FireCustomMissile("HSMissileCoop",0,false,0,-8)
+        stop
+
+      // Alternate sounds
+      PickupAttackAlternate:
+        TNT1 A 0 A_PlaySound("hseek/shoot/alt",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateCoop")
+      PickupAttackAlternateDM:
+        TNT1 A 0 A_FireCustomMissile("HSMissileSoundAlternate",0,false,0,-8)
+        stop
+
+      PickupAttackAlternateCoop:
+        TNT1 A 0 A_FireCustomMissile("HSMissileCoopSoundAlternate",0,false,0,-8)
+        stop
+    }
+}
+
+actor HSMissiles : Ammo
+{
+    Inventory.MaxAmount 25
+    Ammo.BackpackAmount 5 // skills with different AmmoFactor values and sv_doubleammo can still give extra regardless of +IGNORESKILL
+    Ammo.BackpackMaxAmount 50
+    Inventory.Icon "AMSMB0"
+    Tag "Heat Seeker Missiles"
+    +IGNORESKILL
+}
+
+actor HSMissile
+{
+    Projectile
+    Radius 11
+    Height 6
+    Speed 30
+    Damage (10)
+    DamageType "RottExplosive"
+    Scale 0.5
+    DeathSound "god/bang"
+    Decal "Scorch"
+    Obituary "%o met %k's missile."
+    +BLOODLESSIMPACT
+    +EXTREMEDEATH
+    +FORCERADIUSDMG
+    +LOOKALLAROUND
+    +SCREENSEEKER
+    +SEEKERMISSILE
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        M1SS A 0 Light("ROTTROCKET")
+      SpawnLoop:
+        TNT1 A 0 A_PlaySound("missile/fly",CHAN_BODY,1,true)
+        //TNT1 A 0 A_SeekerMissile(4,8)
+        M1SS A 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        TNT1 A 0 A_SeekerMissile(4,8,SMF_LOOK,256)
+        M1SS A 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        //TNT1 A 0 A_SeekerMissile(4,8)
+        M1SS A 1 Bright Light("ROTTROCKET") A_CustomMissile("MissileTrail",0)
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(48,64)
+      DeathFinish:
+        EXPL ABCDEFGHIJKLMNOPQRST 2 Bright Light("ROTTROCKETEXP")
+        stop
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor HSMissileCoop : HSMissile
+{
+    Speed 40
+    Damage (40)
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(80,48)
+        goto DeathFinish
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor HSMissileSoundAlternate : HSMissile { DeathSound "god/bang/alt" }
+
+actor HSMissileCoopSoundAlternate : HSMissileSoundAlternate
+{
+    Speed 40
+    Damage (40)
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(80,48)
+        goto DeathFinish
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}

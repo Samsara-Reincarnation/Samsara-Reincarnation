@@ -1,0 +1,1134 @@
+actor Goldeneye_RCP90PickedUpX : MapCoordinate {}
+actor Goldeneye_RCP90PickedUpY : MapCoordinate {}
+actor Goldeneye_RCP90PickedUpZ : MapCoordinate {}
+actor Goldeneye_RCP90LastPickupTime : Counter { Inventory.InterHubAmount 0 }
+actor Goldeneye_RCP90LevelLimiter : Boolean {}
+actor SamsaraGoldenEyeRCP90SingleSkipFire : Boolean {}
+actor SamsaraGoldenEyeRCP90DualSkipFire : Boolean {}
+
+actor Goldeneye_RCP90 : SamsaraGoldenEyeWeapon
+{
+    Inventory.PickupMessage "Picked up an RC-P90."
+    Inventory.Icon "GEWRCP12"
+    Weapon.SlotNumber 6
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 6
+    Weapon.AmmoType1 "Goldeneye_RCP90Magazine"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Cell"
+    Weapon.AmmoGive2 80
+    Obituary "%o was drilled by %k's RC-P90."
+    Tag "RC-P90"
+    States
+    {
+      Spawn:
+        PIST A -1
+        stop
+
+      // Single
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("BondWatchQueue",1,"WatchRaise")
+        TNT1 A 0 A_JumpIfInventory("BondWatchToken",1,"WatchReady")
+        TNT1 A 0 A_JumpIfInventory("BondAltToggle",1,"DualWield")
+      ReadyStart:
+        GE00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyReloadable")
+      ReadyNonReloadable:
+        GE00 A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyReloadable:
+        GE00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyAmmoCheck
+
+      ReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90Magazine",1,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"Ready")
+        goto ReloadCheck
+
+      Deselect:
+        GE00 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,2)
+        GE00 A 0 A_GunFlash("DualForceRemoval",GFF_NOEXTCHANGE)
+        goto DeselectLoop
+        GE00 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto DeselectLoop
+        GE00 A 0 A_GunFlash("DeselectDual",GFF_NOEXTCHANGE)
+      DeselectLoop:
+        GE00 A 0 A_TakeInventory("BondFireDelay")
+        GE00 A 0 A_TakeInventory("BondAlternateFire")
+        GE00 A 0 A_TakeInventory("BondDualWieldToken")
+        GE00 A 0 A_TakeInventory("BondAltToggle")
+        GE00 A 0 A_TakeInventory("BondZoomToken")
+        GE00 A 0 A_TakeInventory("BondZoomAmountModifyActive")
+        GE00 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        GE00 A 0 A_TakeInventory("BondDryFireSpamProtector1")
+        GE00 A 0 A_TakeInventory("BondDryFireSpamProtector2")
+        GE00 A 0 A_TakeInventory("BondAltActivationToken")
+        GE00 A 1 A_Lower
+        loop
+
+      Select:
+        GE00 A 0 A_GiveInventory("SamsaraGoldenEyeWeaponSwitchSoundPlayer")
+      SelectDualCheck:
+        GE00 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,2)
+        GE00 A 0 A_GunFlash("DualForceRemoval",GFF_NOEXTCHANGE)
+        goto SelectLoop
+        GE00 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto SelectLoop
+        GE00 A 0 A_GunFlash("SelectDual",GFF_NOEXTCHANGE)
+      SelectLoop:
+        GE00 A 0 A_TakeInventory("Goldeneye_UnarmedToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_PP7Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_KnifeToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_KF7Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_AutoShotgunToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_AR33Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_RocketLauncherToken")
+        GE00 A 0 A_GiveInventory("Goldeneye_RCP90Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_LaserToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_GoldenGunToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_SniperToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_D5KToken")
+        GE00 A 1 A_Raise
+        goto SelectDualCheck
+
+      Fire:
+        GE01 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,1)
+        goto FireAltDualCheck
+        GE01 A 0 A_JumpIfInventory("BondAltActivationToken",1,"FireAltDualCheck")
+        GE01 A 0 A_TakeInventory("BondAltToggle")
+        GE01 A 0 A_GiveInventory("BondAltActivationToken")
+        GE01 A 0 ACS_NamedExecuteAlways("BondAltFire")
+        loop
+
+      FireAltDualCheck:
+        GE01 A 0 A_JumpIfInventory("BondAltToggle",1,"DualWieldFire")
+      FireCheckDualOrder:
+        GE01 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto FireAmmoCheck
+        GE01 A 0 A_JumpIfInventory("BondFireDelay",0,"FireAmmoCheck")
+        GE01 A 0 A_JumpIfInventory("BondAlternateFire",1,"Ready")
+        goto FireAmmoCheck
+
+      FireAmmoCheck:
+        GE01 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireAmmoCheckReloadable")
+      FireAmmoCheckNonReloadable:
+        GE01 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireInit")
+        GE01 A 0 A_JumpIfInventory("Cell",1,"FireInit")
+        goto FireDry
+
+      FireAmmoCheckReloadable:
+        GE01 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireInit")
+        GE01 A 0 A_JumpIfInventory("Goldeneye_RCP90Magazine",1,"FireInit")
+        goto FireDry
+
+      FireDry:
+        GE00 A 0 A_JumpIfInventory("BondDryFireSpamProtector1",1,"FireSetDualOrder")
+        GE00 A 0 A_GiveInventory("SamsaraGoldenEyeWeaponDrySoundPlayer")
+        GE00 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Primary")
+        GE00 A 0 A_GiveInventory("BondDryFireSpamProtector1")
+        goto FireSetDualOrder
+
+      FireInit:
+        GE01 A 0 A_JumpIfInventory("SamsaraGoldenEyeRCP90SingleSkipFire",1,2)
+        GE01 A 0 A_GiveInventory("SamsaraGoldenEyeRCP90SingleSkipFire")
+        goto FireStart
+        GE01 A 0 A_TakeInventory("SamsaraGoldenEyeRCP90SingleSkipFire")
+        goto FireStart
+
+      FireStart:
+        GE01 A 0 A_GiveInventory("BondFiringToken")
+        GE01 A 0 A_AlertMonsters
+        GE01 A 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE01 B 0 A_GiveInventory("SamsaraGoldenEyeRCP90SingleAttackHandler")
+		GE00 A 0 A_JumpIfInventory("SamsaraGoldenEyeRCP90SingleSkipFire",1,2)
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_TakeInventory("BondFiringToken")
+      FireReFireCheck:
+        GE00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReFireCheckReloadable")
+      FireReFireCheckNonReloadable:
+        GE00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireReFire")
+        GE00 A 0 A_JumpIfInventory("Cell",1,"FireReFire")
+        goto FireContinue
+
+      FireReFireCheckReloadable:
+        GE00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireReFire")
+        GE00 A 0 A_JumpIfInventory("Goldeneye_RCP90Magazine",1,"FireReFire")
+        goto FireContinue
+
+      FireReFire:
+        GE00 A 0 A_ReFire(1)
+        goto FireContinue
+        GE00 A 0 A_GiveInventory("BondFireDelay")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Fire
+
+      FireContinue:
+        GE01 CDEDC 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0
+        goto FireSetDualOrder
+
+      FireSetDualOrder:
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto FireFinish
+        TNT1 A 0 A_GiveInventory("BondAlternateFire")
+        goto FireFinish
+
+      FireFinish:
+        TNT1 A 0 A_TakeInventory("BondFiringToken")
+        TNT1 A 0 A_TakeInventory("BondFireDelay")
+        goto Ready
+
+      Reload:
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"ReloadCheck")
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto ReloadCheck
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",0,"ReloadCheck")
+        TNT1 A 0 A_JumpIfInventory("BondDualReloadSpamProtector",1,"ReloadCheck")
+        TNT1 A 0 A_GunFlash("ReloadCheckDual",GFF_NOEXTCHANGE)
+        goto ReloadCheck
+
+      ReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90Magazine",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,"ReloadStart")
+        goto Ready
+
+      ReloadStart:
+        GE02 A 0 A_GiveInventory("SamsaraGoldenEyeWeaponReloadSoundPlayer")
+        GE02 ABCDEFGHI 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE02 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        GE02 IHGFEDCBA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      ReloadAmmo:
+        GE02 I 0 A_JumpIfInventory("Goldeneye_RCP90Magazine",0,"ReloadFinish")
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE02 I 0 A_JumpIfInventory("Cell",1,1)
+        goto ReloadFinish
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE02 I 0 A_TakeInventory("Cell",1)
+        GE02 I 0 A_GiveInventory("Goldeneye_RCP90Magazine")
+        loop
+
+      // Dual Init
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("BondAltActivationToken",1,"Ready")
+        TNT1 A 0 A_TakeInventory("BondAltToggle")
+        TNT1 A 0 A_GiveInventory("BondAltActivationToken")
+        TNT1 A 0 ACS_NamedExecuteAlways("BondAltFire")
+        goto Ready
+
+      DualUnwield:
+        TNT1 A 0 A_TakeInventory("BondFireDelay")
+        TNT1 A 0 A_TakeInventory("BondAlternateFire")
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,5)
+        TNT1 A 0 A_TakeInventory("BondDualWieldToken")
+        TNT1 A 0 A_TakeInventory("BondDryFireSpamProtector1")
+        TNT1 A 0 A_TakeInventory("BondDryFireSpamProtector2")
+        TNT1 A 0 A_GunFlash("DualLower",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_ZoomFactor(1)
+        goto ReadyStart
+
+      DualUnwieldFire:
+        GE01 A 0 A_TakeInventory("BondFireDelay")
+        GE01 A 0 A_TakeInventory("BondAlternateFire")
+        GE01 A 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,5)
+        GE01 A 0 A_TakeInventory("BondDualWieldToken")
+        GE01 A 0 A_TakeInventory("BondDryFireSpamProtector1")
+        GE01 A 0 A_TakeInventory("BondDryFireSpamProtector2")
+        GE01 A 0 A_GunFlash("DualLower",GFF_NOEXTCHANGE)
+        GE01 A 0 A_ZoomFactor(1)
+        goto FireCheckDualOrder
+
+      DualLower:
+        GE12 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE12 A 1 A_GiveInventory("BondDualWieldSpamProtector")
+        GE12 BCDEFGHI 1
+        TNT1 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        stop
+
+      DualWield:
+        TNT1 A 0 A_TakeInventory("BondAltActivationToken")
+        TNT1 A 0 A_TakeInventory("BondAltToggle")
+        TNT1 A 0 A_TakeInventory("BondZoomToken")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,1)
+        goto ReadyStart
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldToken",1,"DualUnwield")
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,3)
+        TNT1 A 0 A_GiveInventory("BondDualWieldToken")
+        TNT1 A 0 A_GunFlash("DualRaise",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_ZoomFactor(1)
+        goto ReadyStart
+
+      DualWieldFire:
+        GE01 A 0 A_TakeInventory("BondAltActivationToken")
+        GE01 A 0 A_TakeInventory("BondAltToggle")
+        GE01 A 0 A_TakeInventory("BondZoomToken")
+        GE01 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,1)
+        goto FireCheckDualOrder
+        GE01 A 0 A_JumpIfInventory("BondDualWieldToken",1,"DualUnwieldFire")
+        GE01 A 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,3)
+        GE01 A 0 A_GiveInventory("BondDualWieldToken")
+        GE01 A 0 A_GunFlash("DualRaise",GFF_NOEXTCHANGE)
+        GE01 A 0 A_ZoomFactor(1)
+        goto FireCheckDualOrder
+
+      DualRaise:
+        GE12 I 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE12 I 0 A_GiveInventory("BondDualWieldSpamProtector")
+        GE12 I 1 A_GiveInventory("SamsaraGoldenEyeWeaponSwitchSoundPlayer")
+        GE12 HGFEDCBA 1
+        TNT1 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        goto ReadyStartDual
+
+      // Dual
+      ReadyDual:
+        TNT1 A 0 A_JumpIfInventory("BondFireDelay",0,2)
+        TNT1 A 0 A_JumpIfInventory("BondAlternateFire",1,1)
+        goto ReadyStartDual
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireDual")
+      ReadyStartDual:
+        GE10 A 1
+        goto ReadyAmmoCheckDual
+
+      ReadyAmmoCheckDual:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReadyDual
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyDual")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",1,"ReadyDual")
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"ReadyDual")
+        goto ReloadCheckDual
+
+      DeselectDual:
+        GE10 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE10 A 1 A_TakeInventory("BondDualWieldSpamProtector")
+        GE10 AAAAAAAAAAAAAAA 1
+        stop
+
+      SelectDual:
+        GE10 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE10 A 1 A_TakeInventory("BondDualWieldSpamProtector")
+        goto ReadyStartDual
+
+      FireDual:
+        GE11 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireDualReloadable")
+      FireDualNonReloadable:
+        GE11 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireInitDual")
+        GE11 A 0 A_JumpIfInventory("Cell",1,"FireInitDual")
+        goto FireDryDual
+
+      FireDualReloadable:
+        GE11 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireInitDual")
+        GE11 A 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",1,"FireInitDual")
+        goto FireDryDual
+
+      FireDryDual:
+        GE10 A 0 A_JumpIfInventory("BondDryFireSpamProtector2",1,"FireSetDualOrderDual")
+        GE10 A 0 A_GiveInventory("SamsaraGoldenEyeWeaponDrySoundPlayer")
+        GE10 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Secondary")
+        GE10 A 0 A_GiveInventory("BondDryFireSpamProtector2")
+        goto FireSetDualOrderDual
+
+      FireInitDual:
+        GE11 A 0 A_JumpIfInventory("SamsaraGoldenEyeRCP90DualSkipFire",1,2)
+        GE11 A 0 A_GiveInventory("SamsaraGoldenEyeRCP90DualSkipFire")
+        goto FireStartDual
+        GE11 A 0 A_TakeInventory("SamsaraGoldenEyeRCP90DualSkipFire")
+        goto FireStartDual
+
+      FireStartDual:
+        GE11 A 0 A_GiveInventory("BondFiringToken")
+        GE11 A 1 Bright A_AlertMonsters
+		GE11 B 0 A_GiveInventory("SamsaraGoldenEyeRCP90DualAttackHandler")
+        GE10 A 1 A_JumpIfInventory("SamsaraGoldenEyeRCP90DualSkipFire",1,1)
+		GE10 A 0 A_TakeInventory("BondFiringToken")
+      FireDualReFireCheck:
+        GE10 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireDualReFireCheckReloadable")
+      FireDualReFireCheckNonReloadable:
+        GE10 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireDualReFire")
+        GE10 A 0 A_JumpIfInventory("Cell",1,"FireDualReFire")
+        goto FireDualContinue
+
+      FireDualReFireCheckReloadable:
+        GE10 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireDualReFire")
+        GE10 A 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",1,"FireDualReFire")
+        goto FireDualContinue
+
+      FireDualReFire:
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,1)
+        goto FireDualContinue
+        GE10 A 1 A_GiveInventory("BondFireDelay")
+        goto FireDual
+
+      FireDualContinue:
+        GE11 CDEDC 1
+        GE10 A 0
+        goto FireSetDualOrderDual
+
+      FireSetDualOrderDual:
+        TNT1 A 0 A_TakeInventory("BondAlternateFire")
+        goto FireFinishDual
+
+      FireFinishDual:
+        TNT1 A 0 A_TakeInventory("BondFiringToken")
+        TNT1 A 0 A_TakeInventory("BondFireDelay")
+        goto ReadyDual
+
+      ReloadCheckDual:
+        TNT1 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",0,"ReadyDual")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStartDual")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,"ReloadStartDual")
+        goto ReadyDual
+
+      ReloadStartDual:
+        GE12 A 0 A_GiveInventory("BondDualReloadSpamProtector")
+        GE12 A 1 A_GiveInventory("SamsaraGoldenEyeWeaponReloadSoundPlayer")
+        GE12 BCDEFGHI 1
+        GE12 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoDual")
+      ReloadFinishDual:
+        GE12 IHGFEDCBA 1
+        TNT1 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        goto ReadyDual
+
+      ReloadAmmoDual:
+        GE12 I 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",0,"ReloadFinishDual")
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE12 I 0 A_JumpIfInventory("Cell",1,1)
+        goto ReloadFinishDual
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE12 I 0 A_TakeInventory("Cell",1)
+        GE12 I 0 A_GiveInventory("Goldeneye_RCP90DualMagazine")
+        loop
+    }
+}
+
+// Attack handlers
+
+actor SamsaraGoldenEyeRCP90SingleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90Magazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Goldeneye_RCP90Magazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackSource")
+      // Original sounds
+      PickupAttackN64:
+        TNT1 A 0 A_PlaySound("Goldeneye/RCPShot",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("Goldeneye_Cartridge_Standard",cos(pitch)*22,6,42-(sin(pitch)*22),(2*cos(pitch))+(2*sin(pitch)),frandom(2,3),abs(4*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackN64Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackN64Coop")
+      PickupAttackN64DM:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90Tracer",frandom(-3,3),false,6,0,0,frandom(-3,3))
+        stop
+
+      PickupAttackN64Coop:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90TracerCoop",frandom(-3,3),false,6,0,0,frandom(-3,3))
+        stop
+
+      // Source sounds
+      PickupAttackSource:
+        TNT1 A 0 A_PlaySound("GoldeneyeSource/RCPShot",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("Goldeneye_Cartridge_StandardSoundSource",cos(pitch)*22,6,42-(sin(pitch)*22),(2*cos(pitch))+(2*sin(pitch)),frandom(2,3),abs(4*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackSourceCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackSourceCoop")
+      PickupAttackSourceDM:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90TracerSoundSource",frandom(-3,3),false,6,0,0,frandom(-3,3))
+        stop
+
+      PickupAttackSourceCoop:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90TracerCoopSoundSource",frandom(-3,3),false,6,0,0,frandom(-3,3))
+        stop
+    }
+}
+
+actor SamsaraGoldenEyeRCP90DualAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90DualMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Goldeneye_RCP90DualMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackSource")
+      // Original sounds
+      PickupAttackN64:
+        TNT1 A 0 A_PlaySound("Goldeneye/RCPShot",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("Goldeneye_Cartridge_Standard",cos(pitch)*22,-6,42-(sin(pitch)*22),(2*cos(pitch))+(2*sin(pitch)),frandom(2,3),abs(4*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackN64Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackN64Coop")
+      PickupAttackN64DM:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90Tracer",frandom(-3,3),false,-6,0,0,frandom(-3,3))
+        stop
+
+      PickupAttackN64Coop:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90TracerCoop",frandom(-3,3),false,-6,0,0,frandom(-3,3))
+        stop
+
+      // Source sounds
+      PickupAttackSource:
+        TNT1 A 0 A_PlaySound("GoldeneyeSource/RCPShot",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("Goldeneye_Cartridge_StandardSoundSource",cos(pitch)*22,-6,42-(sin(pitch)*22),(2*cos(pitch))+(2*sin(pitch)),frandom(2,3),abs(4*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackSourceCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackSourceCoop")
+      PickupAttackSourceDM:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90TracerSoundSource",frandom(-3,3),false,-6,0,0,frandom(-3,3))
+        stop
+
+      PickupAttackSourceCoop:
+        TNT1 A 0 A_FireCustomMissile("Goldeneye_RCP90TracerCoopSoundSource",frandom(-3,3),false,-6,0,0,frandom(-3,3))
+        stop
+    }
+}
+
+actor Goldeneye_RCP90Magazine : Ammo
+{
+    Inventory.MaxAmount 80
+    Tag "RC-P90 Magazine (Right)"
+    +IGNORESKILL
+}
+
+actor Goldeneye_RCP90DualMagazine : Ammo
+{
+    Inventory.MaxAmount 80
+    Tag "RC-P90 Magazine (Left)"
+    +IGNORESKILL
+}
+
+actor Goldeneye_RCP90Tracer : Goldeneye_BulletTracer
+{
+    States
+    {
+      XDeath:
+        TNT1 A 0 A_SetUserVar("user_damage",20)
+        goto Super::XDeath
+	  Crash:
+        TNT1 A 0 A_SetUserVar("user_damage",20)
+        goto Super::Crash
+    }
+}
+
+actor Goldeneye_RCP90TracerCoop : Goldeneye_RCP90Tracer
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Goldeneye_RCP90TracerSoundSource : Goldeneye_BulletTracerSoundSource
+{
+    States
+    {
+      XDeath:
+        TNT1 A 0 A_SetUserVar("user_damage",20)
+        goto Super::XDeath
+	  Crash:
+        TNT1 A 0 A_SetUserVar("user_damage",20)
+        goto Super::Crash
+    }
+}
+
+actor Goldeneye_RCP90TracerCoopSoundSource : Goldeneye_RCP90TracerSoundSource
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+// M1 Carbine
+
+actor Goldfinger_M1Carbine : SamsaraGoldenEyeWeapon
+{
+    Inventory.PickupMessage "Picked up an M1 Carbine."
+    Inventory.Icon "GFWM1C12"
+    Weapon.SlotNumber 6
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 600
+    Weapon.AmmoType1 "Goldfinger_M1CarbineMagazine"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Cell"
+    Weapon.AmmoGive2 30
+    Obituary "%o was drilled by %k's M1 Carbine."
+    Tag "M1 Carbine"
+    States
+    {
+      Spawn:
+        PIST A -1
+        stop
+
+      // Single
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("BondWatchQueue",1,"WatchRaise")
+        TNT1 A 0 A_JumpIfInventory("BondWatchToken",1,"WatchReady")
+        TNT1 A 0 A_JumpIfInventory("BondAltToggle",2,"ZoomWeapon")
+        TNT1 A 0 A_JumpIfInventory("BondAltToggle",1,"DualWield")
+        TNT1 A 0 A_JumpIfInventory("BondZoomToken",1,"DecideZoomWeapon")
+      ReadyStart:
+        GE00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyReloadable")
+      ReadyNonReloadable:
+        GE00 A 1 A_WeaponReady
+        goto ReadyAmmoCheck
+
+      ReadyReloadable:
+        GE00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto ReadyAmmoCheck
+
+      ReadyAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineMagazine",1,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"Ready")
+        goto ReloadCheck
+
+      Deselect:
+        GE00 A 0 A_JumpIfInventory("BondZoomToken",1,1)
+        goto DeselectDualCheck
+        GE00 A 0 A_TakeInventory("BondZoomToken")
+        GE00 A 0 A_ZoomFactor(1)
+      DeselectDualCheck:
+        GE00 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,2)
+        GE00 A 0 A_GunFlash("DualForceRemoval",GFF_NOEXTCHANGE)
+        goto DeselectLoop
+        GE00 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto DeselectLoop
+        GE00 A 0 A_GunFlash("DeselectDual",GFF_NOEXTCHANGE)
+      DeselectLoop:
+        GE00 A 0 A_TakeInventory("BondFireDelay")
+        GE00 A 0 A_TakeInventory("BondAlternateFire")
+        GE00 A 0 A_TakeInventory("BondDualWieldToken")
+        GE00 A 0 A_TakeInventory("BondAltToggle")
+        GE00 A 0 A_TakeInventory("BondZoomToken")
+        GE00 A 0 A_TakeInventory("BondZoomAmountModifyActive")
+        GE00 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        GE00 A 0 A_TakeInventory("BondDryFireSpamProtector1")
+        GE00 A 0 A_TakeInventory("BondDryFireSpamProtector2")
+        GE00 A 0 A_TakeInventory("BondAltActivationToken")
+        GE00 A 1 A_Lower
+        loop
+
+      Select:
+        GE00 A 0 A_PlaySound("Goldeneye/Weaponup",CHAN_7)
+      SelectZoomCheck:
+        GE00 A 0 A_JumpIfInventory("BondZoomToken",1,1)
+        goto SelectDualCheck
+        GE00 A 0 A_TakeInventory("BondZoomToken")
+        GE00 A 0 A_ZoomFactor(1,ZOOM_INSTANT) // map change
+      SelectDualCheck:
+        GE00 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,2)
+        GE00 A 0 A_GunFlash("DualForceRemoval",GFF_NOEXTCHANGE)
+        goto SelectLoop
+        GE00 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto SelectLoop
+        GE00 A 0 A_GunFlash("SelectDual",GFF_NOEXTCHANGE)
+      SelectLoop:
+        GE00 A 0 A_TakeInventory("Goldeneye_UnarmedToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_PP7Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_KnifeToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_KF7Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_AutoShotgunToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_AR33Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_RocketLauncherToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_RCP90Token")
+        GE00 A 0 A_TakeInventory("Goldeneye_LaserToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_GoldenGunToken")
+        GE00 A 0 A_GiveInventory("Goldeneye_SniperToken")
+        GE00 A 0 A_TakeInventory("Goldeneye_D5KToken")
+        GE00 A 1 A_Raise
+        goto SelectZoomCheck
+
+      Fire:
+        GE01 B 0 A_JumpIfInventory("BondZoomToken",1,"DecideZoomWeaponFire")
+      FireAltCheck:
+        GE01 B 0 A_JumpIfInventory("SamsaraSynthFireRight",1,1)
+        goto FireAltZoomCheck
+        GE01 B 0 A_JumpIfInventory("BondZoomToken",1,"FireAltZoomCheck")
+        GE01 B 0 A_JumpIfInventory("BondAltActivationToken",1,"FireAltZoomCheck")
+        GE01 B 0 A_TakeInventory("BondAltToggle")
+        GE01 B 0 A_GiveInventory("BondAltActivationToken")
+        GE01 B 0 ACS_NamedExecuteAlways("BondAltFire")
+        loop
+
+      FireAltZoomCheck:
+        GE01 B 0 A_JumpIfInventory("BondAltToggle",2,"ZoomWeaponFire")
+      FireAltDualCheck:
+        GE01 B 0 A_JumpIfInventory("BondAltToggle",1,"DualWieldFire")
+      FireCheckDualOrder:
+        GE01 B 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto FireAmmoCheck
+        GE01 B 0 A_JumpIfInventory("BondAlternateFire",1,"Ready")
+        goto FireAmmoCheck
+
+      FireAmmoCheck:
+        GE01 B 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireAmmoCheckReloadable")
+      FireAmmoCheckNonReloadable:
+        GE01 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        GE01 B 0 A_JumpIfInventory("Cell",2,"FireStart")
+        goto FireDry
+
+      FireAmmoCheckReloadable:
+        GE01 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+        GE01 B 0 A_JumpIfInventory("Goldfinger_M1CarbineMagazine",1,"FireStart")
+        goto FireDry
+
+      FireDry:
+        GE00 A 0 A_JumpIfInventory("BondDryFireSpamProtector1",1,"FireDryBlocker")
+        GE00 A 0 A_PlaySound("Goldfinger/DryFire",CHAN_6)
+        GE00 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Primary")
+        GE00 A 0 A_GiveInventory("BondDryFireSpamProtector1")
+	  FireDryBlocker:
+		GE00 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto FireFinish
+        GE00 A 0 A_GiveInventory("BondAlternateFire")
+        goto FireFinish
+
+      FireStart:
+        GE01 B 0 A_GiveInventory("BondFiringToken")
+        GE01 B 0 A_AlertMonsters
+        GE01 B 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE01 C 0 ACS_NamedExecuteWithResult("BondAltFireActivator", 0)
+        GE01 C 0 A_GiveInventory("SamsaraGoldfingerM1CarbineSingleAttackHandler")
+        GE01 CD 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE01 E 0 A_TakeInventory("BondFiringToken")
+        GE01 EDC 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 ACS_NamedExecuteWithResult("SamsaraSemiAuto", 0)
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE00 A 0 A_JumpIfInventory("SamsaraFiringFullAuto",1,2)
+        GE00 A 0 A_ReFire("FireFinish")
+        GE00 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto FireFinish
+
+      FireFinish:
+		TNT1 A 0 A_TakeInventory("SamsaraFiringFullAuto")
+        TNT1 A 0 A_TakeInventory("BondFiringToken")
+        goto Ready
+
+      Reload:
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"ReloadCheck")
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
+        goto ReloadCheck
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineDualMagazine",0,"ReloadCheck")
+        TNT1 A 0 A_JumpIfInventory("BondDualReloadSpamProtector",1,"ReloadCheck")
+        TNT1 A 0 A_GunFlash("ReloadCheckDual",GFF_NOEXTCHANGE)
+        goto ReloadCheck
+
+      ReloadCheck:
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineMagazine",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"ReloadStart")
+        goto Ready
+
+      ReloadStart:
+        GE02 A 0 A_PlaySound("Goldfinger/Reload",CHAN_6)
+        GE02 ABCDEFGHI 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        GE02 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        GE02 IHGFEDCBA 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      ReloadAmmo:
+        GE02 I 0 A_JumpIfInventory("Goldfinger_M1CarbineMagazine",0,"ReloadFinish")
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE02 I 0 A_JumpIfInventory("Cell",2,1)
+        goto ReloadFinish
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE02 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE02 I 0 A_TakeInventory("Cell",2)
+        GE02 I 0 A_GiveInventory("Goldfinger_M1CarbineMagazine")
+        loop
+
+      // Dual Init
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("BondZoomToken",1,"Ready")
+        TNT1 A 0 A_JumpIfInventory("BondAltActivationToken",1,"Ready")
+        TNT1 A 0 A_TakeInventory("BondAltToggle")
+        TNT1 A 0 A_GiveInventory("BondAltActivationToken")
+        TNT1 A 0 ACS_NamedExecuteAlways("BondAltFire")
+        goto Ready
+
+      DualUnwield:
+        TNT1 A 0 A_TakeInventory("BondAlternateFire")
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,5)
+        TNT1 A 0 A_TakeInventory("BondDualWieldToken")
+        TNT1 A 0 A_TakeInventory("BondDryFireSpamProtector1")
+        TNT1 A 0 A_TakeInventory("BondDryFireSpamProtector2")
+        TNT1 A 0 A_GunFlash("DualLower",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_ZoomFactor(1)
+        goto ReadyStart
+
+      DualUnwieldFire:
+        GE01 B 0 A_TakeInventory("BondAlternateFire")
+        GE01 B 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,5)
+        GE01 B 0 A_TakeInventory("BondDualWieldToken")
+        GE01 B 0 A_TakeInventory("BondDryFireSpamProtector1")
+        GE01 B 0 A_TakeInventory("BondDryFireSpamProtector2")
+        GE01 B 0 A_GunFlash("DualLower",GFF_NOEXTCHANGE)
+        GE01 B 0 A_ZoomFactor(1)
+        goto FireCheckDualOrder
+
+      DualLower:
+        GE12 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE12 A 1 A_GiveInventory("BondDualWieldSpamProtector")
+        GE12 BCDEFGHI 1
+        TNT1 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        stop
+
+      DualWield:
+        TNT1 A 0 A_TakeInventory("BondAltActivationToken")
+        TNT1 A 0 A_TakeInventory("BondAltToggle")
+        TNT1 A 0 A_TakeInventory("BondZoomToken")
+        TNT1 A 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,2)
+        TNT1 A 0 A_ZoomFactor(1)
+        goto ReadyStart
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldToken",1,"DualUnwield")
+        TNT1 A 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,3)
+        TNT1 A 0 A_GiveInventory("BondDualWieldToken")
+        TNT1 A 0 A_GunFlash("DualRaise",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_ZoomFactor(1)
+        goto ReadyStart
+
+      DualWieldFire:
+        GE01 B 0 A_TakeInventory("BondAltActivationToken")
+        GE01 B 0 A_TakeInventory("BondAltToggle")
+        GE01 B 0 A_TakeInventory("BondZoomToken")
+        GE01 B 0 A_JumpIfInventory("Goldeneye_RCP90DualToken",1,2)
+        GE01 B 0 A_ZoomFactor(1)
+        goto FireCheckDualOrder
+        GE01 B 0 A_JumpIfInventory("BondDualWieldToken",1,"DualUnwieldFire")
+        GE01 B 0 A_JumpIfInventory("BondDualWieldSpamProtector",1,3)
+        GE01 B 0 A_GiveInventory("BondDualWieldToken")
+        GE01 B 0 A_GunFlash("DualRaise",GFF_NOEXTCHANGE)
+        GE01 B 0 A_ZoomFactor(1)
+        goto FireCheckDualOrder
+
+      DualRaise:
+        GE12 I 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE12 I 0 A_GiveInventory("BondDualWieldSpamProtector")
+        GE12 I 1 A_PlaySound("Goldeneye/Weaponup",CHAN_7)
+        GE12 HGFEDCBA 1
+        TNT1 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        goto ReadyStartDual
+
+      // Dual
+      ReadyDual:
+        TNT1 A 0 A_JumpIfInventory("BondAlternateFire",1,1)
+        goto ReadyStartDual
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireDual")
+      ReadyStartDual:
+        GE10 A 1
+        goto ReadyAmmoCheckDual
+
+      ReadyAmmoCheckDual:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReadyDual
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyDual")
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineDualMagazine",1,"ReadyDual")
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"ReadyDual")
+        goto ReloadCheckDual
+
+      DeselectDual:
+        GE10 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE10 A 1 A_TakeInventory("BondDualWieldSpamProtector")
+        GE10 AAAAAAAAAAAAAAA 1
+        stop
+
+      SelectDual:
+        GE10 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        GE10 A 1 A_TakeInventory("BondDualWieldSpamProtector")
+        goto ReadyStartDual
+
+      FireDual:
+        GE11 B 0 A_JumpIfInventory("BondAlternateFire",1,"FireAmmoCheckDual")
+        goto ReadyDual
+
+      FireAmmoCheckDual:
+        GE11 B 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireAmmoCheckDualReloadable")
+      FireAmmoCheckDualNonReloadable:
+        GE11 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStartDual")
+        GE11 B 0 A_JumpIfInventory("Cell",2,"FireStartDual")
+        goto FireDryDual
+
+      FireAmmoCheckDualReloadable:
+        GE11 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStartDual")
+        GE11 B 0 A_JumpIfInventory("Goldfinger_M1CarbineDualMagazine",1,"FireStartDual")
+        goto FireDryDual
+
+      FireDryDual:
+        GE10 A 0 A_JumpIfInventory("BondDryFireSpamProtector2",1,"FireDryBlockerDual")
+        GE10 A 0 A_PlaySound("Goldfinger/DryFire",CHAN_6)
+        GE10 A 0 ACS_NamedExecuteAlways("BondDryFireSpamBlocker_Secondary")
+        GE10 A 0 A_GiveInventory("BondDryFireSpamProtector2")
+	  FireDryBlockerDual:
+		GE10 A 0 A_TakeInventory("BondAlternateFire")
+        goto FireFinishDual
+
+      FireStartDual:
+        GE11 B 0 A_GiveInventory("BondFiringToken")
+        GE11 B 1 Bright A_AlertMonsters
+        GE11 C 0 ACS_NamedExecuteWithResult("BondAltFireActivator", 1)
+        GE11 C 1 A_GiveInventory("SamsaraGoldfingerM1CarbineDualAttackHandler")
+        GE11 D 1
+        GE11 E 1 A_TakeInventory("BondFiringToken")
+        GE11 DC 1
+        GE10 A 1 ACS_NamedExecuteWithResult("SamsaraSemiAuto", 1)
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        GE10 A 0 A_JumpIfInventory("SamsaraFiringFullAuto2",1,2)
+        GE10 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"FireFinishDual")
+        GE10 A 1
+        goto FireFinishDual
+
+      FireFinishDual:
+		TNT1 A 0 A_TakeInventory("SamsaraFiringFullAuto2")
+        TNT1 A 0 A_TakeInventory("BondFiringToken")
+        goto ReadyDual
+
+      ReloadCheckDual:
+        TNT1 A 0 A_TakeInventory("BondDualWieldSpamProtector")
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineDualMagazine",0,"ReadyDual")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStartDual")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"ReloadStartDual")
+        goto ReadyDual
+
+      ReloadStartDual:
+        GE12 A 0 A_GiveInventory("BondDualReloadSpamProtector")
+        GE12 A 1 A_PlaySound("Goldfinger/Reload",CHAN_6)
+        GE12 BCDEFGHI 1
+        GE12 I 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoDual")
+      ReloadFinishDual:
+        GE12 IHGFEDCBA 1
+        TNT1 A 0 A_TakeInventory("BondDualReloadSpamProtector")
+        goto ReadyDual
+
+      ReloadAmmoDual:
+        GE12 I 0 A_JumpIfInventory("Goldfinger_M1CarbineDualMagazine",0,"ReloadFinishDual")
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE12 I 0 A_JumpIfInventory("Cell",2,1)
+        goto ReloadFinishDual
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        GE12 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        GE12 I 0 A_TakeInventory("Cell",2)
+        GE12 I 0 A_GiveInventory("Goldfinger_M1CarbineDualMagazine")
+        loop
+
+      // Zoom
+      ZoomWeapon:
+        TNT1 A 0 A_TakeInventory("BondAltActivationToken")
+        TNT1 A 0 A_TakeInventory("BondAltToggle")
+        TNT1 A 0 A_GiveInventory("BondZoomToken")
+        TNT1 A 0 A_ZoomFactor(2)
+        goto ReadyStart
+
+      DecideZoomWeapon:
+        TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"ReadyStart")
+        goto UnzoomWeapon
+
+      UnzoomWeapon:
+        TNT1 A 0 A_TakeInventory("BondZoomToken")
+        TNT1 A 0 A_ZoomFactor(1)
+        goto ReadyStart
+
+      ZoomWeaponFire:
+        GE01 B 0 A_TakeInventory("BondAltActivationToken")
+        GE01 B 0 A_TakeInventory("BondAltToggle")
+        GE01 B 0 A_GiveInventory("BondZoomToken")
+        GE01 B 0 A_ZoomFactor(2)
+        goto FireAltDualCheck
+
+      DecideZoomWeaponFire:
+        GE01 B 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"FireAltCheck")
+        goto UnzoomWeaponFire
+
+      UnzoomWeaponFire:
+        GE01 B 0 A_TakeInventory("BondZoomToken")
+        GE01 B 0 A_ZoomFactor(1)
+        goto FireAltCheck
+    }
+}
+
+// Attack handlers
+
+actor SamsaraGoldfingerM1CarbineSingleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Goldfinger_M1CarbineMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Goldfinger/CarbineShot",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("Goldeneye_Cartridge_Rifle",cos(pitch)*22,6,42-(sin(pitch)*22),(2*cos(pitch))+(2*sin(pitch)),frandom(2,3),abs(4*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Goldfinger_M1CarbineTracer",frandom(-3.5,3.5),false,6,0,0,frandom(-3.5,3.5))
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Goldfinger_M1CarbineTracerCoop",frandom(-3.5,3.5),false,6,0,0,frandom(-3.5,3.5))
+        stop
+    }
+}
+
+actor SamsaraGoldfingerM1CarbineDualAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Goldfinger_M1CarbineDualMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Goldfinger_M1CarbineDualMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Goldfinger/CarbineShot",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("Goldeneye_Cartridge_Rifle",cos(pitch)*22,-6,42-(sin(pitch)*22),(2*cos(pitch))+(2*sin(pitch)),frandom(2,3),abs(4*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Goldfinger_M1CarbineTracer",frandom(-3.5,3.5),false,-6,0,0,frandom(-3.5,3.5))
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Goldfinger_M1CarbineTracerCoop",frandom(-3.5,3.5),false,-6,0,0,frandom(-3.5,3.5))
+        stop
+    }
+}
+
+actor Goldfinger_M1CarbineMagazine : Ammo
+{
+    Inventory.MaxAmount 15
+    Tag "M1 Carbine Magazine (Right)"
+    +IGNORESKILL
+}
+
+actor Goldfinger_M1CarbineDualMagazine : Ammo
+{
+    Inventory.MaxAmount 15
+    Tag "M1 Carbine Magazine (Left)"
+    +IGNORESKILL
+}
+
+actor Goldfinger_M1CarbineTracer : Goldeneye_BulletTracer
+{
+    States
+    {
+      XDeath:
+        TNT1 A 0 A_SetUserVar("user_damage",45)
+        goto Super::XDeath
+	  Crash:
+        TNT1 A 0 A_SetUserVar("user_damage",45)
+        goto Super::Crash
+    }
+}
+
+actor Goldfinger_M1CarbineTracerCoop : Goldfinger_M1CarbineTracer
+{
+    Species "Player"
+    +THRUSPECIES
+}

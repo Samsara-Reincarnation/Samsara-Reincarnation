@@ -1,0 +1,421 @@
+actor SamsaraCatacombCanUseWaves : Boolean {}
+
+actor Catacomb_WavesQuickSpell : Catacomb3D_QuickSpell
+{
+    Inventory.PickupMessage "Waves"
+    Inventory.PickupSound "Catacomb/ItemGet1"
+    Inventory.Icon "CT01Z0"
+    Weapon.UpSound "Catacomb/Score"
+    Weapon.SlotNumber 1
+    Weapon.SelectionOrder 2900
+    Weapon.AmmoType "Catacomb_Waves"
+    Weapon.AmmoGive 4
+    Weapon.AmmoUse 1
+    Tag "Waves"
+    States
+    {
+      Spawn:
+        CT01 YZ 14 Bright
+        loop
+
+      Ready:
+        goto ReadyRaise
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("Catacomb_WeaponMode",1,"AltFireRelease")
+        goto FireMagicMissile
+
+      AltFire:
+        goto AltFireCharge
+
+      AltFireRelease:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_BounceShot",1,"AltFireReleaseBounce")
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_RapidFire",1,"AltFireReleaseFast")
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_SpreadShot",1,"AltFireReleaseSpread")
+        TNT1 A 0 A_JumpIfInventory("PowerCatacomb_FireRing",1,"AltFireReleaseFireball")
+      AltFireReleaseNormal:
+        CT00 A 2
+        CT00 B 4 Bright A_GiveInventory("SamsaraCatacombWavesAttackHandler")
+        CT00 A 19
+        goto AltFireFinish
+
+      AltFireReleaseFireball:
+        CT00 C 2
+        CT00 D 4 Bright A_GiveInventory("SamsaraCatacombWavesAttackHandler") // no fireball version
+        CT00 C 19
+        goto AltFireFinish
+
+      AltFireReleaseSpread:
+        CT00 E 2
+        CT00 F 4 Bright A_GiveInventory("SamsaraCatacombWavesSpreadAttackHandler")
+        CT00 E 19
+        goto AltFireFinish
+
+      AltFireReleaseFast:
+        CT00 G 2
+        CT00 H 4 Bright A_GiveInventory("SamsaraCatacombWavesFastAttackHandler")
+        CT00 G 19
+        goto AltFireFinish
+
+      AltFireReleaseBounce:
+        CT00 I 2
+        CT00 J 4 Bright A_GiveInventory("SamsaraCatacombWavesAttackHandler") // no bounce version
+        CT00 I 19
+        goto AltFireFinish
+
+      AltFireFinish:
+        TNT1 A 0 A_CheckReload
+        goto ReadyActual
+    }
+}
+
+actor SamsaraCatacombWavesAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Waves",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Waves",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/BigExplosion",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1Coop",0,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2XCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3XCoop",0,false)
+        goto PickupResetCharge
+    }
+}
+
+actor SamsaraCatacombWavesSpreadAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Waves",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Waves",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/BigExplosion",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1",10,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3Coop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3Coop",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2Coop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2Coop",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1Coop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1Coop",10,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2X",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2X",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2X",10,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_2XCoop",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_2XCoop",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_2XCoop",10,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3X",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3X",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3X",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3X",10,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile3_3XCoop",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile2_3XCoop",10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3XCoop",-10,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectile1_3XCoop",10,false)
+        goto PickupResetCharge
+    }
+}
+
+actor SamsaraCatacombWavesFastAttackHandler : SamsaraCatacombBaseAttackHandler
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Catacomb_Waves",1,1)
+        goto PickupResetCharge
+        TNT1 A 0 A_TakeInventory("Catacomb_Waves",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Catacomb/BigExplosion",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",0,"PickupAttackLevel3")
+        TNT1 A 0 A_JumpIfInventory("Catacomb3D_ChargeTime",10,"PickupAttackLevel2")
+      // Level 1
+      PickupAttackLevel1:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel1Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel1Coop")
+      PickupAttackLevel1DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast3",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast2",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast1",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel1Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast3Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast2Coop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast1Coop",0,false)
+        goto PickupResetCharge
+
+      // Level 2
+      PickupAttackLevel2:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel2Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel2Coop")
+      PickupAttackLevel2DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast3_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast2_2X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast1_2X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel2Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast3_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast2_2XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast1_2XCoop",0,false)
+        goto PickupResetCharge
+
+      // Level 3
+      PickupAttackLevel3:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackLevel3Coop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackLevel3Coop")
+      PickupAttackLevel3DM:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast3_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast2_3X",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast1_3X",0,false)
+        goto PickupResetCharge
+
+      PickupAttackLevel3Coop:
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast3_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast2_3XCoop",0,false)
+        TNT1 A 0 A_FireCustomMissile("Catacomb_WaveProjectileFast1_3XCoop",0,false)
+        goto PickupResetCharge
+    }
+}
+
+Actor Catacomb_Waves : Ammo
+{
+    +INVENTORY.UNDROPPABLE
+    Inventory.MaxAmount 99
+    Inventory.Amount 2
+    Inventory.InterHubAmount 99
+    Inventory.Icon "AMSMA0"
+    Inventory.PickupSound "Catacomb/ItemGet1"
+    Inventory.PickupMessage "You got the Waves!"
+    Tag "Waves"
+    Inventory.RestrictedTo "PettonEverhail"
+    States
+    {
+        Spawn:
+            CT01 YZ 14 Bright
+            Loop
+    }
+}
+
+Actor Catacomb_WaveProjectile1 : FastProjectile
+{
+    +THRUACTORS
+    +FORCERADIUSDMG
+    +PIERCEARMOR
+    Radius 5
+    Height 5
+    Scale 1.25
+    Damage (0)
+    Speed 55
+    DamageType "Explosive"
+    Decal none
+    DeathSound ""
+    States
+    {
+        Spawn:
+            CT00 XXYY 1 A_Explode(40, 10, 0, false, 10)
+            Stop
+        Death:
+            TNT1 A -1
+            Stop
+    }
+}
+
+Actor Catacomb_WaveProjectile2 : Catacomb_WaveProjectile1 { Speed 45 }
+Actor Catacomb_WaveProjectile3 : Catacomb_WaveProjectile1 { Speed 25 }
+
+Actor Catacomb_WaveProjectile1_2X : Catacomb_WaveProjectile1
+{
+    Scale 1.50
+    Radius 10
+    Height 10
+    States
+    {
+        Spawn:
+            CT00 XXYY 1 A_Explode(80, 15, 0, false, 10)
+            Stop
+    }
+}
+
+Actor Catacomb_WaveProjectile1_3X : Catacomb_WaveProjectile1
+{
+    Scale 1.75
+    Radius 15
+    Height 15
+    States
+    {
+        Spawn:
+            CT00 XXYY 1 A_Explode(120, 20, 0, false, 10)
+            Stop
+    }
+}
+
+Actor Catacomb_WaveProjectile2_2X : Catacomb_WaveProjectile1_2X { Speed 45 }
+Actor Catacomb_WaveProjectile3_2X : Catacomb_WaveProjectile1_2X { Speed 25 }
+Actor Catacomb_WaveProjectile2_3X : Catacomb_WaveProjectile1_3X { Speed 45 }
+Actor Catacomb_WaveProjectile3_3X : Catacomb_WaveProjectile1_3X { Speed 25 }
+
+Actor Catacomb_WaveProjectileFast1 : Catacomb_WaveProjectile1 { Speed 65 }
+Actor Catacomb_WaveProjectileFast2 : Catacomb_WaveProjectile2 { Speed 55 }
+Actor Catacomb_WaveProjectileFast3 : Catacomb_WaveProjectile3 { Speed 35 }
+
+Actor Catacomb_WaveProjectileFast1_2X : Catacomb_WaveProjectile1_2X { Speed 65 }
+Actor Catacomb_WaveProjectileFast2_2X : Catacomb_WaveProjectile2_2X { Speed 55 }
+Actor Catacomb_WaveProjectileFast3_2X : Catacomb_WaveProjectile3_2X { Speed 35 }
+
+Actor Catacomb_WaveProjectileFast1_3X : Catacomb_WaveProjectile1_3X { Speed 65 }
+Actor Catacomb_WaveProjectileFast2_3X : Catacomb_WaveProjectile2_3X { Speed 55 }
+Actor Catacomb_WaveProjectileFast3_3X : Catacomb_WaveProjectile3_3X { Speed 35 }
+
+Actor Catacomb_WaveProjectile1Coop : Catacomb_WaveProjectile1 { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectile2Coop : Catacomb_WaveProjectile2 { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectile3Coop : Catacomb_WaveProjectile3 { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_WaveProjectile1_2XCoop : Catacomb_WaveProjectile1_2X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectile2_2XCoop : Catacomb_WaveProjectile2_2X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectile3_2XCoop : Catacomb_WaveProjectile3_2X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_WaveProjectile1_3XCoop : Catacomb_WaveProjectile1_3X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectile2_3XCoop : Catacomb_WaveProjectile2_3X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectile3_3XCoop : Catacomb_WaveProjectile3_3X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_WaveProjectileFast1Coop : Catacomb_WaveProjectileFast1 { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectileFast2Coop : Catacomb_WaveProjectileFast2 { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectileFast3Coop : Catacomb_WaveProjectileFast3 { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_WaveProjectileFast1_2XCoop : Catacomb_WaveProjectileFast1_2X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectileFast2_2XCoop : Catacomb_WaveProjectileFast2_2X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectileFast3_2XCoop : Catacomb_WaveProjectileFast3_2X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+
+Actor Catacomb_WaveProjectileFast1_3XCoop : Catacomb_WaveProjectileFast1_3X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectileFast2_3XCoop : Catacomb_WaveProjectileFast2_3X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
+Actor Catacomb_WaveProjectileFast3_3XCoop : Catacomb_WaveProjectileFast3_3X { Species "Player" +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }

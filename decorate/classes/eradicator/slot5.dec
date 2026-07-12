@@ -1,0 +1,228 @@
+actor "    Missile Launcher    " : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Missile Launcher"
+    Weapon.SlotNumber 5
+    Weapon.SelectionOrder 2200
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 6
+    Weapon.AmmoUse 1
+    Obituary "%o rode %k's rocket."
+    Tag "Missile Launcher"
+    +ALT_USES_BOTH
+    +EXPLOSIVE
+    States
+    {
+      Spawn:
+        EMPU A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        TNT1 A 0 A_JumpIfInventory("PowerEradEnWP",1,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,2)
+        ELRM A 1 A_WeaponReady(WRF_NOSECONDARY)
+        goto Ready
+        ELRM A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        ELRM A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        ELRM A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorMissileLauncherPrimaryAttackHandler")
+        goto FireContinue
+
+      AltFire:
+        TNT1 A 0 A_GunFlash
+        TNT1 A 0 A_GiveInventory("SamsaraEradicatorMissileLauncherSecondaryAttackHandler")
+        goto FireContinue
+
+      FireContinue:
+        ELRM A 2 Bright
+        ELRM A 1 Offset(-7,40)
+        ELRM A 2 Offset(-19,52)
+        ELRM A 2 Offset(-22,55)
+        ELRM A 2 Offset(-24,57)
+        ELRM A 2 Offset(-16,65)
+        ELRM A 2 Offset(-7,61)
+        ELRM A 3 Offset(-1,50)
+        ELRM A 3 Offset(2,42)
+        ELRM A 4 Offset(4,38)
+        ELRM A 4 Offset(1,36)
+        ELRM A 4 Offset(0,32)
+        goto Ready
+
+      Flash:
+        ELRL A 2 Bright A_Light2
+        goto LightDone
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorMissileLauncherPrimaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Eleena/RFire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("EradMissile",0,false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("EradCoopMissile",0,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(3)
+        stop
+    }
+}
+
+actor SamsaraEradicatorMissileLauncherSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Eleena/RFire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("EradMissile_2",0,false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("EradCoopMissile_2",0,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(3)
+        stop
+    }
+}
+
+actor EradMissile
+{
+    Projectile
+    Radius 11
+    Height 8
+    Speed 50
+    Damage (80)
+    DamageType "EradExplosive"
+    Scale 0.75
+    DeathSound "EradMissile/Boom"
+    Decal "Scorch"
+    Obituary "%o rode %k's rocket."
+    +BLOODLESSIMPACT
+    +WINDTHRUST
+    States
+    {
+      Spawn:
+        ERAM A 2 Bright Light("FUCKCATROCKET__") A_SpawnItemEx("EradSmokeTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        loop
+
+      Death:
+        TNT1 A 0 A_Explode(128,128)
+      DeathFinish:
+        TNT1 A 1 A_SpawnItemEx("EradPlasmaExplosion1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+        stop
+    }
+}
+
+actor EradCoopMissile : EradMissile
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor EradMissile_2 : EradMissile
+{
+    Speed 25
+    Damage (100)
+    +SEEKERMISSILE
+    States
+    {
+      Spawn:
+        ERAM A 1 Bright Light("FUCKCATROCKET__") A_SpawnItemEx("EradSmokeTrail",0,0,0,0,0,1.8,0,SXF_CLIENTSIDE)
+        ERAM A 1 Bright Light("FUCKCATROCKET__") A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE,256)
+        loop
+
+      Death:
+        TNT1 A 0 A_Explode(144,128)
+        goto DeathFinish
+    }
+}
+
+actor EradCoopMissile_2 : EradMissile_2
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor EradSmokeTrail : RocketSmokeTrail
+{
+    RenderStyle "Translucent"
+    Alpha 0.5
+    Scale 0.65
+    +CLIENTSIDEONLY
+    States
+    {
+      Spawn:
+        ERAS ABCDE 2 Bright A_FadeOut
+        stop
+    }
+}
+
+actor EradPlasmaExplosion1
+{
+    Scale 0.65
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        EEXP AB 3 Bright Light("ERADEXPLOSION1__")
+        EEXP CD 3 Bright Light("ERADEXPLOSION2__")
+        EEXP EF 3 Bright Light("ERADEXPLOSION3__")
+        EEXP GH 3 Bright Light("ERADEXPLOSION4__")
+        EEXP I 2 Bright Light("ERADEXPLOSION5__") A_FadeOut
+        stop
+    }
+}

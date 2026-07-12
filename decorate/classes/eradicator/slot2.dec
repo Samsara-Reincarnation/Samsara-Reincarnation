@@ -1,0 +1,195 @@
+actor "  Sonic Shock  " : SamsaraEradicatorWeapon
+{
+    Inventory.PickupMessage "Sonic Shock"
+    Weapon.SlotNumber 2
+    Weapon.SelectionOrder 1500
+    Weapon.AmmoType "Shell"
+    Weapon.AmmoGive 8
+    Weapon.AmmoUse 1
+    Obituary "%o was vaporized by %k's sonic force."
+    Tag "Sonic Shock"
+    States
+    {
+      Spawn:
+        SSPU A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("EleenaReady",1,"IntroTaunt")
+      ReadyStart:
+        ESHK A 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        TNT1 A 0 A_PlaySound("Erad/wepswitch")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        ESHK A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_Raise
+        ESHK A 1 A_Raise
+        loop
+
+      // Unenhanced
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("PowerEradEnWP",1,"FireEnhanced")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireEnhanced")
+      FireUnenhanced:
+        TNT1 A 0 A_GunFlash
+        ESHK A 2 Bright A_GiveInventory("SamsaraEradicatorSonicShockUnenhancedAttackHandler")
+        ESHK A 1 Bright Offset(3,36)
+        ESHK A 1 Offset(10,61)
+        ESHK A 1 Offset(12,69)
+        ESHK A 1 Offset(11,77)
+        ESHK A 1 Offset(10,73)
+        ESHK A 1 Offset(9,70)
+        ESHK A 1 Offset(8,68)
+        ESHK A 1 Offset(7,65)
+        ESHK A 1 Offset(6,63)
+        ESHK A 1 Offset(5,59)
+        ESHK A 1 Offset(4,54)
+        ESHK A 1 Offset(3,47)
+        ESHK A 1 Offset(2,41)
+        ESHK A 1 Offset(1,37)
+        ESHK A 12 Offset(0,32)
+      FireFinish:
+        ESHK A 1 A_ReFire
+        goto Ready
+
+      // Enhanced
+      FireEnhanced:
+        TNT1 A 0 A_GunFlash
+        ESHK A 2 Bright A_GiveInventory("SamsaraEradicatorSonicShockEnhancedAttackHandler")
+        ESHK A 1 Bright Offset(3,36)
+        ESHK A 1 Offset(10,61)
+        ESHK A 1 Offset(12,69)
+        ESHK A 1 Offset(11,77)
+        ESHK A 1 Offset(10,73)
+        ESHK A 1 Offset(9,70)
+        ESHK A 1 Offset(8,68)
+        ESHK A 1 Offset(7,65)
+        ESHK A 1 Offset(6,63)
+        ESHK A 1 Offset(5,59)
+        ESHK A 1 Offset(4,54)
+        ESHK A 1 Offset(3,47)
+        ESHK A 1 Offset(2,41)
+        ESHK A 1 Offset(1,37)
+        ESHK A 2 Offset(0,32)
+        goto FireFinish
+
+      Flash:
+        ESHK B 1 Bright A_Light1
+        ESHK B 2 Bright A_Light2
+        goto LightDone
+
+      IntroTaunt:
+        TNT1 A 0 A_GiveInventory("EleenaIntroTaunt")
+        goto ReadyStart
+    }
+}
+
+actor SamsaraEradicatorSonicShockUnenhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_SpawnItemEx("SonicPuff",6,0,38,0,0,1)
+        TNT1 A 0 A_PlaySound("sonic/shock",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(3,3,6,random(9,15),"SonicPuff",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_FireBullets(3,3,6,random(9,15),"SonicPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_FireBullets(3,3,6,random(12,16),"SonicPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(2)
+        stop
+    }
+}
+
+actor SamsaraEradicatorSonicShockEnhancedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_SpawnItemEx("SonicPuff",6,0,38,0,0,1)
+        TNT1 A 0 A_PlaySound("sonic/shock",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(3,3,9,random(9,15),"SonicPuff",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackCoopImproved")
+        TNT1 A 0 A_FireBullets(3,3,9,random(9,15),"SonicPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoopImproved:
+        TNT1 A 0 A_FireBullets(3,3,10,random(12,16),"SonicPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(3)
+        stop
+    }
+}
+
+actor SonicPuff : BulletPuffSettingless
+{
+    DamageType "EradShock"
+    RenderStyle "Translucent"
+    Scale 0.5
+    VSpeed 0.25
+    Alpha 0.5
+    -ALLOWPARTICLES
+    +NOEXTREMEDEATH
+    +PUFFONACTORS
+    States
+    {
+      Spawn:
+      Crash:
+        EVA6 ABCDEFG 4
+        EVA6 H 4 A_FadeOut
+        stop
+
+      Melee:
+      XDeath:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor SonicPuffCoop : SonicPuff { +MTHRUSPECIES }

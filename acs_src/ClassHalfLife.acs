@@ -421,7 +421,7 @@ str armorstrings[20][2] =
     {"HEV/Armor100", "PCV/Fuzz"},
 };
 
-str pickupstrings[2][24][2] =
+str pickupstrings[2][25][2] =
 {
     {
         {"HEV/Crowbar",  "HEV/Knife"},
@@ -436,6 +436,7 @@ str pickupstrings[2][24][2] =
         {"HEV/Snark",    "HEV/Grenade"},
         {"HEV/Crossbow", "HEV/Sniper"},
         {"HEV/Longjump", "HEV/Barnacle"},
+        {"HEV/Uzi"},
     },
     {
         {"PCV/Blip", "PCV/Blip"},
@@ -450,6 +451,7 @@ str pickupstrings[2][24][2] =
         {"PCV/Blip", "PCV/Blip"},
         {"PCV/Blip", "PCV/Blip"},
         {"PCV/Blip", "PCV/Blip"},
+        {"PCV/Blip"},
     },
 };
 
@@ -469,7 +471,7 @@ int HL_HUD_HealthArmorKillValues[6][2] = {
 	{ 10000, 1000 }, 
 };
 
-#define HALFLIFEWEAPONS 17
+#define HALFLIFEWEAPONS 18
 
 // weapon, priammotype1, priammotype2, hlammofont1, opammofont1, secammotype1, secammotype2, hlammofont2, opammofont2, dualtoken
 str HL_HUD_AmmoStrings[HALFLIFEWEAPONS][10] =
@@ -491,6 +493,7 @@ str HL_HUD_AmmoStrings[HALFLIFEWEAPONS][10] =
     {"Mk 2 Grenades",               "RocketAmmo",        "",           "HPKUP9",  "OPFAMM09", "",           "", "",       "",         ""},
     {"HL Crossbow",                 "HLXBowAmmoCounter", "Shell",      "HPKUP5",  "OPFAMM05", "",           "", "",       "",         ""},
     {"M40A1 Sniper Rifle",          "HLSniperCounter",   "Shell",      "HPKUP26", "OPFAMM26", "",           "", "",       "",         ""},
+    {"HLUzi",                       "HLUziCounter",      "Clip",       "HPKUP1",  "OPFAMM01", "",           "", "",       "",         ""},
 };
 
 // prilowamount1, prilowamount2, removepricounterwhenempty, seclowamount1, seclowamount2, removeseccounterwhenempty
@@ -513,23 +516,24 @@ int HL_HUD_AmmoInts[HALFLIFEWEAPONS][6] =
     {5,  0,  0, 0, 0, 0},
     {2,  10, 0, 0, 0, 0},
     {2,  10, 0, 0, 0, 0},
+    {11, 30, 0, 0, 0, 0},
 };
 
 #define HALFLIFESLOTS 7 // 10
 
-str HL_HUD_WeaponBarGraphics[HALFLIFESLOTS][5] =
+str HL_HUD_WeaponBarGraphics[HALFLIFESLOTS][6] =
 {
-    {"GotWeapon0", "HWMSLOT", "OPFWMB", "HWMSLOT1", "OPFWM1"},
-    {"GotWeapon2", "HWMSLOT", "OPFWMB", "HWMSLOT2", "OPFWM2"},
-    {"GotWeapon3", "HWMSLOT", "OPFWMB", "HWMSLOT3", "OPFWM3"},
-    {"GotWeapon4", "HWMSLOT", "OPFWMB", "HWMSLOT4", "OPFWM4"},
-    {"GotWeapon5", "HWMSLOT", "OPFWMB", "HWMSLOT5", "OPFWM5"},
-    {"GotWeapon6", "HWMSLOT", "OPFWMB", "HWMSLOT6", "OPFWM6"},
-    {"GotWeapon7", "HWMSLOT", "OPFWMB", "HWMSLOT7", "OPFWM7"},
+    {"GotWeapon0", "",      "HWMSLOT", "OPFWMB", "HWMSLOT1", "OPFWM1"},
+    {"GotWeapon2", "",      "HWMSLOT", "OPFWMB", "HWMSLOT2", "OPFWM2"},
+    {"GotWeapon3", "",      "HWMSLOT", "OPFWMB", "HWMSLOT3", "OPFWM3"},
+    {"GotWeapon4", "HLUzi", "HWMSLOT", "OPFWMB", "HWMSLOT4", "OPFWM4"},
+    {"GotWeapon5", "",      "HWMSLOT", "OPFWMB", "HWMSLOT5", "OPFWM5"},
+    {"GotWeapon6", "",      "HWMSLOT", "OPFWMB", "HWMSLOT6", "OPFWM6"},
+    {"GotWeapon7", "",      "HWMSLOT", "OPFWMB", "HWMSLOT7", "OPFWM7"},
     /*
-    {"",           "HWMSLOT", "OPFWMB", "HWMSLOT8", "OPFWM8"}, // unique 2
-    {"",           "HWMSLOT", "OPFWMB", "HWMSLOT9", "OPFWM9"}, // unique 1
-    {"",           "HWMSLOT", "OPFWMB", "HWMSLOT0", "OPFWM0"}, // fallback melee
+    {"",           "",      "HWMSLOT", "OPFWMB", "HWMSLOT8", "OPFWM8"}, // unique 2
+    {"",           "",      "HWMSLOT", "OPFWMB", "HWMSLOT9", "OPFWM9"}, // unique 1
+    {"",           "",      "HWMSLOT", "OPFWMB", "HWMSLOT0", "OPFWM0"}, // fallback melee
     */
 };
 
@@ -611,20 +615,21 @@ script "Freeman_HEV_Enter" (void) clientside//hev suit
 
 	While(ClassifyActor(0) & ACTOR_PLAYER && CheckInventory("HalfLifeClass"))
 	{
-		If(GetCvar("samsara_cl_hevtalk") == true)
-		{
+		//if (GetCVar("samsara_cl_hevtalk"))
+		//{
 			If(GetActorProperty(0,APROP_Health) - CurrentHealth < 0)
 			{
-				if(CheckInventory("HLHEVIsTalking") == false)
+				if(CheckInventory("HLHEVDamageType") == 7)
+				{
+					if(GetActorProperty(0,APROP_Health) - CurrentHealth <= -50) { SetInventory("HLHEVDamageType", 8); }
+				} else if(CheckInventory("HLHEVDamageType") == 9) { // hmm
+					if(GetActorProperty(0,APROP_Health) - CurrentHealth <= -50) { SetInventory("HLHEVDamageType", 10); }
+				}
+
+				if (GetCVar("samsara_cl_hevtalk") && !CheckInventory("HLHEVIsTalking"))
 				{
 					GiveInventory("HLHEVIsTalking", 1);
 					ACS_NamedExecuteAlways("HLHEVTalk",0,0,0,0);
-					if(CheckInventory("HLHEVDamageType") == 7)
-					{
-						if(GetActorProperty(0,APROP_Health) - CurrentHealth <= -50){SetInventory("HLHEVDamageType", 8);}
-					} else if(CheckInventory("HLHEVDamageType") == 9) { // hmm
-						if(GetActorProperty(0,APROP_Health) - CurrentHealth <= -50){SetInventory("HLHEVDamageType", 10);}
-					}
 					LocalAmbientSound(damagestrings[CheckInventory("HLHEVDamageType")][CheckInventory("HalfLifeOpposingForce")],127);
 				}
 			}
@@ -633,7 +638,7 @@ script "Freeman_HEV_Enter" (void) clientside//hev suit
 			{
 				if(CheckInventory("BasicArmor") - CurrentArmor > 1)
 				{
-					if(CheckInventory("HLHEVIsTalking") == false)
+					if (GetCVar("samsara_cl_hevtalk") && !CheckInventory("HLHEVIsTalking"))
 					{
 						GiveInventory("HLHEVIsTalking", 1);
 						ACS_NamedExecuteAlways("HLHEVTalk",0,0,0,0);
@@ -650,7 +655,7 @@ script "Freeman_HEV_Enter" (void) clientside//hev suit
 			{
 				if(armorrange != armormod)
 				{
-					if(CheckInventory("HLHEVIsTalking") == false)
+					if (GetCVar("samsara_cl_hevtalk") && !CheckInventory("HLHEVIsTalking"))
 					{
 						GiveInventory("HLHEVIsTalking", 1);
 						ACS_NamedExecuteAlways("HLHEVTalk",0,0,0,0);
@@ -663,7 +668,7 @@ script "Freeman_HEV_Enter" (void) clientside//hev suit
 			//done with armor, and of lower priority if pickups :D
 			if(CheckInventory("HLHEVPickupID") != 0)
 			{
-				if(CheckInventory("HLHEVIsTalking") == false)
+				if (GetCVar("samsara_cl_hevtalk") && !CheckInventory("HLHEVIsTalking"))
 				{
 					GiveInventory("HLHEVIsTalking", 1);
 					ACS_NamedExecuteAlways("HLHEVTalk",0,3,0,0);
@@ -672,7 +677,7 @@ script "Freeman_HEV_Enter" (void) clientside//hev suit
 				TakeInventory("HLHEVPickupID", 255);
 				TakeInventory("HLHEVLoadoutID", 255);
 			}	
-		}
+		//}
 		
 		CurrentHealth = GetActorProperty(0,APROP_Health);
 		CurrentArmor = CheckInventory("BasicArmor");
@@ -1105,17 +1110,17 @@ script "Freeman_HEV_Enter" (void) clientside//hev suit
 			if (CheckInventory("ExpandedHud"))
 			{
 				SetHUDSize(640, 480, 1);
-				SetFont(HL_HUD_WeaponBarGraphics[0][1+CheckInventory("HalfLifeOpposingForce")]);
+				SetFont(HL_HUD_WeaponBarGraphics[0][2+CheckInventory("HalfLifeOpposingForce")]);
 
 				for(e = 0; e < HALFLIFESLOTS; e++)
 				{
 					HudMessage(s: "A"; HUDMSG_PLAIN|HUDMSG_ADDBLEND|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP, 0, 0, (255+(20*(e))) * 1.0, 0.1, 0.033,0.5+0.001); // 230
 
-					if(CheckInventory(HL_HUD_WeaponBarGraphics[e][0]))
+					if(CheckInventory(HL_HUD_WeaponBarGraphics[e][0]) || CheckInventory(HL_HUD_WeaponBarGraphics[e][1]))
 					{
-						SetFont(HL_HUD_WeaponBarGraphics[e][3+CheckInventory("HalfLifeOpposingForce")]);
+						SetFont(HL_HUD_WeaponBarGraphics[e][4+CheckInventory("HalfLifeOpposingForce")]);
 						HudMessage(s: "A"; HUDMSG_PLAIN|HUDMSG_ADDBLEND|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP, 0, 0, (255+(20*(e))) * 1.0, 0.1, 0.033,0.5+0.2); // 230
-						SetFont(HL_HUD_WeaponBarGraphics[0][1+CheckInventory("HalfLifeOpposingForce")]);
+						SetFont(HL_HUD_WeaponBarGraphics[0][2+CheckInventory("HalfLifeOpposingForce")]);
 					}
 				}
 			}
@@ -1170,7 +1175,7 @@ Script "HL_HUD_DMGTypes" (void)
 	}
 }
 
-str HLPickupIDsNew[2][12][2] =
+str HLPickupIDsNew[2][13][2] =
 {
     {
         {"HPKUP00H", "HPKUP22H"},
@@ -1185,6 +1190,7 @@ str HLPickupIDsNew[2][12][2] =
         {"HPKUP08H", "HPKUP05H"},
         {"HPKUP09H", "HPKUP23H"},
         {"HPKUP16",  "HPKUP16H"},
+        {"HPKUP03H"}, // placeholder
     },
     {
         {"OPFSL00H", "OPFSL22H"},
@@ -1199,6 +1205,7 @@ str HLPickupIDsNew[2][12][2] =
         {"OPFSL08H", "OPFSL05H"},
         {"OPFSL09H", "OPFSL23H"},
         {"OPFSL16",  "OPFSL16H"},
+        {"OPFSL03H"}, // placeholder
     },
 };
 
@@ -1726,50 +1733,46 @@ Script "HalfLife_BulletDamage" (int damage)
 	int bulletX = GetActorX(0);
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
+
 	SetActivator(0,AAPTR_Tracer);
-	int monsterX = GetActorX(0);
-	int monsterY = GetActorY(0);
+
+	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
+
 	int monsterZ = GetActorZ(0);
-	int monsterHealth = GetActorProperty(0,APROP_Health);
 	int monsterHeight = GetActorProperty(0,APROP_Height);
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
-	
-	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
-	
-	if(!CheckInventory("IsFatButBiped") && monsterWidth > monsterHeight)
-	{
-		int monsterAngle = GetActorAngle(0);
-		int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
-		int angle = vang % 1.0;
-		
-		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
-		{			
-			SetResultValue(damage*2);
-		}
-		else
-			SetResultValue(damage);
-	}
-	else
-	{
-		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
-		{
-			int result;
-			if(GetCvar("samsara_mixerloaded"))
-				result = ACS_NamedExecuteWithResult("Goldeneye_HatShot",0,0,0,0);
-			else
-				result = 0;
-				
-			if(result == -1)
-			{
-				SetResultValue(-1);
-				terminate;
-			}
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 
-			SetResultValue(damage*2);
-		}
-		else
-			SetResultValue(damage);
+	if (health >= 1000)
+	{
+		SetResultValue(damage);
+		terminate;
 	}
+	else if(!CheckInventory("IsFatButBiped") && monsterWidth > monsterHeight)
+	{
+		int relativeAngle = abs(relativeAngleToXY(0, bulletX, bulletY));
+
+		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && (relativeAngle < 0.65 && relativeAngle > 0.35))
+		{
+			SetResultValue(damage*2);
+			terminate;
+		}
+	}
+	else if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
+	{
+		int result = GetCVar("samsara_mixerloaded") ? ACS_NamedExecuteWithResult("Goldeneye_HatShot") : 0;
+
+		if(result == -1)
+		{
+			SetResultValue(-1);
+			terminate;
+		}
+
+		SetResultValue(damage*2);
+		terminate;
+	}
+
+	SetResultValue(damage);
 }
 
 script "HLBarnacleTether" (int query, int organic) //2679

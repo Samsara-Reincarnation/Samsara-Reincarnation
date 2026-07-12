@@ -1,0 +1,308 @@
+Actor IpogMode : Inventory { -INVBAR +INVENTORY.UNDROPPABLE Inventory.MaxAmount 4 }
+
+Actor PGBoolean : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	+INVENTORY.IGNORESKILL
+	+INVENTORY.UNDROPPABLE
+	-INVENTORY.INVBAR
+}
+
+Actor PGCounter : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 255
+	+INVENTORY.IGNORESKILL
+	+INVENTORY.UNDROPPABLE
+	-INVENTORY.INVBAR
+}
+
+Actor PGACSTrigger : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	+INVENTORY.IGNORESKILL
+	+INVENTORY.UNDROPPABLE
+	-INVENTORY.INVBAR
+	states
+	{
+	Spawn:
+		TNT1 A -1
+		stop
+	Use:
+		TNT1 A 1
+		stop
+	}
+}
+
+ACTOR PGBulletPuff
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+ALLOWPARTICLES
+	+RANDOMIZE
+	+NOEXTREMEDEATH
+	+CANNOTPUSH
+	+HITTRACER
+	+PUFFONACTORS
+	+BLOODLESSIMPACT
+	RenderStyle Translucent
+	Alpha 0.5
+	VSpeed 1
+	Mass 5
+	DamageType "PGBullet"
+	scale 0.5
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		TNT1 A 1
+		Stop
+	Crash:
+		GP00 ABCD 4 bright
+		stop
+	Melee:
+		TNT1 A 1 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		Stop
+	}
+}
+
+Actor PGBulletPuffCoop : PGBulletPuff { +THRUSPECIES Species "Player" +MTHRUSPECIES }
+
+ACTOR PGBulletPuffExtreme : PGBulletPuff
+{
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+}
+
+Actor PGBullet : FastProjectile
+{
+	Speed 300
+	Damage (0)
+	Radius 1
+	Height 1
+	PROJECTILE
+	+BLOODLESSIMPACT
+	//+BLOODSPLATTER
+	+NOTIMEFREEZE
+	+NOEXTREMEDEATH
+	+CANNOTPUSH
+	+HITTRACER
+	DamageType "PGBullet"
+	states
+	{
+	Spawn:
+		TNT1 A 1
+		loop
+	Death:
+	Crash:	
+		TNT1 A 1 A_SpawnItemEx("PGBulletPuff",0,0,0,0,0,1,0,0)//SXF_CLIENTSIDE) THIS MAKES PUFFS SPAWN IN BLEEDING ACTOR PLS KILL ME PESNIRP FASDOFSANOFPANDDSGGFDSFSFDS000x00001
+		stop
+	XDeath:
+		TNT1 A 1 A_GiveInventory("IPOGBloodGenerator", 1, AAPTR_TRACER)
+		stop
+	}
+}
+
+Actor PGBulletCoop : PGBullet
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+Actor PGBulletExtreme : PGBullet
+{
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+}
+
+Actor PGBulletCoopExtreme : PGBulletCoop
+{
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
+}
+
+Actor PGNeedleStrong : PGBoolean {}
+Actor PGNeedleWeak : PGBoolean {}
+
+//===============
+// MOOMAN: Robot Guard.
+// Shouldn't be that huge
+Actor FriendlyRobotGuard
+{
+	Health 125
+	Radius 15
+	Height 60
+	scale 0.44
+	Mass 350
+	PainChance 100
+	Speed 10
+	Species "Player"
+	MONSTER
+	-SOLID
+	+FRIENDLY
+	+DONTRIP
+	+NOBLOOD
+	+FLOORCLIP
+	+LOOKALLAROUND
+	+MISSILEEVENMORE
+	SeeSound "greed/ally_see"
+	PainSound "greed/ally_pain"
+	DeathSound "greed/ally_kill"
+	Obituary "%o was somehow shot by a robot guard."
+	states
+	{
+	Spawn:
+		GAL0 B 2 A_Look
+		loop
+	See:
+		GAL0 ABCB 4 A_Chase
+		loop
+	Missile:
+		GAL0 D 4 A_FaceTarget
+		GAL0 D 0 A_PlaySound("greed/ally_shot",CHAN_BODY)
+		GAL0 D 4 bright A_CustomMissile("IPOGBullet2_1",32,0,random(-4,4))
+		GAL0 D 4
+		goto See
+	Pain:
+		GAL0 E 4
+		GAL0 E 4 A_Pain
+		goto See
+	Death:
+		GAL0 F 3 A_Scream
+		GAL0 GHIJKL 3 
+		GAL0 M -1
+		stop
+	}
+}
+ 
+Actor IPOGBullet2_1 : PGBullet { Damage (Random(1,3)*5) Species "Player" +THRUSPECIES }
+
+Actor IPOGBlood
+{
+	Height 2
+	Radius 2
+	Projectile
+	Damage (0)
+	Gravity 0.5
+	-NOGRAVITY
+	//+NOINTERACTION
+	+THRUACTORS
+	States
+	{
+		Spawn:
+			GP09 A 0
+			GP09 A 0 A_Jump(256,"Spawn2","Spawn3","Spawn4","Spawn5","Spawn6","Spawn7","Spawn8","Spawn9")
+		Spawn1:
+			GP09 A 2
+			Loop
+		Spawn2:
+			GP09 B 2
+			Loop
+		Spawn3:
+			GP09 C 2
+			Loop
+		Spawn4:
+			GP09 D 2
+			Loop
+		Spawn5:
+			GP09 E 2
+			Loop
+		Spawn6:
+			GP09 F 2
+			Loop
+		Spawn7:
+			GP09 G 2
+			Loop
+		Spawn8:
+			GP09 H 2
+			Loop
+		Spawn9:
+			GP09 I 2
+			Loop
+		Death:
+			"####" "#" 0 A_ChangeFlag("MOVEWITHSECTOR",1)
+			"####" "#" 150
+			Stop
+	}
+}
+
+Actor IPOGBloodGenerator : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	Inventory.PickupMessage ""
+	Inventory.PickupSound ""
+	States
+	{
+		Pickup:
+			TNT1 A 0
+			TNT1 A 0 A_CheckFlag(NOBLOOD, "PickupFail")
+			TNT1 A 0 A_SpawnItemEx("Switchable_FlyingBlood",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)	
+			TNT1 AAAAA 0 A_SpawnItemEx("IPOGBlood",random(-3,3),random(-3,3),(height/2)+random(-7,7),random(-2,2),random(-2,2),random(3,6),0, SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
+			Stop
+		PickupFail:
+			TNT1 A 1
+			Stop
+	}
+}	
+
+Actor IPOGBloodMonster
+{
+	+NOINTERACTION
+	+NOGRAVITY
+	VSpeed 0
+	States
+	{
+		Spawn:
+			TNT1 AAA 0
+			TNT1 A 0 A_SpawnItemEx("Switchable_FlyingBlood",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),33)	
+			TNT1 AAAAA 0 A_SpawnItemEx("IPOGBlood",random(-3,3),random(-3,3),(height/2)+random(-7,7),random(-2,2),random(-2,2),random(3,6),0, SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEPOSITION)
+			Stop
+	}
+}
+
+actor PGArrowPuff
+{
+    Radius 1
+    Height 1
+    Speed 0
+    Damage 0
+    +NOINTERACTION
+    +ALWAYSPUFF
+    +SKYEXPLODE
+    +PUFFONACTORS
+    +PUFFGETSOWNER
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        //TNT1 A 0 ACS_NamedExecuteWithResult("Samsara678")
+		TNT1 A 0 A_SpawnItemEx("PGRocketPuff",0,0,0,0,0,3,0,SXF_CLIENTSIDE)
+        TNT1 A 8 A_PlaySound("greed/rockboom",CHAN_BODY)
+        stop
+    }
+}
+
+Actor PGArrowTrail
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+ALLOWPARTICLES
+	+RANDOMIZE
+	+NOEXTREMEDEATH
+	+CANNOTPUSH
+	+CLIENTSIDEONLY
+	RenderStyle add
+	Alpha 0.9
+	Mass 5
+	scale 0.4
+	States
+	{
+	Spawn:
+		GP00 A 0
+		GP00 A 0 ThrustThingZ(0,1,0,1)
+		GP00 ABCD 1 bright A_FadeOut(0.22)
+		stop
+	}
+}

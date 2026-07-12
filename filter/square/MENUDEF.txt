@@ -1,0 +1,434 @@
+/*
+   Main menu & basic stuff. Mostly this serves to get rid of all the if(Game)
+   defaults that ZDoom uses. We're our own game. ;)
+*/
+
+DefaultListMenu
+{
+  Font "BigFont", "Red"
+  LineSpacing 17
+}
+
+ListMenu "MainMenu"
+{
+  StaticPatchCentered 160, 4, "M_SQUARE"
+
+  Font "SmallFont", "gold"
+  StaticTextCentered 160, 52, "$SQMENU_SUBTITLE"
+
+  Position 108, 64
+
+  Font "BigFont", "White"
+  TextItem "$SQMENU_STARTGAME", "s", "PlayerclassMenu"
+  TextItem "$SQMENU_READTHIS" , "r", "ReadThisMenu"
+  TextItem "$SQMENU_LOAD"     , "l", "LoadGameMenu"
+  TextItem "$SQMENU_SAVE"     , "s", "SaveGameMenu"
+  TextItem "$SQMENU_OPTIONS"  , "o", "SquareOptionsMenu" // Don't monkey with ZDoom's own Options menu.
+  TextItem "$SQMENU_ENDGAME"  , "e", "EndGameMenu"
+  TextItem "$SQMENU_QUIT"     , "q", "QuitMenu"
+}
+
+ListMenu "SkillMenu"
+{
+  Position 40, 40
+  LineSpacing 28
+
+  Font "BigFont", "Purple"
+  StaticText 40, 16, "$SQMENU_HOWSQUARE"
+  Font "BigFont", "White"
+}
+
+ListMenu "EpisodeMenu"
+{
+  NetgameMessage "$NEWGAME"
+  Position 40, 40
+  LineSpacing 28
+
+  Font "BigFont", "Purple"
+  StaticText 40, 16, "$SQMENU_SELECTEP"
+  Font "BigFont", "Red"
+}
+
+ListMenu "LoadGameMenu"
+{
+  NetgameMessage "$LOADNET"
+  StaticTextCentered 160, -16, "$SQMENU_LOADGAME"
+  Position 80,54
+  Class "LoadMenu"
+}
+
+ListMenu "SaveGameMenu"
+{
+  StaticTextCentered 160, -16, "$SQMENU_SAVEGAME"
+  Position 80,54
+  Class "SaveMenu"
+}
+
+/*
+   Option menus; these are a simplified set of options containing just the stuff
+   that's relevant to Square. GZDoom's full options menu is available under "Advanced".
+*/
+
+ListMenu "SquareOptionsMenu"
+{
+  Font "BigFont", "Purple"
+  StaticText 108, 32, "$SQMENU_OPTIONS"
+  Font "BigFont", "White"
+
+  Position 108, 64
+
+  TextItem "$SQMENU_OPTIONS_GAMEPLAY", "g", "SquareGameplayOptions"
+  TextItem "$SQMENU_OPTIONS_CONTROLS", "c", "SquareControlOptions"
+  TextItem "$SQMENU_OPTIONS_VIDEO"   , "v", "SquareVideoOptions"
+  TextItem "$SQMENU_OPTIONS_SOUND"   , "s", "SquareSoundOptions"
+  TextItem "$SQMENU_OPTIONS_ADVANCED", "a", "SquareAdvancedOptions"
+}
+
+
+/* Gameplay Options */
+
+OptionValue "SquareAutosave"
+{
+  0, "$TXT_YES"
+  2, "$TXT_NO"
+}
+
+OptionMenu "SquareGameplayOptions"
+{
+  Title "$SQMENU_GAMEPLAY"
+
+  StaticText "$SQCATG_PREFERENCES", 1
+  Option     "$SQOPT_HINT"          , "square_hints"       , "OnOff"
+  Option     "$SQOPT_SWITCHONPICKUP", "neverswitchonpickup", "OffOn"
+  Option     "$PLYRMNU_ALWAYSRUN"   , "cl_run"             , "OnOff"
+  Slider     "$PLYRMNU_AUTOAIM"     , "Autoaim"            , 0, 35, 1
+
+  StaticText ""
+  StaticText "$SQCATG_SAVES", 1
+  Option     "$MISCMNU_ENABLEAUTOSAVES"     , "disableautosave", "Autosave"
+  Slider     "$MISCMNU_AUTOSAVECOUNT"       , "autosavecount", 1, 20, 1, 0
+  Option     "$MISCMNU_SAVELOADCONFIRMATION", "saveloadconfirmation", "OnOff"
+
+  StaticText ""
+  Submenu    "$SQMENU_PLAYER", "SquarePlayerOptions"
+
+  StaticText ""
+  Submenu "Samsara Clientside Options", "SamsaraClientOptions"
+  Submenu "Samsara Serverside Options", "SamsaraServerSideOptions"
+}
+
+ListMenu "SquarePlayerOptions"
+{
+  Font "BigFont", "Purple"
+  StaticTextCentered 160, 6, "$SQMENU_PLAYER"
+  Font "SmallFont"
+  Linespacing 14
+  Position 48, 36
+
+  PlayerNameBox "Name", 0, "Playerbox"
+  Selector "-", -16, -1
+  MouseWindow 0, 220
+  PlayerDisplay 190, 50, "00 00 00", "80 80 80", 1, "PlayerDisplay"
+
+  ValueText "$PLYRMNU_PLAYERGENDER", "Gender", "Gender"
+  ValueText "$PLYRMNU_TEAM", "Team"
+  ValueText "$PLYRMNU_PLAYERCOLOR", "Color"
+  Linespacing 10
+  Slider "$PLYRMNU_RED", "Red", 0, 255, 16
+  Slider "$PLYRMNU_GREEN", "Green", 0, 255, 16
+  Linespacing 14
+  Slider "$PLYRMNU_BLUE", "Blue", 0, 255, 16
+
+  Class "PlayerMenu"
+}
+
+
+/* Control Options */
+
+OptionMenu "SquareControlOptions"
+{
+  Title "$SQMENU_CONTROLS"
+
+  Submenu "$SQMENU_KEYBINDS"  , "SquareKeybinds"
+  Submenu "$SQMENU_MOUSE"     , "SquareMouseOptions"
+  Submenu "$SQMENU_CONTROLLER", "JoystickOptions" // [XA] non-configurable :(
+
+  StaticText ""
+  IfOption(Windows) {
+    Option "$MISCMNU_MERGEKEYS"          , "k_mergekeys", "OnOff"
+    Option "$MISCMNU_WINFULLSCREENTOGGLE", "k_allowfullscreentoggle", "OnOff"
+  }
+  IfOption(Mac) {
+    Option "$MISCMNU_MACFULLSCREENTOGGLE", "k_allowfullscreentoggle", "OnOff"
+  }
+}
+
+OptionMenu "SquareKeybinds"
+{
+  Title "$SQMENU_KEYBINDS"
+  ScrollTop 2
+  StaticTextSwitchable "$CNTRLMNU_SWITCHTEXT1", "$CNTRLMNU_SWITCHTEXT2", "ControlMessage"
+
+  StaticText ""
+  StaticText "$SQCATG_MOVEMENT", 1
+  Control    "$CNTRLMNU_FORWARD"     , "+forward"
+  Control    "$CNTRLMNU_BACK"        , "+back"
+  Control    "$CNTRLMNU_MOVELEFT"    , "+moveleft"
+  Control    "$CNTRLMNU_MOVERIGHT"   , "+moveright"
+  Control    "$CNTRLMNU_TURNLEFT"    , "+left"
+  Control    "$CNTRLMNU_TURNRIGHT"   , "+right"
+  Control    "$CNTRLMNU_RUN"         , "+speed"
+  Control    "$CNTRLMNU_TOGGLERUN"   , "toggle cl_run"
+  Control    "$CNTRLMNU_STRAFE"      , "+strafe"
+  Control    "$CNTRLMNU_USE"         , "+use"
+  Control    "$CNTRLMNU_JUMP"        , "+jump"
+  Control    "$CNTRLMNU_CROUCH"      , "+crouch"
+  Control    "$CNTRLMNU_TOGGLECROUCH", "crouch"
+  Control    "$SQCNTRL_FLYUP"        , "+moveup"
+  Control    "$SQCNTRL_FLYDOWN"      , "+movedown"
+  Control    "$SQCNTRL_FLYSTOP"      , "land"
+
+  StaticText ""
+  StaticText "$SQCATG_COMBAT", 1
+  Control    "$CNTRLMNU_ATTACK"        , "+attack"
+  Control    "$SQCNTRL_GOONADE"        , "+altattack"
+  Control    "$SQCNTRL_RELOAD"         , "+reload"
+  Control    "$CNTRLMNU_NEXTWEAPON"    , "weapnext"
+  Control    "$CNTRLMNU_PREVIOUSWEAPON", "weapprev"
+  Control    "$SQCNTRL_SLOT1"          , "slot 1"
+  Control    "$SQCNTRL_SLOT2"          , "slot 2"
+  Control    "$SQCNTRL_SLOT3"          , "slot 3"
+  Control    "$SQCNTRL_SLOT4"          , "slot 4"
+  Control    "$SQCNTRL_SLOT5"          , "slot 5"
+  Control    "$SQCNTRL_SLOT6"          , "slot 6"
+  Control    "$SQCNTRL_SLOT7"          , "slot 7"
+
+  StaticText ""
+  StaticText "$SQCATG_MULTIPLAYER", 1
+  Control    "$CNTRLMNU_SAY"             , "messagemode"
+  Control    "$CNTRLMNU_TEAMSAY"         , "messagemode2"
+  Control    "$CNTRLMNU_SCOREBOARD"      , "+showscores"
+  Control    "$CNTRLMNU_TOGGLESCOREBOARD", "togglescoreboard"
+  Control    "$CNTRLMNU_COOPSPY"         , "spynext"
+
+  StaticText ""
+  StaticText "$SQCATG_AUTOMAP", 1
+  Control    "$CNTRLMNU_AUTOMAP"         , "togglemap"
+  MapControl "$MAPCNTRLMNU_PANLEFT"      , "+am_panleft"
+  MapControl "$MAPCNTRLMNU_PANRIGHT"     , "+am_panright"
+  MapControl "$MAPCNTRLMNU_PANUP"        , "+am_panup"
+  MapControl "$MAPCNTRLMNU_PANDOWN"      , "+am_pandown"
+  MapControl "$MAPCNTRLMNU_ZOOMIN"       , "+am_zoomin"
+  MapControl "$MAPCNTRLMNU_ZOOMOUT"      , "+am_zoomout"
+  MapControl "$MAPCNTRLMNU_TOGGLEZOOM"   , "am_gobig"
+  MapControl "$MAPCNTRLMNU_TOGGLEFOLLOW" , "am_togglefollow"
+  MapControl "$MAPCNTRLMNU_TOGGLEGRID"   , "am_togglegrid"
+  MapControl "$MAPCNTRLMNU_TOGGLETEXTURE", "am_toggletexture"
+  MapControl "$MAPCNTRLMNU_SETMARK"      , "am_setmark"
+  MapControl "$MAPCNTRLMNU_CLEARMARK"    , "am_clearmarks"
+
+  StaticText ""
+  StaticText "$CNTRLMNU_OTHER", 1
+  Control    "$SQCNTRL_QUICKSAVE"  , "quicksave"
+  Control    "$SQCNTRL_QUICKLOAD"  , "quickload"
+  Control    "$SQCNTRL_PAUSE"      , "pause"
+  Control    "$SQCNTRL_HELP"       , "menu_help"
+  Control    "$SQCNTRL_ENDGAME"    , "menu_endgame"
+  Control    "$SQCNTRL_QUIT"       , "menu_quit"
+  Control    "$CNTRLMNU_SCREENSHOT", "screenshot"
+  Control    "$SQCNTRL_CONSOLE"    , "toggleconsole"
+
+  StaticText ""
+  Control 	"Compendium: Open",			"samsara_compendium"
+  Control 	"Class Special 1",			"+samsara_cmd_classuniques"
+  Control 	"Class Special 2",			"+samsara_cmd_classuniques2"
+}
+
+OptionMenu "SquareMouseOptions"
+{
+  Title "$SQMENU_MOUSE"
+
+  StaticText "$SQCATG_PREFERENCES", 1
+  Option "$MOUSEMNU_ENABLEMOUSE"   , "use_mouse", "YesNo"
+  Option "$MOUSEMNU_INVERTMOUSE"   , "invertmouse", "OnOff"
+
+  StaticText ""
+  StaticText "$SQCATG_SENSITIVITY", 1
+  Slider "$MOUSEMNU_SENSITIVITY"   , "mouse_sensitivity", 0.5, 2.5, 0.1
+  Slider "$MOUSEMNU_TURNSPEED"     , "m_yaw", 0, 2.5, 0.1
+  Slider "$MOUSEMNU_MOUSELOOKSPEED", "m_pitch", 0, 2.5, 0.1
+  Option "$MOUSEMNU_NOPRESCALE"    , "m_noprescale", "NoYes"
+  Option "$MOUSEMNU_SMOOTHMOUSE"   , "smooth_mouse", "YesNo"
+}
+
+
+/* Video Options */
+
+OptionValue "SquareRenderMode"
+{
+  0, "$SQOPT_RENDERER_SW"
+//1, "$SQOPT_RENDERER_SW_TC" // [XA] This is like a worst-of-all-worlds for Square...
+  4, "$SQOPT_RENDERER_HW_GL"
+}
+
+OptionValue "SquareScreenblocks"
+{
+  10.0, "$SCALEMNU_STATBAR"
+  11.0, "$SCALEMNU_HUD"
+  12.0, "$OPTVAL_NONE"
+}
+
+OptionMenu "SquareVideoOptions"
+{
+  Title "$SQMENU_VIDEO"
+
+  Option "$SQOPT_RENDERER"   , "vid_rendermode", "SquareRenderMode"
+  Option "$VIDMNU_FULLSCREEN", "fullscreen"    , "YesNo"
+  Option "$DSPLYMNU_VSYNC"   , "vid_vsync"     , "OnOff"
+
+  StaticText " "
+  StaticText "$SQCATG_RESOLUTION", 1
+  TextField "$SQRES_WIDTH", menu_resolution_custom_width
+  TextField "$SQRES_HEIGHT", menu_resolution_custom_height
+  Submenu "$SQMENU_RES_PRESET", "SquareResolutionPresets"
+  Command "$SQRES_APPLY_W", "menu_resolution_commit_changes 0"
+  Command "$SQRES_APPLY_FS", "menu_resolution_commit_changes 1"
+
+  StaticText " "
+  StaticText "$SQCATG_HUD", 1
+  Option "$SQOPT_HUDSTYLE"            , "screenblocks", "SquareScreenblocks"
+  ScaleSlider "$SQOPT_SCALE_STATUSBAR", "st_scale"     , -1.0, 8.0, 1.0, "$SCALEMNU_ADAPT", "$SCALEMNU_USEFS"
+  ScaleSlider "$SQOPT_SCALE_HUD"      , "hud_scale"    , -1.0, 8.0, 1.0, "$SCALEMNU_ADAPT", "$SCALEMNU_USEFS"
+  ScaleSlider "$SQOPT_SCALE_MESSAGES" , "con_scaletext",  0.0, 8.0, 1.0, "$SCALEMNU_ADAPT"
+  ScaleSlider "$SQOPT_SCALE_CONSOLE"  , "con_scale"    ,  0.0, 8.0, 1.0, "$SCALEMNU_ADAPT"
+
+  StaticText " "
+  Option "$SQOPT_CROSSHAIR"           , "crosshair"      , "Crosshairs"
+  ColorPicker "$HUDMNU_CROSSHAIRCOLOR", "crosshaircolor"
+  Slider "$SQOPT_CROSSHAIR_SCALE"     , "crosshairscale" , 0.0, 2.0, 0.05, 2
+
+  StaticText " "
+  StaticText "$SQCATG_AUTOMAP_OPT", 1
+  Option "$AUTOMAPMNU_ROTATE"    , "am_rotate"      , "RotateTypes"
+  Option "$AUTOMAPMNU_OVERLAY"   , "am_overlay"     , "OverlayTypes"
+  Option "$SQOPT_AUTOMAP_TEXTURE", "am_textured"    , "OnOff"
+  Option "$SQOPT_AUTOMAP_FOLLOW" , "am_followplayer", "OnOff"
+
+  StaticText " "
+  Submenu "$SQMENU_VIDEO_ADV", "SquareAdvancedVideoOptions"
+}
+
+OptionMenu "SquareResolutionPresets"
+{
+  Title "$SQMENU_RES_PRESET"
+
+  StaticText ""
+  StaticText "$SQRES_ASPECT_16_9", 1
+  Command "960x540", "menu_resolution_set_custom 960 540"
+  Command "(720p HD)   1280x720", "menu_resolution_set_custom 1280 720"
+  Command "1366x768", "menu_resolution_set_custom 1366 768"
+  Command "(1080p HD) 1920x1080", "menu_resolution_set_custom 1920 1080"
+  Command "(1440p HD)  2560x1440", "menu_resolution_set_custom 2560 1440"
+
+  StaticText ""
+  StaticText "$SQRES_ASPECT_16_10", 1
+  Command "960x600", "menu_resolution_set_custom 960 600"
+  Command "1280x800", "menu_resolution_set_custom 1280 800"
+  Command "1440x900", "menu_resolution_set_custom 1440 900"
+  Command "1680x1050", "menu_resolution_set_custom 1680 1050"
+  Command "1920x1200", "menu_resolution_set_custom 1920 1200"
+
+  StaticText "$SQRES_ASPECT_4_3", 1
+  Command "320x240", "menu_resolution_set_custom 320 240"
+  Command "640x480", "menu_resolution_set_custom 640 480"
+  Command "1024x768", "menu_resolution_set_custom 1024 768"
+  Command "1280x960", "menu_resolution_set_custom 1280 960"
+  Command "1600x1200", "menu_resolution_set_custom 1600 1200"
+
+  StaticText ""
+  StaticText "$SQRES_ASPECT_5_4", 1
+  Command "1280x1024", "menu_resolution_set_custom 1280 1024"
+}
+
+OptionMenu "SquareAdvancedVideoOptions"
+{
+  Title "$SQMENU_VIDEO_ADV"
+
+  StaticText " "
+  StaticText "$SQCATG_PERFORMANCE", 1
+  Slider "$SQOPT_GIBS"        , "sv_corpsequeuesize", 64, 512, 64, 0
+  Slider "$DSPLYMNU_MAXDECALS", "cl_maxdecals", 0, 10000, 100, 0
+  IfOption(Windows) {
+    Option "$DSPLYMNU_GPUSWITCH", "vid_gpuswitch", "GPUSwitch"
+  }
+
+  StaticText " "
+  StaticText "$SQCATG_HW_GRAPHICS", 1
+  Option "$SQOPT_TEXFILTER"    , "gl_texture_filter"            , "FilterModes"
+  Option "$SQOPT_ANISOTROPIC"  , "gl_texture_filter_anisotropic", "Anisotropy"
+  Option "$SQOPT_MULTISAMPLE"  , "gl_multisample"               , "Multisample"
+  Option "$SQOPT_FXAA"         , "gl_fxaa"                      , "FXAAQuality"
+  Option "$SQOPT_PRECACHETEX"  , "gl_precache"                  , "YesNo"
+  Slider "$DSPLYMNU_BRIGHTNESS", "vid_brightness"               , -0.8,0.8, 0.05,2
+  Slider "$DSPLYMNU_CONTRAST"  , "vid_contrast"                 , 0.1, 3.0, 0.1
+  Slider "$DSPLYMNU_SATURATION", "vid_saturation"               , -3.0, 3.0, 0.25, 2
+  Slider "$DSPLYMNU_GAMMA"     , "Gamma"                        , 0.75, 3.0, 0.05, 2
+  
+  StaticText " "
+  StaticText "$SQCATG_VR", 1
+  Option "$GLPREFMNU_VRMODE"      , "vr_mode"               , "VRMode"
+  Option "$GLPREFMNU_VRQUADSTEREO", "vr_enable_quadbuffered", "OnOff"
+}
+
+
+/* Sound Options */
+
+OptionMenu "SquareSoundOptions"
+{
+  Title "$SQMENU_SOUND"
+
+  StaticText "$SQCATG_VOLUME", 1
+  Slider "$SNDMNU_MUSICVOLUME", "snd_musicvolume", 0, 1, 0.05, 2
+  Slider "$SNDMNU_SFXVOLUME"  , "snd_sfxvolume"  , 0, 1, 0.05, 2
+  Slider "$SNDMNU_MENUVOLUME" , "snd_menuvolume" , 0, 1, 0.05, 2
+
+  StaticText ""
+  StaticText "$SQCATG_PREFERENCES", 1
+  Slider "$SQOPT_JABBER", "square_jabber_chance", 0, 100, 5, 0
+  Option "$SQOPT_SUBS"  , "square_subtitles"    , "OnOff"
+
+  StaticText ""
+  StaticText "$SQCATG_DEVICE", 1
+  Option "$SQOPT_MUSICDEVICE"  , "snd_mididevice", "MidiDevices"
+  Option "$SQOPT_SOUNDDEVICE"  , "snd_aldevice"   , "ALDevices"
+  Option "$OPENALMNU_ENABLEEFX", "snd_efx"        , "OnOff"
+  Option "$OPENALMNU_RESAMPLER", "snd_alresampler", "ALResamplers"
+
+  StaticText ""
+  Command "$SNDMNU_RESTART", "snd_reset"
+
+  StaticText ""
+  Submenu "$SNDMNU_ADVANCED", "AdvSoundOptions" // [XA] Leaving this untouched
+  Submenu "$SNDMNU_MIDIPLAYER", "MidiPlayerOptions"
+}
+
+
+/* Advanced Options */
+
+OptionMenu "SquareAdvancedOptions"
+{
+  Title "$SQMENU_ADVANCED"
+
+  StaticText ""
+  Submenu "$SQMENU_ENGINE" , "OptionsMenu" // allow access to full set of GZDoom options from here.
+  Command "$SQMENU_CONSOLE", "menuconsole" // the console is also slightly handy as well. ;)
+
+  StaticText ""
+  StaticText "$SQ_ADV_WARNING", Red
+
+  StaticText ""
+  StaticText "$SQ_ADV_MSG_1"
+  StaticText "$SQ_ADV_MSG_2"
+  StaticText "$SQ_ADV_MSG_3"
+  StaticText "$SQ_ADV_MSG_4"
+}

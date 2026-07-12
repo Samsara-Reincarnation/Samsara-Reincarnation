@@ -1,0 +1,158 @@
+/*****************************************************************************
+ * Adventures of Square Common Library - Per Tick Events.
+ * (C) BigBrik Games 2014 - 2016
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * Authors: Matt Tropiano, James Paddock
+ ****************************************************************************/
+
+//#include "zcommon.acs"
+ 
+/*****************************************************************************
+ * Map-scope variables and includes.
+ ****************************************************************************/
+
+/** Promo mode active. */
+int promo_mode_active;
+
+/** Promo mode start time. */
+int promo_mode_time;
+
+/** Promo mode countdown. */
+int promo_mode_countdown_secs;
+
+/*****************************************************************************
+ * Static functions.
+ ****************************************************************************/
+
+function void Easy_Health_Regen (void)
+{
+	if (GameSkill() == SKILL_VERY_EASY)
+	{
+		for(int i = 0; i < PLAYER_MAX; i++)
+		{
+			int ph = GetActorProperty(player_tags[i], AProp_Health);
+			if (ph < 100)
+			{
+				SetActorProperty(player_tags[i], AProp_Health, ph + 1); 
+			}
+		}
+	}
+}
+
+function void Promo_Mode_Countdown (void)
+{
+	// doing this on TITLEMAP would be silly. check for TITLE.
+	if (!promo_mode_active || GameType() == GAME_TITLE_MAP)
+		return;
+	
+	promo_mode_countdown_secs--;
+	if (promo_mode_countdown_secs <= 0)
+	{
+		Teleport_EndGame();
+	}
+	else if (promo_mode_countdown_secs <= 5)
+	{
+		Log(s:"(Promo Mode) Resetting in: ", d:promo_mode_countdown_secs);
+	}
+		
+}
+
+function void Powerup_Effects (void)
+{
+	// For FishTank effects.
+	for (int i = 0; i < PLAYER_MAX; i++)
+	{
+		int airTics = GetActorPowerupTics(player_tags[i], "PowerNoDrown");
+		// if one of the last 5 seconds of the air powerup...
+		if (airTics > 0 && airTics / 35 <= 5 && airTics % 35 == 0)
+		{
+			SetActivator(0, AAPTR_PLAYER1 + i);
+			FadeRange(255, 255, 255, 0.2, 255, 255, 255, 0.0, 0.8);
+			LocalAmbientSound("misc/fishtank/breathe", 127);
+		}
+		
+	}
+	
+	SetActivator(0, AAPTR_NULL);
+}
+
+/*****************************************************************************
+ * Periodic Looper
+ ****************************************************************************/
+
+ 
+/**
+ * Performs actions each gametick.
+ * time: a gametic value (usually Timer()). Use this to base your timing.
+ */
+function void Game_EventTick (int time)
+{
+	/*
+	Examples:
+	if (!(time % 70)) // every two seconds
+	if (!(time % 35)) // every second
+	if (!(time % 18)) // every (roughly) half second
+	if (!(time % 9)) // every (roughly) quarter second
+	if (!(time % 7)) // every fifth of a second
+	*/
+
+	if (!(time % 35)) // every second
+	{
+		Easy_Health_Regen();
+		Promo_Mode_Countdown();
+	}
+	
+	if (!(time % 18)) // every (roughly) half second
+	{
+		Vacuum_Damage();
+	}
+
+	// ======== every tick ========
+
+	Powerup_Effects();
+	
+	// For promo mode, if active.
+	if (GetAllPlayerInput(INPUT_BUTTONS))
+		promo_mode_countdown_secs = promo_mode_time;
+		
+	// For bouncing!
+	for (int p = 0; p < PLAYER_MAX; p++)
+		player_prev_velz[p] = GetActorVelZ(player_tags[p]);
+
+}
+
+script "Game_EventLoop" OPEN
+{
+	// wait for all OPEN scripts to have a chance to process.
+	delay(1);
+
+	// some variable setup.
+	promo_mode_active = GetCVar("square_promo_mode");
+	promo_mode_time = GetCVar("square_promo_time");
+	promo_mode_countdown_secs = promo_mode_time;
+	
+	// enter the loop.
+	while (TRUE)
+	{
+		Game_EventTick(Timer());
+		delay(1); // must delay a tick, or have a runaway script!
+	}
+}

@@ -99,20 +99,21 @@ Script "UnrealHitBox" (int damage, int headshotdmg)
 	int oldTID = ActivatorTID();
 	Thing_ChangeTID(0,newtid);
 	SetActivator(0, AAPTR_Tracer);
-	int tx = GetActorX(0);
-	int ty = GetActorY(0);
 	int tz = GetActorZ(0);
 	int monsterHealth = GetActorProperty(0,APROP_Health);
 	int height = GetActorProperty(0,APROP_Height);
 	int width = GetActorProperty(0,APROP_Radius)*2;
-	int result;
-	if(!CheckInventory("IsFatButBiped") && width >= height)
-	{
-		int monsterAngle = GetActorAngle(0);
-		int vang = VectorAngle(tx - x, ty - y);
-		int angle = vang % 1.0;
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 
-		if(!CheckInventory("NoHeadShots") && (z <= tz+FixedMul(height,0.35)) && (z >= tz+FixedMul(height,0.65)) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
+	if (health >= 1000)
+	{
+		SetResultValue(damage);
+	}
+	else if(!CheckInventory("IsFatButBiped") && width >= height)
+	{
+		int relativeAngle = abs(relativeAngleToXY(0, x, y));
+
+		if(!CheckInventory("NoHeadShots") && (z <= tz+FixedMul(height,0.35)) && (z >= tz+FixedMul(height,0.65)) && (relativeAngle < 0.65 && relativeAngle > 0.35))
 		{
 			SetActorProperty(newtid,APROP_DamageType,"UnrealDecapitate");
 			if(monsterHealth - (headshotdmg) <= 0)
@@ -129,18 +130,19 @@ Script "UnrealHitBox" (int damage, int headshotdmg)
 		if(StrLeft(GetActorClass(0),4)=="RTCW")
 			GiveInventory("RTCW_RemoveHat",1);
 
-		result = GetCvar("samsara_mixerloaded") ? ACS_NamedExecuteWithResult("Goldeneye_HatShot",0,0,0,0) : 0;
+		int result = GetCvar("samsara_mixerloaded") ? ACS_NamedExecuteWithResult("Goldeneye_HatShot") : 0;
 
 		if(result == -1)
 		{
 			SetResultValue(-1);
-			terminate;
 		}
-
-		SetActorProperty(newtid,APROP_DamageType,"UnrealDecapitate");
-		if(monsterHealth - (headshotdmg) <= 0)
-			GiveInventory("Unreal_HeadshotGibGenerator", 1);
-		SetResultValue(headshotdmg);
+		else
+		{
+			SetActorProperty(newtid,APROP_DamageType,"UnrealDecapitate");
+			if(monsterHealth - (headshotdmg) <= 0)
+				GiveInventory("Unreal_HeadshotGibGenerator", 1);
+			SetResultValue(headshotdmg);
+		}
 	}
 	else
 	{

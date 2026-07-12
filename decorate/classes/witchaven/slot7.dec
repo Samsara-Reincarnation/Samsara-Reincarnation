@@ -1,0 +1,229 @@
+Actor "Pike Axe" : WTWeapon
+{
+	Weapon.Slotnumber 7
+	Weapon.SelectionOrder 500
+	Weapon.BobStyle Alpha
+	Weapon.BobRangeX 0.2
+	Weapon.BobRangeY 0.6
+	Weapon.BobSpeed 0.8	
+	Weapon.Ammotype "Cell"
+	Weapon.AmmoUse 10
+	Weapon.Ammogive 40
+	+WEAPON.AMMO_OPTIONAL
+	+Weapon.MELEEWEAPON
+	+WEAPON.NOALERT	
+    Inventory.PickupSound "gpickup/gen"
+    Inventory.PickupMessage "You got the Pike Axe!"
+	Inventory.RestrictedTo "GrondovalPlayer"
+    Tag "Pike Axe"
+	States
+	{
+	Spawn:
+		PWHE A -1
+		stop
+	Select:
+		TNT1 A 0 A_TakeInventory("WTWeaponActive",1)
+		//TNT1 A 0 A_TakeInventory("WTFistActive",1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Raise
+		TNT1 A 1 A_Raise
+		loop
+	Deselect:
+		WW30 F 0 A_TakeInventory("WTSlotIIIClip",999)
+		WW30 F 1 A_Lower
+		loop
+	
+	Ready:
+		WW30 F 0 A_JumpIfInventory("Cell",10,"MegaDraw")
+	Draw:
+		WW30 ABCDE 3 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+		goto WIdle
+	MegaDraw:
+		WW31 AAABBBCCDDEE 1 bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+		goto MegaWIdle
+		
+	WIdle:
+		WW30 F 0 A_JumpIfInventory("WTSlotIIIClip",1,2)
+		WW30 A 0 A_JumpIfInventory("Cell",10,"MegaWIdle")
+		WW30 F 2 A_WeaponReady
+		loop
+	MegaWIdle:
+		WW31 A 0 A_PlayWeaponSound("ggen/buzzloop")
+		WW31 IHGFGH 4 bright A_WeaponReady
+		WW31 A 0 A_JumpIfInventory("Cell",10,"MegaWIdle")
+		WW31 A 0 A_PlayWeaponSound("DSNONE")
+		goto WIdle
+		
+	Altfire:
+		WW30 F 0 A_JumpIfInventory("WTSlotIIIClip",1,"TakeClip")
+	GiveClip:
+		WW30 F 0 A_PlayWeaponSound("DSNONE")
+		WW30 F 12 A_GiveInventory("WTSlotIIIClip",1)
+		goto WIdle
+	TakeClip:
+		WW30 F 0 A_TakeInventory("WTSlotIIIClip",999)
+		WW30 F 12 A_JumpIfInventory("Cell",10,1)
+		goto WIdle
+		WW31 F 0 A_PlayWeaponSound("ggen/buzzloop")
+		WW31 FGH 4 bright
+		goto MegaWIdle
+	Fire:
+		WW30 F 0 A_JumpIfInventory("WTSlotIIIClip",1,"NFire")
+		WW30 A 0 A_JumpIfInventory("Cell",10,"MegaFire")
+	NFire:
+		WW30 A 0 A_JumpIfInventory("WTAttackClip",1,2)
+		WW30 A 0 A_GiveInventory("WTAttackClip",1)
+		goto Attack1
+		WW30 A 0 A_TakeInventory("WTAttackClip",1)
+		goto Attack2
+	MegaFire:
+		goto MegaAttack1		
+	Attack1:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopAtt1")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopAtt1")
+		WW30 GH 4 offset(0,32)
+		WW30 I 3 A_PlayWeaponSound("ggen/swing5")
+		WW30 J 3
+		WW30 K 3 A_FireCustomMissile("WTThrowAxeProjectile",0,0,2,6)
+		WW30 L 3
+		TNT1 A 8
+		WW30 F 4
+		goto WIdle
+	CoopAtt1:	
+		WW30 GH 4 offset(0,32)
+		WW30 I 3 A_PlayWeaponSound("ggen/swing5")
+		WW30 J 3
+		WW30 K 3 A_FireCustomMissile("WTThrowAxeProjectile_2",0,0,2,6)
+		WW30 L 3
+		TNT1 A 8
+		WW30 F 4
+		goto WIdle	
+	Attack2:
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopAtt2")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopAtt2")
+		WW30 M 3 A_PlayWeaponSound("ggen/swing5")
+		WW30 N 3 A_FireCustomMissile("WTThrowAxeProjectile_Weak",0,0,4,6)
+		WW30 OPQ 3
+		TNT1 A 4
+		WW30 R 4 A_PlayWeaponSound("ggen/swing5")
+		WW30 S 4
+		WW30 T 4 A_FireCustomMissile("WTThrowAxeProjectile_Weak",0,0,-2,6)
+		WW30 U 4
+		TNT1 A 4
+		WW30 F 4
+		goto WIdle
+	CoopAtt2:
+		WW30 M 3 A_PlayWeaponSound("ggen/swing5")
+		WW30 N 3 A_FireCustomMissile("WTThrowAxeProjectile_Weak_2",0,0,4,6)
+		WW30 OPQ 3
+		TNT1 A 4
+		WW30 R 4 A_PlayWeaponSound("ggen/swing5")
+		WW30 S 4
+		WW30 T 4 A_FireCustomMissile("WTThrowAxeProjectile_Weak_2",0,0,-2,6)
+		WW30 U 4
+		TNT1 A 4
+		WW30 F 4
+		goto WIdle		
+	MegaAttack1:
+		TNT1 A 0 A_AlertMonsters
+		WW31 J 4 bright offset(0,32)
+		WW31 K 4 bright offset(0,32)
+		WW31 I 0 A_PlaySoundEx("voice","ggen/swing5",0,0)
+		WW31 L 3 bright A_PlayWeaponSound("ggen/insect")
+		WW31 M 3 bright
+		TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"CoopMegaAttack1")
+		TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"CoopMegaAttack1")
+		WW31 K 0 bright A_FireCustomMissile("WTThrownAxe_3",-15,0,2,5)
+		WW31 K 0 bright A_FireCustomMissile("WTThrownAxe_3",0,0,2,5)
+		WW31 N 3 bright A_FireCustomMissile("WTThrownAxe_3",15,1,2,5)
+		goto MA1_Done
+	CoopMegaAttack1:
+		WW31 K 0 bright A_FireCustomMissile("WTThrownAxe_2",-15,0,2,5)
+		WW31 K 0 bright A_FireCustomMissile("WTThrownAxe_2",0,0,2,5)
+		WW31 N 3 bright A_FireCustomMissile("WTThrownAxe_2",15,1,2,5)
+		goto MA1_Done
+	MA1_Done:
+		WW31 O 3 bright
+		TNT1 A 8
+		WW31 P 4 bright
+		goto WIdle
+	}
+}
+
+Actor WTThrowAxeProjectile : WTMegaMeleeProjectile
+{
+	Speed 192
+	Damage (random(220,320))	
+	Obituary "$SAMSARA_WITCHAVEN_OB_SLOT_III"
+}
+
+Actor WTThrowAxeProjectile_2 : WTThrowAxeProjectile { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES +FORCEPAIN }
+
+Actor WTThrowAxeProjectile_Weak : WTMegaMeleeProjectile
+{
+	Speed 192
+	Damage (random(120,190))	
+	Obituary "$SAMSARA_WITCHAVEN_OB_SLOT_III"
+}
+
+Actor WTThrowAxeProjectile_Weak_2 : WTThrowAxeProjectile_Weak { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES +FORCEPAIN  }
+
+Actor WTThrownAxe
+{
+	PROJECTILE
+	+BLOODSPLATTER
+	+SEEKERMISSILE
+	+FORCEPAIN
+	+HITTRACER
+//	+SCREENSEEKER 
+	//+NOEXTREMEDEATH //lol
+	Speed 48
+	Height 12
+	Radius 6
+	DamageType "WTRanged"
+	Damage (random(300,480))	
+	Obituary "$SAMSARA_WITCHAVEN_OB_SLOT_III_MEGA"
+	scale 0.35
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		WP30 A 0 A_PlaySoundEx("gthrow/swing","body",0,0)
+		WP30 ABCDE 4 bright A_SeekerMissile(10,50,SMF_LOOK|SMF_PRECISE,120,10)
+		loop
+	Death:
+	Crash:
+		//WP30 BBB 36 //3 sec
+		TNT1 A 1 A_PlaySoundEx("ggen/metal_s","body",0,0)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("WTMegaGoreSpawner",1,AAPTR_TRACER)
+		TNT1 A 1 A_PlaySoundEx("ggen/metal_l","body",0,0)
+		stop
+	}
+}
+
+Actor WTThrownAxe_2 : WTThrownAxe { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES  }
+
+Actor WTThrownAxe_3 : WTThrownAxe // dm
+{
+	-SEEKERMISSILE
+	Speed 36
+	Damage (200)
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		WP30 A 0 A_PlaySoundEx("gthrow/swing","body",0,0)
+		WP30 ABCDE 4 bright A_SeekerMissile(1,5,SMF_LOOK|SMF_PRECISE,60,5)
+		loop
+	Death:
+	Crash:
+		//WP30 BBB 36 //3 sec
+		TNT1 A 1 A_PlaySoundEx("ggen/metal_s","body",0,0)
+		stop
+	XDeath:
+		TNT1 A 0 A_GiveInventory("WTMegaGoreSpawner",1,AAPTR_TRACER)
+		TNT1 A 1 A_PlaySoundEx("ggen/metal_l","body",0,0)
+		stop
+	}
+}

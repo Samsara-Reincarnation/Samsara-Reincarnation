@@ -1,0 +1,554 @@
+actor RTCW_LugerSilencerAttached : Boolean {}
+
+Actor RTCW_Luger : RTCW_Weapon
+{
+	Weapon.SlotNumber 1
+	Weapon.SlotPriority 2
+	Weapon.SelectionOrder 2000
+	Weapon.AmmoType "RTCW_LugerMagazine"
+	Weapon.AmmoUse 1
+	Obituary "%o was killed (luger) by %k."
+	Inventory.PickupMessage "Luger"
+    Inventory.Icon "CWCMPW02"
+	Tag "Luger"
+	+WIMPY_WEAPON
+	States
+	{
+		Spawn:
+			RW98 A -1
+			stop
+
+		ReadyActual:
+			RW00 A 0 A_JumpIfInventory("RTCW_Kicking",1,"Kicking")
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
+		ReadyActualNonReloadable:
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,2)
+			RW00 A 1 A_WeaponReady
+			goto ReadyActualAmmoCheck
+			RW04 A 1 A_WeaponReady
+			goto ReadyActualAmmoCheck
+
+		ReadyActualReloadable:
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,2)
+			RW00 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			goto ReadyActualAmmoCheck
+			RW04 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			goto ReadyActualAmmoCheck
+
+		ReadyActualAmmoCheck:
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+			goto ReadyActual
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ReadyActual")
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerMagazine",1,"ReadyActual")
+			goto ReloadCheck
+
+		Deselect:
+			RW00 H 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			RW00 H 0 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			RW00 H 2 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,"DeselectSilenced")
+			RW00 IJK 2
+			goto DeselectInstant
+
+		DeselectSilenced:
+			RW04 HIJK 2
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			RW00 A 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,"ReadySilenced")
+			RW00 L 2 A_GiveInventory("RTCW_WeaponToken",2)
+			RW00 MNO 2
+			goto ReadyActual
+
+		ReadySilenced:
+			RW04 L 2 A_GiveInventory("RTCW_WeaponToken",3)
+			RW04 MNO 2
+			goto ReadyActual
+
+		Fire:
+			RW00 B 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+		FireNonReloadable:
+			RW00 B 0 A_JumpIfInventory("PistolModeOn",1,1)
+			goto FireStart
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+			RW00 B 0 A_JumpIfInventory("Clip",1,"FireStart")
+			goto FireDry
+
+		FireReloadable:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+			RW00 B 0 A_JumpIfInventory("RTCW_LugerMagazine",1,"FireStart")
+		FireReloadableDryCheck:
+			RW00 B 0 A_JumpIfInventory("PistolModeOn",1,1)
+			goto ReloadStart
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			RW00 B 0 A_JumpIfInventory("Clip",1,"ReloadStart")
+			goto FireDry
+
+		FireDry:
+			RW00 A 0 A_ClearReFire
+			RW00 A 0 A_GiveInventory("SamsaraRTCWWeaponDrySoundPlayer")
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,2)
+			RW00 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto FireDryFinish
+			RW04 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto FireDryFinish
+
+		FireDryFinish:
+			RW00 A 0 A_SelectWeapon("RTCW_Knife")
+			goto Deselect
+
+		FireStart:
+			RW00 B 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,"FireSilenced")
+			RW00 B 0 A_GiveInventory("RTCW_FiringToken",1)
+			RW00 B 0 A_GiveInventory("RTCW_BlazkoWeaponAlert",1)
+			RW00 B 0 A_GunFlash("FireFlash")
+			RW00 B 0 A_GiveInventory("SamsaraRTCWLugerAttackHandler")
+			RW00 BCDEFGA 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		FireSilenced:
+			RW04 B 0 A_GiveInventory("SamsaraRTCWLugerSilencedAttackHandler")
+			RW04 BCDEFGA 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		FireFlash:
+			TNT1 A 0 A_Jump(256,1,2)
+			RW03 B 2 Bright
+			stop
+			RW08 B 2 Bright
+			stop
+
+		AltFire:
+			RW02 I 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,"AltFireRemove")
+		AltFireAttach:
+			RW02 I 0 A_GiveInventory("SamsaraRTCWLugerSilencerAttachSoundPlayer")
+			RW02 I 0 A_GiveInventory("RTCW_LugerSilencerAttached")
+			RW02 I 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW02 I 0 A_GiveInventory("RTCW_WeaponToken",3)
+			RW02 IJKL 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW02 M 0
+			RW05 "[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW06 ABCDEFGHIJKLMNOPQRSTUV 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActual
+
+		AltFireRemove:
+			RW06 W 0 A_GiveInventory("SamsaraRTCWLugerSilencerRemoveSoundPlayer")
+			RW06 W 0 A_TakeInventory("RTCW_LugerSilencerAttached")
+			RW06 W 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW06 W 0 A_GiveInventory("RTCW_WeaponToken",2)
+			RW06 "WXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW07 ABCDEFGHIJKL 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW07 M 0
+			goto ReadyActual
+
+		Reload:
+		ReloadCheck:
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReadyActual")
+			RW00 A 0 A_JumpIfInventory("PistolModeOn",1,1)
+			goto ReloadStart
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			RW00 A 0 A_JumpIfInventory("Clip",1,"ReloadStart")
+			goto ReadyActual
+
+		ReloadStart:
+			RW00 Q 0 A_GiveInventory("SamsaraRTCWLugerReloadSoundPlayer1")
+			//RW00 Q 0 A_JumpIfInventory("RTCW_LugerMagazine",1,1)
+			goto ReloadStartAmmoless
+			RW00 Q 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,"ReloadStartSilenced")
+			RW00 "QRSTUVWXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+			goto ReloadFinish
+
+		ReloadStartSilenced:
+			RW04 "QRSTUVWXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW05 ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW04 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+			goto ReloadFinish
+
+		ReloadFinish:
+			RW00 A 0
+			goto ReadyActual
+
+		ReloadAmmo:
+			RW00 A 0 A_JumpIfInventory("PistolModeOn",1,"ReloadAmmoReserve")
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReloadFinish")
+			RW00 A 0 A_GiveInventory("RTCW_LugerMagazine")
+			loop
+
+		ReloadAmmoReserve:
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReloadFinish")
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW00 A 0 A_JumpIfInventory("Clip",1,1)
+			goto ReloadFinish
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW00 A 0 A_TakeInventory("Clip",1)
+			RW00 A 0 A_GiveInventory("RTCW_LugerMagazine")
+			goto ReloadAmmo
+
+		ReloadStartAmmoless:
+			RW00 Q 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,"ReloadStartAmmolessSilenced")
+			RW00 "QRSTUVWXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 N 0 A_GiveInventory("SamsaraRTCWLugerReloadSoundPlayer2")
+			RW01 NOPQR 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW01 S 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmoless")
+		ReloadFinishAmmoless:
+			RW01 STUVWXYZ 1 A_WeaponReady
+			goto ReadyActual
+
+		ReloadAmmoAmmoless:
+			RW01 S 0 A_JumpIfInventory("PistolModeOn",1,"ReloadAmmoAmmolessReserve")
+			RW01 S 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReloadFinishAmmoless")
+			RW01 S 0 A_GiveInventory("RTCW_LugerMagazine")
+			loop
+
+		ReloadAmmoAmmolessReserve:
+			RW01 S 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReloadFinishAmmoless")
+			RW01 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW01 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW01 S 0 A_JumpIfInventory("Clip",1,1)
+			goto ReloadFinishAmmoless
+			RW01 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW01 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW01 S 0 A_TakeInventory("Clip",1)
+			RW01 S 0 A_GiveInventory("RTCW_LugerMagazine")
+			goto ReloadAmmoAmmoless
+
+		ReloadStartAmmolessSilenced:
+			RW04 "QRSTUVWXYZ[\]" 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW05 ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW05 N 0 A_GiveInventory("SamsaraRTCWLugerReloadSoundPlayer2")
+			RW05 NOPQR 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW05 S 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmolessSilenced")
+		ReloadFinishAmmolessSilenced:
+			RW05 STUVWXYZ 1 A_WeaponReady
+			goto ReadyActual
+
+		ReloadAmmoAmmolessSilenced:
+			RW05 S 0 A_JumpIfInventory("PistolModeOn",1,"ReloadAmmoAmmolessReserveSilenced")
+			RW05 S 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReloadFinishAmmolessSilenced")
+			RW05 S 0 A_GiveInventory("RTCW_LugerMagazine")
+			loop
+
+		ReloadAmmoAmmolessReserveSilenced:
+			RW05 S 0 A_JumpIfInventory("RTCW_LugerMagazine",0,"ReloadFinishAmmolessSilenced")
+			RW05 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW05 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW05 S 0 A_JumpIfInventory("Clip",1,1)
+			goto ReloadFinishAmmolessSilenced
+			RW05 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+			RW05 S 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+			RW05 S 0 A_TakeInventory("Clip",1)
+			RW05 S 0 A_GiveInventory("RTCW_LugerMagazine")
+			goto ReloadAmmoAmmolessSilenced
+
+		Kicking:
+			RW00 A 0 A_GunFlash("KickingFoot")
+		KickingDelay:
+			RW00 A 0 A_JumpIfInventory("RTCW_LugerSilencerAttached",1,2)
+			RW00 A 18 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto KickingDelayFinish
+			RW04 A 18 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto KickingDelayFinish
+
+		KickingDelayFinish:
+			RW00 A 0 A_TakeInventory("RTCW_Kicking",1)
+			goto ReadyActual
+	}
+}
+
+actor SamsaraRTCWLugerAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RTCW_LugerMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RTCW_LugerMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackRTCWConsole")
+      // Original sounds
+      PickupAttackRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"SamsaraBlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWPCCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWPCCoop")
+      PickupAttackRTCWPCDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracer",frandom(-2.0,2.0),false,4,4,0,frandom(-2.0,2.0))
+        stop
+
+      PickupAttackRTCWPCCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoop",frandom(-2.0,2.0),false,4,4,0,frandom(-2.0,2.0))
+        stop
+
+      // Console sounds
+      PickupAttackRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCWConsole/Luger/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"SamsaraBlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWConsoleCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWConsoleCoop")
+      PickupAttackRTCWConsoleDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerSoundConsole",frandom(-2.0,2.0),false,4,4,0,frandom(-2.0,2.0))
+        stop
+
+      PickupAttackRTCWConsoleCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoopSoundConsole",frandom(-2.0,2.0),false,4,4,0,frandom(-2.0,2.0))
+        stop
+
+      // Enemy Territory sounds
+      PickupAttackET:
+        TNT1 A 0 A_PlaySound("RTCWET/Luger/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"SamsaraBlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackETCoop")
+      PickupAttackETDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerSoundET",frandom(-2.0,2.0),false,4,4,0,frandom(-2.0,2.0))
+        stop
+
+      PickupAttackETCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoopSoundET",frandom(-2.0,2.0),false,4,4,0,frandom(-2.0,2.0))
+        stop
+    }
+}
+
+actor SamsaraRTCWLugerSilencedAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RTCW_LugerMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RTCW_LugerMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackRTCWConsole")
+      // Original sounds
+      PickupAttackRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/SilencerFire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"SamsaraBlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWPCCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWPCCoop")
+      PickupAttackRTCWPCDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracer",frandom(-3.0,3.0),false,4,9,0,frandom(-3.0,3.0))
+        stop
+
+      PickupAttackRTCWPCCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoop",frandom(-3.0,3.0),false,4,9,0,frandom(-3.0,3.0))
+        stop
+
+      // Console sounds
+      PickupAttackRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/SilencerFire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"SamsaraBlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWConsoleCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWConsoleCoop")
+      PickupAttackRTCWConsoleDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerSoundConsole",frandom(-3.0,3.0),false,4,9,0,frandom(-3.0,3.0))
+        stop
+
+      PickupAttackRTCWConsoleCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoopSoundConsole",frandom(-3.0,3.0),false,4,9,0,frandom(-3.0,3.0))
+        stop
+
+      // Enemy Territory sounds
+      PickupAttackET:
+        TNT1 A 0 A_PlaySound("RTCWET/Luger/SilencerFire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("RTCW_Casing",4,-10*cos(-pitch),43+(10*sin(-pitch)),1,0,2*cos(-pitch),-random(85,95),SXF_TRANSFERPITCH)
+        TNT1 A 0 A_FireBullets(0,0,1,0,"SamsaraBlankPuff",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackETCoop")
+      PickupAttackETDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerSoundET",frandom(-3.0,3.0),false,4,9,0,frandom(-3.0,3.0))
+        stop
+
+      PickupAttackETCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_LugerTracerCoopSoundET",frandom(-3.0,3.0),false,4,9,0,frandom(-3.0,3.0))
+        stop
+    }
+}
+
+actor SamsaraRTCWLugerSilencerAttachSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/SilencerAttach",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Luger/SilencerAttach",CHAN_6)
+        stop
+    }
+}
+
+actor SamsaraRTCWLugerSilencerRemoveSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/SilencerRemove",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Luger/SilencerRemove",CHAN_6)
+        stop
+    }
+}
+
+actor SamsaraRTCWLugerReloadSoundPlayer1 : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRTCWConsole")
+      // Original sounds
+      PickupRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/Reload",CHAN_6)
+        stop
+
+      // Console sounds
+      PickupRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCWConsole/Luger/Reload",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Luger/Reload",CHAN_6)
+        stop
+    }
+}
+
+actor SamsaraRTCWLugerReloadSoundPlayer2 : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupRTCWConsole")
+      // Original sounds
+      PickupRTCWPC:
+        TNT1 A 0 A_PlaySound("RTCW/Luger/Reload2",CHAN_6)
+        stop
+
+      // Console sounds
+      PickupRTCWConsole:
+        TNT1 A 0 A_PlaySound("RTCWConsole/Luger/Reload2",CHAN_6)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Luger/Reload2",CHAN_6)
+        stop
+    }
+}
+
+actor RTCW_LugerMagazine : Ammo
+{
+	Inventory.MaxAmount 8
+	Tag "Luger Magazine"
+	+IGNORESKILL
+}
+
+//Was 6 damage, now 12
+Actor RTCW_LugerTracer : RTCW_Tracer
+{
+	States
+	{
+		Crash:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 13, 0),8,!XF_HURTSOURCE,0,8)
+			Goto Super::Death
+
+		XDeath:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 13, 0),8,!XF_HURTSOURCE,0,8)
+			Goto Super::XDeath
+	}
+}
+
+Actor RTCW_LugerTracerCoop : RTCW_LugerTracer { +THRUSPECIES Species "Player" }
+
+Actor RTCW_LugerTracerSoundConsole : RTCW_TracerSoundConsole
+{
+	States
+	{
+		Crash:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 13, 1),8,!XF_HURTSOURCE,0,8)
+			Goto Super::Death
+
+		XDeath:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 13, 1),8,!XF_HURTSOURCE,0,8)
+			Goto Super::XDeath
+	}
+}
+
+Actor RTCW_LugerTracerCoopSoundConsole : RTCW_LugerTracerSoundConsole { +THRUSPECIES Species "Player" }
+
+Actor RTCW_LugerTracerSoundET : RTCW_TracerSoundET
+{
+	States
+	{
+		Crash:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 13, 2),8,!XF_HURTSOURCE,0,8)
+			Goto Super::Death
+
+		XDeath:
+			TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 13, 2),8,!XF_HURTSOURCE,0,8)
+			Goto Super::XDeath
+	}
+}
+
+Actor RTCW_LugerTracerCoopSoundET : RTCW_LugerTracerSoundET { +THRUSPECIES Species "Player" }

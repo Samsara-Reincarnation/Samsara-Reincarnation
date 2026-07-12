@@ -1,0 +1,919 @@
+actor " Fist " : Weapon
+{
+	Weapon.SlotNumber 0
+	Weapon.SelectionOrder 3700
+	Weapon.Kickback 100
+	+INVENTORY.UNDROPPABLE
+	+WEAPON.WIMPY_WEAPON
+	+WEAPON.MELEEWEAPON
+	+WEAPON.NOALERT
+	Obituary "$SAMSARA_DOOMGUY_OB_FALLBACKMELEE"
+	Inventory.RestrictedTo "DoomguyPlayer"
+	Tag "Brass Knuckles"
+	States
+	{
+	Spawn:
+		DPUN Z -1
+		stop
+	// Original
+	Ready:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2, "ReadyStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
+		DPUN A 1 A_WeaponReady
+		loop
+
+	Deselect:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Deselect64")
+		DPUN A 1 A_Lower
+		loop
+
+	Select:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
+		DPUN A 1 A_Raise
+		loop
+
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FireSmooth")
+	FireVanilla:
+		DPUN M 4
+		DPUN N 4 A_GiveInventory("SamsaraDoomguyFistAttackHandler")
+		DPUN O 5
+		DPUN N 4
+		DPUN M 5 A_ReFire
+		goto Ready
+
+	FireSmooth:
+		DPUN L 1 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireSmoothRage")
+		DPUN BCD 1
+		DPUN E 2 A_GiveInventory("SamsaraDoomguyFistAttackHandler")
+		DPUN FGHI 2
+		DPUN JKL 1
+		DPUN A 5 A_ReFire
+		goto Ready
+
+	FireSmoothRage:
+		DPUN BD 2
+		DPUN E 2 A_GiveInventory("SamsaraDoomguyFistAttackHandler")
+		DPUN FGHIJL 2
+		DPUN A 5 A_ReFire
+		goto Ready
+
+	// Doom 64 (fires slower without berserk compared to original fist)
+	Ready64:
+		64FS A 1 A_WeaponReady
+		goto Ready
+
+	Deselect64:
+		64FS A 1 A_Lower
+		goto Deselect
+
+	Select64:
+		64FS A 1 A_Raise
+		goto Select
+
+	Fire64:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"Fire64Smooth")
+	Fire64Vanilla:
+		64FS B 5 A_JumpIfInventory("PowerStrength",1,"Fire64VanillaBerserk")
+		64FS C 5 A_GiveInventory("SamsaraDoomguy64FistAttackHandler")
+		64FS DC 5
+		64FS B 5 A_ReFire
+		goto Ready
+
+	Fire64VanillaBerserk:
+		64FS B 4
+		64FS C 4 A_GiveInventory("SamsaraDoomguy64FistAttackHandler")
+		64FS D 5
+		64FS C 4
+		64FS B 5 A_ReFire
+		goto Ready
+
+	Fire64Smooth:
+		64FS E 1 A_JumpIfInventory("PowerStrength",1,"Fire64SmoothBerserk")
+		64FS QGH 1
+		64FS IK 2
+		64FS J 2 A_GiveInventory("SamsaraDoomguy64FistAttackHandler")
+		64FS KLMN 1
+		64FS OPQ 2
+		64FS A 2 A_ReFire
+		//64FS FE 1
+		//64FS F 2
+		goto Ready
+
+	Fire64SmoothBerserk:
+		64FS EQGH 1
+		64FS I 1 A_GiveInventory("SamsaraDoomguy64FistAttackHandler")
+		64FS JKLMN 1
+		64FS OPQ 2
+		64FS A 1 A_ReFire
+		//64FS FE 1
+		//64FS A 2
+		goto Ready
+
+	// Stronghold
+	// Unpowered
+	DeselectStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStrPowered")
+	DeselectStrContinue:
+		TNT1 A 0 A_Lower
+		DPUN A 1 A_Lower
+		goto Deselect
+
+	SelectStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectStrPowered")
+	SelectStrContinue:
+		TNT1 A 0 A_Raise
+		DPUN A 1 A_Raise
+		goto Select
+
+	ReadyStr:
+		TNT1 A 0 A_WeaponReady
+		DPUN A 1 A_WeaponReady
+		Goto Ready
+
+	FireStr:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FireStrSmooth")
+	FireStrVanilla:
+		DPUN M 4
+		DPUN N 4 A_GiveInventory("SamsaraDoomguyStrFistAttackHandler")
+		DPUN O 5
+		DPUN N 4
+		DPUN M 5 A_ReFire
+		goto Ready
+
+	FireStrSmooth:
+		DPUN L 1 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,"FireStrSmoothRage")
+		DPUN BCD 1
+		DPUN E 2 A_GiveInventory("SamsaraDoomguyStrFistAttackHandler")
+		DPUN FGHI 2
+		DPUN JKL 1
+		DPUN A 5 A_ReFire
+		goto Ready
+
+	FireStrSmoothRage:
+		DPUN LC 2
+		DPUN E 2 A_GiveInventory("SamsaraDoomguyStrFistAttackHandler")
+		DPUN FGHIJL 2
+		DPUN A 4 A_ReFire
+		goto Ready
+
+	// Powered
+	DeselectStrPowered:
+		TNT1 A 0 A_Lower
+		goto DeselectStrContinue
+
+	SelectStrPowered:
+		TNT1 A 0 A_Raise
+		goto SelectStrContinue
+	}
+}
+
+// punchdrunk damage values: random(1,10)*8 (normal), random(10,20)*4 (berserk). Punchdrunk triples fist damage already.
+
+actor SamsaraDoomguyFistAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupNormalImproved")
+      // Normal (vanilla)
+      PickupNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalVanillaCoop")
+      PickupNormalVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalVanillaDMSpread") // A_CustomPunch doesn't support spread, multiply damage by 3 to compensate
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"DoomPunchPuff")
+        stop
+
+      PickupNormalVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"DoomPunchPuff")
+        stop
+
+      PickupNormalVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"DoomPunchPuff_Coop")
+        stop
+
+      PickupNormalVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"DoomPunchPuff_Coop")
+        stop
+
+      // Normal (improved)
+      PickupNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalImprovedCoop")
+      PickupNormalImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"DoomPunchPuff")
+        stop
+
+      PickupNormalImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"DoomPunchPuff")
+        stop
+
+      PickupNormalImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"DoomPunchPuff_Coop")
+        stop
+
+      PickupNormalImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"DoomPunchPuff_Coop")
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupBerserkImproved")
+      // Berserk (vanilla)
+      PickupBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkVanillaCoop")
+      PickupBerserkVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkVanillaDMSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"DoomPunchPuff2") // Technically should be random(1,10)*20, but oh well.
+        stop
+
+      PickupBerserkVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"DoomPunchPuff2")
+        stop
+
+      PickupBerserkVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"DoomPunchPuff2_Coop")
+        stop
+
+      PickupBerserkVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"DoomPunchPuff2_Coop")
+        stop
+
+      // Berserk (improved)
+      PickupBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkImprovedCoop")
+      PickupBerserkImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"DoomPunchPuff2")
+        stop
+
+      PickupBerserkImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"DoomPunchPuff2")
+        stop
+
+      PickupBerserkImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"DoomPunchPuff2_Coop")
+        stop
+
+      PickupBerserkImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"DoomPunchPuff2_Coop")
+        stop
+    }
+}
+
+actor DoomPunchPuff : BulletPuff
+{
+	DamageType "DoomDamageTypeFist"
+    +PUFFGETSOWNER
+	+PUFFONACTORS
+	States
+	{
+	Spawn:
+	Crash:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyFistHitWallSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	Puff:
+		DPFF CD 4
+		stop
+
+	Melee:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyFistHitActorSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	XDeath:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyFistHitActorSoundPlayer",1,AAPTR_TARGET)
+		stop
+	}
+}
+
+actor DoomPunchPuff_Coop : DoomPunchPuff { +MTHRUSPECIES }
+
+actor DoomPunchPuff2 : DoomPunchPuff
+{
+	States
+	{
+	Spawn:
+	Crash:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyFistHitWallBerserkSoundPlayer",1,AAPTR_TARGET)
+		goto Super::Puff
+
+	Melee:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyFistHitActorBerserkSoundPlayer",1,AAPTR_TARGET)
+		goto Super::Puff
+	XDeath:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyFistHitActorBerserkSoundPlayer",1,AAPTR_TARGET)
+		stop
+	}
+}
+
+actor DoomPunchPuff2_Coop : DoomPunchPuff2 { +MTHRUSPECIES }
+
+actor SamsaraDoomguyFistHitWallSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch2",CHAN_WEAPON)
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/wallpunch2",CHAN_WEAPON)
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 //A_PlaySound("doomguy/wallpunch2",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyFistHitActorSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/punch",CHAN_WEAPON)
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/punch",CHAN_WEAPON)
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/punch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyFistHitWallBerserkSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch",CHAN_WEAPON)
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/wallpunch",CHAN_WEAPON)
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 //A_PlaySound("doomguy/wallpunch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyFistHitActorBerserkSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPerkristan")
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupPSX")
+        TNT1 A 0 A_PlaySound("doomguy/punch2",CHAN_WEAPON)
+        stop
+
+      PickupPSX:
+        TNT1 A 0 A_PlaySound("doom64guy/punch2",CHAN_WEAPON)
+        stop
+
+      PickupPerkristan:
+        TNT1 A 0 A_PlaySound("doomguy/perkristan/punch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguy64FistAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupNormalImproved")
+      // Normal (vanilla)
+      PickupNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalVanillaCoop")
+      PickupNormalVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalVanillaDMSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"Doom64PunchPuff")
+        stop
+
+      PickupNormalVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"Doom64PunchPuff")
+        stop
+
+      PickupNormalVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"Doom64PunchPuff_Coop")
+        stop
+
+      PickupNormalVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"Doom64PunchPuff_Coop")
+        stop
+
+      // Normal (improved)
+      PickupNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalImprovedCoop")
+      PickupNormalImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"Doom64PunchPuff")
+        stop
+
+      PickupNormalImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"Doom64PunchPuff")
+        stop
+
+      PickupNormalImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"Doom64PunchPuff_Coop")
+        stop
+
+      PickupNormalImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"Doom64PunchPuff_Coop")
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupBerserkImproved")
+      // Berserk (vanilla)
+      PickupBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkVanillaCoop")
+      PickupBerserkVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkVanillaDMSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"Doom64PunchPuff2")
+        stop
+
+      PickupBerserkVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"Doom64PunchPuff2")
+        stop
+
+      PickupBerserkVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"Doom64PunchPuff2_Coop")
+        stop
+
+      PickupBerserkVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"Doom64PunchPuff2_Coop")
+        stop
+
+      // Berserk (improved)
+      PickupBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkImprovedCoop")
+      PickupBerserkImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"Doom64PunchPuff2")
+        stop
+
+      PickupBerserkImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"Doom64PunchPuff2")
+        stop
+
+      PickupBerserkImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"Doom64PunchPuff2_Coop")
+        stop
+
+      PickupBerserkImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"Doom64PunchPuff2_Coop")
+        stop
+    }
+}
+
+actor Doom64PunchPuff : Doom64BulletPuff
+{
+	DamageType "DoomDamageTypeFist"
+	Decal ""
+    +PUFFGETSOWNER
+	+PUFFONACTORS
+	States
+	{
+	Spawn:
+	Crash:
+		64PF C 0 A_GiveInventory("SamsaraDoomguy64FistHitWallSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	Puff:
+		64PF CDEF 4
+		stop
+		
+	Melee:
+		64PF C 0 A_GiveInventory("SamsaraDoomguy64FistHitActorSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	XDeath:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguy64FistHitActorSoundPlayer",1,AAPTR_TARGET)
+		stop
+	}
+}
+
+actor Doom64PunchPuff_Coop : Doom64PunchPuff { +MTHRUSPECIES }
+
+actor Doom64PunchPuff2 : Doom64PunchPuff
+{
+	States
+	{
+	Spawn:
+	Crash:
+		64PF C 0 A_GiveInventory("SamsaraDoomguy64FistHitWallBerserkSoundPlayer",1,AAPTR_TARGET)
+		goto Super::Puff
+
+	Melee:
+		64PF C 0 A_GiveInventory("SamsaraDoomguy64FistHitActorBerserkSoundPlayer",1,AAPTR_TARGET)
+		goto Super::Puff
+	XDeath:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguy64FistHitActorBerserkSoundPlayer",1,AAPTR_TARGET)
+		stop
+	}
+}
+
+actor Doom64PunchPuff2_Coop : Doom64PunchPuff2 { +MTHRUSPECIES }
+
+actor SamsaraDoomguy64FistHitWallSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("doom64guy/wallpunch2",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguy64FistHitActorSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("doom64guy/punch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguy64FistHitWallBerserkSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("doom64guy/wallpunch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguy64FistHitActorBerserkSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("doom64guy/punch2",CHAN_WEAPON)
+        stop
+    }
+}
+
+// Attack handler
+
+actor SamsaraDoomguyStrFistAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"PickupPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupPowered")
+      // Unpowered
+      PickupUnpowered:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupUnpoweredBerserk")
+      // Normal
+      PickupUnpoweredNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupUnpoweredNormalImproved")
+      // Normal (vanilla)
+      PickupUnpoweredNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupUnpoweredNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupUnpoweredNormalVanillaCoop")
+      PickupUnpoweredNormalVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredNormalVanillaDMSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupUnpoweredNormalVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupUnpoweredNormalVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredNormalVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*2,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      PickupUnpoweredNormalVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*2)*3,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      // Normal (improved)
+      PickupUnpoweredNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupUnpoweredNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupUnpoweredNormalImprovedCoop")
+      PickupUnpoweredNormalImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredNormalImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupUnpoweredNormalImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupUnpoweredNormalImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredNormalImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(2,10)*5,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      PickupUnpoweredNormalImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(2,10)*5)*3,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      // Berserk
+      PickupUnpoweredBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupUnpoweredBerserkImproved")
+      // Berserk (vanilla)
+      PickupUnpoweredBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupUnpoweredBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupUnpoweredBerserkVanillaCoop")
+      PickupUnpoweredBerserkVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredBerserkVanillaDMSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupUnpoweredBerserkVanillaDMSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupUnpoweredBerserkVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredBerserkVanillaCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      PickupUnpoweredBerserkVanillaCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      // Berserk (improved)
+      PickupUnpoweredBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupUnpoweredBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupUnpoweredBerserkImprovedCoop")
+      PickupUnpoweredBerserkImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredBerserkImprovedDMSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupUnpoweredBerserkImprovedDMSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupUnpoweredBerserkImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupUnpoweredBerserkImprovedCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(20,50)*5,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      PickupUnpoweredBerserkImprovedCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(20,50)*5)*3,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      // Powered
+      PickupPowered:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupPoweredBerserk")
+      // Normal
+      PickupPoweredNormal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupPoweredNormalImproved")
+      // Normal (vanilla)
+      PickupPoweredNormalVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupPoweredNormalVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupPoweredNormalVanillaCoop")
+      PickupPoweredNormalVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredNormalVanillaDMSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(1,10)*2,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupPoweredNormalVanillaDMSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(1,10)*2)*3,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupPoweredNormalVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredNormalVanillaCoopSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(1,10)*2,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      PickupPoweredNormalVanillaCoopSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(1,10)*2)*3,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      // Normal (improved)
+      PickupPoweredNormalImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupPoweredNormalImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupPoweredNormalImprovedCoop")
+      PickupPoweredNormalImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredNormalImprovedDMSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(2,10)*5,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupPoweredNormalImprovedDMSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(2,10)*5)*3,true,0,"SamsaraDoomguyStrFistPuff")
+        stop
+
+      PickupPoweredNormalImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredNormalImprovedCoopSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(2,10)*5,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      PickupPoweredNormalImprovedCoopSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(2,10)*5)*3,true,0,"SamsaraDoomguyStrFistPuffCoop")
+        stop
+
+      // Berserk
+      PickupPoweredBerserk:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupPoweredBerserkImproved")
+      // Berserk (vanilla)
+      PickupPoweredBerserkVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupPoweredBerserkVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupPoweredBerserkVanillaCoop")
+      PickupPoweredBerserkVanillaDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredBerserkVanillaDMSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(10,20)*12,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupPoweredBerserkVanillaDMSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(10,20)*12)*3,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupPoweredBerserkVanillaCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredBerserkVanillaCoopSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(10,20)*12,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      PickupPoweredBerserkVanillaCoopSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(10,20)*12)*3,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      // Berserk (improved)
+      PickupPoweredBerserkImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupPoweredBerserkImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupPoweredBerserkImprovedCoop")
+      PickupPoweredBerserkImprovedDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredBerserkImprovedDMSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(10,25)*3,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupPoweredBerserkImprovedDMSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(10,25)*3)*3,true,0,"SamsaraDoomguyStrFistPuff2")
+        stop
+
+      PickupPoweredBerserkImprovedCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupPoweredBerserkImprovedCoopSpread")
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(10,25)*3,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+
+      PickupPoweredBerserkImprovedCoopSpread:
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(10,25)*3)*3,true,0,"SamsaraDoomguyStrFistPuff2Coop")
+        stop
+    }
+}
+
+// Bullet puff (fist)
+
+actor SamsaraDoomguyStrFistPuff : SamsaraDoomguyStrBulletPuff
+{
+	DamageType "DoomDamageTypeFist"
+    +PUFFGETSOWNER
+	+PUFFONACTORS
+	States
+	{
+	Spawn:
+	Crash:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyStrFistHitWallSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	Puff:
+		DPFF CD 4
+		stop
+
+	Melee:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyStrFistHitActorSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	XDeath:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrFistHitActorSoundPlayer",1,AAPTR_TARGET)
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrFistPuffCoop : SamsaraDoomguyStrFistPuff { +MTHRUSPECIES }
+
+actor SamsaraDoomguyStrFistPuff2 : SamsaraDoomguyStrFistPuff
+{
+	States
+	{
+	Spawn:
+	Crash:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyStrFistHitWallBerserkSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+
+	Melee:
+		DPFF C 0 A_GiveInventory("SamsaraDoomguyStrFistHitActorBerserkSoundPlayer",1,AAPTR_TARGET)
+		goto Puff
+	XDeath:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrFistHitActorBerserkSoundPlayer",1,AAPTR_TARGET)
+		stop
+	}
+}
+
+actor SamsaraDoomguyStrFistPuff2Coop : SamsaraDoomguyStrFistPuff2 { +MTHRUSPECIES }
+
+actor SamsaraDoomguyStrFistHitWallSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupDE")
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch2",CHAN_WEAPON)
+        stop
+
+      PickupDE:
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch2",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyStrFistHitActorSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupDE")
+        TNT1 A 0 A_PlaySound("doomguy/punch",CHAN_WEAPON)
+        stop
+
+      PickupDE:
+        TNT1 A 0 A_PlaySound("doomguy/demoneclipse/punch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyStrFistHitWallBerserkSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupDE")
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch",CHAN_WEAPON)
+        stop
+
+      PickupDE:
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraDoomguyStrFistHitActorBerserkSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupDE")
+        TNT1 A 0 A_PlaySound("doomguy/punch2",CHAN_WEAPON)
+        stop
+
+      PickupDE:
+        TNT1 A 0 A_PlaySound("doomguy/demoneclipse/punch2",CHAN_WEAPON)
+        stop
+    }
+}

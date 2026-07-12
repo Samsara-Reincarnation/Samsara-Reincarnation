@@ -1,0 +1,487 @@
+actor RTCW_GrenadeTimer : Counter { Inventory.MaxAmount 4 }
+actor RTCW_GrenadeFuse : Counter { Inventory.MaxAmount 35 }
+actor RTCW_GrenadeCounter : Counter { Inventory.MaxAmount 24 }
+
+//Was 6 damage, now 18
+Actor RTCW_Grenade : RTCW_Weapon
+{
+	Weapon.SlotNumber 1
+	Weapon.SlotPriority 0
+	Weapon.SelectionOrder 2000
+	Weapon.AmmoType "RocketAmmo"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 5
+	Obituary "%o was killed (gren - gm) by %k."
+	Inventory.PickupMessage "Grenade"
+    Inventory.Icon "CWCMPW03"
+	Tag "Stick Grenade"
+	+EXPLOSIVE
+	States
+	{
+		Spawn:
+			RW98 A -1
+			stop
+
+		ReadyActual:
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyActualAmmo")
+			RW00 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyActualAmmo")
+			goto ReadyActualNoAmmo
+
+		ReadyActualNoAmmo:
+			TNT1 A 0 A_JumpIfInventory("RTCW_Kicking",1,"KickingNoAmmo")
+			TNT1 A 1 A_WeaponReady
+			goto ReadyActualNoAmmoCheck
+
+		ReadyActualAmmo:
+			RW00 A 0 A_JumpIfInventory("RTCW_Kicking",1,"Kicking")
+			RW00 A 1 A_WeaponReady
+			goto ReadyActual
+
+		ReadyActualNoAmmoCheck:
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+			TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReloadStart")
+			goto ReadyActual
+
+		Deselect:
+			RW00 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+			RW00 A 0 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectAmmo")
+			RW00 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectAmmo")
+			goto DeselectNoAmmo
+
+		DeselectNoAmmo:
+			TNT1 AAAAA 2
+			goto DeselectInstant
+
+		DeselectAmmo:
+			RW00 AHIJK 2
+			goto DeselectInstant
+
+		Ready: // our "Select" state
+			RW00 A 0 A_TakeInventory("RTCW_WeaponToken",256)
+			RW00 A 0 A_GiveInventory("RTCW_WeaponToken",6)
+			RW00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
+			RW00 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyAmmo")
+			goto ReadyNoAmmo
+
+		ReadyNoAmmo:
+			TNT1 AAAA 2
+			goto ReadyActual
+
+		ReadyAmmo:
+			RW00 LMNO 2
+			goto ReadyActual
+
+		Fire:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+			RW00 B 0 A_JumpIfInventory("RocketAmmo",1,"FireStart")
+			goto FireDry
+
+		FireDry:
+			TNT1 A 0 A_ClearReFire
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWWeaponDrySoundPlayer")
+			TNT1 A 17 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_SelectWeapon("RTCW_Luger")
+			goto Deselect
+
+		FireStart:
+			RW00 B 0 A_GunFlash("ChargeStart",GFF_NOEXTCHANGE) // interpolation hack
+			RW00 BC 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+		FireCharge:
+			RW00 C 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"FireReleaseOvercook")
+			RW00 C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 C 0 A_ReFire("FireCharge")
+		FireRelease:
+			RW00 B 0 A_GiveInventory("RTCW_FiringToken",1)
+			RW00 B 0 A_GunFlash("ChargeRelease",GFF_NOEXTCHANGE)
+		FireReleaseLastShotCalc:
+			RW00 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireReleaseContinue")
+			RW00 B 0 A_JumpIfInventory("RocketAmmo",2,"FireReleaseContinue")
+			goto FireReleaseContinueLast
+
+		FireReleaseContinue:
+			RW00 B 0 A_GiveInventory("SamsaraRTCWGrenadeAttackHandler")
+			RW00 B 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 C 0
+			TNT1 A 35 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActualNoAmmoCheck
+
+		FireReleaseContinueLast:
+			RW00 B 0 A_GiveInventory("SamsaraRTCWWeaponDrySoundPlayer")
+			RW00 B 0 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			RW00 B 0 A_GiveInventory("SamsaraRTCWGrenadeAttackHandler")
+			RW00 B 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 C 0
+			TNT1 A 35 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			TNT1 A 0 A_SelectWeapon("RTCW_Luger")
+			goto DeselectInstant
+
+		FireReleaseOvercook:
+			TNT1 A 0 A_GunFlash("ChargeRelease",GFF_NOEXTCHANGE)
+		FireReleaseOvercookLastShotCalc:
+			TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireReleaseOvercookContinue")
+			TNT1 A 0 A_JumpIfInventory("RocketAmmo",2,"FireReleaseOvercookContinue")
+			goto FireReleaseOvercookContinueLast
+
+		FireReleaseOvercookContinue:
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWGrenadeOvercookAttackHandler")
+			TNT1 A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			TNT1 A 35 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			goto ReadyActualNoAmmoCheck
+
+		FireReleaseOvercookContinueLast:
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWWeaponDrySoundPlayer")
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWWeaponSwitchSoundPlayer")
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWGrenadeOvercookAttackHandler")
+			TNT1 A 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			TNT1 A 35 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			TNT1 A 0 A_SelectWeapon("RTCW_Luger")
+			goto DeselectInstant
+
+		ChargeStart: // [tv50] kinda stupid way of handling this, but eh
+			TNT1 A 0 A_TakeInventory("RTCW_GrenadeFuse")
+			TNT1 A 0 A_TakeInventory("RTCW_GrenadeTimer")
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWGrenadePulse4SoundPlayer")
+		ChargeActive:
+			TNT1 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"ChargeRelease")
+			TNT1 A 0 A_JumpIfInventory("RTCW_GrenadeFuse",0,"ChargeTimerUp")
+			TNT1 A 1 A_GiveInventory("RTCW_GrenadeFuse")
+			loop
+
+		ChargeTimerUp:
+			TNT1 A 0 A_TakeInventory("RTCW_GrenadeFuse")
+			TNT1 A 0 A_GiveInventory("RTCW_GrenadeTimer")
+			TNT1 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"ChargeActive")
+			TNT1 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",3,4)
+			TNT1 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",2,2)
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWGrenadePulse3SoundPlayer")
+			goto ChargeActive
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWGrenadePulse2SoundPlayer")
+			goto ChargeActive
+			TNT1 A 0 A_GiveInventory("SamsaraRTCWGrenadePulse1SoundPlayer")
+			goto ChargeActive
+
+		ChargeRelease:
+			TNT1 A 0
+			stop
+
+		ReloadStart:
+		ReloadFinish:
+			RW00 LMNO 2 A_WeaponReady
+			goto ReadyActual
+
+		KickingNoAmmo: // jumps to "with ammo" version for the time being
+		Kicking:
+			RW00 A 0 A_GunFlash("KickingFoot")
+		KickingDelay:
+			RW00 A 18 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW00 A 0 A_TakeInventory("RTCW_Kicking",1)
+			goto ReadyActual
+	}
+}
+
+actor SamsaraRTCWGrenadeAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackET")
+      // Original/Console sounds
+      PickupAttackRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Grenade/Throw",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWCoop")
+      PickupAttackRTCWDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectile",0,false,8,4)
+        stop
+
+      PickupAttackRTCWCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectileCoop",0,false,8,4)
+        stop
+
+      // Enemy Territory sounds
+      PickupAttackET:
+        TNT1 A 0 A_PlaySound("RTCWET/Grenade/Throw",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackETCoop")
+      PickupAttackETDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectileSoundET",0,false,8,4)
+        stop
+
+      PickupAttackETCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectileCoopSoundET",0,false,8,4)
+        stop
+    }
+}
+
+actor SamsaraRTCWGrenadeOvercookAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackET")
+      // Original/Console sounds
+      PickupAttackRTCW:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRTCWCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRTCWCoop")
+      PickupAttackRTCWDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectile",0,false,8,4)
+        stop
+
+      PickupAttackRTCWCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectileCoop",0,false,8,4)
+        stop
+
+      // Enemy Territory sounds
+      PickupAttackET:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackETCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackETCoop")
+      PickupAttackETDM:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectileSoundET",0,false,8,4)
+        stop
+
+      PickupAttackETCoop:
+        TNT1 A 0 A_FireCustomMissile("RTCW_GrenadeProjectileCoopSoundET",0,false,8,4)
+        stop
+    }
+}
+
+actor SamsaraRTCWGrenadePulse1SoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Grenade/Pulse1",CHAN_5)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Grenade/Pulse1",CHAN_5)
+        stop
+    }
+}
+
+actor SamsaraRTCWGrenadePulse2SoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Grenade/Pulse2",CHAN_5)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Grenade/Pulse2",CHAN_5)
+        stop
+    }
+}
+
+actor SamsaraRTCWGrenadePulse3SoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Grenade/Pulse3",CHAN_5)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Grenade/Pulse3",CHAN_5)
+        stop
+    }
+}
+
+actor SamsaraRTCWGrenadePulse4SoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupET")
+      // Original/Console sounds
+      PickupRTCW:
+        TNT1 A 0 A_PlaySound("RTCW/Grenade/Pulse4",CHAN_5)
+        stop
+
+      // Enemy Territory sounds
+      PickupET:
+        TNT1 A 0 A_PlaySound("RTCWET/Grenade/Pulse4",CHAN_5)
+        stop
+    }
+}
+
+Actor RTCW_GrenadeProjectile
+{
+	Height 10
+	Radius 5
+	Damage (6)
+	Speed 12
+	Projectile
+	Gravity 0.5
+	BounceCount 5
+	BounceType "Hexen"
+	DamageType "RTCWExplosive"
+	BounceSound "RTCW/Grenade/Bounce"
+	ReactionTime 0
+	+USEBOUNCESTATE
+	+ALLOWBOUNCEONACTORS
+	+BOUNCEONACTORS
+	+SKYEXPLODE
+	-NOGRAVITY
+	States
+	{
+		Spawn:
+			RW00 A 0 NoDelay A_GiveInventory("RTCW_GrenadeTimer",CallACS("RTCW_Decorate",7))
+			RW00 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"StopGrenade")
+			RW00 A 0 ThrustThingZ(0,20,0,1)
+		SpawnLoop:
+			RW00 AAAAAAAAAAAAAAAAAAAAAAAA 1
+			RW00 A 0 A_GiveInventory("RTCW_GrenadeTimer",1)
+			RW00 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"StopGrenade")
+			Goto SpawnLoop
+
+		Bounce:
+			RW00 A 0 A_GiveInventory("RTCW_GrenadeCounter",1)
+			RW00 A 0 A_JumpIfInventory("RTCW_GrenadeCounter",0,1)
+			Goto Bounce+5
+			RW00 A 0 A_GiveInventory("RTCW_GrenadeTimer",1)
+			RW00 A 0 A_TakeInventory("RTCW_GrenadeCounter")
+			RW00 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"StopGrenade")
+			RW00 A 1 A_SpawnItemEx("RTCW_GrenadeTrailSmoke")
+			Goto Bounce
+
+		OnFloor:
+			RW00 B 0 A_GiveInventory("RTCW_GrenadeTimer",1)
+			RW00 B 17 A_JumpIfInventory("RTCW_GrenadeTimer",0,"StopGrenade")
+			Loop
+
+		StopGrenade:
+			RW00 A 0 A_Countdown
+			Goto Detonate
+
+		Crash:
+		Death:
+		XDeath:
+			RW00 A 0 A_Stop
+			RW00 A 0 A_JumpIfInventory("RTCW_GrenadeTimer",0,"Detonate")
+			Goto OnFloor
+
+		Detonate:
+			RW00 AAAA 0 A_SpawnItemEx("RTCW_PanzerfaustSmokeExplosion",0,0,0,frandom(-0.5,0.5),frandom(-0.5,0.5),1)
+			RW00 AAAA 0 A_SpawnItemEx("RTCW_ExplosionSmokeDebris")
+			RW00 A 0 A_GiveInventory("RTCW_BlazkoWeaponAlert",1,AAPTR_Target)
+			RW00 A 0 A_Explode(160,160,XF_HURTSOURCE,1,0)
+			RW00 A 0 A_SpawnItemEx("RTCW_GrenadeExplosion")
+			Stop
+	}
+}
+
+Actor RTCW_GrenadeProjectileCoop : RTCW_GrenadeProjectile { +THRUSPECIES Species "Player" }
+
+Actor RTCW_GrenadeProjectileSoundET : RTCW_GrenadeProjectile
+{
+	BounceSound "RTCWET/Grenade/Bounce"
+	States
+	{
+		StopGrenade:
+			RW00 A 0 A_Countdown
+			Goto Detonate
+
+		Detonate:
+			RW00 AAAA 0 A_SpawnItemEx("RTCW_PanzerfaustSmokeExplosion",0,0,0,frandom(-0.5,0.5),frandom(-0.5,0.5),1)
+			RW00 AAAA 0 A_SpawnItemEx("RTCW_ExplosionSmokeDebris")
+			RW00 A 0 A_GiveInventory("RTCW_BlazkoWeaponAlert",1,AAPTR_Target)
+			RW00 A 0 A_Explode(160,160,XF_HURTSOURCE,1,0)
+			RW00 A 0 A_SpawnItemEx("RTCW_GrenadeExplosionSoundET")
+			Stop
+	}
+}
+
+Actor RTCW_GrenadeProjectileCoopSoundET : RTCW_GrenadeProjectileSoundET { +THRUSPECIES Species "Player" }
+
+Actor RTCW_GrenadeTrailSmoke
+{
+	Radius 1
+	Height 1
+	Alpha 0.2
+	Scale 0.1
+	RenderStyle Shaded
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	+FORCEXYBILLBOARD
+	States
+	{
+		Spawn:
+			RW05 ABCDEFGHIJKLMNOPQRSTUVWX 2
+			Stop
+	}
+}
+
+actor RTCW_GrenadeExplosion
+{
+	Radius 2
+	Height 4
+	Scale 2
+	+NOINTERACTION
+	+BRIGHT
+	States
+	{
+	Spawn:
+		//We have to duplicate the sprites because of a zandronum bug
+		RW06 A 0 NoDelay A_Quake(3,15,0,256,"nosoundforyoubitch")
+		TNT1 A 0 A_JumpIf(waterlevel > 0, 2)
+		TNT1 A 0 A_PlaySound("RTCW/Grenade/Explode",CHAN_VOICE)
+		goto SpawnFinish
+		TNT1 A 0 A_PlaySound("RTCW/Grenade/ExplodeUnderwater",CHAN_VOICE)
+		goto SpawnFinish
+
+	SpawnFinish:
+		RW06 ABCDEFGHIJKLMNOPQRSTUVWX 2
+		stop
+	}
+}
+
+actor RTCW_GrenadeExplosionSoundET : RTCW_GrenadeExplosion
+{
+	States
+	{
+	Spawn:
+		//We have to duplicate the sprites because of a zandronum bug
+		RW06 A 0 NoDelay A_Quake(3,15,0,256,"nosoundforyoubitch")
+		TNT1 A 0 A_JumpIf(waterlevel > 0, 2)
+		TNT1 A 0 A_PlaySound("RTCWET/Grenade/Explode",CHAN_VOICE)
+		goto SpawnFinish
+		TNT1 A 0 A_PlaySound("RTCWET/Grenade/ExplodeUnderwater",CHAN_VOICE)
+		goto SpawnFinish
+	}
+}

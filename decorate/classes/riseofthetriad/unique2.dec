@@ -1,0 +1,362 @@
+actor SamsaraROTTDarkStaffSecondaryFiringSoundCheck : Boolean {}
+actor SamsaraROTTDarkStaffSecondaryFiredCount : Counter { Inventory.MaxAmount 14 } // take 1 ammo every 15th projectile
+
+actor "Dark Staff" : SamsaraROTTWeapon
+{
+    Inventory.PickupMessage "You wield the Dark Staff!"
+    Weapon.UpSound "gen/wepswitch"
+    Weapon.SlotNumber 9
+    Weapon.SelectionOrder 250
+    Weapon.AmmoType "DSEnergy"
+    Weapon.AmmoGive 10
+    Weapon.AmmoUse 1
+    Obituary "%o felt the power of %k's Dark Staff."
+    Tag "Dark Staff"
+    +ALT_USES_BOTH
+    +EXPLOSIVE
+    States
+    {
+      Spawn:
+        PKE_ A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck")
+        TNT1 A 0 A_TakeInventory("UsingFirearm")
+        TNT1 A 0 A_CheckReload // auto switch out if we don't have ammo
+        KES_ A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffSecondaryFiringSoundStopper")
+        TNT1 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        KES_ A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_TakeInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck")
+        KES_ A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffPreFireSoundPlayer")
+        KES_ A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ BCDE 9 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffPrimaryAttackHandler")
+        KES_ FGHIJK 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ LMNOP 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ Q 11 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ R 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      AltFire:
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffPreFireSoundPlayer")
+        KES_ A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ BCDE 9 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_PlaySound("firewall/Burn",CHAN_WEAPON,1,true)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck")
+      AltFireLoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("DSEnergy",1,1)
+        goto AltFireEnd
+        KES_ E 2 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffSecondaryAttackHandler")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("DSEnergy",1,1)
+        goto AltFireEnd
+        TNT1 A 0 A_JumpIfInventory("PowerGodProtection",1,"AltFireEnd")
+        TNT1 A 0 A_ReFire("AltFireLoop")
+      AltFireEnd:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffSecondaryFiringSoundStopper")
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffPreFireSoundPlayer")
+        KES_ FGHIJK 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ LMNOP 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ Q 11 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KES_ R 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+    }
+}
+
+actor SamsaraROTTDarkStaffPrimaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DSEnergy",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("DSEnergy",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAttackAlternate")
+      // Original sounds
+      PickupAttackOriginal:
+        TNT1 A 0 A_PlaySound("ksphere/fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackOriginalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackOriginalCoop")
+      PickupAttackOriginalDM:
+        TNT1 A 0 A_FireCustomMissile("Ksphere_Rott",0,false,0,-5)
+        stop
+
+      PickupAttackOriginalCoop:
+        TNT1 A 0 A_FireCustomMissile("Ksphere_Rott_2",0,false,0,-5)
+        stop
+
+      // Alternate sounds
+      PickupAttackAlternate:
+        TNT1 A 0 A_PlaySound("ksphere/fire/alt",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAlternateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAlternateCoop")
+      PickupAttackAlternateDM:
+        TNT1 A 0 A_FireCustomMissile("Ksphere_RottSoundAlternate",0,false,0,-5)
+        stop
+
+      PickupAttackAlternateCoop:
+        TNT1 A 0 A_FireCustomMissile("Ksphere_Rott_2SoundAlternate",0,false,0,-5)
+        stop
+    }
+}
+
+actor SamsaraROTTDarkStaffSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("DSEnergy",1,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTDarkStaffSecondaryFiredCount",0,2)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffSecondaryFiredCount")
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("DSEnergy",1)
+        TNT1 A 0 A_TakeInventory("SamsaraROTTDarkStaffSecondaryFiredCount")
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("firewall/Burn",CHAN_WEAPON,1,true)
+        TNT1 A 0 A_GiveInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("RoTTDarkMatter",0,false,0,-5)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("RoTTDarkMatter",0,false,0,-5)
+        stop
+    }
+}
+
+actor SamsaraROTTDarkStaffPreFireSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",1,"PickupAlternate")
+      // Original sounds
+      PickupOriginal:
+        TNT1 A 0 A_PlaySound("ksphere/charge",CHAN_WEAPON)
+        stop
+
+      // Alternate sounds
+      PickupAlternate:
+        TNT1 A 0 A_PlaySound("ksphere/charge/alt",CHAN_WEAPON)
+        stop
+    }
+}
+
+actor SamsaraROTTDarkStaffSecondaryFiringSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_WEAPON)
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraROTTDarkStaffSecondaryFiringSoundCheck")
+        stop
+    }
+}
+
+actor DSEnergy : Ammo
+{
+    Inventory.MaxAmount 10
+    Tag "Dark Staff Energy"
+    +IGNORESKILL
+}
+
+actor Ksphere_Rott
+{
+    Projectile
+    Radius 11
+    Height 8
+    Speed 60
+    Damage (0)
+    DamageType "RottExplosive"
+    Scale 0.6
+    SeeSound "ksphere/projectile"
+    DeathSound "ksphere/death"
+    Obituary "%o felt the power of %k's Dark Staff."
+    +EXTREMEDEATH
+    +FORCERADIUSDMG
+    //+RIPPER
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        KSP_ A 0 Bright Light("DARKSTAFFBALL")
+        KSP_ ABCDEFIJ 1 Bright Light("DARKSTAFFBALL") A_GiveInventory("Ksphere_Rott_Predictor")
+        loop
+
+      Death:
+        TNT1 A 0 A_PlaySound("gen/expl2")
+        TNT1 A 0 A_Explode(75,128)
+      DeathFinish:
+        EXPL A 1 Bright Light("ROTTROCKETEXP")
+        TNT1 AA 0 A_SpawnItemEx("Rott_ash1",0,0,16,random(5,10),random(5,10),random(5,10),random(0,359),SXF_CLIENTSIDE)
+        EXPL A 1 Bright Light("ROTTROCKETEXP")
+        TNT1 AA 0 A_SpawnItemEx("Rott_ash1",0,0,16,random(5,10),random(5,10),random(5,10),random(0,359),SXF_CLIENTSIDE)
+        EXPL B 1 Bright Light("ROTTROCKETEXP")
+        TNT1 AA 0 A_SpawnItemEx("Rott_ash1",0,0,16,random(5,10),random(5,10),random(5,10),random(0,359),SXF_CLIENTSIDE)
+        EXPL B 1 Bright Light("ROTTROCKETEXP")
+        TNT1 AA 0 A_SpawnItemEx("Rott_ash1",0,0,16,random(5,10),random(5,10),random(5,10),random(0,359),SXF_CLIENTSIDE)
+        EXPL C 1 Bright Light("ROTTROCKETEXP")
+        TNT1 AA 0 A_SpawnItemEx("Rott_ash1",0,0,16,random(5,10),random(5,10),random(5,10),random(0,359),SXF_CLIENTSIDE)
+        EXPL C 1 Bright Light("ROTTROCKETEXP")
+        EXPL DEFGHIJKLMNOPQRS 2 Bright Light("ROTTROCKETEXP")
+        EXPL T 2 Bright Light("ROTTROCKETEXP") A_FadeOut
+        stop
+
+      Crash:
+        TNT1 A 0 A_Jump(250,"Death")
+        TNT1 A 0 A_PlaySound("rmissile/cook",CHAN_5)
+        goto Death
+    }
+}
+
+actor Ksphere_Rott_Predictor : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SetArg(0,sqrt(velx*velx+vely*vely)*1000/sqrt(velx*velx+vely*vely+velz*velz))
+        TNT1 A 0 A_SetArg(1,velz*1000/sqrt(velx*velx+vely*vely+velz*velz))
+        TNT1 A 0 A_SetArg(2,sqrt(velx*velx+vely*vely+velz*velz)/2)
+        TNT1 A 0 A_SetMass(-args[2])
+      PickupLoop:
+        TNT1 A 0 A_JumpIf(mass >= args[2], "PickupStop")
+        TNT1 A 0 A_SpawnItemEx("Ksphere_Rott_Explosion",args[0]/1000.0*mass,0,args[1]/1000.0*mass,0,0,0,0,SXF_TRANSFERPOINTERS)
+        TNT1 A 0 A_SetMass(mass+radius)
+        loop
+    }
+}
+
+actor Ksphere_Rott_Explosion
+{
+    Projectile
+    Radius 11
+    Height 8
+    DamageType "RottExplosive"
+    Obituary "%o felt the power of %k's Dark Staff."
+    +DONTBLAST
+    +DONTREFLECT
+    +DONTSPLASH
+    +EXTREMEDEATH
+    +FORCERADIUSDMG
+    +NODAMAGETHRUST
+    +NOINTERACTION
+    +NOTIMEFREEZE
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 1 A_Explode(50,11,0,false,11)
+        stop
+    }
+}
+
+actor Ksphere_Rott_2 : Ksphere_Rott
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Ksphere_RottSoundAlternate : Ksphere_Rott { SeeSound "ksphere/projectile/alt" }
+
+actor Ksphere_Rott_2SoundAlternate : Ksphere_RottSoundAlternate
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Rott_ash1
+{
+    Radius 10
+    Height 10
+    Gravity 0.75
+    Scale 0.5
+    +CLIENTSIDEONLY
+    +CORPSE
+    +MOVEWITHSECTOR
+    +NOBLOCKMONST
+    +SLIDESONWALLS
+    States
+    {
+      Spawn:
+        ASH_ AB 2 Bright
+        loop
+
+      Death:
+      Crash:
+        TNT1 A 0 A_Jump(128,2)
+        TNT1 A 0 A_PlaySound("gen/ashg",CHAN_VOICE)
+        ASH_ CDEFGHIJKL 2 Bright
+        ASH_ L 250 Bright
+        ASH_ L 1 Bright A_FadeOut
+        wait
+    }
+}
+
+actor RoTTDarkMatter
+{
+    Projectile
+    Radius 11
+    Height 12
+    Speed 44
+    Damage (0)
+    DamageType "RottExplosive"
+    Scale 0.35
+    DeathSound "ksphere/death"
+    +DONTREFLECT
+    +EXTREMEDEATH
+    +FOILINVUL
+    +FORCERADIUSDMG
+    +NODAMAGETHRUST
+    +RIPPER
+    States
+    {
+      Spawn:
+       RT43 A 1 Bright A_Explode(random(5,10),32,0)
+       loop
+
+      Death:
+       TNT1 A 0 A_Explode(25,32,0)
+       EXPL ABCDEFGHIJKLMNOPQRST 2 Bright
+       stop
+    }
+}
+
+actor RoTTDarkMatter_2 : RoTTDarkMatter
+{
+    Species "Player"
+    +THRUSPECIES
+}

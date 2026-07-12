@@ -1,0 +1,234 @@
+actor SamsaraDarkForcesMineSecondaryFiring : Boolean {}
+
+actor "I.M. Mines" : SamsaraDarkForcesWeapon
+{
+    Inventory.PickupMessage "IM Mines"
+    Weapon.SlotNumber 5
+    Weapon.SlotPriority 1
+    Weapon.SelectionOrder 2000
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoGive 5
+    Weapon.AmmoUse 1
+    Obituary "%o tripped %k's I.M. mine."
+    Tag "I.M. Mines"
+    +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
+    +EXPLOSIVE
+    +NOALERT
+    +NOAUTOAIM
+    +NOAUTOFIRE
+    States
+    {
+      Spawn:
+        IMIN A -1
+        stop
+
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyAmmo")
+        goto ReadyNoAmmo
+
+      ReadyNoAmmo:
+        KHAN H 1 A_WeaponReady
+        goto Ready
+
+      ReadyAmmo:
+        KHAN B 1 A_WeaponReady
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_Lower
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectAmmo")
+        goto DeselectNoAmmo
+
+      DeselectNoAmmo:
+        KHAN H 1 A_Lower
+        goto Deselect
+
+      DeselectAmmo:
+        KHAN B 1 A_Lower
+        goto Deselect
+
+      Select:
+        TNT1 A 0 A_Raise
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectAmmo")
+        goto SelectNoAmmo
+
+      SelectNoAmmo:
+        KHAN H 1 A_Raise
+        goto Select
+
+      SelectAmmo:
+        KHAN B 1 A_Raise
+        goto Select
+
+      Fire:
+        TNT1 A 0 A_TakeInventory("SamsaraDarkForcesMineSecondaryFiring")
+        goto FireStart
+
+      AltFire:
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesMineSecondaryFiring")
+        goto FireStart
+
+      FireStart:
+        KHAN BC 1
+        KHAN DE 2
+        TNT1 A 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesMineSecondaryFiring",1,2)
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesMinePrimaryAttackHandler")
+        goto FireFinish
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesMineSecondaryAttackHandler")
+        goto FireFinish
+
+      FireFinish:
+        TNT1 A 8
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto Ready
+        KHAN FG 2
+        KHAN B 2 A_ReFire
+        goto Ready
+
+      FireNoAmmo:
+        KHAN HIJ 2
+        TNT1 A 2
+        TNT1 A 0 A_JumpIfInventory("SamsaraDarkForcesMineSecondaryFiring",1,2)
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesMinePrimaryAttackHandler")
+        goto FireNoAmmoFinish
+        TNT1 A 0 A_GiveInventory("SamsaraDarkForcesMineSecondaryAttackHandler")
+        goto FireNoAmmoFinish
+
+      FireNoAmmoFinish:
+        TNT1 A 8
+        KHAN JIH 2
+        goto Ready
+    }
+}
+
+actor SamsaraDarkForcesMinePrimaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_SpawnItemEx("DarkForcesIMMine",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_SpawnItemEx("DarkForcesIMMineCoop",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+        stop
+    }
+}
+
+actor SamsaraDarkForcesMineSecondaryAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_SpawnItemEx("DarkForcesIMMineProxy",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+        stop
+    }
+}
+
+actor DarkForcesIMMine
+{
+    Projectile
+    Radius 8
+    Height 5
+    Damage (0)
+    DamageType "Explosive"
+    Mass 100000
+    Scale 0.75
+    Tag "I.M. Mine"
+    Obituary "%o tripped %k's I.M. mine."
+    +FORCERADIUSDMG
+    -MISSILE
+    +MOVEWITHSECTOR
+    -NOBLOCKMAP
+    -NOGRAVITY
+    States
+    {
+      Spawn:
+        PMIN B 70 NoDelay A_PlaySound("katarn/minplce",CHAN_VOICE)
+        TNT1 A 0 A_PlaySound("katarn/exmiss",CHAN_VOICE)
+        TNT1 A 0 A_SpawnItemEx("explosion_immine",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_Explode(180,196,0,false)
+        TNT1 A 1 A_Explode(90,196,XF_HURTSOURCE,true)
+        stop
+    }
+}
+
+actor DarkForcesIMMineCoop : DarkForcesIMMine
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor DarkForcesIMMineProxy : DarkForcesIMMine
+{
+    States
+    {
+      Spawn:
+        PMIN B 0 NoDelay A_PlaySound("katarn/minplce",CHAN_VOICE)
+		Goto Stay
+      Stay:
+		PMIN B 30
+		Goto Charge
+      Charge:
+        TNT1 A 0 A_GiveInventory("ProximityTNTArmed",1)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraProximityLooker")
+        Goto ChargeLoop
+      ChargeLoop:
+        PMIN B 1 A_JumpIfInventory("ProximityTNTDetonate",1,"Explode")
+        Loop
+
+      XDeath:
+      Explode:
+        PMIN B 30 A_PlaySound("katarn/minbeep",CHAN_VOICE)
+        TNT1 A 0 A_TransferPointer(AAPTR_TARGET,AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET)
+      ExplodeFinish:
+        TNT1 A 0 A_RemoveChildren(true)
+		TNT1 A 0 A_PlaySound("katarn/exmiss",CHAN_VOICE)
+        TNT1 A 0 A_SpawnItemEx("explosion_immine",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+        TNT1 A 0 A_Explode(180,196,0,false)
+        TNT1 A 1 A_Explode(90,196,XF_HURTSOURCE,true)
+        stop
+    }
+}
+
+actor explosion_immine
+{
+    Radius 6
+    Height 6
+    +CLIENTSIDEONLY
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        EXML AB 2
+        EXML CDE 2 Bright
+        EXML FGHIJKLM 2
+        stop
+    }
+}

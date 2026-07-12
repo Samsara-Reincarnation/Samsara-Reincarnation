@@ -11,10 +11,8 @@ actor CorvusPlayer : SamsaraPlayerPawnNormalRedBlood
     Player.StartItem "CorvusClass", 1
     Player.StartItem "IsSamsaraClass", 1
 	Player.StartItem "SamsaraTipsChecker", 1
+	Player.StartItem "SamsaraPermaWeaponLevel2ToggleMemory", 1
     Player.StartItem "Clip", 50
-    Player.StartItem "PermaRemoteBomb", 1
-    Player.StartItem "PermaTimeBomb", 1
-	Player.StartItem "PermaProxyBomb", 1
     Player.Face "CRV"
     Player.SoundClass "CorvusPlayer"
     Player.JumpZ 9//Default is 8
@@ -66,6 +64,7 @@ actor CorvusPlayer : SamsaraPlayerPawnNormalRedBlood
 			Goto Spawn
 		Death:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
 			CORV H 6
 			CORV I 6 A_PlayerScream
 			CORV JK 6
@@ -75,6 +74,7 @@ actor CorvusPlayer : SamsaraPlayerPawnNormalRedBlood
 			Stop
 		XDeath:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreXDeathEffect")
+		XDeath.Massacre:
 			CORV Q 5 A_PlaySound("*gibbed",CHAN_VOICE)
 			TNT1 A 0 A_SpawnItemEx("BloodySkull2",0,0,46,random(-1,1),random(-1,1),5)
 			CORV R 5 A_NoBlocking
@@ -178,6 +178,7 @@ Actor CorvusPlayer_Shrink : CorvusPlayer
 		Death.DukePistol:
 		Death.MightyBoot:
 		Death.DukeExplosive:
+		Death.HexenMedusa:
 		Death.DukeIce:
 		Ice:
 		Death.HexenIce:
@@ -186,12 +187,18 @@ Actor CorvusPlayer_Shrink : CorvusPlayer
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
 		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
 		Death.QuakeElectric:
 		Death.NotQuadded:
 		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
 		XDeath.QuakeElectric:
 		XDeath.NotQuadded:
 		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
 		Death.RottExplosive:
 		Death.RottFire:
 		Death.RottDisintegrate:
@@ -206,6 +213,7 @@ Actor CorvusPlayer_Shrink : CorvusPlayer
 		Death.Tesla:
 		Death.CalebBullet:
 		Disintegrate:
+		Death.StrifeMauler:
 		Death.EradExplosive:
 		Death.EradNova:
 		Death.EradShock:
@@ -293,6 +301,8 @@ Actor CorvusPlayer_Shrink : CorvusPlayer
 		DeusXDeath:
 		Death:
 		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
 		Death.Squish:
 		XDeath.Squish:
 			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)

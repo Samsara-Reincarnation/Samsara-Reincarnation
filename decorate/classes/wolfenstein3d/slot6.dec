@@ -1,0 +1,263 @@
+// Original/Lost Episodes
+
+actor Wolfen_IHaveSlot6 : Boolean {}
+
+actor " Flamethrower " : InstantSwitchWeapon
+{
+    Weapon.SelectionOrder 1900
+    Weapon.SlotNumber 6
+    Weapon.SlotPriority 0
+    Inventory.PickUpSound "wolfen/flameget"
+    Weapon.AmmoUse 1
+    Weapon.AmmoGive 40
+    Weapon.AmmoType "Cell"
+    +DONTBOB
+    +INVENTORY.UNDROPPABLE
+    Inventory.PickupMessage "You got the Flamethrower!"
+    Weapon.YAdjust 14
+	Inventory.RestrictedTo "WolfenPlayer"
+    Tag "Flamethrower"
+    States
+    {
+      Spawn:
+        WFLP A -1
+        stop
+
+      // Original
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("WolfenClassMode",1,"ReadyLost")
+      ReadyOriginal:
+        WFLT A 1 A_WeaponReady
+        goto Ready
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("WolfenClassMode",1,"FireLost")
+      FireOriginal:
+        WFLT B 5
+        goto HoldOriginal
+
+      Hold:
+        TNT1 A 0 A_JumpIfInventory("WolfenClassMode",1,"HoldLost")
+      HoldOriginal:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"HoldOriginalSmooth")
+      HoldOriginalVanilla:
+        WFLT C 4 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        WFLT D 3 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        goto HoldFinishOriginal
+
+      HoldOriginalSmooth:
+        WFLT C 2 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        WFLT D 1
+		9382 H 1
+        WFLT C 1 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        WFLT D 1
+		9382 H 1
+        goto HoldFinishOriginal
+
+      HoldFinishOriginal:
+        WFLT B 3 A_ReFire
+        goto Ready
+
+      HoldFinishSmooth:
+        9382 H 3 A_ReFire
+        goto Ready
+
+      // Lost Episodes
+      ReadyLost:
+        WFLT E 1 A_WeaponReady
+        goto Ready
+
+      FireLost:
+        WFLT F 5
+      HoldLost:
+        TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"HoldLostSmooth")
+      HoldLostVanilla:
+        WFLT G 4 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        WFLT H 3 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        goto HoldFinishLost
+
+      HoldLostSmooth:
+        WFLT G 2 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+        WFLT H 1
+		9383 B 1
+        WFLT G 1 Bright A_GiveInventory("SamsaraWolfenFlamethrowerAttackHandler")
+		WFLT H 1
+        9383 B 1
+        goto HoldFinishLost
+
+      HoldFinishLost:
+        WFLT F 3 A_ReFire
+        goto Ready
+    }
+}
+
+actor SamsaraWolfenFlamethrowerAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("WolfenFire",0,false)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("WolfenFireCoop",0,false)
+        stop
+    }
+}
+
+actor WolfenFire
+{
+    Radius 12
+    Height 8
+    Speed 35 // Normal Doom plasma speed is 25
+    Damage (10*random(1,4)) // Typical Plasma Rifle damage is 5-40
+    Projectile
+    +RANDOMIZE
+	+NOEXTREMEDEATH
+    DamageType "WolfenFlamethrower"
+    SeeSound "wolfen/flamethrower"
+    Obituary "$SAMSARA_WOLFEN_OB_SLOT6"
+    States
+    {
+      Spawn:
+        WFLB AB 6 Bright Light("BJROCKETEXPSHIT_")
+        loop
+
+      Death:
+        WFLB CDE 6 Bright Light("BJROCKETEXPSHIT_")
+        stop
+    }
+}
+
+actor WolfenFireCoop: WolfenFire { +THRUSPECIES Species "Player" }
+
+// Castle Totenkopf SDL
+
+actor Totenkopf_IHaveChaingun : Boolean {}
+actor SamsaraTotenkopfChaingunAttackSilentSound : Boolean {}
+
+actor Totenkopf_Chaingun : InstantSwitchWeapon
+{
+    Weapon.SelectionOrder 1900
+    Weapon.SlotNumber 6
+    Inventory.PickUpSound "Totenkopf/getweapon"
+    Weapon.AmmoUse 1
+    Weapon.AmmoGive 40
+    Weapon.AmmoType "Cell"
+    +DONTBOB
+    +INVENTORY.UNDROPPABLE
+    Inventory.PickupMessage "Chaingun"
+    Weapon.YAdjust 14
+	Inventory.RestrictedTo "WolfenPlayer"
+    Tag "Chaingun"
+    States
+    {
+      Spawn:
+        TK08 F -1
+        stop
+
+      Ready:
+        TK08 A 1 A_WeaponReady
+        loop
+
+      Fire:
+        TK08 B 2
+      Hold:
+		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"HoldSmooth")
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfChaingunAttackSilentSound")
+        TK08 CDCD 2 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfChaingunAttackSilentSound")
+        TK08 CDC 2 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+        TK08 D 2 Bright
+        TK08 E 2 A_ReFire
+        goto Ready
+
+      HoldSmooth:
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfChaingunAttackSilentSound")
+        TK08 C 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 I 1 Bright
+        TK08 D 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 J 1 Bright
+		TK08 C 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 I 1 Bright
+		TK08 D 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 J 1 Bright
+        TNT1 A 0 A_TakeInventory("SamsaraTotenkopfChaingunAttackSilentSound")
+        TK08 C 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 I 1 Bright
+        TK08 D 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 J 1 Bright
+		TK08 C 1 Bright A_GiveInventory("SamsaraTotenkopfChaingunAttackHandler")
+		TK08 I 1 Bright
+        TK08 DJ 1 Bright
+        TK08 N 2 A_ReFire
+		TK08 KLME 2 A_WeaponReady
+        goto Ready
+    }
+}
+
+actor SamsaraTotenkopfChaingunAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SamsaraTotenkopfChaingunAttackSilentSound",1,2)
+        TNT1 A 0 A_PlaySound("Totenkopf/atkchaingun",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Totenkopf_Tracer_ChaingunDM",random(-6,6),false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Totenkopf_Tracer_ChaingunCoop",random(-6,6),false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraTotenkopfChaingunAttackSilentSound")
+        stop
+    }
+}
+
+actor Totenkopf_Tracer_Chaingun : Totenkopf_Tracer 
+{ 
+	Damage (10 * random(1,4))
+	DamageType "TotenkopfChaingun" 
+	Speed 8
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIf(random(0,4)!=3,3)
+			TNT1 A 0 A_ChangeFlag("NOEXTREMEDEATH",false)
+			TNT1 A 0 A_ChangeFlag("EXTREMEDEATH",true)
+			TNT1 A 0 A_ChangeVelocity(velx*128,vely*128,velz*128,CVF_REPLACE)
+		SpawnLoop:
+			TNT1 A 1
+			Loop
+	}
+}
+actor Totenkopf_Tracer_ChaingunDM : Totenkopf_Tracer_Chaingun { Damage (10 + (random(0,15))) }
+actor Totenkopf_Tracer_ChaingunCoop : Totenkopf_Tracer_Chaingun { Species "Player" +THRUSPECIES }

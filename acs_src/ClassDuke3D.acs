@@ -313,3 +313,63 @@ Script "DukeEnforcerSpit" (void) CLIENTSIDE //4110
 	SetHudSize(214,200,0);HudMessage(s:"";HUDMSG_PLAIN,100+PlayerNumber(),0,107.0,100.0,0.1);	
 	Delay(2);	
 }
+
+script "DukeIncineratorIgnite" (int burn)
+{
+    if (CheckInventory("SamsaraDuke_IsBurning") || CheckFlag(0, "BOSS")) { terminate; }
+
+    int dummytid = UniqueTid();
+
+    SpawnSpotForced("TranslationDummyPersist", 0, dummytid, 0);
+    Thing_SetTranslation(dummytid, -1);
+
+    CreateTranslation(2950, 0:255=%[0, 0, 0]:[2.0, 0.66, 0.0]);
+    Thing_SetTranslation(0, 2950);
+
+    GiveInventory("SamsaraDuke_IsBurning", 1);
+    GiveInventory("Duke3DIncineratorDamager2Giver", 1);
+
+    int a;
+    int health;
+    int delaycount = 0;
+
+    for (a = 1; a < 44; a++)
+    {
+        while (delaycount < 4)
+        {
+            if (isDead(0)) { break; }
+
+            delaycount++;
+            Delay(1);
+        }
+
+        if (isDead(0)) { break; }
+
+        delaycount = 0;
+
+        health = GetActorProperty(0, APROP_Health);
+
+        if (health <= 10) { GiveInventory("Duke3DIncineratorDamager3Giver", 1); }
+
+        if (Random(0, 2) == 0) { GiveInventory("Duke3DIncineratorDamagerGiver", 1); }
+
+        ACS_NamedExecuteWithResult("DukeIncineratorBurningFXGiver"); //GiveInventory("Duke3DIncineratorBurningFX", 1);
+    }
+
+    int oldtid = ActivatorTid();
+    int usertid = UniqueTid();
+
+    Thing_ChangeTID(0, usertid);
+    SetActivator(dummytid);
+    Thing_SetTranslation(usertid, -1);
+    SetActivator(usertid);
+    Thing_ChangeTID(usertid, oldtid);
+
+    TakeInventory("SamsaraDuke_IsBurning", 1);
+
+    SetActivator(dummytid);
+    Thing_ChangeTID(dummytid, 0);
+    Thing_Remove(0);
+}
+
+script "DukeIncineratorBurningFXGiver" (void) CLIENTSIDE { GiveInventory("Duke3DIncineratorBurningFX", 1); }

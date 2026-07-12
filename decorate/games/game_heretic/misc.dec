@@ -1,0 +1,95 @@
+actor ZorchEffectHuge2 : ZorchEffectSmall
+{
+	YScale 1.625
+	XScale 1.825
+	States
+	{
+	Spawn:
+		ZFOG AABBCCDDEEFFGGHHIIJJ 4 bright A_SpawnItemEx("ZorchSparkle",0,0,random(20,72),random(-9,9),random(-9,9),random(1,3),48,128)
+		Stop
+	}
+}
+
+actor Pod2 : Pod replaces Pod
+{
+    Tag "Pod"
+	+DONTRIP
+	States
+	{
+	Death:
+		PPOD C 5 bright A_RemovePod
+		PPOD D 5 bright A_Scream
+		TNT1 A 0 A_SetDamageType("Explosive") // placeholder for now
+	DeathContinue:
+		TNT1 A 0 A_Explode
+		PPOD E 5 bright A_ChangeFlag("BLOODLESSIMPACT",false)
+		PPOD F 10 bright
+		Stop
+
+	Death.ZorchPistol:
+	Death.Zorch:
+	Death.ZorchKamikaze:
+	Death.PhasingZorch:
+	Death.ZorchSpectral:
+		PPOD C 5 bright A_RemovePod
+		PPOD D 5 bright A_Scream
+		TNT1 A 0 A_SetDamageType("Zorch")
+		TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",true)
+		Goto DeathContinue
+	}
+}
+
+actor Teleglitter1B : Teleglitter1 replaces Teleglitter1
+{
+	+CLIENTSIDEONLY
+	+SKYEXPLODE
+	Alpha 0.9
+	States
+	{
+	Spawn:
+		TGLT A 2 bright A_FadeOut(0.05)
+		TGLT B 2 bright A_AccTeleGlitter
+		TGLT C 2 bright
+		TGLT D 2 bright A_AccTeleGlitter
+		TGLT E 2 bright
+		Loop
+	}
+}
+
+actor Teleglitter2B : Teleglitter2 replaces Teleglitter2
+{
+	+CLIENTSIDEONLY
+	+SKYEXPLODE
+	Alpha 0.9
+	States
+	{
+	Spawn:
+		TGLT F 2 bright A_FadeOut(0.05)
+		TGLT G 2 bright A_AccTeleGlitter
+		TGLT H 2 bright
+		TGLT I 2 bright A_AccTeleGlitter
+		TGLT J 2 bright
+		Loop
+	}
+}
+
+actor SamsaraEggFX : MorphProjectile replaces EggFX
+{
+    Game Heretic
+    SpawnID 40
+    Radius 8
+    Height 8
+    Speed 18
+    MorphProjectile.MonsterClass "Chicken2"
+    MorphProjectile.MorphStyle MRF_UNDOBYTOMEOFPOWER|MRF_UNDOBYCHAOSDEVICE // allow unmorphing via chaos device like in hexen
+    States
+    {
+      Spawn:
+        EGGM ABCDE 4
+        loop
+
+      Death:
+        FX01 FFGH 3 Bright
+        stop
+    }
+}
