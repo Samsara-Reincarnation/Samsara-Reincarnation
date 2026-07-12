@@ -621,6 +621,8 @@ actor HexenWraithvergeAllyCoop : HexenWraithvergeAlly
 
 // Daedolon
 
+actor SamsaraHexenBloodscourgePoweredFiringSoundCheck : Boolean {}
+
 actor Bloodscourge : SamsaraHexenWeapon
 {
     Inventory.PickupMessage "Bloodscourge"
@@ -628,13 +630,14 @@ actor Bloodscourge : SamsaraHexenWeapon
     Weapon.YAdjust 20
     Weapon.AmmoType1 "Clip"
     Weapon.AmmoGive1 25
-    Weapon.AmmoUse1 15
+    Weapon.AmmoUse1 2
     Weapon.AmmoType2 "Cell"
     Weapon.AmmoGive2 25
-    Weapon.AmmoUse2 15
+    Weapon.AmmoUse2 2
     Obituary "$SAMSARA_HEXEN_OB_SLOT7"
     Tag "Bloodscourge"
     +BFG
+    +NOALERT
     +PRIMARY_USES_BOTH
     States
     {
@@ -643,36 +646,43 @@ actor Bloodscourge : SamsaraHexenWeapon
         stop
 
       Ready:
-		TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck")
         TNT1 A 0 A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter")
         MSTF AAAAAABBBBBBCCCCCCDDDDDDEEEEEEFFFFF 1 A_WeaponReady
         loop
 
       Deselect:
-		TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_GiveInventory("SamsaraHexenBloodscourgePoweredFiringSoundStopper")
         TNT1 A 0 A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter")
         MSTF A 1 A_Lower
         loop
 
       Select:
-		TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck")
         TNT1 A 0 A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter")
         MSTF A 1 A_Raise
         loop
 
+      // Unpowered
       Fire:
-        MSTF G 4 Offset(0,40)
-		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FirePowered")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FirePowered")
+      FireUnpowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Clip",15,1)
+        goto NoAmmoSwitch
+        TNT1 A 0 A_JumpIfInventory("Cell",15,1)
+        goto NoAmmoSwitch
+        MSTF G 4 Offset(0,40) A_AlertMonsters
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,3)
         TNT1 A 0 A_JumpIfInventory("Clip",15,1)
-        goto FireContinue
+        goto FireContinueUnpowered
         TNT1 A 0 A_JumpIfInventory("Cell",15,1)
-        goto FireContinue
+        goto FireContinueUnpowered
         TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
-        goto FireContinue
+        goto FireContinueUnpowered
 
-      FireContinue:
+      FireContinueUnpowered:
         MSTF H 4 Bright Offset(0,48) A_GiveInventory("SamsaraHexenBloodscourgeAttackHandler")
         MSTF H 2 Bright Offset(0,48) A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter",1)
         MSTF II 2 Offset(0,48) A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter",1)
@@ -684,39 +694,49 @@ actor Bloodscourge : SamsaraHexenWeapon
         TNT1 A 4 Bright A_Light1
         TNT1 A 2 Bright
         goto LightDone
-		
-	  // Powered
+
+      // Powered
       FirePowered: //Play dragon sound when starting
-		TNT1 A 0 A_PlaySound("DragonSight",CHAN_5,0.5)
-		TNT1 A 0 A_PlaySound("Hexen/BloodScourgeLoop",CHAN_WEAPON,1.0,true)
-	  FirePoweredLoopInit:
-		TNT1 A 0 A_AlertMonsters
+        MSTF G 4 Offset(0,40) A_AlertMonsters
+        TNT1 A 0 A_PlaySound("DragonSight",CHAN_BODY,0.5)
+        goto FireLoopPowered
+
+      FireLoopInitPowered:
+        TNT1 A 0 A_AlertMonsters
       FireLoopPowered:
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,3)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,3)
         TNT1 A 0 A_JumpIfInventory("Clip",2,1)
-        goto FireFinishPowered
+        goto FireLoopContinuePowered
         TNT1 A 0 A_JumpIfInventory("Cell",2,1)
-        goto FireFinishPowered
-		TNT1 A 0 A_GunFlash("FlashPowered",GFF_NOEXTCHANGE)
-        MSTF H 2 Bright Offset(0,48) A_GiveInventory("SamsaraHexenBloodscourgeAttackHandler")
-		MSTF I 1 Offset(0,48)
+        goto FireLoopContinuePowered
+        TNT1 A 0 A_GunFlash("FlashPowered",GFF_NOEXTCHANGE)
+        goto FireLoopContinuePowered
+
+      FireLoopContinuePowered:
+        MSTF H 2 Bright Offset(0,48) A_GiveInventory("SamsaraHexenBloodscourgePoweredAttackHandler")
+        MSTF I 1 Offset(0,48)
         TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,3)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,2)
         TNT1 A 0 A_CheckReload
         goto FireFinishPowered
-        TNT1 A 0 A_ReFire("FirePoweredLoopInit")
+        TNT1 A 0 A_ReFire("FireLoopInitPowered")
         goto FireFinishPowered
 
       FireFinishPowered:
-        MSTF I 1 Offset(0,40) A_StopSound(CHAN_WEAPON)
+        MSTF I 1 Offset(0,40) A_GiveInventory("SamsaraHexenBloodscourgePoweredFiringSoundStopper")
         MSTF J 5 Offset(0,36)
         goto Ready
-		
-	  FlashPowered:
+
+      FlashPowered:
         TNT1 A 2 Bright A_Light1
-		TNT1 A 1
+        TNT1 A 1
         goto LightDone
 
+      // "No ammo" switch
+      NoAmmoSwitch:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_SelectWeapon("Sapphire Wand")
+        goto Deselect
     }
 }
 
@@ -726,8 +746,6 @@ actor SamsaraHexenBloodscourgeAttackHandler : Trigger
     {
       // Ammo checking/taking stuff
       Pickup:
-		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupPowered")
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupPowered")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("Clip",15,1)
         stop
@@ -760,29 +778,52 @@ actor SamsaraHexenBloodscourgeAttackHandler : Trigger
         TNT1 A 0 A_GiveInventory("SamsaraHexenWeaponPaletteBlendCounter",3)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraHexenWeaponPaletteBlend", 1)
         stop
-		
-	  //
-	  PickupPowered:
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackPowered")
+    }
+}
+
+actor SamsaraHexenBloodscourgePoweredAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("Clip",2,1)
         stop
         TNT1 A 0 A_JumpIfInventory("Cell",2,1)
         stop
         TNT1 A 0 A_TakeInventory("Clip",2)
         TNT1 A 0 A_TakeInventory("Cell",2)
-        goto PickupAttackPowered
+        goto PickupAttack
 
       // Attack stuff
-      PickupAttackPowered:
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
-      PickupAttackPoweredDM:
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("Hexen/BloodscourgeLoop",CHAN_WEAPON,1.0,true)
+        TNT1 A 0 A_GiveInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
         TNT1 A 0 A_FireCustomMissile("MageStaffFX3",random(-3,3),false,0,2,0,random(-3,3))
-        goto PickupFinish
+        stop
 
-      PickupAttackPoweredCoop:
+      PickupAttackCoop:
         TNT1 A 0 A_FireCustomMissile("MageStaffFX3Coop",random(-3,3),false,0,2,0,random(-3,3))
-        goto PickupFinish
+        stop
+    }
+}
+
+actor SamsaraHexenBloodscourgePoweredFiringSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_WEAPON)
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_TakeInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck")
+        stop
     }
 }
 
