@@ -4,7 +4,6 @@ script "SamsaraOpen" OPEN  //623 -- SAMSARA_OPEN
 	int opd, pd;
 	int opdu, pdu;
 	int opds, pds;
-	int hotkeySTFU;
 
 	int checkerTid = UniqueTid();
 	int spawnerTid = UniqueTid();
@@ -60,7 +59,7 @@ script "SamsaraOpen" OPEN  //623 -- SAMSARA_OPEN
         str mixerversiontext = StrParam(l:"SAMSARA_MIXER_VERSIONDISPLAY");
 
         if (StrCmp(mixerversiontext, "") && StrCmp(mixerversiontext, "SAMSARA_MIXER_VERSIONDISPLAY") && GetCVar("samsara_cl_showversionnumber")) { HudMessage(s:mixerversiontext; HUDMSG_FADEOUT, 93003, CR_UNTRANSLATED, 1.5, 0.28, 2.0, 0.5); }
-		
+
 		if (isSinglePlayer())
 		{
 			if(GetCvar("samsara_cvarinfo") == 0)
@@ -104,18 +103,6 @@ script "SamsaraOpen" OPEN  //623 -- SAMSARA_OPEN
         {
             if (!PlayerInGame(c)) { playerClasses[c] = -1; }
         }
-		
-		if(!hotkeySTFU)
-		{
-			str uniqueKey1New = StrParam(k:"+samsara_cmd_classuniques");
-			str uniqueKey2New = StrParam(k:"+samsara_cmd_classuniques2");
-			str uniqueKey1Old = StrParam(k:"samsara_cmd_classuniques");
-			str uniqueKey2Old = StrParam(k:"samsara_cmd_classuniques2");
-			
-			if((strleft(uniqueKey1New,3) == "???" && strleft(uniqueKey1Old,3) != "???") || (strleft(uniqueKey2New,3) == "???" && strleft(uniqueKey2Old,3) != "???"))
-				Log(s:"You are using the old version of the unique keys. Please rebind your \cgclass unique keys\c- to whatever you are currently reusing!!!");
-			else hotkeySTFU = true;
-		}
 
 		Delay(1);
 	}
