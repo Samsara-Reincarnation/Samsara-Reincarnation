@@ -1,4 +1,5 @@
 actor SamsaraClassicPariasHasBloodscourge : Boolean {}
+actor SamsaraClassicPariasBloodscourgePoweredCounter : TemporaryCounter { Inventory.MaxAmount 5 }
 
 actor " Bloodscourge " : SamsaraHexenWeapon
 {
@@ -47,12 +48,36 @@ actor " Bloodscourge " : SamsaraHexenWeapon
         goto FireContinue
 
       FireContinue:
+		TNT1 A 0 A_TakeInventory("SamsaraClassicPariasBloodscourgePoweredCounter") //Convenient
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"FireContinuePowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"FireContinuePowered")
         MSTF H 4 Bright Offset(0,48) A_GiveInventory("SamsaraHexenClassicBloodscourgeAttackHandler")
         MSTF H 2 Bright Offset(0,48) A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter",1)
         MSTF II 2 Offset(0,48) A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter",1)
         MSTF I 3 Offset(0,40)
         MSTF J 5 Offset(0,36)
         MSTF A 15
+        goto Ready
+
+	  FireContinuePowered:
+		MSTF H 0 A_JumpIfInventory("SamsaraClassicPariasBloodscourgePoweredCounter",0,"FirePoweredFinish")
+		MTSF H 0 A_GiveInventory("SamsaraClassicPariasBloodscourgePoweredCounter")
+		MSTF H 1 Bright Offset(0,48) A_GiveInventory("SamsaraHexenClassicBloodscourgeAttackHandler")
+		MSTF I 1 Offset(0,48)
+		TNT1 A 0 A_JumpIfInventory("Clip",3,1)
+        goto FirePoweredFinish
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        goto FirePoweredFinish
+        TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
+        Goto FireContinuePowered
+		
+	  FirePoweredFinish:
+		TNT1 A 0 A_TakeInventory("SamsaraClassicPariasBloodscourgePoweredCounter")
+        MSTF H 2 Bright Offset(0,48) A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter",1)
+        MSTF II 2 Offset(0,48) A_TakeInventory("SamsaraHexenWeaponPaletteBlendCounter",1)
+        MSTF I 3 Offset(0,40)
+        MSTF J 5 Offset(0,36)
+        MSTF A 10
         goto Ready
 
       Flash:
@@ -68,6 +93,8 @@ actor SamsaraHexenClassicBloodscourgeAttackHandler : Trigger
     {
       // Ammo checking/taking stuff
       Pickup:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupPowered")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("Clip",15,1)
         stop
@@ -100,6 +127,29 @@ actor SamsaraHexenClassicBloodscourgeAttackHandler : Trigger
         TNT1 A 0 A_GiveInventory("SamsaraHexenWeaponPaletteBlendCounter",3)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraHexenWeaponPaletteBlend", 1)
         stop
+		
+	  //Powered
+	  PickupPowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("Cell",3,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",3)
+        TNT1 A 0 A_TakeInventory("Cell",3)
+        goto PickupAttackPowered
+		
+	  PickupAttackPowered:
+		TNT1 A 0 A_PlaySound("MageStaffFire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_FireCustomMissile("MageStaffFX4Classic",random(-8,8),false,0,8,0,random(-8,8))
+        goto PickupFinish
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_FireCustomMissile("MageStaffFX4ClassicCoop",random(-8,8),false,0,8,0,random(-8,8))
+        goto PickupFinish
     }
 }
 
@@ -124,6 +174,34 @@ actor MageStaffFX3Classic : MageStaffFX3
 }
 
 actor MageStaffFX3ClassicCoop : MageStaffFX3Classic
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor MageStaffFX4Classic : MageStaffFX3Classic
+{
+    Speed 32 //Let's make these a bit slower
+	BounceType "Hexen"
+	BounceCount 5
+	Gravity 0.33
+	-NOGRAVITY
+	-SCREENSEEKER //I probably should give it slight seeking capabilities
+    -SEEKERMISSILE
+    States
+    {
+      Spawn:
+        MSP1 ABCD 2 Bright Light("BSBALL") A_SeekerMissile(0,5,SMF_LOOK,256,6)
+        loop
+
+      Death:
+        MSP2 GHIJKLMNOP 4 Bright Light("BSBALL_X1") A_SetTranslucent(1,1)
+        TNT1 A 0 A_Explode(140,192,0) // was 80 damage
+        goto DeathFinish
+    }
+}
+
+actor MageStaffFX4ClassicCoop : MageStaffFX4Classic
 {
     Species "Player"
     +THRUSPECIES
