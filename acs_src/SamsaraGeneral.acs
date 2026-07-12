@@ -1478,25 +1478,78 @@ script "Samsara_Keybinds_Messages" (int button, int mode, int arg2) CLIENTSIDE
 }
 
 //For our unique keys to be consolidated
-Script "Samsara_UniqueKeys" (int key) net
+Script "Samsara_UniqueKeys" (int key) NET
 {
 	int pln = PlayerNumber();
 	switch(PlayerClass(pln))
 	{
 		case CLASS_HERETIC:
-		case CLASS_HEXEN:
-		case CLASS_DEMONESS:
             if (!isDead(0))
             {
-                if (CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory")) { TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1); }
-                else { GiveInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1); }
+                if (CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory"))
+                {
+                    if (GetCVar("samsara_permaweaponlevel2"))
+                    {
+                        PlaySound(0, "heretic/tometoggleoff", CHAN_ITEM);
+                        Print(l:"SAMSARA_HERETICTOME_OFF");
+                    }
+
+                    TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                } else {
+                    if (GetCVar("samsara_permaweaponlevel2"))
+                    {
+                        PlaySound(0, "heretic/tometoggleon", CHAN_ITEM);
+                        Print(l:"SAMSARA_HERETICTOME_ON");
+                    }
+
+                    GiveInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                }
+            }
+			break;
+		case CLASS_HEXEN:
+            if (!isDead(0))
+            {
+                if (CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory"))
+                {
+                    if (GetCVar("samsara_permaweaponlevel2") && !GetCVar("samsara_banhextomeofpower"))
+                    {
+                        PlaySound(0, "hexen/tometoggleoff", CHAN_ITEM);
+                        Print(l:"SAMSARA_HEXEN1TOME_OFF");
+                    }
+
+                    TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                } else {
+                    if (GetCVar("samsara_permaweaponlevel2") && !GetCVar("samsara_banhextomeofpower"))
+                    {
+                        PlaySound(0, "hexen/tometoggleon", CHAN_ITEM);
+                        Print(l:"SAMSARA_HEXEN1TOME_ON");
+                    }
+
+                    GiveInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                }
             }
 			break;
 		case CLASS_CALEB:
             if (!isDead(0))
             {
-                if (CheckInventory("SamsaraBloodGunsAkimboToggleMemory")) { TakeInventory("SamsaraBloodGunsAkimboToggleMemory", 1); }
-                else { GiveInventory("SamsaraBloodGunsAkimboToggleMemory", 1); }
+                if (CheckInventory("SamsaraBloodGunsAkimboToggleMemory"))
+                {
+                    if (GetCVar("samsara_bloodakimbomode") >= 3)
+                    {
+                        PlaySound(0, "Caleb/AkimboToggleOff", CHAN_ITEM);
+                        Print(l:"SAMSARA_BLOODGUNSAKIMBO_OFF");
+                    }
+
+                    TakeInventory("SamsaraBloodGunsAkimboToggleMemory", 1);
+                } else {
+                    if (GetCVar("samsara_bloodakimbomode") >= 3)
+                    {
+                        PlaySound(0, "Caleb/AkimboToggleOn", CHAN_ITEM);
+                        Print(l:"SAMSARA_BLOODGUNSAKIMBO_ON");
+                    }
+
+                    GiveInventory("SamsaraBloodGunsAkimboToggleMemory", 1);
+                }
             }
 			break;
 		case CLASS_ERAD:
@@ -1538,6 +1591,29 @@ Script "Samsara_UniqueKeys" (int key) net
 					SetActorProperty(0,APROP_Health,GetActorProperty(0,APROP_Health)+1);
 				}
 			}
+			break;
+		case CLASS_DEMONESS:
+            if (!isDead(0))
+            {
+                if (CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory"))
+                {
+                    if (GetCVar("samsara_permaweaponlevel2"))
+                    {
+                        PlaySound(0, "Hexen2/TomeToggleOff", CHAN_ITEM);
+                        Print(l:"SAMSARA_HEXEN2TOME_OFF");
+                    }
+
+                    TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                } else {
+                    if (GetCVar("samsara_permaweaponlevel2"))
+                    {
+                        PlaySound(0, "Hexen2/TomeToggleOn", CHAN_ITEM);
+                        Print(l:"SAMSARA_HEXEN2TOME_ON");
+                    }
+
+                    GiveInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                }
+            }
 			break;
 		case CLASS_BOND:
 			ACS_NamedExecuteWithResult("BondActivateWatch",0,0,0);
