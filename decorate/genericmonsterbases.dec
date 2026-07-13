@@ -1175,11 +1175,10 @@ Actor SamsaraMonsterHumanoidFemale : SamsaraMonsterHumanoid
 			TNT1 A 0 A_PlaySound("RTCW/Enemy/BurnF",CHAN_7,1.0)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
-		
-		//SOF Burn
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -1213,16 +1212,7 @@ Actor SamsaraMonsterHumanoidFemaleTotalGib : SamsaraMonsterHumanoidTotalGib
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
-			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
-			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
-			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
-			TNT1 A -1 A_Jump(256, "Burn")
-			Wait
-			
-		//SOF Burn
-		Death.SoFFire:
-		Death.SoFPhosphorus:
-			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -1400,8 +1390,6 @@ Actor SamsaraMonsterHumanoidBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -1491,6 +1479,7 @@ Actor SamsaraMonsterHumanoidBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -1619,14 +1608,28 @@ Actor SamsaraMonsterHumanoidBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -2042,6 +2045,7 @@ Actor SamsaraMonsterDemonic
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -2490,12 +2494,13 @@ Actor SamsaraMonsterDemonic
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -2507,7 +2512,22 @@ Actor SamsaraMonsterDemonic
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -2519,11 +2539,13 @@ Actor SamsaraMonsterDemonic
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -2535,12 +2557,14 @@ Actor SamsaraMonsterDemonic
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -2555,6 +2579,7 @@ Actor SamsaraMonsterDemonic
 		XDeathSoF:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -2891,8 +2916,6 @@ Actor SamsaraMonsterDemonicBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -2982,6 +3005,7 @@ Actor SamsaraMonsterDemonicBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -3110,14 +3134,28 @@ Actor SamsaraMonsterDemonicBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -3531,6 +3569,7 @@ Actor SamsaraMonsterAlien
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -3979,12 +4018,13 @@ Actor SamsaraMonsterAlien
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -3996,7 +4036,22 @@ Actor SamsaraMonsterAlien
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -4008,11 +4063,13 @@ Actor SamsaraMonsterAlien
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -4024,12 +4081,14 @@ Actor SamsaraMonsterAlien
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -4044,6 +4103,7 @@ Actor SamsaraMonsterAlien
 		XDeathSoF:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -4380,8 +4440,6 @@ Actor SamsaraMonsterAlienBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -4471,6 +4529,7 @@ Actor SamsaraMonsterAlienBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -4599,14 +4658,28 @@ Actor SamsaraMonsterAlienBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -5024,6 +5097,7 @@ Actor SamsaraMonsterCybernetic
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -5472,12 +5546,13 @@ Actor SamsaraMonsterCybernetic
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -5489,7 +5564,22 @@ Actor SamsaraMonsterCybernetic
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -5501,11 +5591,13 @@ Actor SamsaraMonsterCybernetic
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -5517,12 +5609,14 @@ Actor SamsaraMonsterCybernetic
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -5537,6 +5631,7 @@ Actor SamsaraMonsterCybernetic
 		XDeathSoF:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -5873,8 +5968,6 @@ Actor SamsaraMonsterCyberneticBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -5964,6 +6057,7 @@ Actor SamsaraMonsterCyberneticBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -6092,14 +6186,28 @@ Actor SamsaraMonsterCyberneticBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -6525,6 +6633,7 @@ Actor SamsaraMonsterBeast
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -6973,12 +7082,13 @@ Actor SamsaraMonsterBeast
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -6990,7 +7100,22 @@ Actor SamsaraMonsterBeast
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -7002,11 +7127,13 @@ Actor SamsaraMonsterBeast
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -7018,12 +7145,14 @@ Actor SamsaraMonsterBeast
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -7038,6 +7167,7 @@ Actor SamsaraMonsterBeast
 		XDeathSoF:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -7374,8 +7504,6 @@ Actor SamsaraMonsterBeastBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -7465,6 +7593,7 @@ Actor SamsaraMonsterBeastBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -7593,14 +7722,28 @@ Actor SamsaraMonsterBeastBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -7896,8 +8039,6 @@ Actor SamsaraMonsterRobotic
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -8005,6 +8146,7 @@ Actor SamsaraMonsterRobotic
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -8158,14 +8300,27 @@ Actor SamsaraMonsterRobotic
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -8348,8 +8503,6 @@ Actor SamsaraMonsterRoboticBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -8439,6 +8592,7 @@ Actor SamsaraMonsterRoboticBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -8552,14 +8706,27 @@ Actor SamsaraMonsterRoboticBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -8755,8 +8922,6 @@ Actor SamsaraMonsterGhost
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -8790,6 +8955,17 @@ Actor SamsaraMonsterGhost
 			Wait
 		Death.DeusExFlamed:
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.SoFFire:
+		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
 
@@ -8938,14 +9114,27 @@ Actor SamsaraMonsterGhost
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -9127,8 +9316,6 @@ Actor SamsaraMonsterGhostBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -9158,6 +9345,17 @@ Actor SamsaraMonsterGhostBoss
 			Wait
 		Death.DeusExFlamed:
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.SoFFire:
+		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
 
@@ -9270,14 +9468,27 @@ Actor SamsaraMonsterGhostBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -9569,8 +9780,6 @@ Actor SamsaraMonsterFlemoid
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -9678,6 +9887,7 @@ Actor SamsaraMonsterFlemoid
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -9840,14 +10050,27 @@ Actor SamsaraMonsterFlemoid
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -10028,8 +10251,6 @@ Actor SamsaraMonsterFlemoidBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -10119,6 +10340,7 @@ Actor SamsaraMonsterFlemoidBoss
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -10246,14 +10468,27 @@ Actor SamsaraMonsterFlemoidBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -10337,8 +10572,6 @@ Actor SamsaraMonsterGeneric
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -10372,6 +10605,17 @@ Actor SamsaraMonsterGeneric
 			Wait
 		Death.DeusExFlamed:
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.SoFFire:
+		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
 
@@ -10519,14 +10763,27 @@ Actor SamsaraMonsterGeneric
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -10612,8 +10869,6 @@ Actor SamsaraMonsterGenericBoss
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -10643,6 +10898,17 @@ Actor SamsaraMonsterGenericBoss
 			Wait
 		Death.DeusExFlamed:
 			TNT1 A 0 ACS_NamedExecuteAlways("DeusEx_KillScript", 0, 0, 3)
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.KingpinFire:
+			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
+			TNT1 A -1 A_Jump(256, "Burn")
+			Wait
+		Death.SoFFire:
+		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
+			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
 			Wait
 
@@ -10755,14 +11021,27 @@ Actor SamsaraMonsterGenericBoss
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -11235,6 +11514,7 @@ Actor SamsaraMiscCharHumanoidStatic
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/Burn",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -11683,12 +11963,13 @@ Actor SamsaraMiscCharHumanoidStatic
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -11700,7 +11981,22 @@ Actor SamsaraMiscCharHumanoidStatic
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -11712,11 +12008,13 @@ Actor SamsaraMiscCharHumanoidStatic
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -11728,12 +12026,14 @@ Actor SamsaraMiscCharHumanoidStatic
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -11748,6 +12048,7 @@ Actor SamsaraMiscCharHumanoidStatic
 		XDeathSoF:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -11943,6 +12244,7 @@ Actor SamsaraMiscCharHumanoidFemaleStatic : SamsaraMiscCharHumanoidStatic
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -11976,6 +12278,7 @@ Actor SamsaraMiscCharHumanoidFemaleStaticTotalGib : SamsaraMiscCharHumanoidStati
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -12424,6 +12727,7 @@ Actor SamsaraMiscCharHumanoidDynamic : SwitchableDecoration
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/Burn",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -12872,12 +13176,13 @@ Actor SamsaraMiscCharHumanoidDynamic : SwitchableDecoration
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -12889,7 +13194,22 @@ Actor SamsaraMiscCharHumanoidDynamic : SwitchableDecoration
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -12901,11 +13221,13 @@ Actor SamsaraMiscCharHumanoidDynamic : SwitchableDecoration
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -12917,12 +13239,14 @@ Actor SamsaraMiscCharHumanoidDynamic : SwitchableDecoration
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -12937,6 +13261,7 @@ Actor SamsaraMiscCharHumanoidDynamic : SwitchableDecoration
 		XDeathSoF:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -13132,6 +13457,7 @@ Actor SamsaraMiscCharHumanoidFemaleDynamic : SamsaraMiscCharHumanoidStatic
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -13165,6 +13491,7 @@ Actor SamsaraMiscCharHumanoidFemaleDynamicTotalGib : SamsaraMiscCharHumanoidDyna
 		Death.SoFFire:
 		Death.SoFPhosphorus:
 			TNT1 A 0 A_PlaySound("SoF/Speech/BurnF",CHAN_7,1.0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -13560,6 +13887,7 @@ Actor SamsaraMiscCharAnimalStatic
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -14008,12 +14336,13 @@ Actor SamsaraMiscCharAnimalStatic
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -14025,7 +14354,22 @@ Actor SamsaraMiscCharAnimalStatic
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -14037,11 +14381,13 @@ Actor SamsaraMiscCharAnimalStatic
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -14053,12 +14399,14 @@ Actor SamsaraMiscCharAnimalStatic
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -14073,6 +14421,7 @@ Actor SamsaraMiscCharAnimalStatic
 		XDeathSoF:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -14627,6 +14976,7 @@ Actor SamsaraMiscCharAnimalDynamic : SwitchableDecoration
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -15075,12 +15425,13 @@ Actor SamsaraMiscCharAnimalDynamic : SwitchableDecoration
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -15092,7 +15443,22 @@ Actor SamsaraMiscCharAnimalDynamic : SwitchableDecoration
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -15104,11 +15470,13 @@ Actor SamsaraMiscCharAnimalDynamic : SwitchableDecoration
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -15120,12 +15488,14 @@ Actor SamsaraMiscCharAnimalDynamic : SwitchableDecoration
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -15140,6 +15510,7 @@ Actor SamsaraMiscCharAnimalDynamic : SwitchableDecoration
 		XDeathSoF:
 			TNT1 A 0 A_ChangeFlag("USESPECIAL", false)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -15577,8 +15948,6 @@ Actor SamsaraMiscCharRoboticStatic
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -15686,6 +16055,7 @@ Actor SamsaraMiscCharRoboticStatic
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -15831,14 +16201,27 @@ Actor SamsaraMiscCharRoboticStatic
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -16134,8 +16517,6 @@ Actor SamsaraMiscCharRoboticDynamic : SwitchableDecoration
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -16243,6 +16624,7 @@ Actor SamsaraMiscCharRoboticDynamic : SwitchableDecoration
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -16388,14 +16770,27 @@ Actor SamsaraMiscCharRoboticDynamic : SwitchableDecoration
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -16609,8 +17004,6 @@ Actor SamsaraMiscCharNonBleedingStatic
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -16718,6 +17111,7 @@ Actor SamsaraMiscCharNonBleedingStatic
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -16867,14 +17261,27 @@ Actor SamsaraMiscCharNonBleedingStatic
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -17087,8 +17494,6 @@ Actor SamsaraMiscCharNonBleedingDynamic : SwitchableDecoration
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -17196,6 +17601,7 @@ Actor SamsaraMiscCharNonBleedingDynamic : SwitchableDecoration
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -17345,14 +17751,27 @@ Actor SamsaraMiscCharNonBleedingDynamic : SwitchableDecoration
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
@@ -17813,6 +18232,7 @@ Actor SamsaraMonsterDarkSideAIRegular
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -18261,12 +18681,13 @@ Actor SamsaraMonsterDarkSideAIRegular
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -18278,7 +18699,22 @@ Actor SamsaraMonsterDarkSideAIRegular
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -18290,11 +18726,13 @@ Actor SamsaraMonsterDarkSideAIRegular
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -18306,12 +18744,14 @@ Actor SamsaraMonsterDarkSideAIRegular
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -18326,6 +18766,7 @@ Actor SamsaraMonsterDarkSideAIRegular
 		XDeathSoF:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -18921,6 +19362,7 @@ Actor SamsaraMonsterDarkSideAIColored
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -19369,12 +19811,13 @@ Actor SamsaraMonsterDarkSideAIColored
 			"####" "#" 0 A_GiveInventory("SoF_MPG_PainExtender")
 			"####" "#" 0 A_Jump(128,2)
 			"####" "#" 0 A_Pain
-			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaser")
+			"####" "#" 2 A_JumpIfInventory("SoF_MPG_InflationCounter",0,"XDeath.SoFMPGLaserAlt")
 			"####" "#" 0 A_GiveInventory("SoF_MPG_InflationCounter")
 			Loop
 		XDeath.SoFMPGLaser:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
@@ -19386,7 +19829,22 @@ Actor SamsaraMonsterDarkSideAIColored
 			TNT1 A 0 A_NoBlocking
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
+		XDeath.SoFMPGLaserAlt:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
+			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), 3)
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
+			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
+			TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Burst",CHAN_AUTO,1.0,false,0.25)
+		SoFGibBurnAlt:
+			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("SoF_BurningGibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_USEBLOODCOLOR)
+			TNT1 A 0 A_Stop
+			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
+			Stop
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibBurn")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			Goto SoFGibBurn
@@ -19398,11 +19856,13 @@ Actor SamsaraMonsterDarkSideAIColored
 			"####" "#" -1 A_Jump(256, "See")
 			Wait
 		Death.SoFSMG:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -19414,12 +19874,14 @@ Actor SamsaraMonsterDarkSideAIColored
 		Death.SoFSlug:
 		Death.SoFMG:
 		Death.SoF44:
+			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,CallACS("SoF_Decorate",10))
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
 			Wait
@@ -19434,6 +19896,7 @@ Actor SamsaraMonsterDarkSideAIColored
 		XDeathSoF:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
 			TNT1 A 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFGibStart")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
@@ -19856,8 +20319,6 @@ Actor SamsaraMonsterDarkSideAINoBlood
 		Death.PhosFireCoop:
 		Death.BittermanFire:
 		Death.Hexen2Fire:
-		Death.SoFFire:
-		Death.SoFPhosphorus:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.CalebFire:
@@ -19965,6 +20426,7 @@ Actor SamsaraMonsterDarkSideAINoBlood
 			Wait
 		Death.SoFFire:
 		Death.SoFPhosphorus:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Burn")
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedTimer",CallACS("SoF_Decorate",17,8))
 			TNT1 A 0 A_GiveToTarget("SoF_RoastedMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Burn")
@@ -20110,14 +20572,27 @@ Actor SamsaraMonsterDarkSideAINoBlood
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_ThrowMoney")
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.SoFKnife:
+		Death.SoFKnifeThrow:
+		Death.SoFShotgun:
+		Death.SoFSlug:
+		Death.SoFMG:
+		Death.SoFSMG:
+		Death.SoF44:
+		Death.SoFStunGrenade:
+		Death.SoFBullet:
+			TNT1 A -1 A_Jump(256, "Death")
+			Wait
 		Death.SoFMPGAlt:
 		XDeath.SoFMPGLaser:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerTimer",CallACS("SoF_Decorate",17,7))
 			TNT1 A 0 A_GiveToTarget("SoF_TVDinnerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
 		Death.SoFExplosive:
 		Death.SoFFlameGlob:
+			TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "Death")
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerTimer",CallACS("SoF_Decorate",17,3))
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 			TNT1 A -1 A_Jump(256, "Death")
