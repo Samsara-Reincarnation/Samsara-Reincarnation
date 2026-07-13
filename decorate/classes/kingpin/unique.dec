@@ -1,15 +1,9 @@
-Actor Kingpin_CashPickupBagUnique : CustomInventory
+actor Kingpin_CashPickupBagUnique : Trigger
 {
-    Inventory.RestrictedTo "Kingpin_Thug"
-    Inventory.PickupSound "Kingpin/Pickup/Cash"
     States
     {
-        Spawn:
-            KP00 A -1
-            stop
-        Pickup:
-            //TNT1 A 0 A_RadiusGive("Kingpin_CashSound",40,RGF_PLAYERS|RGF_NOSIGHT,1)
-            TNT1 A 0 A_GiveInventory("Kingpin_Cash",random(50,100))
-            Stop
+      Pickup:
+        TNT1 A 0 A_GiveInventory("Kingpin_Cash",random(50,100))
+        stop
     }
 }

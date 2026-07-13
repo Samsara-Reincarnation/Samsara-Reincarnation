@@ -1,39 +1,59 @@
-Actor Kingpin_Pipe : Kingpin_Weapon
+actor Kingpin_Pipe : Kingpin_Weapon
 {
+    Inventory.PickupMessage "Copped a pipe."
     Weapon.SlotNumber 0
     Weapon.SelectionOrder 2500
     Obituary "%o was mashed by %k."
-    Inventory.Pickupmessage "Copped a pipe."
     Tag "Pipe"
-    +WEAPON.MELEEWEAPON
+    +MELEEWEAPON
+    +WIMPY_WEAPON
     States
     {
-        Ready:
-            TNT1 A 0
-            TNT1 A 0 A_TakeInventory("Kingpin_SelectedWeapon")
-            KP00 ABCDEF 3
-            Goto ReadyLoop
-        ReadyLoop:
-            KP00 O 0 A_TakeInventory("Kingpin_ShootToken")
-            KP00 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady(WRF_ALLOWRELOAD)
-            KP01 ABC 5 A_WeaponReady(WRF_ALLOWRELOAD)
-            Loop
-        Deselect:
-            KP01 DEFGH 3
-            Goto DeselectLoop
-        Fire:
-            KP00 G 0 A_GiveInventory("Kingpin_ShootToken")
-            KP00 G 0 A_FireBullets(0,0,-1,0,"Kingpin_MeleeSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ,48)
-            KP00 G 0 A_PlaySound("Kingpin/Pipe/Swing",CHAN_WEAPON)
-            KP00 GHIJ 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            KP00 O 0 A_Refire("AttackL")
-            Goto ReadyLoop
-        AttackL:
-            KP00 L 0 A_GiveInventory("Kingpin_ShootToken")
-            KP00 L 0 A_FireBullets(0,0,-1,0,"Kingpin_MeleeSmoke",FBF_NORANDOM|FBF_NORANDOMPUFFZ,48)
-            KP00 L 0 A_PlaySound("Kingpin/Pipe/Swing",CHAN_WEAPON)
-            KP00 KLMN 3 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            KP00 O 6 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto ReadyLoop
+      ReadyActual:
+        KP00 O 0 A_TakeInventory("Kingpin_ShootToken")
+        KP00 "OPQRSTUVWXYZ[\]" 5 A_WeaponReady
+        KP01 ABC 5 A_WeaponReady
+        loop
+
+      Deselect:
+        KP01 D 3 A_JumpIfHealthLower(1,"DeselectInstant")
+        KP01 EFGH 3
+        goto DeselectInstant
+
+      Ready: // our "Select" state
+        KP00 A 3 A_TakeInventory("Kingpin_SelectedWeapon")
+        KP00 BCDEF 3
+        goto ReadyActual
+
+      Fire:
+        KP00 G 0 A_GiveInventory("Kingpin_ShootToken")
+        KP00 G 0 A_GiveInventory("SamsaraKingpinPipeAttackHandler")
+        KP00 GHIJ 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 O 0 A_ReFire(1)
+        goto ReadyActual
+        KP00 L 0 A_GiveInventory("Kingpin_ShootToken")
+        KP00 L 0 A_GiveInventory("SamsaraKingpinPipeAttackHandler")
+        KP00 KLMN 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 O 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto ReadyActual
+    }
+}
+
+actor SamsaraKingpinPipeAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("Kingpin/Pipe/Swing",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireBullets(0,0,-1,0,"Kingpin_MeleeSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ,48)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireBullets(0,0,-1,0,"Kingpin_MeleeSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ,48)
+        stop
     }
 }
