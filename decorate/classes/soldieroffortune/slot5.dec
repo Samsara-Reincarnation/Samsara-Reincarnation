@@ -1,334 +1,335 @@
 ACTOR SoF_Rocket : SoF_Weapon
 {
-	Weapon.SlotNumber 5
-	Weapon.SlotPriority 0
-	Weapon.SelectionOrder 1000
-	Weapon.AmmoUse1 0
-	Weapon.AmmoGive1 0
-	Weapon.AmmoType1 "SoF_RocketMagazine"
-	Weapon.AmmoUse2 0
-	Weapon.AmmoGive2 4
-	Weapon.AmmoType2 "RocketAmmo"
-	Obituary "%o ate %k's rocket"
-	Inventory.Pickupmessage "M202A2 Rocket Launcher"
-	Tag "M202A2 FLASH"
-	States
-	{
-		Ready:
-			TNT1 A 0
-			SF06 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF06 C 0 A_PlaySound("SoF/Weapons/Rocket/Ready",CHAN_AUTO)
-			SF06 CDEFGHIJ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF03 A 0 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto ReadyLoop
-		ReadyLoop:
-		IDLE:	
-			SF03 A 0 A_Jump(20,"IDLEFINGER_A","IDLEFINGER_B")
-			SF03 ABCDEFGHIJKLMNOPQRSTUVWX 2 A_WeaponReady(WRF_ALLOWRELOAD)
-			Loop
-		IDLEFINGER_A:
-			SF04 ABCDEFGHIJK 2 A_WeaponReady(WRF_ALLOWRELOAD)
-			SF04 L 0 A_PlaySound("SoF/Weapons/Flamegun/Knob",CHAN_AUTO)
-			SF04 LMN 2 A_WeaponReady(WRF_ALLOWRELOAD)
-			Goto ReadyLoop
-		IDLEFINGER_B:
-			SF05 ABCDEFGHIJKLMNOPQRS 2 A_WeaponReady(WRF_ALLOWRELOAD)
-			Goto ReadyLoop
-		Deselect:
-			SF00 ABCDEFG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)	
-			SF00 H 0 A_PlaySound("SoF/Weapons/Rocket/Done",CHAN_AUTO)
-			SF00 HIJ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)	
-			Goto DeselectLoop
-		Fire:
-			"####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
-			Goto DryFire
-		FIRE1:
-			SF01 A 0 A_TakeInventory("SoF_RocketSmallChecker")
-			SF01 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
-			SF01 A 0 A_GiveInventory("SoF_Rocket_FireToken")
-			SF01 ABCDEFGH 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			TNT1 A 0
-			SF03 AAAAA 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto ReadyLoop
-		FLASH1:
-			TNT1 A 0 A_JumpIfInventory("SoF_RocketMagazine",3,"FLASH1_B")
-			TNT1 A 0 A_JumpIfInventory("SoF_RocketMagazine",2,"FLASH1_C")
-			TNT1 A 0 A_JumpIfInventory("SoF_RocketMagazine",1,"FLASH1_D")
-		FLASH1_A:
-			SFF1 A 1 Bright
-			TNT1 A 1
-			SFF1 B 1 Bright
-			Stop
-		FLASH1_B:
-			SFF2 A 1 Bright
-			TNT1 A 1
-			SFF2 B 1 Bright
-			Stop
-		FLASH1_C:
-			SFF3 A 1 Bright
-			TNT1 A 1
-			SFF3 B 1 Bright
-			Stop
-		FLASH1_D:
-			SFF4 A 1 Bright
-			TNT1 A 1
-			SFF4 B 1 Bright
-			Stop
-		AltFire:
-			"####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
-			Goto DryFire
-			SF02 A 0 A_GiveInventory("SoF_RocketSmallChecker")
-			SF02 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
-			SF02 A 0 A_GiveInventory("SoF_Rocket_FireToken")
-			SF02 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF02 C 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
-			Goto Reload
-			SF02 C 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
-			SF02 C 0 A_GiveInventory("SoF_Rocket_FireToken")
-			SF02 CDE 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF02 F 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
-			Goto Reload
-			SF02 F 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
-			SF02 F 0 A_GiveInventory("SoF_Rocket_FireToken")
-			SF02 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF02 H 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
-			Goto Reload
-			SF02 H 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
-			SF02 H 0 A_GiveInventory("SoF_Rocket_FireToken")
-			SF02 HIJKLMN 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto Reload	
-		Reload:
-			"####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",0,"ReadyLoop")
-			"####" "#" 0 A_JumpIfInventory("RocketAmmo",1,1)
-			Goto ReadyLoop
-		RELOAD_LOOP:
-			SF07 A 0 A_JumpIfInventory("RocketAmmo",1,1)
-			Goto RELOAD_FINISH
-			SF07 A 0 A_GiveInventory("SoF_RocketMagazine",1)
-			SF07 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
-			SF07 A 0 A_JumpIfInventory("SoF_RocketMagazine",0,"RELOAD_FINISH")
-			Loop
-		RELOAD_FINISH:
-			SF07 ABCDEF 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF07 G 0 A_PlaySound("SoF/Weapons/Rocket/PullOut",CHAN_AUTO)
-			SF07 GHIJKLMNOPQRS 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			SF07 T 0 A_PlaySound("SoF/Weapons/Rocket/PutIn",CHAN_AUTO)
-			SF07 TUVWXYZ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto ReadyLoop
-		DryFire:
-			"####" "#" 0 A_PlaySound("SoF/Weapons/gpistol/Empty",CHAN_AUTO)
-			SF08 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto Reload
-		Spawn:
-			SFPU A -1
-			Stop
-	}
+    Weapon.SlotNumber 5
+    Weapon.SlotPriority 0
+    Weapon.SelectionOrder 1000
+    Weapon.AmmoUse1 0
+    Weapon.AmmoGive1 0
+    Weapon.AmmoType1 "SoF_RocketMagazine"
+    Weapon.AmmoUse2 0
+    Weapon.AmmoGive2 4
+    Weapon.AmmoType2 "RocketAmmo"
+    Obituary "%o ate %k's rocket."
+    Inventory.Pickupmessage "M202A2 Rocket Launcher"
+    Tag "M202A2 \"FLASH\""
+    States
+    {
+        Ready:
+            TNT1 A 0
+            SF06 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF06 C 0 A_PlaySound("SoF/Weapons/Rocket/Ready",CHAN_AUTO)
+            SF06 CDEFGHIJ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF03 A 0 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto ReadyLoop
+        ReadyLoop:
+        IDLE:
+            SF03 A 0 A_Jump(20,"IDLEFINGER_A","IDLEFINGER_B")
+            SF03 ABCDEFGHIJKLMNOPQRSTUVWX 2 A_WeaponReady(WRF_ALLOWRELOAD)
+            Loop
+        IDLEFINGER_A:
+            SF04 ABCDEFGHIJK 2 A_WeaponReady(WRF_ALLOWRELOAD)
+            SF04 L 0 A_PlaySound("SoF/Weapons/Flamegun/Knob",CHAN_AUTO)
+            SF04 LMN 2 A_WeaponReady(WRF_ALLOWRELOAD)
+            Goto ReadyLoop
+        IDLEFINGER_B:
+            SF05 ABCDEFGHIJKLMNOPQRS 2 A_WeaponReady(WRF_ALLOWRELOAD)
+            Goto ReadyLoop
+        Deselect:
+            SF00 ABCDEFG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF00 H 0 A_PlaySound("SoF/Weapons/Rocket/Done",CHAN_AUTO)
+            SF00 HIJ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto DeselectLoop
+        Fire:
+            "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
+            Goto DryFire
+        FIRE1:
+            SF01 A 0 A_TakeInventory("SoF_RocketSmallChecker")
+            SF01 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+            SF01 A 0 A_GiveInventory("SoF_Rocket_FireToken")
+            SF01 ABCDEFGH 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            TNT1 A 0
+            SF03 AAAAA 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto ReadyLoop
+        FLASH1:
+            TNT1 A 0 A_JumpIfInventory("SoF_RocketMagazine",3,"FLASH1_B")
+            TNT1 A 0 A_JumpIfInventory("SoF_RocketMagazine",2,"FLASH1_C")
+            TNT1 A 0 A_JumpIfInventory("SoF_RocketMagazine",1,"FLASH1_D")
+        FLASH1_A:
+            SFF1 A 1 Bright
+            TNT1 A 1
+            SFF1 B 1 Bright
+            Stop
+        FLASH1_B:
+            SFF2 A 1 Bright
+            TNT1 A 1
+            SFF2 B 1 Bright
+            Stop
+        FLASH1_C:
+            SFF3 A 1 Bright
+            TNT1 A 1
+            SFF3 B 1 Bright
+            Stop
+        FLASH1_D:
+            SFF4 A 1 Bright
+            TNT1 A 1
+            SFF4 B 1 Bright
+            Stop
+        AltFire:
+            "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
+            Goto DryFire
+            SF02 A 0 A_GiveInventory("SoF_RocketSmallChecker")
+            SF02 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+            SF02 A 0 A_GiveInventory("SoF_Rocket_FireToken")
+            SF02 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF02 C 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
+            Goto Reload
+            SF02 C 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+            SF02 C 0 A_GiveInventory("SoF_Rocket_FireToken")
+            SF02 CDE 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF02 F 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
+            Goto Reload
+            SF02 F 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+            SF02 F 0 A_GiveInventory("SoF_Rocket_FireToken")
+            SF02 FG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF02 H 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
+            Goto Reload
+            SF02 H 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+            SF02 H 0 A_GiveInventory("SoF_Rocket_FireToken")
+            SF02 HIJKLMN 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto Reload
+        Reload:
+            "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",0,"ReadyLoop")
+            "####" "#" 0 A_JumpIfInventory("RocketAmmo",1,1)
+            Goto ReadyLoop
+        RELOAD_LOOP:
+            SF07 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+            Goto RELOAD_FINISH
+            SF07 A 0 A_GiveInventory("SoF_RocketMagazine",1)
+            SF07 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
+            SF07 A 0 A_JumpIfInventory("SoF_RocketMagazine",0,"RELOAD_FINISH")
+            Loop
+        RELOAD_FINISH:
+            SF07 ABCDEF 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF07 G 0 A_PlaySound("SoF/Weapons/Rocket/PullOut",CHAN_AUTO)
+            SF07 GHIJKLMNOPQRS 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF07 T 0 A_PlaySound("SoF/Weapons/Rocket/PutIn",CHAN_AUTO)
+            SF07 TUVWXYZ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto ReadyLoop
+        DryFire:
+            "####" "#" 0 A_PlaySound("SoF/Weapons/gpistol/Empty",CHAN_AUTO)
+            SF08 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto Reload
+        Spawn:
+            SFPU A -1
+            Stop
+    }
 }
 
 Actor SoF_Rocket_FireToken : Trigger
 {
-	States
-	{
-		Pickup:
-			TNT1 A 0 A_AlertMonsters
-			TNT1 A 0 A_TakeInventory("SoF_RocketMagazine",1)
-			TNT1 A 0 A_SpawnItemEx("SoF_RocketMuzzleSmoke",cos(pitch)*8,4,39-(sin(pitch)*8),0.125*sin(pitch),0,abs(0.125*cos(pitch)))
-			TNT1 A 0 A_JumpIfInventory("SoF_RocketSmallChecker",1,"MultiRocket")
-			TNT1 A 0 A_Quake(1,4,0,16,"")
-		Regular:
-			TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",10,80)
-			TNT1 A 0 A_FireCustomMissile("SoF_RocketProjectile",0,0,10,4)
-			TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/Fire",CHAN_WEAPON)	
-			Stop
-		MultiRocket:
-			TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",6,80)
-			TNT1 A 0 A_FireCustomMissile("SoF_MultiRocketProjectile",frandom(-2,2),0,10,4,0,frandom(-2,2))
-			TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/FireAlt",CHAN_WEAPON)	
-			Stop
-	}
+    States
+    {
+        Pickup:
+            TNT1 A 0 A_AlertMonsters
+            TNT1 A 0 A_TakeInventory("SoF_RocketMagazine",1)
+            TNT1 A 0 A_SpawnItemEx("SoF_RocketMuzzleSmoke",cos(pitch)*8,4,39-(sin(pitch)*8),0.125*sin(pitch),0,abs(0.125*cos(pitch)))
+            TNT1 A 0 A_JumpIfInventory("SoF_RocketSmallChecker",1,"MultiRocket")
+            TNT1 A 0 A_Quake(1,4,0,16,"")
+        Regular:
+            TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",10,80)
+            TNT1 A 0 A_FireCustomMissile("SoF_RocketProjectile",0,0,10,4)
+            TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/Fire",CHAN_WEAPON)
+            Stop
+        MultiRocket:
+            TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",6,80)
+            TNT1 A 0 A_FireCustomMissile("SoF_MultiRocketProjectile",frandom(-2,2),0,10,4,0,frandom(-2,2))
+            TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/FireAlt",CHAN_WEAPON)
+            Stop
+    }
 }
 
 Actor SoF_RocketMagazine : Ammo
 {
-	Inventory.Amount 4
-	Inventory.MaxAmount 4
+    Inventory.Amount 4
+    Inventory.MaxAmount 4
+    Tag "M202A2 Magazine"
 }
 
 Actor SoF_RocketSmallChecker : TemporaryBoolean {}
 
 Actor SoF_RocketProjectile
 {
-	Height 8
-	Radius 4
-	Speed 24
-	Damage (0)
-	Projectile
-	DamageType "SoFExplosive"
-	Decal "SoFExplosionScorch"
-	+BLOODLESSIMPACT
-	+FORCERADIUSDMG
-	States
-	{
-		Spawn:
-			TNT1 A 0
-			TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/FlyLP",CHAN_BODY)
-			TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",11)
-			SF00 A 1
-		SpawnLoop:
-			SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
-			SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
-			Loop
-		Death:
-			TNT1 A 0 A_StopSound(CHAN_BODY)
-			TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("SoF_ExplosionLargeSpark",frandom(0,8),frandom(0,8),frandom(0,360),CMF_AIMDIRECTION,frandom(35,90))
-			TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSpark",0,0,0,frandom(-6,6),0,frandom(-6,6),frandom(0,90))
-			TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
-			TNT1 A 0 A_SpawnItemEx("SoF_ExplosionBig")
-			TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/BigExplode",CHAN_AUTO,0.75)
-			TNT1 A 0 A_Explode(175,175,!XF_HURTSOURCE,true)
-			TNT1 A 0 A_Explode(50,175,0,true)
-			TNT1 A 0 A_Quake(3,17,0,175,"")
-			TNT1 A 1 A_SpawnItemEx("SoF_ExplosionScorch")
-			Stop
-	}
+    Height 8
+    Radius 4
+    Speed 24
+    Damage (0)
+    Projectile
+    DamageType "SoFExplosive"
+    Decal "SoFExplosionScorch"
+    +BLOODLESSIMPACT
+    +FORCERADIUSDMG
+    States
+    {
+        Spawn:
+            TNT1 A 0
+            TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/FlyLP",CHAN_BODY)
+            TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",11)
+            SF00 A 1
+        SpawnLoop:
+            SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
+            SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
+            Loop
+        Death:
+            TNT1 A 0 A_StopSound(CHAN_BODY)
+            TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("SoF_ExplosionLargeSpark",frandom(0,8),frandom(0,8),frandom(0,360),CMF_AIMDIRECTION,frandom(35,90))
+            TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSpark",0,0,0,frandom(-6,6),0,frandom(-6,6),frandom(0,90))
+            TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
+            TNT1 A 0 A_SpawnItemEx("SoF_ExplosionBig")
+            TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/BigExplode",CHAN_AUTO,0.75)
+            TNT1 A 0 A_Explode(175,175,!XF_HURTSOURCE,true)
+            TNT1 A 0 A_Explode(50,175,0,true)
+            TNT1 A 0 A_Quake(3,17,0,175,"")
+            TNT1 A 1 A_SpawnItemEx("SoF_ExplosionScorch")
+            Stop
+    }
 }
 
 Actor SoF_MultiRocketProjectile
 {
-	Height 8
-	Radius 4
-	Speed 24
-	Scale 0.5
-	Damage (0)
-	Projectile
-	DamageType "SoFExplosive"
-	Decal "SoFExplosionScorchSmall"
-	+BLOODLESSIMPACT
-	+FORCERADIUSDMG
-	States
-	{
-		Spawn:
-			TNT1 A 0
-			TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/FlyLP",CHAN_BODY)
-			TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",11)
-			SF00 A 1
-			SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
-			SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
-			SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
-			SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
-			TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/Split",CHAN_VOICE)
-			TNT1 A 0 A_CustomMissile("SoF_MultiRocketProjectile2",0,0,frandom(-10,10),CMF_AIMDIRECTION|CMF_TRACKOWNER,frandom(-10,10))
-		SpawnLoop:
-			SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
-			SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
-			Loop
-		Death:
-			TNT1 A 0 A_StopSound(CHAN_BODY)
-			TNT1 AAAAAAAA 0 A_CustomMissile("SoF_ExplosionLargeSpark",frandom(0,8),frandom(0,8),frandom(0,360),CMF_AIMDIRECTION,frandom(35,90))
-			TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSpark",0,0,0,frandom(-6,6),0,frandom(-6,6),frandom(0,90))
-			TNT1 AAA 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
-			TNT1 A 0 A_SpawnItemEx("SoF_ExplosionShockwave")
-			TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/SmallExplode",CHAN_AUTO,0.75)
-			TNT1 A 0 A_Explode(125,125,!XF_HURTSOURCE,true)
-			TNT1 A 0 A_Explode(25,125,0,true)
-			TNT1 A 0 A_Quake(3,17,0,125,"")
-			TNT1 A 1 A_SpawnItemEx("SoF_ExplosionScorchSmall")
-			Stop
-	}
+    Height 8
+    Radius 4
+    Speed 24
+    Scale 0.5
+    Damage (0)
+    Projectile
+    DamageType "SoFExplosive"
+    Decal "SoFExplosionScorchSmall"
+    +BLOODLESSIMPACT
+    +FORCERADIUSDMG
+    States
+    {
+        Spawn:
+            TNT1 A 0
+            TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/FlyLP",CHAN_BODY)
+            TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",11)
+            SF00 A 1
+            SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
+            SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
+            SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
+            SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
+            TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/Split",CHAN_VOICE)
+            TNT1 A 0 A_CustomMissile("SoF_MultiRocketProjectile2",0,0,frandom(-10,10),CMF_AIMDIRECTION|CMF_TRACKOWNER,frandom(-10,10))
+        SpawnLoop:
+            SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
+            SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
+            Loop
+        Death:
+            TNT1 A 0 A_StopSound(CHAN_BODY)
+            TNT1 AAAAAAAA 0 A_CustomMissile("SoF_ExplosionLargeSpark",frandom(0,8),frandom(0,8),frandom(0,360),CMF_AIMDIRECTION,frandom(35,90))
+            TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSpark",0,0,0,frandom(-6,6),0,frandom(-6,6),frandom(0,90))
+            TNT1 AAA 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
+            TNT1 A 0 A_SpawnItemEx("SoF_ExplosionShockwave")
+            TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/SmallExplode",CHAN_AUTO,0.75)
+            TNT1 A 0 A_Explode(125,125,!XF_HURTSOURCE,true)
+            TNT1 A 0 A_Explode(25,125,0,true)
+            TNT1 A 0 A_Quake(3,17,0,125,"")
+            TNT1 A 1 A_SpawnItemEx("SoF_ExplosionScorchSmall")
+            Stop
+    }
 }
 
 Actor SoF_MultiRocketProjectile2 : SoF_MultiRocketProjectile
 {
-	States
-	{
-		Spawn:
-			TNT1 A 0
-			TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/FlyLP",CHAN_BODY)
-			TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",11)
-		SpawnLoop:
-			SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
-			SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
-			Loop
-	}
+    States
+    {
+        Spawn:
+            TNT1 A 0
+            TNT1 A 0 A_PlaySound("SoF/Weapons/rocket/FlyLP",CHAN_BODY)
+            TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",11)
+        SpawnLoop:
+            SF00 A 0 A_SpawnItemEx("SoF_RocketSpark",frandom(-4,4),frandom(-4,4),frandom(-4,4),frandom(-2,2),frandom(-2,2),-frandom(2,4))
+            SF00 A 1 A_SpawnItemEx("SoF_RocketTrail",frandom(-4,4),frandom(-4,4),frandom(-4,4))
+            Loop
+    }
 }
 
 Actor SoF_RocketTrail
-{	
-	Height 2
-	Radius 2
-	Scale 0.125
-	Renderstyle Translucent
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	+CLIENTSIDEONLY
-	States
-	{
-		Spawn:
-			SF00 F 0
-			SF00 F -1 Bright ACS_NamedExecuteWithResult("SoF_FX",4,35,65536)
-			Stop
-	}
+{
+    Height 2
+    Radius 2
+    Scale 0.125
+    Renderstyle Translucent
+    +FORCEXYBILLBOARD
+    +NOINTERACTION
+    +CLIENTSIDEONLY
+    States
+    {
+        Spawn:
+            SF00 F 0
+            SF00 F -1 Bright ACS_NamedExecuteWithResult("SoF_FX",4,35,65536)
+            Stop
+    }
 }
 
 Actor SoF_RocketSpark
-{	
-	Height 2
-	Radius 2
-	Scale 0.0625
-	Renderstyle Add
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	+CLIENTSIDEONLY
-	States
-	{
-		Spawn:
-			SF00 H 0
-			SF00 HHHHHHHHHH 1 Bright A_Fadeout(0.1)
-			Stop
-	}
+{
+    Height 2
+    Radius 2
+    Scale 0.0625
+    Renderstyle Add
+    +FORCEXYBILLBOARD
+    +NOINTERACTION
+    +CLIENTSIDEONLY
+    States
+    {
+        Spawn:
+            SF00 H 0
+            SF00 HHHHHHHHHH 1 Bright A_Fadeout(0.1)
+            Stop
+    }
 }
 
 Actor SoF_RocketFlare
 {
-	Height 2
-	Radius 2
-	Renderstyle Add
-	Scale 0.5
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	+CLIENTSIDEONLY
-	States
-	{
-		Spawn:
-			TNT1 A 0
-			SF00 G -1 Bright
-			Stop
-	}
+    Height 2
+    Radius 2
+    Renderstyle Add
+    Scale 0.5
+    +FORCEXYBILLBOARD
+    +NOINTERACTION
+    +CLIENTSIDEONLY
+    States
+    {
+        Spawn:
+            TNT1 A 0
+            SF00 G -1 Bright
+            Stop
+    }
 }
 
 Actor SoF_ExplosionLargeSpark
-{	
-	Height 2
-	Radius 2
-	Scale 0.5
-	Renderstyle Add
-	Damage (0)
-	Speed 12
-	Gravity 0.9
-	Projectile //Only because I want gravity on these
-	+BLOODLESSIMPACT
-	+NOTRIGGER
-	-NOGRAVITY
-	+FORCEXYBILLBOARD
-	+THRUACTORS
-	//+NOINTERACTION
-	+CLIENTSIDEONLY
-	States
-	{
-		Spawn:
-			SF00 H 0
-			SF00 HHHHHHHH 2 Bright A_SetScale(scalex-0.033)
-			SF00 HH 2 Bright A_Fadeout(0.5)
-			Stop
-	}
+{
+    Height 2
+    Radius 2
+    Scale 0.5
+    Renderstyle Add
+    Damage (0)
+    Speed 12
+    Gravity 0.9
+    Projectile //Only because I want gravity on these
+    +BLOODLESSIMPACT
+    +NOTRIGGER
+    -NOGRAVITY
+    +FORCEXYBILLBOARD
+    +THRUACTORS
+    //+NOINTERACTION
+    +CLIENTSIDEONLY
+    States
+    {
+        Spawn:
+            SF00 H 0
+            SF00 HHHHHHHH 2 Bright A_SetScale(scalex-0.033)
+            SF00 HH 2 Bright A_Fadeout(0.5)
+            Stop
+    }
 }
