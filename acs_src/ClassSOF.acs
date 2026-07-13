@@ -663,9 +663,12 @@ Script "SoF_BulletDamage" (int damage)
 
 function void SoF_HitDamageBrutalityBonus (int type)
 {
-	SetActivator(0,AAPTR_TRACER);
-	if(type == 0) { GiveInventory("SoF_MelonPopperTimer",ACS_NamedExecuteWithResult("SoF_Decorate",17,5)); GiveInventory("SoF_MelonPopperMultiplier",1); }
-	else if(type == 1) { GiveInventory("SoF_TheEvisceratorTimer",ACS_NamedExecuteWithResult("SoF_Decorate",17,6)); GiveInventory("SoF_TheEvisceratorMultiplier",1); }
+	if (!GetCvar("samsara_nosofbrutalities"))
+	{
+		SetActivator(0,AAPTR_TRACER);
+		if(type == 0) { GiveInventory("SoF_MelonPopperTimer",ACS_NamedExecuteWithResult("SoF_Decorate",17,5)); GiveInventory("SoF_MelonPopperMultiplier",1); }
+		else if(type == 1) { GiveInventory("SoF_TheEvisceratorTimer",ACS_NamedExecuteWithResult("SoF_Decorate",17,6)); GiveInventory("SoF_TheEvisceratorMultiplier",1); }
+	}
 }
 
 function void SoF_SetGibberType (int count)

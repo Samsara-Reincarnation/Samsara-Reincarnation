@@ -158,8 +158,12 @@ Script "Kingpin_Player" (void)
 		
 		if(CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
 			GiveInventory("Kingpin_Bazooka_LaserSight",1);
-		
-		HudMessage(d:CheckInventory("Kingpin_Cash");HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,5,CR_UNTRANSLATED,0.1,0.9,0.0);
+
+		if (GetCVar("screenblocks") < 11)
+		{
+			HudMessage(d:CheckInventory("Kingpin_Cash");HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,5,CR_UNTRANSLATED,0.1,0.9,0.0);
+		}
+		else { HudMessage(s:"";HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP,5,CR_UNTRANSLATED,0.1,0.9,0.0); }
 		
 		if(CheckInventory("Kingpin_ResetPlayerAction")) 
 		{ 
@@ -638,10 +642,10 @@ Script "Kingpin_BulletDamage" (void)
 				
 		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
 		{
-			if(monsterHealth - (damage*3) <= -damage*2)
+			if(monsterHealth - (damage*2) <= -damage)
 				GiveInventory("Kingpin_BloodHeadshotGenerator",1);
 		
-			SetResultValue(damage*3);
+			SetResultValue(damage*2);
 		}
 		else
 			SetResultValue(damage);
@@ -650,7 +654,7 @@ Script "Kingpin_BulletDamage" (void)
 	{
 		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
 		{
-			if(monsterHealth - (damage*3) <= -damage*2)
+			if(monsterHealth - (damage*2) <= -damage)
 				GiveInventory("Kingpin_BloodHeadshotGenerator",1);
 		
 			int result;
@@ -668,7 +672,7 @@ Script "Kingpin_BulletDamage" (void)
 				//GiveInventory("RTCW_RemoveHat",1);
 				
 
-			SetResultValue(damage*3);
+			SetResultValue(damage*2);
 		}
 		else
 			SetResultValue(damage);
@@ -693,14 +697,17 @@ Script "Kingpin_PawnOMatic_Initiate" (void) Net
 {
 	if(!CheckInventory("Kingpin_PawnOMaticOpen"))
 	{
-		int sTid = uniqueTid();
-		GiveInventory("Kingpin_PawnOMaticOpen",1);
-		SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
-		SpawnForced("Kingpin_PawnOMaticSoundController",0,0,0,sTid);
-		SetInventory("Kingpin_PawnOMaticSoundTid",sTid);
-		PlaySound(sTid,"PawnoMatic/Welcome",CHAN_VOICE,1.0,0,ATTN_NONE);
-		
-		ACS_NamedExecuteWithResult("Kingpin_PawnOMatic",PlayerNumber(),sTid);
+		if(!CheckInventory("CompendiumOpened"))
+		{
+			int sTid = uniqueTid();
+			GiveInventory("Kingpin_PawnOMaticOpen",1);
+			SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
+			SpawnForced("Kingpin_PawnOMaticSoundController",0,0,0,sTid);
+			SetInventory("Kingpin_PawnOMaticSoundTid",sTid);
+			PlaySound(sTid,"PawnoMatic/Welcome",CHAN_VOICE,1.0,0,ATTN_NONE);
+			
+			ACS_NamedExecuteWithResult("Kingpin_PawnOMatic",PlayerNumber(),sTid);
+		}
 	}
 	else
 	{
