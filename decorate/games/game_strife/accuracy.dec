@@ -1420,3 +1420,33 @@ actor DeusExStrifeUnique2 : Trigger
         stop
     }
 }
+
+actor SoFStrifeUnique1 : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SoF_MPistol",1,"PickupFill")
+        TNT1 A 0 A_GiveInventory("SoF_MPistol")
+        stop
+
+      PickupFill:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 0)
+        stop
+    }
+}
+
+actor SoFStrifeUnique2 : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SoF_SniperRifle",1,"PickupFill")
+        TNT1 A 0 A_GiveInventory("SoF_SniperRifle")
+        stop
+
+      PickupFill:
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraStrifeAccuracyAmmoFiller", 1)
+        stop
+    }
+}
