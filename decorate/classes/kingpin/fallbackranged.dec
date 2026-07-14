@@ -27,20 +27,20 @@ actor Kingpin_Pistol : Kingpin_Weapon
         KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyActualNonReloadableSilencer")
         KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyActualNonReloadableMagnum")
         KP01 ABCDEFGHIJKLMNOP 5 A_WeaponReady
-        loop
+        goto ReadyActual
 
       ReadyActualNonReloadableMagnum:
         KP11 ABCDEFGHIJKLMNOP 5 A_WeaponReady
         goto ReadyActual
 
       ReadyActualNonReloadableSilencer:
-        KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyActualNonReloadableMagnumSilencer")
+        KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyActualNonReloadableSilencerMagnum")
         KP21 "VWXYZ[\]" 5 A_WeaponReady
         KP22 ABCDEFGH 5 A_WeaponReady
         TNT1 A 0
         goto ReadyActual
 
-      ReadyActualNonReloadableMagnumSilencer:
+      ReadyActualNonReloadableSilencerMagnum:
         KP31 "VWXYZ[\]" 5 A_WeaponReady
         KP32 ABCDEFGH 5 A_WeaponReady
         TNT1 A 0
@@ -50,20 +50,20 @@ actor Kingpin_Pistol : Kingpin_Weapon
         KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_SilencerActive",1,"ReadyActualReloadableSilencer")
         KP01 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyActualReloadableMagnum")
         KP01 ABCDEFGHIJKLMNOP 5 A_WeaponReady(WRF_ALLOWRELOAD)
-        loop
+        goto ReadyActual
 
       ReadyActualReloadableMagnum:
         KP11 ABCDEFGHIJKLMNOP 5 A_WeaponReady(WRF_ALLOWRELOAD)
         goto ReadyActual
 
       ReadyActualReloadableSilencer:
-        KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyActualReloadableMagnumSilencer")
+        KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyActualReloadableSilencerMagnum")
         KP21 "VWXYZ[\]" 5 A_WeaponReady(WRF_ALLOWRELOAD)
         KP22 ABCDEFGH 5 A_WeaponReady(WRF_ALLOWRELOAD)
         TNT1 A 0
         goto ReadyActual
 
-      ReadyActualReloadableMagnumSilencer:
+      ReadyActualReloadableSilencerMagnum:
         KP31 "VWXYZ[\]" 5 A_WeaponReady(WRF_ALLOWRELOAD)
         KP32 ABCDEFGH 5 A_WeaponReady(WRF_ALLOWRELOAD)
         TNT1 A 0
@@ -81,11 +81,11 @@ actor Kingpin_Pistol : Kingpin_Weapon
         goto DeselectInstant
 
       DeselectSilencer:
-        KP22 I 3 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"DeselectMagnumSilencer")
+        KP22 I 3 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"DeselectSilencerMagnum")
         KP22 JKLM 3
         goto DeselectInstant
 
-      DeselectMagnumSilencer:
+      DeselectSilencerMagnum:
         KP32 IJKLM 3
         goto DeselectInstant
 
@@ -103,12 +103,12 @@ actor Kingpin_Pistol : Kingpin_Weapon
         goto ReadyActual
 
       ReadySilencer:
-        KP22 M 3 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadyMagnumSilencer")
+        KP22 M 3 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReadySilencerMagnum")
         KP22 LKJI 3
         KP21 V 0
         goto ReadyActual
 
-      ReadyMagnumSilencer:
+      ReadySilencerMagnum:
         KP32 MLKJI 3
         KP31 V 0
         goto ReadyActual
@@ -145,12 +145,12 @@ actor Kingpin_Pistol : Kingpin_Weapon
         goto ReadyActual
 
       FireDrySilencer:
-        KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"FireDryMagnumSilencer")
+        KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"FireDrySilencerMagnum")
         KP21 V 15 A_WeaponReady(WRF_NOFIRE)
         TNT1 A 0
         goto ReadyActual
 
-      FireDryMagnumSilencer:
+      FireDrySilencerMagnum:
         KP31 V 15 A_WeaponReady(WRF_NOFIRE)
         TNT1 A 0
         goto ReadyActual
@@ -184,7 +184,7 @@ actor Kingpin_Pistol : Kingpin_Weapon
 
       FireStartSilencer:
         KP20 V 0 A_GiveInventory("SamsaraKingpinPistolAttackHandler")
-        KP20 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"FireStartMagnumSilencer")
+        KP20 V 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"FireStartSilencerMagnum")
         KP20 VWXY 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP21 V 0 A_JumpIfInventory("Kingpin_Pistol_RateOfFire",1,2)
         KP21 VV 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
@@ -194,7 +194,7 @@ actor Kingpin_Pistol : Kingpin_Weapon
         KP21 V 0 A_JumpIfInventory("Kingpin_PistolMagazine",1,"ReadyActual")
         goto ReloadCheck
 
-      FireStartMagnumSilencer:
+      FireStartSilencerMagnum:
         KP30 VWXY 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP31 V 0 A_JumpIfInventory("Kingpin_Pistol_RateOfFire",1,2)
         KP31 VV 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
@@ -280,24 +280,24 @@ actor Kingpin_Pistol : Kingpin_Weapon
 
       ReloadFinishMagnum:
         KP10 KLMNOPQRST 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP10 U 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishFastMagnum")
+        KP10 U 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishMagnumFast")
         KP10 U 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
         KP10 UVWXY 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         TNT1 A 0
         KP10 "Z[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         goto ReadyActual
 
-      ReloadFinishFastMagnum:
+      ReloadFinishMagnumFast:
         KP10 U 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP10 V 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
         KP11 A 0
         goto ReadyActual
 
       ReloadFinishSilencer:
-        KP20 Z 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReloadFinishMagnumSilencer")
+        KP20 Z 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"ReloadFinishSilencerMagnum")
         KP20 "Z[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP21 ABCDEF 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP21 G 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishFastSilencer")
+        KP21 G 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishSilencerFast")
         KP21 G 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
         KP21 GHIJK 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         TNT1 A 0
@@ -305,16 +305,16 @@ actor Kingpin_Pistol : Kingpin_Weapon
         KP21 V 0
         goto ReadyActual
 
-      ReloadFinishFastSilencer:
+      ReloadFinishSilencerFast:
         KP21 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP21 H 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
         KP21 V 0
         goto ReadyActual
 
-      ReloadFinishMagnumSilencer:
+      ReloadFinishSilencerMagnum:
         KP30 "Z[\]" 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP31 ABCDEF 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP31 G 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishFastMagnumSilencer")
+        KP31 G 0 A_JumpIfInventory("Kingpin_Pistol_Reload",1,"ReloadFinishSilencerMagnumFast")
         KP31 G 0 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
         KP31 GHIJK 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         TNT1 A 0
@@ -322,7 +322,7 @@ actor Kingpin_Pistol : Kingpin_Weapon
         KP31 V 0
         goto ReadyActual
 
-      ReloadFinishFastMagnumSilencer:
+      ReloadFinishSilencerMagnumFast:
         KP31 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP31 H 6 A_PlaySound("Kingpin/Pistol/ReloadIn",CHAN_5)
         KP31 V 0

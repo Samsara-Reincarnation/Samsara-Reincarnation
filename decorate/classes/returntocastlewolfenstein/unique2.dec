@@ -124,8 +124,8 @@ Actor RTCW_Winchester : RTCW_Weapon
 		ReloadStart:
 			TNT1 A 0 A_JumpIfInventory("RTCW_ShotgunMagazine",1,1)
 			goto ReloadStartAmmoless
-			RW02 "]" 1
-			RW03 ABCDEFG 1
+			RW02 "]" 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			RW03 ABCDEFG 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 		ReloadLoopInit:
 			TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
 			goto ReloadFinish
