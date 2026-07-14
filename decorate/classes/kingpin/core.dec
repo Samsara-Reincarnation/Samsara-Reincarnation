@@ -203,6 +203,8 @@ Actor Kingpin_ShellCasing : Kingpin_Casing {}
 Actor Kingpin_GrenadeCasing : Kingpin_Casing {}
 Actor Kingpin_HMGCasing : Kingpin_Casing {}
 
+actor SamsaraKingpinExplosionRecoilTargetHack : Boolean {}
+
 Actor Kingpin_Explosion
 {
 	+NOINTERACTION
@@ -214,12 +216,26 @@ Actor Kingpin_Explosion
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",256,RGF_PLAYERS,1)
+			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",256,RGF_PLAYERS)
+		SpawnFinish:
 			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
 			TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",0,0,frandom(0,360),CMF_AIMDIRECTION,frandom(0,360))
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect")
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke")
 			Stop
+	}
+}
+
+Actor Kingpin_ExplosionCoop : Kingpin_Explosion
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_GiveInventory("SamsaraKingpinExplosionRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoilCoop",256,RGF_PLAYERS)
+			TNT1 A 0 A_TakeInventory("SamsaraKingpinExplosionRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
+			goto SpawnFinish
 	}
 }
 
@@ -229,6 +245,16 @@ Actor Kingpin_ExplosionRecoil : Trigger
 	{
 		Pickup:
 			TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,192)
+			Stop
+	}
+}
+
+Actor Kingpin_ExplosionRecoilCoop : Kingpin_ExplosionRecoil
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_JumpIfInventory("SamsaraKingpinExplosionRecoilTargetHack",1,"Super::Pickup")
 			Stop
 	}
 }

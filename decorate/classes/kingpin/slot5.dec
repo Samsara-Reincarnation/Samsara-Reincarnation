@@ -101,11 +101,13 @@ Actor Kingpin_Bazooka : Kingpin_Weapon
             KP71 B 0
             Goto ReadyLoop
         Deselect:
-            KP01 N 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"DeselectLaser")
-            KP01 NOPQRS 3
+            KP01 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"DeselectLaser")
+            KP01 BNOPQR 3
+            KP01 S 0
             Goto DeselectLoop
         DeselectLaser:
-            KP01 NOPQRS 3
+            KP11 BNOPQR 3
+            KP11 S 0
             Goto DeselectLoop
         Fire:
             TNT1 A 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,1)

@@ -516,7 +516,6 @@ actor HolySpiritGoodCoop : HolySpiritGood
     +THRUSPECIES
 }
 
-// TO-DO clean up!
 // Our possessed enemy
 
 actor HexenWraithvergeAlly : SamsaraMiscCharHumanoidStatic
@@ -541,8 +540,11 @@ actor HexenWraithvergeAlly : SamsaraMiscCharHumanoidStatic
     States
     {
       Spawn:
-        H139 A 0 // allowing A_Look to take effect on first tic
-        H139 AB 12 A_Look
+        H139 A 0 // allowing code pointers to take effect on first tic
+        TNT1 A 0 A_Look H139 A 3 A_Wander
+        TNT1 A 0 A_Look H139 B 3 A_Wander
+        TNT1 A 0 A_Look H139 C 3 A_Wander
+        TNT1 A 0 A_Look H139 D 3 A_Wander
         loop
 
       See:
@@ -864,9 +866,6 @@ actor MageStaffFX3 : MageStaffFX2 //Needed for special mage staff ripper that ri
     Decal "Scorch"
     Obituary "$SAMSARA_HEXEN_OB_INSTAGIB"
     +BLOODSPLATTER
-    //+EXTREMEDEATH
-    //+SCREENSEEKER
-    //+SEEKERMISSILE
     States
     {
       Spawn:

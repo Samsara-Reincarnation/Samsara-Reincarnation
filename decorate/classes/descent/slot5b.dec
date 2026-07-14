@@ -25,6 +25,8 @@ actor SamsaraDescentMegaMissileAttackHandler : Trigger
     }
 }
 
+actor SamsaraDescentMegaMissileRecoilTargetHack : Boolean {}
+
 actor DescentMegaMissile : DescentMissile
 {
 	Radius 6
@@ -51,7 +53,7 @@ actor DescentMegaMissile : DescentMissile
 			TNT1 A 0 A_TakeFromTarget("DescentMissileCamera",1)
 			TNT1 A 0 A_PlaySound("Descent/MegaMissile/Explode",CHAN_VOICE)
 			TNT1 A 0 A_SpawnItemEx("DescentMegaExplosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-			TNT1 AAAAAAAAAAAAA 2 A_RadiusGive("DescentMegaGiver",256,RGF_PLAYERS|RGF_NOSIGHT,1)
+			TNT1 AAAAAAAAAAAAA 2 A_RadiusGive("DescentMegaGiver",256,RGF_PLAYERS|RGF_NOSIGHT)
 			stop
 	}
 }
@@ -70,69 +72,69 @@ actor DescentMegaMissileCoop : DescentMegaMissile
 			TNT1 A 0 A_PlaySound("Descent/MegaMissile/Explode",CHAN_VOICE)
 			TNT1 A 0 A_SpawnItemEx("DescentMegaExplosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 		DeathShake1:
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShake2
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake2:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShake3
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake3:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShake4
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake4:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShake5
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake5:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShake6
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake6:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShake7
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake7:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			Goto DeathShake8
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake8:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			Goto DeathShake9
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake9:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			Goto DeathShake10
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake10:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			Goto DeathShake11
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake11:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			Goto DeathShake12
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake12:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			Goto DeathShake13
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake13:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(256,1)
-			goto DeathShakeFinish
-			TNT1 A 0 A_GiveToTarget("DescentMegaGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentMegaGiverCoop",256,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentMegaMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShakeFinish:
 			TNT1 A 2
 			stop
@@ -149,5 +151,15 @@ actor DescentMegaGiver : Trigger
         TNT1 A 0 A_SetAngle(angle+frandom(-5.0,5.0))
         TNT1 A 0 A_SetPitch(pitch-frandom(2.0,4.0))
         stop
+    }
+}
+
+actor DescentMegaGiverCoop : DescentMegaGiver
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDescentMegaMissileRecoilTargetHack",1,"Super::Pickup")
+		stop
     }
 }

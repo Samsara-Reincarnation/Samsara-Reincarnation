@@ -406,8 +406,6 @@ actor ClericSwordSlashTrail11 : ClericSwordSlashTrail { Alpha 0.05 }
 
 // Powered
 
-//actor ClericSwordThrowContinue : Boolean {}
-
 actor ClericSwordThrow
 {
     Projectile
@@ -417,6 +415,7 @@ actor ClericSwordThrow
     DamageType "Fire"
     RenderStyle "Translucent"
     Alpha 0.67
+    +BLOODSPLATTER
     +FORCERADIUSDMG
     +NODAMAGETHRUST
     +THRUACTORS //Because this has to work on hellknights
@@ -427,14 +426,9 @@ actor ClericSwordThrow
         H133 AABBCCDDEEFFGGHH 1 Bright Light("CBISHOPSWORD") A_Explode(30,32,0,false,32)
         loop
 
-      /*ReturnBlade:
-        TNT1 A 1 A_Die("ReturnBlade")
-        loop*/
-
       Death:
         TNT1 A 0 A_SpawnItemEx("ClericSwordWallPowered")
         TNT1 A 0 A_PlaySound("HolySymbolFire",CHAN_VOICE)
-      //Death.ReturnBlade:
         TNT1 A 0 A_ChangeFlag("NOINTERACTION",true)
         TNT1 A 0 ACS_NamedExecuteWithResult("HexenBishopSwordReturn")
       DeathLoop:
@@ -602,8 +596,8 @@ actor SamsaraHexenWandOfEmbersBall
     Scale 2.75
     DeathSound "Hexen/WandOfEmbers/Hit"
     Decal "HexenEmberWandScorch"
-    -BLOODSPLATTER
     +BLOODLESSIMPACT
+    -BLOODSPLATTER
     -NOGRAVITY
     States
     {
@@ -660,6 +654,7 @@ actor SamsaraHexenEmberGem
     Height 2
     DamageType "Fire"
     Scale 2.75
+    +BLOODSPLATTER
     +FLOORHUGGER
     +FORCERADIUSDMG
     //+RIPPER
