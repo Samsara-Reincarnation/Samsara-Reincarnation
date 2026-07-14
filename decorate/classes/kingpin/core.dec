@@ -214,12 +214,26 @@ Actor Kingpin_Explosion
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",256,RGF_PLAYERS,1)
+			TNT1 A 0 A_RadiusGive("Kingpin_ExplosionRecoil",256,RGF_PLAYERS)
+		SpawnFinish:
 			TNT1 A 0 A_PlaySound("Kingpin/Explosion",CHAN_5)
 			TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",0,0,frandom(0,360),CMF_AIMDIRECTION,frandom(0,360))
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionEffect")
 			TNT1 A 0 A_SpawnItemEX("Kingpin_ExplosionSmoke")
 			Stop
+	}
+}
+
+Actor Kingpin_ExplosionCoop : Kingpin_Explosion
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_JumpIfCloser(256,1)
+			goto SpawnFinish
+			TNT1 A 0 A_GiveInventory("Kingpin_ExplosionRecoil",1,AAPTR_TARGET)
+			goto SpawnFinish
 	}
 }
 
