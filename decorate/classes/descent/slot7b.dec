@@ -32,6 +32,8 @@ actor SamsaraDescentShakerMissileAttackHandler : Trigger
     }
 }
 
+actor SamsaraDescentShakerMissileRecoilTargetHack : Boolean {}
+
 actor DescentShakerMissile : DescentMissile
 {
 	Radius 8
@@ -58,7 +60,7 @@ actor DescentShakerMissile : DescentMissile
 			TNT1 A 0 A_PlaySound("Descent/EarthShaker/Explode",CHAN_VOICE)
 			TNT1 A 0 A_SpawnItemEx("DescentShakerExplosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 			TNT1 AAAAAA 0 A_CustomMissile("DescentShakerBomblet",0,0,random(0,359),CMF_AIMDIRECTION|CMF_TRACKOWNER,random(0,359))
-			TNT1 AAAAAAAAAAAAA 2 A_RadiusGive("DescentShakerGiver",512,RGF_PLAYERS|RGF_NOSIGHT,1)
+			TNT1 AAAAAAAAAAAAA 2 A_RadiusGive("DescentShakerGiver",512,RGF_PLAYERS|RGF_NOSIGHT)
 			stop
 	}
 }
@@ -79,69 +81,69 @@ actor DescentShakerMissileCoop : DescentShakerMissile
 			TNT1 A 0 A_SpawnItemEx("DescentShakerExplosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 			TNT1 AAAAAA 0 A_CustomMissile("DescentShakerBombletCoop",0,0,random(0,359),CMF_AIMDIRECTION|CMF_TRACKOWNER,random(0,359))
 		DeathShake1:
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake2
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake2:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake3
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake3:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake4
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake4:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake5
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake5:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake6
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake6:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake7
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake7:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake8
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake8:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake9
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake9:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake10
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake10:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake11
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake11:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake12
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake12:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake13
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake13:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShakeFinish
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShakeFinish:
 			TNT1 A 2
 			stop
@@ -165,7 +167,7 @@ actor DescentShakerBomblet : DescentMissile
 			TNT1 A 0 A_Explode(500,250,0)
 			TNT1 A 0 A_PlaySound("Descent/EarthShaker/Explode",CHAN_VOICE)
 			TNT1 A 0 A_SpawnItemEx("DescentShakerExplosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-			TNT1 AAAAAAAAAAAAA 2 A_RadiusGive("DescentShakerGiver",512,RGF_PLAYERS|RGF_NOSIGHT,1)
+			TNT1 AAAAAAAAAAAAA 2 A_RadiusGive("DescentShakerGiver",512,RGF_PLAYERS|RGF_NOSIGHT)
 			Stop
 	}
 }
@@ -182,69 +184,69 @@ actor DescentShakerBombletCoop : DescentShakerBomblet
 			TNT1 A 0 A_PlaySound("Descent/EarthShaker/Explode",CHAN_VOICE)
 			TNT1 A 0 A_SpawnItemEx("DescentShakerExplosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 		DeathShake1:
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake2
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake2:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake3
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake3:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake4
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake4:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake5
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake5:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake6
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake6:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake7
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake7:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake8
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake8:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake9
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake9:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake10
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake10:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake11
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake11:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake12
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake12:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShake13
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShake13:
 			TNT1 A 2
-			TNT1 A 0 A_JumpIfCloser(512,1)
-			goto DeathShakeFinish
-			TNT1 A 0 A_GiveToTarget("DescentShakerGiver")
+            TNT1 A 0 A_GiveInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,AAPTR_TARGET)
+			TNT1 A 0 A_RadiusGive("DescentShakerGiverCoop",512,RGF_PLAYERS|RGF_NOSIGHT)
+            TNT1 A 0 A_TakeInventory("SamsaraDescentShakerMissileRecoilTargetHack",0x7FFFFFFF,0,AAPTR_TARGET)
 		DeathShakeFinish:
 			TNT1 A 2
 			stop
@@ -260,4 +262,14 @@ actor DescentShakerGiver : Trigger
 			TNT1 A 0 A_SetAngle(angle+frandom(-5.0,5.0))
 			stop
 	}
+}
+
+actor DescentShakerGiverCoop : DescentShakerGiver
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDescentShakerMissileRecoilTargetHack",1,"Super::Pickup")
+		stop
+    }
 }
