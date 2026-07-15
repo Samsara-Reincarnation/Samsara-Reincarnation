@@ -316,9 +316,9 @@ Script "DukeEnforcerSpit" (void) CLIENTSIDE //4110
 
 script "DukeIncineratorIgnite" (int burn)
 {
-    if (CheckInventory("SamsaraDuke_IsBurning") || CheckFlag(0, "BOSS")) { terminate; }
+    if (CheckInventory("SamsaraDuke_IsBurning") || CheckFlag(0, "BOSS") || isDead(0)) { terminate; }
 
-    int dummytid = UniqueTid();
+    int dummytid = UniqueTID();
 
     SpawnSpotForced("TranslationDummyPersist", 0, dummytid, 0);
     Thing_SetTranslation(dummytid, -1);
@@ -356,8 +356,8 @@ script "DukeIncineratorIgnite" (int burn)
         ACS_NamedExecuteWithResult("DukeIncineratorBurningFXGiver"); //GiveInventory("Duke3DIncineratorBurningFX", 1);
     }
 
-    int oldtid = ActivatorTid();
-    int usertid = UniqueTid();
+    int oldtid = ActivatorTID();
+    int usertid = UniqueTID();
 
     Thing_ChangeTID(0, usertid);
     SetActivator(dummytid);
