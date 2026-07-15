@@ -5458,6 +5458,15 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				}
 				break;
 
+			case CLASS_KINGPIN:
+                if (CheckInventory("SamsaraKingpinFlamethrowerIdleSoundCheck") && !CheckWeapon("Kingpin_Flamethrower"))
+                {
+                    StopSound(0, CHAN_5);
+
+                    SetInventory("SamsaraKingpinFlamethrowerIdleSoundCheck", 0);
+                }
+                break;
+
 			default:
                 if (cvalue != 1)
                 {

@@ -357,14 +357,22 @@ Script "Kingpin_ThrowMoney" (void)
 	Thing_ChangeTid(moneyTid,random(1,monsterHealth/10));
 }
 
-Script "Kingpin_Flamethrower" (void)
+script "Kingpin_Flamethrower" (void)
 {
-	While(CheckInventory("Kingpin_Flamethrower_Hold"))
-	{
-		Playsound(0,strparam(s:"Kingpin/Flamethrower/Flame",d:((timer()%3))+1),CHAN_AUTO,1.0,0,ATTN_NORM);
-		GiveInventory("Kingpin_Flamethrower_FireTrigger",1);
-		Delay(1);
-	}
+    if (CheckInventory("Kingpin_Flamethrower_Hold")) { terminate; }
+
+    if (CheckInventory("Cell") < (2 - CheckInventory("Kingpin_Flamethrower_FuelPump")) && !CheckInventory("SamsaraHasInfiniteAmmo")) { terminate; }
+
+    GiveInventory("Kingpin_Flamethrower_Hold", 1);
+
+    while (CheckWeapon("Kingpin_Flamethrower") && !isDead(0) && CheckInventory("Kingpin_Flamethrower_Hold"))
+    {
+        PlaySound(0, StrParam(s:"Kingpin/Flamethrower/Flame", d:((Timer() % 3)) + 1), CHAN_AUTO);
+        GiveInventory("Kingpin_Flamethrower_FireTrigger", 1);
+        Delay(1);
+    }
+
+    SetInventory("Kingpin_Flamethrower_Hold", 0);
 }
 
 Script "Kingpin_FlamethrowerDistance" (int px, int py, int pz)
@@ -411,6 +419,8 @@ Script "Kingpin_FlamethrowerTracer" (int upgrade)
 
 			if(CheckInventory("Kingpin_FlamethrowerIgnition") >= requiredIgnition && !CheckInventory("Kingpin_FlamethrowerBurnt"))
 			{
+				bool isPVEGame = isSinglePlayer() || isCoop();
+
 				//Gross hack for enemy gender
 				int gender = -GetActorProperty(0,APROP_STAMINA);
 				if(CheckInventory("StrifeClass")) gender = 1;
@@ -422,7 +432,7 @@ Script "Kingpin_FlamethrowerTracer" (int upgrade)
 				int burnerTid = UniqueTid();
 				if(gender == 2) PlaySound(0,"Kingpin/Flamethrower/BurnF",CHAN_AUTO,1.0,0,ATTN_NORM);
 				else if(gender == 1) PlaySound(0,"Kingpin/Flamethrower/Burn",CHAN_AUTO,1.0,0,ATTN_NORM);
-				SpawnForced("Kingpin_FlamethrowerBurner",GetActorX(0),GetActorY(0),GetActorZ(0),burnerTid);
+				SpawnForced(isPVEGame ? "Kingpin_FlamethrowerBurnerCoop" : "Kingpin_FlamethrowerBurner",GetActorX(0),GetActorY(0),GetActorZ(0),burnerTid);
 				SetActivator(myTid,AAPTR_Target);
 				SetPointerExt(AAPTR_Target,0,burnerTid);
 				SetActivator(myTid,AAPTR_Tracer);

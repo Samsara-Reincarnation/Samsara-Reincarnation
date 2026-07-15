@@ -1,650 +1,860 @@
-Actor Kingpin_Flamethrower_Range : Boolean {}
-Actor Kingpin_Flamethrower_FuelPump : Boolean {}
-Actor Kingpin_Flamethrower_HotterFlame : Boolean {}
-Actor Kingpin_Flamethrower_Napalmer : Boolean {}
+actor Kingpin_Flamethrower_Range : Boolean {}
+actor Kingpin_Flamethrower_FuelPump : Boolean {}
+actor Kingpin_Flamethrower_HotterFlame : Boolean {}
+actor Kingpin_Flamethrower_Napalmer : Boolean {}
+actor SamsaraKingpinFlamethrowerIdleSoundCheck : Boolean {}
+actor SamsaraKingpinFlamethrowerReadyFrame : Counter { Inventory.MaxAmount 11 }
+actor SamsaraKingpinFlamethrowerActiveCalls : Boolean {} // for rage rune
 
-Actor Kingpin_Flamethrower : Kingpin_Weapon
+actor Kingpin_Flamethrower : Kingpin_Weapon
 {
+    Inventory.PickupMessage "Copped a flamethrower."
     Weapon.SlotNumber 6
     Weapon.SelectionOrder 300
-    Weapon.AmmoUse1 0
-    Weapon.AmmoGive1 30
-    Weapon.AmmoType1 "Cell"
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoGive 30
+    Weapon.AmmoUse 1
     Obituary "%o was roasted in %k's torch."
-    Inventory.Pickupmessage "Copped a flamethrower."
     Tag "Flamethrower"
     States
     {
-        Ready:
-            TNT1 A 0 A_TakeInventory("Kingpin_SelectedWeapon")
-            TNT1 A 0 A_GiveInventory("Kingpin_SelectedWeapon",7)
-            KP00 A 0 A_GunFlash("ReadyFlash",GFF_NOEXTCHANGE)
-            KP00 A 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"ReadyFuelPump")
-            KP00 ABCDEF 3
-            Goto ReadyLoop
-        ReadyFuelPump:
-            KP10 ABCDEF 3
-            Goto ReadyLoop
-        ReadyFlash:
-            KP90 ABCDEF 3
-            Goto ReadyLoop
-        ReadyLoop:
-            KP00 O 0 A_TakeInventory("Kingpin_ShootToken")
-            KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"ReadyLoopFuelPump")
-            KP00 O 0 A_GunFlash("ReadyLoopFlash",GFF_NOEXTCHANGE)
-            KP00 O 0 A_PlaySound("Kingpin/Flamethrower/Twitch",CHAN_5,1.0,1)
-            KP00 OPQRSTUVWXYZ 5 A_WeaponReady(WRF_ALLOWRELOAD)
-            Loop
-        ReadyLoopFuelPump:
-            KP10 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,1)
-            Goto ReadyLoop
-            KP10 O 0 A_GunFlash("ReadyLoopFlash",GFF_NOEXTCHANGE)
-            KP10 O 0 A_PlaySound("Kingpin/Flamethrower/Twitch",CHAN_5,1.0,1)
-            KP10 OPQRSTUVWXYZ 5 A_WeaponReady(WRF_ALLOWRELOAD)
-            Loop
-        ReadyLoopFlash:
-            KP91 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 Bright
-            KP92 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 Bright
-            KP93 AB 1 Bright
-            Stop
-        Deselect:
-            KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"DeselectFuelPump")
-            KP00 O 0 A_StopSound(CHAN_5)
-            KP00 O 0 A_GunFlash("DeselectFlash",GFF_NOEXTCHANGE)
-            KP00 "O[\]" 3
-            KP01 AB 3
-            KP01 C 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
-            Goto DeselectLoop
-        DeselectFuelPump:
-            KP10 O 0 A_StopSound(CHAN_5)
-            KP10 O 0 A_GunFlash("DeselectFlash",GFF_NOEXTCHANGE)
-            KP10 "O[\]" 3
-            KP11 AB 3
-            KP11 C 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
-            Goto DeselectLoop
-        DeselectFlash:
-            KP91 A 3 Bright
-            KP94 ABCD 3 Bright
-            KP94 E 0 Bright
-            Stop
-        Fire:
-            "####" "#" 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto DryFire
-            "####" "#" 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireFuelPump")
-            "####" "#" 3 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
-            KP00 G 0 A_StopSound(CHAN_5)
-            KP00 G 0 A_GiveInventory("Kingpin_Flamethrower_Hold")
-            KP00 G 0 ACS_NamedExecuteWithResult("Kingpin_Flamethrower")
-        FireLoop:
-            KP00 G 0 A_GiveInventory("Kingpin_ShootToken")
-            KP00 G 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 G 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 H 0 A_Refire(1)
-            Goto FireResolve
-            KP00 H 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 H 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 H 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 I 0 A_Refire(1)
-            Goto FireResolve
-            KP00 I 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 I 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 I 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 J 0 A_Refire(1)
-            Goto FireResolve
-            KP00 J 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 J 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 J 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 K 0 A_Refire(1)
-            Goto FireResolve
-            KP00 K 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 K 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 K 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 L 0 A_Refire(1)
-            Goto FireResolve
-            KP00 L 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 L 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 L 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 M 0 A_Refire(1)
-            Goto FireResolve
-            KP00 M 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 M 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 M 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 N 0 A_Refire(1)
-            Goto FireResolve
-            KP00 N 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolve
-            KP00 N 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP00 N 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP00 G 0 A_Refire("FireLoop")
-            Goto FireResolve
-        FireResolve:
-            KP00 G 3 A_TakeInventory("Kingpin_Flamethrower_Hold")
-            KP00 O 0 A_PlaySound("Kingpin/Flamethrower/End",CHAN_AUTO)
-            KP00 O 0
-            Goto ReadyLoop
-        FireFuelPump:
-            KP10 G 0 A_StopSound(CHAN_5)
-            KP10 G 0 A_GiveInventory("Kingpin_Flamethrower_Hold")
-            KP10 G 0 ACS_NamedExecuteWithResult("Kingpin_Flamethrower")
-        FireFuelPumpLoop:
-            KP10 G 0 A_GiveInventory("Kingpin_ShootToken")
-            KP10 G 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 G 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 H 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 H 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 H 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 H 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 I 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 I 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 I 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 I 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 J 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 J 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 J 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 J 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 K 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 K 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 K 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 K 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 L 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 L 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 L 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 L 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 M 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 M 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 M 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 M 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 N 0 A_Refire(1)
-            Goto FireResolveFuelPump
-            KP10 N 0 A_JumpIfInventory("Cell",CallACS("Kingpin_Decorate",1),1)
-            Goto FireResolveFuelPump
-            KP10 N 0 A_TakeInventory("Cell",CallACS("Kingpin_Decorate",1),TIF_NOTAKEINFINITE)
-            KP10 N 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            KP10 G 0 A_Refire("FireFuelPumpLoop")
-            Goto FireResolveFuelPump
-        FireResolveFuelPump:
-            KP10 G 3 A_TakeInventory("Kingpin_Flamethrower_Hold")
-            KP10 O 0 A_PlaySound("Kingpin/Flamethrower/End",CHAN_AUTO)
-            KP10 O 0
-            Goto ReadyLoop
-        DryFire:
-            KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"DryFireFuelPump")
-            KP00 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
-            KP00 O 15 A_WeaponReady(WRF_NOFIRE)
-            Goto ReadyLoop
-        DryFireFuelPump:
-            KP10 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
-            KP10 O 15 A_WeaponReady(WRF_NOFIRE)
-            Goto ReadyLoop
-        StopFlash:
-            TNT1 A 1
-            Stop
+      ReadyActual:
+        KP00 O 0 A_TakeInventory("Kingpin_ShootToken")
+        KP00 O 0 A_GunFlash("ReadyActualFlash",GFF_NOEXTCHANGE)
+        KP00 O 0 A_GiveInventory("SamsaraKingpinFlamethrowerIdleSoundStarter")
+        KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"ReadyActualFuelPump")
+        KP00 O 0 A_TakeInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 O 5 A_WeaponReady
+        KP00 P 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 P 5 A_WeaponReady
+        KP00 Q 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 Q 5 A_WeaponReady
+        KP00 R 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 R 5 A_WeaponReady
+        KP00 S 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 S 5 A_WeaponReady
+        KP00 T 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 T 5 A_WeaponReady
+        KP00 U 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 U 5 A_WeaponReady
+        KP00 V 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 V 5 A_WeaponReady
+        KP00 W 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 W 5 A_WeaponReady
+        KP00 X 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 X 5 A_WeaponReady
+        KP00 Y 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 Y 5 A_WeaponReady
+        KP00 Z 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP00 Z 5 A_WeaponReady
+        loop
+
+      ReadyActualFuelPump:
+        KP10 O 0 A_TakeInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 O 5 A_WeaponReady
+        KP10 P 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 P 5 A_WeaponReady
+        KP10 Q 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 Q 5 A_WeaponReady
+        KP10 R 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 R 5 A_WeaponReady
+        KP10 S 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 S 5 A_WeaponReady
+        KP10 T 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 T 5 A_WeaponReady
+        KP10 U 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 U 5 A_WeaponReady
+        KP10 V 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 V 5 A_WeaponReady
+        KP10 W 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 W 5 A_WeaponReady
+        KP10 X 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 X 5 A_WeaponReady
+        KP10 Y 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 Y 5 A_WeaponReady
+        KP10 Z 0 A_GiveInventory("SamsaraKingpinFlamethrowerReadyFrame") KP10 Z 5 A_WeaponReady
+        KP10 O 0
+        goto ReadyActual
+
+      ReadyActualFlash:
+        KP91 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 Bright
+        KP92 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 1 Bright
+        KP93 AB 1 Bright
+        stop
+
+      Deselect:
+        KP00 O 0 A_GiveInventory("SamsaraKingpinFlamethrowerIdleSoundStopper")
+        KP00 O 0 A_GunFlash("DeselectFlash",GFF_NOEXTCHANGE)
+        KP00 O 0 A_JumpIfHealthLower(1,"DeselectInstant")
+        KP00 O 3 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"DeselectFuelPump")
+        KP00 "[\]" 3
+        KP01 AB 3
+        KP01 C 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
+        goto DeselectInstant
+
+      DeselectFuelPump:
+        KP10 "O[\]" 3
+        KP11 AB 3
+        KP11 C 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
+        goto DeselectInstant
+
+      DeselectFlash:
+        KP91 A 3 Bright
+        KP94 ABCD 3 Bright
+        KP94 E 0 Bright
+        stop
+
+      Ready: // our "Select" state
+        KP00 A 0 A_TakeInventory("Kingpin_SelectedWeapon")
+        KP00 A 0 A_GiveInventory("Kingpin_SelectedWeapon",7)
+        KP00 A 0 A_GunFlash("ReadyFlash",GFF_NOEXTCHANGE)
+        KP00 A 3 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"ReadyFuelPump")
+        KP00 BCDEF 3
+        goto ReadyActual
+
+      ReadyFuelPump:
+        KP10 ABCDEF 3
+        KP10 O 0
+        goto ReadyActual
+
+      ReadyFlash:
+        KP90 ABCDEF 3
+        KP91 A 0
+        stop
+
+      Fire:
+        KP00 O 0 A_TakeInventory("SamsaraKingpinFlamethrowerActiveCalls")
+        KP00 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireFuelPump")
+        KP00 O 0 A_JumpIfInventory("Cell",2,"FireStart")
+        goto FireDry
+
+      FireFuelPump:
+        KP10 O 0 A_JumpIfInventory("Cell",1,"FireStart")
+        goto FireDry
+
+      FireDry:
+        KP00 O 0 A_ClearReFire
+        KP00 O 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+        KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireDryFuelPump")
+        KP00 O 15 A_WeaponReady(WRF_NOFIRE)
+        goto ReadyActual
+
+      FireDryFuelPump:
+        KP10 O 15 A_WeaponReady(WRF_NOFIRE)
+        KP10 O 0
+        goto ReadyActual
+
+      FireStart:
+        KP00 O 0 A_GunFlash("StopFlash",GFF_NOEXTCHANGE)
+        KP00 O 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireStartFuelPump")
+        // silly zan stuff coming up
+        KP00 O 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",1,2)  KP00 O 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 P 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",2,2)  KP00 P 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 Q 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",3,2)  KP00 Q 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 R 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",4,2)  KP00 R 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 S 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",5,2)  KP00 S 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 T 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",6,2)  KP00 T 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 U 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",7,2)  KP00 U 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 V 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",8,2)  KP00 V 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 W 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",9,2)  KP00 W 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 X 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",10,2) KP00 X 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        KP00 Y 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",0,2)  KP00 Y 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+        /*                              endpoint                             */ KP00 Z 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopStart
+
+      FireLoopStart:
+        KP00 G 0 A_GiveInventory("SamsaraKingpinFlamethrowerIdleSoundStopper")
+        KP00 G 0 ACS_NamedExecuteWithResult("Kingpin_Flamethrower")
+      FireLoop1:
+        KP00 G 0 A_GiveInventory("Kingpin_ShootToken")
+        KP00 G 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop1FuelPump")
+        KP00 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 G 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 G 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 H 0 A_ReFire("FireLoop2")
+        goto FireFinish
+
+      FireLoop2:
+        KP00 H 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop2FuelPump")
+        KP00 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 H 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 H 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 H 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 I 0 A_ReFire("FireLoop3")
+        goto FireFinish
+
+      FireLoop3:
+        KP00 I 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop3FuelPump")
+        KP00 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 I 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 I 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 I 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 J 0 A_ReFire("FireLoop4")
+        goto FireFinish
+
+      FireLoop4:
+        KP00 J 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop4FuelPump")
+        KP00 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 J 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 J 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 J 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 K 0 A_ReFire("FireLoop5")
+        goto FireFinish
+
+      FireLoop5:
+        KP00 K 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop5FuelPump")
+        KP00 K 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 K 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 K 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 K 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 L 0 A_ReFire("FireLoop6")
+        goto FireFinish
+
+      FireLoop6:
+        KP00 L 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop6FuelPump")
+        KP00 L 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 L 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 L 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 L 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 M 0 A_ReFire("FireLoop7")
+        goto FireFinish
+
+      FireLoop7:
+        KP00 M 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop7FuelPump")
+        KP00 M 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 M 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 M 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 M 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 N 0 A_ReFire("FireLoop8")
+        goto FireFinish
+
+      FireLoop8:
+        KP00 N 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireLoop8FuelPump")
+        KP00 N 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP00 N 0 A_JumpIfInventory("Cell",2,1)
+        goto FireFinish
+        KP00 N 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP00 N 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 G 0 A_ReFire("FireLoop1")
+        goto FireFinish
+
+      FireFinish:
+        KP00 G 0 A_TakeInventory("Kingpin_Flamethrower_Hold")
+        KP00 G 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"FireFinishFuelPump")
+        KP00 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP00 O 0 A_PlaySound("Kingpin/Flamethrower/End",CHAN_AUTO)
+        goto ReadyActual
+
+      FireStartFuelPump:
+        // I warned you
+        KP10 O 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",1,2)  KP10 O 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 P 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",2,2)  KP10 P 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 Q 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",3,2)  KP10 Q 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 R 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",4,2)  KP10 R 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 S 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",5,2)  KP10 S 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 T 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",6,2)  KP10 T 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 U 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",7,2)  KP10 U 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 V 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",8,2)  KP10 V 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 W 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",9,2)  KP10 W 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 X 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",10,2) KP10 X 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        KP10 Y 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerReadyFrame",0,2)  KP10 Y 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+        /*                              endpoint                             */ KP10 Z 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE) goto FireLoopInterpolationFuelPump
+
+      FireLoopInterpolationFuelPump: // hack
+        KP10 G 0
+        goto FireLoopStart
+
+      FireLoop1FuelPump:
+        KP10 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 G 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 G 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 H 0 A_ReFire("FireLoop2")
+        goto FireFinish
+
+      FireLoop2FuelPump:
+        KP10 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 H 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 H 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 H 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 I 0 A_ReFire("FireLoop3")
+        goto FireFinish
+
+      FireLoop3FuelPump:
+        KP10 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 I 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 I 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 I 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 J 0 A_ReFire("FireLoop4")
+        goto FireFinish
+
+      FireLoop4FuelPump:
+        KP10 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 J 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 J 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 J 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 K 0 A_ReFire("FireLoop5")
+        goto FireFinish
+
+      FireLoop5FuelPump:
+        KP10 K 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 K 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 K 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 K 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 L 0 A_ReFire("FireLoop6")
+        goto FireFinish
+
+      FireLoop6FuelPump:
+        KP10 L 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 L 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 L 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 L 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 M 0 A_ReFire("FireLoop7")
+        goto FireFinish
+
+      FireLoop7FuelPump:
+        KP10 M 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 M 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 M 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 M 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 N 0 A_ReFire("FireLoop8")
+        goto FireFinish
+
+      FireLoop8FuelPump:
+        KP10 N 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        KP10 N 0 A_JumpIfInventory("Cell",1,1)
+        goto FireFinish
+        KP10 N 0 A_GiveInventory("Kingpin_Flamethrower_AmmoTaker")
+        KP10 N 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 G 0 A_ReFire("FireLoop1")
+        goto FireFinish
+
+      FireFinishFuelPump:
+        KP10 G 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        KP10 O 0 A_PlaySound("Kingpin/Flamethrower/End",CHAN_AUTO)
+        goto ReadyActual
+
+      StopFlash:
+        TNT1 A 1
+        stop
     }
 }
 
-Actor Kingpin_Flamethrower_Hold : Boolean {}
+actor Kingpin_Flamethrower_Hold : Boolean {}
 
-Actor Kingpin_Flamethrower_FireTrigger : Trigger
+actor Kingpin_Flamethrower_AmmoTaker : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_AlertMonsters
-            TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStream",0,0,10,8)
-            TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFire",0,0,16,4)
-            Stop
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupStop")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_FuelPump",1,"PickupFuelPump")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("Cell",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",2)
+        stop
+
+      // Fuel pump
+      PickupFuelPump:
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        stop
     }
 }
 
-Actor Kingpin_FlamethrowerFire
+actor Kingpin_Flamethrower_FireTrigger : Trigger
 {
-    Gravity 0.33
-    Damage (10)
-    Height 4
-    Radius 2
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStream",0,false,10,8)
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFire",0,false,16,4)
+        TNT1 A 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerActiveCalls",1,2)
+        TNT1 A 0 A_GiveInventory("SamsaraKingpinFlamethrowerActiveCalls")
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,1)
+        goto PickupTakeCalls
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStream",0,false,10,8)
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFire",0,false,16,4)
+        goto PickupTakeCalls
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStreamCoop",0,false,10,8)
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireCoop",0,false,16,4)
+        TNT1 A 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerActiveCalls",1,2)
+        TNT1 A 0 A_GiveInventory("SamsaraKingpinFlamethrowerActiveCalls")
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,1)
+        goto PickupTakeCalls
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireStreamCoop",0,false,10,8)
+        TNT1 A 0 A_FireCustomMissile("Kingpin_FlamethrowerFireCoop",0,false,16,4)
+        goto PickupTakeCalls
+
+      // Active call taking stuff
+      PickupTakeCalls:
+        TNT1 A 0 A_TakeInventory("SamsaraKingpinFlamethrowerActiveCalls")
+        stop
+    }
+}
+
+actor SamsaraKingpinFlamethrowerIdleSoundStarter : Trigger
+{
+    States
+    {
+      // Sound starting stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("Kingpin/Flamethrower/Twitch",CHAN_5,1,true)
+        TNT1 A 0 A_GiveInventory("SamsaraKingpinFlamethrowerIdleSoundCheck")
+        stop
+    }
+}
+
+actor SamsaraKingpinFlamethrowerIdleSoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraKingpinFlamethrowerIdleSoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_5)
+        TNT1 A 0 A_StopSound(CHAN_5)
+        TNT1 A 0 A_TakeInventory("SamsaraKingpinFlamethrowerIdleSoundCheck")
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerFire
+{
     Projectile
+    Radius 2
+    Height 4
     Speed 24
+    Damage (10)
+    Gravity 0.33
     Scale 0.5
-    +THRUACTORS
     +BLOODLESSIMPACT
     +NOTRIGGER
+    +THRUACTORS
     States
     {
-        Spawn:
-            TNT1 A 0
-            TNT1 A 1
-        Death:
-            TNT1 A 0 A_SetArg(0,1+CallACS("Kingpin_ReturnUpgrade",21))
-            TNT1 A 0 A_SetScale(scaleX+(0.25*(args[0]-1)))
-            TNT1 A 0 A_ChangeVelocity(12*(sqrt(velx*velx+vely*vely)/24)*args[0],0,12*(velz/24)*args[0],CVF_RELATIVE|CVF_REPLACE)
-            TNT1 A 1 A_SpawnItemEx("Kingpin_FlamethrowerFireEffect",0,0,0,velx+frandom(-1,1),vely+frandom(-1,1),velz+frandom(-1,1),0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS)
-            Stop
+      Spawn:
+        TNT1 A 0
+        TNT1 A 1
+      Death:
+        TNT1 A 0 A_SetArg(0,1+CallACS("Kingpin_ReturnUpgrade", 21))
+        TNT1 A 0 A_SetScale(scalex+(0.25*(args[0]-1)))
+        TNT1 A 0 A_ChangeVelocity(12*(sqrt(velx*velx+vely*vely)/24)*args[0],0,12*(velz/24)*args[0],CVF_RELATIVE|CVF_REPLACE)
+        TNT1 A 1 A_SpawnItemEx("Kingpin_FlamethrowerFireEffect",0,0,0,velx+frandom(-1,1),vely+frandom(-1,1),velz+frandom(-1,1),0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+        stop
     }
 }
 
-Actor Kingpin_FlamethrowerFireEffect
+actor Kingpin_FlamethrowerFireCoop : Kingpin_FlamethrowerFire
 {
-    +NOGRAVITY
-    -SOLID
-    +FORCEXYBILLBOARD
-    +THRUACTORS
-    +NOTRIGGER
-    +BLOODLESSIMPACT
-    +SKYEXPLODE
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 1
+      Death:
+        TNT1 A 0 A_SetArg(0,1+CallACS("Kingpin_ReturnUpgrade", 21))
+        TNT1 A 0 A_SetScale(scalex+(0.25*(args[0]-1)))
+        TNT1 A 0 A_ChangeVelocity(12*(sqrt(velx*velx+vely*vely)/24)*args[0],0,12*(velz/24)*args[0],CVF_RELATIVE|CVF_REPLACE)
+        TNT1 A 1 A_SpawnItemEx("Kingpin_FlamethrowerFireEffectCoop",0,0,0,velx+frandom(-1,1),vely+frandom(-1,1),velz+frandom(-1,1),0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+        stop
+    }
+}
+
+actor Kingpin_Flamethrower_SpriteCounter : Counter { Inventory.MaxAmount 14 }
+
+actor Kingpin_FlamethrowerFireEffect
+{
     Projectile
-    Height 20
     Radius 10
+    Height 20
     VSpeed 0.5
-    Renderstyle Add
+    RenderStyle "Add"
     Scale 0.5
+    +BLOODLESSIMPACT
+    +FORCEXYBILLBOARD
+    +NOGRAVITY
+    +NOTRIGGER
+    +SKYEXPLODE
+    +THRUACTORS
     States
     {
-        Spawn:
-            KP01 A 0 NoDelay ACS_NamedExecuteWithResult("Kingpin_FX",2,28,1.0*65536)
-            KP01 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 AA 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 B 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 BB 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 C 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 CC 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 D 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 DD 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 E 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 EE 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 F 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 FF 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 G 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 GG 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 H 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 HH 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 I 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 II 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 J 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 JJ 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 K 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 KK 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 L 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 LL 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 M 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 MM 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            KP01 N 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter",1)
-            KP01 NN 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        XDeath:
-            TNT1 A 0
-            Goto End
-        Death:
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_Napalmer",1,1,AAPTR_Target)
-            Goto End
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerFireNapalm",0,0,0,CMF_TRACKOWNER)
-            Goto End
-        End:
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",14,"End14")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",13,"End13")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",12,"End12")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",11,"End11")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",10,"End10")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",9,"End9")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",8,"End8")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",7,"End7")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",6,"End6")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",5,"End5")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",4,"End4")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",3,"End3")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",2,"End2")
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",1,"End1")
-        End14:
-            KP01 N 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End13:
-            KP01 MN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End12:
-            KP01 LMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End11:
-            KP01 KLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End10:
-            KP01 JKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End9:
-            KP01 IJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End8:
-            KP01 HIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End7:
-            KP01 GHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End6:
-            KP01 FGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End5:
-            KP01 EFGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End4:
-            KP01 DEFGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End3:
-            KP01 CDEFGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End2:
-            KP01 BCDEFGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
-        End1:
-            KP01 ABCDEFGHIJKLMN 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Stop
+      Spawn:
+        KP01 A 0 NoDelay ACS_NamedExecuteWithResult("Kingpin_FX",2,28,1.0*65536)
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 AA 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 BB 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 CC 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 DD 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 EE 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 FF 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 GG 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 HH 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 II 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 JJ 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 KK 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 LL 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 MM 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 NN 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        stop
+
+      XDeath:
+        TNT1 A 0
+        goto End
+
+      Death:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_Napalmer",1,1,AAPTR_TARGET)
+        goto End
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerFireNapalm",0,0,0,CMF_TRACKOWNER)
+        goto End
+
+      End:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",0,"End14")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",13,"End13")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",12,"End12")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",11,"End11")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",10,"End10")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",9,"End9")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",8,"End8")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",7,"End7")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",6,"End6")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",5,"End5")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",4,"End4")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",3,"End3")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",2,"End2")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",1,"End1")
+        goto End1
+
+      End1:  KP01 A 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End2:  KP01 B 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End3:  KP01 C 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End4:  KP01 D 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End5:  KP01 E 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End6:  KP01 F 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End7:  KP01 G 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End8:  KP01 H 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End9:  KP01 I 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End10: KP01 J 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End11: KP01 K 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End12: KP01 L 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End13: KP01 M 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+      End14: KP01 N 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        stop
     }
 }
 
-Actor Kingpin_Flamethrower_SpriteCounter : Counter {}
-
-Actor Kingpin_FlamethrowerFireStream : FastProjectile
+actor Kingpin_FlamethrowerFireEffectCoop : Kingpin_FlamethrowerFireEffect
 {
-    Damage (0)
-    Height 4
+    States
+    {
+      Death:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_Napalmer",1,1,AAPTR_TARGET)
+        goto End
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerFireNapalmCoop",0,0,0,CMF_TRACKOWNER)
+        goto End
+    }
+}
+
+actor Kingpin_FlamethrowerFireStream : FastProjectile
+{
     Radius 2
+    Height 4
     Speed 18
+    Damage (0)
     MissileType "Kingpin_FlamethrowerStream"
     MissileHeight 0
     +BLOODLESSIMPACT
     +NOTRIGGER
     States
     {
-        Spawn:
-            TNT1 A 0
-            TNT1 A 1
-        Death:
-            TNT1 A 1
-            Stop
+      Spawn:
+        TNT1 A 0
+        TNT1 A 1
+      Death:
+        TNT1 A 1
+        stop
     }
 }
 
-Actor Kingpin_FlamethrowerStream
+actor Kingpin_FlamethrowerFireStreamCoop : Kingpin_FlamethrowerFireStream
 {
-    +NOINTERACTION
-    +NOGRAVITY
-    -SOLID
-    +FORCEXYBILLBOARD
-    +NOBLOCKMAP
-    +THRUACTORS
-    Height 4
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Kingpin_FlamethrowerStream
+{
     Radius 2
-    Renderstyle Add
+    Height 4
+    RenderStyle "Add"
     Scale 0.15
-    States
-    {
-        Spawn:
-            TNT1 A 0
-            TNT1 A 0 A_Stop
-            TNT1 A 0 A_JumpIfCloser(32,"Quit")
-            TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerStream2",4*cos(pitch),0,4*sin(pitch))
-            TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerStream2",-4*cos(pitch),0,-4*sin(pitch))
-            KP04 C 1 A_Stop
-            Stop
-        Quit:
-            TNT1 A 1
-            Stop
-    }
-}
-
-Actor Kingpin_FlamethrowerStream2 : Kingpin_FlamethrowerStream
-{
-    States
-    {
-        Spawn:
-            TNT1 A 0
-            KP04 C 1
-            Stop
-    }
-}
-
-Actor Kingpin_FlamethrowerIgniteShooter : Trigger
-{
-    States
-    {
-        Pickup:
-            TNT1 A 0 A_SetAngle(5*random(0,6))
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
-            stop
-    }
-}
-
-Actor Kingpin_FlamethrowerIgniteTracer
-{
-    Height 64
-    Radius 32
-    Speed 32
-    Projectile
-    +HITTRACER
-    +DONTBLAST
-    +DONTREFLECT
-    States
-    {
-        Spawn:
-            TNT1 A 2
-            Stop
-        Death:
-            TNT1 A 1
-            Stop
-        Crash:
-        XDeath:
-            TNT1 A 2 ACS_NamedExecuteWithResult("Kingpin_FlamethrowerTracer",CallACS("Kingpin_Decorate",2))
-            Stop
-    }
-}
-
-Actor Kingpin_FlamethrowerIgnition : Counter { Inventory.MaxAmount 50 }
-Actor Kingpin_FlamethrowerStacker : Counter { Inventory.MaxAmount 32 }
-Actor Kingpin_FlamethrowerHitTarget : Boolean {}
-Actor Kingpin_FlamethrowerBurnt : Boolean {}
-
-Actor Kingpin_FlamethrowerSetFear : Trigger
-{
-    States
-    {
-        Pickup:
-            TNT1 A 0 A_CheckFlag("BOSS","Ignore")
-            TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-            Stop
-        Ignore:
-            TNT1 A 1
-            fail
-    }
-}
-
-Actor Kingpin_FlamethrowerUnSetFear : Trigger
-{
-    States
-    {
-        Pickup:
-            TNT1 A 0 A_CheckFlag("BOSS","Ignore")
-            TNT1 A 0 A_ChangeFlag("FRIGHTENED",0)
-            Stop
-        Ignore:
-            TNT1 A 1
-            fail
-    }
-}
-
-Actor Kingpin_FlamethrowerBurner
-{
-    Height 4
-    Radius 2
-    Speed 0
-    Damage (0)
-    Projectile
-    DamageType "KingpinFire"
+    +FORCEXYBILLBOARD
+    +NOINTERACTION
     +THRUACTORS
-    +NODAMAGETHRUST
-    +FORCEPAIN
+    States
+    {
+      Spawn:
+        KP04 C 0
+        TNT1 A 0 A_Stop
+        TNT1 A 0 A_JumpIfCloser(32,"Quit")
+        TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerStream2",4*cos(pitch),0,4*sin(pitch))
+        TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerStream2",-4*cos(pitch),0,-4*sin(pitch))
+        KP04 C 1 A_Stop
+        stop
+
+      Quit:
+        TNT1 A 1
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerStream2 : Kingpin_FlamethrowerStream
+{
+    States
+    {
+      Spawn:
+        KP04 C 0
+        KP04 C 1
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerIgniteShooter : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SetAngle(5*random(0,6))
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracer",-16,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerIgniteTracer
+{
+    Projectile
+    Radius 32
+    Height 64
+    Speed 32
     +DONTBLAST
     +DONTREFLECT
-    +FORCERADIUSDMG
+    +HITTRACER
+    States
+    {
+      Spawn:
+        TNT1 A 2
+        stop
+
+      Death:
+        TNT1 A 1
+        stop
+
+      Crash:
+      XDeath:
+        TNT1 A 2 ACS_NamedExecuteWithResult("Kingpin_FlamethrowerTracer", CallACS("Kingpin_Decorate", 2))
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerIgnition : Counter { Inventory.MaxAmount 50 }
+actor Kingpin_FlamethrowerStacker : Counter { Inventory.MaxAmount 32 }
+actor Kingpin_FlamethrowerHitTarget : Boolean {}
+actor Kingpin_FlamethrowerBurnt : Boolean {}
+
+actor Kingpin_FlamethrowerSetFear : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_CheckFlag("BOSS","PickupStop")
+        TNT1 A 0 A_ChangeFlag("FRIGHTENED",true)
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerUnSetFear : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_CheckFlag("BOSS","PickupStop")
+        TNT1 A 0 A_ChangeFlag("FRIGHTENED",false)
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerBurner
+{
     var int user_radius;
     var int user_height;
-    States
-    {
-        Spawn:
-            TNT1 A 0
-            TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_BurnHandler")
-        Death:
-            TNT1 A 0 A_SetUserVar("user_radius",CallACS("Kingpin_Decorate",9))
-            TNT1 A 0 A_SetUserVar("user_height",CallACS("Kingpin_Decorate",9,1))
-            TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
-            TNT1 A 0 A_ChangeFlag("PAINLESS",1)
-            TNT1 A 0 A_ChangeFlag("FORCEPAIN",0)
-            TNT1 A 0 A_GiveInventory("Kingpin_FlamethrowerSetFear",1,AAPTR_TRACER)
-        SpawnLoop:
-            TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
-            Goto Remove
-            TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
-            TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireVisual",random(-user_radius/2,user_radius/2),random(-user_radius/2,user_radius/2),random(0,user_height),0,0,0,0,SXF_NOCHECKPOSITION)
-            TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
-            TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
-            TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
-            Goto Remove
-            TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
-            TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
-            TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
-            TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
-            Goto Remove
-            TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
-            TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireVisual",random(-user_radius/2,user_radius/2),random(-user_radius/2,user_radius/2),random(0,user_height),0,0,0,0,SXF_NOCHECKPOSITION)
-            TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
-            TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
-            TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_Tracer)
-            Goto Remove
-            TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_Tracer)
-            TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate",10),16,!XF_HURTSOURCE,0,16)
-            TNT1 A 1 A_Warp(AAPTR_Tracer,0,0,0,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
-            Loop
-        Remove:
-            TNT1 A 0 A_GiveInventory("Kingpin_FlamethrowerUnSetFear",1,AAPTR_TRACER)
-            TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerIgnition",65536,0,AAPTR_Tracer)
-            TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerStacker",65536,0,AAPTR_Tracer)
-            TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerHitTarget",999,0,AAPTR_Tracer)
-            TNT1 A 1 A_TakeInventory("Kingpin_FlamethrowerBurnt",999,0,AAPTR_Tracer)
-            Stop
-    }
-}
-
-Actor Kingpin_FlamethrowerFireVisual
-{
-    +NOINTERACTION
-    +NOGRAVITY
-    -SOLID
-    +FORCEXYBILLBOARD
-    Height 4
-    Radius 2
-    VSpeed 0.5
-    Renderstyle Add
-    Scale 0.67
-    States
-    {
-        Spawn:
-            KP01 A 0 NoDelay ACS_NamedExecuteWithResult("Kingpin_FX",2,28,(65536*2)/3)
-            KP01 ABCDEFGHIJKLMN 2 Bright
-            Stop
-    }
-}
-
-Actor Kingpin_FlamethrowerFireNapalm
-{
     Projectile
-    Speed 0
-    Height 4
     Radius 2
+    Height 4
+    Speed 0
+    Damage (0)
+    DamageType "KingpinFire"
+    +DONTBLAST
+    +DONTREFLECT
+    +FORCEPAIN
+    +FORCERADIUSDMG
+    +NODAMAGETHRUST
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_BurnHandler")
+      Death:
+        TNT1 A 0 A_SetUserVar("user_radius",CallACS("Kingpin_Decorate", 9))
+        TNT1 A 0 A_SetUserVar("user_height",CallACS("Kingpin_Decorate", 9, 1))
+        TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate", 10),16,0,false,16)
+        TNT1 A 0 A_ChangeFlag("PAINLESS",true)
+        TNT1 A 0 A_ChangeFlag("FORCEPAIN",false)
+        TNT1 A 0 A_GiveInventory("Kingpin_FlamethrowerSetFear",1,AAPTR_TRACER)
+      SpawnLoop:
+        TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+        goto Remove
+        TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_TRACER)
+        TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireVisual",random(-user_radius/2,user_radius/2),random(-user_radius/2,user_radius/2),random(0,user_height),0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate", 10),16,0,false,16)
+        TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+        TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+        goto Remove
+        TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_TRACER)
+        TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate", 10),16,0,false,16)
+        TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+        TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+        goto Remove
+        TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_TRACER)
+        TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireVisual",random(-user_radius/2,user_radius/2),random(-user_radius/2,user_radius/2),random(0,user_height),0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate", 10),16,0,false,16)
+        TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+        TNT1 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+        goto Remove
+        TNT1 A 0 A_CheckFlag("CORPSE","Remove",AAPTR_TRACER)
+        TNT1 A 0 A_Explode(CallACS("Kingpin_Decorate", 10),16,0,false,16)
+        TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
+        loop
+
+      Remove:
+        TNT1 A 0 A_GiveInventory("Kingpin_FlamethrowerUnSetFear",1,AAPTR_TRACER)
+        TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerIgnition",0x7FFFFFFF,0,AAPTR_TRACER)
+        TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerStacker",0x7FFFFFFF,0,AAPTR_TRACER)
+        TNT1 A 0 A_TakeInventory("Kingpin_FlamethrowerHitTarget",0x7FFFFFFF,0,AAPTR_TRACER)
+        TNT1 A 1 A_TakeInventory("Kingpin_FlamethrowerBurnt",0x7FFFFFFF,0,AAPTR_TRACER)
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerBurnerCoop : Kingpin_FlamethrowerBurner
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Kingpin_FlamethrowerFireVisual
+{
+    Radius 2
+    Height 4
+    VSpeed 0.5
+    RenderStyle "Add"
+    Scale 0.67
+    +FORCEXYBILLBOARD
+    +NOINTERACTION
+    States
+    {
+      Spawn:
+        KP01 A 0 Bright NoDelay ACS_NamedExecuteWithResult("Kingpin_FX", 2, 28, (65536 * 2) / 3)
+        KP01 ABCDEFGHIJKLMN 2 Bright
+        stop
+    }
+}
+
+actor Kingpin_Flamethrower_NapalmLife : Counter { Inventory.MaxAmount 105 }
+
+actor Kingpin_FlamethrowerFireNapalm
+{
+    var int user_lifetime;
+    Projectile
+    Radius 2
+    Height 4
     Damage (0)
     ReactionTime 0
     +BLOODLESSIMPACT
-    +THRUACTORS
     +NOTRIGGER
-    var int user_lifetime;
-    States
-    {
-        Spawn:
-            TNT1 A 0
-            TNT1 A 0 A_PlaySound("Kingpin/Flamethrower/Fire",CHAN_5,1.0,1)
-        SpawnLoop:
-            TNT1 A 0 A_CountDown
-            Loop
-        Death:
-            TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_NapalmLife",0,"Quit")
-            TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireNapalmEffect",frandom(-4,4),frandom(-4,4))
-            TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_NapalmLife")
-            TNT1 A 1 A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
-            Loop
-        Quit:
-            TNT1 A 1 A_StopSound(CHAN_5)
-            Stop
-    }
-}
-
-Actor Kingpin_Flamethrower_NapalmLife : Counter { Inventory.MaxAmount 105 }
-
-Actor Kingpin_FlamethrowerFireNapalmEffect
-{
-    +NOINTERACTION
-    +NOGRAVITY
-    //+FORCEXYBILLBOARD
     +THRUACTORS
-    +NOBLOCKMAP
-    Height 4
-    Radius 2
-    Renderstyle Add
-    Scale 0.25
     States
     {
-        Spawn:
-            TNT1 A 0
-            KP05 A 0 A_SetScale(ScaleX*frandom(0.9,1.1))
-            KP05 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireNapalmEffect2",0,0,8,frandom(-1,1),frandom(-1,1),frandom(1,2),0,SXF_TRANSFERSCALE)
-            KP05 CA 3 Bright
-            KP05 CCC 1 Bright A_Fadeout(0.33)
-            Stop
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_PlaySound("Kingpin/Flamethrower/Fire",CHAN_5,1,true)
+      SpawnLoop:
+        TNT1 A 1 A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_NapalmLife",0,"Quit")
+        TNT1 A 0 A_SpawnItemEx("Kingpin_FlamethrowerFireNapalmEffect",frandom(-4,4),frandom(-4,4))
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_NapalmLife")
+        TNT1 A 1 A_GiveInventory("Kingpin_FlamethrowerIgniteShooter")
+        loop
+
+      Quit:
+        TNT1 A 0 A_PlaySound("silence",CHAN_5)
+        TNT1 A 1 A_StopSound(CHAN_5)
+        stop
     }
 }
 
-Actor Kingpin_FlamethrowerFireNapalmEffect2 : Kingpin_FlamethrowerFireNapalmEffect
+actor Kingpin_FlamethrowerFireNapalmCoop : Kingpin_FlamethrowerFireNapalm
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Kingpin_FlamethrowerFireNapalmEffect
+{
+    Radius 2
+    Height 4
+    RenderStyle "Add"
+    Scale 0.25
+    +NOINTERACTION
+    +THRUACTORS
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SetScale(scalex*frandom(0.9,1.1))
+        KP05 C 3 Bright A_SpawnItemEx("Kingpin_FlamethrowerFireNapalmEffect2",0,0,8,frandom(-1,1),frandom(-1,1),frandom(1,2),0,SXF_TRANSFERSCALE)
+        KP05 A 3 Bright
+        KP05 CCC 1 Bright A_FadeOut(0.33)
+        stop
+    }
+}
+
+actor Kingpin_FlamethrowerFireNapalmEffect2 : Kingpin_FlamethrowerFireNapalmEffect
 {
     +FORCEXYBILLBOARD
     States
     {
-        Spawn:
-            TNT1 A 0
-            KP05 B 0 A_SetScale(ScaleX/2)
-            KP05 BBBBBBBBBB 1 Bright A_Fadeout(0.1)
-            Stop
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SetScale(scalex/2)
+        KP05 BBBBBBBBBB 1 Bright A_FadeOut(0.1)
+        stop
     }
 }
