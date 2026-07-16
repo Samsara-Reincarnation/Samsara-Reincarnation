@@ -242,6 +242,63 @@ Class Strife_WallBlood_ZScript : Actor
 	}
 }
 
+Class SOF_WallBloodLarge_ZScript : Actor
+{
+	Default
+	{
+		scale 0.6;
+		speed 7;
+		health 1;
+		radius 8;
+		height 1;
+		Gravity 0.7;
+		damage 0;
+		+MISSILE;
+		+CLIENTSIDEONLY;
+		+NOTELEPORT;
+		+NOBLOCKMAP;
+		+THRUACTORS;
+	}
+	
+	States
+	{
+		Spawn:
+			TNT1 A 3 NoDelay
+			{
+				if(master)
+				{
+					CopyBloodColor(master);
+					for(int i = 16; i >= 0; i--)
+					{
+						A_SetAngle(random(0, 360));
+						A_SetPitch(random(-50, 50));
+						A_SprayDecal("SoFBloodWall", 172, (0, 0, 0), (0, 0, 0), true, 0);
+					}
+				}
+			}
+			stop;
+	}
+}
+
+Class SOF_WallBloodSmall_ZScript : SOF_WallBloodLarge_ZScript
+{
+	States
+	{
+		Spawn:
+			TNT1 A 3 NoDelay
+			{
+				if(master)
+				{
+					CopyBloodColor(master);
+					A_SetAngle(random(0, 360));
+					A_SetPitch(random(-50, 50));
+					A_SprayDecal("SoFBloodWall", 172, (0, 0, 0), (0, 0, 0), true, 0);
+				}
+			}
+			stop;
+	}
+}
+
 Class NashGoreGibSpawner_ZScript : Actor
 {
 	Default
