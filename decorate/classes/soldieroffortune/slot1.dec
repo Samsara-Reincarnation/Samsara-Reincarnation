@@ -2,12 +2,10 @@ ACTOR SoF_Pistol2 : SoF_Weapon
 {
     Weapon.SlotNumber 1
     Weapon.SelectionOrder 1500
-    Weapon.AmmoUse1 0
-    Weapon.AmmoGive1 0
     Weapon.AmmoType1 "SoF_Pistol2Magazine"
-    Weapon.AmmoUse2 0
-    Weapon.AmmoGive2 10
+    Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Clip"
+    Weapon.AmmoGive2 10
     Obituary "%o was hollow pointed by %k's monster magnum."
     Inventory.Pickupmessage ".44 Pistol"
     Tag "The Silver Talon"
@@ -438,6 +436,11 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             Goto DeselectLoop
         Fire:
             "####" "#" 0 A_TakeInventory("SoF_WeaponAnimFrame")
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            "####" "#" 0 A_JumpIfInventory("Clip",2,3)
+            Goto DryFire
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_Pistol2Magazine",1,1)
             Goto DryFire
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",10,"FIRE1_C")
@@ -502,7 +505,11 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             Goto ReadyLoop
 
         Reload:
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+            goto ReadyLoop
             "####" "#" 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"ReadyLoop")
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             "####" "#" 0 A_JumpIfInventory("Clip",2,1)
             Goto ReadyLoop
             "####" "#" 0 A_TakeInventory("SoF_WeaponAnimFrame")
@@ -517,11 +524,15 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",2,"RELOAD_C")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",1,"RELOAD_A")
         RELOAD_A:
+            TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"RELOAD_A_FINISH")
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             TNT1 A 0 A_JumpIfInventory("Clip",2,1)
             Goto RELOAD_A_FINISH
-            TNT1 A 0 A_GiveInventory("SoF_Pistol2Magazine",1)
-            TNT1 A 0 A_TakeInventory("Clip",2,TIF_NOTAKEINFINITE)
-            TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"RELOAD_A_FINISH")
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+            TNT1 A 0 A_TakeInventory("Clip",2)
+            TNT1 A 0 A_GiveInventory("SoF_Pistol2Magazine")
             Loop
         RELOAD_A_FINISH:
             SF0E ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -534,11 +545,15 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             SF06 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",1,1)
             Goto ReadyLoop
         RELOAD_C:
+            TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"RELOAD_C_FINISH")
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             TNT1 A 0 A_JumpIfInventory("Clip",2,1)
             Goto RELOAD_C_FINISH
-            TNT1 A 0 A_GiveInventory("SoF_Pistol2Magazine",1)
-            TNT1 A 0 A_TakeInventory("Clip",2,TIF_NOTAKEINFINITE)
-            TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"RELOAD_C_FINISH")
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+            TNT1 A 0 A_TakeInventory("Clip",2)
+            TNT1 A 0 A_GiveInventory("SoF_Pistol2Magazine")
             Loop
         RELOAD_C_FINISH:
             SF0F A 0 A_PlaySound("SoF/Weapons/dpistol/PullOut",CHAN_AUTO)
@@ -564,14 +579,24 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             "####" "#" 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF10 A 0 A_PlaySound("SoF/Weapons/gpistol/Empty",CHAN_AUTO)
             SF10 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF09 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+            goto DRYFIRE_LHAND_FINISH
+            SF09 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF09 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
             SF09 A 0 A_JumpIfInventory("Clip",2,"Reload")
+        DRYFIRE_LHAND_FINISH:
             SF09 A 8 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             Goto ReadyLoop
         DRYFIRE_RHAND:
             "####" "#" 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF11 A 0 A_PlaySound("SoF/Weapons/gpistol/Empty",CHAN_AUTO)
             SF11 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF06 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+            goto DRYFIRE_RHAND_FINISH
+            SF06 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF06 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
             SF06 A 0 A_JumpIfInventory("Clip",2,"Reload")
+        DRYFIRE_RHAND_FINISH:
             SF06 A 8 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             Goto ReadyLoop
         Spawn:
@@ -584,15 +609,43 @@ Actor SoF_Pistol2_A_FireToken : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_SpawnItemEx("SoF_MediumCasing",cos(pitch)*8,4,40-(sin(pitch)*8),0.125*sin(pitch),frandom(0.75,1.25),abs(1*cos(pitch)),0,SXF_TRANSFERPITCH)
-            TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke",cos(pitch)*8,3,40-(sin(pitch)*8),0.125*sin(pitch),0,abs(0.125*cos(pitch)))
-            TNT1 A 0 A_PlaySound("SoF/Weapons/dpistol/Fire",CHAN_WEAPON)
-            TNT1 A 0 A_AlertMonsters
-            TNT1 A 0 A_FireBullets(2,2,-1,0,"SoF_Pistol2BulletPuff",FBF_NORANDOM)
-            TNT1 A 0 A_TakeInventory("SoF_Pistol2Magazine",1)
-            TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,80)
-            Stop
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",2)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("SoF_Pistol2Magazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("SoF/Weapons/dpistol/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("SoF_MediumCasing",cos(pitch)*8,4,40-(sin(pitch)*8),0.125*sin(pitch),frandom(0.75,1.25),abs(1*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke",cos(pitch)*8,3,40-(sin(pitch)*8),0.125*sin(pitch),0,abs(0.125*cos(pitch)))
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"SoF_Pistol2BulletPuff",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"SoF_Pistol2BulletPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 80)
+        stop
     }
 }
 
@@ -600,19 +653,49 @@ Actor SoF_Pistol2_C_FireToken : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_SpawnItemEx("SoF_MediumCasing",cos(pitch)*8,-2,40-(sin(pitch)*8),0.125*sin(pitch),frandom(0.75,1.25),abs(1*cos(pitch)),0,SXF_TRANSFERPITCH)
-            TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke",cos(pitch)*8,-3,40-(sin(pitch)*8),0.125*sin(pitch),0,abs(0.125*cos(pitch)))
-            TNT1 A 0 A_PlaySound("SoF/Weapons/dpistol/Fire",CHAN_WEAPON)
-            TNT1 A 0 A_AlertMonsters
-            TNT1 A 0 A_FireBullets(2,2,-1,0,"SoF_Pistol2BulletPuff",FBF_NORANDOM)
-            TNT1 A 0 A_TakeInventory("SoF_Pistol2Magazine",1)
-            TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",5,80)
-            Stop
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",2,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",2)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("SoF_Pistol2Magazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("SoF/Weapons/dpistol/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("SoF_MediumCasing",cos(pitch)*8,-2,40-(sin(pitch)*8),0.125*sin(pitch),frandom(0.75,1.25),abs(1*cos(pitch)),0,SXF_TRANSFERPITCH)
+        TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke",cos(pitch)*8,-3,40-(sin(pitch)*8),0.125*sin(pitch),0,abs(0.125*cos(pitch)))
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"SoF_Pistol2BulletPuff",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"SoF_Pistol2BulletPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 80)
+        stop
     }
 }
 
 Actor SoF_Pistol2BulletPuff : SoF_BulletPuff { args 60 DamageType "SoF44" Decal SoF44BulletHole }
+
+actor SoF_Pistol2BulletPuffCoop : SoF_Pistol2BulletPuff { +MTHRUSPECIES }
 
 Actor SoF_Pistol2Magazine : Ammo
 {
