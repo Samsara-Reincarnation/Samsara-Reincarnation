@@ -565,8 +565,7 @@ actor Kingpin_Shotgun : Kingpin_Weapon
 
       ReloadStartMagazine:
         KP10 R 0 A_PlaySound("Kingpin/Shotgun/ReloadMagazine",CHAN_7)
-        goto ReloadAmmoMagazine
-
+        KP10 R 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoMagazine")
       ReloadFinishMagazine:
         KP10 R 0 ACS_NamedExecuteWithResult("Kingpin_Decorate", 12, 0)
         KP10 "RSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
@@ -606,8 +605,7 @@ actor Kingpin_Shotgun : Kingpin_Weapon
 
       ReloadStartDoubleMagazine:
         KP30 R 0 A_PlaySound("Kingpin/Shotgun/ReloadMagazine",CHAN_7)
-        goto ReloadAmmoDoubleMagazine
-
+        KP30 R 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoDoubleMagazine")
       ReloadFinishDoubleMagazine:
         KP30 R 0 ACS_NamedExecuteWithResult("Kingpin_Decorate", 12, 0)
         KP30 "RSTUVWXYZ[\]" 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)

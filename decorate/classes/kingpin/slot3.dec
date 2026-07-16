@@ -118,8 +118,7 @@ actor Kingpin_GrenadeLauncher : Kingpin_Weapon
       ReloadStart:
         KP00 R 0 A_TakeInventory("Kingpin_ShootToken")
         KP00 R 0 A_PlaySound("Kingpin/GrenadeLauncher/Reload",CHAN_WEAPON)
-        goto ReloadAmmo
-
+        KP00 R 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
       ReloadFinish:
         KP00 "RSTUVWXYZ[\]" 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP01 ABCD 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
