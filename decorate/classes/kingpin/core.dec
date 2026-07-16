@@ -257,12 +257,24 @@ Actor Kingpin_ExplosionRecoilCoop : Kingpin_ExplosionRecoil
 	}
 }
 
+actor SamsaraKingpinNukeFlashTargetHack : Boolean {}
+
 Actor Kingpin_NukeFlash : Trigger
 {
 	States
 	{
 		Pickup:
-			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_NukeFlash")
+			TNT1 A 0 A_SetBlend("White",1,35)
+			Stop
+	}
+}
+
+Actor Kingpin_NukeFlashCoop : Kingpin_NukeFlash
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_JumpIfInventory("SamsaraKingpinNukeFlashTargetHack",1,"Super::Pickup")
 			Stop
 	}
 }

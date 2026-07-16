@@ -311,11 +311,6 @@ Script "Kingpin_RocketFlare" (void)
 	Thing_ChangeTid(flareTid,0);
 }
 
-Script "Kingpin_NukeFlash" (void)
-{
-	FadeRange(255,255,255,1.0,0,0,0,0,1.0);
-}
-
 Script "Kingpin_Bazooka" (int type, int arg1, int arg2)
 {
 	int lTid;
@@ -329,7 +324,7 @@ Script "Kingpin_Bazooka" (int type, int arg1, int arg2)
 			int missileTid = uniqueTid();
 			Thing_ChangeTid(0,missileTid);
 			SetActivator(0,AAPTR_Target);
-			lTid = abs(CheckInventory("Kingpin_Bazooka_LaserTiD"));
+			lTid = abs(CheckInventory("Kingpin_Bazooka_LaserTID"));
 			SetActivator(missileTid);
 			Thing_ChangeTid(missileTid,0);
 			ACS_NamedExecuteWithResult("Kingpin_Bazooka",0,lTid);
@@ -338,8 +333,8 @@ Script "Kingpin_Bazooka" (int type, int arg1, int arg2)
 			lTid = uniqueTid();
 			SpawnForced("Kingpin_Bazooka_Seeker",GetActorX(0),GetActorY(0),GetActorZ(0),lTid);
 			SetActivator(0,AAPTR_Target);
-			SetInventory("Kingpin_Bazooka_LaserTiD",0);
-			GiveInventory("Kingpin_Bazooka_LaserTiD",lTid);
+			SetInventory("Kingpin_Bazooka_LaserTID",0);
+			GiveInventory("Kingpin_Bazooka_LaserTID",lTid);
 			break;	
 	}
 }
