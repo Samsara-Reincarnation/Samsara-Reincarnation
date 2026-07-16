@@ -30,9 +30,10 @@ ACTOR SoF_Knife : SoF_Weapon
             Goto ReadyLoop
         Deselect:
             SF00 A 0 A_StopSound(CHAN_WEAPON)
+            SF00 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
             SF00 ABCD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF00 H 0 A_PlaySound("SoF/Weapons/knife/Done",CHAN_AUTO)
-            Goto DeselectLoop
+            Goto DeselectInstant
         Fire:
             "####" "#" 0 A_Jump(192,"FIRE1_2A")
         FIRE1_1A:
