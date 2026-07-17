@@ -420,6 +420,10 @@ actor StrifeguyPlayer : StrifePlayer
 		Death.WTRangedFire:
 		Death.RTCWFire:
 		Death.DoomDamageTypeFire:
+		Death.KingpinFire:
+		Death.SoFFire:
+		Death.SoFPhosphorus:
+		Death.SoFFlameGlob:
 			TNT1 A -1 A_Jump(256,"Burn")
 			Wait
 		Death.TotenkopfFire:
@@ -852,6 +856,29 @@ actor StrifeguyPlayer : StrifePlayer
 		XDeath.GoldeneyeTorso:
 			TNT1 A -1 A_Jump(256, "Death")
 			Wait
+		Death.KingpinMelee:
+		Death.KingpinBullet:
+			"####" A 0 A_SpawnItemEx("Kingpin_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+			"####" A -1 A_Jump(256, "Death")
+			Wait
+		Death.KingpinExplosive:
+			"####" A 0 A_JumpIfInventory("Kingpin_SetGib",CallACS("Kingpin_Decorate",5),"KingpinGib")
+			"####" A -1 A_Jump(256, "Death")
+			Wait
+		KingpinGib:
+			"####" A 0 A_ChangeFlag("SOLID",false)
+			"####" A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+			"####" A 5 A_FadeOut
+			TNT1 A -1
+			Stop
+		Death.SoFExplosive:
+		XDeathSoF:
+			"####" A 0 A_ChangeFlag("SOLID",false)
+			"####" A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+			"####" A 0 A_SpawnItemEx("SoF_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER)
+			"####" A 5 A_FadeOut
+			TNT1 A -1
+			Stop
 		DisableVoodooDoll:
 			"####" "#" 0 A_ChangeFlag("NOPAIN",true)
 			"####" "#" 0 A_SetGravity(1.0)
