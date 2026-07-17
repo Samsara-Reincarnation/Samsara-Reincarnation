@@ -629,7 +629,7 @@ Script "SoF_BulletDamage" (int damage)
 			
 			SetResultValue(damage + (2 * damage * !CheckInventory("SoF_IsDeathGibber")));
 		}
-		else if(bulletType == "SoF_ShotgunBulletPuff" || bulletType == "SoF_KnifePuff")
+		else if(bulletType == "SoF_ShotgunBulletPuff" || bulletType == "SoF_ShotgunBulletPuffCoop" || bulletType == "SoF_KnifePuff" || bulletType == "SoF_KnifePuffCoop")
 		{
 			monsterAngle = GetActorAngle(0);
 			vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
@@ -637,7 +637,7 @@ Script "SoF_BulletDamage" (int damage)
 			if(GetActorClass(0) == "SoF_DeathGibber")
 			{
 				if(random(0,4) == 0) 
-					if(bulletType == "SoF_KnifePuff")
+					if(bulletType == "SoF_KnifePuff" || bulletType == "SoF_KnifePuffCoop")
 						GiveInventory("SoF_GibberSeverKnifeGenerator",1);
 					else
 						GiveInventory("SoF_GibberSeverGenerator",1);
