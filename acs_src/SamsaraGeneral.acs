@@ -11349,8 +11349,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
             break;
 
           case SLOT_UNIQUE2:
-            if (CheckInventory("SamsaraHexenTomeOfPower") && CheckInventory("SamsaraHexenDiscOfRepulsion") &&
-                !CheckInventory("SamsaraHexenTomeOfPowerCooldown") &&
+            if (((CheckInventory("SamsaraHexenTomeOfPower") && !GetCVar("samsara_banhextomeofpower")) || (CheckInventory("SamsaraLesserTomeInventoryRaven") >= 16 && GetCVar("samsara_banhextomeofpower"))) && CheckInventory("SamsaraHexenDiscOfRepulsion") &&
+                (!CheckInventory("SamsaraHexenTomeOfPowerCooldown") || GetCVar("samsara_banhextomeofpower")) &&
                 CheckInventory("PortMysticAmbit") < 16)
             { result = 1; } // if maxed out on everything but mystic ambit incant, treat this unique as the giver
             else
@@ -11380,9 +11380,9 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
             break;
 
           case SLOT_UNIQUE3:
-            if (CheckInventory("SamsaraHexenTomeOfPower") && CheckInventory("SamsaraHexenDiscOfRepulsion") &&
+            if (((CheckInventory("SamsaraHexenTomeOfPower") && !GetCVar("samsara_banhextomeofpower")) || (CheckInventory("SamsaraLesserTomeInventoryRaven") >= 16 && GetCVar("samsara_banhextomeofpower"))) && CheckInventory("SamsaraHexenDiscOfRepulsion") &&
                 ((CheckInventory("SamsaraHexenDarkServant") && (loadoutchoice <= 0 || completeloadout)) || ((CheckInventory("SamsaraHexenPorkalator") >= 16 || morphitemsbanned)) && (loadoutchoice >= 1 || completeloadout)) &&
-                !CheckInventory("SamsaraHexenTomeOfPowerCooldown") &&
+                (!CheckInventory("SamsaraHexenTomeOfPowerCooldown") || GetCVar("samsara_banhextomeofpower")) &&
                 CheckInventory("PortMysticAmbit") < 16)
             { result = 1; } // if maxed out on everything but mystic ambit incant, treat this unique as the giver
             else
