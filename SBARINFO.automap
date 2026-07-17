@@ -12646,10 +12646,152 @@ StatusBar Automap, ForceScaled
         }*/
     }
 	
-	PlayerType Kingpin_Thug //placeholder for now -SD938
+	PlayerType Kingpin_Thug
     {
 		DrawImage "KPBAR", 0, 168;
-		InInventory ExpandedHud { DrawImage "KPBART", 0, 0; }
+		
+		IsSelected Kingpin_Pistol
+		{
+            InInventory PistolModeOn { DrawNumber 3, KPHUDF, KPMarble, Ammo Clip, 287, 188, KPRed, 5; DrawImage "KPAMMO1", 288, 184; }
+		} else {
+			IsSelected Kingpin_TommyGun { DrawNumber 3, KPHUDF, KPMarble, Ammo Clip, 287, 188, KPRed, 5; DrawImage "KPAMMO1", 288, 184; }
+			
+			IsSelected Kingpin_Shotgun { DrawNumber 3, KPHUDF, KPMarble, Ammo Shell, 287, 188, KPRed, 5; DrawImage "KPAMMO2", 288, 184; }
+			
+			IsSelected Kingpin_GrenadeLauncher, Kingpin_Bazooka { DrawNumber 3, KPHUDF, KPMarble, Ammo RocketAmmo, 287, 188, KPRed, 5; DrawImage "KPAMMO3", 288, 184; }
+			
+			IsSelected Kingpin_Flamethrower, Kingpin_HMG { DrawNumber 3, KPHUDF, KPMarble, Ammo Cell, 287, 188, KPRed, 5; DrawImage "KPAMMO4", 288, 184; }
+		}
+		
+		DrawNumber 3, KPHUDF, KPMarble, Ammo1, 303, 171, 0, KPRed, 1;
+		
+		DrawNumber 3, KPHUDF, KPMarble, Armor, 62, 171, 0, KPRed, 25, KPPurple, 101;
+		
+                InInventory BasicArmor, 1
+                {
+                    InInventory SamsaraArmorCategory, 10 { DrawImage "KPAMR9", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 9 { DrawImage "KPAMR8", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 8 { DrawImage "KPAMR7", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 7 { DrawImage "KPAMR6", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 6 { DrawImage "KPAMR5", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 5 { DrawImage "KPAMR4", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 4 { DrawImage "KPAMR3", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 3 { DrawImage "KPAMR2", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 2 { DrawImage "KPAMR1", 19, 171; }
+                    else InInventory SamsaraArmorCategory, 1 { DrawImage "KPAMR0", 19, 171; }
+                    //else { DrawImage "KPAMR", 62, 171; }
+                }
+				
+        DrawNumber 3, KPHUDF, KPMarble, Health, 62, 188, 0, KPRed, 25, KPPurple, 101;
+		
+		DrawNumber 5, KPHUDF, KPGreenMoney, Kingpin_Cash, Alignment(Left), 201, 171, 0;
+		
+		GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawKeyBar 100, Horizontal, 10, 75, 171, 0, 5, 12; } //don't feel like aligning a million keys rn
+        
+		InInventory ChickenModeOn { DrawNumber 3, KPHUDF, KPRed, ChickenKillCount, Alignment(Left), 201, 188; }
+        else
+        { GameMode Deathmatch, Possession, TeamGame { DrawNumber 5, KPHUDF, KPRed, Frags, Alignment(Left), 201, 188; }
+            else GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawNumber 5, KPHUDF, KPRed, KillCountAmount, Alignment(Left), 201, 188; } } //no need for kill notches when the kill counter can go so high
+
+        InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 40, Center; }
+
+        DrawSelectedInventory AlwaysShowCounter, Center, KPHUDS, 160, 184, 166, 193, KPWhite;
+
+        /*InInventory ExpandedHud
+        {
+            DrawImage "KPBART", 0, 0;
+
+            // Slot 1
+            InInventory GotWeapon0
+            {
+                DrawImage "KP1BNT", 32, 3;
+                DrawImage "KPWPN1N", 24, 13;
+            }
+
+            IsSelected "Kingpin_Crowbar"
+            {
+                DrawImage "KP1BRT", 32, 3;
+                DrawImage "KPWPN1Y", 24	, 13;
+            }
+
+            // Slot 2
+            InInventory GotWeapon2
+            {
+                DrawImage "KP2BNT", 71, 3;
+                DrawImage "KPWPN2N", 65, 13;
+            }
+
+            IsSelected "Kingpin_Shotgun"
+            {
+                DrawImage "KP2BRT", 71, 3;
+                DrawImage "KPWPN2Y", 65, 13;
+            }
+
+            // Slot 3
+            InInventory GotWeapon3
+            {
+                DrawImage "KP3BNT", 110, 3;
+                DrawImage "KPWPN3N", 107, 13;
+            }
+
+            IsSelected "Kingpin_GrenadeLauncher"
+            {
+                DrawImage "KP3BRT", 110, 3;
+                DrawImage "KPWPN3Y", 107, 13;
+            }
+
+            // Slot 4
+            InInventory GotWeapon4
+            {
+                DrawImage "KP4BNT", 154, 3;
+                DrawImage "KPWPN4N", 148, 13;
+            }
+
+            IsSelected "Kingpin_TommyGun"
+            {
+                DrawImage "KP4BRT", 154, 3;
+                DrawImage "KPWPN4Y", 148, 13;
+            }
+
+            // Slot 5
+            InInventory GotWeapon5
+            {
+                DrawImage "KP5BNT", 199, 3;
+                DrawImage "KPWPN5N", 191, 13;
+            }
+
+            IsSelected "Kingpin_Bazooka"
+            {
+                DrawImage "KP5BRT", 199, 3;
+                DrawImage "KPWPN5Y", 191, 13;
+            }
+
+            // Slot 6
+            InInventory GotWeapon6
+            {
+                DrawImage "KP6BNT", 238, 3;
+                DrawImage "KPWPN6N", 232, 13;
+            }
+
+            IsSelected "Kingpin_Flamethrower"
+            {
+                DrawImage "KP6BRT", 238, 3;
+                DrawImage "KPWPN6Y", 232, 13;
+            }
+
+            // Slot 7
+            InInventory GotWeapon7
+            {
+                DrawImage "KP7BNT", 276, 3;
+                DrawImage "KPWPN7N", 274, 13;
+            }
+
+            IsSelected "Kingpin_HMG"
+            {
+                DrawImage "KP7BRT", 276, 3;
+                DrawImage "KPWPN7Y", 274, 13;
+            }
+		}*/
 	}
 
 	PlayerType JohnMullins
