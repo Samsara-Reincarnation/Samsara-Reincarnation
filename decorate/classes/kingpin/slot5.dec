@@ -680,7 +680,7 @@ actor Kingpin_Rocket
         KP00 A 0
         KP00 A 0 ACS_NamedExecuteWithResult("Kingpin_RocketFlare")
         KP00 A 0 A_SetUserVar("user_nukeCounter1",0)
-        KP00 A 0 A_PlaySound("Kingpin/Rocket/Fly")
+        KP00 A 0 A_PlaySound("Kingpin/Rocket/Fly",CHAN_BODY,1,true)
       SpawnLaserCheck:
         KP00 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,1,AAPTR_TARGET)
         goto SpawnHECheck
@@ -703,6 +703,8 @@ actor Kingpin_Rocket
         goto SpawnLoop
 
       Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
         TNT1 A 0 A_RemoveChildren(true)
         TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"DeathNuke",AAPTR_TARGET)
         TNT1 A 0 A_Explode(100+(100*(scalex-1)*2),100+(100*(scalex-1)),XF_HURTSOURCE,true,50)
@@ -769,6 +771,8 @@ actor Kingpin_RocketCoop : Kingpin_Rocket
     States
     {
       Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
         TNT1 A 0 A_RemoveChildren(true)
         TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"DeathNuke",AAPTR_TARGET)
         TNT1 A 0 A_Explode(100+(100*(scalex-1)*2),100+(100*(scalex-1)),XF_HURTSOURCE,true,50)
@@ -801,7 +805,7 @@ actor Kingpin_RocketFast : Kingpin_Rocket
         KP00 A 0
         KP00 A 0 ACS_NamedExecuteWithResult("Kingpin_RocketFlare")
         KP00 A 0 A_SetUserVar("user_nukeCounter1",0)
-        KP00 A 0 A_PlaySound("Kingpin/Rocket/Fly")
+        KP00 A 0 A_PlaySound("Kingpin/Rocket/Fly",CHAN_BODY,1,true)
       SpawnLaserCheck:
         KP00 A 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,1,AAPTR_TARGET)
         goto SpawnHECheck
@@ -837,6 +841,8 @@ actor Kingpin_RocketFastCoop : Kingpin_RocketFast
     States
     {
       Death:
+        TNT1 A 0 A_PlaySound("silence")
+        TNT1 A 0 A_StopSound(CHAN_BODY)
         TNT1 A 0 A_RemoveChildren(true)
         TNT1 A 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"DeathNuke",AAPTR_TARGET)
         TNT1 A 0 A_Explode(100+(100*(scalex-1)*2),100+(100*(scalex-1)),XF_HURTSOURCE,true,50)
