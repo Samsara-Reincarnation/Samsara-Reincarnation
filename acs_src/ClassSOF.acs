@@ -848,7 +848,16 @@ Script "SoF_DoScope" (void) clientside
 		
 		SetFont("SOFSCO01");
 		SetHudSize(480,480,0);
-		for(int a = 0; a < CheckInventory("SoF_SniperMagazine"); a++)
+
+        int curammo = 0;
+
+        if (CheckInventory("SamsaraReloadMode") >= 2) { curammo = CheckInventory("SoF_SniperMagazine"); }
+        else { curammo = CheckInventory("Shell"); }
+
+        if (curammo > 6) { curammo = 6; }
+        else if (curammo < 0) { curammo = 0; }
+
+		for(int a = 0; a < curammo; a++)
 		{
 			HudMessage(s:"A";HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,49+a,CR_UNTRANSLATED,480.0,400.0-16.0*a,0.0);
 		}
