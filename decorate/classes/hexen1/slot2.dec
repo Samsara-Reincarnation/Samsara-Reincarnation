@@ -610,11 +610,11 @@ actor SamsaraHexenFrostShardsPoweredAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 AAA 0 A_FireCustomMissile("FrostMissileDM",0,false,frandom(2,8),frandom(0,8))
+        TNT1 AAA 0 A_FireCustomMissile("FrostMissileDM",frandom(-6,6),false,0,frandom(-4,8))
         stop
 
       PickupAttackCoop:
-        TNT1 AAA 0 A_FireCustomMissile("FrostMissile2",0,false,frandom(2,8),frandom(0,8))
+        TNT1 AAA 0 A_FireCustomMissile("FrostMissile2",frandom(-6,6),false,0,frandom(-4,8))
         stop
     }
 }
@@ -842,11 +842,16 @@ actor SamsaraHexenJavelinOfZealMeleeAttackHandler : Trigger
     {
       // Ammo checking stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrong")
-        TNT1 A 0 A_JumpIfInventory("Clip",3,"PickupAttackStrong")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"PickupAttack")
         goto PickupAttackWeak
 
       // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackStrongPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackStrongPowered")
+        goto PickupAttackStrongUnpowered
+
       // Weak
       PickupAttackWeak:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackWeakCoop")
@@ -870,6 +875,7 @@ actor SamsaraHexenJavelinOfZealMeleeAttackHandler : Trigger
         stop
 
       // Strong
+      // Unpowered
       PickupAttackStrong:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrongInfinite")
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongCoop")
@@ -911,6 +917,50 @@ actor SamsaraHexenJavelinOfZealMeleeAttackHandler : Trigger
 
       PickupAttackStrongInfiniteCoopSpread:
         TNT1 A 0 A_CustomPunch(random(48,96)*3,true,0,"HexenSpearPuffGlowInfiniteCoop",128)
+        stop
+
+      // Powered
+      PickupAttackStrongPowered:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackStrongPoweredInfinite")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongPoweredCoop")
+      PickupAttackStrongPoweredDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongPoweredDMSpread")
+        TNT1 A 0 A_CustomPunch(random(96,144),true,0,"HexenSpearPuffGlow",128)
+        stop
+
+      PickupAttackStrongPoweredDMSpread:
+        TNT1 A 0 A_CustomPunch(random(96,144)*3,true,0,"HexenSpearPuffGlow",128)
+        stop
+
+      PickupAttackStrongPoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongPoweredCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(96,144),true,0,"HexenSpearPuffGlowCoop",128)
+        stop
+
+      PickupAttackStrongPoweredCoopSpread:
+        TNT1 A 0 A_CustomPunch(random(96,144)*3,true,0,"HexenSpearPuffGlowCoop",128)
+        stop
+
+      PickupAttackStrongPoweredInfinite:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackStrongPoweredInfiniteCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackStrongPoweredInfiniteCoop")
+      PickupAttackStrongPoweredInfiniteDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongPoweredInfiniteDMSpread")
+        TNT1 A 0 A_CustomPunch(random(96,144),true,0,"HexenSpearPuffGlowInfinite",128)
+        stop
+
+      PickupAttackStrongPoweredInfiniteDMSpread:
+        TNT1 A 0 A_CustomPunch(random(96,144)*3,true,0,"HexenSpearPuffGlowInfinite",128)
+        stop
+
+      PickupAttackStrongPoweredInfiniteCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackStrongPoweredInfiniteCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(96,144),true,0,"HexenSpearPuffGlowInfiniteCoop",128)
+        stop
+
+      PickupAttackStrongPoweredInfiniteCoopSpread:
+        TNT1 A 0 A_CustomPunch(random(96,144)*3,true,0,"HexenSpearPuffGlowInfiniteCoop",128)
         stop
     }
 }
