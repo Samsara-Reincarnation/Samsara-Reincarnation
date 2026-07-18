@@ -1,14 +1,14 @@
+actor SamsaraSOFFlameGunConsumeAmmo : Counter { Inventory.MaxAmount 5 }
+
 ACTOR SoF_Flamegun : SoF_Weapon
 {
     Weapon.SlotNumber 5
     Weapon.SlotPriority 1
     Weapon.SelectionOrder 800
-    Weapon.AmmoUse1 0
-    Weapon.AmmoGive1 0
     Weapon.AmmoType1 "SoF_FlameGunMagazine"
-    Weapon.AmmoUse2 0
-    Weapon.AmmoGive2 10
+    Weapon.AmmoUse1 1
     Weapon.AmmoType2 "RocketAmmo"
+    Weapon.AmmoGive2 10
     Obituary "%o was flame broiled by %k."
     Inventory.Pickupmessage "M343D Flame Gun"
     Tag "M343D Flame Gun"
@@ -21,7 +21,7 @@ ACTOR SoF_Flamegun : SoF_Weapon
             SF0D BC 2 A_WeaponReady(WRF_ALLOWRELOAD)
             SF0D D 0 A_PlaySound("SoF/Weapons/flamegun/Tug",CHAN_AUTO)
             SF0D DEFGHIJKL 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-        ReadyLoop:
+        ReadyActual:
         IDLE:
             SF09 A 0 A_StopSound(CHAN_WEAPON)
             SF09 A 0 A_Jump(30,"IDLEFINGER_A","IDLEFINGER_B","IDLEFINGER_C")
@@ -39,13 +39,13 @@ ACTOR SoF_Flamegun : SoF_Weapon
             SF0A HI 2 A_WeaponReady(WRF_ALLOWRELOAD)
             SF0A J 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF0A JKLMNOPQ 2 A_WeaponReady(WRF_ALLOWRELOAD)
-            Goto ReadyLoop
+            Goto ReadyActual
         IDLEFINGER_B:
             SF0B A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF0B ABCDEFGHIJ 2 A_WeaponReady(WRF_ALLOWRELOAD)
             SF0B K 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF0B K 2 A_WeaponReady(WRF_ALLOWRELOAD)
-            Goto ReadyLoop
+            Goto ReadyActual
         IDLEFINGER_C:
             SF0C A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF0C A 2 A_WeaponReady(WRF_ALLOWRELOAD)
@@ -55,14 +55,19 @@ ACTOR SoF_Flamegun : SoF_Weapon
             SF0C KLMNOPQRST 2 A_WeaponReady(WRF_ALLOWRELOAD)
             SF0C U 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF0C UVWXYZ 2 A_WeaponReady(WRF_ALLOWRELOAD)
-            Goto ReadyLoop
+            Goto ReadyActual
         Deselect:
             SF00 A 0 A_StopSound(CHAN_WEAPON)
             SF00 ABCD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF00 E 0 A_PlaySound("SoF/Weapons/FlameGun/Done",CHAN_AUTO)
             SF00 EFGHI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto DeselectLoop
+            Goto DeselectInstant
         Fire:
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            "####" "#" 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto DryFire
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
             Goto DryFire
         FIRE1:
@@ -74,76 +79,209 @@ ACTOR SoF_Flamegun : SoF_Weapon
             SF01 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF03 A 0 A_PlaySound("SoF/Weapons/flamegun/Fire",CHAN_WEAPON,0.85,true)
         FIRE1_IDLE:
-            SF03 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 A 0 A_Refire(1) Goto FIRE1_2
+            SF03 A 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 A 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 A 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 A 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 B 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 B 0 A_Refire(1) Goto FIRE1_2
+            SF03 B 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 B 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 B 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 B 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 B 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 C 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 C 0 A_Refire(1) Goto FIRE1_2
+            SF03 C 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 C 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 C 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 C 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 C 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 C 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 C 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 C 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 D 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 D 0 A_Refire(1) Goto FIRE1_2
+            SF03 D 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 D 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 D 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 D 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 D 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 D 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 D 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 E 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 E 0 A_Refire(1) Goto FIRE1_2
+            SF03 E 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 E 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 E 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 E 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 E 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 F 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 F 0 A_Refire(1) Goto FIRE1_2
+            SF03 F 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 F 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 F 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 F 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 F 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 G 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 G 0 A_Refire(1) Goto FIRE1_2
+            SF03 G 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 G 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 G 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 G 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 G 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 H 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 H 0 A_Refire(1) Goto FIRE1_2
+            SF03 H 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 H 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 H 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 H 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 I 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 I 0 A_Refire(1) Goto FIRE1_2
+            SF03 I 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 I 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 I 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 I 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 I 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 I 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 J 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 J 0 A_Refire(1) Goto FIRE1_2
+            SF03 J 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 J 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 J 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 J 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 K 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 K 0 A_Refire(1) Goto FIRE1_2
+            SF03 K 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 K 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 K 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 K 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 K 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 K 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 K 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 K 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 L 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 L 0 A_Refire(1) Goto FIRE1_2
+            SF03 L 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 L 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 L 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 L 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 L 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 L 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 L 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 M 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 M 0 A_Refire(1) Goto FIRE1_2
+            SF03 M 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 M 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 M 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 M 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 M 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 M 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 M 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 M 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 N 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 N 0 A_Refire(1) Goto FIRE1_2
+            SF03 N 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 N 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 N 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 N 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 N 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 N 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 N 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 O 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 O 0 A_Refire(1) Goto FIRE1_2
+            SF03 O 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 O 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 O 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 O 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 O 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 O 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 O 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 P 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 P 0 A_Refire(1) Goto FIRE1_2
+            SF03 P 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 P 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 P 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 P 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 P 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 P 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 P 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 Q 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 Q 0 A_Refire(1) Goto FIRE1_2
+            SF03 Q 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 Q 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 Q 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 Q 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 Q 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 Q 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 Q 0 A_GiveInventory("SoF_FlameGun_FireToken",1)
             SF03 Q 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 R 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 R 0 A_Refire(1) Goto FIRE1_2
+            SF03 R 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 R 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 R 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 R 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 R 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 R 0 A_Refire(1)
+            Goto FIRE1_2
             SF03 R 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF03 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1) Goto FIRE1_2
-            SF03 A 0 A_Refire("FIRE1_IDLE") Goto FIRE1_2
+            SF03 A 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF03 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF03 A 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto FIRE1_2
+            SF03 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF03 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+            Goto FIRE1_2
+            SF03 A 0 A_Refire("FIRE1_IDLE")
+            Goto FIRE1_2
         FIRE1_2:
             "####" "#" 2 A_GunFlash("FIRE1_2_FLASH",GFF_NOEXTCHANGE)
             SF02 A 0 A_StopSound(CHAN_WEAPON)
             SF02 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto ReadyLoop
+            Goto ReadyActual
         FIRE1_FLASH:
             SFF1 A 1 Bright
             TNT1 A 1
@@ -202,6 +340,11 @@ ACTOR SoF_Flamegun : SoF_Weapon
             TNT1 A 1
             Stop
         AltFire:
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            "####" "#" 0 A_JumpIfInventory("RocketAmmo",1,3)
+            Goto DryFire
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_FlameGunMagazine",6,1)
             Goto DryFire
         FIRE2_1:
@@ -216,7 +359,7 @@ ACTOR SoF_Flamegun : SoF_Weapon
             SF03 A 10 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF03 A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF03 A 10 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto ReadyLoop
+            Goto ReadyActual
         FIRE2_1_FLASH:
             SFF5 A 2
             SFF5 B 1 Bright
@@ -224,16 +367,29 @@ ACTOR SoF_Flamegun : SoF_Weapon
         //Doesn't have a real reload animation, so we'll improvise
         Reload:
             "####" "#" 0 A_StopSound(CHAN_WEAPON)
-            "####" "#" 0 A_JumpIfInventory("SoF_FlameGunMagazine",55,"ReadyLoop")
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+            goto ReadyActual
+            "####" "#" 0 A_JumpIfInventory("SoF_FlameGunMagazine",0,"ReadyActual")
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             "####" "#" 0 A_JumpIfInventory("RocketAmmo",1,1)
-            Goto ReadyLoop
+            Goto ReadyActual
         RELOAD_LOOP:
+            SF00 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",0,"RELOAD_FINISH")
+            SF00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             SF00 A 0 A_JumpIfInventory("RocketAmmo",1,1)
             Goto RELOAD_FINISH
-            SF00 A 0 A_GiveInventory("SoF_FlameGunMagazine",6)
-            SF00 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
-            SF00 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",55,"RELOAD_FINISH")
-            Loop
+            SF00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF00 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"RELOAD_LOOP_GIVEMAGAZINE")
+            SF00 A 0 A_JumpIfInventory("SamsaraSOFFlameGunConsumeAmmo",0,2)
+            SF00 A 0 A_GiveInventory("SamsaraSOFFlameGunConsumeAmmo")
+            goto RELOAD_LOOP_GIVEMAGAZINE
+            SF00 A 0 A_TakeInventory("RocketAmmo",1)
+            SF00 A 0 A_TakeInventory("SamsaraSOFFlameGunConsumeAmmo")
+        RELOAD_LOOP_GIVEMAGAZINE:
+            SF00 A 0 A_GiveInventory("SoF_FlameGunMagazine")
+            goto RELOAD_LOOP
         RELOAD_FINISH:
             SF00 ABCD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF00 E 0 A_PlaySound("SoF/Weapons/FlameGun/Done",CHAN_AUTO)
@@ -250,7 +406,7 @@ ACTOR SoF_Flamegun : SoF_Weapon
             SF0A HI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF0A J 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
             SF0A JKLMNOPQ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto ReadyLoop
+            Goto ReadyActual
         DryFire:
             "####" "#" 0 A_StopSound(CHAN_WEAPON)
             "####" "#" 0 A_PlaySound("SoF/Weapons/gpistol/Empty",CHAN_AUTO)
@@ -274,13 +430,41 @@ Actor SoF_FlameGun_FireToken : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_AlertMonsters
-            TNT1 A 0 A_FireCustomMissile("SoF_FlameProjectile",frandom(-0.5,0.5),0,12,0,0,frandom(-0.5,0.5))
-            TNT1 AAAA 0 A_SpawnItemEx("SoF_MuzzleSpark",cos(pitch)*7,3,39-(sin(pitch)*7),frandom(-1,1)*sin(pitch)+2*cos(pitch),frandom(-2,2),frandom(-1,1)*cos(pitch)+2*sin(-pitch))
-            TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
-            TNT1 A 0 A_TakeInventory("SoF_FlameGunMagazine",1)
-            Stop
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraSOFFlameGunConsumeAmmo",0,2)
+        TNT1 A 0 A_GiveInventory("SamsaraSOFFlameGunConsumeAmmo")
+        goto PickupAttack
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        TNT1 A 0 A_TakeInventory("SamsaraSOFFlameGunConsumeAmmo")
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("SoF_FlameGunMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 AAAA 0 A_SpawnItemEx("SoF_MuzzleSpark",cos(pitch)*7,3,39-(sin(pitch)*7),frandom(-1,1)*sin(pitch)+2*cos(pitch),frandom(-2,2),frandom(-1,1)*cos(pitch)+2*sin(-pitch))
+        TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SoF_FlameProjectile",frandom(-0.5,0.5),false,12,0,0,frandom(-0.5,0.5))
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("SoF_FlameProjectileCoop",frandom(-0.5,0.5),false,12,0,0,frandom(-0.5,0.5))
+        stop
     }
 }
 
@@ -288,15 +472,43 @@ Actor SoF_FlameGun_AltFireToken : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_AlertMonsters
-            TNT1 A 0 A_Quake(1,4,0,16,"")
-            TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",6,80) //Sure, it didn't do this, but this is more fun
-            TNT1 A 0 A_PlaySound("SoF/Weapons/flamegun/Fireball",CHAN_WEAPON)
-            TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
-            TNT1 A 0 A_TakeInventory("SoF_FlameGunMagazine",6)
-            TNT1 A 0 A_FireCustomMissile("SoF_FlameGunGlob",frandom(-0.5,0.5),0,12,0,0,frandom(-0.5,0.5))
-            Stop
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SoF_FlameGunMagazine",6,1)
+        stop
+        TNT1 A 0 A_TakeInventory("SoF_FlameGunMagazine",6)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("SoF/Weapons/flamegun/Fireball",CHAN_WEAPON)
+        TNT1 A 0 A_SpawnItemEx("SoF_MuzzleSmoke4",cos(pitch)*8,2,39-(sin(pitch)*8),frandom(0.05,0.1)*sin(pitch),0,abs(frandom(0.05,0.1)*cos(pitch)))
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SoF_FlameGunGlob",frandom(-0.5,0.5),false,12,0,0,frandom(-0.5,0.5))
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("SoF_FlameGunGlobCoop",frandom(-0.5,0.5),false,12,0,0,frandom(-0.5,0.5))
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Quake(1,4,0,16,"nosoundforyoubitch")
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 6, 80) //Sure, it didn't do this, but this is more fun
+        stop
     }
 }
 
@@ -326,14 +538,40 @@ Actor SoF_FlameProjectile
         SpawnLoop:
             SF00 TTTTTTTTTT 1 Bright A_Fadeout(0.05)
         Death:
-            TNT1 A 0 A_RadiusGive("SoF_FlamethrowerBurnStart",32,RGF_MONSTERS|RGF_PLAYERS)
+            TNT1 A 0 A_RadiusGive("SoF_FlamethrowerBurnStart",32,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET)
             SF00 TTT 0 A_CustomMissile("SoF_FlameProjectile2",0,0,(1-(random(0,1)*2))*90,CMF_AIMDIRECTION|CMF_TRACKOWNER,frandom(-90,90))
             TNT1 A 0 A_Explode(15,32,!XF_HURTSOURCE,0,32)
             TNT1 A 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
             SF00 T 1 A_Fadeout(0.1)
             Wait
         XDeath:
-            TNT1 A 0 A_RadiusGive("SoF_FlamethrowerBurnStart",32,RGF_MONSTERS|RGF_PLAYERS)
+            TNT1 A 0 A_RadiusGive("SoF_FlamethrowerBurnStart",32,RGF_PLAYERS|RGF_MONSTERS|RGF_NOTARGET)
+            TNT1 A 0 A_Explode(15,32,!XF_HURTSOURCE,0,32)
+            TNT1 A 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
+            SF00 T 1 A_Fadeout(0.1)
+            Wait
+    }
+}
+
+actor SoF_FlameProjectileCoop : SoF_FlameProjectile
+{
+    Species "Player"
+    +THRUSPECIES
+    States
+    {
+        Spawn:
+            TNT1 A 0
+        SpawnLoop:
+            SF00 TTTTTTTTTT 1 Bright A_Fadeout(0.05)
+        Death:
+            TNT1 A 0 A_RadiusGive("SoF_FlamethrowerBurnStart",32,RGF_MONSTERS)
+            SF00 TTT 0 A_CustomMissile("SoF_FlameProjectile2Coop",0,0,(1-(random(0,1)*2))*90,CMF_AIMDIRECTION|CMF_TRACKOWNER,frandom(-90,90))
+            TNT1 A 0 A_Explode(15,32,!XF_HURTSOURCE,0,32)
+            TNT1 A 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
+            SF00 T 1 A_Fadeout(0.1)
+            Wait
+        XDeath:
+            TNT1 A 0 A_RadiusGive("SoF_FlamethrowerBurnStart",32,RGF_MONSTERS)
             TNT1 A 0 A_Explode(15,32,!XF_HURTSOURCE,0,32)
             TNT1 A 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
             SF00 T 1 A_Fadeout(0.1)
@@ -360,6 +598,12 @@ Actor SoF_FlameProjectile2 : SoF_FlameProjectile
             SF00 T 1 A_Fadeout(0.1)
             Wait
     }
+}
+
+actor SoF_FlameProjectile2Coop : SoF_FlameProjectile2
+{
+    Species "Player"
+    +THRUSPECIES
 }
 
 Actor SoF_FlamethrowerBurnStart : Trigger
@@ -439,6 +683,12 @@ Actor SoF_FlameGunGlob
             TNT1 A 1
             Stop
     }
+}
+
+actor SoF_FlameGunGlobCoop : SoF_FlameGunGlob
+{
+    Species "Player"
+    +THRUSPECIES
 }
 
 Actor SoF_FlameGlobTrailSpark
