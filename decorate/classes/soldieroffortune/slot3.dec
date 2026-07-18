@@ -200,7 +200,23 @@ Actor SoF_Shotgun_FireToken : Trigger
     }
 }
 
-Actor SoF_ShotgunBulletPuff : SoF_BulletPuff { DamageType "SoFShotgun" args 13 }
+actor SamsaraSOFAttackIsShotgun : Boolean {}
+
+Actor SoF_ShotgunBulletPuff : SoF_BulletPuff
+{
+    DamageType "SoFShotgun"
+    Args 13
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 A_GiveInventory("SamsaraSOFAttackIsShotgun")
+            goto Super::Spawn
+		XDeath:
+			TNT1 A 0 A_GiveInventory("SamsaraSOFAttackIsShotgun")
+			goto Super::XDeath
+	}
+}
 
 actor SoF_ShotgunBulletPuffCoop : SoF_ShotgunBulletPuff { +MTHRUSPECIES }
 
