@@ -82,6 +82,7 @@ ACTOR SoF_MPG : SoF_Weapon
         DONE:
             SF06 A 0 A_GunFlash("STOP_FLASH",GFF_NOEXTCHANGE)
             SF01 A 0 A_StopSound(CHAN_WEAPON)
+            SF01 A 0 A_JumpIfHealthLower(1,"DeselectInstant")
             SF01 ABCDE 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 F 0 A_PlaySound("SoF/Weapons/MPG/Done",CHAN_AUTO)
             SF01 FGHI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
