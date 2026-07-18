@@ -539,24 +539,52 @@ actor SamsaraHexenHammerOfRetributionMeleeAttackHandler : Trigger
     {
       // Attack stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
-      PickupDM:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_JumpIfInventory("PowerSamsaraHexenWeaponLevel2",1,"PickupAttackPowered")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"PickupAttackPowered")
+        goto PickupAttack
+
+      // Unpowered
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackDMSpread")
         TNT1 A 0 A_CustomPunch(random(60,113),true,0,"SamsaraHexenHammerPuff",144)
         stop
 
-      PickupDMSpread:
+      PickupAttackDMSpread:
         TNT1 A 0 A_CustomPunch(random(60,113)*3,true,0,"SamsaraHexenHammerPuff",144)
         stop
 
-      PickupCoop:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+      PickupAttackCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackCoopSpread")
         TNT1 A 0 A_CustomPunch(random(90,170),true,0,"SamsaraHexenHammerPuffCoop",144)
         stop
 
-      PickupCoopSpread:
+      PickupAttackCoopSpread:
         TNT1 A 0 A_CustomPunch(random(90,170)*3,true,0,"SamsaraHexenHammerPuffCoop",144)
+        stop
+
+      // Powered
+      PickupAttackPowered:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackPoweredCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackPoweredCoop")
+      PickupAttackPoweredDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackPoweredDMSpread")
+        TNT1 A 0 A_CustomPunch(random(90,150),true,0,"SamsaraHexenHammerPuff",144)
+        stop
+
+      PickupAttackPoweredDMSpread:
+        TNT1 A 0 A_CustomPunch(random(90,150)*3,true,0,"SamsaraHexenHammerPuff",144)
+        stop
+
+      PickupAttackPoweredCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupAttackPoweredCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(150,225),true,0,"SamsaraHexenHammerPuffCoop",144)
+        stop
+
+      PickupAttackPoweredCoopSpread:
+        TNT1 A 0 A_CustomPunch(random(150,225)*3,true,0,"SamsaraHexenHammerPuffCoop",144)
         stop
     }
 }
