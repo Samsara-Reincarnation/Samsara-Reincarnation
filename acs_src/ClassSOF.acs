@@ -392,15 +392,7 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
 			Thing_Remove(oldtid);
 			break;
 		case 13:
-			if(!GetCvar("sv_infiniteammo")) 
-			{
-				if(CheckInventory("SoF_MPG_TakeAmmo") < 2) GiveInventory("SoF_MPG_TakeAmmo",1);
-				else 
-				{
-					TakeInventory("SoF_MPGMagazine",1);
-					SetInventory("SoF_MPG_TakeAmmo",0);
-				}
-			}
+			GiveInventory("SoF_MPG_AmmoTaker", 1);
 			GiveInventory("SoF_MPG_FireToken",1);
 			Delay(1);
 			GiveInventory("SoF_MPG_FireToken",1);

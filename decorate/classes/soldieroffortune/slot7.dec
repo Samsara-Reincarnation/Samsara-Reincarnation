@@ -1,16 +1,17 @@
+Actor SoF_MPG_TakeAmmo : Counter { Inventory.MaxAmount 2 } // this is somewhat of a more intricate version of SamsaraTakingAmmo
+
 ACTOR SoF_MPG : SoF_Weapon
 {
     Weapon.SlotNumber 7
     Weapon.SelectionOrder 250
-    Weapon.AmmoUse1 0
-    Weapon.AmmoGive1 0
     Weapon.AmmoType1 "SoF_MPGMagazine"
-    Weapon.AmmoUse2 0
-    Weapon.AmmoGive2 90
+    Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Cell"
+    Weapon.AmmoGive2 90
     Obituary "%o was microwaved by %k's MPG."
-    Inventory.Pickupmessage "Microwave Pulse Emitter"
+    Inventory.PickupMessage "Microwave Pulse Emitter"
     Tag "R-22 Microwave Pulse"
+    +BFG
     States
     {
         Ready:
@@ -28,7 +29,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SF0B A 0 A_GunFlash("SPINUP_FLASH",GFF_NOEXTCHANGE)
             SF0B ABCDEFGHIJKLMNOPQRST 2 A_WeaponReady(WRF_ALLOWRELOAD)
             SF06 A 0 A_WeaponReady(WRF_ALLOWRELOAD)
-            Goto ReadyLoop
+            Goto ReadyActual
         READY_FLASH:
             SFFA "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]" 2 Bright
             SFFB ABCDEFGHIJKLMNOPQRST 2 Bright
@@ -38,7 +39,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SFFB ABCDEFGHIJKLMNOPQRST 2 Bright
             SFFB T -1 Bright
             Stop
-        ReadyLoop:
+        ReadyActual:
         IDLE:
             SF06 A 0 A_Jump(25,"IDLEFINGER_A","IDLEFINGER_B")
             SF06 A 0 A_GunFlash("IDLE_FLASH",GFF_NOEXTCHANGE)
@@ -64,7 +65,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SF08 N 0 A_PlaySound("SoF/Weapons/mpg/Idle",CHAN_6,0.4)
             SF08 NOPQRSTUVWX 2 A_WeaponReady(WRF_ALLOWRELOAD)
             TNT1 A 0 //Does not play nice with interpolation
-            Goto ReadyLoop
+            Goto ReadyActual
         IDLEFINGER_A_FLASH:
             SFF8 ABCDEFGHIJKLMNOPQRSTUVWX 2 Bright
             Stop
@@ -73,7 +74,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SF09 A 0 A_PlaySound("SoF/Weapons/mpg/Idle",CHAN_AUTO,0.4)
             SF09 ABCDEFGHIJKL 2 A_WeaponReady(WRF_ALLOWRELOAD)
             TNT1 A 0 //Does not play nice with interpolation
-            Goto ReadyLoop
+            Goto ReadyActual
         IDLEFINGER_B_FLASH:
             SFF9 ABCDEFGHIJKL 2 Bright
             Stop
@@ -86,11 +87,16 @@ ACTOR SoF_MPG : SoF_Weapon
             SF01 FGHI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 J 0 A_PlaySound("SoF/Weapons/MPG/TakeOut",CHAN_AUTO)
             SF01 JK 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto DeselectLoop
+            Goto DeselectInstant
         Fire:
             "####" "#" 0 A_TakeInventory("SoF_MPG_TakeAmmo")
             "####" "#" 0 A_GunFlash("STOP_FLASH",GFF_NOEXTCHANGE)
             "####" "#" 0 A_StopSound(CHAN_WEAPON)
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            "####" "#" 0 A_JumpIfInventory("Cell",1,3)
+            Goto DRYFIRE
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
             Goto DRYFIRE
         FIRE2:
@@ -104,20 +110,120 @@ ACTOR SoF_MPG : SoF_Weapon
             SF03 E 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF03 E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
         FIRE2_LOOP:
             SF05 A 0 A_PlaySound("SoF/Weapons/MPG/Alt",CHAN_WEAPON)
-            SF05 A 0 A_Refire(1) Goto FIRE2_END SF05 A 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF05 B 0 A_Refire(1) Goto FIRE2_END SF05 B 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 B 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 B 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 A 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 A 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 A 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 A 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 B 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 B 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 B 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 B 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 B 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 B 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 B 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF05 C 0 A_PlaySound("SoF/Weapons/MPG/Alt",CHAN_WEAPON)
-            SF05 C 0 A_Refire(1) Goto FIRE2_END SF05 C 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 C 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 C 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF05 D 0 A_Refire(1) Goto FIRE2_END SF05 D 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 D 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 D 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 C 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 C 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 C 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 C 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 C 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 C 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 C 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 C 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 D 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 D 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 D 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 D 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 D 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 D 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 D 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 D 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF05 E 0 A_PlaySound("SoF/Weapons/MPG/Alt",CHAN_WEAPON)
-            SF05 E 0 A_Refire(1) Goto FIRE2_END SF05 E 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 E 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF05 F 0 A_Refire(1) Goto FIRE2_END SF05 F 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 F 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 F 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 E 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 E 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 E 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 E 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 E 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 E 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 F 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 F 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 F 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 F 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 F 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 F 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF05 G 0 A_PlaySound("SoF/Weapons/MPG/Alt",CHAN_WEAPON)
-            SF05 G 0 A_Refire(1) Goto FIRE2_END SF05 G 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 G 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF05 H 0 A_Refire(1) Goto FIRE2_END SF05 H 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 H 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 G 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 G 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 G 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 G 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 G 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 G 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 H 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 H 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 H 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 H 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 H 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF05 I 0 A_PlaySound("SoF/Weapons/MPG/Alt",CHAN_WEAPON)
-            SF05 I 0 A_Refire(1) Goto FIRE2_END SF05 I 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 I 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 I 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF05 J 0 A_Refire(1) Goto FIRE2_END SF05 J 0 A_JumpIfInventory("SoF_MPGMagazine",1,1) Goto FIRE2_END SF05 J 0 ACS_NamedExecuteWithResult("SoF_Decorate",13) SF05 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 I 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 I 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 I 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 I 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 I 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 I 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF05 J 0 A_Refire(1)
+            Goto FIRE2_END
+            SF05 J 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            SF05 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            SF05 J 0 A_JumpIfInventory("Cell",1,3)
+            Goto FIRE2_END
+            SF05 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF05 J 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+            Goto FIRE2_END
+            SF05 J 0 ACS_NamedExecuteWithResult("SoF_Decorate",13)
+            SF05 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF05 A 0 A_Refire("FIRE2_LOOP")
         FIRE2_END:
             SF04 A 0 A_GunFlash("FIRE2_END_FLASH",GFF_NOEXTCHANGE)
@@ -134,6 +240,11 @@ ACTOR SoF_MPG : SoF_Weapon
             Stop
         AltFire:
             "####" "#" 0 A_GunFlash("STOP_FLASH",GFF_NOEXTCHANGE)
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,4)
+            "####" "#" 0 A_JumpIfInventory("Cell",10,3)
+            Goto DRYFIRE
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_MPGMagazine",10,1)
             Goto DRYFIRE
         FIRE1:
@@ -146,7 +257,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SF00 A 0 A_PlaySound("SoF/Weapons/mpg/Charge",CHAN_AUTO)
             SF00 ABCDEFGHIJKLMNOPQRST 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             TNT1 A 0 //Because interpolation doesn't play nicely here
-            Goto ReadyLoop
+            Goto ReadyActual
         FIRE1_FLASH:
             SFF2 ABCDEFGHIJ 2 Bright
         CHARGE_FLASH:
@@ -155,15 +266,23 @@ ACTOR SoF_MPG : SoF_Weapon
             Stop
         Reload:
             "####" "#" 0 A_GunFlash("RELOAD_FLASH",GFF_NOEXTCHANGE)
-            "####" "#" 0 A_JumpIfInventory("SoF_MPGMagazine",0,"ReadyLoop")
+            "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+            goto ReadyActual
+            "####" "#" 0 A_JumpIfInventory("SoF_MPGMagazine",0,"ReadyActual")
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             "####" "#" 0 A_JumpIfInventory("Cell",1,1)
-            Goto ReadyLoop
+            Goto ReadyActual
         RELOAD_LOOP:
+            SF0C A 0 A_JumpIfInventory("SoF_MPGMagazine",0,"RELOAD_FINISH")
+            SF0C A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF0C A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             SF0C A 0 A_JumpIfInventory("Cell",1,1)
             Goto RELOAD_FINISH
-            SF0C A 0 A_GiveInventory("SoF_MPGMagazine",1)
-            SF0C A 0 A_TakeInventory("Cell",1,TIF_NOTAKEINFINITE)
-            SF0C A 0 A_JumpIfInventory("SoF_MPGMagazine",0,"RELOAD_FINISH")
+            SF0C A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+            SF0C A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+            SF0C A 0 A_TakeInventory("Cell",1)
+            SF0C A 0 A_GiveInventory("SoF_MPGMagazine")
             Loop
         RELOAD_FINISH:
             SF0C ABCDEFGHI 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -197,10 +316,18 @@ Actor SoF_MPG_FireToken : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_FireCustomMissile("SoF_MPGLaserProjectile",0,false,6)
-            TNT1 A 0 A_AlertMonsters
-            Stop
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_FireCustomMissile("SoF_MPGLaserProjectile",0,false,6)
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_FireCustomMissile("SoF_MPGLaserProjectileCoop",0,false,6)
+        stop
     }
 }
 
@@ -208,12 +335,70 @@ Actor SoF_MPG_AltFireToken : Trigger
 {
     States
     {
-        Pickup:
-            TNT1 A 0 A_AlertMonsters
-            TNT1 A 0 A_TakeInventory("SoF_MPGMagazine",10)
-            TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Fire",CHAN_WEAPON)
-            TNT1 A 0 A_FireCustomMissile("SoF_MPGAltFireProjectile",0,0,5,4,0,0)
-            Stop
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",10,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",10)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SoF_MPGMagazine",10,1)
+        stop
+        TNT1 A 0 A_TakeInventory("SoF_MPGMagazine",10)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("SoF/Weapons/mpg/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("SoF_MPGAltFireProjectile",0,false,5,4)
+        stop
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("SoF_MPGAltFireProjectileCoop",0,false,5,4)
+        stop
+    }
+}
+
+Actor SoF_MPG_AmmoTaker : Trigger
+{
+    States
+    {
+      // Token checking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SoF_MPG_TakeAmmo",0,"PickupAmmoCheck")
+        TNT1 A 0 A_GiveInventory("SoF_MPG_TakeAmmo")
+        stop
+
+      // Ammo checking/taking stuff
+      PickupAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckReloadable")
+      PickupAmmoCheckNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupFinish")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupFinish
+
+      PickupAmmoCheckReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupFinish")
+        TNT1 A 0 A_JumpIfInventory("SoF_MPGMagazine",1,1)
+        goto PickupFinish
+        TNT1 A 0 A_TakeInventory("SoF_MPGMagazine",1)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_TakeInventory("SoF_MPG_TakeAmmo")
+        stop
     }
 }
 
@@ -228,7 +413,6 @@ Actor SoF_MPGMagazine : Ammo
 Actor SoF_MPG_InflationCounter : TemporaryCounter { Inventory.MaxAmount 30 }
 Actor SoF_MPG_BossInflationCounter : TemporaryCounter { Inventory.MaxAmount 120 }
 Actor SoF_MPG_PainExtender : TemporaryBoolean {}
-Actor SoF_MPG_TakeAmmo : TemporaryCounter { Inventory.MaxAmount 2 }
 
 Actor SoF_MPGLaserProjectile : FastProjectile
 {
@@ -265,6 +449,12 @@ Actor SoF_MPGLaserProjectile : FastProjectile
             TNT1 A 1
             stop
     }
+}
+
+actor SoF_MPGLaserProjectileCoop : SoF_MPGLaserProjectile
+{
+    Species "Player"
+    +THRUSPECIES
 }
 
 Actor SoF_MPGLaserSegment
@@ -417,6 +607,12 @@ Actor SoF_MPGAltFireProjectile : FastProjectile
             TNT1 A 1
             Stop
     }
+}
+
+actor SoF_MPGAltFireProjectileCoop : SoF_MPGAltFireProjectile
+{
+    Species "Player"
+    +THRUSPECIES
 }
 
 Actor SoF_MPGShockwave
