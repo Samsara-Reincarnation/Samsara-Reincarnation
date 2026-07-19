@@ -554,11 +554,66 @@ actor Kingpin_FlamethrowerFireEffectCoop : Kingpin_FlamethrowerFireEffect
 {
     States
     {
+      Spawn:
+        KP01 A 0 NoDelay ACS_NamedExecuteWithResult("Kingpin_FX",2,28,1.0*65536)
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 AA 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 BB 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 CC 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 DD 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 EE 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 FF 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 GG 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 HH 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 II 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 JJ 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 KK 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 LL 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 MM 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        TNT1 A 0 A_GiveInventory("Kingpin_Flamethrower_SpriteCounter") KP01 NN 1 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        stop
+
+      XDeath:
+        TNT1 A 0
+        goto End
+
       Death:
         TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_Napalmer",1,1,AAPTR_TARGET)
         goto End
         TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerFireNapalmCoop",0,0,0,CMF_TRACKOWNER)
         goto End
+
+      End:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",0,"End14")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",13,"End13")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",12,"End12")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",11,"End11")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",10,"End10")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",9,"End9")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",8,"End8")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",7,"End7")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",6,"End6")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",5,"End5")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",4,"End4")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",3,"End3")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",2,"End2")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Flamethrower_SpriteCounter",1,"End1")
+        goto End1
+
+      End1:  KP01 A 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End2:  KP01 B 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End3:  KP01 C 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End4:  KP01 D 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End5:  KP01 E 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End6:  KP01 F 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End7:  KP01 G 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End8:  KP01 H 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End9:  KP01 I 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End10: KP01 J 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End11: KP01 K 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End12: KP01 L 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End13: KP01 M 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+      End14: KP01 N 2 Bright A_GiveInventory("Kingpin_FlamethrowerIgniteShooterCoop")
+        stop
     }
 }
 
@@ -644,6 +699,24 @@ actor Kingpin_FlamethrowerIgniteShooter : Trigger
     }
 }
 
+actor Kingpin_FlamethrowerIgniteShooterCoop : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SetAngle(5*random(0,6))
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,0,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,45,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,90,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,135,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,180,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,225,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,270,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        TNT1 A 0 A_CustomMissile("Kingpin_FlamethrowerIgniteTracerCoop",-16,0,315,CMF_AIMDIRECTION|CMF_TRACKOWNER)
+        stop
+    }
+}
+
 actor Kingpin_FlamethrowerIgniteTracer
 {
     Projectile
@@ -668,6 +741,12 @@ actor Kingpin_FlamethrowerIgniteTracer
         TNT1 A 2 ACS_NamedExecuteWithResult("Kingpin_FlamethrowerTracer", CallACS("Kingpin_Decorate", 2))
         stop
     }
+}
+
+actor Kingpin_FlamethrowerIgniteTracerCoop : Kingpin_FlamethrowerIgniteTracer
+{
+    Species "Player"
+    +THRUSPECIES
 }
 
 actor Kingpin_FlamethrowerIgnition : Counter { Inventory.MaxAmount 50 }
