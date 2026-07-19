@@ -2124,7 +2124,7 @@ actor JCDentonDiePulse: PeopleDieParticle
     {
       Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("PyroGXDieParticle", 0,0,0, random(100,200)/250.0,0,random(-25,25)/250.0, random(0,360))
+        TNT1 A 0 A_SpawnItemEx("JCDentonDieParticle", 0,0,0, random(100,200)/250.0,0,random(-25,25)/250.0, random(0,360))
         TNT1 A 0 A_Countdown
         loop
 
@@ -2147,6 +2147,104 @@ actor JCDentonDiesWhenHeIsKilled: PeopleDieParticle
         DX01 A 0 A_PlaySound("DeusEx/GEPGun/Explode", CHAN_BODY, 1.0, 0, ATTN_NONE)
 		TNT1 A 0 A_SpawnItemEX("DeusEx_ExplosionMid", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 		TNT1 A 0 A_SpawnItemEX("DeusEx_ShockWaveHuge", 0,0,0,0,0,0,0, SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+        stop
+    }
+}
+
+actor ThugDieParticle: PeopleDieParticle
+{
+    RenderStyle Add
+    Alpha 0.75
+
+    Scale 0.75
+
+    States
+    {
+      Spawn:
+        DPLM AAAAAABBBBBB 1 bright A_FadeOut(0.02)
+        loop
+    }
+}
+
+actor ThugDiePulse: PeopleDieParticle
+{
+    ReactionTime 35
+
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("ThugDieParticle", 0,0,0, random(100,200)/250.0,0,random(-25,25)/250.0, random(0,360))
+        TNT1 A 0 A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0
+        stop
+    }
+}
+
+actor ThugDiesWhenHeIsKilled: PeopleDieParticle
+{
+    RenderStyle Add
+    Scale 2.5
+
+    States
+    {
+      Spawn:
+        DMSL B 0 bright
+        DMSL B 8 bright A_PlaySound("doomguy/rocklx", CHAN_BODY, 1, 0, ATTN_NONE)
+        DMSL C 6 bright
+        DMSL D 4 bright
+        stop
+    }
+}
+
+actor JohnMullinsDieParticle: PeopleDieParticle
+{
+    RenderStyle Add
+    Alpha 0.75
+
+    Scale 0.75
+
+    States
+    {
+      Spawn:
+        DPLM AAAAAABBBBBB 1 bright A_FadeOut(0.02)
+        loop
+    }
+}
+
+actor JohnMullinsDiePulse: PeopleDieParticle
+{
+    ReactionTime 35
+
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("JohnMullinsDieParticle", 0,0,0, random(100,200)/250.0,0,random(-25,25)/250.0, random(0,360))
+        TNT1 A 0 A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0
+        stop
+    }
+}
+
+actor JohnMullinsDiesWhenHeIsKilled: PeopleDieParticle
+{
+    RenderStyle Add
+    Scale 2.5
+
+    States
+    {
+      Spawn:
+        DMSL B 0 bright
+        DMSL B 8 bright A_PlaySound("doomguy/rocklx", CHAN_BODY, 1, 0, ATTN_NONE)
+        DMSL C 6 bright
+        DMSL D 4 bright
         stop
     }
 }
