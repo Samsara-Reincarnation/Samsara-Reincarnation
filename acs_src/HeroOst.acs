@@ -301,7 +301,7 @@ script "SamsaraOST_Enter" ENTER
 
                   case 0:
                   case 36:
-                    switchClass = gameoverride == 34;
+                    switchClass = gameoverride == 36;
                     settrack = Random(1, maxGameTracks[0][switchClass][0]);
 
                     LocalSetMusic(StrParam(s:gameMusicTypes[0][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
@@ -310,7 +310,7 @@ script "SamsaraOST_Enter" ENTER
                   case 3:
                   case 37:
 					switchType = GetUserCVar(pln, "samsara_cl_wolf3dimf");
-                    switchClass = gameoverride == 35;
+                    switchClass = gameoverride == 37;
                     settrack = Random(1, maxGameTracks[3][switchClass][switchClass ? 0 : switchType]);
 
                     LocalSetMusic(StrParam(s:gameMusicTypes[3][switchClass][switchClass ? 0 : switchType], s:settrack < 10 ? "0" : "", d:settrack));
@@ -324,7 +324,7 @@ script "SamsaraOST_Enter" ENTER
 
                   case 5:
                   case 38:
-                    switchClass = gameoverride == 36;
+                    switchClass = gameoverride == 38;
                     settrack = Random(1, maxGameTracks[5][switchClass][0]);
 
                     LocalSetMusic(StrParam(s:gameMusicTypes[5][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
@@ -378,7 +378,7 @@ script "SamsaraOST_Enter" ENTER
 
                   case 26:
                   case 40:
-					switchClass = gameoverride == 38;
+					switchClass = gameoverride == 40;
                     settrack = Random(1, maxGameTracks[26][switchClass][0]);
                     SetInventory("BondMusicToken", settrack + 1);
 
@@ -511,7 +511,7 @@ script "SamsaraOST_HalfLifeScriptedMusicLoop" (int musictid)
 
     while (GetUserCVAR(PlayerNumber(),"samsara_cl_heromusic") == mySetting)
     {
-		if(CheckInventory("SamsaraHeroMusicGame") != 20 && CheckInventory("SamsaraHeroMusicGame") != 38)
+		if(CheckInventory("SamsaraHeroMusicGame") != 20 && CheckInventory("SamsaraHeroMusicGame") != 40)
 			break;
 
         if (CheckInventory("HalfLifeMusicPlayingToken"))
@@ -581,7 +581,7 @@ Script "SamsaraOST_HalfLifeScriptedMusic" (int musictid, int cause, int pln) cli
 {
 	if(pln != ConsolePlayerNumber()) terminate;
 	int settrack;
-    bool halflifeopposingforce = CheckInventory("SamsaraHeroMusicGame") == 38;
+    bool halflifeopposingforce = CheckInventory("SamsaraHeroMusicGame") == 40;
 
 	switch(cause)
 	{
