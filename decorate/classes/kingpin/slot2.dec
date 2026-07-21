@@ -115,13 +115,13 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         KP00 F 0 A_JumpIfInventory("Kingpin_Shotgun_DoubleBarrel",1,"FireDouble")
         KP00 F 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
       FireNonReloadable:
-        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        KP00 F 0 A_JumpIfInventory("Shell",1,"FireStart")
+        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        KP00 F 0 A_JumpIfInventory("Shell",1,"FireWaterCheck")
         goto FireDry
 
       FireReloadable:
-        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
-        KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"FireStart")
+        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        KP00 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"FireWaterCheck")
       FireReloadableDryCheck:
         KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
         KP00 F 0 A_JumpIfInventory("Shell",1,"ReloadStart")
@@ -130,19 +130,24 @@ actor Kingpin_Shotgun : Kingpin_Weapon
       FireDouble:
         KP20 F 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadableDouble")
       FireNonReloadableDouble:
-        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        KP20 F 0 A_JumpIfInventory("Shell",2,"FireStart")
-        KP20 F 0 A_JumpIfInventory("Shell",1,"AltFireStartDouble")
+        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        KP20 F 0 A_JumpIfInventory("Shell",2,"FireWaterCheck")
+        KP20 F 0 A_JumpIfInventory("Shell",1,"AltFireWaterCheckDouble")
         goto FireDry
 
       FireReloadableDouble:
-        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
-        KP20 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",2,"FireStart")
-        KP20 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"AltFireStartDouble")
+        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        KP20 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",2,"FireWaterCheck")
+        KP20 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"AltFireWaterCheckDouble")
       FireReloadableDryCheckDouble:
         KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
         KP20 F 0 A_JumpIfInventory("Shell",1,"ReloadStart")
         goto FireDry
+
+      FireWaterCheck:
+        KP00 F 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        KP00 F 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto FireStart
 
       FireDry:
         KP01 E 0 A_ClearReFire
@@ -361,17 +366,22 @@ actor Kingpin_Shotgun : Kingpin_Weapon
       AltFireDouble:
         KP20 F 0 A_JumpIfInventory("SamsaraReloadMode",2,"AltFireReloadableDouble")
       AltFireNonReloadableDouble:
-        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltFireStartDouble")
-        KP20 F 0 A_JumpIfInventory("Shell",1,"AltFireStartDouble")
+        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltFireWaterCheckDouble")
+        KP20 F 0 A_JumpIfInventory("Shell",1,"AltFireWaterCheckDouble")
         goto FireDry
 
       AltFireReloadableDouble:
-        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AltFireStartDouble")
-        KP20 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"AltFireStartDouble")
+        KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AltFireWaterCheckDouble")
+        KP20 F 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"AltFireWaterCheckDouble")
       AltFireReloadableDryCheckDouble:
         KP20 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
         KP20 F 0 A_JumpIfInventory("Shell",1,"ReloadStart")
         goto FireDry
+
+      AltFireWaterCheckDouble:
+        KP20 F 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"AltFireStartDouble")
+        KP20 F 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto AltFireStartDouble
 
       AltFireStartDouble:
         KP20 F 0 A_GiveInventory("Kingpin_ShootToken")

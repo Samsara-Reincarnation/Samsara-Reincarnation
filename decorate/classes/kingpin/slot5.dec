@@ -275,50 +275,80 @@ actor Kingpin_Bazooka : Kingpin_Weapon
         KP00 G 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"FireBigBubba")
         KP00 G 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
       FireNonReloadable:
-        KP00 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        KP00 G 0 A_JumpIfInventory("RocketAmmo",1,"FireStart")
-        goto FireDry
+        KP00 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        KP00 G 0 A_JumpIfInventory("RocketAmmo",1,"FireWaterCheck")
+        goto FireDryAmmoless
 
       FireReloadable:
-        KP00 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
-        KP00 G 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"FireStart")
+        KP00 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        KP00 G 0 A_JumpIfInventory("Kingpin_BazookaMagazine",1,"FireWaterCheck")
       FireReloadableDryCheck:
         KP00 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
         KP00 G 0 A_JumpIfInventory("RocketAmmo",1,"ReloadStart")
-        goto FireDry
+        goto FireDryAmmoless
 
       FireBigBubba:
         KP20 G 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireBigBubbaReloadable")
       FireBigBubbaNonReloadable:
-        KP20 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        KP20 G 0 A_JumpIfInventory("RocketAmmo",5,"FireStart")
-        goto FireDry
+        KP20 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        KP20 G 0 A_JumpIfInventory("RocketAmmo",5,"FireWaterCheck")
+        goto FireDryAmmoless
 
       FireBigBubbaReloadable:
-        KP20 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
-        KP20 G 0 A_JumpIfInventory("Kingpin_BazookaMagazine",5,"FireStart")
+        KP20 G 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        KP20 G 0 A_JumpIfInventory("Kingpin_BazookaMagazine",5,"FireWaterCheck")
         goto FireReloadableDryCheck
 
+      FireWaterCheck:
+        KP00 G 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        KP00 G 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto FireStart
+
       FireDry:
-        KP41 B 0 A_ClearReFire
-        KP41 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
-        KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"FireDryBigBubba")
-        KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireDryLaser")
-        KP41 B 15 A_WeaponReady(WRF_NOFIRE)
+        KP01 B 0 A_ClearReFire
+        KP01 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+        KP01 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"FireDryBigBubba")
+        KP01 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireDryLaser")
+        KP01 B 15 A_WeaponReady(WRF_NOFIRE)
         goto ReadyActual
 
       FireDryLaser:
+        KP11 B 15 A_WeaponReady(WRF_NOFIRE)
+        KP11 B 0
+        goto ReadyActual
+
+      FireDryBigBubba:
+        KP21 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireDryBigBubbaLaser")
+        KP21 B 15 A_WeaponReady(WRF_NOFIRE)
+        KP21 B 0
+        goto ReadyActual
+
+      FireDryBigBubbaLaser:
+        KP31 B 15 A_WeaponReady(WRF_NOFIRE)
+        KP31 B 0
+        goto ReadyActual
+
+      FireDryAmmoless:
+        KP41 B 0 A_ClearReFire
+        KP41 B 0 A_PlaySound("Kingpin/DryFire",CHAN_WEAPON)
+        KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_BigBubbaActive",1,"FireDryAmmolessBigBubba")
+        KP41 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireDryAmmolessLaser")
+        KP41 B 15 A_WeaponReady(WRF_NOFIRE)
+        KP41 B 0
+        goto ReadyActual
+
+      FireDryAmmolessLaser:
         KP51 B 15 A_WeaponReady(WRF_NOFIRE)
         KP51 B 0
         goto ReadyActual
 
-      FireDryBigBubba:
-        KP61 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireDryBigBubbaLaser")
+      FireDryAmmolessBigBubba:
+        KP61 B 0 A_JumpIfInventory("Kingpin_Bazooka_LaserSystem",1,"FireDryAmmolessBigBubbaLaser")
         KP61 B 15 A_WeaponReady(WRF_NOFIRE)
         KP61 B 0
         goto ReadyActual
 
-      FireDryBigBubbaLaser:
+      FireDryAmmolessBigBubbaLaser:
         KP71 B 15 A_WeaponReady(WRF_NOFIRE)
         KP71 B 0
         goto ReadyActual

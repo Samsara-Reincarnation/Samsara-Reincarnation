@@ -226,17 +226,22 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire:
         KP00 F 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
       FireNonReloadable:
-        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        KP00 F 0 A_JumpIfInventory("Cell",2,"FireStart")
+        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        KP00 F 0 A_JumpIfInventory("Cell",2,"FireWaterCheck")
         goto FireDry
 
       FireReloadable:
-        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
-        KP00 F 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"FireStart")
+        KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        KP00 F 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"FireWaterCheck")
       FireReloadableDryCheck:
         KP00 F 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadScopeCheck")
         KP00 F 0 A_JumpIfInventory("Cell",2,"ReloadScopeCheck")
         goto FireDry
+
+      FireWaterCheck:
+        KP00 F 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        KP00 F 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto FireStart
 
       FireDry:
         KP01 O 0 A_ClearReFire
@@ -284,14 +289,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire2:
         KP00 H 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire2Reloadable")
       Fire2NonReloadable:
-        KP00 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2Start")
-        KP00 H 0 A_JumpIfInventory("Cell",2,"Fire2Start")
+        KP00 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2WaterCheck")
+        KP00 H 0 A_JumpIfInventory("Cell",2,"Fire2WaterCheck")
         goto FireFinishReloadCheck
 
       Fire2Reloadable:
-        KP00 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2Start")
-        KP00 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2Start")
+        KP00 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2WaterCheck")
+        KP00 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2WaterCheck")
         goto FireFinishReloadCheck
+
+      Fire2WaterCheck:
+        KP00 H 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire2Start")
+        KP00 H 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheck")
+        goto Fire2Start
 
       Fire2Start:
         KP00 H 0 A_AlertMonsters
@@ -304,14 +314,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire3:
         KP00 J 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire3Reloadable")
       Fire3NonReloadable:
-        KP00 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3Start")
-        KP00 J 0 A_JumpIfInventory("Cell",2,"Fire3Start")
+        KP00 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3WaterCheck")
+        KP00 J 0 A_JumpIfInventory("Cell",2,"Fire3WaterCheck")
         goto FireFinishReloadCheck
 
       Fire3Reloadable:
-        KP00 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3Start")
-        KP00 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3Start")
+        KP00 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3WaterCheck")
+        KP00 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3WaterCheck")
         goto FireFinishReloadCheck
+
+      Fire3WaterCheck:
+        KP00 J 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire3Start")
+        KP00 J 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheck")
+        goto Fire3Start
 
       Fire3Start:
         KP00 J 0 A_AlertMonsters
@@ -342,14 +357,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire2CoolingRod:
         KP10 H 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire2ReloadableCoolingRod")
       Fire2NonReloadableCoolingRod:
-        KP10 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2StartCoolingRod")
-        KP10 H 0 A_JumpIfInventory("Cell",2,"Fire2StartCoolingRod")
+        KP10 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2WaterCheckCoolingRod")
+        KP10 H 0 A_JumpIfInventory("Cell",2,"Fire2WaterCheckCoolingRod")
         goto FireFinishReloadCheckCoolingRod
 
       Fire2ReloadableCoolingRod:
-        KP10 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2StartCoolingRod")
-        KP10 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2StartCoolingRod")
+        KP10 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2WaterCheckCoolingRod")
+        KP10 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2WaterCheckCoolingRod")
         goto FireFinishReloadCheckCoolingRod
+
+      Fire2WaterCheckCoolingRod:
+        KP10 H 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire2StartCoolingRod")
+        KP10 H 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheckCoolingRod")
+        goto Fire2StartCoolingRod
 
       Fire2StartCoolingRod:
         KP10 H 0 A_AlertMonsters
@@ -362,14 +382,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire3CoolingRod:
         KP10 J 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire3ReloadableCoolingRod")
       Fire3NonReloadableCoolingRod:
-        KP10 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3StartCoolingRod")
-        KP10 J 0 A_JumpIfInventory("Cell",2,"Fire3StartCoolingRod")
+        KP10 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3WaterCheckCoolingRod")
+        KP10 J 0 A_JumpIfInventory("Cell",2,"Fire3WaterCheckCoolingRod")
         goto FireFinishReloadCheckCoolingRod
 
       Fire3ReloadableCoolingRod:
-        KP10 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3StartCoolingRod")
-        KP10 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3StartCoolingRod")
+        KP10 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3WaterCheckCoolingRod")
+        KP10 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3WaterCheckCoolingRod")
         goto FireFinishReloadCheckCoolingRod
+
+      Fire3WaterCheckCoolingRod:
+        KP10 J 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire3StartCoolingRod")
+        KP10 J 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheckCoolingRod")
+        goto Fire3StartCoolingRod
 
       Fire3StartCoolingRod:
         KP10 J 0 A_AlertMonsters
@@ -398,14 +423,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire2Scope:
         KP20 H 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire2ReloadableScope")
       Fire2NonReloadableScope:
-        KP20 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2StartScope")
-        KP20 H 0 A_JumpIfInventory("Cell",2,"Fire2StartScope")
+        KP20 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2WaterCheckScope")
+        KP20 H 0 A_JumpIfInventory("Cell",2,"Fire2WaterCheckScope")
         goto FireFinishReloadCheckScope
 
       Fire2ReloadableScope:
-        KP20 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2StartScope")
-        KP20 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2StartScope")
+        KP20 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2WaterCheckScope")
+        KP20 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2WaterCheckScope")
         goto FireFinishReloadCheckScope
+
+      Fire2WaterCheckScope:
+        KP20 H 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire2StartScope")
+        KP20 H 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheckScope")
+        goto Fire2StartScope
 
       Fire2StartScope:
         KP20 H 0 A_AlertMonsters
@@ -418,14 +448,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire3Scope:
         KP20 J 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire3ReloadableScope")
       Fire3NonReloadableScope:
-        KP20 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3StartScope")
-        KP20 J 0 A_JumpIfInventory("Cell",2,"Fire3StartScope")
+        KP20 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3WaterCheckScope")
+        KP20 J 0 A_JumpIfInventory("Cell",2,"Fire3WaterCheckScope")
         goto FireFinishReloadCheckScope
 
       Fire3ReloadableScope:
-        KP20 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3StartScope")
-        KP20 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3StartScope")
+        KP20 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3WaterCheckScope")
+        KP20 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3WaterCheckScope")
         goto FireFinishReloadCheckScope
+
+      Fire3WaterCheckScope:
+        KP20 J 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire3StartScope")
+        KP20 J 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheckScope")
+        goto Fire3StartScope
 
       Fire3StartScope:
         KP20 J 0 A_AlertMonsters
@@ -453,14 +488,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire2ScopeCoolingRod:
         KP30 H 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire2ReloadableScopeCoolingRod")
       Fire2NonReloadableScopeCoolingRod:
-        KP30 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2StartScopeCoolingRod")
-        KP30 H 0 A_JumpIfInventory("Cell",2,"Fire2StartScopeCoolingRod")
+        KP30 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2WaterCheckScopeCoolingRod")
+        KP30 H 0 A_JumpIfInventory("Cell",2,"Fire2WaterCheckScopeCoolingRod")
         goto FireFinishReloadCheckScopeCoolingRod
 
       Fire2ReloadableScopeCoolingRod:
-        KP30 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2StartScopeCoolingRod")
-        KP30 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2StartScopeCoolingRod")
+        KP30 H 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2WaterCheckScopeCoolingRod")
+        KP30 H 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2WaterCheckScopeCoolingRod")
         goto FireFinishReloadCheckScopeCoolingRod
+
+      Fire2WaterCheckScopeCoolingRod:
+        KP30 H 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire2StartScopeCoolingRod")
+        KP30 H 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheckScopeCoolingRod")
+        goto Fire2StartScopeCoolingRod
 
       Fire2StartScopeCoolingRod:
         KP30 H 0 A_AlertMonsters
@@ -473,14 +513,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire3ScopeCoolingRod:
         KP30 J 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire3ReloadableScopeCoolingRod")
       Fire3NonReloadableScopeCoolingRod:
-        KP30 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3StartScopeCoolingRod")
-        KP30 J 0 A_JumpIfInventory("Cell",2,"Fire3StartScopeCoolingRod")
+        KP30 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3WaterCheckScopeCoolingRod")
+        KP30 J 0 A_JumpIfInventory("Cell",2,"Fire3WaterCheckScopeCoolingRod")
         goto FireFinishReloadCheckScopeCoolingRod
 
       Fire3ReloadableScopeCoolingRod:
-        KP30 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3StartScopeCoolingRod")
-        KP30 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3StartScopeCoolingRod")
+        KP30 J 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3WaterCheckScopeCoolingRod")
+        KP30 J 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3WaterCheckScopeCoolingRod")
         goto FireFinishReloadCheckScopeCoolingRod
+
+      Fire3WaterCheckScopeCoolingRod:
+        KP30 J 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire3StartScopeCoolingRod")
+        KP30 J 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheckScopeCoolingRod")
+        goto Fire3StartScopeCoolingRod
 
       Fire3StartScopeCoolingRod:
         KP30 J 0 A_AlertMonsters
@@ -509,14 +554,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire2Zoomed:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire2ReloadableZoomed")
       Fire2NonReloadableZoomed:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2StartZoomed")
-        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire2StartZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2WaterCheckZoomed")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire2WaterCheckZoomed")
         goto FireFinishReloadCheck
 
       Fire2ReloadableZoomed:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2StartZoomed")
-        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2StartZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2WaterCheckZoomed")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2WaterCheckZoomed")
         goto FireFinishReloadCheck
+
+      Fire2WaterCheckZoomed:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire2StartZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheck")
+        goto Fire2StartZoomed
 
       Fire2StartZoomed:
         TNT1 A 0 A_AlertMonsters
@@ -529,14 +579,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire3Zoomed:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire3ReloadableZoomed")
       Fire3NonReloadableZoomed:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3StartZoomed")
-        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire3StartZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3WaterCheckZoomed")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire3WaterCheckZoomed")
         goto FireFinishReloadCheck
 
       Fire3ReloadableZoomed:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3StartZoomed")
-        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3StartZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3WaterCheckZoomed")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3WaterCheckZoomed")
         goto FireFinishReloadCheck
+
+      Fire3WaterCheckZoomed:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire3StartZoomed")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheck")
+        goto Fire3StartZoomed
 
       Fire3StartZoomed:
         TNT1 A 0 A_AlertMonsters
@@ -562,14 +617,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire2ZoomedCoolingRod:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire2ReloadableZoomedCoolingRod")
       Fire2NonReloadableZoomedCoolingRod:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2StartZoomedCoolingRod")
-        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire2StartZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire2WaterCheckZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire2WaterCheckZoomedCoolingRod")
         goto FireFinishReloadCheck
 
       Fire2ReloadableZoomedCoolingRod:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2StartZoomedCoolingRod")
-        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2StartZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire2WaterCheckZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire2WaterCheckZoomedCoolingRod")
         goto FireFinishReloadCheck
+
+      Fire2WaterCheckZoomedCoolingRod:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire2StartZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheck")
+        goto Fire2StartZoomedCoolingRod
 
       Fire2StartZoomedCoolingRod:
         TNT1 A 0 A_AlertMonsters
@@ -582,14 +642,19 @@ actor Kingpin_HMG : Kingpin_Weapon
       Fire3ZoomedCoolingRod:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Fire3ReloadableZoomedCoolingRod")
       Fire3NonReloadableZoomedCoolingRod:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3StartZoomedCoolingRod")
-        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire3StartZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Fire3WaterCheckZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("Cell",2,"Fire3WaterCheckZoomedCoolingRod")
         goto FireFinishReloadCheck
 
       Fire3ReloadableZoomedCoolingRod:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3StartZoomedCoolingRod")
-        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3StartZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Fire3WaterCheckZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_HMGMagazine",1,"Fire3WaterCheckZoomedCoolingRod")
         goto FireFinishReloadCheck
+
+      Fire3WaterCheckZoomedCoolingRod:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"Fire3StartZoomedCoolingRod")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireFinishReloadCheck")
+        goto Fire3StartZoomedCoolingRod
 
       Fire3StartZoomedCoolingRod:
         TNT1 A 0 A_AlertMonsters

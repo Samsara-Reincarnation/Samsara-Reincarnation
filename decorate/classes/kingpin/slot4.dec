@@ -42,17 +42,22 @@ actor Kingpin_TommyGun : Kingpin_Weapon
       Fire:
         KP00 E 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
       FireNonReloadable:
-        KP00 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        KP00 E 0 A_JumpIfInventory("Clip",1,"FireStart")
+        KP00 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
+        KP00 E 0 A_JumpIfInventory("Clip",1,"FireWaterCheck")
         goto FireDry
 
       FireReloadable:
-        KP00 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
-        KP00 E 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",1,"FireStart")
+        KP00 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireWaterCheck")
+        KP00 E 0 A_JumpIfInventory("Kingpin_TommyGunMagazine",1,"FireWaterCheck")
       FireReloadableDryCheck:
         KP00 E 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
         KP00 E 0 A_JumpIfInventory("Clip",1,"ReloadStart")
         goto FireDry
+
+      FireWaterCheck:
+        KP00 E 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"FireStart")
+        KP00 E 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        goto FireStart
 
       FireDry:
         KP01 B 0 A_ClearReFire
