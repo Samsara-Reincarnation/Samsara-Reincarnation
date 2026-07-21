@@ -45,6 +45,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",2,"Fire3")
 		TNT1 A 0 A_JumpIfInventory("SamsaraIPOGSuperPlasmaAnnihilatorMode",1,"Fire2")
 	Fire1:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DoFire1")
 		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire1")
 		GW70 A 1 
 		Goto Ready
@@ -79,7 +80,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_SetAngle(angle+30)
 		goto FireFinish		
 	CoopFire1:
-		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 1 bright	A_TakeInventory("Cell",25,TIF_NOTAKEINFINITE)
 		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
 		GW70 B 0 A_SetAngle(angle+30)
 		GW70 B 0 bright A_FireCustomMissile("PGClipSuperPlasmaBallCoop",0,0,0,0)
@@ -106,6 +107,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_SetAngle(angle+30)		
 		goto FireFinish		
 	Fire2:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DoFire2")
 		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire2")
 		GW70 A 1 
 		Goto Ready
@@ -128,7 +130,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_FireCustomMissile("PGShellSuperPlasmaBall",330,0,0,0)
 		goto FireFinish		
 	CoopFire2:
-		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 1 bright	A_TakeInventory("Cell",25,TIF_NOTAKEINFINITE)
 		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",0,0,0,0)
 		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",30,0,0,0)
 		GW70 B 0 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",60,0,0,0)
@@ -143,6 +145,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_FireCustomMissile("PGShellSuperPlasmaBallCoop",330,0,0,0)
 		goto FireFinish
 	Fire3:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DoFire3")
 		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire3")
 		GW70 A 1 
 		Goto Ready
@@ -165,7 +168,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_FireCustomMissile("PGRocketSuperPlasmaBall",330,0,0,0)
 		goto FireFinish	
 	CoopFire3:
-		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 1 bright	A_TakeInventory("Cell",25,TIF_NOTAKEINFINITE)
 		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",0,0,0,0)
 		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",30,0,0,0)
 		GW70 B 0 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",60,0,0,0)
@@ -180,6 +183,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_FireCustomMissile("PGRocketSuperPlasmaBallCoop",330,0,0,0)
 		goto FireFinish
 	Fire4:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DoFire4")
 		TNT1 A 0 A_JumpIfInventory("Cell",25,"DoFire4")
 		GW70 A 1 
 		Goto Ready
@@ -202,7 +206,7 @@ Actor " Super Plasma Annihilator " : Weapon
 		GW70 B 1 bright A_FireCustomMissile("PGCellSuperPlasmaBall",330,0,0,0)
 		goto FireFinish
 	CoopFire4:
-		GW70 B 1 bright	A_TakeInventory("Cell",25)
+		GW70 B 1 bright	A_TakeInventory("Cell",25,TIF_NOTAKEINFINITE)
 		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",0,0,0,0)
 		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",30,0,0,0)
 		GW70 B 0 bright A_FireCustomMissile("PGCellSuperPlasmaBallCoop",60,0,0,0)
