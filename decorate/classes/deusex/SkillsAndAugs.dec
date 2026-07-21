@@ -33,6 +33,27 @@ Actor DeusEx_QuickAugmentationsTimer : TemporaryCounter { Inventory.MaxAmount 35
 actor DeusEx_AugmentationUpgradeCannister : Counter { Inventory.MaxAmount 99 }
 actor DeusEx_AugmentationBioEnergyCell : Counter { Inventory.MaxAmount 99 }
 
+actor SamsaraDeusExAugmentationBioEnergyCellQuickUse : CustomInventory
+{
+    Inventory.UseSound ""
+    Inventory.MaxAmount 1
+    +UNDROPPABLE
+    States
+    {
+      Use:
+        TNT1 A 0 A_JumpIfInventory("DeusEx_AugmentationBioEnergyCell",1,1)
+        fail
+        TNT1 A 0 A_JumpIfInventory("DeusEx_BioEnergy",0,"UseFail")
+        TNT1 A 0 A_GiveInventory("DeusEx_BioEnergy",100)
+        TNT1 A 0 A_TakeInventory("DeusEx_AugmentationBioEnergyCell",1)
+        fail
+
+      UseFail:
+        TNT1 A 0
+        fail
+    }
+}
+
 //Arms
 Actor DeusEx_Augmentation_ArmsActive : TemporaryCounter { Inventory.MaxAmount 2 }
 Actor DeusEx_Augmentation_ArmsSlot : Counter { Inventory.MaxAmount 2 }
