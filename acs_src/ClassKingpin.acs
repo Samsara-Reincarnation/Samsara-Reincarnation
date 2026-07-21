@@ -156,18 +156,6 @@ Script "Kingpin_Player" (void)
 		SetAmmoCapacity("Kingpin_TommyGunMagazine",50*(1+CheckInventory("Kingpin_TommyGun_MagazineCapacity")));
 		SetAmmoCapacity("Kingpin_GrenadeLauncherMagazine",3*(1+CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacity")));
 
-        if (CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacityCheat"))
-        {
-            if (CheckInventory("Kingpin_GrenadeLauncherMagazine") < GetAmmoCapacity("Kingpin_GrenadeLauncherMagazine")) { SetInventory("Kingpin_GrenadeLauncherMagazine", GetAmmoCapacity("Kingpin_GrenadeLauncherMagazine")); }
-            SetInventory("Kingpin_GrenadeLauncher_MagazineCapacityCheat", 0);
-        }
-
-        if (CheckInventory("Kingpin_TommyGun_MagazineCapacityCheat"))
-        {
-            if (CheckInventory("Kingpin_TommyGunMagazine") < GetAmmoCapacity("Kingpin_TommyGunMagazine")) { SetInventory("Kingpin_TommyGunMagazine", GetAmmoCapacity("Kingpin_TommyGunMagazine")); }
-            SetInventory("Kingpin_TommyGun_MagazineCapacityCheat", 0);
-        }
-
 		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("Kingpin_Shotgun_DoubleBarrelAlternate", CheckInventory("Kingpin_ShotgunMagazine") % 2); }
 
 		if(CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
