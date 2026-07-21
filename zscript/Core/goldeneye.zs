@@ -15,7 +15,7 @@ Class BondWeaponAppearanceUpdate : CustomInventory
 					let weaponname = player.ReadyWeapon.GetClassName();
 					let firing = CheckInventory("BondFiringToken",1);
 					let alternate = CheckInventory("BondAlternateFire",1);
-					if(CheckInventory("Goldeneye_PlayerAltClassToken",1))
+					if(CheckInventory("BondClassMode",1))
 					{
 						switch(weaponname)
 						{

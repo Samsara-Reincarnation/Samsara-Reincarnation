@@ -19,7 +19,7 @@ actor Goldeneye_Slapper : SamsaraGoldenEyeWeapon
         TNT1 A 0 A_JumpIfInventory("BondWatchQueue",1,"WatchRaise")
         TNT1 A 0 A_JumpIfInventory("BondWatchToken",1,"WatchReady")
       ReadyStart:
-        //TNT1 A 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,2)
+        //TNT1 A 0 A_JumpIfInventory("BondClassMode",1,2)
         //TNT1 A 0 A_JumpIfInventory("Goldeneye_SniperRifle",1,"ReadyStartSniper")
         TNT1 A 1 A_WeaponReady
         goto Ready
@@ -35,7 +35,7 @@ actor Goldeneye_Slapper : SamsaraGoldenEyeWeapon
         TNT1 A 0 A_TakeInventory("BondDryFireSpamProtector1")
         TNT1 A 0 A_TakeInventory("BondDryFireSpamProtector2")
         TNT1 A 0 A_TakeInventory("BondAltActivationToken")
-        //TNT1 A 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,2)
+        //TNT1 A 0 A_JumpIfInventory("BondClassMode",1,2)
         //TNT1 A 0 A_JumpIfInventory("Goldeneye_SniperRifle",1,"DeselectSniper")
         TNT1 A 1 A_Lower
         loop
@@ -53,14 +53,14 @@ actor Goldeneye_Slapper : SamsaraGoldenEyeWeapon
         TNT1 A 0 A_TakeInventory("Goldeneye_GoldenGunToken")
         TNT1 A 0 A_TakeInventory("Goldeneye_SniperToken")
         TNT1 A 0 A_TakeInventory("Goldeneye_D5KToken")
-        //TNT1 A 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,2)
+        //TNT1 A 0 A_JumpIfInventory("BondClassMode",1,2)
         //TNT1 A 0 A_JumpIfInventory("Goldeneye_SniperRifle",1,"SelectSniper")
         TNT1 A 1 A_Raise
         loop
 
       Fire:
         GE00 B 0 A_GiveInventory("BondFiringToken")
-        GE00 B 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"FireGoldfinger")
+        GE00 B 0 A_JumpIfInventory("BondClassMode",1,"FireGoldfinger")
         GE00 B 0 A_GiveInventory("SamsaraGoldenEyeSlapperSwingSoundPlayer")
         //GE00 B 0 A_JumpIfInventory("Goldeneye_SniperRifle",1,"FireSniper")
         GE00 B 0 A_Jump(256,"Fire1","Fire2")
@@ -90,7 +90,7 @@ actor Goldeneye_Slapper : SamsaraGoldenEyeWeapon
 
       WatchReady:
         GE14 T 0 A_JumpIfInventory("BondWatchQueue",1,"WatchRaise")
-        GE14 T 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"WatchReadyGoldfinger")
+        GE14 T 0 A_JumpIfInventory("BondClassMode",1,"WatchReadyGoldfinger")
         GE14 T 4 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_DISABLESWITCH)
         loop
 
@@ -99,7 +99,7 @@ actor Goldeneye_Slapper : SamsaraGoldenEyeWeapon
         GE14 T 0 A_GiveInventory("BondWatchUIDeinit")
       WatchLowerStart:
         GE14 T 0 ACS_NamedExecuteAlways("BondWatchLookUpAndDown")
-        GE14 T 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"WatchLowerStartGoldfinger")
+        GE14 T 0 A_JumpIfInventory("BondClassMode",1,"WatchLowerStartGoldfinger")
         GE14 T 12 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_DISABLESWITCH)
         GE14 SRQPONMLKJIHGFEDCBA 2 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_DISABLESWITCH)
         goto WatchLowerDualCheck
@@ -112,7 +112,7 @@ actor Goldeneye_Slapper : SamsaraGoldenEyeWeapon
         GE14 A 0 A_JumpIfInventory("BondWatchToken",1,"WatchLower")
         GE14 A 0 A_GiveInventory("BondWatchActivate")
       WatchRaiseDualCheck:
-        GE14 A 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"WatchRaiseDualCheckGoldfinger")
+        GE14 A 0 A_JumpIfInventory("BondClassMode",1,"WatchRaiseDualCheckGoldfinger")
         GE14 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
         goto WatchRaiseStart
         GE00 A 0 A_GunFlash("DualLower",GFF_NOEXTCHANGE)

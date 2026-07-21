@@ -419,7 +419,7 @@ actor Goldfinger_DB5MachineGuns : SamsaraGoldenEyeWeapon
 
       WatchReady:
         GE14 T 0 A_JumpIfInventory("BondWatchQueue",1,"WatchRaise")
-        GE14 T 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"WatchReadyGoldfinger")
+        GE14 T 0 A_JumpIfInventory("BondClassMode",1,"WatchReadyGoldfinger")
         GE14 T 4 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_DISABLESWITCH)
         loop
 
@@ -428,7 +428,7 @@ actor Goldfinger_DB5MachineGuns : SamsaraGoldenEyeWeapon
         GE14 T 0 A_GiveInventory("BondWatchUIDeinit")
       WatchLowerStart:
         GE14 T 0 ACS_NamedExecuteAlways("BondWatchLookUpAndDown")
-        GE14 T 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"WatchLowerStartGoldfinger")
+        GE14 T 0 A_JumpIfInventory("BondClassMode",1,"WatchLowerStartGoldfinger")
         GE14 T 12 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_DISABLESWITCH)
         GE14 SRQPONMLKJIHGFEDCBA 2 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_DISABLESWITCH)
         goto WatchLowerDualCheck
@@ -441,7 +441,7 @@ actor Goldfinger_DB5MachineGuns : SamsaraGoldenEyeWeapon
         GE14 A 0 A_JumpIfInventory("BondWatchToken",1,"WatchLower")
         GE14 A 0 A_GiveInventory("BondWatchActivate")
       WatchRaiseDualCheck:
-        GE14 A 0 A_JumpIfInventory("Goldeneye_PlayerAltClassToken",1,"WatchRaiseDualCheckGoldfinger")
+        GE14 A 0 A_JumpIfInventory("BondClassMode",1,"WatchRaiseDualCheckGoldfinger")
         GE14 A 0 A_JumpIfInventory("BondDualWieldToken",1,1)
         goto WatchRaiseStart
         GE00 A 0 A_GunFlash("DualLower",GFF_NOEXTCHANGE)

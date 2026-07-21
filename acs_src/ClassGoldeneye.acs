@@ -332,7 +332,7 @@ Script "BondWatchInterface" (void) Clientside
 
 	if(CheckInventory("BondWatchUIInit"))
 	{			
-		goldfinger = CheckInventory("Goldeneye_PlayerAltClassToken");
+		goldfinger = CheckInventory("BondClassMode");
 	
 		SpawnSpotForced("Goldeneye_WatchOpen", 0, 0, 0);
 
@@ -954,7 +954,7 @@ script "BondWeaponSwitch" (void) CLIENTSIDE
         terminate;
     }
 
-    int goldfinger = CheckInventory("Goldeneye_PlayerAltClassToken");
+    int goldfinger = CheckInventory("BondClassMode");
 
     weptoswitch--;
 
@@ -1000,7 +1000,7 @@ Script "BondHudDisplay" (void) Clientside
 {
     while (CheckInventory("BondClass"))
     {
-		int goldfinger = CheckInventory("Goldeneye_PlayerAltClassToken");
+		int goldfinger = CheckInventory("BondClassMode");
         if (!CheckInventory("BondWatchToken") && GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
         {
             for (int a = 0; a < GOLDENEYEWEAPONS; a++)
@@ -1119,11 +1119,11 @@ Script "BondDeathFunctions" Death clientside
 
     if (isSinglePlayer() && !GetCVar("sv_singleplayerrespawn"))
     {
-        LocalAmbientSound(CheckInventory("Goldeneye_PlayerAltClassToken") ? "Goldfinger/MissionDeath" : "Goldeneye/MissionDeath", 127);
+        LocalAmbientSound(CheckInventory("BondClassMode") ? "Goldfinger/MissionDeath" : "Goldeneye/MissionDeath", 127);
         LocalSetMusic("");
         canresetmusic = true;
     }
-    else { LocalAmbientSound(CheckInventory("Goldeneye_PlayerAltClassToken") ? "Goldfinger/MultiplayerDeath" : "Goldeneye/MultiplayerDeath", 127); }
+    else { LocalAmbientSound(CheckInventory("BondClassMode") ? "Goldfinger/MultiplayerDeath" : "Goldeneye/MultiplayerDeath", 127); }
 
 	FadeTo(0,0,0,0.0,0.01);
 	SetHudSize(96, 80, true);
@@ -1222,7 +1222,7 @@ Script "BondDeathCameraWiggle" (void) clientside
 
 Script "BondGiveDualToken" (int index) clientside
 {
-	int goldfinger = CheckInventory("Goldeneye_PlayerAltClassToken");
+	int goldfinger = CheckInventory("BondClassMode");
 	GiveInventory(GoldeneyeWeaponInfo[goldfinger][index][7], 1);
 }
 
@@ -1264,7 +1264,7 @@ Script "BondDamageIndicators" (void) clientside
 
 Script "BondWeaponChecker" (void)
 {
-	int goldfinger = CheckInventory("Goldeneye_PlayerAltClassToken");
+	int goldfinger = CheckInventory("BondClassMode");
 	for(int a = 0; a < GOLDENEYEWEAPONS; a++)
 	{
 		if(CheckWeapon(GoldeneyeWeaponInfo[goldfinger][a][0]))
