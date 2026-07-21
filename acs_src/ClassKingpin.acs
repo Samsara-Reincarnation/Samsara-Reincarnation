@@ -349,7 +349,8 @@ Script "Kingpin_ThrowMoney" (void)
 	SpawnForced(moneyActor,GetActorX(0),GetActorY(0),GetActorZ(0)+(GetActorProperty(0,APROP_Height)*2),moneyTid);
 	SetActorAngle(moneyTid,random(0,1.0));
 	SetActorVelocity(moneyTid,4*cos(GetActorAngle(moneyTid)),4*sin(GetActorAngle(moneyTid)),random(0,4.0),0,0);
-	Thing_ChangeTid(moneyTid,random(1,monsterHealth/10));
+	SetActorProperty(moneyTid, APROP_Accuracy, Random(1, monsterHealth / 10));
+    Thing_ChangeTID(moneyTid, 0);
 }
 
 script "Kingpin_Flamethrower" (void)
