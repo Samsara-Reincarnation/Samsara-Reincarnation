@@ -1,4 +1,4 @@
-Actor " .454 Casull Pistol " : Weapon
+Actor " .454 Casull Pistol " : RRWeapon
 {
     Inventory.PickupSound "RR/Wpickup"
 	+WEAPON.WIMPY_WEAPON
@@ -6,9 +6,6 @@ Actor " .454 Casull Pistol " : Weapon
     +NOALERT
     +AMMO_OPTIONAL
 	Weapon.SelectionOrder 8000
-    Weapon.BobRangeX 0.75
-    Weapon.BobRangeY 0.95
-    Weapon.BobSpeed 1.1	
 	Weapon.SlotNumber 1
 	Weapon.SlotPriority 1
 	Weapon.AmmoType "LeonardPistolReload"
@@ -23,17 +20,12 @@ Actor " .454 Casull Pistol " : Weapon
 		Spawn:
 			RRP_ A -1 Bright
 			Stop
-
 		Select:
-			TNT1 A 0 A_Raise
-			RRP_ B 1 A_Raise
-			Loop
-
+			RRP_ B 0
+			Goto Super::Select
 		Deselect:
-			TNT1 A 0 A_Lower
-			RRP_ B 1 A_Lower
-			Loop
-
+			RRP_ B 0
+			Goto Super::Deselect
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
 			Goto SetSoberView
@@ -43,20 +35,17 @@ Actor " .454 Casull Pistol " : Weapon
         ReadyNonReloadable:
             RRP_ B 1 A_WeaponReady
             goto Ready
-
         ReadyModernReloadable:
             TNT1 A 0 A_JumpIfInventory("LeonardPistolReload",0,"ReadyNonReloadable")
             TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,"ReadyModernReloadableReserve")
         ReadyModernReloadableCanReload:
             RRP_ B 1 A_WeaponReady(WRF_ALLOWRELOAD)
             goto Ready
-
         ReadyModernReloadableReserve:
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyModernReloadableCanReload")
             TNT1 A 0 A_JumpIfInventory("Clip",1,"ReadyModernReloadableCanReload")
             goto ReadyNonReloadable
-
 		Fire:
 			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkViewFire")
 			Goto SetSoberViewFire
@@ -67,7 +56,6 @@ Actor " .454 Casull Pistol " : Weapon
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
             TNT1 A 0 A_JumpIfInventory("Clip",1,"FireStart")
             goto NoAmmoSwitch
-
         FireReloadable:
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
             TNT1 A 0 A_JumpIfInventory("LeonardPistolReload",1,"FireStart")
@@ -77,7 +65,6 @@ Actor " .454 Casull Pistol " : Weapon
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
             TNT1 A 0 A_JumpIfInventory("Clip",1,"Reload")
             goto NoAmmoSwitch
-
         FireStart:
 			RRP_ C 2 Bright A_AlertMonsters
 			TNT1 A 0 A_GiveInventory("SamsaraLeonardPistolAttackHandler")
@@ -89,7 +76,6 @@ Actor " .454 Casull Pistol " : Weapon
 			RRP_ EI 1 Bright
             TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"AReloadable")
             goto AFinish
-
         AReloadable:
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"AFinish")
             TNT1 A 0 A_JumpIfInventory("LeonardPistolReload",1,"AFinish")
@@ -99,19 +85,18 @@ Actor " .454 Casull Pistol " : Weapon
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
             TNT1 A 0 A_JumpIfInventory("Clip",1,"Reload")
             goto AFinish
-
         AFinish:
 			RRP_ B 2 Bright
 			goto Ready
-
 		Reload:
+			TNT1 A 0 A_PlaySound("Leonard/PistolU",CHAN_WEAPON)
 			RRP_ I 2 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			TNT1 A 0 A_PlaySound("Leonard/PistolR",CHAN_WEAPON)
 			RRP_ J 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			RRP_ J 2 offset(-8,50) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			RRP_ J 2 offset(-13,63) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			RRP_ K 2 offset(-18,76) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			RRP_ K 2 offset(-23,89) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_PlaySound("Leonard/PistolR",CHAN_WEAPON)
 			RRP_ K 2 offset(-18,76) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)			
 			RRP_ J 2 offset(-13,63) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			RRP_ J 2 offset(-8,50) Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)		
@@ -122,13 +107,11 @@ Actor " .454 Casull Pistol " : Weapon
             //RRP_ B 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
             TNT1 A 0
 			goto Ready
-
       ReloadAmmo:
         TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,"ReloadAmmoReserve")
         TNT1 A 0 A_JumpIfInventory("LeonardPistolReload",0,"ReloadFinish")
         TNT1 A 0 A_GiveInventory("LeonardPistolReload")
         loop
-
       ReloadAmmoReserve:
         TNT1 A 0 A_JumpIfInventory("LeonardPistolReload",0,"ReloadFinish")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
@@ -140,7 +123,6 @@ Actor " .454 Casull Pistol " : Weapon
         TNT1 A 0 A_TakeInventory("Clip",1)
         TNT1 A 0 A_GiveInventory("LeonardPistolReload")
         goto ReloadAmmo
-
 	  IntroTaunt:
 			TNT1 A 0 A_JumpIfInventory("SamsaraBallgag",1,2)
 			TNT1 A 0 A_PlaySoundEx("Leonard/Enter", "SoundSlot7", 0, 0)
@@ -148,7 +130,6 @@ Actor " .454 Casull Pistol " : Weapon
 			TNT1 A 0 A_GiveInventory("LeonardTauntCooldown",5)
 			TNT1 A 0 ACS_NamedExecuteAlways("LeonardTauntCooldown", 0)
 			Goto Ready
-
 	  WaitingTaunt:
 			TNT1 A 0 A_JumpIfInventory("SamsaraIdleBallgag",1,"IdleBallgagStuff")
 			TNT1 A 0 A_JumpIfInventory("SamsaraBallgag",1,2)
@@ -157,27 +138,21 @@ Actor " .454 Casull Pistol " : Weapon
 			TNT1 A 0 A_GiveInventory("LeonardTauntCooldown",5)
 			TNT1 A 0 ACS_NamedExecuteAlways("LeonardTauntCooldown", 0)
 			Goto Ready
-
 	  IdleBallgagStuff:
 			TNT1 A 0 A_TakeInventory("LeonardWaiting", 15)
 			goto Ready
-
 	  SetDrunkView:
 			TNT1 A 0 A_ZoomFactor(0.55)
 			Goto Ready+1
-
 	  SetDrunkViewFire:
 			TNT1 A 0 A_ZoomFactor(0.55)
 			Goto Fire+1
-
 	  SetSoberView:
 			TNT1 A 0 A_ZoomFactor(1.0)
 			Goto Ready+1
-
 	  SetSoberViewFire:
 			TNT1 A 0 A_ZoomFactor(1.0)
 			Goto Fire+1
-
       // "No ammo" switch
       NoAmmoSwitch:
         TNT1 A 0 A_SelectWeapon(" RR Crowbar ")

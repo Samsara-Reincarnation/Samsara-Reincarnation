@@ -1,19 +1,16 @@
-Actor " RR Hunting Crossbow " : Weapon
+Actor " RR Hunting Crossbow " : RRWeapon
 {
 	Inventory.PickupMessage "Hunting Crossbow"
     Inventory.PickupSound "RR/Wpickup"
 	Weapon.SelectionOrder 2900
-    Weapon.BobRangeX 0.75
-    Weapon.BobRangeY 0.95
-    Weapon.BobSpeed 1.1	
 	Weapon.SlotNumber 2
 	Weapon.SlotPriority 2
 	Weapon.AmmoType "Shell"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 8
-	Obituary "%o was pierced by %k's arrows."
+	Weapon.UpSound "Leonard/PistolR"
 	Inventory.RestrictedTo "Leonard"
-	Tag "Hunting Crossbow"	
+	Tag "Huntin' Crossbow"	
 	+WEAPON.NOALERT
 	States
 	{
@@ -23,31 +20,25 @@ Actor " RR Hunting Crossbow " : Weapon
 		Select:
 			TNT1 A 0 A_JumpIfNoAmmo("SelectAmmoLess")  
 		SelectLoop:			
-			TNT1 A 0 A_Raise
-			R9_H B 1 A_Raise
-			Loop
+			R9_H B 0 A_Raise
+			Goto Super::Select
 		SelectAmmoLess:
-			TNT1 A 0 A_Raise
-			R9_H D 1 A_Raise
-			Loop
+			R9_H D 0
+			Goto Super::Select
 		SelectDynomite:
-			TNT1 A 0 A_Raise
-			R9_H K 1 A_Raise
-			Loop			
+			R9_H K 0
+			Goto Super::Select			
 		Deselect:
 			TNT1 A 0 A_JumpIfNoAmmo("DeselectAmmoLess")
 		DeselectLoop:	
-			TNT1 A 0 A_Lower
-			R9_H B 1 A_Lower
-			Loop
+			R9_H B 0
+			Goto Super::Deselect
 		DeselectAmmoLess:
-			TNT1 A 0 A_Lower
-			R9_H D 1 A_Lower
-			Loop
+			R9_H D 0
+			Goto Super::Deselect
 		DeselectDynoMite:
-			TNT1 A 0 A_Lower
-			R9_H K 1 A_Lower
-			Loop			
+			R9_H K 0
+			Goto Super::Deselect			
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
 			Goto SetSoberView
@@ -147,7 +138,8 @@ Actor RRHUNTINGARROW : FastProjectile
 	+NOEXTREMEDEATH
 	+BLOODSPLATTER
 	+NOEXTREMEDEATH
-    DamageType "LeonardDamage1"	
+    DamageType "LeonardDamage1"
+	Obituary "%o was pierced by %k's arrows."
 	Scale 0.39
     States
     {
@@ -170,18 +162,21 @@ Actor RRHUNTINGARROW : FastProjectile
 
 Actor RRHUNTINGARROW_2 : RRHUNTINGARROW { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
 
-Actor " RR Dynomite Crossbow " : " RR Hunting Crossbow "
+Actor " RR Dynomite Crossbow " : RRWeapon
 {
 	Inventory.PickupMessage "Dyn 'o' mite Crossbow"
     Inventory.PickupSound "RR/Wpickup"
+	Weapon.SelectionOrder 2900
+	Weapon.SlotNumber 2
+	Weapon.SlotPriority 2	
 	Weapon.AmmoType "RocketAmmo"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 0
     +AMMO_OPTIONAL
 	+WEAPON.EXPLOSIVE
-	Obituary "%o was blown up by %k's crossbow dyn 'o' mite!"
+	Weapon.UpSound "Leonard/PistolR"
 	Inventory.RestrictedTo "Leonard"
-	Tag "Dyn 'O' Mite Crossbow"	
+	Tag "Dyn-O-Mite Crossbow"	
 	States
 	{
 		Spawn:
@@ -190,23 +185,19 @@ Actor " RR Dynomite Crossbow " : " RR Hunting Crossbow "
 		Select:
 			TNT1 A 0 A_JumpIfNoAmmo("SelectAmmoLess")  
 		SelectLoop:			
-			TNT1 A 0 A_Raise
-			R9_H K 1 A_Raise
-			Loop	
+			R9_H K 0
+			Goto Super::Select		
 		SelectAmmoLess:
-			TNT1 A 0 A_Raise
-			R9_H D 1 A_Raise
-			Loop		
+			R9_H D 0
+			Goto Super::Select			
 		Deselect:
 			TNT1 A 0 A_JumpIfNoAmmo("DeselectAmmoLess")
 		DeselectLoop:	
-			TNT1 A 0 A_Lower
-			R9_H K 1 A_Lower
-			Loop	
+			R9_H K 0
+			Goto RRWeapon::Deselect	
 		DeselectAmmoLess:
-			TNT1 A 0 A_Lower
-			R9_H D 1 A_Lower
-			Loop		
+			R9_H D 0
+			Goto Super::Deselect			
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
 			Goto SetSoberView
@@ -317,7 +308,8 @@ Actor RRHUNTINDYNOMITEARROW : RRHUNTINGARROW
 	Radius 5
 	Damage (140)
 	+FORCERADIUSDMG
-	DamageType "LeonardDamage2"	
+	DamageType "LeonardDamage2"
+	Obituary "%o was blown up by %k's crossbow dyn 'o' mite!"
 	States
 	{
 		Spawn:

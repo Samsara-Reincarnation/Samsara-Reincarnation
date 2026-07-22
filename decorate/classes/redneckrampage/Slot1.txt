@@ -1,32 +1,28 @@
-Actor " RR Rip Saw " : Weapon
+Actor " RR Rip Saw " : RRWeapon
 {
 	Inventory.PickupMessage "Rip Saw!"
     Inventory.PickupSound "RR/Wpickup"
 	Weapon.SelectionOrder 900
-    Weapon.BobRangeX 0.75
-    Weapon.BobRangeY 0.95
-    Weapon.BobSpeed 1.1	
 	Weapon.SlotNumber 1
 	Weapon.SlotPriority 1
 	Weapon.AmmoType "Shell"
 	Weapon.AmmoUse 3
 	Weapon.AmmoGive 12
-	Obituary "%o was ripped by %k's saws."
+	Weapon.UpSound "Leonard/PistolR"
+	Obituary "%o was ripped by %k's saw."
 	Inventory.RestrictedTo "Leonard"	
-	Tag "Rip Saw"	
+	Tag "Ripsaw"	
 	States
 	{
 		Spawn:
 			R_RS U -1 Bright
 			Stop
-		Select:
-			TNT1 A 0 A_Raise
-			R_RS A 1 A_Raise
-			Loop
 		Deselect:
-			TNT1 A 0 A_Lower
-			R_RS A 1 A_Lower
-			Loop
+			R_RS A 0 
+			Goto Super::Deselect
+		Select:
+			R_RS A 0 
+			Goto Super::Select				
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("LeonardWaiting", 15, "WaitingTaunt")
 			TNT1 A 0 A_JumpIfInventory("LeonardReady",1,"IntroTaunt")		
@@ -92,6 +88,7 @@ Actor RIPSAWRIPPERDISC
 	Radius 4
 	Speed 50
 	DamageType "LeonardDamage1"
+	Obituary "%o was ripped by %k's saw."
 	BounceFactor 0.93
 	BounceCount 14
 	States
