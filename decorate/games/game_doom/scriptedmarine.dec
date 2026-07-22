@@ -946,7 +946,7 @@ ACTOR ScriptedMarine2 : ScriptedMarine replaces ScriptedMarine
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
-			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
+			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
 		SoFSMGDelayDeathContinue:
@@ -964,7 +964,7 @@ ACTOR ScriptedMarine2 : ScriptedMarine replaces ScriptedMarine
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
-			"####" "#" 0 A_ChangeFlag("XFLIP",random(0,1))
+			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")

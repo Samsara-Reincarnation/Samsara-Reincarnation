@@ -482,3 +482,15 @@ Actor SoF_TVDinnerMultiplier : TemporaryCounter { Inventory.MaxAmount 20 }
 Actor SoF_TVDinnerTimer : TemporaryCounter { Inventory.MaxAmount 105 }
 Actor SoF_RoastedMultiplier : TemporaryCounter { Inventory.MaxAmount 10 }
 Actor SoF_RoastedTimer : TemporaryCounter { Inventory.MaxAmount 105 }
+
+actor SamsaraSOFXFlipDecider : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraZDoomJumpCheck"), 1)
+        stop
+        TNT1 A 0 A_ChangeFlag("XFLIP",random(false,true))
+        stop
+    }
+}
