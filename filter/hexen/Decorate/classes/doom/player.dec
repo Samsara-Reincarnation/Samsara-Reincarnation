@@ -459,10 +459,6 @@ Actor DoomguyPlayer_Shrink : DoomguyPlayer
 		Death.MightyBoot:
 		Death.DukeExplosive:
 		Death.HexenMedusa:
-		Death.DukeIce:
-		Ice:
-		Death.HexenIce:
-		Death.Ice:
 		Death.ExpanderDMG:
 		XDeath.ExpanderDMG:
 		Death.ExpanderDMGCoop:
@@ -589,6 +585,17 @@ Actor DoomguyPlayer_Shrink : DoomguyPlayer
 			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			TNT1 A -1
 			stop
+        Death.DukeIce:
+        Death.HexenIce:
+        Death.WTMeleeIce:
+        Death.WTRangedIce:
+        Death.DoomDamageTypeIce:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+        Ice: // this has some hardcoded nonsense to it
+            TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+            TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+            TNT1 A 1 A_CheckPlayerDone
+            wait
 		Death.DukeSquish:
 		XDeath.DukeSquish:
 			TNT1 A 0 A_JumpIfInventory("DoomClassMode", 2, 2) //We have to do this the awful way because #### doesn't work here
