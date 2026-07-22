@@ -18678,3 +18678,19 @@ script "SamsaraSemiAuto" (int offhand)
 }
 
 script "SamsaraSetRenderStyle" (int styletype) { SetActorProperty(0, APROP_RenderStyle, styletype); }
+
+script "SamsaraIceDeathScreenBlend" (void) CLIENTSIDE
+{
+    while (isDead(0))
+    {
+        bool usinghexenblend = GetCVar("pf_ice");
+
+        SetInventory("PowerSamsaraIceDeathBlendZDoom", !usinghexenblend);
+        SetInventory("PowerSamsaraIceDeathBlendHexen", usinghexenblend);
+
+        Delay(1);
+    }
+
+    SetInventory("PowerSamsaraIceDeathBlendHexen", 0);
+    SetInventory("PowerSamsaraIceDeathBlendZDoom", 0);
+}

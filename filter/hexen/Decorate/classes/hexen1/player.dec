@@ -341,14 +341,15 @@ actor HexenPlayer : SamsaraPlayerPawnNormalRedBlood
 
 		// SamsaraPlayerPawnNormalRedBlood states
 		Death.DukeIce:
-			TNT1 A 0 A_Jump(218,"Ice")
+			TNT1 A 0 A_Jump(218,"IceBlendInit")
 			TNT1 A 0 A_GiveToTarget("DukeDMTaunt1",1)
-		Ice:
 		Death.HexenIce:
 		Death.WTMeleeIce:
 		Death.WTRangedIce:
 		Death.DoomDamageTypeIce:
-		Death.Ice:
+		IceBlendInit:
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+		Ice: // this has some hardcoded nonsense to it
 			TNT1 A 0 A_JumpIfInventory("HexenClassMode", 3, "IceFighter")
 			TNT1 A 0 A_JumpIfInventory("HexenClassMode", 2, "IceMage")
 			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
@@ -358,8 +359,8 @@ actor HexenPlayer : SamsaraPlayerPawnNormalRedBlood
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 		IceMage:
 			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -368,8 +369,8 @@ actor HexenPlayer : SamsaraPlayerPawnNormalRedBlood
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 		IceFighter:
 			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -378,8 +379,8 @@ actor HexenPlayer : SamsaraPlayerPawnNormalRedBlood
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			//TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 	}
 }
 

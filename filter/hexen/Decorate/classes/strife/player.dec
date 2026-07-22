@@ -478,14 +478,15 @@ actor StrifeguyPlayer : StrifePlayer
 			TNT1 A -1
 			Stop
 		Death.DukeIce:
-			"####" "#" 0 A_Jump(218,"Ice")
+			"####" "#" 0 A_Jump(218,"IceBlendInit")
 			"####" "#" 0 A_GiveToTarget("DukeDMTaunt1",1)
-		Ice:
 		Death.HexenIce:
 		Death.WTMeleeIce:
 		Death.WTRangedIce:
 		Death.DoomDamageTypeIce:
-		Death.Ice:
+		IceBlendInit:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+		Ice: // this has some hardcoded nonsense to it
 			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			"####" "#" 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			"####" "#" 69 A_ChangeFlag("SOLID",false)
@@ -493,8 +494,8 @@ actor StrifeguyPlayer : StrifePlayer
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 		Death.FireExplosive:
 		Death.DoomDamageTypeFireExplosive:
 			"####" A 0 A_Jump(128,2)

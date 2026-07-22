@@ -279,14 +279,15 @@ Actor SamsaraPlayerPawnNormalRedBlood : PlayerPawn
 			TNT1 A -1
 			Stop
 		Death.DukeIce:
-			"####" "#" 0 A_Jump(218,"Ice")
+			"####" "#" 0 A_Jump(218,"IceBlendInit")
 			"####" "#" 0 A_GiveToTarget("DukeDMTaunt1",1)
-		Ice:
 		Death.HexenIce:
 		Death.WTMeleeIce:
 		Death.WTRangedIce:
 		Death.DoomDamageTypeIce:
-		Death.Ice:
+		IceBlendInit:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+		Ice: // this has some hardcoded nonsense to it
 			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			"####" "#" 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			"####" "#" 69 A_ChangeFlag("SOLID",false)
@@ -294,8 +295,8 @@ Actor SamsaraPlayerPawnNormalRedBlood : PlayerPawn
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 
 		// XDeath states (Uses actor's XDeath state if available)
 		Death.FireExplosive:
@@ -1074,14 +1075,15 @@ Actor SamsaraPlayerPawnNormalColoredBlood : PlayerPawn
 			TNT1 A -1
 			Stop
 		Death.DukeIce:
-			"####" "#" 0 A_Jump(218,"Ice")
+			"####" "#" 0 A_Jump(218,"IceBlendInit")
 			"####" "#" 0 A_GiveToTarget("DukeDMTaunt1",1)
-		Ice:
 		Death.HexenIce:
 		Death.WTMeleeIce:
 		Death.WTRangedIce:
 		Death.DoomDamageTypeIce:
-		Death.Ice:
+		IceBlendInit:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+		Ice: // this has some hardcoded nonsense to it
 			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			"####" "#" 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			"####" "#" 69 A_ChangeFlag("SOLID",false)
@@ -1089,8 +1091,8 @@ Actor SamsaraPlayerPawnNormalColoredBlood : PlayerPawn
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 
 		// XDeath states (Uses actor's XDeath state if available)
 		Death.FireExplosive:
@@ -1855,14 +1857,15 @@ Actor SamsaraPlayerPawnNormalNoBlood : PlayerPawn
 			TNT1 A -1
 			Stop
 		Death.DukeIce:
-			"####" "#" 0 A_Jump(218,"Ice")
+			"####" "#" 0 A_Jump(218,"IceBlendInit")
 			"####" "#" 0 A_GiveToTarget("DukeDMTaunt1",1)
-		Ice:
 		Death.HexenIce:
 		Death.WTMeleeIce:
 		Death.WTRangedIce:
 		Death.DoomDamageTypeIce:
-		Death.Ice:
+		IceBlendInit:
+			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+		Ice: // this has some hardcoded nonsense to it
 			"####" "#" 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
 			"####" "#" 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			"####" "#" 69 A_ChangeFlag("SOLID",false)
@@ -1870,8 +1873,8 @@ Actor SamsaraPlayerPawnNormalNoBlood : PlayerPawn
 			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2NoBlood",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_SetTranslucent(1,0)
 			TNT1 A 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 9000)
-			TNT1 A -1
-			Stop
+			TNT1 A 1 A_CheckPlayerDone
+			Wait
 
 		// XDeath states (Uses actor's XDeath state if available)
 		Death.FireExplosive:
@@ -2619,6 +2622,18 @@ actor SamsaraPlayerBaseBurnDeathSoundTrigger : Trigger
         TNT1 A 0 A_PlaySound("G_Dominatrix/Die",CHAN_VOICE)
         stop
     }
+}
+
+actor PowerSamsaraIceDeathBlendZDoom : Powerup
+{
+    Powerup.Duration 0x7FFFFFFF
+    Powerup.Color "40 40 DA", 0.4
+}
+
+actor PowerSamsaraIceDeathBlendHexen : Powerup
+{
+    Powerup.Duration 0x7FFFFFFF
+    Powerup.Color "00 00 E0", 0.5
 }
 
 // A few player classes will need to have some states manually placed because
