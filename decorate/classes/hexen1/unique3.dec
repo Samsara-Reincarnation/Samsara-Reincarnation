@@ -433,17 +433,18 @@ actor Pig2 : SamsaraMonsterReincPig replaces Pig
     Death.DukeIce:
         PIGY M 0 A_Jump(218,"Ice")
         PIGY M 0 A_GiveToTarget("DukeKillTaunt",1)
-    Ice:
     Death.HexenIce:
     Death.WTMeleeIce:
     Death.WTRangedIce:
-    Death.Ice:
+    Ice:
         PIGY M 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
         PIGY M 0 ACS_NamedExecuteAlways("Samsara_KillCount", 0, 0)
         PIGY M 0 A_GiveInventory("EnemyZorched",1)
         PIGY M 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
         //PIGY M 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
         PIGY M 0 A_SpawnItemEx("UniversalBloodyHellIceDeathSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        PIGY M 0 A_ChangeFlag("DONTCORPSE",true)
+        PIGY M 0 A_ChangeFlag("DONTGIB",true)
         PIGY M 69 A_ChangeFlag("SOLID",false)
         PIGY M 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
         TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
@@ -460,6 +461,8 @@ actor Pig2 : SamsaraMonsterReincPig replaces Pig
         PIGY M 0 A_GiveInventory("EnemyZorched",1)
         PIGY M 0 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
         //PIGY M 0 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 100)
+        PIGY M 0 A_ChangeFlag("DONTCORPSE",true)
+        PIGY M 0 A_ChangeFlag("DONTGIB",true)
         PIGY M 0 A_ChangeFlag("SOLID",false)
         PIGY M 1 ACS_NamedExecuteAlways("SamsaraDeathEffects", 0, 15)
         TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellIceDeathEffect2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
