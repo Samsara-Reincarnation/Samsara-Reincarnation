@@ -284,6 +284,10 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 		GiveInventory("SamsaraChexGigazorcherSpawnReloader", 1);
 		break;
 
+    case CLASS_WOLFEN:
+        SetInventory("SamsaraWolf3DKilledBySchabbsSyringe", 0);
+        break;
+
 	case CLASS_HEXEN:
 		if (CheckInventory("SamsaraHexenClericInvulnerabilityNonShootableActive")) { GiveInventory("SamsaraHexenClericInvulnerabilityNonShootableOff", 1); }
 		if (CheckInventory("SamsaraHexenMageInvulnerabilityReflectiveActive")) { GiveInventory("SamsaraHexenMageInvulnerabilityReflectiveOff", 1); }
@@ -1251,6 +1255,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_WOLFEN:
+                if (CheckInventory("SamsaraWolf3DKilledBySchabbsSyringe") && !isDead(0)) { SetInventory("SamsaraWolf3DKilledBySchabbsSyringe", 0); } // resurrect cheat silliness
+
                 if (CheckInventory("Totenkopf_Kar98k") && CheckInventory("Totenkopf_IHaveScope"))
                 {
                     storedammopriname = "Shell", storedammopri = CheckInventory(storedammopriname);
