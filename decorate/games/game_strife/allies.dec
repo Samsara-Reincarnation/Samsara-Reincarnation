@@ -800,6 +800,8 @@ ACTOR FriendlyGrunt
 		TNT1 A 5 A_NoBlocking
 		Stop
 	Death.RottDisintegrate:
+		TNT1 A 0 A_ChangeFlag("DONTCORPSE",1)
+		TNT1 A 0 A_ChangeFlag("DONTGIB",1)
 		TNT1 A 0 A_ChangeFlag("SOLID", 0)
 		TNT1 A 0 A_GiveToTarget("KillCount",1)
 		TNT1 A 0 A_Scream
@@ -809,6 +811,7 @@ ACTOR FriendlyGrunt
 	Death.StrifeMauler:
 		"####" "#" 0 A_GiveToTarget("KillCount",1)
 		"####" "#" 0 A_NoBlocking
+		"####" "#" 0 A_ChangeFlag("DONTCORPSE",1)
 		"####" "#" 0 A_ChangeFlag("DONTGIB",1)
 		"####" "#" 0 ACS_NamedExecuteAlways("ExtraDeathFX",0,1)
 		"####" "#" 0 A_Scream
@@ -1101,6 +1104,8 @@ ACTOR FriendlyLowGuard
 		SKEX V -1 A_Fall
 		Stop
 	Death.RottDisintegrate:
+		TNT1 A 0 A_ChangeFlag("DONTCORPSE",1)
+		TNT1 A 0 A_ChangeFlag("DONTGIB",1)
 		TNT1 A 0 A_ChangeFlag("SOLID", 0)
 		TNT1 A 0 A_Scream
 		TNT1 A 0 A_SpawnItem("RGodModeDeath")
@@ -1109,6 +1114,7 @@ ACTOR FriendlyLowGuard
 	Death.StrifeMauler:
 		TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_ChangeFlag("DONTCORPSE",1)
 		TNT1 A 0 A_ChangeFlag("DONTGIB",1)
 		TNT1 A 0 A_SpawnItemEx("LowGuardDisintegrate",0,0,5,0,0,0,0,32)
 		TNT1 A 1 A_PlayerScream
