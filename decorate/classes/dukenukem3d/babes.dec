@@ -115,7 +115,7 @@ Actor Duke3DStreetBabe : SamsaraMiscCharHumanoidFemaleDynamicTotalGib
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Basic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -133,7 +133,7 @@ Actor Duke3DStreetBabe : SamsaraMiscCharHumanoidFemaleDynamicTotalGib
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Coop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -1352,29 +1352,11 @@ Actor Duke3DStripper : SamsaraMiscCharHumanoidFemaleDynamicTotalGib
 			Stop
 
 		// SamsaraMiscCharHumanoidFemaleDynamicTotalGib states
-		Death.ExpanderDMG:
-		XDeath.ExpanderDMG:
-			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
-			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
-			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
-			"####" "#" 0 A_PlaySound("duke/expand")
-			Goto ExpanderLoop
-		ExpanderLoop:
-			"####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
-			"####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
-			"####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
-			"####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPop")
-			Loop
 		ExpanderPop:
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Basic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -1388,29 +1370,11 @@ Actor Duke3DStripper : SamsaraMiscCharHumanoidFemaleDynamicTotalGib
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
-		Death.ExpanderDMGCoop:
-		XDeath.ExpanderDMGCoop:
-			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
-			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
-			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
-			"####" "#" 0 A_PlaySound("duke/expand")
-			Goto ExpanderLoopCoop
-		ExpanderLoopCoop:
-			"####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
-			"####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
-			"####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
-			"####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPopCoop")
-			Loop
 		ExpanderPopCoop:
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Coop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -2729,29 +2693,11 @@ Actor Duke3DBeachBather : SamsaraMiscCharHumanoidFemaleDynamicTotalGib
 			Stop
 
 		// SamsaraMiscCharHumanoidFemaleDynamicTotalGib states
-		Death.ExpanderDMG:
-		XDeath.ExpanderDMG:
-			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
-			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
-			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
-			"####" "#" 0 A_PlaySound("duke/expand")
-			Goto ExpanderLoop
-		ExpanderLoop:
-			"####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
-			"####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
-			"####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
-			"####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPop")
-			Loop
 		ExpanderPop:
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Basic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -2765,29 +2711,11 @@ Actor Duke3DBeachBather : SamsaraMiscCharHumanoidFemaleDynamicTotalGib
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
-		Death.ExpanderDMGCoop:
-		XDeath.ExpanderDMGCoop:
-			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
-			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
-			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
-			"####" "#" 0 A_PlaySound("duke/expand")
-			Goto ExpanderLoopCoop
-		ExpanderLoopCoop:
-			"####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
-			"####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
-			"####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
-			"####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPopCoop")
-			Loop
 		ExpanderPopCoop:
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Coop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -3069,29 +2997,11 @@ Actor Duke3DBeachBabe : SamsaraMiscCharHumanoidFemaleStaticTotalGib
 			Stop
 
 		// SamsaraMiscCharHumanoidFemaleStaticTotalGib states
-		Death.ExpanderDMG:
-		XDeath.ExpanderDMG:
-			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
-			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
-			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
-			"####" "#" 0 A_PlaySound("duke/expand")
-			Goto ExpanderLoop
-		ExpanderLoop:
-			"####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
-			"####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
-			"####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
-			"####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPop")
-			Loop
 		ExpanderPop:
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Basic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
@@ -3105,29 +3015,11 @@ Actor Duke3DBeachBabe : SamsaraMiscCharHumanoidFemaleStaticTotalGib
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt",1)
 			TNT1 A -1 ACS_NamedExecuteWithResult("SamsaraBossDeathToggler")
 			Stop
-		Death.ExpanderDMGCoop:
-		XDeath.ExpanderDMGCoop:
-			"####" "#" 0 ACS_NamedExecuteWithResult("SamsaraActorStopSound")
-			"####" "#" 0 A_ChangeFlag("DONTGIB",1)
-			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scalexoriginal", scalex*65536.0)
-			"####" "#" 0 A_SetUserVar("user_scaleyoriginal", scaley*65536.0)
-			"####" "#" 0 A_PlaySound("duke/expand")
-			Goto ExpanderLoopCoop
-		ExpanderLoopCoop:
-			"####" "#" 1 A_SetScale(1.1*(user_scalex/65536.0)+((0.01*(user_scalex/65536.0))*CallACS("Samsara_Expander",1))+((0.01*(user_scalex/65536.0))*(CallACS("Samsara_Expander",1)-CallACS("Samsara_Expander",2)))*(CallACS("Samsara_Expander",3)*2),1.1*(user_scaley/65536.0)+((0.01*(user_scaley/65536.0))*CallACS("Samsara_Expander",2)))
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthX", 1)
-			"####" "#" 0 A_JumpIf(ceilingz - (z + height + CallACS("Samsara_Expander",1) + 32) <= 0, 2)
-			"####" "#" 0 A_GiveInventory("ExpanderGrowthY", 1)
-			"####" "#" 0 A_GiveInventory("ExpanderDoubleX", 1)
-			"####" "#" 0 A_JumpIfInventory("ExpanderGrowthX", 40, "ExpanderPopCoop")
-			Loop
 		ExpanderPopCoop:
 			"####" "#" 10
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
 			TNT1 A 0 A_SpawnItemEx("ExpanderExplosion_Coop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-			TNT1 A 0 A_PlaySound("duke/explosion", 6, 1.0)
+			TNT1 A 0 A_PlaySound("duke/explosion", CHAN_6, 1.0)
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraDecorate",36,1)
 			TNT1 A 0 A_Jump(96,2)
 			TNT1 A 0 A_GiveToTarget("DukeGibTaunt", 1)
