@@ -1,18 +1,16 @@
-Actor " Hunting Rifle With Scope " : Weapon
+Actor " Hunting Rifle With Scope " : RRWeapon
 {
 	Inventory.PickupMessage "Hunting Rifle"
 	Inventory.PickupSound "RR/Wpickup"
 	Weapon.SelectionOrder 1600
 	Weapon.SlotNumber 8
-	Weapon.BobRangeX 0.75
-	Weapon.BobRangeY 0.95
-	Weapon.BobSpeed 1.1
 	Weapon.SlotPriority 8
+	Weapon.UpSound "Leonard/PistolR"
 	Weapon.AmmoType "Clip"
 	Weapon.AmmoUse 5
 	Weapon.AmmoGive 25
 	Obituary "%o became one of %k's trophies."
-	Tag "Hunting Rifle with Scope"
+	Tag "Huntin' Rifle"
 	Inventory.RestrictedTo "Leonard"
 	+Weapon.NoAlert
 	States
@@ -20,31 +18,25 @@ Actor " Hunting Rifle With Scope " : Weapon
 		Spawn:
 			R_HC J -1 Bright
 			Stop
-
 		Select:
             TNT1 A 0 A_JumpIfInventory("RZoomed",1,1)
             goto SelectStart
             TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT) // map change
             TNT1 A 0 A_TakeInventory("RZoomed")
             goto SelectStart
-
         SelectStart:
-			TNT1 A 0 A_Raise
-			R_HC A 1 A_Raise
-			goto Select
-
+			R_HC G 0
+			Goto Super::Select
 		Deselect:
 			TNT1 A 0 A_JumpIfInventory("RZoomed",1,"ZoomDeselect")
-			TNT1 A 0 A_Lower
-			R_HC A 1 A_Lower
-			Goto Deselect+1
+			R_HC G 0
+			Goto Super::Deselect
 		ZoomDeselect:
 			TNT1 A 0 A_TakeInventory("RZoomed",2)
 			TNT1 A 0 A_ZoomFactor(1.0)
 			R_HC BBGG 1 A_Lower
-			TNT1 A 0 A_Lower
-			R_CH A 1 A_Lower
-			Goto ZoomDeselect+6
+			R_HC G 0
+			Goto Super::Deselect
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
 			Goto SetSoberView
@@ -167,20 +159,17 @@ Actor RRBullet5 : RRBullet1 { Damage (200-random(50,0)) DamageType "LeonardDamag
 Actor RZoomed : Counter { Inventory.MaxAmount 2 }
 Actor IMUSTRELOADTHISRIFLEx : Boolean {}
 
-Actor " Chicken Crossbow " : Weapon
+Actor " Chicken Crossbow " : RRWeapon
 {
 	Inventory.PickupMessage "Chicken Crossbow"
 	Inventory.PickupSound "RR/Wpickup"
 	Weapon.SelectionOrder 2500
-	Weapon.BobRangeX 0.75
-	Weapon.BobRangeY 0.95
-	Weapon.BobSpeed 1.1	
 	Weapon.SlotNumber 2
 	Weapon.SlotPriority 2
+	Weapon.UpSound "Leonard/PistolR"
 	Weapon.AmmoType "ChickenAmmo"
 	Weapon.AmmoUse 1
 	Weapon.AmmoGive 5
-	Obituary "%o didn't expect %k's cock... :^)"
 	Inventory.RestrictedTo "Leonard"
 	Tag "Chicken Crossbow"
     +AMMO_OPTIONAL
@@ -194,23 +183,19 @@ Actor " Chicken Crossbow " : Weapon
 		Select:
 			TNT1 A 0 A_JumpIfnoAmmo("SelectAmmoLess")  
 		SelectLoop:
-			TNT1 A 0 A_Raise
-			CH_R A 1 A_Raise
-			Loop
+			CH_R A 0
+			Goto Super::Select
 		SelectAmmoLess:
-			TNT1 A 0 A_Raise
-			CH_R C 1 A_Raise
-			Loop
+			CH_R C 0
+			Goto Super::Select
 		Deselect:
 			TNT1 A 0 A_JumpIfnoAmmo("DeselectAmmoLess")
 		DeselectLoop:
-			TNT1 A 0 A_Lower
-			CH_R A 1 A_Lower
-			Loop
+			CH_R A 0
+			Goto Super::Deselect
 		DeselectAmmoLess:
-			TNT1 A 0 A_Lower
-			CH_R C 1 A_Lower
-			Loop
+			CH_R C 0
+			Goto Super::Deselect
 		Ready:
 			TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
 			Goto SetSoberView
@@ -357,6 +342,7 @@ Actor RRCHICKENBOMB
 	+SEEKERMISSILE
 	+SCREENSEEKER
 	DamageType "LeonardDamage2"
+	Obituary "%o tried to play chicken with %k."
 	States
 	{
 	  Spawn:

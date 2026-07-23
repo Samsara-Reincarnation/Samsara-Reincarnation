@@ -1,32 +1,28 @@
-Actor " Alien Arm Cannon " : Weapon
+Actor " Alien Arm Cannon " : RRWeapon
 {
   Inventory.PickupMessage "Alien Arm Cannon"
   Inventory.PickupSound "RR/Wpickup"
   Weapon.SelectionOrder 700
-  Weapon.BobRangeX 0.75
-  Weapon.BobRangeY 0.95
-  Weapon.BobSpeed 1.1 
   Weapon.SlotNumber 7  
-  Weapon.SlotPriority 7    
+  Weapon.SlotPriority 7
+  Weapon.UpSound "Leonard/PistolR"
   Weapon.AmmoUse 10
   Weapon.AmmoGive 40
   Weapon.AmmoType "Cell"
   +WEAPON.BFG
   Inventory.RestrictedTo "Leonard"
-  Tag "Alien Arm Cannon"
+  Tag "Alien Arm Gun"
   States
   {
 	Spawn:
 		R_HA K -1 Bright
 		Stop
 	Deselect:
-		TNT1 A 0 A_Lower
-		R_HA A 1 A_Lower
-		Loop
+		R_HA A 0
+		Goto Super::Deselect
 	Select:
-		TNT1 A 0 A_Raise
-		R_HA A 1 A_Raise
-		Loop
+		R_HA A 0
+		Goto Super::Select
 	Ready:
 		TNT1 A 0 A_JumpIfInventory("RRDrunkToken", 1, "SetDrunkView")
 		Goto SetSoberView
@@ -112,6 +108,7 @@ Actor AlienHulkPlasmashot
 	+MISSILE
 	PROJECTILE
     DamageType "LeonardDamage3"	
+	Obituary "%o was crispified by %k."
 	states
 	{
 	  Spawn:
