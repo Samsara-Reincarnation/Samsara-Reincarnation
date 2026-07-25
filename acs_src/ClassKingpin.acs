@@ -629,6 +629,7 @@ Script "Kingpin_BulletDamage" (void)
 	int bulletX = GetActorX(0);
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 	int damage = ACS_NamedExecuteWithResult("Kingpin_DetermineBulletDamage");
 	SetActivator(0,AAPTR_Tracer);
 	int monsterX = GetActorX(0);
@@ -646,7 +647,11 @@ Script "Kingpin_BulletDamage" (void)
 	else
 		PlaySound(0,"RTCW/BulletHitFlesh",CHAN_6,0.5,0,ATTN_NORM);*/
 
-	if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
+	if (health >= 1000)
+	{
+		SetResultValue(damage);
+	}
+	else if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
 	{
 		int monsterAngle = GetActorAngle(0);
 		int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);

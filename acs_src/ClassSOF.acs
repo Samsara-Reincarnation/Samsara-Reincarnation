@@ -595,10 +595,15 @@ Script "SoF_BulletDamage" (int damage)
 	int monsterHeight = GetActorProperty(0,APROP_Height);
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
 	int monsterAngle, vang, angle;
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 
 	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
 
-	if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
+	if (health >= 1000)
+	{
+		SetResultValue(damage);
+	}
+	else if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
 	{
 		monsterAngle = GetActorAngle(0);
 		vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
@@ -606,14 +611,14 @@ Script "SoF_BulletDamage" (int damage)
 				
 		if(!CheckInventory("SoF_PerformedHeadShot") && !CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
 		{
-			if(bulletType != 2 && monsterHealth - (damage*3) <= -damage*2)
+			if(bulletType != 2 && monsterHealth - (damage*2) <= -damage)
 			{
 				SoF_HitDamageBrutalityBonus(0);
 				GiveInventory("SoF_PerformedHeadShot",1);
 				GiveInventory("SoF_BloodHeadshotGenerator",1);
 			}
 		
-			SetResultValue(damage + (2 * damage * !CheckInventory("SoF_IsDeathGibber")));
+			SetResultValue(2 * damage * !CheckInventory("SoF_IsDeathGibber"));
 		}
 		else
 		{
@@ -627,7 +632,7 @@ Script "SoF_BulletDamage" (int damage)
 	{
 		if(bulletZ > monsterZ + FixedMul(monsterHeight,0.75))
 		{
-			if(bulletType != 2 && !CheckInventory("SoF_PerformedHeadShot") && monsterHealth - (damage*3) <= -damage*2)
+			if(bulletType != 2 && !CheckInventory("SoF_PerformedHeadShot") && monsterHealth - (damage*2) <= -damage)
 			{
 				SoF_HitDamageBrutalityBonus(0);
 				GiveInventory("SoF_PerformedHeadShot",1);
@@ -649,7 +654,7 @@ Script "SoF_BulletDamage" (int damage)
 				//GiveInventory("RTCW_RemoveHat",1);
 				
 			
-			SetResultValue(damage + (2 * damage * !CheckInventory("SoF_IsDeathGibber")));
+			SetResultValue(2 * damage * !CheckInventory("SoF_IsDeathGibber"));
 		}
 		else if(bulletType == 1 || bulletType == 3)
 		{
