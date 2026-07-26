@@ -190,12 +190,12 @@ Script "Kingpin_Player" (void)
 			SetInventory("Kingpin_ResetPlayerAction",0);
 		} 
 		//Jumping
-		else if(!CheckInventory("Kingpin_ShootToken") && (GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP) && !CheckInventory("Kingpin_PlayerJumping"))
+		else if((GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP) && !CheckInventory("Kingpin_PlayerJumping"))
 		{
 			if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 4)
 			{
 				currentplayeraction = 4;
-				SetActorState(0,strparam(s:"Jump",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetActorState(0,strparam(s:"Jump",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 		}
@@ -214,20 +214,20 @@ Script "Kingpin_Player" (void)
 				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 9)
 				{
 					currentplayeraction = 9;
-					SetActorState(0,strparam(s:"CrouchWalk",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetActorState(0,strparam(s:"CrouchWalk",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 				}
 			}
 			else if(CheckInventory("Kingpin_ShootToken") && currentplayeraction != 10)
 			{
 				currentplayeraction = 10;
-				SetActorState(0,strparam(s:"CrouchShoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetActorState(0,strparam(s:"CrouchShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 			else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 8) && !CheckInventory("Kingpin_ShootToken"))
 			{
 				currentplayeraction = 8;
-				SetActorState(0,strparam(s:"Crouch",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetActorState(0,strparam(s:"Crouch",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 		}
@@ -241,7 +241,7 @@ Script "Kingpin_Player" (void)
 			}
 			
 			//If the player is moving more forward than to the left or right, do this
-			if(GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0 && GetPlayerInput(-1,MODINPUT_FORWARDMOVE) > abs(GetPlayerInput(-1,MODINPUT_SIDEMOVE)))
+			if(GetPlayerInput(-1,MODINPUT_FORWARDMOVE) != 0 && abs(GetPlayerInput(-1,MODINPUT_FORWARDMOVE)) > abs(GetPlayerInput(-1,MODINPUT_SIDEMOVE)))
 			{
 				if(sqrt(velX*velX + velY*velY)<<16 >= 8.0)
 				{
@@ -249,7 +249,7 @@ Script "Kingpin_Player" (void)
 					if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != actionValue)
 					{
 						currentplayeraction = actionValue;
-						SetActorState(0,strparam(s:actionValue == 1 ? "See" : "RunShoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+						SetActorState(0,strparam(s:actionValue == 1 ? "See" : "RunShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 						SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 					}
 				}
@@ -259,7 +259,7 @@ Script "Kingpin_Player" (void)
 					if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != actionValue)
 					{
 						currentplayeraction = actionValue;
-						SetActorState(0,strparam(s:actionValue == 5 ? "Walk" : "WalkShoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+						SetActorState(0,strparam(s:actionValue == 5 ? "Walk" : "WalkShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 						SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 					}
 				}
@@ -270,7 +270,7 @@ Script "Kingpin_Player" (void)
 				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 3)
 				{
 					currentplayeraction = 3;
-					SetActorState(0,strparam(s:"StrafeLeft",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetActorState(0,strparam(s:"StrafeLeft",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 				}
 			}
@@ -279,21 +279,21 @@ Script "Kingpin_Player" (void)
 				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 2)
 				{
 					currentplayeraction = 2;
-					SetActorState(0,strparam(s:"StrafeRight",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetActorState(0,strparam(s:"StrafeRight",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 				}
 			}
 		}
-		else if(CheckInventory("Kingpin_ShootToken") && currentplayeraction != 6)
+		else if(CheckInventory("Kingpin_ShootToken") && !CheckInventory("Kingpin_PlayerJumping") && currentplayeraction != 6)
 		{
 			currentplayeraction = 6;
-			SetActorState(0,strparam(s:"Shoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+			SetActorState(0,strparam(s:"Shoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 			SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 		}
 		else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 0) && !CheckInventory("Kingpin_PlayerJumping") && !CheckInventory("Kingpin_ShootToken"))
 		{
 			currentplayeraction = 0;
-			SetActorState(0,strparam(s:"Spawn",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+			SetActorState(0,strparam(s:"Spawn",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 			SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 		}
 		
@@ -761,7 +761,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 
 	int breakloop;
 	int pawnOpen;
-	int simTimer;
+	int cigarAnimator;
 	int currentMenu = 1;
 	int currentMenuItem = 0;
 	int lastMenu = 1;
@@ -773,7 +773,6 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 	int selectedItemOpen;
 	int scrollingItem;
 	int modSelected;
-	int a;
 	while(CheckInventory("Kingpin_PawnOMaticOpen"))
 	{
 		int playerInputX = GetPlayerInput(-1,INPUT_SIDEMOVE);
@@ -781,13 +780,14 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 		int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
 		int oldbuttons = GetPlayerInput(-1,INPUT_OLDBUTTONS);
 		int useKey = (buttons & BT_USE) && !(oldbuttons & BT_USE);
-		simTimer = timer();
-		SetFont(strparam(s:"KPSTOR",d:((simTimer%100)/5)+1));
+		cigarAnimator = ((timer()%116)/2)+1;
+		SetFont("KPSTORE");
 		SetHudSize(1200,800,1);
-		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,60,CR_UNTRANSLATED,600.0,400.0,0.0);
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,61,CR_UNTRANSLATED,600.0,400.0,0.0);
+		SetFont(strparam(s:"KPCIGR",s:cigarAnimator < 10 ? "0" : "",d:cigarAnimator));
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,60,CR_UNTRANSLATED,576.0,480.0,0.0);
 		SetFont("KPLITOFF");
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,59,CR_UNTRANSLATED,600.0,400.0,0.0);
-		lastMenu = currentMenu;
 		
 		if(lastInputTimer >= maxInputDelay && !scrollingItem)
 		{		
@@ -805,8 +805,8 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 					if(playerInputY > 0) currentMenuItem++;
 					else if(playerInputY < 0) currentMenuItem--;
 					
-					if(currentMenuItem < 1) currentMenuItem = 8;
-					if(currentMenuItem > 8) currentMenuItem = 1;
+					if(currentMenuItem < 1) currentMenuItem = 4;
+					if(currentMenuItem > 4) currentMenuItem = 1;
 				}	
 				lastInputTimer = 0;
 				if(modSelected > 0)
@@ -946,8 +946,11 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net Clientside
 		Delay(1);
 	}
 	
+	// Play the exit sound and stop other noises
 	PlaySound(sTid,"PawnOMAtic/Exit",CHAN_VOICE,1.0,0,ATTN_NONE);
+	StopSound(sTid,CHAN_5);
+	StopSound(sTid,CHAN_6);
 	Thing_Remove(sTid);
 	SetInventory("Kingpin_PawnOMaticSoundTid",0);
-	RemoveMessages(50,60);
+	RemoveMessages(50,61);
 }
