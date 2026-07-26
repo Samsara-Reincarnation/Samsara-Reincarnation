@@ -195,7 +195,7 @@ Script "Kingpin_Player" (void)
 			if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 4)
 			{
 				currentplayeraction = 4;
-				SetActorState(0,strparam(s:"Jump",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetActorState(0,strparam(s:"Jump",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 		}
@@ -214,20 +214,20 @@ Script "Kingpin_Player" (void)
 				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 9)
 				{
 					currentplayeraction = 9;
-					SetActorState(0,strparam(s:"CrouchWalk",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetActorState(0,strparam(s:"CrouchWalk",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 				}
 			}
 			else if(CheckInventory("Kingpin_ShootToken") && currentplayeraction != 10)
 			{
 				currentplayeraction = 10;
-				SetActorState(0,strparam(s:"CrouchShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetActorState(0,strparam(s:"CrouchShoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 			else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 8) && !CheckInventory("Kingpin_ShootToken"))
 			{
 				currentplayeraction = 8;
-				SetActorState(0,strparam(s:"Crouch",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+				SetActorState(0,strparam(s:"Crouch",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 				SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 			}
 		}
@@ -249,7 +249,7 @@ Script "Kingpin_Player" (void)
 					if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != actionValue)
 					{
 						currentplayeraction = actionValue;
-						SetActorState(0,strparam(s:actionValue == 1 ? "See" : "RunShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+						SetActorState(0,strparam(s:actionValue == 1 ? "See" : "RunShoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 						SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 					}
 				}
@@ -259,7 +259,7 @@ Script "Kingpin_Player" (void)
 					if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != actionValue)
 					{
 						currentplayeraction = actionValue;
-						SetActorState(0,strparam(s:actionValue == 5 ? "Walk" : "WalkShoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+						SetActorState(0,strparam(s:actionValue == 5 ? "Walk" : "WalkShoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 						SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 					}
 				}
@@ -270,7 +270,7 @@ Script "Kingpin_Player" (void)
 				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 3)
 				{
 					currentplayeraction = 3;
-					SetActorState(0,strparam(s:"StrafeLeft",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetActorState(0,strparam(s:"StrafeLeft",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 				}
 			}
@@ -279,7 +279,7 @@ Script "Kingpin_Player" (void)
 				if(CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 2)
 				{
 					currentplayeraction = 2;
-					SetActorState(0,strparam(s:"StrafeRight",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+					SetActorState(0,strparam(s:"StrafeRight",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 					SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 				}
 			}
@@ -287,13 +287,13 @@ Script "Kingpin_Player" (void)
 		else if(CheckInventory("Kingpin_ShootToken") && !CheckInventory("Kingpin_PlayerJumping") && currentplayeraction != 6)
 		{
 			currentplayeraction = 6;
-			SetActorState(0,strparam(s:"Shoot",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+			SetActorState(0,strparam(s:"Shoot",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 			SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 		}
 		else if((CheckInventory("Kingpin_SelectedWeapon") != CheckInventory("Kingpin_LastWeapon") || currentplayeraction != 0) && !CheckInventory("Kingpin_PlayerJumping") && !CheckInventory("Kingpin_ShootToken"))
 		{
 			currentplayeraction = 0;
-			SetActorState(0,strparam(s:"Spawn",s:stateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
+			SetActorState(0,strparam(s:"Spawn",s:KingpinStateNames[CheckInventory("Kingpin_SelectedWeapon")]),true);
 			SetInventory("Kingpin_LastWeapon",CheckInventory("Kingpin_SelectedWeapon"));
 		}
 		
