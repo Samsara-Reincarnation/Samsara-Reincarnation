@@ -615,11 +615,14 @@ function int SamsaraOST_AmbientReseed (int type, int themeseed)
 		case 28: 
 			switch(themeseed)
 			{
-				case 2: case 3: case 4: case 5: case 10: case 11: case 12: case 13: case 17: case 18: case 20: case 22: return random(0,1);
+				default: return 0;
+				case 2: case 3: case 4: case 5: case 10: case 11: case 12: case 13: case 17: case 18: case 20: case 22: 
+					return random(0,1); break;
 			}
 			break;
 		case 33: 
 			if(themeseed == 14) return random(0,1);
+			else return 0;
 			break;
 	}
 	return 0;
@@ -768,16 +771,14 @@ Script "SamsaraOST_AmbientFightScriptedMusic" (int type)
 
 						if(laststate == 1)
 						{
-							songseed = SamsaraOST_AmbientReseed(type, themeseed);
 							LocalSetMusic(strparam(s:gameMusicTypes[type][0][songseed],s:themeseed < 10 ? "0" : "",d:themeseed),0);
-						}
+							
 						laststate = 0;
 					}
 				}
 				else
 				{
 					SetMusicVolume(targetmusicvolume);
-					songseed = SamsaraOST_AmbientReseed(type, themeseed);
 					LocalSetMusic(strparam(s:gameMusicTypes[type][0][songseed],s:themeseed < 10 ? "0" : "",d:themeseed),0);
 				}
 			}
