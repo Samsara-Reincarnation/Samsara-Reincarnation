@@ -197,7 +197,7 @@ Script "SoF_HandleLean" (void)
 			{
 				SetInventory("SoF_Leaning",1);
 				SetPlayerProperty(0,1,PROP_FROZEN);
-				Thing_Stop(0);
+				SetActorVelocity(0,0,0,GetActorVelZ(0),0,0);
 				if(leanCounter > -8)
 				{
 					leanCounter--;
@@ -208,7 +208,7 @@ Script "SoF_HandleLean" (void)
 			{
 				SetInventory("SoF_Leaning",2);
 				SetPlayerProperty(0,1,PROP_FROZEN);
-				Thing_Stop(0);
+				SetActorVelocity(0,0,0,GetActorVelZ(0),0,0);
 				if(leanCounter < 8)
 				{
 					leanCounter++;
@@ -399,7 +399,7 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
 			break;
 		case 14:
 			SetActivator(0,AAPTR_TRACER);
-			if((CheckActorState(0,"SoFMPGLaserExpand",true) && CheckInventory("SoF_MPG_InflationCounter") < 30) && (ClassifyActor(0) & ACTOR_ALIVE))
+			if((CheckInventory("SoF_MPG_InflationCounter") < 30) && (ClassifyActor(0) & ACTOR_ALIVE))
 			{
 				SetActorState(0,"SoFMPGLaserExpand",true);
 				SetResultValue(0);
