@@ -44,7 +44,39 @@ Script "SoF_Player" (void)
 	}
 }
 
-Script "SoF_DrawBrutality" (int type, int reward, int brutalityCounter) clientside
+// This should help route actual server side information to the client
+Script "SoF_DrawBrutality" (int type, int reward, int brutalityCounter)
+{
+	switch(type)
+		{
+			case 0:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_BulletSpongeMultiplier"));
+				break;
+			case 1:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_LengTcheMultiplier"));
+				break;
+			case 2:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_AlexMurphyMultiplier"));
+				break;
+			case 3:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_TheJuicerMultiplier"));
+				break;
+			case 4:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_TheEvisceratorMultiplier"));
+				break;
+			case 5:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_MelonPopperMultiplier"));
+				break;
+			case 6:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_TVDinnerMultiplier"));
+				break;
+			case 7:
+				ACS_NamedExecuteWithResult("SoF_DrawBrutalityClient",type,reward,brutalityCounter,CheckInventory("SoF_RoastedMultiplier"));
+				break;
+		}
+}
+
+Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, int multiplier) clientside
 {
 	SetHudSize(640,400,0);
 	str primaryReward = "";
@@ -55,57 +87,57 @@ Script "SoF_DrawBrutality" (int type, int reward, int brutalityCounter) clientsi
 		case 0:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_BulletSpongeMultiplier"),s:"\c- Ammo 1");
-				secondaryReward = CheckInventory("SoF_BulletSpongeMultiplier") >= 5 ? strParam(s:", \cf",d:CheckInventory("SoF_BulletSpongeMultiplier")/5,s:"\c- Armor") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 1");
+				secondaryReward = multiplier >= 5 ? strParam(s:", \cf",d:multiplier/5,s:"\c- Armor") : "";
 			}
 			break;
 		case 1:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_LengTcheMultiplier"),s:"\c- Health");
-				secondaryReward = CheckInventory("SoF_LengTcheMultiplier") >= 20 ? strParam(s:", \cf",d:1,s:"\c- Knife") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Health");
+				secondaryReward = multiplier >= 20 ? strParam(s:", \cf",d:1,s:"\c- Knife") : "";
 			}
 			break;
 		case 2:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_AlexMurphyMultiplier"),s:"\c- Ammo 1");
-				secondaryReward = CheckInventory("SoF_AlexMurphyMultiplier") >= 2 ? strParam(s:", \cf",d:CheckInventory("SoF_AlexMurphyMultiplier")/5,s:"\c- Ammo 2") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 1");
+				secondaryReward = multiplier >= 2 ? strParam(s:", \cf",d:multiplier/5,s:"\c- Ammo 2") : "";
 			}
 			break;
 		case 3:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_TheJuicerMultiplier"),s:"\c- Armor");
-				secondaryReward = CheckInventory("SoF_TheJuicerMultiplier") >= 4 ? strParam(s:", \cf",d:CheckInventory("SoF_TheJuicerMultiplier")/4,s:"\c- Ammo 3") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Armor");
+				secondaryReward = multiplier >= 4 ? strParam(s:", \cf",d:multiplier/4,s:"\c- Ammo 3") : "";
 			}
 			break;
 		case 4:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_TheEvisceratorMultiplier"),s:"\c- Health");
-				secondaryReward = strParam(s:", \cf",d:CheckInventory("SoF_TheEvisceratorMultiplier"),s:"\c- Armor");
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Health");
+				secondaryReward = strParam(s:", \cf",d:multiplier,s:"\c- Armor");
 			}
 			break;
 		case 5:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_MelonPopperMultiplier"),s:"\c- Armor");
-				secondaryReward = CheckInventory("SoF_MelonPopperMultiplier") >= 10 ? strParam(s:", \cf",d:5,s:"\c- Ammo 2") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Armor");
+				secondaryReward = multiplier >= 10 ? strParam(s:", \cf",d:5,s:"\c- Ammo 2") : "";
 			}
 			break;
 		case 6:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_TVDinnerMultiplier"),s:"\c- Ammo 4");
-				secondaryReward = CheckInventory("SoF_TVDinnerMultiplier") >= 4 ? strParam(s:", \cf",d:CheckInventory("SoF_TVDinnerMultiplier")/4,s:"\c- Health") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 4");
+				secondaryReward = multiplier >= 4 ? strParam(s:", \cf",d:multiplier/4,s:"\c- Health") : "";
 			}
 			break;
 		case 7:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:CheckInventory("SoF_RoastedMultiplier"),s:"\c- Ammo 4");
-				secondaryReward = CheckInventory("SoF_RoastedMultiplier") >= 10 ? strParam(s:", \cf",d:CheckInventory("SoF_RoastedMultiplier")/10,s:"\c- Ammo 3") : "";
+				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 4");
+				secondaryReward = multiplier >= 10 ? strParam(s:", \cf",d:multiplier/10,s:"\c- Ammo 3") : "";
 			}
 			break;
 	}
