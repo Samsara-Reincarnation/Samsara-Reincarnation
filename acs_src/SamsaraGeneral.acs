@@ -7200,42 +7200,18 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_SUPERSHOTGUN:
-            hasweapon = CheckInventory("Grenade Launcher") || CheckInventory("Q1Widowmaker");
-
-            if (loadoutchoice <= 0 || completeloadout) // Grenade Launcher
+            if (!CheckInventory("Grenade Launcher"))
             {
-                if (!hasweapon)
-                {
-                    GiveInventory("Grenade Launcher", 1);
-                    if (!GetCVar("samsara_vanillaquake")) { GiveInventory("Grenade Launcher DOE", 1); }
-                    GiveInventory("RocketAmmo", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
-                    result = 1;
-                } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("RocketAmmo", 5 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2)
-                {
-                    GiveInventory("RocketAmmo", GetAmmoCapacity("RocketAmmo"));
-                    if (startmode <= -1 && !GetCVar("samsara_vanillaquake")) { GiveInventory("MultiRocketAmmo", GetAmmoCapacity("MultiRocketAmmo")); }
-                }
+                GiveInventory("Grenade Launcher", 1);
+                if (!GetCVar("samsara_vanillaquake")) { GiveInventory("Grenade Launcher DOE", 1); }
+                result = 1;
+            } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                GiveInventory("Grenade Launcher", 1);
+                if (!GetCVar("samsara_vanillaquake")) { GiveInventory("Grenade Launcher DOE", 1); }
+                result = 1;
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Widowmaker
-            {
-                if (!hasweapon)
-                {
-                    GiveInventory("Q1Widowmaker", 1);
-                    GiveInventory("Shell", dmextraammo ? 16 / tossedammo * 5 / 2 : 16 / tossedammo);
-                    result = 1;
-                } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("Shell", 16 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
-            }
+            if (startmode <= -1 && !GetCVar("samsara_vanillaquake")) { GiveInventory("MultiRocketAmmo", GetAmmoCapacity("MultiRocketAmmo")); }
             break;
 
           case SLOT_CHAINGUN:
