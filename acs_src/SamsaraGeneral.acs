@@ -2569,6 +2569,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("TOZT-7 Napalm Unit", INTMAX);
 			TakeInventory("SPNKR-25 Auto Cannon", INTMAX);
 			TakeInventory("ONI-71 Wave Motion Cannon", INTMAX);
+			TakeInventory("Mercury Class Fusion Rifle", INTMAX);
+			TakeInventory("MCFRFireRateThing", INTMAX);
 			TakeInventory("Alien Weapon", INTMAX);
 			TakeInventory(" Alien Weapon ", INTMAX);
 			TakeInventory("Talon Ceramic Combat Blade", INTMAX);
@@ -2606,6 +2608,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("Laser Cannon", INTMAX);
 			TakeInventory("Nailgun", INTMAX);
 			TakeInventory("Nailgun DOE", INTMAX);
+			TakeInventory("Q1AssaultCannon", INTMAX);
+            SetInventory("AC_FiredOnce", 0);
 			TakeInventory("QuadDamageItem", INTMAX);
 			TakeInventory("Thunderbolt", INTMAX);
 			TakeInventory("Thunderbolt DOE", INTMAX);
@@ -4517,11 +4521,6 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_CHAINSAW:
             if (startmode != 0) { loadoutchoice = GetCVar("samsara_ranger_slot1") > 0 ? GetCVar("samsara_ranger_slot1") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot1"); }
             else { loadoutchoice = CheckInventory("SamsaraQuake1LoadoutSlot1"); }
-            break;
-
-          case SLOT_SUPERSHOTGUN:
-            if (startmode != 0) { loadoutchoice = GetCVar("samsara_ranger_slot3") > 0 ? GetCVar("samsara_ranger_slot3") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot3"); }
-            else { loadoutchoice = CheckInventory("SamsaraQuake1LoadoutSlot3"); }
             break;
         }
         break;
@@ -7166,6 +7165,18 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 result = 1;
             }
             break;
+
+          case SLOT_BFG10K:
+            if (!CheckInventory("Mercury Class Fusion Rifle"))
+            {
+                GiveInventory("Mercury Class Fusion Rifle", 1);
+                GiveInventory("Cell", dmextraammo ? 20 * 5 / 2 : 20);
+                result = 1;
+            } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                GiveInventory("Cell", 20);
+                result = 1;
+            }
+            break;
         }
         break;
 
@@ -7205,42 +7216,18 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_SUPERSHOTGUN:
-            hasweapon = CheckInventory("Grenade Launcher") || CheckInventory("Q1Widowmaker");
-
-            if (loadoutchoice <= 0 || completeloadout) // Grenade Launcher
+            if (!CheckInventory("Grenade Launcher"))
             {
-                if (!hasweapon)
-                {
-                    GiveInventory("Grenade Launcher", 1);
-                    if (!GetCVar("samsara_vanillaquake")) { GiveInventory("Grenade Launcher DOE", 1); }
-                    GiveInventory("RocketAmmo", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
-                    result = 1;
-                } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("RocketAmmo", 5 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2)
-                {
-                    GiveInventory("RocketAmmo", GetAmmoCapacity("RocketAmmo"));
-                    if (startmode <= -1 && !GetCVar("samsara_vanillaquake")) { GiveInventory("MultiRocketAmmo", GetAmmoCapacity("MultiRocketAmmo")); }
-                }
+                GiveInventory("Grenade Launcher", 1);
+                if (!GetCVar("samsara_vanillaquake")) { GiveInventory("Grenade Launcher DOE", 1); }
+                result = 1;
+            } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                GiveInventory("Grenade Launcher", 1);
+                if (!GetCVar("samsara_vanillaquake")) { GiveInventory("Grenade Launcher DOE", 1); }
+                result = 1;
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Widowmaker
-            {
-                if (!hasweapon)
-                {
-                    GiveInventory("Q1Widowmaker", 1);
-                    GiveInventory("Shell", dmextraammo ? 16 / tossedammo * 5 / 2 : 16 / tossedammo);
-                    result = 1;
-                } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("Shell", 16 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
-            }
+            if (startmode <= -1 && !GetCVar("samsara_vanillaquake")) { GiveInventory("MultiRocketAmmo", GetAmmoCapacity("MultiRocketAmmo")); }
             break;
 
           case SLOT_CHAINGUN:
@@ -13997,7 +13984,6 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_duke_slot4", false);
 		SetCVar("samsara_cl_dukelab_slot4", false);
 		SetCVar("samsara_cl_ranger_slot1", false);
-		SetCVar("samsara_cl_ranger_slot3", false);
 		SetCVar("samsara_cl_freeman_fallbackmelee", false);
 		SetCVar("samsara_cl_freeman_slot1", false);
 		SetCVar("samsara_cl_freeman_slot3", false);
@@ -14177,7 +14163,6 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_duke_slot4", false);
 		SetCVar("samsara_cl_dukelab_slot4", false);
 		SetCVar("samsara_cl_ranger_slot1", false);
-		SetCVar("samsara_cl_ranger_slot3", false);
 		SetCVar("samsara_cl_freeman_fallbackmelee", false);
 		SetCVar("samsara_cl_freeman_slot1", false);
 		SetCVar("samsara_cl_freeman_slot3", false);
@@ -14357,7 +14342,6 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_duke_slot4", false);
 		SetCVar("samsara_cl_dukelab_slot4", false);
 		SetCVar("samsara_cl_ranger_slot1", false);
-		SetCVar("samsara_cl_ranger_slot3", false);
 		SetCVar("samsara_cl_freeman_fallbackmelee", false);
 		SetCVar("samsara_cl_freeman_slot1", false);
 		SetCVar("samsara_cl_freeman_slot3", false);
@@ -14538,7 +14522,6 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_duke_slot4", false);
 		SetCVar("samsara_cl_dukelab_slot4", false);
 		SetCVar("samsara_cl_ranger_slot1", false);
-		SetCVar("samsara_cl_ranger_slot3", false);
 		SetCVar("samsara_cl_freeman_fallbackmelee", false);
 		SetCVar("samsara_cl_freeman_slot1", false);
 		SetCVar("samsara_cl_freeman_slot3", false);
@@ -14718,7 +14701,6 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_duke_slot4", true);
 		SetCVar("samsara_cl_dukelab_slot4", true);
 		SetCVar("samsara_cl_ranger_slot1", false);
-		SetCVar("samsara_cl_ranger_slot3", false);
 		SetCVar("samsara_cl_freeman_fallbackmelee", false);
 		SetCVar("samsara_cl_freeman_slot1", false);
 		SetCVar("samsara_cl_freeman_slot3", false);
@@ -15168,7 +15150,6 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_duke_slot4", 0);
 		SetCVar("samsara_dukelab_slot4", 0);
 		SetCVar("samsara_ranger_slot1", 0);
-		SetCVar("samsara_ranger_slot3", 0);
 		SetCVar("samsara_freeman_fallbackmelee", 0);
 		SetCVar("samsara_freeman_slot1", 0);
 		SetCVar("samsara_freeman_slot3", 0);
@@ -15610,7 +15591,6 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_duke_slot4", 0);
 		SetCVar("samsara_dukelab_slot4", 0);
 		SetCVar("samsara_ranger_slot1", 0);
-		SetCVar("samsara_ranger_slot3", 0);
 		SetCVar("samsara_freeman_fallbackmelee", 0);
 		SetCVar("samsara_freeman_slot1", 0);
 		SetCVar("samsara_freeman_slot3", 0);
@@ -16052,7 +16032,6 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_duke_slot4", 0);
 		SetCVar("samsara_dukelab_slot4", 0);
 		SetCVar("samsara_ranger_slot1", 0);
-		SetCVar("samsara_ranger_slot3", 0);
 		SetCVar("samsara_freeman_fallbackmelee", 0);
 		SetCVar("samsara_freeman_slot1", 0);
 		SetCVar("samsara_freeman_slot3", 0);
@@ -16495,7 +16474,6 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_duke_slot4", 0);
 		SetCVar("samsara_dukelab_slot4", 0);
 		SetCVar("samsara_ranger_slot1", 0);
-		SetCVar("samsara_ranger_slot3", 0);
 		SetCVar("samsara_freeman_fallbackmelee", 0);
 		SetCVar("samsara_freeman_slot1", 0);
 		SetCVar("samsara_freeman_slot3", 0);
@@ -16943,7 +16921,6 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_duke_slot4", 0);
 		SetCVar("samsara_dukelab_slot4", 0);
 		SetCVar("samsara_ranger_slot1", 0);
-		SetCVar("samsara_ranger_slot3", 0);
 		SetCVar("samsara_freeman_fallbackmelee", 0);
 		SetCVar("samsara_freeman_slot1", 0);
 		SetCVar("samsara_freeman_slot3", 0);
