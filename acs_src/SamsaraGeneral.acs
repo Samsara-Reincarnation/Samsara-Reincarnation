@@ -2569,6 +2569,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("TOZT-7 Napalm Unit", INTMAX);
 			TakeInventory("SPNKR-25 Auto Cannon", INTMAX);
 			TakeInventory("ONI-71 Wave Motion Cannon", INTMAX);
+			TakeInventory("Mercury Class Fusion Rifle", INTMAX);
+			TakeInventory("MCFRFireRateThing", INTMAX);
 			TakeInventory("Alien Weapon", INTMAX);
 			TakeInventory(" Alien Weapon ", INTMAX);
 			TakeInventory("Talon Ceramic Combat Blade", INTMAX);
@@ -2606,6 +2608,8 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("Laser Cannon", INTMAX);
 			TakeInventory("Nailgun", INTMAX);
 			TakeInventory("Nailgun DOE", INTMAX);
+			TakeInventory("Q1AssaultCannon", INTMAX);
+            SetInventory("AC_FiredOnce", 0);
 			TakeInventory("QuadDamageItem", INTMAX);
 			TakeInventory("Thunderbolt", INTMAX);
 			TakeInventory("Thunderbolt DOE", INTMAX);
@@ -7158,6 +7162,18 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             } else if ((CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv || CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv) && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("Cell", 40);
                 GiveInventory("RocketAmmo", 15);
+                result = 1;
+            }
+            break;
+
+          case SLOT_BFG10K:
+            if (!CheckInventory("Mercury Class Fusion Rifle"))
+            {
+                GiveInventory("Mercury Class Fusion Rifle", 1);
+                GiveInventory("Cell", dmextraammo ? 20 * 5 / 2 : 20);
+                result = 1;
+            } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                GiveInventory("Cell", 20);
                 result = 1;
             }
             break;

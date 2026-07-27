@@ -2705,18 +2705,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("AssaultClicked2", 0);
 				}
 
-				if (CheckWeapon("Mercury Class Fusion Rifle"))
-				{
-					TakeInventory("MCFRFiredS", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
-					TakeInventory("MCFRClicked", 1); // weapon fires for 1 tic each frame
-					TakeInventory("MCFRClicked2", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
-					GiveInventory("SamsaraMarathonMCFRAltReload", 1);
-					GiveInventory("SamsaraMarathonMCFRAltFire", 1);
-				} else {
-					SetInventory("MCFRFiredS", 0);
-					SetInventory("MCFRClicked", 0);
-					SetInventory("MCFRClicked2", 0);
-				}
+                if (CheckWeapon("Mercury Class Fusion Rifle"))
+                {
+                    TakeInventory("MCFRFiredS", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
+                    GiveInventory("SamsaraMarathonMCFRAltReload", 1);
+                    GiveInventory("SamsaraMarathonMCFRAltFire", 1);
+                }
+                else { SetInventory("MCFRFiredS", 0); }
 
 				if (CheckWeapon("Alien Weapon"))
 				{
@@ -2756,6 +2751,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                                                          CheckWeapon("  Rocket Launcher  ") || CheckWeapon("  Rocket Launcher DOE  ") ||
                                                                          CheckWeapon("Super Nailgun") || CheckWeapon("Super Nailgun DOE") ||
                                                                          CheckWeapon("Thunderbolt") || CheckWeapon("Thunderbolt DOE"));
+
+				if (CheckInventory("SamsaraQuake1AssaultCannonLoopSoundCheck") && !CheckWeapon("Q1AssaultCannon"))
+				{
+					StopSound(0, CHAN_6);
+
+					SetInventory("SamsaraQuake1AssaultCannonLoopSoundCheck", 0);
+				}
 
                 if (!CheckWeapon("Thunderbolt"))
                 {

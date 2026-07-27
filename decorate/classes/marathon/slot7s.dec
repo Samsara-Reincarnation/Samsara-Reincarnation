@@ -1,16 +1,15 @@
 actor MCFRFiredS: Counter {}
-actor MCFRClicked: Counter {}
-actor MCFRClicked2: Counter {}
 actor SamsaraMarathonMCFRCanAltReload : Boolean {}
 actor SamsaraMarathonMCFRCanAltFire : Boolean {}
 actor SamsaraMarathonMCFRAltReloadWaitTime : Counter {}
 actor SamsaraMarathonMCFRAltReloadFireLockTime : Counter {}
-Actor MCFRFireRateThing : Inventory { Inventory.Amount 1 Inventory.MaxAmount 1 }
+actor MCFRFireRateThing : Boolean {}
 
 actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
 {
     Inventory.PickupMessage "You picked up a Mercury Class Fusion Rifle!"
     Weapon.SlotNumber 7
+    Weapon.SlotPriority 1
     Weapon.SelectionOrder 100
     Weapon.AmmoType1 "MercuryFusionBullet1"
     Weapon.AmmoUse1 1
@@ -47,8 +46,6 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
 
       Deselect:
 	    TNT1 A 0 A_TakeInventory("MCFRFiredS")
-        TNT1 A 0 A_TakeInventory("MCFRClicked")
-        TNT1 A 0 A_TakeInventory("MCFRClicked2")
         TNT1 A 0 A_TakeInventory("SamsaraMarathonMCFRCanAltReload")
         TNT1 A 0 A_TakeInventory("SamsaraMarathonMCFRCanAltFire")
         TNT1 A 0 A_TakeInventory("SamsaraMarathonMCFRAltReloadWaitTime")
@@ -78,8 +75,6 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
         TNT1 A 0 A_TakeInventory("UsingMarathonInstagib")
 		
 	    TNT1 A 0 A_TakeInventory("MCFRFiredS")
-        TNT1 A 0 A_TakeInventory("MCFRClicked")
-        TNT1 A 0 A_TakeInventory("MCFRClicked2")
         TNT1 A 0 A_TakeInventory("SamsaraMarathonMCFRCanAltReload")
         TNT1 A 0 A_TakeInventory("SamsaraMarathonMCFRCanAltFire")
         TNT1 A 0 A_TakeInventory("SamsaraMarathonMCFRAltReloadWaitTime")
@@ -109,7 +104,7 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
       FireNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
         TNT1 A 0 A_JumpIfInventory("Cell",1,"FireStart")
-        goto FireDry
+        goto Ready
 
       FireReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
@@ -117,7 +112,7 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
       FireReloadableDryCheck:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
         TNT1 A 0 A_JumpIfInventory("Cell",1,"Reload")
-        goto FireDry
+        goto Ready
 
       FireReloadableReloadCheck:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,1) // only allowed with modern reloading
@@ -130,16 +125,9 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("Cell",1,"Reload")
         goto FireReloadable
 
-      FireDry:
-        TNT1 A 0 A_JumpIfInventory("MCFRClicked",1,"Ready")
-        TNT1 A 0 A_TakeInventory("MCFRClicked") // reset
-        TNT1 A 0 A_GiveInventory("MCFRClicked",10)
-        TNT1 A 0 A_PlaySound("marathon/rifle/dryfire")
-        goto Ready
-
       FireStart:
         TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
-        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FireDry")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"Ready")
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 //A_GunFlash
         TNT1 A 0 A_GiveInventory("SamsaraMarathonMCFRPrimaryAttackHandler")
@@ -204,7 +192,7 @@ actor SamsaraMarathonMCFRAltFire : Trigger
       PickupStartNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAltFire")
         TNT1 A 0 A_JumpIfInventory("Cell",1,"PickupAltFire")
-        goto PickupAltFireDry
+        stop
 
       PickupStartReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAltFire")
@@ -212,19 +200,12 @@ actor SamsaraMarathonMCFRAltFire : Trigger
       PickupStartReloadableDryCheck:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupStop")
         TNT1 A 0 A_JumpIfInventory("Cell",1,"PickupStop")
-        goto PickupAltFireDry
-
-      PickupAltFireDry:
-        TNT1 A 0 A_JumpIfInventory("AssaultClicked2",1,"PickupStop")
-        TNT1 A 0 A_TakeInventory("AssaultClicked2") // reset
-        TNT1 A 0 A_GiveInventory("AssaultClicked2",18)
-        TNT1 A 0 //A_PlaySound("marathon/rifle/dryfire")
         stop
 
       PickupAltFire:
 	    //TNT1 A 0 A_Log("altfire success!")
         TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
-        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupAltFireDry")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupStop")
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraForcePlayerAttackState", 1)
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_TakeInventory("MCFRFiredS") // reset

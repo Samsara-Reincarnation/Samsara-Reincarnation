@@ -1,9 +1,10 @@
 actor SamsaraQuake1AssaultCannonLoopSoundCheck : Boolean {}
 actor AC_FiredOnce: Boolean {}
 
-actor "Quake_AssaultCannon" : SamsaraQuakeWeapon
+actor "Q1AssaultCannon" : SamsaraQuakeWeapon
 {
     Inventory.PickupMessage "You got the Assault Cannon."
+    Weapon.SlotPriority 2
     Weapon.SelectionOrder 4
     Weapon.Kickback 100
     Weapon.AmmoType "Shell"
@@ -30,7 +31,7 @@ actor "Quake_AssaultCannon" : SamsaraQuakeWeapon
         TNT1 A 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopSoundStopper")
         goto Super::Deselect
       Fire:
-        QASC B 0 A_GiveInventory("SamsaraQuakeWeaponAlert")
+        //QASC B 0 A_GiveInventory("SamsaraQuakeWeaponAlert")
         QASC B 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopStartSoundPlayer")
         QASC B 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 		QASC B 0 A_ReFire(1)
@@ -89,7 +90,6 @@ actor "Quake_AssaultCannon" : SamsaraQuakeWeapon
         TNT1 A 0 A_SetPitch(pitch+frandom(-1.25,1.25))
         TNT1 A 0
         stop
-
     }
 } 
 
