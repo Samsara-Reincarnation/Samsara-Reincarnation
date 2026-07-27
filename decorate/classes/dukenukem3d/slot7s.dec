@@ -207,12 +207,12 @@ actor SamsaraDukeX3000AttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
         TNT1 A 0 A_FireCustomMissile("DukeX3000Puff",0,false,2,6)
-        TNT1 A 0 A_RailAttack(0,5,false,None,None,RGF_SILENT|RGF_FULLBRIGHT|RGF_NOPIERCING,10,"X3000Explosion",0,0,0,0,24.0,1.0,"X3000ExplosionSmall")
+        TNT1 A 0 A_RailAttack(0,5,false,None,None,RGF_SILENT|RGF_FULLBRIGHT|RGF_NOPIERCING,10,"X3000Explosion",0,0,0,0,24.0,1.0,"X3000RailTrail")
         goto PickupFinish
 
       PickupAttackCoop:
         TNT1 A 0 A_FireCustomMissile("DukeX3000Puff_Coop",0,false,2,6)
-        TNT1 A 0 A_RailAttack(0,5,false,None,None,RGF_SILENT|RGF_FULLBRIGHT|RGF_NOPIERCING,10,"X3000ExplosionCoop",0,0,0,0,24.0,1.0,"X3000ExplosionSmall")
+        TNT1 A 0 A_RailAttack(0,5,false,None,None,RGF_SILENT|RGF_FULLBRIGHT|RGF_NOPIERCING,10,"X3000ExplosionCoop",0,0,0,0,24.0,1.0,"X3000RailTrail")
         goto PickupFinish
 
       PickupFinish:
@@ -256,31 +256,17 @@ Actor DukeX3000Puff : FastProjectile
 actor X3000Explosion
 {
 	+NOINTERACTION
-	Scale 0.7
+	+CLIENTSIDEONLY
 	States
 	{
 	Spawn:
-	   3XXP A 2 Bright 
-	   3XXP B 2 Bright 
-	   3XXP C 2 Bright 
-	   3XXP D 2 Bright 
-	   3XXP E 2 Bright 
-	   3XXP F 2 Bright 
-	   3XXP G 2 Bright 
-	   3XXP H 2 Bright 
-	   3XXP I 2 Bright 
-	   3XXP J 2 Bright 
-	   3XXP K 2 Bright 
-	   3XXP L 2 Bright 
-	   3XXP M 2 Bright 
-	   3XXP N 2 Bright 
-	   3XXP O 2 Bright 
-	   3XXP P 2 Bright 
-	   3XXP Q 2 Bright 
-	   3XXP R 2 Bright 
-	   3XXP S 2 Bright 
-	   3XXP T 2 Bright 
-	   3XXP U 2 Bright 
+       3XXP I 0
+       3XXP IIIIIIIIIIIIII 0 A_SpawnItemEx("X3000ExplosionDebris",random(-3,3),random(-3,3),random(-3,3),random(-9,9),random(-9,9),random(-9,9),0,SXF_CLIENTSIDE)
+	   3XXP I 4 Bright
+	   3XXP J 4 Bright
+	   3XXP K 4 Bright
+	   3XXP L 4 Bright
+	   3XXP M 4 Bright
        stop
 	}
 }
@@ -291,14 +277,73 @@ actor X3000ExplosionCoop : X3000Explosion // for A_RailAttack
 	+MTHRUSPECIES
 }
 
-actor X3000ExplosionSmall : X3000Explosion { Scale 0.1 }
+actor X3000RailTrail
+{
+	+NOINTERACTION
+	+CLIENTSIDEONLY
+	Scale 0.5
+	States
+	{
+	Spawn:
+       3XXP A 0
+       3XXP AAA 0 A_SpawnItemEx("X3000ExplosionDebris",random(-3,3),random(-3,3),random(-3,3),random(-9,9),random(-9,9),random(-9,9),0,SXF_CLIENTSIDE)
+	   3XXP AB 4 Bright A_FadeOut(.25)
+       goto Spawn+4
+	}
+}
+
+actor X3000ExplosionDebris
+{
+	Health 5
+	Radius 1
+	Height 1
+	Speed 15
+	Scale 0.3
+	+MISSILE
+	+NOBLOCKMAP
+	+NOTELEPORT
+	+DONTSPLASH
+	+RANDOMIZE
+	+NOBLOCKMONST
+	+THRUACTORS
+	+CLIENTSIDEONLY
+	+WINDTHRUST
+	+BRIGHT
+	RenderStyle Translucent
+	Alpha 0.75
+	VSpeed 1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		3XXP C 0 A_Jump(192,1,2,3,4,5)
+		Goto FallDown
+		3XXP D 0
+		Goto FallDown
+		3XXP E 0
+		Goto FallDown
+		3XXP F 0
+		Goto FallDown
+		3XXP G 0
+		Goto FallDown
+		3XXP H 0
+		Goto FallDown
+	FallDown:
+		"####" "#" 10
+		"####" "#" 200 A_LowGravity
+		Stop
+	Death:
+		TNT1 A 0
+		Stop
+	}
+}
 
 actor DukeX3000SplashGiver : Trigger
 {
     States
     {
       Pickup:
-        TNT1 A 0 A_SpawnItemEx("X3000Explosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_SpawnItemEx("X3000Explosion",0,0,48,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
         TNT1 A 0 A_SpawnItemEx("DukeX3000Splash",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
         stop
     }
@@ -329,9 +374,10 @@ Actor DukeX3000Puff_Coop : DukeX3000Puff
     States
     {
       Death:
-        TNT1 A 0 A_SpawnItemEx("X3000Explosion",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_SpawnItemEx("X3000Explosion",0,0,48,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
         TNT1 A 0 A_RadiusGive("DukeX3000SplashGiver",200,RGF_MONSTERS)
-        TNT1 A 1 A_Explode(600,200,XF_HURTSOURCE,0,200)
+        TNT1 A 0 A_Explode(200,200,XF_HURTSOURCE,0,200)
+        TNT1 A 1 A_Explode(400,200,0,0,200)
         stop
 	}
 }
