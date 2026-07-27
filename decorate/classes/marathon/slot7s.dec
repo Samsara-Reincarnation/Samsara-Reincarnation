@@ -167,8 +167,24 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
         MCFR A 1 Offset(0,116)
         MCFR A 1 Offset(0,122)
         MCFR A 18 Offset(0,128)
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectReloadAmmo")
-        goto SelectStart
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        // TODO: separate calls that prevent switching while altfire is waiting
+        MCFR A 1 A_Raise
+        loop
+
+      ReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("MercuryFusionBullet1",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        TNT1 A 0 A_GiveInventory("MercuryFusionBullet1")
+        TNT1 A 0 A_PlaySound("marathon/mcfr/reload")
+        loop
     }
 }
 
