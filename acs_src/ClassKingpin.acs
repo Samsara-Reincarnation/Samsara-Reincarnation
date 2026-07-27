@@ -158,8 +158,11 @@ Script "Kingpin_Player" (void)
 
 		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("Kingpin_Shotgun_DoubleBarrelAlternate", CheckInventory("Kingpin_ShotgunMagazine") % 2); }
 
-		if(CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
-			GiveInventory("Kingpin_Bazooka_LaserSight",1);
+        if (CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
+        {
+            if (isSinglePlayer() || isCoop()) { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuffCoop", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
+            else { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuff", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
+        }
 
 		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
 		{
