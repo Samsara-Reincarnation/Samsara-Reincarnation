@@ -461,6 +461,7 @@ actor SoF_MPGLaserProjectileCoop : SoF_MPGLaserProjectile
 Actor SoF_MPGLaserSegment
 {
     +NOINTERACTION
+    +NOTIMEFREEZE
     +CLIENTSIDEONLY
     +BRIGHT
     Height 4
@@ -479,6 +480,7 @@ Actor SoF_MPGLaserSegment
 Actor SoF_MPGLaserSegmentFlare
 {
     +NOINTERACTION
+    +NOTIMEFREEZE
     +CLIENTSIDEONLY
     +FORCEXYBILLBOARD
     +BRIGHT
@@ -594,17 +596,18 @@ Actor SoF_MPGAltFireProjectile : FastProjectile
     DamageType "SoFMPGAlt"
     +BLOODLESSIMPACT
     +NODAMAGETHRUST
+    +NOTIMEFREEZE
     +FORCERADIUSDMG
     States
     {
         Spawn:
             TNT1 A 0
             TNT1 A -1
-            Wait
+            Stop
         Death:
             TNT1 A 0 ACS_NamedExecuteWithResult("SoF_DrawLaserToClient",1)
             TNT1 A 0 A_SpawnItemEx("SoF_MPGShockwave")
-            TNT1 A 0 A_Explode(1000,128,!XF_HURTSOURCE,true)
+            TNT1 A 0 A_Explode(1000,128,0,true)
             TNT1 A 1
             Stop
     }
@@ -624,6 +627,7 @@ Actor SoF_MPGShockwave
     Renderstyle Add
     +FORCEXYBILLBOARD
     +NOINTERACTION
+    +NOTIMEFREEZE
     +CLIENTSIDEONLY
     States
     {
@@ -643,6 +647,7 @@ Actor SoF_MPGAltFireTrail
     Renderstyle Add
     +FORCEXYBILLBOARD
     +NOINTERACTION
+    +NOTIMEFREEZE
     +CLIENTSIDEONLY
     States
     {
@@ -663,6 +668,7 @@ Actor SoF_MPGAltFireTrailParticle
     Renderstyle Add
     +FORCEXYBILLBOARD
     +NOINTERACTION
+    +NOTIMEFREEZE
     +CLIENTSIDEONLY
     States
     {

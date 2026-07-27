@@ -944,7 +944,7 @@ StatusBar Fullscreen, ForceScaled
 
             //Shells
             IsSelected "Single Shotgun", "Double Shotgun" { DrawImage "Q1_AMMO1", 295, 176; }
-            IsSelected Q1Widowmaker { DrawImage "Q1_AMMO1", 295, 176; }
+            IsSelected Q1AssaultCannon, Q1Widowmaker { DrawImage "Q1_AMMO1", 295, 176; }
             //Nails
             IsSelected Nailgun, "Super Nailgun" { DrawImage "Q1_AMMO2", 295, 176; }
             IsSelected "Nailgun DOE", "Super Nailgun DOE" { DrawImage "Q1DAMMO2", 295, 176; }
@@ -1020,12 +1020,13 @@ StatusBar Fullscreen, ForceScaled
                 InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
 
                 IsSelected "Grenade Launcher", "Grenade Launcher DOE" { DrawImage "STY2NUM3", 146, 10; }
-                else IsSelected Q1Widowmaker { DrawImage "STY2NUM3", 146, 10; }
 
-                // Slot 4
-                InInventory GotWeapon4 { DrawImage "STYSNUM4", 156, 10; }
+                // Slot 4 + Slot 4S
+                InInventory GotWeapon4 || Q1AssaultCannon { DrawImage "STYSNUM4", 156, 10; }
 
                 IsSelected Nailgun, "Nailgun DOE" { DrawImage "STY2NUM4", 156, 10; }
+
+                IsSelected Q1AssaultCannon { DrawImage "STY3NUM4", 156, 10; }
 
                 // Slot 5
                 InInventory GotWeapon5 { DrawImage "STYSNUM5", 166, 10; }
@@ -3149,7 +3150,8 @@ StatusBar Fullscreen, ForceScaled
                     IsSelected not "WSTE-M5 Combat Shotgun", "Fusion Pistol" {
                     IsSelected not "MA-75B Assault Rifle", "SPNKR-XP SSM Launcher" {
                     IsSelected not "TOZT-7 Napalm Unit", "SPNKR-25 Auto Cannon" {
-                    IsSelected not "ONI-71 Wave Motion Cannon", "Tech.50 Pacifier" {
+                    IsSelected not "ONI-71 Wave Motion Cannon", "Mercury Class Fusion Rifle" {
+                    IsSelected not "Tech.50 Pacifier" { // fuck you
                     IsSelected not "Grenade Launcher", "Grenade Launcher DOE" {
                     IsSelected not Nailgun, "Nailgun DOE" {
                     IsSelected not "  Rocket Launcher  ", "  Rocket Launcher DOE  " {
@@ -3234,7 +3236,7 @@ StatusBar Fullscreen, ForceScaled
                                 DrawImage AmmoIcon2, 228, 192, Center;
                             }
                         }
-                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
                     // Doom Characters
                     IsSelected "Automatic Shotgun"
@@ -3595,6 +3597,30 @@ StatusBar Fullscreen, ForceScaled
 
                         DrawImage "AMSMD0", 238, 185, Center;
                         DrawImage "AMSMC0", 228, 192, Center;
+                    }
+
+                    IsSelected "Mercury Class Fusion Rifle"
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        } else {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo Cell, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo Cell, 298, 185;
+                        }
+
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawImage "HUDBAR", 250, 192;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 270, 186;
+                        }
+
+                        InInventory SamsaraReloadMode, 2 { DrawNumber 4, INDEXFONT, LightBlue, Ammo Cell, 273, 174; }
+
+                        DrawImage "AMSMD0", 238, 185, Center;
                     }
 
                     IsSelected "Tech.50 Pacifier"
@@ -5991,7 +6017,6 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected "Explosive Shotgun" { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected "Fusion Pistol" { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected "Grenade Launcher", "Grenade Launcher DOE" { DrawImage "STY2NUM3", 146, 10; } // Need to change
-                IsSelected Q1Widowmaker { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected HeatSeeker { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected "Heavy Assault Weapon" { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected Sawedoff { DrawImage "STY2NUM3", 146, 10; }
@@ -6050,6 +6075,8 @@ StatusBar Fullscreen, ForceScaled
                     } else { // Original/Life's A Beach
                         InInventory GotWeapon4 || "Golden Desert Eagle" { DrawImage "STYSNUM4", 156, 10; }
                     }
+                } else InInventory QuakeClass {
+                    InInventory GotWeapon4 || Q1AssaultCannon { DrawImage "STYSNUM4", 156, 10; }
                 } else InInventory RottClass {
                     InInventory GotWeapon4 || RoTTM60 { DrawImage "STYSNUM4", 156, 10; }
                 } else InInventory BlakeClass {
@@ -6144,6 +6171,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected "Ultra Rapid Zorcher" { DrawImage "STY3NUM4", 156, 10; }
                 IsSelected "  Dual Chainguns  " { DrawImage "STY3NUM4", 156, 10; }
                 IsSelected "Golden Desert Eagle" { DrawImage "STY3NUM4", 156, 10; }
+                IsSelected Q1AssaultCannon { DrawImage "STY3NUM4", 156, 10; }
                 IsSelected RoTTM60 { DrawImage "STY3NUM4", 156, 10; }
                 IsSelected "Gatling Fusion Devastator" { DrawImage "STY3NUM4", 156, 10; }
                 IsSelected BloodGreaseGun { DrawImage "STY3NUM4", 156, 10; }
@@ -6417,6 +6445,8 @@ StatusBar Fullscreen, ForceScaled
                         } else { // Original/Life's A Beach
                             InInventory GotWeapon7 || Duke3D_X3000 { DrawImage "STYSNUM7", 186, 10; }
                         }
+                    } else InInventory MarathonClass {
+                        InInventory GotWeapon7 || "Mercury Class Fusion Rifle" { DrawImage "STYSNUM7", 186, 10; }
                     } else InInventory CalebClass {
                         InInventory LifeLeech || BloodNaturomDemonto { DrawImage "STYSNUM7", 186, 10; }
                     } else InInventory KatarnClass {
@@ -6509,6 +6539,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected "Liquid Zorcher" { DrawImage "STY3NUM7", 186, 10; }
                 IsSelected " Bloodscourge " { DrawImage "STY3NUM7", 186, 10; }
                 IsSelected Duke3D_X3000 { DrawImage "STY3NUM7", 186, 10; }
+                IsSelected "Mercury Class Fusion Rifle" { DrawImage "STY3NUM7", 186, 10; }
                 IsSelected BloodNaturomDemonto { DrawImage "STY3NUM7", 186, 10; }
                 IsSelected "Wookie Bowcaster" { DrawImage "STY3NUM7", 186, 10; }
                 IsSelected Q2Trap, Q2Disruptor { DrawImage "STY3NUM7", 186, 10; }

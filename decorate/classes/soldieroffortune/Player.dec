@@ -1,4 +1,6 @@
 Actor SoFClass : Boolean {}
+Actor SoF_SelectedWeapon : Counter {}
+Actor SoF_LastWeapon : TemporaryCounter {}
 
 Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 {
@@ -18,15 +20,203 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 	Player.StartItem "SoF_MPGMagazine", 30
 	Player.StartItem "SoF_MPistolMagazine", 32
 	Player.StartItem "SoF_SniperMagazine", 6
+	Player.StartItem "SoF_SelectedWeapon", 1
 	Player.StartItem "Clip", 50
 	Player.DisplayName "Soldier of Fortune"
 	States
 	{
 		Spawn:
-			S000 ABCDEFGHIJ 2
+		SpawnLauncher:
+			SF34 ABCDEFGHIJKLM 2
 			Loop
+		SpawnShotgun:
+			SF35 ABCDEFGHIJKLM 2
+			Loop
+		SpawnKnife:
+			SF36 ABCDEFGHIJKLM 2
+			Loop
+		SpawnPistol:
+			SF37 ABCDEFGHIJ 2
+			Loop
+		SpawnRifle:
+			SF38 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			Loop
+		
+		// Walking Animations
+		WalkLauncher:
+			SFB9 ABCDEFGHIJ 2
+			Loop
+		WalkShotgun:
+			SFBA ABCDEFGHIJ 2
+			Loop
+		WalkKnife:
+		WalkPistol:
+			SFBB ABCDEFGHIJ 2
+			Loop
+		WalkRifle:
+			SFBC ABCDEFGHIJ 2
+			Loop
+			
+		WStrafeLLauncher:
+			SFBD ABCDEFGHIJ 2
+			Loop
+		WStrafeLShotgun:
+			SFBE ABCDEFGHIJ 2
+			Loop
+		WStrafeLKnife:
+		WStrafeLPistol:
+			SFBF ABCDEFGHIJ 2
+			Loop
+		WStrafeLRifle:
+			SFC0 ABCDEFGHIJ 2
+			Loop
+			
+		WStrafeRLauncher:
+			SFC1 ABCDEFGHIJ 2
+			Loop
+		WStrafeRShotgun:
+			SFC2 ABCDEFGHIJ 2
+			Loop
+		WStrafeRKnife:
+		WStrafeRPistol:
+			SFC3 ABCDEFGHIJ 2
+			Loop
+		WStrafeRRifle:
+			SFC4 ABCDEFGHIJ 2
+			Loop
+			
+		WalkBackLauncher:
+			SFC5 ABCDEFGHIJ 2
+			Loop
+		WalkBackShotgun:
+			SFC6 ABCDEFGHIJ 2
+			Loop
+		WalkBackKnife:
+		WalkBackPistol:
+			SFC7 ABCDEFGHIJ 2
+			Loop
+		WalkBackRifle:
+			SFC8 ABCDEFGHIJ 2
+			Loop
+			
+		// Running Animations
+		RunLauncher:
+			SF86 ABCDEF 2
+			Loop
+		RunShotgun:
+		RunRifle:
+			SF87 ABCDEF 2
+			Loop
+		RunKnife:
+		RunPistol:
+			SF88 ABCDEF 2
+			Loop
+		
+		StrafeLLauncher:
+			SF86 ABCDEF 2
+			Loop
+		StrafeLShotgun:
+		StrafeLRifle:
+			SF8B ABCDEF 2
+			Loop
+		StrafeLKnife:
+		StrafeLPistol:
+			SF8C ABCDEF 2
+			Loop
+			
+		StrafeRLauncher:
+			SF8D ABCDEF 2
+			Loop
+		StrafeRShotgun:
+		StrafeRRifle:
+			SF8E ABCDEF 2
+			Loop
+		StrafeRKnife:
+		StrafeRPistol:
+			SF8F ABCDEF 2
+			Loop
+			
+		RunBackLauncher:
+			SF90 ABCDEF 2
+			Loop
+		RunBackShotgun:
+		RunBackRifle:
+			SF91 ABCDEF 2
+			Loop
+		RunBackKnife:
+		RunBackPistol:
+			SF92 ABCDEF 2
+			Loop
+		
+		//Death Animations
 		Death:
 			TNT1 A -1
+			Stop
+		ShutUpErrors:
+			SF00 A 0 A_Stop		SF01 A 0 A_Stop		SF02 A 0 A_Stop		SF03 A 0 A_Stop
+			SF04 A 0 A_Stop		SF05 A 0 A_Stop		SF06 A 0 A_Stop		SF07 A 0 A_Stop
+			SF08 A 0 A_Stop		SF09 A 0 A_Stop		SF0A A 0 A_Stop		SF0B A 0 A_Stop
+			SF0C A 0 A_Stop		SF0D A 0 A_Stop		SF0E A 0 A_Stop		SF0F A 0 A_Stop
+			SF10 A 0 A_Stop		SF11 A 0 A_Stop		SF12 A 0 A_Stop		SF13 A 0 A_Stop
+			SF14 A 0 A_Stop		SF15 A 0 A_Stop		SF16 A 0 A_Stop		SF17 A 0 A_Stop
+			SF18 A 0 A_Stop		SF19 A 0 A_Stop		SF1A A 0 A_Stop		SF1B A 0 A_Stop
+			SF1C A 0 A_Stop		SF1D A 0 A_Stop		SF1E A 0 A_Stop		SF1F A 0 A_Stop
+			SF20 A 0 A_Stop		SF21 A 0 A_Stop		SF22 A 0 A_Stop		SF23 A 0 A_Stop
+			SF24 A 0 A_Stop		SF25 A 0 A_Stop		SF26 A 0 A_Stop		SF27 A 0 A_Stop
+			SF28 A 0 A_Stop		SF29 A 0 A_Stop		SF2A A 0 A_Stop		SF2B A 0 A_Stop
+			SF2C A 0 A_Stop		SF2D A 0 A_Stop		SF2E A 0 A_Stop		SF2F A 0 A_Stop
+			SF30 A 0 A_Stop		SF31 A 0 A_Stop		SF32 A 0 A_Stop		SF33 A 0 A_Stop
+			SF34 A 0 A_Stop		SF35 A 0 A_Stop		SF36 A 0 A_Stop		SF37 A 0 A_Stop
+			SF38 A 0 A_Stop		SF39 A 0 A_Stop		SF3A A 0 A_Stop		SF3B A 0 A_Stop
+			SF3C A 0 A_Stop		SF3D A 0 A_Stop		SF3E A 0 A_Stop		SF3F A 0 A_Stop
+			SF40 A 0 A_Stop		SF41 A 0 A_Stop		SF42 A 0 A_Stop		SF43 A 0 A_Stop
+			SF44 A 0 A_Stop		SF45 A 0 A_Stop		SF46 A 0 A_Stop		SF47 A 0 A_Stop
+			SF48 A 0 A_Stop		SF49 A 0 A_Stop		SF4A A 0 A_Stop		SF4B A 0 A_Stop
+			SF4C A 0 A_Stop		SF4D A 0 A_Stop		SF4E A 0 A_Stop		SF4F A 0 A_Stop
+			SF50 A 0 A_Stop		SF51 A 0 A_Stop		SF52 A 0 A_Stop		SF53 A 0 A_Stop
+			SF54 A 0 A_Stop		SF55 A 0 A_Stop		SF56 A 0 A_Stop		SF57 A 0 A_Stop
+			SF58 A 0 A_Stop		SF59 A 0 A_Stop		SF5A A 0 A_Stop		SF5B A 0 A_Stop
+			SF5C A 0 A_Stop		SF5D A 0 A_Stop		SF5E A 0 A_Stop		SF5F A 0 A_Stop
+			SF60 A 0 A_Stop		SF61 A 0 A_Stop		SF62 A 0 A_Stop		SF63 A 0 A_Stop
+			SF64 A 0 A_Stop		SF65 A 0 A_Stop		SF66 A 0 A_Stop		SF67 A 0 A_Stop
+			SF68 A 0 A_Stop		SF69 A 0 A_Stop		SF6A A 0 A_Stop		SF6B A 0 A_Stop
+			SF6C A 0 A_Stop		SF6D A 0 A_Stop		SF6E A 0 A_Stop		SF6F A 0 A_Stop
+			SF70 A 0 A_Stop		SF71 A 0 A_Stop		SF72 A 0 A_Stop		SF73 A 0 A_Stop
+			SF74 A 0 A_Stop		SF75 A 0 A_Stop		SF76 A 0 A_Stop		SF77 A 0 A_Stop
+			SF78 A 0 A_Stop		SF79 A 0 A_Stop		SF7A A 0 A_Stop		SF7B A 0 A_Stop
+			SF7C A 0 A_Stop		SF7D A 0 A_Stop		SF7E A 0 A_Stop		SF7F A 0 A_Stop
+			SF80 A 0 A_Stop		SF81 A 0 A_Stop		SF82 A 0 A_Stop		SF83 A 0 A_Stop
+			SF84 A 0 A_Stop		SF85 A 0 A_Stop		SF86 A 0 A_Stop		SF87 A 0 A_Stop
+			SF88 A 0 A_Stop		SF89 A 0 A_Stop		SF8A A 0 A_Stop		SF8B A 0 A_Stop
+			SF8C A 0 A_Stop		SF8D A 0 A_Stop		SF8E A 0 A_Stop		SF8F A 0 A_Stop
+			SF90 A 0 A_Stop		SF91 A 0 A_Stop		SF92 A 0 A_Stop		SF93 A 0 A_Stop
+			SF94 A 0 A_Stop		SF95 A 0 A_Stop		SF96 A 0 A_Stop		SF97 A 0 A_Stop
+			SF98 A 0 A_Stop		SF99 A 0 A_Stop		SF9A A 0 A_Stop		SF9B A 0 A_Stop
+			SF9C A 0 A_Stop		SF9D A 0 A_Stop		SF9E A 0 A_Stop		SF9F A 0 A_Stop
+			SFA0 A 0 A_Stop		SFA1 A 0 A_Stop		SFA2 A 0 A_Stop		SFA3 A 0 A_Stop
+			SFA4 A 0 A_Stop		SFA5 A 0 A_Stop		SFA6 A 0 A_Stop		SFA7 A 0 A_Stop
+			SFA8 A 0 A_Stop		SFA9 A 0 A_Stop		SFAA A 0 A_Stop		SFAB A 0 A_Stop
+			SFAC A 0 A_Stop		SFAD A 0 A_Stop		SFAE A 0 A_Stop		SFAF A 0 A_Stop
+			SFB0 A 0 A_Stop		SFB1 A 0 A_Stop		SFB2 A 0 A_Stop		SFB3 A 0 A_Stop
+			SFB4 A 0 A_Stop		SFB5 A 0 A_Stop		SFB6 A 0 A_Stop		SFB7 A 0 A_Stop
+			SFB8 A 0 A_Stop		SFB9 A 0 A_Stop		SFBA A 0 A_Stop		SFBB A 0 A_Stop
+			SFBC A 0 A_Stop		SFBD A 0 A_Stop		SFBE A 0 A_Stop		SFBF A 0 A_Stop
+			SFC0 A 0 A_Stop		SFC1 A 0 A_Stop		SFC2 A 0 A_Stop		SFC3 A 0 A_Stop
+			SFC4 A 0 A_Stop		SFC5 A 0 A_Stop		SFC6 A 0 A_Stop		SFC7 A 0 A_Stop
+			SFC8 A 0 A_Stop		SFC9 A 0 A_Stop		SFCA A 0 A_Stop		SFCB A 0 A_Stop
+			SFCC A 0 A_Stop		SFCD A 0 A_Stop		SFCE A 0 A_Stop		SFCF A 0 A_Stop
+			SFD0 A 0 A_Stop		SFD1 A 0 A_Stop		SFD2 A 0 A_Stop		SFD3 A 0 A_Stop
+			SFD4 A 0 A_Stop		SFD5 A 0 A_Stop		SFD6 A 0 A_Stop		SFD7 A 0 A_Stop
+			SFD8 A 0 A_Stop		SFD9 A 0 A_Stop		SFDA A 0 A_Stop		SFDB A 0 A_Stop
+			SFDC A 0 A_Stop		SFDD A 0 A_Stop		SFDE A 0 A_Stop		SFDF A 0 A_Stop
+			SFE0 A 0 A_Stop		SFE1 A 0 A_Stop		SFE2 A 0 A_Stop		SFE3 A 0 A_Stop
+			SFE4 A 0 A_Stop		SFE5 A 0 A_Stop		SFE6 A 0 A_Stop		SFE7 A 0 A_Stop
+			SFE8 A 0 A_Stop		SFE9 A 0 A_Stop		SFEA A 0 A_Stop		SFEB A 0 A_Stop
+			SFEC A 0 A_Stop		SFED A 0 A_Stop		SFEE A 0 A_Stop		SFEF A 0 A_Stop
+			SFF0 A 0 A_Stop		SFF1 A 0 A_Stop		SFF2 A 0 A_Stop		SFF3 A 0 A_Stop
+			SFF4 A 0 A_Stop		SFF5 A 0 A_Stop		SFF6 A 0 A_Stop		SFF7 A 0 A_Stop
+			SFF8 A 0 A_Stop		SFF9 A 0 A_Stop		SFFA A 0 A_Stop		SFFB A 0 A_Stop
+			SFFC A 0 A_Stop		SFFD A 0 A_Stop		SFFE A 0 A_Stop		SFFF A 0 A_Stop
 			Stop
 	}
 }

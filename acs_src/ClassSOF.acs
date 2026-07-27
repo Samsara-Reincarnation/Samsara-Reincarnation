@@ -10,9 +10,27 @@ str BrutalityBonuses[8][2] =
 	{ "Roasted", "SoF_Roasted" },
 };
 
+int SoFWeaponStates[12] = { "Knife", "Pistol", "Pistol", "Rifle", "Shotgun", "Shotgun", "Launcher", "Shotgun", "Shotgun", "Shotgun", "Pistol", "Rifle" };
+
+#DEFINE SOF_ACTION_SPAWN 0
+#DEFINE SOF_ACTION_WALK 1
+#DEFINE SOF_ACTION_WSTRAFEL 2
+#DEFINE SOF_ACTION_WSTRAFER 3
+#DEFINE SOF_ACTION_WALKBACK 4
+#DEFINE SOF_ACTION_RUN 5
+#DEFINE SOF_ACTION_STRAFEL 6
+#DEFINE SOF_ACTION_STRAFER 7
+#DEFINE SOF_ACTION_RUNBACK 8
 Script "SoF_Player" (void)
 {
+	int GZDoom = (GetCvar("samsara_zscriptready") == 1);
+	int currentplayeraction = 0;
+	int playerStillMoving = 0;
+	int actionValue = 0; //I need this to reduce duplicated code
+	int viewModelsLoaded = GetCvar("samsara_cl_viewmodelsloaded");
+	int changeWeapon = 0;
 	ACS_NamedExecuteWithResult("SoF_HandleLean");
+	
 	while(CheckInventory("SoFClass"))
 	{
 		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraSOFRocketCycle", CheckInventory("SoF_RocketMagazine") % 4); }
@@ -38,6 +56,133 @@ Script "SoF_Player" (void)
 			}
 			
 			TakeInventory(strparam(s:BrutalityBonuses[i][1],s:"Timer"),1);
+		}
+		
+		int velX = GetActorVelX(0)>>16;
+		int velY = GetActorVelY(0)>>16;
+		int inputX = -GetPlayerInput(-1,MODINPUT_SIDEMOVE);
+		int inputY = GetPlayerInput(-1,MODINPUT_FORWARDMOVE);
+		
+		// If the player is not dead, do this stuff, otherwise, wait until they are alive
+		if(currentplayeraction >= SOF_ACTION_SPAWN)
+		{
+			// If in GZDoom, give the weapon updater ZScript token. Otherwise, use behavior of the Assault Rifle
+			if(GZDoom && viewModelsLoaded) GiveInventory("JohnMullinsWeaponUpdater",1);
+			else SetInventory("SoF_SelectedWeapon",3);
+			
+			// Set ChangeWeapon
+			changeWeapon = CheckInventory("SoF_SelectedWeapon") != CheckInventory("SoF_LastWeapon");
+			
+			//Spawn/Standing
+			if(inputY != 0 || inputX != 0 || playerStillMoving > 0)
+			{
+				//Add inertia to the player
+				if(inputY != 0 || inputX != 0)
+				{
+					if(playerStillMoving < 16) 
+						playerStillMoving+=2;
+				}
+				
+				//Check for running
+				if(sqrt(velX*velX + velY*velY)<<16 >= 8.0)
+				{
+					if(abs(inputY) > abs(inputX) && inputY > 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_RUN)
+						{
+							currentplayeraction = SOF_ACTION_RUN;
+							SetActorState(0,strparam(s:"Run",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+					else if(abs(inputY) > abs(inputX) && inputY < 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_RUNBACK)
+						{
+							currentplayeraction = SOF_ACTION_RUNBACK;
+							SetActorState(0,strparam(s:"RunBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+					else if(inputX > 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFER)
+						{
+							currentplayeraction = SOF_ACTION_STRAFER;
+							SetActorState(0,strparam(s:"StrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+					else if(inputX < 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFEL)
+						{
+							currentplayeraction = SOF_ACTION_STRAFEL;
+							SetActorState(0,strparam(s:"StrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+				} 
+				//Check for walking speed
+				else
+				{
+					if(abs(inputY) > abs(inputX) && inputY > 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_WALK)
+						{
+							currentplayeraction = SOF_ACTION_WALK;
+							SetActorState(0,strparam(s:"Walk",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+					else if(abs(inputY) > abs(inputX) && inputY < 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_WALKBACK)
+						{
+							currentplayeraction = SOF_ACTION_WALKBACK;
+							SetActorState(0,strparam(s:"WalkBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+					else if(inputX > 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFER)
+						{
+							currentplayeraction = SOF_ACTION_WSTRAFER;
+							SetActorState(0,strparam(s:"WStrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+					else if(inputX < 0)
+					{
+						if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFEL)
+						{
+							currentplayeraction = SOF_ACTION_WSTRAFEL;
+							SetActorState(0,strparam(s:"WStrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						}
+					}
+				}
+			}	
+			//Walking?
+			else if(changeWeapon || currentplayeraction != SOF_ACTION_SPAWN)
+			{
+				currentplayeraction = SOF_ACTION_SPAWN;
+				SetActorState(0,strparam(s:"Spawn",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+				SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+			}
+				
+			
+			if(playerStillMoving > 0) playerStillMoving--;
+			
+			Delay(1);
+		}
+		else
+		{
+			if(ClassifyActor(0) & ACTOR_ALIVE)
+				currentplayeraction = 0;
+				
+			Delay(1);
 		}
 
 		Delay(1);
@@ -902,4 +1047,24 @@ Script "SoF_DoScope" (void) clientside
 		Delay(1);
 	}
 	RemoveMessages(49,59);
+}
+
+str SoFWeapons[12] = { "SoF_Knife", "SoF_Pistol1", "SoF_Pistol2", "SoF_AssaultRifle", "SoF_Shotgun", "SoF_Machinegun", "SoF_Rocket", "SoF_Flamegun", "SoF_Slugger", "SoF_MPG", "SoF_MPistol", "SoF_SniperRifle" };
+
+Script "SoF_CheckWeapon" (void)
+{
+	//We don't run this if the view models aren't loaded
+	if(!GetCvar("samsara_cl_viewmodelsloaded"))
+		terminate;
+		
+	for(int a = 0; a < 12; a++)
+	{
+		if(CheckWeapon(SoFWeapons[a]))
+		{
+			//Only do the thing if the weapon changed.
+			if(CheckInventory("SoF_SelectedWeapon") != (a + 1))
+				SetInventory("SoF_SelectedWeapon",a+1);
+			break;
+		}
+	}	
 }
