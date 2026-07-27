@@ -2768,23 +2768,10 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                 SetInventory("SamsaraQuake1LoadoutSlot1", loadoutmode);
 
-                loadoutmode = GetCVar("samsara_ranger_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_ranger_slot3") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot3");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraQuake1LoadoutSlot3", loadoutmode);
-
                 if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraQuake1LoadoutSlot1"))
                 {
                     ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINSAW, CheckInventory("SamsaraQuake1LoadoutSlot1"), pln);
                     loadoutPrevValue[pln][SLOT_CHAINSAW] = CheckInventory("SamsaraQuake1LoadoutSlot1");
-                }
-
-                if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != CheckInventory("SamsaraQuake1LoadoutSlot3"))
-                {
-                    ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, CheckInventory("SamsaraQuake1LoadoutSlot3"), pln);
-                    loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = CheckInventory("SamsaraQuake1LoadoutSlot3");
                 }
 
                 if (CheckInventory("Mjolnir") || CheckInventory("Q1Chainsaw"))
@@ -2807,33 +2794,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                             if (CheckWeapon("Mjolnir")) { SetWeapon("Q1Chainsaw"); }
 
                             SetInventory("Mjolnir", 0);
-                        }
-                    }
-                }
-
-                if (CheckInventory("Grenade Launcher") || CheckInventory("Q1Widowmaker"))
-                {
-                    if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
-                    {
-                        SetInventory("Grenade Launcher", 1);
-                        SetInventory("Grenade Launcher DOE", CheckInventory("Grenade Launcher") && !vanillaquake);
-                        SetInventory("Q1Widowmaker", 1);
-                    } else {
-                        if (!CheckInventory("SamsaraQuake1LoadoutSlot3"))
-                        {
-                            SetInventory("Grenade Launcher", 1);
-                            SetInventory("Grenade Launcher DOE", CheckInventory("Grenade Launcher") && !vanillaquake);
-
-                            if (CheckWeapon("Q1Widowmaker")) { SetWeapon("Grenade Launcher"); }
-
-                            SetInventory("Q1Widowmaker", 0);
-                        } else if (CheckInventory("SamsaraQuake1LoadoutSlot3")) {
-                            SetInventory("Q1Widowmaker", 1);
-
-                            if (CheckWeapon("Grenade Launcher") || CheckWeapon("Grenade Launcher DOE")) { SetWeapon("Q1Widowmaker"); }
-
-                            SetInventory("Grenade Launcher", 0);
-                            SetInventory("Grenade Launcher DOE", 0);
                         }
                     }
                 }
