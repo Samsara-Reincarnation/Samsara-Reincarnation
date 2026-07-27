@@ -1,4 +1,4 @@
-actor SamsaraQuake1AssaultCannonLoopSoundCheck : Boolean {}
+actor SamsaraQuakeAssaultCannonLoopSoundCheck : Boolean {}
 actor AC_FiredOnce: Boolean {}
 
 actor "Q1AssaultCannon" : SamsaraQuakeWeapon
@@ -10,16 +10,19 @@ actor "Q1AssaultCannon" : SamsaraQuakeWeapon
     Weapon.AmmoType "Shell"
     Weapon.AmmoGive 10
     Weapon.AmmoUse 1
-    Obituary "$SAMSARA_RANGER_OB_SLOT2"
+    Obituary "$SAMSARA_RANGER_OB_SLOT4S"
     Tag "Assault Cannon"
     States
     {
       Spawn:
         QASC Z -1
         stop
+
       Ready:
+        QASC A 0 A_TakeInventory("SamsaraQuakeAssaultCannonLoopSoundCheck")
         QASC A 1 A_WeaponReady
         loop
+
       Select:
         TNT1 A 0 A_TakeInventory("Ranger_AxeSelected")
         TNT1 A 0 A_GiveInventory("Ranger_GunSelected")
@@ -27,71 +30,75 @@ actor "Q1AssaultCannon" : SamsaraQuakeWeapon
         TNT1 A 0 A_TakeInventory("Ranger_NailSelected")
         TNT1 A 0 A_TakeInventory("Ranger_PlasmaSelected")
         goto Super::Select
-	  Deselect:
-        TNT1 A 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopSoundStopper")
+
+      Deselect:
+        TNT1 A 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopSoundStopper")
         goto Super::Deselect
+
       Fire:
-        //QASC B 0 A_GiveInventory("SamsaraQuakeWeaponAlert")
-        QASC B 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopStartSoundPlayer")
+        QASC B 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopStartSoundPlayer")
         QASC B 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC B 0 A_ReFire(1)
-		goto FireFinish
+        QASC C 0 A_ReFire(1)
+        goto FireFinish
         QASC C 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC C 0 A_ReFire(1)
-		goto FireFinish
+        QASC D 0 A_ReFire(1)
+        goto FireFinish
         QASC D 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC D 0 A_ReFire(1)
-		goto FireFinish
+        QASC A 0 A_ReFire(1)
+        goto FireFinish
         QASC A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC A 0 A_ReFire(1)
-		goto FireFinish
+        QASC B 0 A_ReFire(1)
+        goto FireFinish
         QASC B 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC B 0 A_ReFire(1)
-		goto FireFinish
-		QASC C 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC B 0 A_ReFire(1)
-		goto FireFinish
-		QASC D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC D 0 A_ReFire(1)
-		goto FireFinish
-		QASC A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC A 0 A_ReFire(1)
-		goto FireFinish
-		QASC B 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC B 0 A_ReFire(1)
-		goto FireFinish
-		QASC C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC C 0 A_ReFire(1)
-		goto FireFinish
-		QASC D 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        QASC D 0 A_ReFire("Hold")
-		goto FireFinish
-	  Hold:
-	    QASC E 0 A_GiveInventory("SamsaraQuakeWeaponAlert")
-        QASC E 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopSoundPlayer")
-		QASC E 0 A_GiveInventory("SamsaraQuakeAssaultCannonAttackHandler")
-		QASC E 0 A_GunFlash
+        QASC C 0 A_ReFire(1)
+        goto FireFinish
+        QASC C 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC D 0 A_ReFire(1)
+        goto FireFinish
+        QASC D 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC A 0 A_ReFire(1)
+        goto FireFinish
+        QASC A 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC B 0 A_ReFire(1)
+        goto FireFinish
+        QASC B 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC C 0 A_ReFire(1)
+        goto FireFinish
+        QASC C 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC D 0 A_ReFire(1)
+        goto FireFinish
+        QASC D 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC E 0 A_ReFire
+        goto FireFinish
+
+      Hold:
+        QASC E 0 A_GiveInventory("SamsaraQuakeWeaponAlert")
+        QASC E 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopSoundStarter")
+        QASC E 0 A_GiveInventory("SamsaraQuakeAssaultCannonAttackHandler")
+        QASC E 0 A_GunFlash
         QASC EBCD 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC E 0 A_ReFire("Hold")
-	  FireFinish:
-	    QASC A 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopSoundPlayer")
-	    QASC A 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopEndSoundPlayer")
-		QASC AB 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC CDAB 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC C 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC B 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC C 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-		QASC D 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC E 0 A_ReFire
+        goto FireFinish
+
+      FireFinish:
+        QASC A 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopSoundStopper")
+        QASC A 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopEndSoundPlayer")
+        QASC AB 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC CDAB 2 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC C 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC B 5 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC C 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        QASC D 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         goto Ready
-	  Flash:
-        TNT1 A 0 A_SetAngle(angle+frandom(-1.25,1.25))
+
+      Flash:
         TNT1 A 0 A_JumpIfInventory("SamsaraRecoilIsDisabled",1,2)
         TNT1 A 0 A_SetPitch(pitch+frandom(-1.25,1.25))
-        TNT1 A 0
+        TNT1 A 0 A_SetAngle(angle+frandom(-1.25,1.25))
         stop
     }
-} 
+}
 
 actor SamsaraQuakeAssaultCannonAttackHandler : Trigger
 {
@@ -99,31 +106,22 @@ actor SamsaraQuakeAssaultCannonAttackHandler : Trigger
     {
       // Ammo checking/taking stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("Shell",1,1)
         stop
         TNT1 A 0 A_JumpIfInventory("AC_FiredOnce",0,2)
         TNT1 A 0 A_GiveInventory("AC_FiredOnce")
-        goto PickupPlaySound
+        goto PickupAttack
         TNT1 A 0 A_TakeInventory("Shell",1)
         TNT1 A 0 A_TakeInventory("AC_FiredOnce")
-        goto PickupPlaySound
-
-      // Sound stuff
-      PickupPlaySound:
-        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupPlaySoundDMC")
-        TNT1 A 0 A_PlaySound("quakeweps/asscan2",CHAN_WEAPON)
-        goto PickupAttack
-
-      PickupPlaySoundDMC:
-        TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan2",CHAN_WEAPON)
         goto PickupAttack
 
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupAttackDMC")
-      // Original/Rerelease sounds (of which there are not actually any)
+      // Original/Rerelease sounds (of which there are not actually any for the puffs)
       PickupAttackQuakeI:
+        TNT1 A 0 A_PlaySound("quakeweps/asscan2",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackQuakeICoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackQuakeICoop")
       PickupAttackQuakeIDM:
@@ -136,6 +134,7 @@ actor SamsaraQuakeAssaultCannonAttackHandler : Trigger
 
       // Deathmatch Classic sounds
       PickupAttackDMC:
+        TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan2",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackDMCCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackDMCCoop")
       PickupAttackDMCDM:
@@ -151,77 +150,81 @@ actor SamsaraQuakeAssaultCannonAttackHandler : Trigger
         TNT1 A 0 ACS_NamedExecuteAlways("SamsaraRecoil", 0, -100, 0, 3)
         stop
     }
-} 
+}
 
-actor SamsaraQuake1AssaultCannonLoopStartSoundPlayer : Trigger
+actor SamsaraQuakeAssaultCannonLoopStartSoundPlayer : Trigger
 {
     States
     {
       // Sound playing stuff
       Pickup:
         TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupDMC")
+      // Original/Rerelease sounds
+      PickupQuakeI:
         TNT1 A 0 A_PlaySound("quakeweps/asscan1",CHAN_6)
         stop
 
+      // Deathmatch Classic sounds
       PickupDMC:
         TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan1",CHAN_6)
         stop
     }
 }
 
-actor SamsaraQuake1AssaultCannonLoopSoundPlayer : Trigger
-{
-    States
-    {
-      // Sound starting stuff
-      Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupDMC")
-        TNT1 A 0 A_PlaySound("quakeweps/asscan4",CHAN_6,1.0,true)
-        TNT1 A 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopSoundCheck")
-        stop
-
-      PickupDMC:
-        TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan4",CHAN_6,1.0,true)
-        TNT1 A 0 A_GiveInventory("SamsaraQuake1AssaultCannonLoopSoundCheck")
-        stop
-    }
-}
-
-actor SamsaraQuake1AssaultCannonLoopEndSoundPlayer : Trigger
+actor SamsaraQuakeAssaultCannonLoopSoundStarter : Trigger
 {
     States
     {
       // Sound playing stuff
       Pickup:
         TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupDMC")
-        TNT1 A 0 A_JumpIfInventory("SamsaraQuake1AssaultCannonLoopSoundCheck",1,1)
-        stop
-        TNT1 A 0 A_PlaySound("quakeweps/asscan3",CHAN_6)
+      // Original/Rerelease sounds
+      PickupQuakeI:
+        TNT1 A 0 A_PlaySound("quakeweps/asscan4",CHAN_6,1,true)
         goto PickupFinish
 
+      // Deathmatch Classic sounds
       PickupDMC:
-        TNT1 A 0 A_JumpIfInventory("SamsaraQuake1AssaultCannonLoopSoundCheck",1,1)
-        stop
-        TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan3",CHAN_6)
+        TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan4",CHAN_6,1,true)
         goto PickupFinish
 
+      // Finishing stuff
       PickupFinish:
-        TNT1 A 0 A_TakeInventory("SamsaraQuake1AssaultCannonLoopSoundCheck")
+        TNT1 A 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopSoundCheck")
         stop
     }
 }
 
-actor SamsaraQuake1AssaultCannonLoopSoundStopper : Trigger
+actor SamsaraQuakeAssaultCannonLoopEndSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound playing stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraAlternateSoundToken",2,"PickupDMC")
+      // Original/Rerelease sounds
+      PickupQuakeI:
+        TNT1 A 0 A_PlaySound("quakeweps/asscan3",CHAN_6)
+        stop
+
+      // Deathmatch Classic sounds
+      PickupDMC:
+        TNT1 A 0 A_PlaySound("quakeweps/dmc/asscan3",CHAN_6)
+        stop
+    }
+}
+
+actor SamsaraQuakeAssaultCannonLoopSoundStopper : Trigger
 {
     States
     {
       // Sound stopping stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraQuake1AssaultCannonLoopSoundCheck",1,1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraQuakeAssaultCannonLoopSoundCheck",1,1)
         stop
         TNT1 A 0 A_PlaySound("silence",CHAN_6)
         TNT1 A 0 A_StopSound(CHAN_6)
-        TNT1 A 0 A_TakeInventory("SamsaraQuake1AssaultCannonLoopSoundCheck")
+        TNT1 A 0 A_TakeInventory("SamsaraQuakeAssaultCannonLoopSoundCheck")
         stop
     }
 }
