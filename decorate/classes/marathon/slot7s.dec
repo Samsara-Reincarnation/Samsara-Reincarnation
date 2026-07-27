@@ -127,10 +127,8 @@ actor "Mercury Class Fusion Rifle" : SamsaraMarathonWeapon
         goto FireReloadable
 
       FireStart:
-        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
-        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"Ready")
         TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 //A_GunFlash
+        TNT1 A 0 A_GunFlash
         TNT1 A 0 A_GiveInventory("SamsaraMarathonMCFRPrimaryAttackHandler")
         TNT1 A 0 A_Light2
 		TNT1 A 0 A_JumpIfInventory("MCFRFireRateThing",1,"FireB")
@@ -205,8 +203,6 @@ actor SamsaraMarathonMCFRAltFire : Trigger
 
       PickupAltFire:
 	    //TNT1 A 0 A_Log("altfire success!")
-        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,2)
-        TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"PickupStop")
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraForcePlayerAttackState", 1)
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_TakeInventory("MCFRFiredS") // reset
