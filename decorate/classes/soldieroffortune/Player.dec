@@ -1,6 +1,8 @@
 Actor SoFClass : Boolean {}
 Actor SoF_SelectedWeapon : Counter {}
 Actor SoF_LastWeapon : TemporaryCounter {}
+Actor SoF_PlayerJumping : TemporaryBoolean {}
+Actor SoF_ShootingToken : TemporaryBoolean {}
 
 Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 {
@@ -20,9 +22,10 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 	Player.StartItem "SoF_MPGMagazine", 30
 	Player.StartItem "SoF_MPistolMagazine", 32
 	Player.StartItem "SoF_SniperMagazine", 6
-	Player.StartItem "SoF_SelectedWeapon", 1
+	Player.StartItem "SoF_SelectedWeapon", 2
 	Player.StartItem "Clip", 50
 	Player.DisplayName "Soldier of Fortune"
+	Player.ColorRange 112, 127
 	States
 	{
 		Spawn:
@@ -30,6 +33,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SF34 ABCDEFGHIJKLM 2
 			Loop
 		SpawnShotgun:
+		SpawnMachineGun:
 			SF35 ABCDEFGHIJKLM 2
 			Loop
 		SpawnKnife:
@@ -47,6 +51,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SFB9 ABCDEFGHIJ 2
 			Loop
 		WalkShotgun:
+		WalkMachineGun:
 			SFBA ABCDEFGHIJ 2
 			Loop
 		WalkKnife:
@@ -61,6 +66,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SFBD ABCDEFGHIJ 2
 			Loop
 		WStrafeLShotgun:
+		WStrafeLMachineGun:
 			SFBE ABCDEFGHIJ 2
 			Loop
 		WStrafeLKnife:
@@ -75,6 +81,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SFC1 ABCDEFGHIJ 2
 			Loop
 		WStrafeRShotgun:
+		WStrafeRMachineGun:
 			SFC2 ABCDEFGHIJ 2
 			Loop
 		WStrafeRKnife:
@@ -89,6 +96,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SFC5 ABCDEFGHIJ 2
 			Loop
 		WalkBackShotgun:
+		WalkBackMachineGun:
 			SFC6 ABCDEFGHIJ 2
 			Loop
 		WalkBackKnife:
@@ -104,6 +112,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SF86 ABCDEF 2
 			Loop
 		RunShotgun:
+		RunMachineGun:
 		RunRifle:
 			SF87 ABCDEF 2
 			Loop
@@ -116,6 +125,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SF86 ABCDEF 2
 			Loop
 		StrafeLShotgun:
+		StrafeLMachineGun:
 		StrafeLRifle:
 			SF8B ABCDEF 2
 			Loop
@@ -128,6 +138,7 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SF8D ABCDEF 2
 			Loop
 		StrafeRShotgun:
+		StrafeRMachineGun:
 		StrafeRRifle:
 			SF8E ABCDEF 2
 			Loop
@@ -140,12 +151,157 @@ Actor JohnMullins : SamsaraPlayerPawnNormalRedBlood
 			SF90 ABCDEF 2
 			Loop
 		RunBackShotgun:
+		RunBackMachineGun:
 		RunBackRifle:
-			SF91 ABCDEF 2
+			SF91 ABCD 2
 			Loop
 		RunBackKnife:
 		RunBackPistol:
 			SF92 ABCDEF 2
+			Loop
+
+		// Leaning idle animation
+		LeanLeftMidKnife:
+		LeanLeftMidPistol:
+		LeanLeftMidRifle:
+		LeanLeftMidShotgun:
+		LeanLeftMidMachineGun:
+			SF48 ABCDEFGHIJ 2
+			Loop
+		LeanLeftMidLauncher:
+			SF49 ABCDEFGHIJ 2
+			Loop
+			
+		LeanRightMidKnife:
+		LeanRightMidPistol:
+		LeanRightMidRifle:
+		LeanRightMidShotgun:
+		LeanRightMidMachineGun:
+			SF4E ABCDEFGHIJ 2
+			Loop
+		LeanRightMidLauncher:
+			SF4F ABCDEFGHIJ 2
+			Loop
+			
+		//Transitional leaning frames
+		//Left
+		LeanToMulti4:
+			SF4A A 2
+			Loop
+		LeanToMulti3:
+			SF4A B 2
+			Loop
+		LeanToMulti2:
+			SF4A C 2
+			Loop
+		LeanToMulti1:
+			SF4A D 2
+			Loop
+		LeanToLauncher4:
+			SF4B A 2
+			Loop
+		LeanToLauncher3:
+			SF4B B 2
+			Loop
+		LeanToLauncher2:
+			SF4B C 2
+			Loop
+		LeanToLauncher1:
+			SF4A D 2
+			Loop
+		// Right
+		LeanToMulti6:
+			SF50 A 2
+			Loop
+		LeanToMulti7:
+			SF50 B 2
+			Loop
+		LeanToMulti8:
+			SF50 C 2
+			Loop
+		LeanToMulti9:
+			SF50 D 2
+			Loop
+		LeanToLauncher6:
+			SF51 A 2
+			Loop
+		LeanToLauncher7:
+			SF51 B 2
+			Loop
+		LeanToLauncher8:
+			SF51 C 2
+			Loop
+		LeanToLauncher9:
+			SF51 D 2
+			Loop
+			
+		//Jump (Straight Up)
+		JumpStraightKnife:
+		JumpStraightPistol:
+		JumpStraightRifle:
+		JumpStraightShotgun:
+		JumpStraightMachineGun:
+			SF57 A 0 A_GiveInventory("SoF_PlayerJumping")
+			SF57 IJKL 2
+			Goto JumpStraightMultiLoop
+		JumpStraightMultiLoop:
+			SF57 M 2 
+			SF57 M 0 A_CheckFloor("JumpStraightMultiEnd")
+			Loop
+		JumpStraightMultiEnd:
+			SF57 NOPQRSTUVWX 2
+			SF57 X 2 A_TakeInventory("SoF_PlayerJumping")
+			Wait
+		JumpStraightLauncher:
+			SF58 A 0 A_GiveInventory("SoF_PlayerJumping")
+			SF58 IJKL 2
+			Goto JumpStraightLauncherLoop
+		JumpStraightLauncherLoop:
+			SF58 M 2 
+			SF58 M 0 A_CheckFloor("JumpStraightLauncherEnd")
+			Loop
+		JumpStraightLauncherEnd:
+			SF58 NOPQRSTUVWX 2
+			SF58 X 2 A_TakeInventory("SoF_PlayerJumping")
+			Wait
+			
+		//Jump (Forward)
+		JumpForwardKnife:
+		JumpForwardPistol:
+		JumpForwardRifle:
+		JumpForwardShotgun:
+		JumpForwardMachineGun:
+		JumpForwardLauncher:
+			SF56 A 0 A_GiveInventory("SoF_PlayerJumping")
+			SF56 ABCD 2
+			Goto JumpForwardMultiLoop
+		JumpForwardMultiLoop:
+			SF56 E 2 
+			SF56 E 0 A_CheckFloor("JumpForwardMultiEnd")
+			Loop
+		JumpForwardMultiEnd:
+			SF56 FGHIJKLMNOP 2
+			SF56 P 2 A_TakeInventory("SoF_PlayerJumping")
+			Wait
+		
+		//Shooting animation. I could sworn the move states had it. Oh well.
+		ShootKnife:
+			SF85 ABCDEFGHIJKLMNO 2
+			Loop
+		ShootPistol:
+			SF43 ABCDE 2
+			Loop
+		ShootRifle:
+			SF44 ABCDE 2
+			Loop
+		ShootShotgun:
+			SF45 ABCDE 2
+			Loop
+		ShootMachineGun:
+			SF42 AB 2
+			Loop
+		ShootLauncher:
+			SF41 ABCDEFGHI 2
 			Loop
 		
 		//Death Animations

@@ -424,6 +424,7 @@ ACTOR SoF_Pistol1 : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_Pistol1Magazine",1,"FireStart")
             Goto DryFire
         FireStart:
+			"####" "#" 0 A_GiveInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",11,"FIRE1_C")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",10,"FIRE1_B")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",9,"FIRE1_A")
@@ -450,6 +451,7 @@ ACTOR SoF_Pistol1 : SoF_Weapon
             SF00 F 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF00 G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF0A A 0 ACS_NamedExecuteWithResult("SoF_Decorate",1,1)
+			SF0A A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B:
             "####" "#" 0 A_JumpIfInventory("SoF_FullyLeaned",1,2)
@@ -464,6 +466,7 @@ ACTOR SoF_Pistol1 : SoF_Weapon
             SF01 F 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF0B A 0 ACS_NamedExecuteWithResult("SoF_Decorate",1,2)
+			SF0B A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_C:
             "####" "#" 6
@@ -644,7 +647,7 @@ Actor SoF_Pistol1_A_FireToken : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 3, 48)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 3, 48, 0, 0)
         stop
     }
 }
@@ -690,7 +693,7 @@ Actor SoF_Pistol1_B_FireToken : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 3, 48)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 3, 48, 0, 0)
         stop
     }
 }

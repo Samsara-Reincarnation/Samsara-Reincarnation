@@ -10,7 +10,7 @@ str BrutalityBonuses[8][2] =
 	{ "Roasted", "SoF_Roasted" },
 };
 
-int SoFWeaponStates[12] = { "Knife", "Pistol", "Pistol", "Rifle", "Shotgun", "Shotgun", "Launcher", "Shotgun", "Shotgun", "Shotgun", "Pistol", "Rifle" };
+int SoFWeaponStates[12] = { "Knife", "Pistol", "Pistol", "Rifle", "Shotgun", "MachineGun", "Launcher", "MachineGun", "MachineGun", "MachineGun", "Pistol", "Rifle" };
 
 #DEFINE SOF_ACTION_SPAWN 0
 #DEFINE SOF_ACTION_WALK 1
@@ -21,6 +21,11 @@ int SoFWeaponStates[12] = { "Knife", "Pistol", "Pistol", "Rifle", "Shotgun", "Sh
 #DEFINE SOF_ACTION_STRAFEL 6
 #DEFINE SOF_ACTION_STRAFER 7
 #DEFINE SOF_ACTION_RUNBACK 8
+#DEFINE SOF_ACTION_LEANLEFTLOOP 9
+#DEFINE SOF_ACTION_LEANRIGHTLOOP 10
+#DEFINE SOF_ACTION_JUMPSTRAIGHT 11
+#DEFINE SOF_ACTION_JUMPFORWARD 12
+#DEFINE SOF_ACTION_SHOOTING 13
 Script "SoF_Player" (void)
 {
 	int GZDoom = (GetCvar("samsara_zscriptready") == 1);
@@ -29,6 +34,7 @@ Script "SoF_Player" (void)
 	int actionValue = 0; //I need this to reduce duplicated code
 	int viewModelsLoaded = GetCvar("samsara_cl_viewmodelsloaded");
 	int changeWeapon = 0;
+	int lastLean = 0;
 	ACS_NamedExecuteWithResult("SoF_HandleLean");
 	
 	while(CheckInventory("SoFClass"))
@@ -73,9 +79,56 @@ Script "SoF_Player" (void)
 			// Set ChangeWeapon
 			changeWeapon = CheckInventory("SoF_SelectedWeapon") != CheckInventory("SoF_LastWeapon");
 			
-			//Spawn/Standing
-			if(inputY != 0 || inputX != 0 || playerStillMoving > 0)
+			//Leaning
+			if(CheckInventory("SoF_LeanCounter") != 5)
+			{		
+				SetInventory("SoF_PlayerJumping",0);
+				//Left
+				if((CheckInventory("SoF_LeanCounter") == 1 && currentplayeraction != SOF_ACTION_LEANLEFTLOOP) || changeWeapon)
+				{
+					currentplayeraction = SOF_ACTION_LEANLEFTLOOP;
+					SetActorState(0,strparam(s:"LeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+				}
+				//Right
+				else if((CheckInventory("SoF_LeanCounter") == 9 && currentplayeraction != SOF_ACTION_LEANRIGHTLOOP) || changeWeapon)
+				{
+					currentplayeraction = SOF_ACTION_LEANRIGHTLOOP;
+					SetActorState(0,strparam(s:"LeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+				}
+				else if(CheckInventory("SoF_LeanCounter") != 9 && CheckInventory("SoF_LeanCounter") != 1)
+				{
+					if(SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")] != "Launcher")
+						SetActorState(0,strparam(s:"LeanToMulti",d:CheckInventory("SoF_LeanCounter")),true);
+					else
+						SetActorState(0,strparam(s:"LeanToLauncher",d:CheckInventory("SoF_LeanCounter")),true);
+				}
+			}
+			//Jumping is a lower priority than leaning
+			else if((GetPlayerInput(-1,MODINPUT_BUTTONS) & BT_JUMP) || CheckInventory("SoF_PlayerJumping"))
 			{
+				if(sqrt(velX*velX + velY*velY)<<16 <= 4.0)
+				{
+					if(currentplayeraction != SOF_ACTION_JUMPSTRAIGHT && !CheckInventory("SoF_PlayerJumping"))
+					{
+						SetActorState(0,strparam(s:"JumpStraight",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						currentplayeraction = SOF_ACTION_JUMPSTRAIGHT;
+					}
+				}
+				else
+				{
+					if(currentplayeraction != SOF_ACTION_JUMPFORWARD && !CheckInventory("SoF_PlayerJumping"))
+					{
+						SetActorState(0,strparam(s:"JumpForward",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						currentplayeraction = SOF_ACTION_JUMPFORWARD;
+					}
+				}
+			}
+			//Moving
+			else if(inputY != 0 || inputX != 0 || playerStillMoving > 0)
+			{
+				SetInventory("SoF_PlayerJumping",0);
 				//Add inertia to the player
 				if(inputY != 0 || inputX != 0)
 				{
@@ -164,9 +217,20 @@ Script "SoF_Player" (void)
 					}
 				}
 			}	
-			//Walking?
+			//Shooting
+			else if(CheckInventory("SoF_ShootingToken"))
+			{
+				if(currentplayeraction != SOF_ACTION_SHOOTING)
+				{
+					SetInventory("SoF_PlayerJumping",0);
+					currentplayeraction = SOF_ACTION_SHOOTING;
+					SetActorState(0,strparam(s:"Shoot",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+				}
+			}
+			//Spawn/Standing
 			else if(changeWeapon || currentplayeraction != SOF_ACTION_SPAWN)
 			{
+				SetInventory("SoF_PlayerJumping",0);
 				currentplayeraction = SOF_ACTION_SPAWN;
 				SetActorState(0,strparam(s:"Spawn",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
 				SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
@@ -362,6 +426,8 @@ Script "SoF_BrutalityRewards" (int type)
 Script "SoF_HandleLean" (void)
 {
 	int leanCounter = 0;
+	//Need it to remain centered so it does nothing stupid
+	SetInventory("SoF_LeanCounter",5);
 	while(true)
 	{
 		// Do lean stuff. I gotta do this system earlier than I'd like unfortunately
@@ -415,6 +481,8 @@ Script "SoF_HandleLean" (void)
 		
 		if(buttons & BT_ATTACK) SetInventory("SoF_Shooting",1);
 		else SetInventory("SoF_Shooting",0);
+		
+		SetInventory("SoF_LeanCounter",5+(leanCounter/2));
 		
 		Delay(1);
 	}
