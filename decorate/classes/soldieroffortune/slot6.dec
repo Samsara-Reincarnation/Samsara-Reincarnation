@@ -55,6 +55,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_SluggerMagazine",1,1)
             Goto DryFire
         FIRE1:
+			SF01 A 0 A_GiveInventory("SoF_ShootingToken")
             SF01 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
             SF01 A 0 A_GiveInventory("SoF_Slugger_FireToken")
             SF01 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -62,6 +63,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             SF01 C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 D 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF03 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FLASH1:
             SFF1 A 1 Bright
@@ -78,6 +80,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_SluggerMagazine",2,1)
             Goto DryFire
         FIRE2:
+			SF02 A 0 A_GiveInventory("SoF_ShootingToken")
             SF02 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 B 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 C 0 A_GiveInventory("SoF_Slugger_AltFireToken")
@@ -103,6 +106,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             SF02 V 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 W 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 X 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF03 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         Reload:
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
