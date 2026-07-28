@@ -78,16 +78,19 @@ ACTOR SoF_SniperRifle : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_SniperMagazine",1,1)
             Goto DryFire
         FIRE1:
+			SF02 A 0 A_GiveInventory("SoF_ShootingToken")
             SF02 A 0 A_JumpIfInventory("SoF_SniperScoped",1,"FIRE1_ZOOMED")
             SF02 A 0 A_GunFlash("FIRE1_FLASH",GFF_NOEXTCHANGE)
             SF02 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 B 0 A_GiveInventory("SoF_Sniper_FireToken")
             SF02 BCDEFG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF04 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_ZOOMED:
             TNT1 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             TNT1 B 0 A_GiveInventory("SoF_Sniper_FireToken")
             TNT1 BCDEFG 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_FLASH:
             SFF2 A 1 Bright
@@ -296,7 +299,7 @@ Actor SoF_Sniper_FireToken : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 2, 32)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 2, 32, 0, 0)
         stop
     }
 }

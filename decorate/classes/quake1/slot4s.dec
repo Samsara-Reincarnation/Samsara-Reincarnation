@@ -36,6 +36,8 @@ actor "Q1AssaultCannon" : SamsaraQuakeWeapon
         goto Super::Deselect
 
       Fire:
+        // originally alerted enemies when spinning up; let's only have that happen
+        // during attack calls, like other weapons in the mod with a similar system
         QASC B 0 A_GiveInventory("SamsaraQuakeAssaultCannonLoopStartSoundPlayer")
         QASC B 7 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         QASC C 0 A_ReFire(1)
