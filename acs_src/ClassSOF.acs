@@ -84,14 +84,14 @@ Script "SoF_Player" (void)
 			{		
 				SetInventory("SoF_PlayerJumping",0);
 				//Left
-				if((CheckInventory("SoF_LeanCounter") == 1 && currentplayeraction != SOF_ACTION_LEANLEFTLOOP) || changeWeapon)
+				if(CheckInventory("SoF_LeanCounter") == 1 && (currentplayeraction != SOF_ACTION_LEANLEFTLOOP || changeWeapon))
 				{
 					currentplayeraction = SOF_ACTION_LEANLEFTLOOP;
 					SetActorState(0,strparam(s:"LeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
 					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 				}
 				//Right
-				else if((CheckInventory("SoF_LeanCounter") == 9 && currentplayeraction != SOF_ACTION_LEANRIGHTLOOP) || changeWeapon)
+				else if(CheckInventory("SoF_LeanCounter") == 9 && (currentplayeraction != SOF_ACTION_LEANRIGHTLOOP || changeWeapon))
 				{
 					currentplayeraction = SOF_ACTION_LEANRIGHTLOOP;
 					SetActorState(0,strparam(s:"LeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
