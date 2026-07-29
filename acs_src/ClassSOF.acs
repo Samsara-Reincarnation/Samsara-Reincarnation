@@ -26,6 +26,13 @@ int SoFWeaponStates[12] = { "Knife", "Pistol", "Pistol", "Rifle", "Shotgun", "Ma
 #DEFINE SOF_ACTION_JUMPSTRAIGHT 11
 #DEFINE SOF_ACTION_JUMPFORWARD 12
 #DEFINE SOF_ACTION_SHOOTING 13
+#DEFINE SOF_ACTION_CROUCH 14
+#DEFINE SOF_ACTION_CROUCHFORWARD 15
+#DEFINE SOF_ACTION_CROUCHLEFT 16
+#DEFINE SOF_ACTION_CROUCHRIGHT 17
+#DEFINE SOF_ACTION_CROUCHLEANLEFT 18
+#DEFINE SOF_ACTION_CROUCHLEANRIGHT 19
+#DEFINE SOF_ACTION_CROUCHSHOOTING 20
 Script "SoF_Player" (void)
 {
 	int GZDoom = (GetCvar("samsara_zscriptready") == 1);
@@ -35,6 +42,8 @@ Script "SoF_Player" (void)
 	int viewModelsLoaded = GetCvar("samsara_cl_viewmodelsloaded");
 	int changeWeapon = 0;
 	int lastLean = 0;
+	int lastCrouch = 0;
+	int currentCrouch = 0;
 	ACS_NamedExecuteWithResult("SoF_HandleLean");
 	
 	while(CheckInventory("SoFClass"))
@@ -75,6 +84,9 @@ Script "SoF_Player" (void)
 			// If in GZDoom, give the weapon updater ZScript token. Otherwise, use behavior of the Assault Rifle
 			if(GZDoom && viewModelsLoaded) GiveInventory("JohnMullinsWeaponUpdater",1);
 			else SetInventory("SoF_SelectedWeapon",3);
+			
+			// Set Current crouch value
+			currentCrouch = isCrouching(26.0);
 			
 			// Set ChangeWeapon
 			changeWeapon = CheckInventory("SoF_SelectedWeapon") != CheckInventory("SoF_LastWeapon");
@@ -136,82 +148,115 @@ Script "SoF_Player" (void)
 						playerStillMoving+=2;
 				}
 				
-				//Check for running
-				if(sqrt(velX*velX + velY*velY)<<16 >= 8.0)
+				if(!currentCrouch)
 				{
-					if(abs(inputY) > abs(inputX) && inputY > 0)
+					//Check for running
+					if(sqrt(velX*velX + velY*velY)<<16 >= 8.0)
 					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_RUN)
+						if(abs(inputY) > abs(inputX) && inputY > 0)
 						{
-							currentplayeraction = SOF_ACTION_RUN;
-							SetActorState(0,strparam(s:"Run",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							if(changeWeapon || currentplayeraction != SOF_ACTION_RUN)
+							{
+								currentplayeraction = SOF_ACTION_RUN;
+								SetActorState(0,strparam(s:"Run",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+						else if(abs(inputY) > abs(inputX) && inputY < 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_RUNBACK)
+							{
+								currentplayeraction = SOF_ACTION_RUNBACK;
+								SetActorState(0,strparam(s:"RunBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+						else if(inputX > 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFER)
+							{
+								currentplayeraction = SOF_ACTION_STRAFER;
+								SetActorState(0,strparam(s:"StrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+						else if(inputX < 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFEL)
+							{
+								currentplayeraction = SOF_ACTION_STRAFEL;
+								SetActorState(0,strparam(s:"StrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+					} 
+					//Check for walking speed
+					else
+					{
+						if(abs(inputY) > abs(inputX) && inputY > 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_WALK)
+							{
+								currentplayeraction = SOF_ACTION_WALK;
+								SetActorState(0,strparam(s:"Walk",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+						else if(abs(inputY) > abs(inputX) && inputY < 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_WALKBACK)
+							{
+								currentplayeraction = SOF_ACTION_WALKBACK;
+								SetActorState(0,strparam(s:"WalkBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+						else if(inputX > 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFER)
+							{
+								currentplayeraction = SOF_ACTION_WSTRAFER;
+								SetActorState(0,strparam(s:"WStrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
+						}
+						else if(inputX < 0)
+						{
+							if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFEL)
+							{
+								currentplayeraction = SOF_ACTION_WSTRAFEL;
+								SetActorState(0,strparam(s:"WStrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							}
 						}
 					}
-					else if(abs(inputY) > abs(inputX) && inputY < 0)
-					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_RUNBACK)
-						{
-							currentplayeraction = SOF_ACTION_RUNBACK;
-							SetActorState(0,strparam(s:"RunBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
-						}
-					}
-					else if(inputX > 0)
-					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFER)
-						{
-							currentplayeraction = SOF_ACTION_STRAFER;
-							SetActorState(0,strparam(s:"StrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
-						}
-					}
-					else if(inputX < 0)
-					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFEL)
-						{
-							currentplayeraction = SOF_ACTION_STRAFEL;
-							SetActorState(0,strparam(s:"StrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
-						}
-					}
-				} 
-				//Check for walking speed
+				}
 				else
 				{
-					if(abs(inputY) > abs(inputX) && inputY > 0)
+					if(abs(inputY) > abs(inputX))
 					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_WALK)
+						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHFORWARD)
 						{
-							currentplayeraction = SOF_ACTION_WALK;
-							SetActorState(0,strparam(s:"Walk",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
-						}
-					}
-					else if(abs(inputY) > abs(inputX) && inputY < 0)
-					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_WALKBACK)
-						{
-							currentplayeraction = SOF_ACTION_WALKBACK;
-							SetActorState(0,strparam(s:"WalkBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							currentplayeraction = SOF_ACTION_CROUCHFORWARD;
+							SetActorState(0,strparam(s:"CrouchForward",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
 							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 						}
 					}
 					else if(inputX > 0)
 					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFER)
+						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHRIGHT)
 						{
-							currentplayeraction = SOF_ACTION_WSTRAFER;
-							SetActorState(0,strparam(s:"WStrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							currentplayeraction = SOF_ACTION_CROUCHRIGHT;
+							SetActorState(0,strparam(s:"CrouchRight",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
 							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 						}
 					}
 					else if(inputX < 0)
 					{
-						if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFEL)
+						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHLEFT)
 						{
-							currentplayeraction = SOF_ACTION_WSTRAFEL;
-							SetActorState(0,strparam(s:"WStrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+							currentplayeraction = SOF_ACTION_CROUCHLEFT;
+							SetActorState(0,strparam(s:"CrouchLeft",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
 							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 						}
 					}
@@ -220,24 +265,43 @@ Script "SoF_Player" (void)
 			//Shooting
 			else if(CheckInventory("SoF_ShootingToken"))
 			{
-				if(currentplayeraction != SOF_ACTION_SHOOTING)
+				if(!currentCrouch && currentplayeraction != SOF_ACTION_SHOOTING)
 				{
 					SetInventory("SoF_PlayerJumping",0);
 					currentplayeraction = SOF_ACTION_SHOOTING;
 					SetActorState(0,strparam(s:"Shoot",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
 				}
+				else if(currentCrouch && currentplayeraction != SOF_ACTION_CROUCHSHOOTING)
+				{
+					SetInventory("SoF_PlayerJumping",0);
+					currentplayeraction = SOF_ACTION_CROUCHSHOOTING;
+					SetActorState(0,strparam(s:"CrouchShoot",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+				}
 			}
 			//Spawn/Standing
-			else if(changeWeapon || currentplayeraction != SOF_ACTION_SPAWN)
+			else if(changeWeapon || currentplayeraction != SOF_ACTION_SPAWN || currentplayeraction != SOF_ACTION_CROUCH)
 			{
-				SetInventory("SoF_PlayerJumping",0);
-				currentplayeraction = SOF_ACTION_SPAWN;
-				SetActorState(0,strparam(s:"Spawn",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-				SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+				if(!currentCrouch && (currentplayeraction != SOF_ACTION_SPAWN || changeWeapon))
+				{
+					SetInventory("SoF_PlayerJumping",0);
+					currentplayeraction = SOF_ACTION_SPAWN;
+					SetActorState(0,strparam(s:"Spawn",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+				}
+				else if(currentCrouch && (currentplayeraction != SOF_ACTION_CROUCH || changeWeapon))
+				{
+					SetInventory("SoF_PlayerJumping",0);
+					currentplayeraction = SOF_ACTION_CROUCH;
+					SetActorState(0,strparam(s:"Crouch",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+				}
 			}
 				
-			
+			//Lower intertia
 			if(playerStillMoving > 0) playerStillMoving--;
+			
+			//Set the last known crouch status
+			lastCrouch = currentCrouch;
 			
 			Delay(1);
 		}
