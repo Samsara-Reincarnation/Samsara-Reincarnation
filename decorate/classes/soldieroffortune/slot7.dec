@@ -9,7 +9,7 @@ ACTOR SoF_MPG : SoF_Weapon
     Weapon.AmmoType2 "Cell"
     Weapon.AmmoGive2 90
     Obituary "%o was microwaved by %k's MPG."
-    Inventory.PickupMessage "Microwave Pulse Emitter"
+    Inventory.PickupMessage "Picked up a microwave pulse gun."
     Tag "R-22 Microwave Pulse"
     +BFG
     States
@@ -256,7 +256,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SF02 A 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 B 0 A_GiveInventory("SoF_MPG_AltFireToken")
             SF02 BCDEFGHIJ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            TNT1 A 0 //Because interpolation doesn't play nicely here
+            TNT1 A 0 A_TakeInventory("SoF_ShootingToken") //Because interpolation doesn't play nicely here
         CHARGE:
             SF00 A 0 A_PlaySound("SoF/Weapons/mpg/Charge",CHAN_AUTO)
             SF00 ABCDEFGHIJKLMNOPQRST 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -269,6 +269,7 @@ ACTOR SoF_MPG : SoF_Weapon
             SF06 A 0
             Stop
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_GunFlash("RELOAD_FLASH",GFF_NOEXTCHANGE)
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual

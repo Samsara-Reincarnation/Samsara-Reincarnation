@@ -7,7 +7,7 @@ ACTOR SoF_MPistol : SoF_Weapon
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 64
     Obituary "%o was perforated by %k's machine pistol."
-    Inventory.PickupMessage "9mm Suppressed SMG"
+    Inventory.PickupMessage "Picked up a 9mm suppressed SMG."
     Tag "Bulldog T-31 Suppressed"
     States
     {
@@ -139,6 +139,7 @@ ACTOR SoF_MPistol : SoF_Weapon
             SF02 ABCD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             Goto ReadyActual
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual
             "####" "#" 0 A_JumpIfInventory("SoF_MPistolMagazine",0,"ReadyActual")
