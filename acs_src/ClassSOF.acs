@@ -12,27 +12,29 @@ str BrutalityBonuses[8][2] =
 
 int SoFWeaponStates[12] = { "Knife", "Pistol", "Pistol", "Rifle", "Shotgun", "MachineGun", "Launcher", "MachineGun", "MachineGun", "MachineGun", "Pistol", "Rifle" };
 
-#DEFINE SOF_ACTION_SPAWN 0
-#DEFINE SOF_ACTION_WALK 1
-#DEFINE SOF_ACTION_WSTRAFEL 2
-#DEFINE SOF_ACTION_WSTRAFER 3
-#DEFINE SOF_ACTION_WALKBACK 4
-#DEFINE SOF_ACTION_RUN 5
-#DEFINE SOF_ACTION_STRAFEL 6
-#DEFINE SOF_ACTION_STRAFER 7
-#DEFINE SOF_ACTION_RUNBACK 8
-#DEFINE SOF_ACTION_LEANLEFTLOOP 9
-#DEFINE SOF_ACTION_LEANRIGHTLOOP 10
-#DEFINE SOF_ACTION_JUMPSTRAIGHT 11
-#DEFINE SOF_ACTION_JUMPFORWARD 12
-#DEFINE SOF_ACTION_SHOOTING 13
-#DEFINE SOF_ACTION_CROUCH 14
-#DEFINE SOF_ACTION_CROUCHFORWARD 15
-#DEFINE SOF_ACTION_CROUCHLEFT 16
-#DEFINE SOF_ACTION_CROUCHRIGHT 17
-#DEFINE SOF_ACTION_CROUCHLEANLEFT 18
-#DEFINE SOF_ACTION_CROUCHLEANRIGHT 19
-#DEFINE SOF_ACTION_CROUCHSHOOTING 20
+#DEFINE SOF_ACTION_NULL -1
+#DEFINE SOF_ACTION_RESET 0
+#DEFINE SOF_ACTION_SPAWN 1
+#DEFINE SOF_ACTION_WALK 2
+#DEFINE SOF_ACTION_WSTRAFEL 3
+#DEFINE SOF_ACTION_WSTRAFER 4
+#DEFINE SOF_ACTION_WALKBACK 5
+#DEFINE SOF_ACTION_RUN 6
+#DEFINE SOF_ACTION_STRAFEL 7
+#DEFINE SOF_ACTION_STRAFER 8
+#DEFINE SOF_ACTION_RUNBACK 9
+#DEFINE SOF_ACTION_LEANLEFTLOOP 10
+#DEFINE SOF_ACTION_LEANRIGHTLOOP 11
+#DEFINE SOF_ACTION_JUMPSTRAIGHT 12
+#DEFINE SOF_ACTION_JUMPFORWARD 13
+#DEFINE SOF_ACTION_SHOOTING 14
+#DEFINE SOF_ACTION_CROUCH 15
+#DEFINE SOF_ACTION_CROUCHFORWARD 16
+#DEFINE SOF_ACTION_CROUCHLEFT 17
+#DEFINE SOF_ACTION_CROUCHRIGHT 18
+#DEFINE SOF_ACTION_CROUCHLEANLEFT 19
+#DEFINE SOF_ACTION_CROUCHLEANRIGHT 20
+#DEFINE SOF_ACTION_CROUCHSHOOTING 21
 Script "SoF_Player" (void)
 {
 	int GZDoom = (GetCvar("samsara_zscriptready") == 1);
@@ -73,14 +75,15 @@ Script "SoF_Player" (void)
 			TakeInventory(strparam(s:BrutalityBonuses[i][1],s:"Timer"),1);
 		}
 		
-		int velX = GetActorVelX(0)>>16;
-		int velY = GetActorVelY(0)>>16;
 		int inputX = -GetPlayerInput(-1,MODINPUT_SIDEMOVE);
 		int inputY = GetPlayerInput(-1,MODINPUT_FORWARDMOVE);
 		
 		// If the player is not dead, do this stuff, otherwise, wait until they are alive
-		if(currentplayeraction >= SOF_ACTION_SPAWN)
+		if(currentplayeraction >= SOF_ACTION_RESET)
 		{
+			int velX = GetActorVelX(0)>>16;
+			int velY = GetActorVelY(0)>>16;
+			int currentSpeed = sqrt(velX*velX + velY*velY)<<16;
 			// If in GZDoom, give the weapon updater ZScript token. Otherwise, use behavior of the Assault Rifle
 			if(GZDoom && viewModelsLoaded) GiveInventory("JohnMullinsWeaponUpdater",1);
 			else SetInventory("SoF_SelectedWeapon",3);
@@ -91,36 +94,90 @@ Script "SoF_Player" (void)
 			// Set ChangeWeapon
 			changeWeapon = CheckInventory("SoF_SelectedWeapon") != CheckInventory("SoF_LastWeapon");
 			
+			if(CheckInventory("SoF_PainToken"))
+				currentplayeraction = SOF_ACTION_RESET;
+			
+			// Dead
+			if(ClassifyActor(0) & ACTOR_DEAD) 
+			{
+				GiveInventory("SoF_EnablePain",1);
+				int DeathSine = sin(GetActorAngle(0));
+				//Do crouch death
+				if(currentplayeraction >= SOF_ACTION_CROUCH)
+					SetActorState(0,"CrouchDeath",true);
+				else if(DeathSine * currentSpeed >= 8.0)
+					SetActorState(0,"DeathBlowForward",true);
+				else if(DeathSine * currentSpeed <= -8.0)
+					SetActorState(0,"DeathBlowBack",true);
+					
+				//Do nothing, let the death animations take over for now
+				currentplayeraction = SOF_ACTION_NULL;
+				SetInventory("SoF_PlayerJumping",0); 
+				SetInventory("SoF_LastWeapon",0); 
+			} 
 			//Leaning
-			if(CheckInventory("SoF_LeanCounter") != 5)
+			else if(CheckInventory("SoF_LeanCounter") != 5)
 			{		
+				GiveInventory("SoF_DisablePain",1);
+				TakeInventory("SoF_PainToken",1);
 				SetInventory("SoF_PlayerJumping",0);
 				//Left
-				if(CheckInventory("SoF_LeanCounter") == 1 && (currentplayeraction != SOF_ACTION_LEANLEFTLOOP || changeWeapon))
+				if(CheckInventory("SoF_LeanCounter") == 1)
 				{
-					currentplayeraction = SOF_ACTION_LEANLEFTLOOP;
-					SetActorState(0,strparam(s:"LeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					if((currentplayeraction != SOF_ACTION_LEANLEFTLOOP || changeWeapon) && !currentCrouch)
+					{
+						currentplayeraction = SOF_ACTION_LEANLEFTLOOP;
+						SetActorState(0,strparam(s:"LeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					}
+					else if((currentplayeraction != SOF_ACTION_CROUCHLEANLEFT || changeWeapon) && currentCrouch)
+					{
+						currentplayeraction = SOF_ACTION_CROUCHLEANLEFT;
+						SetActorState(0,strparam(s:"CrouchLeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					}
 				}
 				//Right
-				else if(CheckInventory("SoF_LeanCounter") == 9 && (currentplayeraction != SOF_ACTION_LEANRIGHTLOOP || changeWeapon))
+				else if(CheckInventory("SoF_LeanCounter") == 9)
 				{
-					currentplayeraction = SOF_ACTION_LEANRIGHTLOOP;
-					SetActorState(0,strparam(s:"LeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					if((currentplayeraction != SOF_ACTION_LEANRIGHTLOOP || changeWeapon) && !currentCrouch)
+					{
+						currentplayeraction = SOF_ACTION_LEANRIGHTLOOP;
+						SetActorState(0,strparam(s:"LeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					}
+					if((currentplayeraction != SOF_ACTION_CROUCHLEANRIGHT || changeWeapon) && currentCrouch)
+					{
+						currentplayeraction = SOF_ACTION_CROUCHLEANRIGHT;
+						SetActorState(0,strparam(s:"CrouchLeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					}
 				}
+				//Transitional frames
 				else if(CheckInventory("SoF_LeanCounter") != 9 && CheckInventory("SoF_LeanCounter") != 1)
 				{
-					if(SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")] != "Launcher")
-						SetActorState(0,strparam(s:"LeanToMulti",d:CheckInventory("SoF_LeanCounter")),true);
+					if(!currentCrouch)
+					{
+						if(SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")] != "Launcher")
+							SetActorState(0,strparam(s:"LeanToMulti",d:CheckInventory("SoF_LeanCounter")),true);
+						else
+							SetActorState(0,strparam(s:"LeanToLauncher",d:CheckInventory("SoF_LeanCounter")),true);
+					}
 					else
-						SetActorState(0,strparam(s:"LeanToLauncher",d:CheckInventory("SoF_LeanCounter")),true);
+					{
+						if(SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")] != "Launcher")
+							SetActorState(0,strparam(s:"CrouchLeanToMulti",d:CheckInventory("SoF_LeanCounter")),true);
+						else
+							SetActorState(0,strparam(s:"CrouchLeanToLauncher",d:CheckInventory("SoF_LeanCounter")),true);
+					}
 				}
 			}
 			//Jumping is a lower priority than leaning
 			else if((GetPlayerInput(-1,MODINPUT_BUTTONS) & BT_JUMP) || CheckInventory("SoF_PlayerJumping"))
 			{
-				if(sqrt(velX*velX + velY*velY)<<16 <= 4.0)
+				GiveInventory("SoF_EnablePain",1);
+				TakeInventory("SoF_PainToken",1);
+				if(currentSpeed <= 4.0)
 				{
 					if(currentplayeraction != SOF_ACTION_JUMPSTRAIGHT && !CheckInventory("SoF_PlayerJumping"))
 					{
@@ -137,8 +194,7 @@ Script "SoF_Player" (void)
 					}
 				}
 			}
-			//Moving
-			else if(inputY != 0 || inputX != 0 || playerStillMoving > 0)
+			else if((inputY != 0 || inputX != 0 || playerStillMoving > 0) && !CheckInventory("SoF_PainToken"))
 			{
 				SetInventory("SoF_PlayerJumping",0);
 				//Add inertia to the player
@@ -151,7 +207,7 @@ Script "SoF_Player" (void)
 				if(!currentCrouch)
 				{
 					//Check for running
-					if(sqrt(velX*velX + velY*velY)<<16 >= 8.0)
+					if(currentSpeed >= 8.0)
 					{
 						if(abs(inputY) > abs(inputX) && inputY > 0)
 						{
@@ -242,7 +298,7 @@ Script "SoF_Player" (void)
 							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 						}
 					}
-					else if(inputX > 0)
+					else if(inputX > 0 && currentSpeed >= 1.0)
 					{
 						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHRIGHT)
 						{
@@ -251,7 +307,7 @@ Script "SoF_Player" (void)
 							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 						}
 					}
-					else if(inputX < 0)
+					else if(inputX < 0 && currentSpeed >= 1.0)
 					{
 						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHLEFT)
 						{
@@ -263,8 +319,9 @@ Script "SoF_Player" (void)
 				}
 			}	
 			//Shooting
-			else if(CheckInventory("SoF_ShootingToken"))
+			else if(CheckInventory("SoF_ShootingToken") && !CheckInventory("SoF_PainToken"))
 			{
+				GiveInventory("SoF_EnablePain",1);
 				if(!currentCrouch && currentplayeraction != SOF_ACTION_SHOOTING)
 				{
 					SetInventory("SoF_PlayerJumping",0);
@@ -279,8 +336,9 @@ Script "SoF_Player" (void)
 				}
 			}
 			//Spawn/Standing
-			else if(changeWeapon || currentplayeraction != SOF_ACTION_SPAWN || currentplayeraction != SOF_ACTION_CROUCH)
+			else if((changeWeapon || currentplayeraction != SOF_ACTION_SPAWN || currentplayeraction != SOF_ACTION_CROUCH) && !CheckInventory("SoF_PainToken"))
 			{
+				GiveInventory("SoF_EnablePain",1);
 				if(!currentCrouch && (currentplayeraction != SOF_ACTION_SPAWN || changeWeapon))
 				{
 					SetInventory("SoF_PlayerJumping",0);
@@ -296,7 +354,6 @@ Script "SoF_Player" (void)
 					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
 				}
 			}
-				
 			//Lower intertia
 			if(playerStillMoving > 0) playerStillMoving--;
 			
