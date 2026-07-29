@@ -10,7 +10,7 @@ ACTOR SoF_Rocket : SoF_Weapon
     Weapon.AmmoType2 "RocketAmmo"
     Weapon.AmmoGive2 4
     Obituary "%o ate %k's rocket."
-    Inventory.PickupMessage "M202A2 Rocket Launcher"
+    Inventory.PickupMessage "Picked up an M-1943 rocket launcher."
     Tag "M202A2 \"FLASH\""
     +EXPLOSIVE
     States
@@ -22,7 +22,8 @@ ACTOR SoF_Rocket : SoF_Weapon
             SF06 CDEFGHIJ 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF03 A 0 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             Goto ReadyActual
-        ReadyActual:
+        ReadyActual: //Putting this here since it's a pain in the ass to do it elsewhere
+			SF03 A 0 A_TakeInventory("SoF_ShootingToken")
         IDLE:
             SF03 A 0 A_Jump(20,"IDLEFINGER_A","IDLEFINGER_B")
             SF03 ABCDEFGHIJKLMNOPQRSTUVWX 2 A_WeaponReady(WRF_ALLOWRELOAD)
@@ -50,6 +51,7 @@ ACTOR SoF_Rocket : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
             Goto DryFire
         FIRE1:
+			SF01 A 0 A_GiveInventory("SoF_ShootingToken")
             SF01 A 0 A_TakeInventory("SoF_RocketSmallChecker")
             SF01 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
             SF01 A 0 A_GiveInventory("SoF_Rocket_FireToken")
@@ -57,6 +59,7 @@ ACTOR SoF_Rocket : SoF_Weapon
             SF01 ABCDEFGH 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             TNT1 A 0
             SF03 AAAAA 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF03 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FLASH1:
             TNT1 A 0 A_JumpIfInventory("SamsaraSOFRocketCycle",0,"FLASH1_B")
@@ -91,6 +94,7 @@ ACTOR SoF_Rocket : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,1)
             Goto DryFire
+			SF02 A 0 A_GiveInventory("SoF_ShootingToken")
             SF02 A 0 A_GiveInventory("SoF_RocketSmallChecker")
             SF02 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
             SF02 A 0 A_GiveInventory("SoF_Rocket_FireToken")
@@ -140,6 +144,7 @@ ACTOR SoF_Rocket : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",1,"ReadyActual")
             Goto Reload
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual
             "####" "#" 0 A_JumpIfInventory("SoF_RocketMagazine",0,"ReadyActual")
@@ -235,12 +240,12 @@ Actor SoF_Rocket_FireToken : Trigger
       // Normal rockets
       PickupFinishNormal:
         TNT1 A 0 A_Quake(1,4,0,16,"nosoundforyoubitch")
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 10, 80)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 10, 80, 0, 0)
         stop
 
       // Multi rockets
       PickupFinishMulti:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 6, 80)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 6, 80, 0, 0)
         stop
     }
 }

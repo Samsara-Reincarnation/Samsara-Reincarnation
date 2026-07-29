@@ -7,7 +7,7 @@ ACTOR SoF_Pistol2 : SoF_Weapon
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 10
     Obituary "%o was hollow pointed by %k's monster magnum."
-    Inventory.PickupMessage ".44 Pistol"
+    Inventory.PickupMessage "Picked up a .44 pistol."
     Tag "The Silver Talon"
     States
     {
@@ -445,6 +445,7 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             "####" "#" 0 A_JumpIfInventory("SoF_Pistol2Magazine",1,1)
             Goto DryFire
+			"####" "#" 0 A_GiveInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",10,"FIRE1_C")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",9,"FIRE1_A")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",8,"FIRE1_D")
@@ -472,6 +473,7 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             SF02 H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF06 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",1,1)
+			SF06 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_C:
             "####" "#" 0 A_JumpIfInventory("SoF_FullyLeaned",1,2)
@@ -488,6 +490,7 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             SF03 H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF03 I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF09 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",1,2)
+			SF09 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_D:
             "####" "#" 6
@@ -507,6 +510,7 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             Goto ReadyActual
 
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual
             "####" "#" 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"ReadyActual")
@@ -526,6 +530,7 @@ ACTOR SoF_Pistol2 : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",2,"RELOAD_C")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",1,"RELOAD_A")
         RELOAD_A:
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             TNT1 A 0 A_JumpIfInventory("SoF_Pistol2Magazine",0,"RELOAD_A_FINISH")
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
@@ -646,7 +651,7 @@ Actor SoF_Pistol2_A_FireToken : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 80)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 80, 0, 0)
         stop
     }
 }
@@ -690,7 +695,7 @@ Actor SoF_Pistol2_C_FireToken : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 80)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 80, 0, 0)
         stop
     }
 }

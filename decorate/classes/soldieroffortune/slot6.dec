@@ -7,7 +7,7 @@ ACTOR SoF_Slugger : SoF_Weapon
     Weapon.AmmoType2 "Cell"
     Weapon.AmmoGive2 40
     Obituary "%o was sawn in half by %k's slugthrower."
-    Inventory.PickupMessage "Repeating Slug Thrower"
+    Inventory.PickupMessage "Picked up a repeating slugthrower."
     Tag "\"Heavy Hitter\" H-24"
     +EXPLOSIVE
     States
@@ -55,6 +55,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_SluggerMagazine",1,1)
             Goto DryFire
         FIRE1:
+			SF01 A 0 A_GiveInventory("SoF_ShootingToken")
             SF01 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
             SF01 A 0 A_GiveInventory("SoF_Slugger_FireToken")
             SF01 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -62,6 +63,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             SF01 C 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 D 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 E 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF03 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FLASH1:
             SFF1 A 1 Bright
@@ -78,6 +80,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_SluggerMagazine",2,1)
             Goto DryFire
         FIRE2:
+			SF02 A 0 A_GiveInventory("SoF_ShootingToken")
             SF02 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 B 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 C 0 A_GiveInventory("SoF_Slugger_AltFireToken")
@@ -90,6 +93,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             SF02 I 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 J 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 K 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF02 L 0 A_TakeInventory("SoF_ShootingToken")
             SF02 L 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 M 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF02 N 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -105,6 +109,7 @@ ACTOR SoF_Slugger : SoF_Weapon
             SF02 X 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             Goto ReadyActual
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual
             "####" "#" 0 A_JumpIfInventory("SoF_SluggerMagazine",0,"ReadyActual")
@@ -180,7 +185,7 @@ Actor SoF_Slugger_FireToken : Trigger
       // Finishing stuff
       PickupFinish:
         TNT1 A 0 A_Quake(1,4,0,16,"nosoundforyoubitch")
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 2, 60)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 2, 60, 0, 0)
         stop
     }
 }
@@ -224,7 +229,7 @@ Actor SoF_Slugger_AltFireToken : Trigger
       // Finishing stuff
       PickupFinish:
         TNT1 A 0 A_Quake(1,4,0,16,"nosoundforyoubitch")
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 10, 60)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 10, 60, 0, 0)
         stop
     }
 }

@@ -7,7 +7,7 @@ ACTOR SoF_Machinegun : SoF_Weapon
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 40
     Obituary "%o was machinegunned by %k."
-    Inventory.PickupMessage "Heavy Machinegun"
+    Inventory.PickupMessage "Picked up a heavy machinegun."
     Tag "M-75 Guardian"
     States
     {
@@ -351,6 +351,7 @@ ACTOR SoF_Machinegun : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_MachinegunMagazine",1,1)
             Goto DryFire
             TNT1 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+			TNT1 A 0 A_GiveInventory("SoF_ShootingToken")
             TNT1 A 0 A_GiveInventory("SoF_Machinegun_FireToken")
             TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,10)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FIRE1_1")
@@ -376,38 +377,47 @@ ACTOR SoF_Machinegun : SoF_Weapon
         FIRE1_0:
             SF01 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF04 A 0 A_Refire("FIRE1_B")
+			SF04 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_1:
             SF11 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF14 A 0 A_Refire("FIRE1_B")
+			SF14 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_2:
             SF21 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF24 A 0 A_Refire("FIRE1_B")
+			SF24 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_3:
             SF31 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF34 A 0 A_Refire("FIRE1_B")
+			SF34 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_4:
             SF41 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF44 A 0 A_Refire("FIRE1_B")
+			SF44 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_5:
             SF51 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF54 A 0 A_Refire("FIRE1_B")
+			SF54 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_6:
             SF61 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF64 A 0 A_Refire("FIRE1_B")
+			SF64 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_7:
             SF71 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF74 A 0 A_Refire("FIRE1_B")
+			SF74 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_8:
             SF81 AB 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF84 A 0 A_Refire("FIRE1_B")
+			SF84 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B:
             TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
@@ -418,6 +428,7 @@ ACTOR SoF_Machinegun : SoF_Weapon
             TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",1,1)
             Goto DryFire
             TNT1 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
+			TNT1 A 0 A_GiveInventory("SoF_ShootingToken")
             TNT1 A 0 A_GiveInventory("SoF_Machinegun_FireToken")
             TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,10)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FIRE1_B1")
@@ -444,46 +455,55 @@ ACTOR SoF_Machinegun : SoF_Weapon
             SF01 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF04 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF04 A 0 A_Refire("FIRE")
+			SF04 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B1:
             SF11 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF14 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF14 A 0 A_Refire("FIRE")
+			SF14 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B2:
             SF21 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF24 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF24 A 0 A_Refire("FIRE")
+			SF24 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B3:
             SF31 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF34 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF34 A 0 A_Refire("FIRE")
+			SF34 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B4:
             SF41 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF44 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF44 A 0 A_Refire("FIRE")
+			SF44 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B5:
             SF51 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF54 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF54 A 0 A_Refire("FIRE")
+			SF54 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B6:
             SF61 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF64 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF64 A 0 A_Refire("FIRE")
+			SF64 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B7:
             SF71 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF74 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF74 A 0 A_Refire("FIRE")
+			SF74 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE1_B8:
             SF81 CD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF84 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF84 A 0 A_Refire("FIRE")
+			SF84 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FLASH1:
             SFF0 A 1 Bright
@@ -499,6 +519,7 @@ ACTOR SoF_Machinegun : SoF_Weapon
             SF03 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             SF03 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",10,1)
             Goto DryFire
+			TNT1 A 0 A_GiveInventory("SoF_ShootingToken")
             TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,10)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FIRE2_1")
             TNT1 A 0 A_JumpIfInventory("Clip",9,"FIRE2_1")
@@ -525,59 +546,69 @@ ACTOR SoF_Machinegun : SoF_Weapon
             SF03 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF03 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF03 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_1:
             SF13 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF13 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF13 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF13 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_2:
             SF23 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF23 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF23 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF23 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_3:
             SF33 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF33 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF33 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF33 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_4:
             SF43 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF43 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF43 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF43 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_5:
             SF53 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF53 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF53 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF53 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_6:
             SF63 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF63 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF63 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF63 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_7:
             SF73 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF73 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF73 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF73 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FIRE2_8:
             SF83 ABC 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF83 D 0 A_GunFlash("FLASH2",GFF_NOEXTCHANGE)
             SF83 D 0 A_GiveInventory("SoF_Machinegun_FireToken2")
             SF83 DEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			TNT1 A 0 A_TakeInventory("SoF_ShootingToken")
             Goto ReadyActual
         FLASH2:
             SFF1 D 1 Bright
             Stop
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual
             "####" "#" 0 A_JumpIfInventory("SoF_MachinegunMagazine",0,"ReadyActual")
@@ -803,7 +834,7 @@ Actor SoF_Machinegun_FireToken : Trigger
       // Finishing stuff
       PickupFinish:
         TNT1 A 0 A_Quake(1,4,0,16,"nosoundforyoubitch")
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 3, 48)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 3, 48, 0, 0)
         stop
     }
 }

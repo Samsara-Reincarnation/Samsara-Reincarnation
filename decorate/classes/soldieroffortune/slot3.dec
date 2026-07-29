@@ -7,7 +7,7 @@ ACTOR SoF_Shotgun : SoF_Weapon
     Weapon.AmmoType2 "Shell"
     Weapon.AmmoGive2 12
     Obituary "%o was peppered by %k's shotgun."
-    Inventory.PickupMessage "12 Gauge Shotgun"
+    Inventory.PickupMessage "Picked up a 12 gauge shotgun."
     Tag "B-42 (Berserker)"
     States
     {
@@ -61,6 +61,7 @@ ACTOR SoF_Shotgun : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_ShotgunMagazine",1,1)
             Goto DryFire
         FIRE1:
+			SF01 A 0 A_GiveInventory("SoF_ShootingToken")
             SF01 A 0 A_GunFlash("FLASH1",GFF_NOEXTCHANGE)
             SF01 A 0 A_GiveInventory("SoF_Shotgun_FireToken")
             SF01 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -71,6 +72,7 @@ ACTOR SoF_Shotgun : SoF_Weapon
             SF01 F 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 H 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			SF01 J 0 A_TakeInventory("SoF_ShootingToken") //Make the 3rd person animation better
             SF01 J 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 K 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF01 L 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -83,6 +85,7 @@ ACTOR SoF_Shotgun : SoF_Weapon
             "####" "#" 0 A_Jump(256,"IDLEFINGER_B","IDLEFINGER_C")
             Goto ReadyActual
         Reload:
+			"####" "#" 0 A_TakeInventory("SoF_ShootingToken")
             "####" "#" 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
             goto ReadyActual
             "####" "#" 0 A_JumpIfInventory("SoF_ShotgunMagazine",0,"ReadyActual")
@@ -195,7 +198,7 @@ Actor SoF_Shotgun_FireToken : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 6, 80)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 6, 80, 0, 0)
         stop
     }
 }
