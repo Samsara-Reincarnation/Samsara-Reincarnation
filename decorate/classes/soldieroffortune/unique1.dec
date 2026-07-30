@@ -6,7 +6,6 @@ ACTOR SoF_MPistol : SoF_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 64
-    Obituary "%o was perforated by %k's machine pistol."
     Inventory.PickupMessage "Picked up a 9mm suppressed SMG."
     Tag "Bulldog T-31 Suppressed"
     States
@@ -219,7 +218,12 @@ Actor SoF_MPistol_FireToken : Trigger
     }
 }
 
-Actor SoF_MachinePistolBulletPuff : SoF_BulletPuff { args 10 DamageType "SoFSMG" }
+Actor SoF_MachinePistolBulletPuff : SoF_BulletPuff 
+{ 
+	args 10
+	DamageType "SoFSMG"
+	Obituary "%o was perforated by %k's machine pistol."
+}
 
 actor SoF_MachinePistolBulletPuffCoop : SoF_MachinePistolBulletPuff { +MTHRUSPECIES }
 

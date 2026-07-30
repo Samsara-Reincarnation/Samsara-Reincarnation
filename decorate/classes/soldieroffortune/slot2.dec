@@ -6,7 +6,6 @@ ACTOR SoF_AssaultRifle : SoF_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 30
-    Obituary "%o was assaulted by %k's SMG."
     Inventory.PickupMessage "Picked up a 5.56 SMG."
     Tag "Raptor SMG"
     States
@@ -7071,7 +7070,12 @@ Actor SoF_AssaultRifle_B_FireToken : Trigger
     }
 }
 
-Actor SoF_AssaultRifleBulletPuff : SoF_BulletPuff { args 15 DamageType "SoFSMG" }
+Actor SoF_AssaultRifleBulletPuff : SoF_BulletPuff
+{ 
+	args 15 
+	DamageType "SoFSMG" 
+	Obituary "%o was assaulted by %k's SMG."
+}
 
 actor SoF_AssaultRifleBulletPuffCoop : SoF_AssaultRifleBulletPuff { +MTHRUSPECIES }
 

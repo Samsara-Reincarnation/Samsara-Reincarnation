@@ -6,7 +6,6 @@ ACTOR SoF_Machinegun : SoF_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 40
-    Obituary "%o was machinegunned by %k."
     Inventory.PickupMessage "Picked up a heavy machinegun."
     Tag "M-75 Guardian"
     States
@@ -876,7 +875,12 @@ Actor SoF_Machinegun_FireToken2 : Trigger
     }
 }
 
-Actor SoF_MachinegunBulletPuff : SoF_BulletPuff { DamageType "SoFMG"  args 34 }
+Actor SoF_MachinegunBulletPuff : SoF_BulletPuff
+{ 
+	DamageType "SoFMG"
+	args 34
+	Obituary "%o was machinegunned by %k."
+}
 
 actor SoF_MachinegunBulletPuffCoop : SoF_MachinegunBulletPuff { +MTHRUSPECIES }
 
@@ -902,6 +906,7 @@ Actor SoF_PhosphorusGrenade
     DamageType "SoFPhosphorus"
     PoisonDamageType "SoFPhosphorus"
     PoisonDamage 2, 2, 14
+	Obituary "%o was popped by %k's phosphorus grenade."
     +BLOODLESSIMPACT
     -NOGRAVITY
     +NOEXTREMEDEATH

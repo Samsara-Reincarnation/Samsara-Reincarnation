@@ -13,7 +13,6 @@ actor Kingpin_GrenadeLauncher : Kingpin_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "RocketAmmo"
     Weapon.AmmoGive2 3
-    Obituary "%o fumbled %k's grenade."
     Tag "Grenade Launcher"
     +EXPLOSIVE
     States
@@ -213,6 +212,7 @@ actor Kingpin_Grenade
     ReactionTime 0
     BounceType "Hexen"
     BounceSound "Kingpin/Grenade/Bounce"
+	Obituary "%o fumbled %k's grenade."
     +BLOODLESSIMPACT
     -NOGRAVITY
     +SKYEXPLODE
@@ -267,7 +267,7 @@ actor Kingpin_Grenade
         stop
 
       DeathFireFragments:
-        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),16,10,"Kingpin_BulletSmoke",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
+        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),16,10,"Kingpin_GrenadeSmoke",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
         TNT1 A 1
         stop
     }
@@ -357,7 +357,7 @@ actor Kingpin_ClusterGrenade : Kingpin_Grenade
         goto DeathFinish
 
       DeathFireFragments:
-        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),3,10,"Kingpin_BulletSmoke",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
+        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),3,10,"Kingpin_GrenadeSmoke",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
         TNT1 A 1
         stop
     }
@@ -390,4 +390,9 @@ actor Kingpin_ClusterGrenadeCoop : Kingpin_ClusterGrenade
         TNT1 A 1
         stop
     }
+}
+
+actor Kingpin_ShotgunSmoke : Kingpin_BulletSmoke
+{
+	Obituary "%o fumbled %k's grenade."
 }
