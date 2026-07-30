@@ -486,6 +486,7 @@ Actor Kingpin_BloodGenerator : Trigger
 	{
 		Pickup:
 			TNT1 A 0 A_CheckFlag("NOBLOOD","PickupStop")
+			TNT1 A 0 A_SpawnItemEx("Server_FlyingBloodSpawner",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodShot",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),frandom(0.25,0.5)*sin(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(-0.5,0.5)*cos(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
 			stop
 	}
@@ -497,6 +498,7 @@ Actor Kingpin_BloodChunkGenerator : Trigger
 	{
 		Pickup:
 			TNT1 A 0 A_CheckFlag("NOBLOOD","PickupStop")
+			TNT1 A 0 A_SpawnItemEx("Server_FlyingBloodSpawner",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodShot",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),frandom(0.25,0.5)*sin(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(-0.5,0.5)*cos(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
 			TNT1 A 0 A_SpawnItemEx("Kingpin_Gib",frandom(-8,8)+(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),frandom(-8,8)+(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),frandom(0.25,0.5)*sin(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(-0.5,0.5)*cos(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
 			stop
@@ -509,6 +511,7 @@ Actor Kingpin_BloodHeadshotGenerator : Trigger
 	{
 		Pickup:
 			TNT1 A 0 A_CheckFlag("NOBLOOD","PickupStop")
+			TNT1 A 0 A_SpawnItemEx("Server_FlyingBloodSpawner",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
 			TNT1 A 0 A_SpawnItemEx("Kingpin_BloodShot",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),frandom(0.25,0.5)*sin(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(-0.5,0.5)*cos(CallACS("SamsaraBloodGeneratorReturn",3)),frandom(0.05,0.25),0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
 			TNT1 A 0 A_SpawnItemEx("Kingpin_Gib",(radius-16)*cos(CallACS("SamsaraBloodGeneratorReturn",1)),(radius-16)*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),frandom(-6,6),0,frandom(6,8),random(0,360),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEVELOCITY)
 			stop
@@ -606,7 +609,9 @@ Actor Kingpin_BloodSpot
 		Spawn:
 			KP00 A 0
 			KP00 A 0 A_SetScale(frandom(4.0,16.0))
+		Spawn2:
 			KP00 A 1050 A_Warp(AAPTR_DEFAULT,0,0,0.25,0,WARPF_TOFLOOR|WARPF_NOCHECKPOSITION)
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Spawn2")
 			KP00 AAAAAAAAAA 2 A_Fadeout(0.1)
 			Stop
 	}
@@ -631,7 +636,9 @@ Actor Kingpin_BloodPool
 			TNT1 A 35
 			TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,0.25,0,WARPF_TOFLOOR|WARPF_NOCHECKPOSITION)
 			KP00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SetScale(scaleX*1.1)
+		Spawn2:
 			KP00 A 1050
+			TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), "Spawn2")
 			KP00 AAAAAAAAAA 2 A_Fadeout(0.1)
 			Stop
 	}
@@ -796,6 +803,10 @@ Actor Kingpin_GibStay
 		SpawnLoop:
 			KP01 "#" 1 A_TakeInventory("Kingpin_GibLifeSpan",1)
 			KP01 "#" 0 A_JumpIfInventory("Kingpin_GibLifeSpan",1,"SpawnLoop")
+			KP01 "#" 0 A_JumpIf(ACS_NamedExecuteWithResult("SamsaraClientDecorate", 13), 1)
+			goto Death
+			KP01 "#" 0 A_GiveInventory("Kingpin_GibLifeSpan",350)
+			goto SpawnLoop
 		Death:
 			"####" "##########" 2 A_Fadeout(0.1)
 			Stop
@@ -820,6 +831,7 @@ Actor Kingpin_GibSpawner
 	{
 		Spawn:
 			TNT1 A 0
+			//TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreXDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS)
 			TNT1 A 3 ACS_NamedExecuteWithResult("Kingpin_GibSpawner")
 			Stop
 	}
@@ -1012,6 +1024,7 @@ Actor Kingpin_CashSound : Trigger
 Actor Kingpin_Cash : Counter { Inventory.MaxAmount 99999 }
 Actor Kingpin_SetGib : TemporaryBoolean {}
 
+/*
 Actor AllUpgrades : Trigger
 {
 	States
@@ -1177,3 +1190,4 @@ Actor HMGUpgrades : Trigger
 			Stop
 	}
 }
+*/
