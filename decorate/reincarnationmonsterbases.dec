@@ -1019,11 +1019,15 @@ Actor SamsaraMonsterReincPainElemental : SamsaraMonsterDemonicTotalGib
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -1037,12 +1041,16 @@ Actor SamsaraMonsterReincPainElemental : SamsaraMonsterDemonicTotalGib
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -1063,6 +1071,7 @@ Actor SamsaraMonsterReincPainElemental : SamsaraMonsterDemonicTotalGib
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -1979,11 +1988,15 @@ Actor SamsaraMonsterReincHereticImp : HereticImp
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -1997,12 +2010,16 @@ Actor SamsaraMonsterReincHereticImp : HereticImp
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -2023,6 +2040,7 @@ Actor SamsaraMonsterReincHereticImp : HereticImp
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -2952,11 +2970,15 @@ Actor SamsaraMonsterReincHereticImp2 : HereticImpLeader
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -2970,12 +2992,16 @@ Actor SamsaraMonsterReincHereticImp2 : HereticImpLeader
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -2996,6 +3022,7 @@ Actor SamsaraMonsterReincHereticImp2 : HereticImpLeader
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -3973,11 +4000,15 @@ Actor SamsaraMonsterReincWizard : Wizard
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -3991,12 +4022,16 @@ Actor SamsaraMonsterReincWizard : Wizard
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -4017,6 +4052,7 @@ Actor SamsaraMonsterReincWizard : Wizard
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -4928,11 +4964,15 @@ Actor SamsaraMonsterReincWizardFriend : Wizard
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -4946,12 +4986,16 @@ Actor SamsaraMonsterReincWizardFriend : Wizard
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -4971,6 +5015,7 @@ Actor SamsaraMonsterReincWizardFriend : Wizard
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -5948,11 +5993,15 @@ Actor SamsaraMonsterReincKnight : Knight
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -5966,12 +6015,16 @@ Actor SamsaraMonsterReincKnight : Knight
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -5992,6 +6045,7 @@ Actor SamsaraMonsterReincKnight : Knight
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -6969,11 +7023,15 @@ Actor SamsaraMonsterReincKnight2 : KnightGhost
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -6987,12 +7045,16 @@ Actor SamsaraMonsterReincKnight2 : KnightGhost
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -7013,6 +7075,7 @@ Actor SamsaraMonsterReincKnight2 : KnightGhost
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -10006,11 +10069,15 @@ Actor SamsaraMonsterReincChicken : Chicken
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -10024,12 +10091,16 @@ Actor SamsaraMonsterReincChicken : Chicken
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -10050,6 +10121,7 @@ Actor SamsaraMonsterReincChicken : Chicken
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -10979,11 +11051,15 @@ Actor SamsaraMonsterReincAfrit : FireDemon
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -10997,12 +11073,16 @@ Actor SamsaraMonsterReincAfrit : FireDemon
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -11023,6 +11103,7 @@ Actor SamsaraMonsterReincAfrit : FireDemon
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -13295,11 +13376,15 @@ Actor SamsaraMonsterReincWraith : Wraith
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -13313,12 +13398,16 @@ Actor SamsaraMonsterReincWraith : Wraith
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -13339,6 +13428,7 @@ Actor SamsaraMonsterReincWraith : Wraith
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -14268,11 +14358,15 @@ Actor SamsaraMonsterReincWraithBuried : WraithBuried
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -14286,12 +14380,16 @@ Actor SamsaraMonsterReincWraithBuried : WraithBuried
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -14312,6 +14410,7 @@ Actor SamsaraMonsterReincWraithBuried : WraithBuried
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -15241,11 +15340,15 @@ Actor SamsaraMonsterReincSerpent : Serpent
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -15259,12 +15362,16 @@ Actor SamsaraMonsterReincSerpent : Serpent
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -15285,6 +15392,7 @@ Actor SamsaraMonsterReincSerpent : Serpent
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -16214,11 +16322,15 @@ Actor SamsaraMonsterReincSerpentLeader : SerpentLeader
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -16232,12 +16344,16 @@ Actor SamsaraMonsterReincSerpentLeader : SerpentLeader
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -16258,6 +16374,7 @@ Actor SamsaraMonsterReincSerpentLeader : SerpentLeader
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -19824,11 +19941,15 @@ Actor SamsaraMonsterReincPig : Pig
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -19842,12 +19963,16 @@ Actor SamsaraMonsterReincPig : Pig
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -19868,6 +19993,7 @@ Actor SamsaraMonsterReincPig : Pig
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -20855,11 +20981,15 @@ Actor SamsaraMonsterReincAcolyte : Acolyte
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -20873,12 +21003,16 @@ Actor SamsaraMonsterReincAcolyte : Acolyte
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -20899,6 +21033,7 @@ Actor SamsaraMonsterReincAcolyte : Acolyte
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -21887,11 +22022,15 @@ Actor SamsaraMonsterReincAcolyteBlue : AcolyteBlue
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -21905,12 +22044,16 @@ Actor SamsaraMonsterReincAcolyteBlue : AcolyteBlue
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -21931,6 +22074,7 @@ Actor SamsaraMonsterReincAcolyteBlue : AcolyteBlue
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
@@ -22917,11 +23061,15 @@ Actor SamsaraMonsterReincStrifeHumanoid : StrifeHumanoid
 			Wait
 		Death.SoFSMG:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFSMGDelayDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_SMGDeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFSMGDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 5 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFSMGDelayDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -22935,12 +23083,16 @@ Actor SamsaraMonsterReincStrifeHumanoid : StrifeHumanoid
 		Death.SoFMG:
 		Death.SoF44:
 			"####" "#" 0 A_JumpIf(CallACS("SamsaraDecorate", 72), "SoFHighCaliberDeathContinue")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagStore")
+			"####" "#" 0 A_ChangeFlag("DONTCORPSE",true)
+			"####" "#" 0 A_ChangeFlag("DONTGIB",true)
 			"####" "#" 0 A_SpawnItemEx("SoF_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_SETMASTER)
 		Death.SoFHighCaliberDelay:
 			"####" "#" 0 A_GiveInventory("SamsaraSOFXFlipDecider")
 			"####" "#" 0 A_JumpIfInventory("SoF_PerformedHeadShot",1,5)
 			"####" "##########" 3 A_FaceTarget
 			"####" "#" 0 A_GiveInventory("SoF_RemoveGibber")
+			"####" "#" 0 A_GiveInventory("SamsaraSOFDeathFlagReset")
 		SoFHighCaliberDeathContinue:
 			"####" "#" 0 A_SpawnItemEx("SoF_BloodPoolSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
 			"####" "#" -1 A_Jump(256,"Death")
@@ -22961,6 +23113,7 @@ Actor SamsaraMonsterReincStrifeHumanoid : StrifeHumanoid
 			TNT1 A 0 A_GiveToTarget("SoF_TheJuicerMultiplier",1)
 		SoFGibStart:
 			TNT1 A 0 A_GiveInventory("EnemyZorched",1)
+			TNT1 A 0 A_GiveInventory("SamsaraSOFDeathFlagTokenRemove")
 			TNT1 A 0 A_ChangeFlag("DONTCORPSE",true)
 			TNT1 A 0 A_ChangeFlag("DONTGIB",true)
 			TNT1 A 0 A_SpawnItemEx("SoF_BloodPoolSpawnerGib",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
