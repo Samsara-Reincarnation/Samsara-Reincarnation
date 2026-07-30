@@ -3860,12 +3860,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 					if (CheckInventory("ChickenAmmo") || CheckInventory("SamsaraHasInfiniteAmmo"))
 					{
-						if (!CheckInventory(" Chicken Crossbow "))
-                        {
-                            storedammopriname = "ChickenAmmo", storedammopri = CheckInventory(storedammopriname);
-                            SetInventory(" Chicken Crossbow ", 1);
-                            SetInventory(storedammopriname, storedammopri); // don't give extra; only the ammo pickup itself should give ammo
-                        }
+						if (!CheckInventory(" Chicken Crossbow ")) { GiveInventory(" Chicken Crossbow ", 1); }
 					} else {
 						if (CheckInventory(" Chicken Crossbow ") && !CheckWeapon(" Chicken Crossbow ")) { TakeInventory(" Chicken Crossbow ", 1); }
 					}
