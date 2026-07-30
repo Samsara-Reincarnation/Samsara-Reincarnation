@@ -77,6 +77,10 @@ Class BondWeaponAppearanceUpdate : CustomInventory
 								A_ChangeModel("",1,"Models/Goldfinger/player","oddjobhat.md3",1,"","",0,0);
 								A_ChangeModel("",2,"Models/Goldeneye/player","goldengun_left.md3",2,"Models","", CMDL_HIDEMODEL);
 								break;
+							case 'Goldfinger_GolfClub':
+								A_ChangeModel("",1,"Models/Goldfinger/player","oddjobhat.md3",1,"","",0,0);
+								A_ChangeModel("",2,"Models/Goldeneye/player","goldengun_left.md3",2,"Models","", CMDL_HIDEMODEL);
+								break;
 							case 'Goldfinger_MP40':
 								A_ChangeModel("",1,"Models/Goldfinger/player","mp40_right.md3",1,"","",0,0);
 								if(firing) A_ChangeModel("",3,"Models/Goldfinger/player","mp40_flash_right.md3",3,"","",0,0);
@@ -300,6 +304,12 @@ Class BondWeaponAppearanceUpdate : CustomInventory
 								}
 								break;
 							case 'Goldeneye_ThrowingKnives':
+								A_ChangeModel("",1,"Models/Goldeneye/player","knife_right.md3",1,"","",0,0);
+
+								if(CheckInventory("BondDualWieldToken",1))
+									A_ChangeModel("",2,"Models/Goldeneye/player","knife_left.md3",2,"","",0,0);
+								break;
+							case 'Goldeneye_HuntingKnife':
 								A_ChangeModel("",1,"Models/Goldeneye/player","knife_right.md3",1,"","",0,0);
 
 								if(CheckInventory("BondDualWieldToken",1))
