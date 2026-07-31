@@ -150,6 +150,7 @@ Script "Kingpin_Player" (void)
 	int playerStillMoving = 0;
 	int actionValue = 0; //I need this to reduce duplicated code
 	int UsingFullScreen = false;
+	int startIndex = 45600;
 	while(CheckInventory("KingpinClass"))
 	{
 		int velX = GetActorVelX(0)>>16;
@@ -171,12 +172,12 @@ Script "Kingpin_Player" (void)
 			if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
 			{
 				UsingFullScreen = true;
-				ACS_NamedExecuteWithResult("Kingpin_DrawHud",0,0,0,0);
+				ACS_NamedExecuteWithResult("Kingpin_DrawHud",startIndex,0,0,0);
 			}
 			//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
 			else if(UsingFullScreen == true)
 			{
-				RemoveMessages(60,90);
+				RemoveMessages(startIndex,startIndex+40);
 				UsingFullScreen = false;
 			}
 				
@@ -329,7 +330,7 @@ Script "Kingpin_Player" (void)
 str KingpinHUDWeapons[9][9] =
 {
 	{ "Kingpin_Pipe", "", "", "", "", "" },
-	{ "Kingpin_Pistol", "Kingpin_PistolMagazine", "-1", "KPHWEAP1", "KPHAMMO1", "Kingpin_Pistol_Magnum", "Kingpin_Pistol_Reload", "Kingpin_Pistol_RateOfFire", "Kingpin_Pistol_Silencer" },
+	{ "Kingpin_Pistol", "Kingpin_PistolMagazine", "Clip", "KPHWEAP1", "KPHAMMO1", "Kingpin_Pistol_Magnum", "Kingpin_Pistol_Reload", "Kingpin_Pistol_RateOfFire", "Kingpin_Pistol_Silencer" },
 	{ "Kingpin_Crowbar", "", "", "KPHWEAP2", "", "", "", "", "" },
 	{ "Kingpin_Shotgun", "Kingpin_ShotgunMagazine", "Shell", "KPHWEAP3", "KPHAMMO2", "Kingpin_Shotgun_Magazine", "Kingpin_Shotgun_DoubleBarrel", "Kingpin_Shotgun_SelectFire", "Kingpin_Shotgun_BleedShot" },
 	{ "Kingpin_GrenadeLauncher", "Kingpin_GrenadeLauncherMagazine", "RocketAmmo", "KPHWEAP4", "KPHAMMO3", "Kingpin_GrenadeLauncher_ConcussionGrenades", "Kingpin_GrenadeLauncher_MagazineCapacity", "Kingpin_GrenadeLauncher_Fragmentation", "Kingpin_GrenadeLauncher_ClusterBombs" },
@@ -339,25 +340,27 @@ str KingpinHUDWeapons[9][9] =
 	{ "Kingpin_HMG", "Kingpin_HMGMagazine", "Cell", "KPHWEAP8", "KPHAMMO6", "Kingpin_HMG_SelectFire", "Kingpin_HMG_AntiMaterial", "Kingpin_HMG_CoolingRod", "Kingpin_HMG_TacticalScope" },
 };
 
-Script "Kingpin_DrawHud" (void)
+Script "Kingpin_DrawHud" (int startIndex)
 {
-	int startIndex = 60;
 	int offset, digit, i;
 	int kp_cash = CheckInventory("Kingpin_Cash");
 	int kp_cashDigits = strlen(strparam(d:kp_cash));
 	int kp_health = GetActorProperty(0,APROP_Health);
 	int kp_healthDigits = strlen(strparam(d:kp_health));
 	int kp_armor = CheckInventory("BasicArmor");
+	int kp_armorDigits = strlen(strparam(d:kp_armor));
+	int kp_kills = CheckInventory("KillCountAmount");
+	int kp_killsDigits = strlen(strparam(d:kp_kills));
 	int currentWeapon = CheckInventory("Kingpin_SelectedWeapon");
 	
 	//Set hud size. This seems pretty safe
-	SetHudSize(640,480,0);	
+	SetHudSize(800,600,0);	
 	//Draw money icon
 	SetFont("KPHMONEY");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+20,CR_UNTRANSLATED,592.2,20.0,0.0,0.33);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+29,CR_UNTRANSLATED,700.2,28.0,0.0,0.33);
 	//Draw money amount
-	RemoveMessages(startIndex+25,startIndex+30);
-	SetFont("KPHUDF");
+	RemoveMessages(startIndex+24,startIndex+28);
+	SetFont("KPHUDL");
 	for(i = kp_cashDigits; i > 0; i--)
 	{
 		//Since these are aligned from the left, we need an offset for the drawing function
@@ -365,12 +368,28 @@ Script "Kingpin_DrawHud" (void)
 		//This formula will compute the current digit
 		digit = (kp_cash % pow(10,i)) / pow(10,i-1);
 		//Finally, draw the digit
-		HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+25+offset,CR_UNTRANSLATED,600.2 + (offset * 7.0),20.0 + (offset * 1.0),0.0);	
+		HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+24+offset,CR_UNTRANSLATED,704.1 + (offset * 16.0),28.0 + (offset * 3.0),0.0);	
+	}
+	
+	//Draw kills icon
+	SetFont("KPHKILL");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+30,CR_UNTRANSLATED,700.2,72.0,0.0,0.33);
+	//Draw money amount
+	RemoveMessages(startIndex+31,startIndex+35);
+	SetFont("KPHUDL");
+	for(i = kp_killsDigits; i > 0; i--)
+	{
+		//Since these are aligned from the left, we need an offset for the drawing function
+		offset = kp_killsDigits-i;
+		//This formula will compute the current digit
+		digit = (kp_kills % pow(10,i)) / pow(10,i-1);
+		//Finally, draw the digit
+		HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+31+offset,CR_UNTRANSLATED,704.1 + (offset * 16.0),72.0 + (offset * 3.0),0.0);	
 	}
 	
 	//Draw health amount
-	RemoveMessages(startIndex+22,startIndex+24);
-	SetFont("KPHUDF");
+	RemoveMessages(startIndex+21,startIndex+23);
+	SetFont("KPHUDL");
 	for(i = kp_healthDigits; i > 0; i--)
 	{
 		//Since these are aligned from the left, we need an offset for the drawing function
@@ -378,21 +397,30 @@ Script "Kingpin_DrawHud" (void)
 		//This formula will compute the current digit
 		digit = (kp_health % pow(10,i)) / pow(10,i-1);
 		//Finally, draw the digit
-		HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+22+offset,CR_UNTRANSLATED,80.2 + (offset * 7.0),460.0 + (offset * 1.0),0.0);	
+		HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+21+offset,CR_UNTRANSLATED,80.2 + (offset * 16.0),576.0 + (offset * 3.0),0.0);	
 	}
 	//Draw Health Icon - inconsistent placement, I know
 	SetFont("KPHLIFE");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+19,CR_UNTRANSLATED,76.2,460.0,0.0,0.33);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+20,CR_UNTRANSLATED,20.1,580.0,0.0,0.33);
 	
 	//Draw armor amount
-	SetFont("KPHUDF"); 
-	HudMessage(d:kp_armor;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+21,CR_UNTRANSLATED,32.0,360.0,0.0);	
+	RemoveMessages(startIndex+17,startIndex+19);
+	SetFont("KPHUDL");
+	for(i = kp_armorDigits; i > 0; i--)
+	{
+		//Since these are aligned from the left, we need an offset for the drawing function
+		offset = kp_armorDigits-i;
+		//This formula will compute the current digit
+		digit = (kp_armor % pow(10,i)) / pow(10,i-1);
+		//Finally, draw the digit
+		HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+17+offset,CR_UNTRANSLATED,80.2 + (offset * 16.0),500.0 + (offset * 3.0),0.0);	
+	}
 	SetHudSize(960,640,0);	
 	//Draw armor icon
 	SetFont("KPHBODY");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+18,CR_UNTRANSLATED,80.2,580.2,0.0,0.33);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+16,CR_UNTRANSLATED,80.2,580.2,0.0,0.33);
 	SetFont("KPHARMOR");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+16,CR_UNTRANSLATED,80.2,580.2,0.0,kp_armor*1.0/100);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+15,CR_UNTRANSLATED,80.2,580.2,0.0,kp_armor*1.0/100);
 	//Draw armor outline, here
 	if(kp_armor >= 150)
 		SetFont("KPHARMB");
@@ -403,32 +431,31 @@ Script "Kingpin_DrawHud" (void)
 	else if(kp_armor >= 25)
 		SetFont("KPHARMO");
 	else if(kp_armor > 0)
-		SetFont("KPHARMR");
-	if(kp_armor > 0) HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+17,CR_UNTRANSLATED,80.2,580.2,0.0,0.5);
-	SetHudSize(640,480,0);	
+		SetFont("KPHARMY");
+	if(kp_armor > 0) HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+14,CR_UNTRANSLATED,80.2,580.2,0.0,0.5);
+	SetHudSize(800,600,0);	
 	
 	//Draw ammo/weapon info
-	SetFont("KPHUDF"); 
+	SetFont("KPHUDL"); 
 	//Draw total ammo
-	RemoveMessages(startIndex+12,startIndex+15);
-	if((StrCmp(KingpinHUDWeapons[currentWeapon][2], "") && StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1")) || (!StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
+	RemoveMessages(startIndex+10,startIndex+13);
+	if(strlen(KingpinHUDWeapons[currentWeapon][2]) > 0)
 	{
-		int kp_ammo = !StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") ? CheckInventory("Clip") : CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
+		int kp_ammo = CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
 		if(kp_ammo > 9999) kp_ammo = 9999;
 		int kp_ammoDigits = strlen(strparam(d:kp_ammo));
 		for(i = kp_ammoDigits; i > 0; i--)
 		{
 			//Since these are aligned from the left, we need an offset for the drawing function
-			offset = kp_ammoDigits-i;
 			//This formula will compute the current digit
 			digit = (kp_ammo % pow(10,i)) / pow(10,i-1);
 			//Finally, draw the digit
-			HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+12+offset,CR_UNTRANSLATED,580.2 + (offset * 7.0),468.0 - (offset * 1.0),0.0);	
+			HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10+i,CR_UNTRANSLATED,760.2 - (i * 16.0),568.0 + (i * 3.0),0.0);	
 		}
 	}
 	//Draw clip ammo
-	RemoveMessages(startIndex+8,startIndex+11);
-	if(StrCmp(KingpinHUDWeapons[currentWeapon][1], "") && CheckInventory("SamsaraReloadMode") >= 2)
+	RemoveMessages(startIndex+6,startIndex+9);
+	if(strlen(KingpinHUDWeapons[currentWeapon][1]) > 0)
 	{
 		int kp_clip = CheckInventory(KingpinHUDWeapons[currentWeapon][1]);
 		if(kp_clip > 9999) kp_clip = 9999;
@@ -436,52 +463,53 @@ Script "Kingpin_DrawHud" (void)
 		for(i = kp_clipDigits; i > 0; i--)
 		{
 			//Since these are aligned from the left, we need an offset for the drawing function
-			offset = kp_clipDigits-i;
 			//This formula will compute the current digit
 			digit = (kp_clip % pow(10,i)) / pow(10,i-1);
 			//Finally, draw the digit
-			HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+8+offset,CR_UNTRANSLATED,620.2 + (offset * 7.0),420.0 - (offset * 1.0),0.0);	
+			HudMessage(d:digit;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6+i,CR_UNTRANSLATED,796.2 - (i * 16.0),524.0 + (i * 3.0),0.0);	
 		}
 	}
 	//Draw ammo type icon
-	if(strlen(KingpinHUDWeapons[currentWeapon][4] > 0))
+	if(strlen(KingpinHUDWeapons[currentWeapon][4]) > 0)
 	{
 		SetHudSize(1280,960,0);	
 		SetFont(KingpinHUDWeapons[currentWeapon][4]); 
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+7,CR_UNTRANSLATED,1220.2,924.2,0.0);	
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+5,CR_UNTRANSLATED,1276.2,940.2,0.0);	
 	}
+	else RemoveMessages(startIndex+5,startIndex+5);
 	//Draw weapon icon
-	if(strlen(KingpinHUDWeapons[currentWeapon][3] > 0))
+	if(strlen(KingpinHUDWeapons[currentWeapon][3]) > 0)
 	{
 		SetHudSize(960,640,0);
 		SetFont(KingpinHUDWeapons[currentWeapon][3]); 
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,CR_UNTRANSLATED,930.2,544.2,0.0);	
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+4,CR_UNTRANSLATED,940.2,540.2,0.0);	
 	}
+	else RemoveMessages(startIndex+4,startIndex+4);
 	//Finally, draw upgrades
-	RemoveMessages(startIndex+2,startIndex+5);
-	if(strlen(KingpinHUDWeapons[currentWeapon][5] > 0) && CheckInventory(KingpinHUDWeapons[currentWeapon][5]))
+	RemoveMessages(startIndex,startIndex+3);
+	if(strlen(KingpinHUDWeapons[currentWeapon][5]) > 0 && CheckInventory(KingpinHUDWeapons[currentWeapon][5]))
 	{
 		SetHudSize(1280,960,0);	
-		SetFont(strparam(s:"KPHW",d:currentWeapon,s:"U",d:1)); 
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+5,CR_UNTRANSLATED,1280.2,720.2,0.0);	
+		SetFont("KPUPGR1"); 
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+3,CR_UNTRANSLATED,1100.2,732.2,0.0);	
 	}
-	if(strlen(KingpinHUDWeapons[currentWeapon][6] > 0) && CheckInventory(KingpinHUDWeapons[currentWeapon][6]))
+	if(strlen(KingpinHUDWeapons[currentWeapon][6]) > 0 && CheckInventory(KingpinHUDWeapons[currentWeapon][6]))
 	{
 		SetHudSize(1280,960,0);	
-		SetFont(strparam(s:"KPHW",d:currentWeapon,s:"U",d:2)); 
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+4,CR_UNTRANSLATED,1280.2,660.2,0.0);	
+		SetFont("KPUPGR2"); 
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+2,CR_UNTRANSLATED,1160.2,732.2,0.0);	
 	}
-	if(strlen(KingpinHUDWeapons[currentWeapon][7] > 0) && CheckInventory(KingpinHUDWeapons[currentWeapon][7]))
+	if(strlen(KingpinHUDWeapons[currentWeapon][7]) > 0 && CheckInventory(KingpinHUDWeapons[currentWeapon][7]))
 	{
 		SetHudSize(1280,960,0);	
-		SetFont(strparam(s:"KPHW",d:currentWeapon,s:"U",d:3)); 
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+3,CR_UNTRANSLATED,1280.2,600.2,0.0);	
+		SetFont("KPUPGR3"); 
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+1,CR_UNTRANSLATED,1220.2,732.2,0.0);	
 	}
-	if(strlen(KingpinHUDWeapons[currentWeapon][8] > 0) && CheckInventory(KingpinHUDWeapons[currentWeapon][8]))
+	if(strlen(KingpinHUDWeapons[currentWeapon][8]) > 0 && CheckInventory(KingpinHUDWeapons[currentWeapon][8]))
 	{
 		SetHudSize(1280,960,0);	
-		SetFont(strparam(s:"KPHW",d:currentWeapon,s:"U",d:4)); 
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+2,CR_UNTRANSLATED,1280.2,540.2,0.0);	
+		SetFont("KPUPGR4"); 
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex,CR_UNTRANSLATED,1280.2,732.2,0.0);	
 	}
 }
 
