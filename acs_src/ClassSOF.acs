@@ -46,11 +46,25 @@ Script "SoF_Player" (void)
 	int lastLean = 0;
 	int lastCrouch = 0;
 	int currentCrouch = 0;
+	int UsingFullScreen = false;
+	int startIndex = 45600;
 	ACS_NamedExecuteWithResult("SoF_HandleLean");
 	
 	while(CheckInventory("SoFClass"))
 	{
 		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraSOFRocketCycle", CheckInventory("SoF_RocketMagazine") % 4); }
+
+		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+		{
+			UsingFullScreen = true;
+			ACS_NamedExecuteWithResult("SoF_DrawHud",0,0,0,0);
+		}
+		//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
+		else if(UsingFullScreen == true)
+		{
+			RemoveMessages(startIndex,startIndex+40);
+			UsingFullScreen = false;
+		}
 
 		int brutalityCounter = 0;
 		
@@ -84,15 +98,16 @@ Script "SoF_Player" (void)
 			int velX = GetActorVelX(0)>>16;
 			int velY = GetActorVelY(0)>>16;
 			int currentSpeed = sqrt(velX*velX + velY*velY)<<16;
+			int currentWeapon = CheckInventory("SoF_SelectedWeapon");
 			// If in GZDoom, give the weapon updater ZScript token. Otherwise, use behavior of the Assault Rifle
 			if(GZDoom && viewModelsLoaded) GiveInventory("JohnMullinsWeaponUpdater",1);
-			else SetInventory("SoF_SelectedWeapon",3);
+			else currentWeapon = 3;
 			
 			// Set Current crouch value
 			currentCrouch = isCrouching(26.0);
 			
 			// Set ChangeWeapon
-			changeWeapon = CheckInventory("SoF_SelectedWeapon") != CheckInventory("SoF_LastWeapon");
+			changeWeapon = currentWeapon != CheckInventory("SoF_LastWeapon");
 			
 			if(CheckInventory("SoF_PainToken"))
 				currentplayeraction = SOF_ACTION_RESET;
@@ -127,14 +142,14 @@ Script "SoF_Player" (void)
 					if((currentplayeraction != SOF_ACTION_LEANLEFTLOOP || changeWeapon) && !currentCrouch)
 					{
 						currentplayeraction = SOF_ACTION_LEANLEFTLOOP;
-						SetActorState(0,strparam(s:"LeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						SetActorState(0,strparam(s:"LeanLeftMid",s:SoFWeaponStates[currentWeapon-1]),true);
+						SetInventory("SoF_LastWeapon",currentWeapon);
 					}
 					else if((currentplayeraction != SOF_ACTION_CROUCHLEANLEFT || changeWeapon) && currentCrouch)
 					{
 						currentplayeraction = SOF_ACTION_CROUCHLEANLEFT;
-						SetActorState(0,strparam(s:"CrouchLeanLeftMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						SetActorState(0,strparam(s:"CrouchLeanLeftMid",s:SoFWeaponStates[currentWeapon-1]),true);
+						SetInventory("SoF_LastWeapon",currentWeapon);
 					}
 				}
 				//Right
@@ -143,14 +158,14 @@ Script "SoF_Player" (void)
 					if((currentplayeraction != SOF_ACTION_LEANRIGHTLOOP || changeWeapon) && !currentCrouch)
 					{
 						currentplayeraction = SOF_ACTION_LEANRIGHTLOOP;
-						SetActorState(0,strparam(s:"LeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						SetActorState(0,strparam(s:"LeanRightMid",s:SoFWeaponStates[currentWeapon-1]),true);
+						SetInventory("SoF_LastWeapon",currentWeapon);
 					}
 					if((currentplayeraction != SOF_ACTION_CROUCHLEANRIGHT || changeWeapon) && currentCrouch)
 					{
 						currentplayeraction = SOF_ACTION_CROUCHLEANRIGHT;
-						SetActorState(0,strparam(s:"CrouchLeanRightMid",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-						SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+						SetActorState(0,strparam(s:"CrouchLeanRightMid",s:SoFWeaponStates[currentWeapon-1]),true);
+						SetInventory("SoF_LastWeapon",currentWeapon);
 					}
 				}
 				//Transitional frames
@@ -158,14 +173,14 @@ Script "SoF_Player" (void)
 				{
 					if(!currentCrouch)
 					{
-						if(SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")] != "Launcher")
+						if(SoFWeaponStates[currentWeapon] != "Launcher")
 							SetActorState(0,strparam(s:"LeanToMulti",d:CheckInventory("SoF_LeanCounter")),true);
 						else
 							SetActorState(0,strparam(s:"LeanToLauncher",d:CheckInventory("SoF_LeanCounter")),true);
 					}
 					else
 					{
-						if(SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")] != "Launcher")
+						if(SoFWeaponStates[currentWeapon] != "Launcher")
 							SetActorState(0,strparam(s:"CrouchLeanToMulti",d:CheckInventory("SoF_LeanCounter")),true);
 						else
 							SetActorState(0,strparam(s:"CrouchLeanToLauncher",d:CheckInventory("SoF_LeanCounter")),true);
@@ -181,7 +196,7 @@ Script "SoF_Player" (void)
 				{
 					if(currentplayeraction != SOF_ACTION_JUMPSTRAIGHT && !CheckInventory("SoF_PlayerJumping"))
 					{
-						SetActorState(0,strparam(s:"JumpStraight",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						SetActorState(0,strparam(s:"JumpStraight",s:SoFWeaponStates[currentWeapon-1]),true);
 						currentplayeraction = SOF_ACTION_JUMPSTRAIGHT;
 					}
 				}
@@ -189,7 +204,7 @@ Script "SoF_Player" (void)
 				{
 					if(currentplayeraction != SOF_ACTION_JUMPFORWARD && !CheckInventory("SoF_PlayerJumping"))
 					{
-						SetActorState(0,strparam(s:"JumpForward",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+						SetActorState(0,strparam(s:"JumpForward",s:SoFWeaponStates[currentWeapon-1]),true);
 						currentplayeraction = SOF_ACTION_JUMPFORWARD;
 					}
 				}
@@ -214,8 +229,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_RUN)
 							{
 								currentplayeraction = SOF_ACTION_RUN;
-								SetActorState(0,strparam(s:"Run",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"Run",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 						else if(abs(inputY) > abs(inputX) && inputY < 0)
@@ -223,8 +238,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_RUNBACK)
 							{
 								currentplayeraction = SOF_ACTION_RUNBACK;
-								SetActorState(0,strparam(s:"RunBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"RunBack",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 						else if(inputX > 0)
@@ -232,8 +247,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFER)
 							{
 								currentplayeraction = SOF_ACTION_STRAFER;
-								SetActorState(0,strparam(s:"StrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"StrafeR",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 						else if(inputX < 0)
@@ -241,8 +256,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_STRAFEL)
 							{
 								currentplayeraction = SOF_ACTION_STRAFEL;
-								SetActorState(0,strparam(s:"StrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"StrafeL",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 					} 
@@ -254,8 +269,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_WALK)
 							{
 								currentplayeraction = SOF_ACTION_WALK;
-								SetActorState(0,strparam(s:"Walk",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"Walk",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 						else if(abs(inputY) > abs(inputX) && inputY < 0)
@@ -263,8 +278,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_WALKBACK)
 							{
 								currentplayeraction = SOF_ACTION_WALKBACK;
-								SetActorState(0,strparam(s:"WalkBack",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"WalkBack",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 						else if(inputX > 0)
@@ -272,8 +287,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFER)
 							{
 								currentplayeraction = SOF_ACTION_WSTRAFER;
-								SetActorState(0,strparam(s:"WStrafeR",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"WStrafeR",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 						else if(inputX < 0)
@@ -281,8 +296,8 @@ Script "SoF_Player" (void)
 							if(changeWeapon || currentplayeraction != SOF_ACTION_WSTRAFEL)
 							{
 								currentplayeraction = SOF_ACTION_WSTRAFEL;
-								SetActorState(0,strparam(s:"WStrafeL",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-								SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+								SetActorState(0,strparam(s:"WStrafeL",s:SoFWeaponStates[currentWeapon-1]),true);
+								SetInventory("SoF_LastWeapon",currentWeapon);
 							}
 						}
 					}
@@ -294,8 +309,8 @@ Script "SoF_Player" (void)
 						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHFORWARD)
 						{
 							currentplayeraction = SOF_ACTION_CROUCHFORWARD;
-							SetActorState(0,strparam(s:"CrouchForward",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							SetActorState(0,strparam(s:"CrouchForward",s:SoFWeaponStates[currentWeapon-1]),true);
+							SetInventory("SoF_LastWeapon",currentWeapon);
 						}
 					}
 					else if(inputX > 0 && currentSpeed >= 1.0)
@@ -303,8 +318,8 @@ Script "SoF_Player" (void)
 						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHRIGHT)
 						{
 							currentplayeraction = SOF_ACTION_CROUCHRIGHT;
-							SetActorState(0,strparam(s:"CrouchRight",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							SetActorState(0,strparam(s:"CrouchRight",s:SoFWeaponStates[currentWeapon-1]),true);
+							SetInventory("SoF_LastWeapon",currentWeapon);
 						}
 					}
 					else if(inputX < 0 && currentSpeed >= 1.0)
@@ -312,8 +327,8 @@ Script "SoF_Player" (void)
 						if(changeWeapon || currentplayeraction != SOF_ACTION_CROUCHLEFT)
 						{
 							currentplayeraction = SOF_ACTION_CROUCHLEFT;
-							SetActorState(0,strparam(s:"CrouchLeft",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-							SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+							SetActorState(0,strparam(s:"CrouchLeft",s:SoFWeaponStates[currentWeapon-1]),true);
+							SetInventory("SoF_LastWeapon",currentWeapon);
 						}
 					}
 				}
@@ -326,13 +341,13 @@ Script "SoF_Player" (void)
 				{
 					SetInventory("SoF_PlayerJumping",0);
 					currentplayeraction = SOF_ACTION_SHOOTING;
-					SetActorState(0,strparam(s:"Shoot",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+					SetActorState(0,strparam(s:"Shoot",s:SoFWeaponStates[currentWeapon-1]),true);
 				}
 				else if(currentCrouch && currentplayeraction != SOF_ACTION_CROUCHSHOOTING)
 				{
 					SetInventory("SoF_PlayerJumping",0);
 					currentplayeraction = SOF_ACTION_CROUCHSHOOTING;
-					SetActorState(0,strparam(s:"CrouchShoot",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
+					SetActorState(0,strparam(s:"CrouchShoot",s:SoFWeaponStates[currentWeapon-1]),true);
 				}
 			}
 			//Spawn/Standing
@@ -343,15 +358,15 @@ Script "SoF_Player" (void)
 				{
 					SetInventory("SoF_PlayerJumping",0);
 					currentplayeraction = SOF_ACTION_SPAWN;
-					SetActorState(0,strparam(s:"Spawn",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					SetActorState(0,strparam(s:"Spawn",s:SoFWeaponStates[currentWeapon-1]),true);
+					SetInventory("SoF_LastWeapon",currentWeapon);
 				}
 				else if(currentCrouch && (currentplayeraction != SOF_ACTION_CROUCH || changeWeapon))
 				{
 					SetInventory("SoF_PlayerJumping",0);
 					currentplayeraction = SOF_ACTION_CROUCH;
-					SetActorState(0,strparam(s:"Crouch",s:SoFWeaponStates[CheckInventory("SoF_SelectedWeapon")-1]),true);
-					SetInventory("SoF_LastWeapon",CheckInventory("SoF_SelectedWeapon"));
+					SetActorState(0,strparam(s:"Crouch",s:SoFWeaponStates[currentWeapon-1]),true);
+					SetInventory("SoF_LastWeapon",currentWeapon);
 				}
 			}
 			//Lower intertia
@@ -372,6 +387,57 @@ Script "SoF_Player" (void)
 
 		Delay(1);
 	}
+}
+
+str SoFWeapons [12][3] = {
+	{ "SoF_Knife", "", "" },
+	{ "SoF_Pistol1", "SoF_Pistol1Magazine", "Clip" },
+	{ "SoF_Pistol2", "SoF_Pistol2Magazine", "Clip" },
+	{ "SoF_AssaultRifle", "SoF_AssaultRifleMagazine", "Clip" },
+	{ "SoF_Shotgun", "SoF_ShotgunMagazine", "Shell" },
+	{ "SoF_Machinegun", "SoF_MachinegunMagazine", "Clip" },
+	{ "SoF_Rocket", "SoF_RocketMagazine", "RocketAmmo" },
+	{ "SoF_Flamegun", "SoF_FlameGunMagazine", "RocketAmmo" },
+	{ "SoF_Slugger", "SoF_SluggerMagazine", "Cell" },
+	{ "SoF_MPG", "SoF_MPGMagazine", "Cell" },
+	{ "SoF_MPistol", "SoF_MPistolMagazine", "Clip" },
+	{ "SoF_SniperRifle", "SoF_SniperMagazine", "Shell" }
+};
+
+Script "SoF_DrawHud" (int startIndex)
+{
+	int selectedWeapon = CheckInventory("SoF_SelectedWeapon")-1;
+	int sof_health = GetActorProperty(0,APROP_Health);
+	int sof_armor = CheckInventory("BasicArmor");
+	//Set hud size. This seems pretty safe
+	SetHudSize(800,600,0);	
+	//Draw the status bar backdrop
+	SetFont("SFFULBAR");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+24,CR_UNTRANSLATED,0.1,600.2,0.0);
+	
+	//Draw Health bar
+	SetFont("SOFLIFEB");
+	SetHudClipRect(346,576,128*FixedDiv(sof_health,100)>>16,16,0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+25,CR_UNTRANSLATED,346.1,576.1,0.0);
+	SetHudClipRect(0,0,0,0,0);
+	
+	//Draw Armor bar
+	SetFont("SOFARMOR");
+	SetHudClipRect(280,568,142*FixedDiv(sof_armor,100)>>16,16,0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+23,CR_UNTRANSLATED,280.1,568.1,0.0);
+	SetHudClipRect(0,0,0,0,0);
+	
+	//Draw the magazine counter
+	SetFont("SOFSCONB");
+	int sof_clip = CheckInventory(SoFWeapons[selectedWeapon][1]);
+	HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20,CR_UNTRANSLATED,736.1,580.2,0.0);
+	
+	// Need the font ripped!
+	/*SetFont("SOFFONTS");
+	int sof_ammo = CheckInventory(SoFWeapons[selectedWeapon][2]);
+	HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+19,CR_UNTRANSLATED,700.1,580.2,0.0);*/
+	
+	
 }
 
 // This should help route actual server side information to the client
@@ -474,8 +540,8 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 	
 	if(reward)
 	{
-		HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" Reward:\n");HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,60+type*2,CR_UNTRANSLATED,320.0,384.0-(20.0*brutalityCounter),0.5,0.5);
-		HudMessage(s:primaryReward,s:secondaryReward;HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,61+type*2,CR_UNTRANSLATED,320.0,392.0-(20.0*brutalityCounter),0.5,0.5);
+		HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" Reward:\n");HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,60+type*2,CR_UNTRANSLATED,320.0,364.0-(20.0*brutalityCounter),0.5,0.5);
+		HudMessage(s:primaryReward,s:secondaryReward;HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,61+type*2,CR_UNTRANSLATED,320.0,372.0-(20.0*brutalityCounter),0.5,0.5);
 		SetHudClipRect(0,0,0,0,0);
 		SetFont("SMALLFONT");
 	}
@@ -489,10 +555,10 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 
 function void drawBonusBar (int type, int brutalityCounter)
 {
-	HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" ",s:"\cfx",d:CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Multiplier")));HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,60+type*2,CR_UNTRANSLATED,320.0,384.0-(20.0*brutalityCounter),0.0);
-	SetHudClipRect(256,392-(20*brutalityCounter),FixedMul(128.0,FixedDiv(CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Timer"))*1.0,105.0))>>16,16,0);
+	HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" ",s:"\cfx",d:CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Multiplier")));HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,60+type*2,CR_UNTRANSLATED,320.0,364.0-(20.0*brutalityCounter),0.0);
+	SetHudClipRect(256,372-(20*brutalityCounter),FixedMul(128.0,FixedDiv(CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Timer"))*1.0,105.0))>>16,16,0);
 	SetFont("SOFCOMBO");
-	HudMessage(s:"A";HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,61+type*2,CR_UNTRANSLATED,320.0,392.0-(20.0*brutalityCounter),0.0);
+	HudMessage(s:"A";HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,61+type*2,CR_UNTRANSLATED,320.0,372.0-(20.0*brutalityCounter),0.0);
 	SetHudClipRect(0,0,0,0,0);
 	SetFont("SMALLFONT");
 	return;
@@ -1238,17 +1304,11 @@ Script "SoF_DoScope" (void) clientside
 	RemoveMessages(49,59);
 }
 
-str SoFWeapons[12] = { "SoF_Knife", "SoF_Pistol1", "SoF_Pistol2", "SoF_AssaultRifle", "SoF_Shotgun", "SoF_Machinegun", "SoF_Rocket", "SoF_Flamegun", "SoF_Slugger", "SoF_MPG", "SoF_MPistol", "SoF_SniperRifle" };
-
 Script "SoF_CheckWeapon" (void)
 {
-	//We don't run this if the view models aren't loaded
-	if(!GetCvar("samsara_cl_viewmodelsloaded"))
-		terminate;
-		
 	for(int a = 0; a < 12; a++)
 	{
-		if(CheckWeapon(SoFWeapons[a]))
+		if(CheckWeapon(SoFWeapons[a][0]))
 		{
 			//Only do the thing if the weapon changed.
 			if(CheckInventory("SoF_SelectedWeapon") != (a + 1))
