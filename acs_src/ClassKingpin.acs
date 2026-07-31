@@ -174,7 +174,7 @@ Script "Kingpin_Player" (void)
 				ACS_NamedExecuteWithResult("Kingpin_DrawHud",0,0,0,0);
 			}
 			//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
-			else if(UsingFullScreen == false)
+			else if(UsingFullScreen == true)
 			{
 				RemoveMessages(60,90);
 				UsingFullScreen = false;
@@ -403,7 +403,7 @@ Script "Kingpin_DrawHud" (void)
 	else if(kp_armor >= 25)
 		SetFont("KPHARMO");
 	else if(kp_armor > 0)
-		SetFont("KPHARMY");
+		SetFont("KPHARMR");
 	if(kp_armor > 0) HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+17,CR_UNTRANSLATED,80.2,580.2,0.0,0.5);
 	SetHudSize(640,480,0);	
 	
@@ -411,9 +411,9 @@ Script "Kingpin_DrawHud" (void)
 	SetFont("KPHUDF"); 
 	//Draw total ammo
 	RemoveMessages(startIndex+12,startIndex+15);
-	if((StrCmp(KingpinHUDWeapons[currentWeapon][2], "") && StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1")) || (!StrICmp(KingpinHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
+	if((StrCmp(KingpinHUDWeapons[currentWeapon][2], "") && StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1")) || (!StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
 	{
-		int kp_ammo = !StrICmp(KingpinHUDWeapons[currentWeapon][2], "-1") ? CheckInventory("Clip") : CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
+		int kp_ammo = !StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") ? CheckInventory("Clip") : CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
 		if(kp_ammo > 9999) kp_ammo = 9999;
 		int kp_ammoDigits = strlen(strparam(d:kp_ammo));
 		for(i = kp_ammoDigits; i > 0; i--)
