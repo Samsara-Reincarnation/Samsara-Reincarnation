@@ -329,7 +329,7 @@ Script "Kingpin_Player" (void)
 str KingpinHUDWeapons[9][9] =
 {
 	{ "Kingpin_Pipe", "", "", "", "", "" },
-	{ "Kingpin_Pistol", "Kingpin_PistolMagazine", "Clip", "KPHWEAP1", "KPHAMMO1", "Kingpin_Pistol_Magnum", "Kingpin_Pistol_Reload", "Kingpin_Pistol_RateOfFire", "Kingpin_Pistol_Silencer" },
+	{ "Kingpin_Pistol", "Kingpin_PistolMagazine", "-1", "KPHWEAP1", "KPHAMMO1", "Kingpin_Pistol_Magnum", "Kingpin_Pistol_Reload", "Kingpin_Pistol_RateOfFire", "Kingpin_Pistol_Silencer" },
 	{ "Kingpin_Crowbar", "", "", "KPHWEAP2", "", "", "", "", "" },
 	{ "Kingpin_Shotgun", "Kingpin_ShotgunMagazine", "Shell", "KPHWEAP3", "KPHAMMO2", "Kingpin_Shotgun_Magazine", "Kingpin_Shotgun_DoubleBarrel", "Kingpin_Shotgun_SelectFire", "Kingpin_Shotgun_BleedShot" },
 	{ "Kingpin_GrenadeLauncher", "Kingpin_GrenadeLauncherMagazine", "RocketAmmo", "KPHWEAP4", "KPHAMMO3", "Kingpin_GrenadeLauncher_ConcussionGrenades", "Kingpin_GrenadeLauncher_MagazineCapacity", "Kingpin_GrenadeLauncher_Fragmentation", "Kingpin_GrenadeLauncher_ClusterBombs" },
@@ -411,9 +411,9 @@ Script "Kingpin_DrawHud" (void)
 	SetFont("KPHUDF"); 
 	//Draw total ammo
 	RemoveMessages(startIndex+12,startIndex+15);
-	if(strlen(KingpinHUDWeapons[currentWeapon][2] > 0))
+	if((StrCmp(KingpinHUDWeapons[currentWeapon][2], "") && StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1")) || (!StrICmp(KingpinHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
 	{
-		int kp_ammo = CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
+		int kp_ammo = !StrICmp(KingpinHUDWeapons[currentWeapon][2], "-1") ? CheckInventory("Clip") : CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
 		if(kp_ammo > 9999) kp_ammo = 9999;
 		int kp_ammoDigits = strlen(strparam(d:kp_ammo));
 		for(i = kp_ammoDigits; i > 0; i--)
@@ -428,7 +428,7 @@ Script "Kingpin_DrawHud" (void)
 	}
 	//Draw clip ammo
 	RemoveMessages(startIndex+8,startIndex+11);
-	if(strlen(KingpinHUDWeapons[currentWeapon][1] > 0))
+	if(StrCmp(KingpinHUDWeapons[currentWeapon][1], "") && CheckInventory("SamsaraReloadMode") >= 2)
 	{
 		int kp_clip = CheckInventory(KingpinHUDWeapons[currentWeapon][1]);
 		if(kp_clip > 9999) kp_clip = 9999;
