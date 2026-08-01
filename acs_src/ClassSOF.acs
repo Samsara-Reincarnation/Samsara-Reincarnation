@@ -389,19 +389,19 @@ Script "SoF_Player" (void)
 	}
 }
 
-str SoFWeapons [12][3] = {
-	{ "SoF_Knife", "", "" },
-	{ "SoF_Pistol1", "SoF_Pistol1Magazine", "Clip" },
-	{ "SoF_Pistol2", "SoF_Pistol2Magazine", "Clip" },
-	{ "SoF_AssaultRifle", "SoF_AssaultRifleMagazine", "Clip" },
-	{ "SoF_Shotgun", "SoF_ShotgunMagazine", "Shell" },
-	{ "SoF_Machinegun", "SoF_MachinegunMagazine", "Clip" },
-	{ "SoF_Rocket", "SoF_RocketMagazine", "RocketAmmo" },
-	{ "SoF_Flamegun", "SoF_FlameGunMagazine", "RocketAmmo" },
-	{ "SoF_Slugger", "SoF_SluggerMagazine", "Cell" },
-	{ "SoF_MPG", "SoF_MPGMagazine", "Cell" },
-	{ "SoF_MPistol", "SoF_MPistolMagazine", "Clip" },
-	{ "SoF_SniperRifle", "SoF_SniperMagazine", "Shell" }
+str SoFWeapons [12][4] = {
+	{ "SoF_Knife", "", "", "KNIFE" },
+	{ "SoF_Pistol1", "SoF_Pistol1Magazine", "Clip", "9MM PISTOL" },
+	{ "SoF_Pistol2", "SoF_Pistol2Magazine", "Clip", ".44 PISTOL" },
+	{ "SoF_AssaultRifle", "SoF_AssaultRifleMagazine", "Clip", "SMG" },
+	{ "SoF_Shotgun", "SoF_ShotgunMagazine", "Shell", "SHOTGUN" },
+	{ "SoF_Machinegun", "SoF_MachinegunMagazine", "Clip", "HEAVY MG" },
+	{ "SoF_Rocket", "SoF_RocketMagazine", "RocketAmmo", "RCK LNCH" },
+	{ "SoF_Flamegun", "SoF_FlameGunMagazine", "RocketAmmo", "FLAME GUN" },
+	{ "SoF_Slugger", "SoF_SluggerMagazine", "Cell", "SLGTHRWR" },
+	{ "SoF_MPG", "SoF_MPGMagazine", "Cell", "MPG" },
+	{ "SoF_MPistol", "SoF_MPistolMagazine", "Clip", "SUP. SMG" },
+	{ "SoF_SniperRifle", "SoF_SniperMagazine", "Shell", "SNIPER R" }
 };
 
 Script "SoF_DrawHud" (int startIndex)
@@ -432,12 +432,14 @@ Script "SoF_DrawHud" (int startIndex)
 	int sof_clip = CheckInventory(SoFWeapons[selectedWeapon][1]);
 	HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20,CR_UNTRANSLATED,736.1,580.2,0.0);
 	
-	// Need the font ripped!
-	/*SetFont("SOFFONTS");
+	//Display the total ammo amount
+	SetFont("SOFHUDSM");
 	int sof_ammo = CheckInventory(SoFWeapons[selectedWeapon][2]);
-	HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+19,CR_UNTRANSLATED,700.1,580.2,0.0);*/
+	HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+19,"SoFHudGreen",704.1,581.2,0.0);
 	
-	
+	//Display the weapon name
+	SetFont("SOFHUDSM");
+	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+18,"SoFHudGreen",724.1,538.2,0.0);
 }
 
 // This should help route actual server side information to the client
@@ -474,6 +476,7 @@ Script "SoF_DrawBrutality" (int type, int reward, int brutalityCounter)
 
 Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, int multiplier) clientside
 {
+	//SetFont("SOFHUDBG");
 	SetHudSize(640,400,0);
 	str primaryReward = "";
 	str secondaryReward = "";
@@ -483,57 +486,57 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 		case 0:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 1");
-				secondaryReward = multiplier >= 5 ? strParam(s:", \cf",d:multiplier/5,s:"\c- Armor") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 1");
+				secondaryReward = multiplier >= 5 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite]- Armor") : "";
 			}
 			break;
 		case 1:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Health");
-				secondaryReward = multiplier >= 20 ? strParam(s:", \cf",d:1,s:"\c- Knife") : "";
+				primaryReward = strparam(s:"\[SoFHUDRed]f",d:multiplier,s:"\c[SoFHUDWhite] Health");
+				secondaryReward = multiplier >= 20 ? strParam(s:", \c[SoFHUDRed]",d:1,s:"\c[SoFHUDWhite]- Knife") : "";
 			}
 			break;
 		case 2:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 1");
-				secondaryReward = multiplier >= 2 ? strParam(s:", \cf",d:multiplier/5,s:"\c- Ammo 2") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 1");
+				secondaryReward = multiplier >= 2 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite]- Ammo 2") : "";
 			}
 			break;
 		case 3:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Armor");
-				secondaryReward = multiplier >= 4 ? strParam(s:", \cf",d:multiplier/4,s:"\c- Ammo 3") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
+				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite]- Ammo 3") : "";
 			}
 			break;
 		case 4:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Health");
-				secondaryReward = strParam(s:", \cf",d:multiplier,s:"\c- Armor");
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Health");
+				secondaryReward = strParam(s:", \c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
 			}
 			break;
 		case 5:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Armor");
-				secondaryReward = multiplier >= 10 ? strParam(s:", \cf",d:5,s:"\c- Ammo 2") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
+				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:5,s:"\c[SoFHUDWhite]- Ammo 2") : "";
 			}
 			break;
 		case 6:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 4");
-				secondaryReward = multiplier >= 4 ? strParam(s:", \cf",d:multiplier/4,s:"\c- Health") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 4");
+				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite]- Health") : "";
 			}
 			break;
 		case 7:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\cf",d:multiplier,s:"\c- Ammo 4");
-				secondaryReward = multiplier >= 10 ? strParam(s:", \cf",d:multiplier/10,s:"\c- Ammo 3") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 4");
+				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/10,s:"\c[SoFHUDWhite]- Ammo 3") : "";
 			}
 			break;
 	}
