@@ -13,7 +13,6 @@ actor Kingpin_TommyGun : Kingpin_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 50
-    Obituary "%o bowed to %k's tommy gun."
     Tag "Tommy Gun"
     States
     {
@@ -179,7 +178,7 @@ actor SamsaraKingpinTommyGunAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackInaccurateCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackInaccurateCoop")
       PickupAttackInaccurateDM:
-        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_TommySmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackInaccurateCoop:
@@ -191,7 +190,7 @@ actor SamsaraKingpinTommyGunAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAccurateCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAccurateCoop")
       PickupAttackAccurateDM:
-        TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_TommySmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackAccurateCoop:
@@ -222,4 +221,9 @@ actor Kingpin_TommyGunMagazine : Ammo
     Inventory.MaxAmount 50
     Tag "Tommy Gun Magazine"
     +IGNORESKILL
+}
+
+actor Kingpin_TommySmoke : Kingpin_BulletSmoke
+{
+	Obituary "%o bowed to %k's tommy gun."
 }

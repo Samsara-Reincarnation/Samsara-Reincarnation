@@ -8,7 +8,6 @@ ACTOR SoF_SniperRifle : SoF_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Shell"
     Weapon.AmmoGive2 6
-    Obituary "%o was sniped by %k."
     Inventory.PickupMessage "Picked up a 5.56 sniper rifle."
     Tag "The Eagle Eye"
     States
@@ -305,7 +304,12 @@ Actor SoF_Sniper_FireToken : Trigger
     }
 }
 
-Actor SoF_SniperRifleBulletPuff : SoF_BulletPuff { args 80 DamageType "SoFBullet" }
+Actor SoF_SniperRifleBulletPuff : SoF_BulletPuff 
+{ 
+	args 80
+	DamageType "SoFBullet"
+	Obituary "%o was sniped by %k."
+}
 
 actor SoF_SniperRifleBulletPuffCoop : SoF_SniperRifleBulletPuff { +MTHRUSPECIES }
 

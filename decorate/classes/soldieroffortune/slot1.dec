@@ -6,7 +6,6 @@ ACTOR SoF_Pistol2 : SoF_Weapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Clip"
     Weapon.AmmoGive2 10
-    Obituary "%o was hollow pointed by %k's monster magnum."
     Inventory.PickupMessage "Picked up a .44 pistol."
     Tag "The Silver Talon"
     States
@@ -700,7 +699,13 @@ Actor SoF_Pistol2_C_FireToken : Trigger
     }
 }
 
-Actor SoF_Pistol2BulletPuff : SoF_BulletPuff { args 60 DamageType "SoF44" Decal SoF44BulletHole }
+Actor SoF_Pistol2BulletPuff : SoF_BulletPuff
+{ 
+	args 60
+	DamageType "SoF44"
+	Decal SoF44BulletHole
+	Obituary "%o was hollow pointed by %k's monster magnum."
+}
 
 actor SoF_Pistol2BulletPuffCoop : SoF_Pistol2BulletPuff { +MTHRUSPECIES }
 

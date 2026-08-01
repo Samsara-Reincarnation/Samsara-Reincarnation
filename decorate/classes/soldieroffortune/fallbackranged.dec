@@ -4,7 +4,6 @@ ACTOR SoF_Pistol1 : SoF_Weapon
     Weapon.SelectionOrder 1900
     Weapon.AmmoType "SoF_Pistol1Magazine"
     Weapon.AmmoUse 1
-    Obituary "%o was blasted by %k's piece."
     Inventory.PickupMessage "Picked up a 9mm pistol."
     Tag "The Black Panther"
     +WIMPY_WEAPON
@@ -699,7 +698,12 @@ Actor SoF_Pistol1_B_FireToken : Trigger
     }
 }
 
-Actor SoF_Pistol1BulletPuff : SoF_BulletPuff { args 15 DamageType "SoFSMG" }
+Actor SoF_Pistol1BulletPuff : SoF_BulletPuff
+{
+	args 15
+	DamageType "SoFSMG"
+	Obituary "%o was blasted by %k's piece."
+}
 
 actor SoF_Pistol1BulletPuffCoop : SoF_Pistol1BulletPuff { +MTHRUSPECIES }
 

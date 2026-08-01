@@ -12,7 +12,6 @@ actor Kingpin_Pistol : Kingpin_Weapon
     Weapon.SelectionOrder 1900
     Weapon.AmmoType "Kingpin_PistolMagazine"
     Weapon.AmmoUse 1
-    Obituary "%o was busted by %k."
     Tag "Pistol"
     +WIMPY_WEAPON
     States
@@ -393,7 +392,7 @@ actor SamsaraKingpinPistolAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_BulletSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_PistolSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackCoop:
@@ -413,4 +412,9 @@ actor Kingpin_PistolMagazine : Ammo
     Inventory.MaxAmount 10
     Tag "Pistol Magazine"
     +IGNORESKILL
+}
+
+actor Kingpin_PistolSmoke : Kingpin_BulletSmoke
+{
+	Obituary "%o was busted by %k's cap."
 }
