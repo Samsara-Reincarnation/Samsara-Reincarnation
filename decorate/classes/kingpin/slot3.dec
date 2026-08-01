@@ -304,7 +304,7 @@ actor Kingpin_GrenadeCoop : Kingpin_Grenade
         stop
 
       DeathFireFragments:
-        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),16,10,"Kingpin_BulletSmokeCoop",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
+        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),16,10,"Kingpin_GrenadeSmokeCoop",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
         TNT1 A 1
         stop
     }
@@ -386,13 +386,12 @@ actor Kingpin_ClusterGrenadeCoop : Kingpin_ClusterGrenade
         goto DeathFinish
 
       DeathFireFragments:
-        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),3,10,"Kingpin_BulletSmokeCoop",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
+        TNT1 A 0 A_CustomBulletAttack(frandom(0,360),frandom(0,360),3,10,"Kingpin_GrenadeSmokeCoop",512,CBAF_EXPLICITANGLE|CBAF_NORANDOM)
         TNT1 A 1
         stop
     }
 }
 
-actor Kingpin_GrenadeSmoke : Kingpin_BulletSmoke
-{
-	Obituary "%o fumbled %k's grenade."
-}
+actor Kingpin_GrenadeSmoke : Kingpin_BulletSmoke { Obituary "%o fumbled %k's grenade." }
+
+actor Kingpin_GrenadeSmokeCoop : Kingpin_GrenadeSmoke { +MTHRUSPECIES }

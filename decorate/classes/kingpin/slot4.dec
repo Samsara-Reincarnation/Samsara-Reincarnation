@@ -182,7 +182,7 @@ actor SamsaraKingpinTommyGunAttackHandler : Trigger
         goto PickupFinish
 
       PickupAttackInaccurateCoop:
-        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_BulletSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_TommySmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Accurate
@@ -194,7 +194,7 @@ actor SamsaraKingpinTommyGunAttackHandler : Trigger
         goto PickupFinish
 
       PickupAttackAccurateCoop:
-        TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_BulletSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_TommySmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -223,7 +223,6 @@ actor Kingpin_TommyGunMagazine : Ammo
     +IGNORESKILL
 }
 
-actor Kingpin_TommySmoke : Kingpin_BulletSmoke
-{
-	Obituary "%o bowed to %k's tommy gun."
-}
+actor Kingpin_TommySmoke : Kingpin_BulletSmoke { Obituary "%o bowed to %k's tommy gun." }
+
+actor Kingpin_TommySmokeCoop : Kingpin_TommySmoke { +MTHRUSPECIES }
