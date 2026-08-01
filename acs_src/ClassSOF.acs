@@ -3,9 +3,9 @@ str BrutalityBonuses[8][2] =
 	{ "Bullet Sponge", "SoF_BulletSponge" },
 	{ "Leng Tche", "SoF_LengTche" },
 	{ "Alex Murphy", "SoF_AlexMurphy" },
-	{ "The Juicer", "SoF_TheJuicer"},
-	{ "The Eviscerator", "SoF_TheEviscerator"},
-	{ "Melon Popper", "SoF_MelonPopper"},
+	{ "The Juicer", "SoF_TheJuicer" },
+	{ "The Eviscerator", "SoF_TheEviscerator" },
+	{ "Melon Popper", "SoF_MelonPopper" },
 	{ "TV Dinner", "SoF_TVDinner" },
 	{ "Roasted", "SoF_Roasted" },
 };
@@ -48,8 +48,14 @@ Script "SoF_Player" (void)
 	int currentCrouch = 0;
 	int UsingFullScreen = false;
 	int startIndex = 45600;
+	int switchCounter = 0;
+	int lastWeapon = 0;
+	int switchGradient = 0;
+	bool doSwitchWeaponWidget = false;
 	ACS_NamedExecuteWithResult("SoF_HandleLean");
 	
+	//Prevent the widget from activating at the beginning
+	lastWeapon = CheckInventory("SoF_SelectedWeapon");
 	while(CheckInventory("SoFClass"))
 	{
 		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraSOFRocketCycle", CheckInventory("SoF_RocketMagazine") % 4); }
@@ -57,7 +63,33 @@ Script "SoF_Player" (void)
 		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
 		{
 			UsingFullScreen = true;
-			ACS_NamedExecuteWithResult("SoF_DrawHud",0,0,0,0);
+			
+			if(CheckInventory("SoF_SelectedWeapon") != lastWeapon)
+				doSwitchWeaponWidget = true;
+				
+			if(doSwitchWeaponWidget)
+			{
+				if(switchGradient < 28)
+					switchGradient+=2;
+				else
+				{
+					switchCounter = 35;
+					switchGradient = 28;
+					doSwitchWeaponWidget = false;
+				}
+			}
+			else switchCounter--;
+			if(switchCounter <= 0 && !doSwitchWeaponWidget)
+			{
+				if(switchGradient > 0)
+					switchGradient-=2;
+			}
+				
+			//Weapon widget
+			lastWeapon = CheckInventory("SoF_SelectedWeapon");
+			
+			//Finally draw
+			ACS_NamedExecuteWithResult("SoF_DrawHud",startIndex,switchGradient,0,0);
 		}
 		//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
 		else if(UsingFullScreen == true)
@@ -77,8 +109,13 @@ Script "SoF_Player" (void)
 					ACS_NamedExecuteWithResult("SoF_BrutalityRewards",i);
 					ACS_NamedExecuteWithResult("SoF_DrawBrutality",i,1,brutalityCounter);
 					SetInventory(strparam(s:BrutalityBonuses[i][1],s:"Multiplier"),0);
+					SetInventory(strparam(s:BrutalityBonuses[i][1],s:"Delay"),18);
 					brutalityCounter++;
 				}
+				else if(CheckInventory(strparam(s:BrutalityBonuses[i][1],s:"Delay")) > 0)
+					brutalityCounter++;
+				else
+					SetInventory(strparam(s:BrutalityBonuses[i][1],s:"Delay"),0);
 			}
 			else
 			{
@@ -87,6 +124,7 @@ Script "SoF_Player" (void)
 			}
 			
 			TakeInventory(strparam(s:BrutalityBonuses[i][1],s:"Timer"),1);
+			TakeInventory(strparam(s:BrutalityBonuses[i][1],s:"Delay"),1);
 		}
 		
 		int inputX = -GetPlayerInput(-1,MODINPUT_SIDEMOVE);
@@ -390,7 +428,7 @@ Script "SoF_Player" (void)
 }
 
 str SoFWeapons [12][4] = {
-	{ "SoF_Knife", "", "", "KNIFE" },
+	{ "SoF_Knife", "", "SoF_Knives", "KNIFE" },
 	{ "SoF_Pistol1", "SoF_Pistol1Magazine", "Clip", "9MM PISTOL" },
 	{ "SoF_Pistol2", "SoF_Pistol2Magazine", "Clip", ".44 PISTOL" },
 	{ "SoF_AssaultRifle", "SoF_AssaultRifleMagazine", "Clip", "SMG" },
@@ -404,7 +442,7 @@ str SoFWeapons [12][4] = {
 	{ "SoF_SniperRifle", "SoF_SniperMagazine", "Shell", "SNIPER R" }
 };
 
-Script "SoF_DrawHud" (int startIndex)
+Script "SoF_DrawHud" (int startIndex, int switchGradient)
 {
 	int selectedWeapon = CheckInventory("SoF_SelectedWeapon")-1;
 	int sof_health = GetActorProperty(0,APROP_Health);
@@ -413,33 +451,52 @@ Script "SoF_DrawHud" (int startIndex)
 	SetHudSize(800,600,0);	
 	//Draw the status bar backdrop
 	SetFont("SFFULBAR");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+24,CR_UNTRANSLATED,0.1,600.2,0.0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+25,CR_UNTRANSLATED,0.1,600.2,0.0);
+	if(switchGradient > 2)
+	{
+		SetFont("SFFULLIP");
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+24,CR_UNTRANSLATED,800.2,568.2,0.0);
+	} else RemoveMessages(startIndex+24,startIndex+24);
+	
+	//Draw health amount
+	SetFont("SOFHUDSM");
+	HudMessage(d:sof_health;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+23,"SoFHudGreen",332.2,590.2,0.0);
 	
 	//Draw Health bar
 	SetFont("SOFLIFEB");
-	SetHudClipRect(346,576,128*FixedDiv(sof_health,100)>>16,16,0);
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+25,CR_UNTRANSLATED,346.1,576.1,0.0);
+	if(sof_health > 100) sof_health = 100;
+	SetHudClipRect(350,576,124*FixedDiv(sof_health,100)>>16,16,0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+26,CR_UNTRANSLATED,348.1,576.1,0.0);
 	SetHudClipRect(0,0,0,0,0);
+	
+	//Draw armor amount
+	SetFont("SOFHUDSM");
+	HudMessage(d:sof_armor;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+22,"SoFHudGreen",332.2,577.2,0.0);
 	
 	//Draw Armor bar
 	SetFont("SOFARMOR");
-	SetHudClipRect(280,568,142*FixedDiv(sof_armor,100)>>16,16,0);
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+23,CR_UNTRANSLATED,280.1,568.1,0.0);
+	if(sof_armor > 100) sof_armor = 100;
+	SetHudClipRect(330,568,152*FixedDiv(sof_armor,100)>>16,16,0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+21,CR_UNTRANSLATED,280.1,568.1,0.0);
 	SetHudClipRect(0,0,0,0,0);
-	
+
 	//Draw the magazine counter
 	SetFont("SOFSCONB");
 	int sof_clip = CheckInventory(SoFWeapons[selectedWeapon][1]);
+	if(sof_clip > 99) sof_clip = 99;
 	HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20,CR_UNTRANSLATED,736.1,580.2,0.0);
 	
 	//Display the total ammo amount
 	SetFont("SOFHUDSM");
 	int sof_ammo = CheckInventory(SoFWeapons[selectedWeapon][2]);
-	HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+19,"SoFHudGreen",704.1,583.2,0.0);
+	if(sof_ammo > 999) sof_ammo = 999;
+	HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+19,"SoFHudGreen",722.2,583.2,0.0);
 	
-	//Display the weapon name
+	//Display the weapon name widget. If there is 5 pixels left, raise the drawing id of the moving widget
+	SetFont("SFFULWEP");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+28,CR_UNTRANSLATED,800.2,600.2 - switchGradient*1.0,0.0);
 	SetFont("SOFHUDSM");
-	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+18,"SoFHudGreen",722.1,541.2,0.0);
+	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+27,"SoFHudGreen",722.1,569.2 - switchGradient*1.0,0.0);
 }
 
 // This should help route actual server side information to the client
@@ -476,8 +533,8 @@ Script "SoF_DrawBrutality" (int type, int reward, int brutalityCounter)
 
 Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, int multiplier) clientside
 {
-	//SetFont("SOFHUDBG");
-	SetHudSize(640,400,0);
+	SetFont("SOFHUDBG");
+	SetHudSize(1280,800,0);
 	str primaryReward = "";
 	str secondaryReward = "";
 	
@@ -486,67 +543,66 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 		case 0:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 1");
-				secondaryReward = multiplier >= 5 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite]- Armor") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Ammo 1");
+				secondaryReward = multiplier >= 5 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite] - Armor") : "";
 			}
 			break;
 		case 1:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\[SoFHUDRed]f",d:multiplier,s:"\c[SoFHUDWhite] Health");
-				secondaryReward = multiplier >= 20 ? strParam(s:", \c[SoFHUDRed]",d:1,s:"\c[SoFHUDWhite]- Knife") : "";
+				primaryReward = strparam(s:"\[SoFHUDRed]f",d:multiplier,s:"\c[SoFHUDWhite] - Health");
+				secondaryReward = multiplier >= 20 ? strParam(s:", \c[SoFHUDRed]",d:1,s:"\c[SoFHUDWhite] - Knife") : "";
 			}
 			break;
 		case 2:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 1");
-				secondaryReward = multiplier >= 2 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite]- Ammo 2") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Ammo 1");
+				secondaryReward = multiplier >= 2 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite] - Ammo 2") : "";
 			}
 			break;
 		case 3:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
-				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite]- Ammo 3") : "";
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Armor");
+				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite] - Ammo 3") : "";
 			}
 			break;
 		case 4:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Health");
-				secondaryReward = strParam(s:", \c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Health");
+				secondaryReward = strParam(s:", \c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Armor");
 			}
 			break;
 		case 5:
 			if(reward)
 			{
 				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
-				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:5,s:"\c[SoFHUDWhite]- Ammo 2") : "";
+				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:5,s:"\c[SoFHUDWhite] - Ammo 2") : "";
 			}
 			break;
 		case 6:
 			if(reward)
 			{
 				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 4");
-				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite]- Health") : "";
+				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite] - Health") : "";
 			}
 			break;
 		case 7:
 			if(reward)
 			{
 				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 4");
-				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/10,s:"\c[SoFHUDWhite]- Ammo 3") : "";
+				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/10,s:"\c[SoFHUDWhite] - Ammo 3") : "";
 			}
 			break;
 	}
 	
 	if(reward)
 	{
-		HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" Reward:\n");HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,60+type*2,CR_UNTRANSLATED,320.0,364.0-(20.0*brutalityCounter),0.5,0.5);
-		HudMessage(s:primaryReward,s:secondaryReward;HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,61+type*2,CR_UNTRANSLATED,320.0,372.0-(20.0*brutalityCounter),0.5,0.5);
+		HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" Reward:\n");HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,60+type*2,CR_UNTRANSLATED,640.0,720.0-(40.0*brutalityCounter),0.5,0.5);
+		HudMessage(s:primaryReward,s:secondaryReward;HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_FADEOUT,61+type*2,CR_UNTRANSLATED,640.0,736.0-(40.0*brutalityCounter),0.5,0.5);
 		SetHudClipRect(0,0,0,0,0);
-		SetFont("SMALLFONT");
 	}
 	else
 	{
@@ -558,12 +614,14 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 
 function void drawBonusBar (int type, int brutalityCounter)
 {
-	HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" ",s:"\cfx",d:CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Multiplier")));HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,60+type*2,CR_UNTRANSLATED,320.0,364.0-(20.0*brutalityCounter),0.0);
-	SetHudClipRect(256,372-(20*brutalityCounter),FixedMul(128.0,FixedDiv(CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Timer"))*1.0,105.0))>>16,16,0);
+	SetFont("SOFHUDBG");
+	SetHudSize(1280,800,0);
+	HudMessage(s:strparam(s:BrutalityBonuses[type][0],s:" ",s:"\c[SoFHUDRed]x",d:CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Multiplier")));HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,60+type*2,CR_UNTRANSLATED,640.0,716.0-(40.0*brutalityCounter),0.0);
+	SetHudSize(640,400,0);
+	SetHudClipRect(256,364-(20*brutalityCounter),FixedMul(128.0,FixedDiv(CheckInventory(strparam(s:BrutalityBonuses[type][1],s:"Timer"))*1.0,105.0))>>16,16,0);
 	SetFont("SOFCOMBO");
-	HudMessage(s:"A";HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,61+type*2,CR_UNTRANSLATED,320.0,372.0-(20.0*brutalityCounter),0.0);
+	HudMessage(s:"A";HUDMSG_LAYER_OVERHUD|HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,61+type*2,CR_UNTRANSLATED,320.0,364.0-(20.0*brutalityCounter),0.0);
 	SetHudClipRect(0,0,0,0,0);
-	SetFont("SMALLFONT");
 	return;
 }
 
