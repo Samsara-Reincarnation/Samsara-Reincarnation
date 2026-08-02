@@ -752,22 +752,21 @@ StatusBar Fullscreen, ForceScaled
                         }
                         else InInventory PistolModeOn { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo Clip, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                     }
-                } else IsSelected "  Shotgun  " {
-                    InInventory Duke64UsingExplosiveShells { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ExplosiveShells, 96, 183; }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
-                } else IsSelected RPG {
-                    InInventory Duke64UsingHeatSeeking { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64HeatSeekingRockets, 96, 183; }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
-                } else IsSelected Freezethrower {
-                    InInventory Duke64UsingShrinker { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ShrinkerAmmo, 96, 183; }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 } else {
-                    UsesSecondaryAmmo
+                    InInventory SamsaraDuke64UsingAltAmmo
                     {
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        IsSelected "  Shotgun  " { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ExplosiveShells, 96, 183; }
+                        else IsSelected RPG { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64HeatSeekingRockets, 96, 183; }
+                        else IsSelected Freezethrower { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ShrinkerAmmo, 96, 183; }
+                        else { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo2, 96, 183; }
+                    } else {
+                        UsesSecondaryAmmo
+                        {
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        }
+                        else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                     }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 }
             } else { // Original/Life's A Beach
                 IsSelected "Glock 17"
@@ -790,12 +789,16 @@ StatusBar Fullscreen, ForceScaled
                     }
                     else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo2, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 } else {
-                    UsesSecondaryAmmo
+                    InInventory SamsaraDukeUsingAltAmmo { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo1, 96, 183; }
+                    else
                     {
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        UsesSecondaryAmmo
+                        {
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        }
+                        else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                     }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 }
             }
 
