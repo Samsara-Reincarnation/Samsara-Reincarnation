@@ -441,7 +441,7 @@ Script "Kingpin_DrawHud" (int startIndex)
 	RemoveMessages(startIndex+10,startIndex+13);
 	if((StrCmp(KingpinHUDWeapons[currentWeapon][2], "") && StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1")) || (!StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
 	{
-		int kp_ammo = !StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") ? CheckInventory("Clip") : CheckInventory(KingpinHUDWeapons[currentWeapon][2]);
+		int kp_ammo = CheckInventory(!StrCmp(KingpinHUDWeapons[currentWeapon][2], "-1") ? "Clip" : KingpinHUDWeapons[currentWeapon][2]);
 		if(kp_ammo > 9999) kp_ammo = 9999;
 		int kp_ammoDigits = strlen(strparam(d:kp_ammo));
 		for(i = kp_ammoDigits; i > 0; i--)

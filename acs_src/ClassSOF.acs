@@ -430,7 +430,7 @@ Script "SoF_Player" (void)
 
 str SoFWeapons [12][4] = {
 	{ "SoF_Knife", "", "SoF_Knives", "KNIFE" },
-	{ "SoF_Pistol1", "SoF_Pistol1Magazine", "Clip", "9MM PISTOL" },
+	{ "SoF_Pistol1", "SoF_Pistol1Magazine", "-1", "9MM PISTOL" },
 	{ "SoF_Pistol2", "SoF_Pistol2Magazine", "Clip", ".44 PISTOL" },
 	{ "SoF_AssaultRifle", "SoF_AssaultRifleMagazine", "Clip", "SMG" },
 	{ "SoF_Shotgun", "SoF_ShotgunMagazine", "Shell", "SHOTGUN" },
@@ -482,16 +482,24 @@ Script "SoF_DrawHud" (int startIndex, int switchGradient)
 	SetHudClipRect(0,0,0,0,0);
 
 	//Draw the magazine counter
-	SetFont("SOFSCONB");
-	int sof_clip = CheckInventory(SoFWeapons[selectedWeapon][1]);
-	if(sof_clip > 99) sof_clip = 99;
-	HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20,CR_UNTRANSLATED,736.1,580.2,0.0);
+	RemoveMessages(startIndex+20,startIndex+20);
+	if (CheckInventory("SamsaraReloadMode") >= 2)
+	{
+		SetFont("SOFSCONB");
+		int sof_clip = CheckInventory(SoFWeapons[selectedWeapon][1]);
+		if(sof_clip > 99) sof_clip = 99;
+		HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20,CR_UNTRANSLATED,736.1,580.2,0.0);
+	}
 	
 	//Display the total ammo amount
-	SetFont("SOFHUDSM");
-	int sof_ammo = CheckInventory(SoFWeapons[selectedWeapon][2]);
-	if(sof_ammo > 999) sof_ammo = 999;
-	HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+19,"SoFHudGreen",722.2,583.2,0.0);
+	RemoveMessages(startIndex+19,startIndex+19);
+	if ((StrCmp(SoFWeapons[selectedWeapon][2], "") && StrCmp(SoFWeapons[selectedWeapon][2], "-1")) || (!StrCmp(SoFWeapons[selectedWeapon][2], "-1") && CheckInventory("PistolModeOn")))
+	{
+		SetFont("SOFHUDSM");
+		int sof_ammo = CheckInventory(!StrCmp(SoFWeapons[selectedWeapon][2], "-1") ? "Clip" : SoFWeapons[selectedWeapon][2]);
+		if(sof_ammo > 999) sof_ammo = 999;
+		HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+19,"SoFHudGreen",722.2,583.2,0.0);
+	}
 	
 	//Display the weapon name widget. If there is 5 pixels left, raise the drawing id of the moving widget
 	SetFont("SFFULWEP");
