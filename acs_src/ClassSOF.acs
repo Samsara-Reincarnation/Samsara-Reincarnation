@@ -69,20 +69,21 @@ Script "SoF_Player" (void)
 				
 			if(doSwitchWeaponWidget)
 			{
-				if(switchGradient < 28)
+				if(switchGradient < 26)
 					switchGradient+=2;
 				else
 				{
 					switchCounter = 35;
-					switchGradient = 28;
+					switchGradient = 27;
 					doSwitchWeaponWidget = false;
 				}
 			}
 			else switchCounter--;
 			if(switchCounter <= 0 && !doSwitchWeaponWidget)
 			{
-				if(switchGradient > 0)
+				if(switchGradient > 1)
 					switchGradient-=2;
+				else switchGradient = 0;
 			}
 				
 			//Weapon widget
@@ -494,9 +495,9 @@ Script "SoF_DrawHud" (int startIndex, int switchGradient)
 	
 	//Display the weapon name widget. If there is 5 pixels left, raise the drawing id of the moving widget
 	SetFont("SFFULWEP");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+28,CR_UNTRANSLATED,800.2,600.2 - switchGradient*1.0,0.0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+28,CR_UNTRANSLATED,800.2,599.2 - switchGradient*1.0,0.0);
 	SetFont("SOFHUDSM");
-	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+27,"SoFHudGreen",722.1,569.2 - switchGradient*1.0,0.0);
+	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+27,"SoFHudGreen",722.1,567.2 - switchGradient*1.0,0.0);
 }
 
 // This should help route actual server side information to the client
