@@ -1324,7 +1324,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 					else if(CheckInventory("Kingpin_Cash") < pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1])
 					{
 						PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
-					}					
+					}
 					else
 					{
 						lastInputTimer = -4;
@@ -1362,13 +1362,13 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack3")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 7); }
 						}
 
-						if(CheckInventory("Kingpin_Cash") < pawnOMaticItemPrices[currentMenu-2][currentMenuItem])
-						{
-							PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
-						}	
-						else if(hitlimit)
+						if(hitlimit)
 						{
 							PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
+						}
+						else if(CheckInventory("Kingpin_Cash") < pawnOMaticItemPrices[currentMenu-2][currentMenuItem])
+						{
+							PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
 						}
 						else
 						{
