@@ -125,7 +125,7 @@ Script "Kingpin_GibSpawner" (void)
 	SetActivator(0,AAPTR_Master);
 	int height = GetActorProperty(0,APROP_Height)*4;
 	int radius = GetActorProperty(0,APROP_Radius);
-	//Thing_Remove(0);
+	Thing_Remove(0);
 	SetActivator(thisTid);
 	Thing_ChangeTid(thisTid,0);
 	int gibScale = (((height>>16)*(radius>>16))<<16)/1120;
@@ -569,8 +569,6 @@ script "Kingpin_Flamethrower" (void)
 
     if (CheckInventory("Cell") < (2 - CheckInventory("Kingpin_Flamethrower_FuelPump")) && !CheckInventory("SamsaraHasInfiniteAmmo")) { terminate; }
 
-    if (CheckInventory("SamsaraCurrentWaterLevel") >= 3 && CheckInventory("SamsaraCanFireWeaponsUnderwater") <= 0) { terminate; }
-
     GiveInventory("Kingpin_Flamethrower_Hold", 1);
 
     while (CheckWeapon("Kingpin_Flamethrower") && !isDead(0) && CheckInventory("Kingpin_Flamethrower_Hold"))
@@ -749,14 +747,26 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 	int result;
 	switch(type)
 	{
+		case 1:
+			SetResultValue(2-CheckInventory("Kingpin_Flamethrower_FuelPump"));
+			break;
 		case 2:
 			SetActivator(0,AAPTR_Target);
 			SetResultValue(1+(2*CheckInventory("Kingpin_Flamethrower_HotterFlame")));
+			break;
+		case 3:
+			SetResultValue(1+(2*CheckInventory("Kingpin_HMG_SelectFire")));
+			break;
+		case 4:
+			SetResultValue(CheckInventory("Kingpin_HMG_ScopeActive"));
 			break;
 		case 5:
 			if(GetActorProperty(0,APROP_Health) < -GetActorProperty(0,APROP_SpawnHealth)/((random(0,2)+(2+(GetActorProperty(0,APROP_SpawnHealth)/200)))))
 				GiveInventory("Kingpin_SetGib",1);			
 			SetResultValue(1);
+			break;
+		case 6:
+			SetResultValue(!CheckInventory("Kingpin_HMG_AntiMaterial"));
 			break;
 		case 7:
 			if(GetSectorLightLevel(0) < 64) SetActorState(0,"Light4",1);
@@ -783,7 +793,7 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 			switch(arg1)
 			{
 				case 1:
-					if(GetActorClass(0) == "Kingpin_Thug") SetActorState(0,"Next",1);
+					if(GetActorClass(0) == "Thug") SetActorState(0,"Next",1);
 					break;
 				case 2:
 					if(GetActorClass(0) == "Kingpin_CashPickup") SetActorState(0,"Next",1);
@@ -829,6 +839,7 @@ Script "Kingpin_BulletDamage" (void)
 	int bulletX = GetActorX(0);
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
+	int health = GetActorProperty(0,APROP_SpawnHealth);
 	int damage = ACS_NamedExecuteWithResult("Kingpin_DetermineBulletDamage");
 	SetActivator(0,AAPTR_Tracer);
 	int monsterX = GetActorX(0);
@@ -837,7 +848,6 @@ Script "Kingpin_BulletDamage" (void)
 	int monsterHealth = GetActorProperty(0,APROP_Health);
 	int monsterHeight = GetActorProperty(0,APROP_Height);
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
-	int health = GetActorProperty(0,APROP_SpawnHealth);
 
 	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
 	/*if(CheckInventory("RTCW_MetalMonster"))
@@ -847,17 +857,13 @@ Script "Kingpin_BulletDamage" (void)
 	else
 		PlaySound(0,"RTCW/BulletHitFlesh",CHAN_6,0.5,0,ATTN_NORM);*/
 
-	if (health >= 1000)
-	{
-		SetResultValue(damage);
-	}
-	else if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
+	if(monsterWidth >= monsterHeight && !CheckInventory("IsFatButBiped"))
 	{
 		int monsterAngle = GetActorAngle(0);
 		int vang = VectorAngle(monsterX - bulletX, monsterY - bulletY);
 		int angle = vang % 1.0;
 				
-		if(!CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
+		if((health < 1000) && !CheckInventory("NoHeadShots") && bulletZ > monsterZ + FixedMul(monsterHeight,0.35) && bulletZ < monsterZ + FixedMul(monsterHeight,0.65) && ((abs(monsterAngle - angle)) < 0.65 && (abs(monsterAngle - angle)) > 0.35))
 		{
 			if(monsterHealth - (damage*2) <= -damage)
 				GiveInventory("Kingpin_BloodHeadshotGenerator",1);
@@ -933,6 +939,20 @@ Script "Kingpin_PawnOMatic_Initiate" (void) Net
 	}
 }
 
+str pawnOMaticItemOptions[2][8] =
+{
+	{ "Clip", "Shell", "RocketAmmo", "Cell" },
+	{ "HealPack0", "HealPack1", "HealPack2", "SuperHealth", "ArmorScrap", "ArmorPack1", "ArmorPack2" }
+};
+
+//Number of options followed by prices
+int pawnOMaticItemPrices[3][9] =
+{
+	{ 8, 1, 50, 150, 300, 200, 500, 400, 800 },
+	{ 4, 2, 4, 10, 5 },
+	{ 7, 5, 25, 50, 500, 5, 250, 500 }
+};
+
 str pawnOMaticUpgradeOptions [7][4][2] =
 {
 	{ {"Kingpin_Pistol_Reload", "PawnOMAtic/Mod1/Reload"}, {"Kingpin_Pistol_RateOfFire", "PawnOMAtic/Mod1/RateOfFire"}, {"Kingpin_Pistol_Magnum", "PawnOMAtic/Mod1/Magnum"}, {"Kingpin_Pistol_Silencer", "PawnOMAtic/Mod1/Silencer"} },
@@ -942,6 +962,15 @@ str pawnOMaticUpgradeOptions [7][4][2] =
 	{ {"Kingpin_Bazooka_FastRockets", ""}, {"Kingpin_Bazooka_LaserSystem", ""}, {"Kingpin_Bazooka_HighExplosives", ""}, {"Kingpin_Bazooka_BigBubba", ""} },
 	{ {"Kingpin_Flamethrower_Range", ""}, {"Kingpin_Flamethrower_HotterFlame", ""}, {"Kingpin_Flamethrower_FuelPump", ""}, {"Kingpin_Flamethrower_Napalmer", ""} },
 	{ {"Kingpin_HMG_TacticalScope", ""}, {"Kingpin_HMG_CoolingRod", ""}, {"Kingpin_HMG_SelectFire", ""}, {"Kingpin_HMG_AntiMaterial", ""} },
+};
+
+// To fill...
+str pawnOMaticUpgradeDialogue[7][4][3] =
+{
+	{
+		{ "Test reload mod message", "Test reload mod message2", "Test reload mod message3" },
+		{ },
+	}
 };
 
 int pawnOMaticUpgradePrices [7][4] =
@@ -955,27 +984,32 @@ int pawnOMaticUpgradePrices [7][4] =
 	{ 100, 150, 350, 500 },
 };
 
-
-str KingpinWeapons[7] = { "Kingpin_Pistol", "Kingpin_Shotgun", "Kingpin_GrenadeLauncher", "Kingpin_TommyGun", "Kingpin_Bazooka", "Kingpin_Flamethrower", "Kingpin_HMG" };
+str KingpinWeapons[8] = { "Kingpin_Crowbar", "Kingpin_Pistol", "Kingpin_Shotgun", "Kingpin_GrenadeLauncher", "Kingpin_TommyGun", "Kingpin_Bazooka", "Kingpin_Flamethrower", "Kingpin_HMG" };
 
 Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 {
 	int breakloop;
 	int pawnOpen;
 	int cigarAnimator;
+	int lastInputTimer;
+	int scrollingItem;
+	int intendedItem = 1;
+	int maxInputDelay = 4;
+	//Big menu items, on the left
 	int currentMenu = 1;
 	int currentMenuItem = 0;
 	int lastMenu = 1;
-	int currentItem = 1;
-	int triggerItems;
-	int lastInputTimer;
-	int maxInputDelay = 4;
-	int intendedItem = 1;
+	//Sub menu related variables
+	int currentUpgradeMenu = 0;
+	int triggerUpgradeMenu;
+	//Item related variables
+	int currentItem = 0;
 	int selectedItemOpen;
-	int scrollingItem;
+	int triggerItems;
 	int modSelected;
 	while(CheckInventory("Kingpin_PawnOMaticOpen"))
 	{
+		//Draw the default stuff for pawn-o-matic. Also, get input
 		int playerInputX = GetPlayerInput(-1,INPUT_SIDEMOVE);
 		int playerInputY = -GetPlayerInput(-1,INPUT_FORWARDMOVE);
 		int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
@@ -989,85 +1023,219 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,60,CR_UNTRANSLATED,576.0,480.0,0.0);
 		SetFont("KPLITOFF");
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,59,CR_UNTRANSLATED,600.0,400.0,0.0);
+		SetFont("KPDIALOG");
+		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_ALPHA,63,CR_UNTRANSLATED,600.0,420.0,0.0,0.67);
+		int scrollersCounter = (triggerItems && currentMenu == 1) ? 32 : 20;
 		
+		//Check for the input delay and if items are currently scrolling
 		if(lastInputTimer >= maxInputDelay && !scrollingItem)
 		{		
+			//If Up-Down input...
 			if(playerInputY != 0)
 			{
-				if(!triggerItems)
+				//This will scroll up and down on the main list
+				if(!triggerItems && !triggerUpgradeMenu)
 				{
 					PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
 					if(playerInputY > 0) currentMenu++;
-					else if(playerInputY < 0) currentMenu--;			
+					else if(playerInputY < 0) currentMenu--;		
+					
+					//Clamp main menu values
+					if(currentMenu < 1) currentMenu = 8;
+					else if(currentMenu > 8) currentMenu = 1;
+					else if(currentMenu == 5) currentMenu = 8;
+					else if(currentMenu == 7) currentMenu = 4;
 				}
+				//That assumes the upgrade menu is open. If so, do this
+				else if(!triggerItems)
+				{
+					PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
+					if(playerInputY > 0) currentUpgradeMenu++;
+					else if(playerInputY < 0) currentUpgradeMenu--;	
+					
+					if(currentUpgradeMenu < 1) currentUpgradeMenu = 7;
+					else if(currentUpgradeMenu > 7) currentUpgradeMenu = 1;
+				}
+				//You must be in the items menu, then
 				else
 				{
 					PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
 					if(playerInputY > 0) currentMenuItem++;
 					else if(playerInputY < 0) currentMenuItem--;
 					
-					if(currentMenuItem < 1) currentMenuItem = 4;
-					if(currentMenuItem > 4) currentMenuItem = 1;
+					//We use the fixed 4 if this is the upgrades menu
+					if(currentMenu == 1)
+					{
+						if(currentMenuItem < 1) currentMenuItem = 4;
+						if(currentMenuItem > 4) currentMenuItem = 1;
+					}
+					//Otherwise, we get dynamic values
+					else
+					{
+						//WTF? Why -2?
+						if(currentMenuItem < 1) currentMenuItem = pawnOMaticItemPrices[currentMenu-2][0];
+						if(currentMenuItem > pawnOMaticItemPrices[currentMenu-2][0]) currentMenuItem = 1;
+					}
 				}	
+				//Reset input timer
 				lastInputTimer = 0;
+				
+				//Queue "no thanks" if an item was selected
+				if(modSelected > 0)
+				{
+					modSelected = 0;
+					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
+				}
+			}	
+			//If the upgrade menu isn't open, then we must handle the menu items
+			else if(!triggerUpgradeMenu && playerInputX != 0 || (useKey && currentMenuItem == 0))
+			{
+				PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
+					
+				//Behavior is different, depending on what menu to pick
+				if(currentMenu > 1)
+				{
+					//Moving to the right or use key activates this
+					if((playerInputX > 0 || useKey) && !triggerItems)
+					{
+						//Exit here
+						if(currentMenu == 8) 
+						{
+							TakeInventory("Kingpin_PawnOMaticOpen",1);
+							SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
+							break;
+						}		
+						
+						//Switch to items menu
+						triggerItems = true;	
+						
+						//Set the selected menu to the current menu index
+						selectedItemOpen = currentMenu;	
+						
+						//Flip the intended item index to the one needed, so it will scroll
+						intendedItem = 1+(4*currentMenu);
+							if(intendedItem >= scrollersCounter)
+								intendedItem = 1;
+								
+						//Tell it to scroll the items menu
+						scrollingItem = true;
+						
+						//Set the default menu item index
+						currentMenuItem = 1;
+						
+						//Force the panels to go to their starting point
+						currentItem = 1;
+					}	
+					//Moving to the left will go back to input of the main menu to the left
+					else if(playerInputX < 0)
+					{
+						triggerItems = false;
+						selectedItemOpen = 0;	
+						intendedItem = 1;	
+						scrollingItem = true;			
+						currentMenuItem = 0;
+					}
+				}
+				//This is the upgrade menu
+				else if(currentMenu == 1)
+				{
+					if((playerInputX > 0 || useKey) && !triggerItems)
+					{
+						triggerItems = false;		
+						triggerUpgradeMenu = true;
+						currentItem = 1;
+						
+						//Flip the intended item index to the one needed, so it will scroll
+						intendedItem = 1+(4*currentMenu);
+							if(intendedItem >= scrollersCounter)
+								intendedItem = 1;
+								
+						//Tell it to scroll the items menu
+						scrollingItem = true;
+						
+						//Set the default upgrade item index
+						currentUpgradeMenu = 1;
+						currentMenuItem = 0;
+					}
+					else if(playerInputX < 0 && triggerItems)
+					{
+						triggerUpgradeMenu = true;
+						triggerItems = false;
+						selectedItemOpen = 0;	
+						
+						//Set the item to scroll back to
+						intendedItem = 1+(4*currentMenu);
+						
+						//Force the item to scroll
+						currentItem = 1;
+						scrollingItem = true;			
+						currentMenuItem = 0;
+					}				
+				}
+				
+				//Reset input timer
+				lastInputTimer = 0;
+				PlaySound(sTid,"PawnOMatic/Scrollers",CHAN_6,1.0,1,ATTN_NONE);
+				
+				//Queue "no thanks" if an item was selected
 				if(modSelected > 0)
 				{
 					modSelected = 0;
 					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
 				}
 			}
-			
-			if(playerInputX != 0 || (useKey && currentMenuItem == 0))
+			//Otherwise, do this stuff if the upgrade menu is open
+			else if(triggerUpgradeMenu && (playerInputX != 0 || useKey))
 			{
 				PlaySound(sTid,"PawnOMatic/Selection",CHAN_5,1.0,0,ATTN_NONE);
 				if((playerInputX > 0 || useKey) && !triggerItems)
 				{
-					if(currentMenu == 8) 
-					{
-						TakeInventory("Kingpin_PawnOMaticOpen",1);
-						SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
-						break;
-					}		
+					//Switch to modifications menu
+					triggerItems = true;	
+					triggerUpgradeMenu = false;
 					
-					triggerItems = 1;					
-					selectedItemOpen = currentMenu;			
-					intendedItem = 1+(4*currentMenu);
-						if(intendedItem >= 32)
+					//Set the selected menu to the current menu index
+					selectedItemOpen = currentUpgradeMenu;	
+					
+					//Flip the intended item index to the one needed, so it will scroll
+					intendedItem = 1+(4*currentUpgradeMenu);
+						if(intendedItem >= scrollersCounter)
 							intendedItem = 1;
-							
-					scrollingItem = 1;
-					currentMenuItem = 1;
 					
+					//Force the panels to go to their starting point
+					currentItem = 1;
+					
+					//Tell it to scroll the items menu
+					scrollingItem = true;
+					
+					//Set the default menu item index
+					currentMenuItem = 1;
 				}
-				else if(triggerItems && playerInputX < 0)
+				//Moving to the left will go back to input of the main menu to the left
+				else if(playerInputX < 0)
 				{
-					triggerItems = 0;
+					triggerItems = false;
+					triggerUpgradeMenu = false;
 					selectedItemOpen = 0;	
 					intendedItem = 1;	
-					scrollingItem = 1;			
+					scrollingItem = true;			
 					currentMenuItem = 0;
+					currentUpgradeMenu = 0;
 				}
 				
+				//Reset input timer
 				lastInputTimer = 0;
 				PlaySound(sTid,"PawnOMatic/Scrollers",CHAN_6,1.0,1,ATTN_NONE);
-				
-				if(modSelected > 0)
-				{
-					modSelected = 0;
-					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
-				}
 			}
-			
-			if(currentMenu < 1) currentMenu = 8;
-			if(currentMenu > 8) currentMenu = 1;
 		}
-		
+				
+		//Flip scroller things
 		if(currentItem != intendedItem)
 		{
 			if(timer()%2 == 0)
 			{
 				currentItem++;
-				if(currentItem >= 32)
+				if(currentItem >= scrollersCounter)
 					currentItem = 1;
 			}
 		}
@@ -1077,8 +1245,16 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 			StopSound(sTid,CHAN_6);
 		}
 		
-		SetFont(strparam(s:"KPITEM",d:currentItem));
-		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);
+		if(triggerItems && currentMenu == 1)
+		{
+			SetFont(strparam(s:"KPITEM",s:currentItem < 10 ? "0" : "",d:currentItem));
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);
+		}
+		else
+		{
+			SetFont(strparam(s:"KPITM2",s:currentItem < 10 ? "0" : "",d:currentItem));
+			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);	
+		}
 		
 		SetFont(strparam(s:"KPSELE",d:currentItem));
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,55,CR_UNTRANSLATED,600.0,400.0,0.0);
@@ -1086,50 +1262,117 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 		SetFont(strparam(s:"KPSTLT1",d:currentMenu));
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,58,CR_UNTRANSLATED,600.0,400.0,0.0);
 		
-		if(currentMenuItem > 0)
+		if(currentMenuItem > 0 || currentUpgradeMenu > 0)
 		{
-			SetFont(strparam(s:"KPSTLT2",d:currentMenuItem));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,57,CR_UNTRANSLATED,600.0,400.0,0.0);
-			
-			SetFont(strparam(s:"KPDIGT",d:(pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1]/100)%10));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,54,CR_UNTRANSLATED,574.0,400.0,0.0);
-		
-			SetFont(strparam(s:"KPDIGT",d:(pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1]/10)%10));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,53,CR_UNTRANSLATED,600.0,400.0,0.0);
-			
-			SetFont(strparam(s:"KPDIGT",d:pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1]%10));
-			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,52,CR_UNTRANSLATED,626.0,400.0,0.0);
-												
-			if(lastInputTimer >= maxInputDelay && !scrollingItem && useKey && currentMenuItem < 5)
+			if(currentUpgradeMenu > 0 && currentMenuItem == 0)
 			{
-				lastInputTimer = 0;
-				if(!CheckInventory(KingpinWeapons[currentMenu-1]))
+				SetFont(strparam(s:"KPSTLT2",d:currentUpgradeMenu));
+				HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,57,CR_UNTRANSLATED,600.0,400.0,0.0);
+			}
+			else
+			{
+				SetFont(strparam(s:"KPSTLT2",d:currentMenuItem));
+				HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,57,CR_UNTRANSLATED,600.0,400.0,0.0);
+			}
+			
+			if(triggerItems)
+			{
+				if(currentMenu == 1)
 				{
-					PlaySound(sTid,"PawnOMatic/NoWeapon",CHAN_VOICE,1.0,0,ATTN_NONE);
+					SetFont(strparam(s:"KPDIGT",d:(pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1]/100)%10));
+					HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,54,CR_UNTRANSLATED,574.0,400.0,0.0);
+				
+					SetFont(strparam(s:"KPDIGT",d:(pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1]/10)%10));
+					HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,53,CR_UNTRANSLATED,600.0,400.0,0.0);
+					
+					SetFont(strparam(s:"KPDIGT",d:pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1]%10));
+					HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,52,CR_UNTRANSLATED,626.0,400.0,0.0);
 				}
-				else if(CheckInventory(pawnOMaticUpgradeOptions[currentMenu-1][currentMenuItem-1][0]))
-				{
-					PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
-				}
-				else if(CheckInventory("Kingpin_Cash") < pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1])
-				{
-					PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
-				}					
 				else
 				{
-					lastInputTimer = -4;
-					if(modSelected == 0)
+					SetFont(strparam(s:"KPDIGT",d:(pawnOMaticItemPrices[currentMenu-2][currentMenuItem]/100)%10));
+					HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,54,CR_UNTRANSLATED,574.0,400.0,0.0);
+				
+					SetFont(strparam(s:"KPDIGT",d:(pawnOMaticItemPrices[currentMenu-2][currentMenuItem]/10)%10));
+					HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,53,CR_UNTRANSLATED,600.0,400.0,0.0);
+					
+					SetFont(strparam(s:"KPDIGT",d:pawnOMaticItemPrices[currentMenu-2][currentMenuItem]%10));
+					HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,52,CR_UNTRANSLATED,626.0,400.0,0.0);
+				}
+			}
+			//Remove digits
+			else RemoveMessages(52,54);
+			
+			//Buying weapon upgrades
+			if(lastInputTimer >= maxInputDelay && !scrollingItem && useKey)
+			{
+				if(currentMenu == 1 && currentMenuItem < 5)
+				{
+					lastInputTimer = 0;
+					if(!CheckInventory(KingpinWeapons[currentUpgradeMenu]))
 					{
-						PlaySound(sTid,pawnOMaticUpgradeOptions[currentMenu-1][currentMenuItem-1][1],CHAN_VOICE,1.0,0,ATTN_NONE);
-						modSelected = currentMenu;
+						PlaySound(sTid,"PawnOMatic/NoWeapon",CHAN_VOICE,1.0,0,ATTN_NONE);
 					}
+					else if(CheckInventory(pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][0]))
+					{
+						PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
+					}
+					else if(CheckInventory("Kingpin_Cash") < pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1])
+					{
+						PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
+					}					
 					else
 					{
-						PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
-						PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
-						TakeInventory("Kingpin_Cash",pawnOMaticUpgradePrices[currentMenu-1][currentMenuItem-1]);
-						GiveInventory(pawnOMaticUpgradeOptions[currentMenu-1][currentMenuItem-1][0],1);
-						modSelected = 0;
+						lastInputTimer = -4;
+						if(modSelected == 0)
+						{
+							//Play sound for confirmation
+							PlaySound(sTid,pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][1],CHAN_VOICE,1.0,0,ATTN_NONE);
+							modSelected = currentUpgradeMenu;
+						}
+						else
+						{
+							PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
+							PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
+							TakeInventory("Kingpin_Cash",pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1]);
+							GiveInventory(pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][0],1);
+							modSelected = 0;
+						}
+					}
+				}
+				//Other items
+				else
+				{
+					if(currentMenuItem < pawnOMaticItemPrices[currentMenu-2][0]+1)
+					{
+						if(CheckInventory("Kingpin_Cash") < pawnOMaticItemPrices[currentMenu-2][currentMenuItem])
+						{
+							PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
+						}	
+						else if(currentMenu == 2 && CheckInventory(KingpinWeapons[currentMenuItem-1]))
+						{
+							PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
+						}
+						else
+						{
+							lastInputTimer = -4;
+							if(modSelected == 0)
+							{
+								//PlaySound(sTid,pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][1],CHAN_VOICE,1.0,0,ATTN_NONE);
+								modSelected = currentMenuItem;
+							}
+							else
+							{
+								PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
+								PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
+								TakeInventory("Kingpin_Cash",pawnOMaticItemPrices[currentMenu-2][currentMenuItem]);
+								if(currentMenu > 2)
+									GiveInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1],1);
+								else if(currentMenu == 2)
+									GiveInventory(KingpinWeapons[currentMenuItem-1],1);
+								modSelected = 0;
+							}
+						}
 					}
 				}
 			}
@@ -1154,5 +1397,5 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 	StopSound(sTid,CHAN_6);
 	Thing_Remove(sTid);
 	SetInventory("Kingpin_PawnOMaticSoundTid",0);
-	RemoveMessages(50,61);
+	RemoveMessages(50,63);
 }
