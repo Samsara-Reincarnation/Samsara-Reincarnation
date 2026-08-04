@@ -1349,11 +1349,24 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 				{
 					if(currentMenuItem < pawnOMaticItemPrices[currentMenu-2][0]+1)
 					{
+						bool hitlimit = false;
+
+						if (currentMenu == 2) { hitlimit = CheckInventory(KingpinWeapons[currentMenuItem-1][0]); }
+						else if (currentMenu == 3) { hitlimit = CheckInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1]) >= GetAmmoCapacity(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1]); }
+						else if (currentMenu == 4)
+						{
+							if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack0") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "SuperHealth")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200); }
+							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack1") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack2")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1); }
+							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorScrap")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 0); }
+							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack1")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 5); }
+							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack3")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 7); }
+						}
+
 						if(CheckInventory("Kingpin_Cash") < pawnOMaticItemPrices[currentMenu-2][currentMenuItem])
 						{
 							PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
 						}	
-						else if(currentMenu == 2 && CheckInventory(KingpinWeapons[currentMenuItem-1][0]))
+						else if(hitlimit)
 						{
 							PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
 						}
@@ -1372,9 +1385,9 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 								TakeInventory("Kingpin_Cash",pawnOMaticItemPrices[currentMenu-2][currentMenuItem]);
 								if(currentMenu > 2)
 								{
-									GiveInventory("SamsaraPickupOrShutUp",1);
+									GiveInventory("SamsaraPickupAndShutUp",1);
 									GiveInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1],1);
-									TakeInventory("SamsaraPickupOrShutUp",0x7FFFFFFF);
+									TakeInventory("SamsaraPickupAndShutUp",INTMAX);
 								}
 								else if(currentMenu == 2)
 								{
