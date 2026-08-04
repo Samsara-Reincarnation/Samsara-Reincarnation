@@ -854,14 +854,29 @@ actor SamsaraKingpinHMGAttackHandler : Trigger
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_FireCustomMissile("Kingpin_HMGCasing",-90,false,4,4)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
-      PickupAttackDM:
-        TNT1 A 0 A_FireBullets(1-CallACS("Kingpin_Decorate", 4),1-CallACS("Kingpin_Decorate", 4),-1,0,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_JumpIfInventory("Kingpin_HMG_ScopeActive",1,"PickupAttackScoped")
+      // Unscoped
+      PickupAttackUnscoped:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackUnscopedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackUnscopedCoop")
+      PickupAttackUnscopedDM:
+        TNT1 A 0 A_FireBullets(1,1,-1,0,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
-      PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(1-CallACS("Kingpin_Decorate", 4),1-CallACS("Kingpin_Decorate", 4),-1,0,"Kingpin_HMGBulletSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+      PickupAttackUnscopedCoop:
+        TNT1 A 0 A_FireBullets(1,1,-1,0,"Kingpin_HMGBulletSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Scoped
+      PickupAttackScoped:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackScopedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackScopedCoop")
+      PickupAttackScopedDM:
+        TNT1 A 0 A_FireBullets(0,0,-1,0,"Kingpin_HMGBulletSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      PickupAttackScopedCoop:
+        TNT1 A 0 A_FireBullets(0,0,-1,0,"Kingpin_HMGBulletSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff

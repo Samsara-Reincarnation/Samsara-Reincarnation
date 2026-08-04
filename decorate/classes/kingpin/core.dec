@@ -904,18 +904,14 @@ Actor Kingpin_CashPickupBagL : Kingpin_CashPickup
 
 Actor Kingpin_CashPickupSignal : Trigger
 {
+	Inventory.RestrictedTo "Kingpin_Thug"
 	States
 	{
 		Pickup:
-			TNT1 A 0 A_JumpIfInventory("KingpinClass",1,1)
-			Goto NotPlayer
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_Decorate",11,2)
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_Decorate",11,1)
 		Next:
 			TNT1 A 0 A_RadiusGive("Kingpin_CashPickupSignal2",70,RGF_OBJECTS|RGF_NOSIGHT,1)
-			Stop
-		NotPlayer:
-			TNT1 A 0
 			Stop
 	}
 }
@@ -941,17 +937,13 @@ Actor Kingpin_CashPickupSignal2 : Trigger
 
 Actor Kingpin_CashPickupSignalBagS : Trigger
 {
+	Inventory.RestrictedTo "Kingpin_Thug"
 	States
 	{
 		Pickup:
-			TNT1 A 0 A_JumpIfInventory("KingpinClass",1,1)
-			Goto NotPlayer
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_Decorate",11,1)
 		Next:
 			TNT1 A 0 A_RadiusGive("Kingpin_CashPickupSignal2BagS",70,RGF_OBJECTS|RGF_NOSIGHT,1)
-			Stop
-		NotPlayer:
-			TNT1 A 0
 			Stop
 	}
 }
@@ -977,17 +969,13 @@ Actor Kingpin_CashPickupSignal2BagS : Trigger
 
 Actor Kingpin_CashPickupSignalBagL : Trigger
 {
+	Inventory.RestrictedTo "Kingpin_Thug"
 	States
 	{
 		Pickup:
-			TNT1 A 0 A_JumpIfInventory("KingpinClass",1,1)
-			Goto NotPlayer
 			TNT1 A 0 ACS_NamedExecuteWithResult("Kingpin_Decorate",11,1)
 		Next:
 			TNT1 A 0 A_RadiusGive("Kingpin_CashPickupSignal2BagS",70,RGF_OBJECTS|RGF_NOSIGHT,1)
-			Stop
-		NotPlayer:
-			TNT1 A 0
 			Stop
 	}
 }

@@ -747,26 +747,14 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 	int result;
 	switch(type)
 	{
-		case 1:
-			SetResultValue(2-CheckInventory("Kingpin_Flamethrower_FuelPump"));
-			break;
 		case 2:
 			SetActivator(0,AAPTR_Target);
 			SetResultValue(1+(2*CheckInventory("Kingpin_Flamethrower_HotterFlame")));
-			break;
-		case 3:
-			SetResultValue(1+(2*CheckInventory("Kingpin_HMG_SelectFire")));
-			break;
-		case 4:
-			SetResultValue(CheckInventory("Kingpin_HMG_ScopeActive"));
 			break;
 		case 5:
 			if(GetActorProperty(0,APROP_Health) < -GetActorProperty(0,APROP_SpawnHealth)/((random(0,2)+(2+(GetActorProperty(0,APROP_SpawnHealth)/200)))))
 				GiveInventory("Kingpin_SetGib",1);			
 			SetResultValue(1);
-			break;
-		case 6:
-			SetResultValue(!CheckInventory("Kingpin_HMG_AntiMaterial"));
 			break;
 		case 7:
 			if(GetSectorLightLevel(0) < 64) SetActorState(0,"Light4",1);
@@ -793,7 +781,7 @@ Script "Kingpin_Decorate" (int type, int arg1, int arg2)
 			switch(arg1)
 			{
 				case 1:
-					if(GetActorClass(0) == "Thug") SetActorState(0,"Next",1);
+					if(GetActorClass(0) == "Kingpin_Thug") SetActorState(0,"Next",1);
 					break;
 				case 2:
 					if(GetActorClass(0) == "Kingpin_CashPickup") SetActorState(0,"Next",1);
