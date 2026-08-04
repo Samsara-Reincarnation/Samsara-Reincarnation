@@ -569,6 +569,8 @@ script "Kingpin_Flamethrower" (void)
 
     if (CheckInventory("Cell") < (2 - CheckInventory("Kingpin_Flamethrower_FuelPump")) && !CheckInventory("SamsaraHasInfiniteAmmo")) { terminate; }
 
+    if (CheckInventory("SamsaraCurrentWaterLevel") >= 3 && CheckInventory("SamsaraCanFireWeaponsUnderwater") <= 0) { terminate; }
+
     GiveInventory("Kingpin_Flamethrower_Hold", 1);
 
     while (CheckWeapon("Kingpin_Flamethrower") && !isDead(0) && CheckInventory("Kingpin_Flamethrower_Hold"))
