@@ -1174,7 +1174,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 					//Check armor
 					else if(pawnOMaticItemBulkBuy[currentMenu-3][currentMenuItem-1] == 2)
 					{
-						itemLimit = 200;
+						itemLimit = ACS_NamedExecuteWithResult("SamsaraArmorCapResultChecker", 0, 0);
 						maxBulkBuy = itemLimit - CheckInventory("BasicArmor");
 					}
 				}
@@ -1549,9 +1549,10 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 						{
 							if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack0") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "SuperHealth")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200); }
 							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack1") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack2")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1); }
-							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorScrap")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 0); }
+							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorScrap")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 0, 0, 0, 2); }
 							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack1")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 5); }
 							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack3")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 7); }
+							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "MegaPack")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200) && ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 11); }
 						}
 
 						if(hitlimit)

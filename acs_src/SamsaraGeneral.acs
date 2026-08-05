@@ -18320,6 +18320,40 @@ script "SamsaraArmorCapCheck" (int armortype, int armorcap, int maxbonuscap, int
     SetResultValue(result);
 }
 
+script "SamsaraArmorCapResultChecker" (int armortype, int ignoremaxboost) // basically used for the pawn-o-matic; will likely not expand on this script further
+{
+    int result = 0;
+
+    // initialize armor mode
+    SetArmorMode();
+
+    // adjust variable
+    if (CheckInventory("SamsaraHasProsperity")) { result = 250; }
+    else if (GetCVar("samsara_noarmorcap")) { result = INTMAX; }
+    else
+    {
+        result = ArmorAmounts[ArmorMode][armortype][1];
+
+        if (result > 0) // check if we're not using the None armor type
+        {
+            // raise cap in accordance to multi runes' prosperity_max_health cvar
+            if (CheckInventory("PowerProsperity1") && GetCVar("prosperity_max_health") > result) { result = GetCVar("prosperity_max_health"); } // only take effect if cvar is greater than variable
+
+            // if we're allowed to, take max armor boost into account
+            if (!ignoremaxboost)
+            {
+                int armormaxbonusmax = ArmorAmounts[ArmorMode][armortype][4];
+
+                if (CheckInventory("SamsaraHasMaxArmor") > armormaxbonusmax) { result += CheckInventory("SamsaraHasMaxArmor"); }
+                else if (armormaxbonusmax > 0) { result += armormaxbonusmax; }
+            }
+        }
+    }
+
+    // let scripts read off this
+    SetResultValue(result);
+}
+
 script "SamsaraPlayerMaxArmorAdjust" (int armortype, int maxbonusadd, int maxbonuscap)
 {
     // initialize armor mode
