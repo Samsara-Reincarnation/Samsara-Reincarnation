@@ -1268,7 +1268,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 					messageDialog = random(0,2);
 					KingpinDisplayDialogue(9,1,messageDialog,0);
 					welcomeMessage = false;
-					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
+					PlaySound(sTid,StrParam(s:"PawnOMatic/NoThanks",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 				}
 			}	
 			//If the upgrade menu isn't open, then we must handle the menu items
@@ -1368,7 +1368,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 					messageDialog = random(0,2);
 					KingpinDisplayDialogue(9,1,messageDialog,0);
 					welcomeMessage = false;
-					PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
+					PlaySound(sTid,StrParam(s:"PawnOMatic/NoThanks",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 				}
 			}
 			//Otherwise, do this stuff if the upgrade menu is open
@@ -1525,13 +1525,13 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 						}
 						else
 						{
-							PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
-							PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
 							TakeInventory("Kingpin_Cash",pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1]);
 							GiveInventory(pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][0],1);
 							messageDialog = random(0,2);
 							KingpinDisplayDialogue(9,0,messageDialog,0);
 							welcomeMessage = false;
+							PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
+							PlaySound(sTid,StrParam(s:"PawnOMatic/Sold",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 							modSelected = 0;
 						}
 					}
@@ -1594,8 +1594,6 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 									//If the bulk counter is greater than 0, make the purchase
 									if(bulkCounter > 0)
 									{
-										PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
-										PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
 										TakeInventory("Kingpin_Cash",pawnOMaticItemPrices[currentMenu-2][currentMenuItem] * bulkCounter);
 									
 										GiveInventory("SamsaraPickupAndShutUp",1);
@@ -1607,6 +1605,8 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 										messageDialog = random(0,2);
 										KingpinDisplayDialogue(9,0,messageDialog,0);
 										welcomeMessage = false;
+										PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
+										PlaySound(sTid,StrParam(s:"PawnOMatic/Sold",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 									}
 									//Otherwise, cancel the purchase.
 									else
@@ -1615,13 +1615,11 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 										messageDialog = random(0,2);
 										KingpinDisplayDialogue(9,1,messageDialog,0);
 										welcomeMessage = false;
-										PlaySound(sTid,"PawnOMatic/NoThanks",CHAN_VOICE,1.0,0,ATTN_NONE);
+										PlaySound(sTid,StrParam(s:"PawnOMatic/NoThanks",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 									}
 								}
 								else if(currentMenu == 2)
 								{
-									PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
-									PlaySound(sTid,"PawnOMatic/Sold",CHAN_VOICE,1.0,0,ATTN_NONE);
 									TakeInventory("Kingpin_Cash",pawnOMaticItemPrices[currentMenu-2][currentMenuItem] * bulkCounter);
 								
 									GiveInventory(KingpinWeapons[currentMenuItem-1][0],1);
@@ -1630,6 +1628,8 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 									messageDialog = random(0,2);
 									KingpinDisplayDialogue(9,0,messageDialog,0);
 									welcomeMessage = false;
+									PlaySound(sTid,"PawnOMatic/Register",CHAN_5,1.0,0,ATTN_NONE);
+									PlaySound(sTid,StrParam(s:"PawnOMatic/Sold",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 								}
 								modSelected = 0;
 							}
