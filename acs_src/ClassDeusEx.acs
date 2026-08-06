@@ -322,6 +322,8 @@ Script "DeusEx_Enter" (void)
 		terminate;
 		
 	int loopTid = 0;
+	int UsingFullScreen = false;
+	int startIndex = 45600;
 		
 	while(CheckInventory("DeusExClass"))
 	{
@@ -338,6 +340,18 @@ Script "DeusEx_Enter" (void)
             SetInventory("DeusEx_Crouching", keyDown(BT_CROUCH)); //GetActorViewHeight(0) <= GetActorViewHeight(0) / 2 << 16
             SetInventory("DeusEx_StrafeLeft", keyDown(BT_MOVELEFT) && !keyDown(BT_MOVERIGHT));
             SetInventory("DeusEx_StrafeRight", keyDown(BT_MOVERIGHT) && !keyDown(BT_MOVELEFT));
+			
+			if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+			{
+				UsingFullScreen = true;
+				ACS_NamedExecuteWithResult("DeusEx_DrawHud",startIndex,0,0,0);
+			}
+			//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
+			else if(UsingFullScreen == true)
+			{
+				RemoveMessages(startIndex,startIndex+120);
+				UsingFullScreen = false;
+			}
 
             if (!keyDown(BT_ATTACK))
             {
@@ -489,7 +503,281 @@ Script "DeusEx_Enter" (void)
 		Delay(1);
 	}
 	RemoveMessages(2001,2007);
-}	
+}
+
+/*str DeusExHUDWeapons[14][9] =
+{
+        {"DeusEx_CombatKnife", "", "", "", "", "KNIFE", "", "", ""},
+        {"DeusEx_10mmPistol", "DeusEx_GlockMagazine", "", "", "", "PISTOL", "", "", ""},
+		{"DeusEx_StealthPistol", "DeusEx_StealthMagazine", "", "", "", "STEALTH", "", "", ""},
+		{"DeusEx_MiniCrossbow", "DeusEx_MiniXBowMagazine", "Shell", "", "SamsaraDeusExMiniXBowAmmoType", "CROSSBOW", "TRQ DART", "DART", "FLR DART"},
+        {"DeusEx_Shotgun", "DeusEx_ShotgunMagazine", "Shell", "", "SamsaraDeusExShotgunAmmoType", "BUCKSHOT", "SABOT", "", ""},
+        {"DeusEx_AssaultShotgun", "DeusEx_AssShotgunMagazine", "Shell", "", "SamsaraDeusExAssaultShotgunAmmoType", "BUCKSHOT", "SABOT", "", ""},
+        {"DeusEx_AssaultRifle", "DeusEx_AssaultGunMagazine", "Clip", "RocketAmmo", "SamsaraDeusExAssaultRifleAmmoType", "", "", "", ""},
+        {"DeusEx_GEPGun", "DeusEx_GEPGunMagazine", "RocketAmmo", "", "SamsaraDeusExGEPGunAmmoType", "", "", "", ""},
+        {"DeusEx_FlameThrower", "DeusEx_FlameThrowerMagazine", "Cell", "", "", "", "", "", ""},
+        {"DeusEx_MJ12PlasmaRifle", "DeusEx_PlasmaRifleMagazine", "Cell", "", "SamsaraDeusExPlasmaRifleAmmoType", "", "", "", ""},
+		{"DeusEx_LAW", "", "DeusEx_LAWAmmo", "", "", "", "", "", ""},
+		{"DeusEx_LAM", "", "RocketAmmo", "", "", "", "", "", ""},
+		{"DeusEx_SniperRifle", "DeusEx_SniperMagazine", "Shell", "", "", "", "", "", ""},
+		{"DeusEx_NanoSword", "", "", "", "", "DRAGON", "", "", ""},
+};*/
+
+str DeusExHUDWeapons[14][4] =
+{
+        {"DeusEx_CombatKnife", "", "", "DXFHWP01"},
+        {"DeusEx_10mmPistol", "DeusEx_GlockMagazine", "-1", "DXFHWP02"},
+		{"DeusEx_StealthPistol", "DeusEx_StealthMagazine", "-1", "DXFHWP03"},
+		{"DeusEx_MiniCrossbow", "DeusEx_MiniXBowMagazine", "Shell", "DXFHWP04"},
+        {"DeusEx_Shotgun", "DeusEx_ShotgunMagazine", "Shell", "DXFHWP05"},
+        {"DeusEx_AssaultShotgun", "DeusEx_AssShotgunMagazine", "Shell", "DXFHWP06"},
+        {"DeusEx_AssaultRifle", "DeusEx_AssaultGunMagazine", "Clip", "DXFHWP07"},
+        {"DeusEx_GEPGun", "DeusEx_GEPGunMagazine", "RocketAmmo", "DXFHWP08"},
+        {"DeusEx_FlameThrower", "DeusEx_FlameThrowerMagazine", "Cell", "DXFHWP09"},
+        {"DeusEx_MJ12PlasmaRifle", "DeusEx_PlasmaRifleMagazine", "Cell", "DXFHWP10"},
+		{"DeusEx_LAW", "DeusEx_LAWAmmo", "", "DXFHWP11"},
+		{"DeusEx_LAM", "RocketAmmo", "", "DXFHWP12"},
+		{"DeusEx_SniperRifle", "DeusEx_SniperMagazine", "Shell", "DXFHWP13"},
+		{"DeusEx_NanoSword", "", "", "DXFHWP14"},
+};
+
+str DeusExHUDBeltWeapons[10][13] =
+{
+		{"DeusEx_MiniCrossbow", "", "", "DXFHWP04", "", "", "CROSSBOW", "", "", "SamsaraDeusExMiniXBowAmmoType", "TRQ DART", "DART", "FLR DART"},
+        {"DeusEx_Shotgun", "", "", "DXFHWP05", "", "", "SAWED-OFF", "", "", "SamsaraDeusExShotgunAmmoType", "BUCKSHOT", "SABOT", ""},
+        {"DeusEx_AssaultShotgun", "", "", "DXFHWP06", "", "", "SHOTGUN", "", "", "SamsaraDeusExAssaultShotgunAmmoType", "BUCKSHOT", "SABOT", ""},
+        {"DeusEx_AssaultRifle", "", "", "DXFHWP07", "", "", "ASSAULT", "", "", "SamsaraDeusExAssaultRifleAmmoType", "7.62 AMMO", "20MM HE", ""},
+        {"DeusEx_GEPGun", "", "", "DXFHWP08", "", "", "GEP GUN", "", "", "SamsaraDeusExGEPGunAmmoType", "ROCKET", "WP ROCKET", ""},
+        {"DeusEx_FlameThrower", "", "", "DXFHWP09", "", "", "FLAMETHWR", "", "", "", "NAPALM", "", ""},
+        {"DeusEx_MJ12PlasmaRifle", "", "", "DXFHWP10", "", "", "PLASMA", "", "", "SamsaraDeusExPlasmaRifleAmmoType", "PMA CLIP", "NANOPHAGE", ""},
+		{"DeusEx_LAW", "DeusEx_LAM", "", "DXFHWP11", "DXFHWP12", "", "LAW", "LAM", "", "", "", "", ""},
+		{"DeusEx_SniperRifle", "DeusEx_NanoSword", "", "DXFHWP13", "DXFHWP14", "", "SNIPER", "DRAGON", "", "", "3006 AMMO", "", ""},
+		{"DeusEx_10mmPistol", "DeusEx_StealthPistol", "DeusEx_CombatKnife", "DXFHWP02", "DXFHWP03", "DXFHWP01", "PISTOL", "STEALTH", "KNIFE", "", "10MM AMMO", "", ""},
+};
+
+Script "DeusEx_CheckWeapon" (void)
+{
+	for(int a = 0; a < 14; a++)
+	{
+		if(CheckWeapon(DeusExHUDWeapons[a][0]))
+		{
+			//Only do the thing if the weapon changed.
+			if(CheckInventory("DeusEx_SelectedWeapon") != (a + 1))
+				{ SetInventory("DeusEx_SelectedWeapon",a+1); }
+			break;
+		}
+	}	
+}
+
+Script "DeusEx_DrawHud" (int startIndex)
+{
+	int currentWeapon = CheckInventory("DeusEx_SelectedWeapon") - 1;
+	int dx_kills = CheckInventory("KillCountAmount");
+	int dx_health = GetActorProperty(0,APROP_Health);
+	int dx_armor = CheckInventory("BasicArmor");
+	int offset, digit, i, b;
+	
+	SetHudSize(800,600,0);	
+	SetFont("DXFONTS2");
+	HudMessage(s:"Kills: ";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+120,CR_UNTRANSLATED,16.1,155.1,0.0);
+	HudMessage(d:dx_kills;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+119,CR_UNTRANSLATED,38.1,155.1,0.0);
+	SetFont("DXFHHEA1");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+118,CR_UNTRANSLATED,-15.1,0.1,0.0);
+	SetFont("DXFHAMMO");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+117,CR_UNTRANSLATED,-12.1,523.1,0.0);
+	SetFont("DXFHBELT");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+116,CR_UNTRANSLATED,259.1,531.1,0.0);
+	
+	SetFont("DXFHAUGM");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+103,CR_UNTRANSLATED,738.1,0.1,0.0);
+	
+	SetFont("DXFONTS2");
+	HudMessage(s:"HP";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+109,CR_UNTRANSLATED,13.1,77.1,0.0);
+	
+	SetFont("DXFONTS2");
+	if (dx_health < 0) dx_health = 0;
+	HudMessage(d:dx_health;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+107,CR_UNTRANSLATED,23.1,77.1,0.0);
+
+	SetFont("DXFONTS2");
+	HudMessage(s:"AR";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+108,CR_UNTRANSLATED,62.1,77.1,0.0);
+	
+	SetFont("DXFONTS2");
+	HudMessage(d:dx_armor;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+106,CR_UNTRANSLATED,58.2,77.1,0.0);
+
+	SetFont("DXFONTS2");
+	HudMessage(s:"BE: ";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+105,CR_UNTRANSLATED,16.1,165.1,0.0);
+	HudMessage(d:CheckInventory("DeusEx_BioEnergy");HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+104,CR_UNTRANSLATED,36.1,165.1,0.0);
+
+	
+	if(strlen(DeusExHUDWeapons[currentWeapon][3]) > 0)
+	{
+		SetFont(DeusExHUDWeapons[currentWeapon][3]); 
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+115,CR_UNTRANSLATED,21.1,542.1,0.0);	
+	}
+	else RemoveMessages(startIndex+115,startIndex+115);
+
+	/*	for(b = 0; b < 11; b++)
+		{
+		SetFont(b == 10 ? strparam(s:"DXAUG21",s:(CheckInventory(strparam(s:DeusExAugmentationsSlots[b][0],s:"Active")) > 0 ? "E" : "D")) : strparam(s:DeusExAugmentationsSlots[b][6+CheckInventory(strparam(s:DeusExAugmentationsSlots[b][0],s:"Slot"))],s:(CheckInventory(strparam(s:DeusExAugmentationsSlots[b][0],s:"Active")) > 0 ? "E" : "D")));
+		HudMessage(s:"a";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+114,CR_UNTRANSLATED,400.1,300.1,0.0);
+		}*/
+
+	SetFont("DXFHBARG");
+	if(dx_health > 100) dx_health = 100;
+	SetHudClipRect(15,20,5,55*FixedDiv(dx_health,100)>>16,0);
+	//SetHudClipRect(15,20+FixedDiv(dx_health,100)>>16,5,55,0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+113,CR_UNTRANSLATED,15.1,20.1,0.0);
+	SetHudClipRect(0,0,0,0,0);
+	
+	SetFont("DXFHBARC");
+	if(dx_armor > 100) dx_armor = 100;
+	SetHudClipRect(62,20,5,55*FixedDiv(dx_armor,100)>>16,0);
+	//SetHudClipRect(62,20+FixedDiv(dx_armor,100)>>16,5,55,0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+112,CR_UNTRANSLATED,62.1,20.1,0.0);
+	SetHudClipRect(0,0,0,0,0);
+	
+	if(dx_health >= 101)
+		SetFont("DXFHH10X");
+	else if(dx_health == 100)
+		SetFont("DXFHH100");
+	else if(dx_health >= 90)
+		SetFont("DXFHH101");
+	else if(dx_health >= 80)
+		SetFont("DXFHH102");
+	else if(dx_health >= 70)
+		SetFont("DXFHH103");
+	else if(dx_health >= 60)
+		SetFont("DXFHH104");
+	else if(dx_health >= 50)
+		SetFont("DXFHH105");
+	else if(dx_health >= 40)
+		SetFont("DXFHH106");
+	else if(dx_health >= 30)
+		SetFont("DXFHH107");
+	else if(dx_health >= 20)
+		SetFont("DXFHH108");
+	else if(dx_health >= 10)
+		SetFont("DXFHH109");
+	else if(dx_health > 0)
+		SetFont("DXFHH10Y");
+
+	if(dx_health > 0) HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+111,CR_UNTRANSLATED,26.1,17.1,0.0);
+	else RemoveMessages(startIndex+111,startIndex+111);
+
+		//SetFont("DXFHHEA2");
+	//HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+111,CR_UNTRANSLATED,26.1,17.1,0.0);
+
+	SetFont("DXFHHEA3");
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+110,CR_UNTRANSLATED,24.1,15.1,0.0);
+	
+
+
+	//Draw weapon belt
+	int wep = 0;
+	for(wep = 0; wep < 10; wep++)
+	{
+		offset = wep * 51.0;
+		int ammotype = 0;
+		if ((CheckInventory(DeusExHUDBeltWeapons[wep][0])) && !(CheckWeapon(DeusExHUDBeltWeapons[wep][1])) && !(CheckWeapon(DeusExHUDBeltWeapons[wep][2])))
+		{	
+			SetFont(DeusExHUDBeltWeapons[wep][3]); 
+			HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+60+wep,CR_UNTRANSLATED,272.1 + offset,542.1,0.0);
+			SetFont("DXFONTS2");
+			HudMessage(s:DeusExHUDBeltWeapons[wep][6];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+40+wep,CR_UNTRANSLATED,292.4 + offset,578.1,0.0);
+		
+			if(strlen(DeusExHUDBeltWeapons[wep][9]) > 0) { ammotype = CheckInventory(DeusExHUDBeltWeapons[wep][9]); }
+			else ammotype = 0;
+			HudMessage(s:DeusExHUDBeltWeapons[wep][10+ammotype];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20+wep,CR_UNTRANSLATED,292.4 + offset,567.1,0.0);
+		
+			if(CheckWeapon(DeusExHUDBeltWeapons[wep][0]))
+			{	
+				SetFont("DXFHSEL"); 
+				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+80+wep,CR_UNTRANSLATED,270.1 + offset,539.1,0.0);	
+			}
+			else RemoveMessages(startIndex+80+wep,startIndex+80+wep);
+		}
+		else if ((CheckInventory(DeusExHUDBeltWeapons[wep][1])) && !(CheckWeapon(DeusExHUDBeltWeapons[wep][2])))
+		{	
+			if (DeusExHUDBeltWeapons[wep][7] == "DRAGON")
+			{RemoveMessages(startIndex+20+wep,startIndex+20+wep);}
+			SetFont(DeusExHUDBeltWeapons[wep][4]); 
+			HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+60+wep,CR_UNTRANSLATED,272.1 + offset,542.1,0.0);	
+			SetFont("DXFONTS2");
+			HudMessage(s:DeusExHUDBeltWeapons[wep][7];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+40+wep,CR_UNTRANSLATED,292.4 + offset,578.1,0.0);
+
+			if(CheckWeapon(DeusExHUDBeltWeapons[wep][1]))
+			{	
+				SetFont("DXFHSEL"); 
+				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+80+wep,CR_UNTRANSLATED,270.1 + offset,539.1,0.0);	
+			}
+			else RemoveMessages(startIndex+80+wep,startIndex+80+wep);
+		}
+		else if (CheckWeapon(DeusExHUDBeltWeapons[wep][2]))
+		{
+			if (DeusExHUDBeltWeapons[wep][8] == "KNIFE")
+			{RemoveMessages(startIndex+20+wep,startIndex+20+wep);}
+			SetFont(DeusExHUDBeltWeapons[wep][5]); 
+			HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+60+wep,CR_UNTRANSLATED,272.1 + offset,542.1,0.0);
+			SetFont("DXFONTS2");
+			HudMessage(s:DeusExHUDBeltWeapons[wep][8];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+40+wep,CR_UNTRANSLATED,292.4 + offset,578.1,0.0);
+			
+			if(CheckWeapon(DeusExHUDBeltWeapons[wep][2]))
+			{	
+				SetFont("DXFHSEL"); 
+				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+80+wep,CR_UNTRANSLATED,270.1 + offset,539.1,0.0);	
+			}
+			else RemoveMessages(startIndex+80+wep,startIndex+80+wep);	
+		}
+		else
+		{
+			RemoveMessages(startIndex+60+wep,startIndex+60+wep);
+			RemoveMessages(startIndex+40+wep,startIndex+40+wep);
+			RemoveMessages(startIndex+20+wep,startIndex+20+wep);
+		}
+	}
+	
+	SetHudSize(640,480,0);	
+	SetFont("DXFONTS2");
+	HudMessage(s:"CLIPS";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+9,"DXGren",61.4,456.1,0.0);	
+	HudMessage(s:"AMMO";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+5,"DXGren",61.4,430.1,0.0);	
+	RemoveMessages(startIndex+10,startIndex+10);
+	if((StrCmp(DeusExHUDWeapons[currentWeapon][2], "") && StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1")) || (!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
+	{
+		int dx_ammo = CheckInventory(!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") ? "Clip" : DeusExHUDWeapons[currentWeapon][2]);
+		int dx_ammo2 = GetAmmoCapacity(DeusExHUDWeapons[currentWeapon][1]);
+		if (dx_ammo2 == 0) dx_ammo2 = 1;
+		int dx_ammo3 = dx_ammo / dx_ammo2;
+		if (dx_ammo3 > 999) dx_ammo3 = 999;
+		if (CheckInventory("SamsaraReloadMode") >= 2)
+		HudMessage(d:dx_ammo3;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
+		else
+		HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
+	}
+	else
+	{
+	HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);	
+	} 
+	//Draw clip ammo
+	RemoveMessages(startIndex+6,startIndex+6);
+
+	if (strlen(DeusExHUDWeapons[currentWeapon][1]) <= 2)
+	{
+	HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);	
+	}
+	else if (CheckInventory("SamsaraReloadMode") >= 2)
+	{
+		int dx_clip = CheckInventory(DeusExHUDWeapons[currentWeapon][1]);
+		if(dx_clip > 999) dx_clip = 999;
+		HudMessage(d:dx_clip;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);	
+	}
+	else
+	{
+	dx_clip = CheckInventory(!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") ? "Clip" : DeusExHUDWeapons[currentWeapon][2]);
+	if(dx_clip > 999) dx_clip = 999;
+	HudMessage(d:dx_clip;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);
+	}
+	
+}
 
 Script "DeusEx_DisplayInfoPlaceHolder" (void) clientside
 {
