@@ -965,17 +965,17 @@ str pawnOMaticUpgradeOptions [7][4][2] =
 	{ {"Kingpin_TommyGun_MagazineCapacity", ""}, {"Kingpin_TommyGun_Damage", ""}, {"Kingpin_TommyGun_Accuracy", ""}, {"Kingpin_TommyGun_Buzzsaw", ""} },
 	{ {"Kingpin_Bazooka_FastRockets", ""}, {"Kingpin_Bazooka_LaserSystem", ""}, {"Kingpin_Bazooka_HighExplosives", ""}, {"Kingpin_Bazooka_BigBubba", ""} },
 	{ {"Kingpin_Flamethrower_Range", ""}, {"Kingpin_Flamethrower_HotterFlame", ""}, {"Kingpin_Flamethrower_FuelPump", ""}, {"Kingpin_Flamethrower_Napalmer", ""} },
-	{ {"Kingpin_HMG_TacticalScope", ""}, {"Kingpin_HMG_CoolingRod", ""}, {"Kingpin_HMG_SelectFire", ""}, {"Kingpin_HMG_AntiMaterial", ""} },
+	{ {"Kingpin_HMG_TacticalScope", ""}, {"Kingpin_HMG_CoolingRod", "PawnOMAtic/Mod/HMG"}, {"Kingpin_HMG_SelectFire", ""}, {"Kingpin_HMG_AntiMaterial", ""} },
 };
 
 // To fill...
 str pawnOMaticUpgradeDialogue[7][4][2] =
 {
 	{
-		{ "Pistol reload mod, very good choice... none of that fumblin around with a clip.", "The pistol reload mod... that would decrease your reloading time."},
-		{ "The ROF, very nice mod... increase your rate of fire.", "That that ROF, you can spit bullets out."},
-		{ "Magnum mod, one of my favorites.", "Magnum mod, very good choice... great stoppin power."},
-		{ "Ahh silencer... very good when you're sneaking up on somebody.", "That'll quiet your pistol down a little bit."},
+		{ "Ah, pistol reload mod, very good choice... None of that fumblin' around with a clip.", "Ah, the reload mod... That'll decrease your reloading time."},
+		{ "Ah, the ROF, very nice mod... Increase your rate of fire.", "Take that ROF, you can spit bullets out."},
+		{ "Magnum mod, one of my favorites. A real punch, ya know?", "Magnum mod, very good choice... Great stoppin' power."},
+		{ "Ahh, silencer... Very good when you're sneaking up on somebody.", "That'll quiet your pistol down a little bit."},
 	},
 	{},
 	{},
@@ -983,8 +983,8 @@ str pawnOMaticUpgradeDialogue[7][4][2] =
 	{},
 	{},
 	{
-		{ "Ooo hmg cooling mod very good option Boom Boom Boom", "Ooo hmg cooling mod now thats a very nice number turn that baby nearly automatic for ya" },
 		{},
+		{ "Oh, the HMG cooling mod, very nice option. Boom boom b-boom boom boom boom! Heheheheh!", "Oh, the HMG cooling mod, that's a nice little number. Turn that baby nearly automatic for ya! Heh." },
 		{},
 		{}
 	},
@@ -1016,40 +1016,47 @@ str KingpinWeapons[8][2] =
 str SharkySoldNoBuy[2][3] =
 {
 	{ "It's all yours.", "Here ya go.", "Sold." },
-	{ "Nah? How bout somethin else?", "Okay, find somethin else you like.", "Nah?" }
+	{ "Nah? How 'bout somethin' else?", "Okay, find somethin' else you like.", "Nah?" }
+};
+
+str SharkyDenied[3][2] =
+{
+	{ "Hey, you don't have enough cash...", "You ain't got enough money." },
+	{ "Hey, that mod ain't gonna do you any good unless you've got the gun to go with it.", "Hey, you gotta have the right piece for that thing... Otherwise, it's worthless." },
+	{ "Hey, you already got that.", "Hey, you don't need two... You already got one." }
 };
 
 str SharkyRandomWeapons[9] =
 {
 	"Very good choice.",
 	"Heh, my personal favorite.",
-	"Oh I like that one a lot.",
+	"Oh, I like that one a lot.",
 	"Very good choice.",
 	"Nice selection.",
 	"That'll work.",
-	"Boom!  heh heh heh.",
+	"Boom! Heh heh heh.",
 	"So you're gonna take this one...",
 	"Awright."
 };
 
 str SharkyHealthArmorStrings[8][2] =
 {
-	{ "What, got yourself a papercut? Don't you worry.", "This will heal a cut or bruise but you may want more." },
+	{ "What, got yourself a papercut? Don't you worry.", "This will heal a cut or bruise, but you may want more." },
 	{ "Stimpack, okay.", "Not a bad choice, a stimpack." },
-	{ "Those medkits'll get you through some scrapes...", "If you're really hurtin, that thing'll do you some good..." },
-	{ "Soulsphere's are the best health item I sell.", "This will do more than I heal ya up." },
+	{ "Those medkits'll get you through some scrapes...", "If you're really hurtin', that thing'll do you some good..." },
+	{ "Soulspheres are the best health item I sell.", "This will do more than I heal ya up." },
 	{ "Needing a minor patch up, huh?", "Just a small patch up. Alright?" },
-	{ "Ahh, green armor. Not the best but decent enough.", "Nice, green armor. Can't go wrong with that." },
-	{ "Blue armor huh? Nothing better than that.", "Blue armor isn't cheap." },
+	{ "Ahh, green armor. Not the best, but decent enough.", "Nice, green armor. Can't go wrong with that." },
+	{ "Blue armor, huh? Nothing better than that.", "Blue armor isn't cheap." },
 	{ "Wow, a megasphere. Not too many people buy these.", "Ah yeah, I happen to have a spare one of these laying around. Very expensive." }
 };
 
 str SharkyAmmoStrings[4][2] =
 {
-	{ "Alright, you wanna buy some bullets?", "You wanna purchase some bullets... that it?" },
-	{ "Shotgun shells..", "You wanna buy some shotgun shells, eh?" },
-	{ "Explosives. Very nasty, you wanna buy em?", "Explosives... you want em?" },
-	{ "Gonna do a little touch up work eh?", "Gas canisters and 308 rounds, very deadly." }
+	{ "Alright, you wanna buy some bullets?", "You wanna purchase some bullets... That it?" },
+	{ "Shotgun shells.", "You wanna buy some shotgun shells, eh?" },
+	{ "Explosives. Very nasty, you wanna buy 'em?", "Explosives... You want 'em?" },
+	{ "Gonna do a little touch up work, eh?", "Gas canisters and .308 rounds, very deadly." }
 };
 
 function void KingpinDisplayDialogue(int arg1, int arg2, int arg3, int arg4)
@@ -1059,38 +1066,41 @@ function void KingpinDisplayDialogue(int arg1, int arg2, int arg3, int arg4)
 	switch(arg1)
 	{
 		default:
-			text = "Hey, welcome to pawn-o-matic!";
+			text = "Hey, welcome to Pawn-O-Matic, huh?";
 			break;
 		case 1:
-			text = strparam(s:"\c[KPPawnOMaticWhite]", s:pawnOMaticUpgradeDialogue[arg2][arg3][arg4], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticUpgradePrices[arg2][arg3], s:"\c[KPPawnOMaticWhite] dollar(s).", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+			text = strparam(s:"\c[KPPawnOMaticWhite]", s:pawnOMaticUpgradeDialogue[arg2][arg3][arg4], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticUpgradePrices[arg2][arg3], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticUpgradePrices[arg2][arg3] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			break;
 		case 2:
-			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyRandomWeapons[arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[0][arg2], s:"\c[KPPawnOMaticWhite] dollar(s).", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyRandomWeapons[arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[0][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[0][arg2] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			break;
 		case 3: 
 			if(pawnOMaticItemBulkBuy[arg1-3][arg2-1] == 0)
-				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[1][arg2], s:"\c[KPPawnOMaticWhite] dollar(s).", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[1][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[1][arg2] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			else
 			{
 				if(arg4 > 0)
-					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[1][arg2]*arg4, s:" dollar(s).", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
+					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[1][arg2]*arg4, s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[1][arg2]*arg4 > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
 				else
 					text = strparam(s:"\c[KPPawnOMaticRed](Activate again to cancel)");
 			}
 			break;
 		case 4:
 			if(pawnOMaticItemBulkBuy[arg1-3][arg2-1] == 0)
-				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[2][arg2], s:"\c[KPPawnOMaticWhite] dollar(s).", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[2][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[2][arg2] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			else
 			{
 				if(arg4 > 0)
-					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[2][arg2]*arg4, s:" dollar(s).", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
+					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[2][arg2]*arg4, s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[2][arg2]*arg4 > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
 				else
 					text = strparam(s:"\c[KPPawnOMaticRed](Activate again to cancel)");
 			}
 			break;
 		case 9:
-			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkySoldNoBuy[arg2][arg3], s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkySoldNoBuy[arg2][arg3]);
+			break;
+		case 10:
+			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyDenied[arg2][arg3]);
 			break;
 	}
 	Setfont("KPFONTBG");
@@ -1501,15 +1511,24 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 					lastInputTimer = 0;
 					if(!CheckInventory(KingpinWeapons[currentUpgradeMenu][0]))
 					{
-						PlaySound(sTid,"PawnOMatic/NoWeapon",CHAN_VOICE,1.0,0,ATTN_NONE);
+						messageDialog = random(0,1);
+						KingpinDisplayDialogue(10,1,messageDialog,0);
+						welcomeMessage = false;
+						PlaySound(sTid,StrParam(s:"PawnOMatic/NoWeapon",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 					}
 					else if(CheckInventory(pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][0]))
 					{
-						PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
+						messageDialog = random(0,1);
+						KingpinDisplayDialogue(10,2,messageDialog,0);
+						welcomeMessage = false;
+						PlaySound(sTid,StrParam(s:"PawnOMatic/AlreadyHave",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 					}
 					else if(CheckInventory("Kingpin_Cash") < pawnOMaticUpgradePrices[currentUpgradeMenu-1][currentMenuItem-1])
 					{
-						PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
+						messageDialog = random(0,1);
+						KingpinDisplayDialogue(10,0,messageDialog,0);
+						welcomeMessage = false;
+						PlaySound(sTid,StrParam(s:"PawnOMatic/LowCash",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 					}
 					else
 					{
@@ -1517,10 +1536,10 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 						if(modSelected == 0)
 						{
 							//Play sound for confirmation
-							PlaySound(sTid,pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][1],CHAN_VOICE,1.0,0,ATTN_NONE);
 							messageDialog = random(0,1);
 							KingpinDisplayDialogue(1,currentUpgradeMenu-1,currentMenuItem-1,messageDialog);
 							welcomeMessage = false;
+							if (StrCmp(pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][1], "")) { PlaySound(sTid,StrParam(s:pawnOMaticUpgradeOptions[currentUpgradeMenu-1][currentMenuItem-1][1],d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE); }
 							modSelected = currentUpgradeMenu;
 						}
 						else
@@ -1557,11 +1576,17 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 
 						if(hitlimit)
 						{
-							PlaySound(sTid,"PawnOMatic/AlreadyHave",CHAN_VOICE,1.0,0,ATTN_NONE);
+							messageDialog = random(0,1);
+							KingpinDisplayDialogue(10,2,messageDialog,0);
+							welcomeMessage = false;
+							PlaySound(sTid,StrParam(s:"PawnOMatic/AlreadyHave",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 						}
 						else if(CheckInventory("Kingpin_Cash") < pawnOMaticItemPrices[currentMenu-2][currentMenuItem])
 						{
-							PlaySound(sTid,"PawnOMatic/LowCash",CHAN_VOICE,1.0,0,ATTN_NONE);
+							messageDialog = random(0,1);
+							KingpinDisplayDialogue(10,0,messageDialog,0);
+							welcomeMessage = false;
+							PlaySound(sTid,StrParam(s:"PawnOMatic/LowCash",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 						}
 						else
 						{
