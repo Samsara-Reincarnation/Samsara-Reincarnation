@@ -1,0 +1,42 @@
+actor SamsaraOutlawsWeapon : Weapon
+{
+	Inventory.PickupMessage "Yeehaw partner! It looks like there's no pickup message hooked up. Please help that Shiny Metagross fella out and fill them for him!"
+    Inventory.RestrictedTo "OutlawsPlayer"
+    Weapon.BobRangeX 0.5
+    Weapon.BobRangeY 0.5
+    Weapon.BobSpeed 1
+    +UNDROPPABLE
+	+AMMO_OPTIONAL
+	+ALT_AMMO_OPTIONAL
+}
+
+Actor OutlawsTemporaryPuff
+{
+	+NOINTERACTION
+	Radius 1
+	Height 1
+	States
+	{
+		Spawn:
+			TNT1 A 1
+			Stop
+		Crash:
+			TNT1 A 1 A_SpawnItemEx("OutlawsPuffHole")
+			Stop
+	}
+}
+
+Actor OutlawsPuffHole
+{
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	Radius 1
+	Height 1
+	States
+	{
+		Spawn:
+			OL99 A 1050
+			OL99 AAAAA 1 A_Fadeout(0.2)
+			Stop
+	}
+}
