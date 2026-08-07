@@ -72,14 +72,14 @@ Actor Outlaws_DoubleBarrelShotgun : SamsaraOutlawsWeapon
 			OL02 E 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
 			OL02 E 0 A_GiveInventory("Outlaws_DBSMagazine")
 			OL02 E 0 A_JumpIfInventory("Outlaws_DBSMagazine",0,"ReloadFull")
-			OL02 E 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL02 E 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
 			Goto ReloadFinish
 		ReloadFull:
-			OL02 F 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL02 F 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
 			Goto Ready
 		//Allow reloading again, here
 		ReloadFinish:
-			OL02 E 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			OL02 E 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
 			Goto Ready	
 	}
 }
@@ -168,7 +168,7 @@ Actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "Shell"
     Weapon.AmmoGive2 6
-    Tag "Double Barrel Shotgun"
+    Tag "Sawed-Off Shotgun"
 	States
 	{
 		Spawn:
@@ -234,14 +234,14 @@ Actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
 			OL03 E 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
 			OL03 E 0 A_GiveInventory("Outlaws_SawedMagazine")
 			OL03 E 0 A_JumpIfInventory("Outlaws_SawedMagazine",0,"ReloadFull")
-			OL03 E 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL03 E 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
 			Goto ReloadFinish
 		ReloadFull:
-			OL03 F 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL03 F 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
 			Goto Ready
 		//Allow reloading again, here
 		ReloadFinish:
-			OL03 E 1 A_WeaponReady(WRF_ALLOWRELOAD)
+			OL03 E 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
 			Goto Ready	
 	}
 }
