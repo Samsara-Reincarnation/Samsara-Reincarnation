@@ -6,7 +6,7 @@
 #include "zcommon.acs"
 #include "commonFuncs.acs"
 
-#define musicCount 41
+#define musicCount 42
 
 int musicActivated[musicCount] = {-1};
 str musicSettings[musiccount] =
@@ -47,16 +47,59 @@ str musicSettings[musiccount] =
     "samsara_cl_heromusic_deusex", //33
 	"samsara_cl_heromusic_kingpin", //34
 	"samsara_cl_heromusic_sof", //35
-	"samsara_cl_heromusic_doom64", //36
-	"samsara_cl_heromusic_totenkopf", //37
-	"samsara_cl_heromusic_dukelab", //38
-	"samsara_cl_heromusic_hlop", //39
-	"samsara_cl_heromusic_goldfinger", //40
+	"samsara_cl_heromusic_outlaws", //36
+	"samsara_cl_heromusic_doom64", //classcount+1
+	"samsara_cl_heromusic_totenkopf",//classcount+2
+	"samsara_cl_heromusic_dukelab",//classcount+3
+	"samsara_cl_heromusic_hlop", //classcount+4
+	"samsara_cl_heromusic_goldfinger",//classcount+5
 };
 
-#DEFINE CLASSCOUNT 36
+#DEFINE CLASSCOUNT 37
 #DEFINE MAXTYPES 5
 #DEFINE MAXALTS 5
+#DEFINE OVERRIDE_DOOM 0
+#DEFINE OVERRIDE_CHEX 1
+#DEFINE OVERRIDE_HERETIC 2
+#DEFINE OVERRIDE_WOLF3D 3
+#DEFINE OVERRIDE_HEXEN1 4
+#DEFINE OVERRIDE_DUKE3D 5
+#DEFINE OVERRIDE_MARATHON 6
+#DEFINE OVERRIDE_QUAKE1 7
+#DEFINE OVERRIDE_ROTT 8
+#DEFINE OVERRIDE_BSTONE 9
+#DEFINE OVERRIDE_BLOOD 10
+#DEFINE OVERRIDE_STRIFE 11
+#DEFINE OVERRIDE_ERAD 12
+#DEFINE OVERRIDE_C7 13
+#DEFINE OVERRIDE_RMR 14
+#DEFINE OVERRIDE_DARKF 15
+#DEFINE OVERRIDE_IPOG 16
+#DEFINE OVERRIDE_DISRUP 17
+#DEFINE OVERRIDE_WITCH 18
+#DEFINE OVERRIDE_HALFLIFE 19
+#DEFINE OVERRIDE_SW 20
+#DEFINE OVERRIDE_CM 21
+#DEFINE OVERRIDE_PS 22
+#DEFINE OVERRIDE_RR 23
+#DEFINE OVERRIDE_QUAKE2 24
+#DEFINE OVERRIDE_HEXEN2 25
+#DEFINE OVERRIDE_GOLDENEYE 26
+#DEFINE OVERRIDE_CATACOMB 27
+#DEFINE OVERRIDE_PAINKILLER 28
+#DEFINE OVERRIDE_UNREAL 29
+#DEFINE OVERRIDE_RTCW 30
+#DEFINE OVERRIDE_QUAKE3 31
+#DEFINE OVERRIDE_DESCENT 32
+#DEFINE OVERRIDE_DEUSEX 33
+#DEFINE OVERRIDE_KINGPIN 34
+#DEFINE OVERRIDE_SOF 35
+#DEFINE OVERRIDE_OUTLAWS 36
+#DEFINE OVERRIDE_DOOM64 CLASSCOUNT+1
+#DEFINE OVERRIDE_TOTENKOPF CLASSCOUNT+2
+#DEFINE OVERRIDE_DUKELAB CLASSCOUNT+3
+#DEFINE OVERRIDE_HLOP CLASSCOUNT+4
+#DEFINE OVERRIDE_GOLDFINGER CLASSCOUNT+5
 
 int maxGameTracks[CLASSCOUNT][MAXALTS][MAXTYPES] =
 {
@@ -96,6 +139,7 @@ int maxGameTracks[CLASSCOUNT][MAXALTS][MAXTYPES] =
 	{ {21, 21, 21} }, //Deus Ex
 	{ {6} }, //Kingpin
 	{ {24, 24, 24} }, //Soldier of Fortune
+	{ {15} }, //Outlaws
 };
 
 str gameMusicTypes[CLASSCOUNT][MAXALTS][MAXTYPES] =
@@ -136,6 +180,7 @@ str gameMusicTypes[CLASSCOUNT][MAXALTS][MAXTYPES] =
 	{ {"DXAMB1", "DXAMB2", "DXFIT"} },
 	{ {"KPTRAK"} },
 	{ {"SOFAMB", "SOFAMB", "SOFFIT"} },
+	{ {"OLTRAK"} },
 };
 
 str ChristmasMusic[16] = {"CHRIST01","CHRIST02","CHRIST03","CHRIST04","CHRIST05",
@@ -254,24 +299,24 @@ script "SamsaraOST_Enter" ENTER
                       default:
                         break;
 
-                      case 0:
-                        if (GetUserCVar(pln, "samsara_cl_doommode") == 1) { gameoverride = 36; }
+                      case OVERRIDE_DOOM:
+                        if (GetUserCVar(pln, "samsara_cl_doommode") == 1) { gameoverride = OVERRIDE_DOOM64; }
                         break;
 
-                      case 3:
-                        if (GetUserCVar(pln, "samsara_cl_wolfmode") >= 2) { gameoverride = 37; }
+                      case OVERRIDE_WOLF3D:
+                        if (GetUserCVar(pln, "samsara_cl_wolfmode") >= 2) { gameoverride = OVERRIDE_TOTENKOPF; }
                         break;
 
-                      case 5:
-                        if (GetUserCVar(pln, "samsara_cl_dukemode") == 1) { gameoverride = 38; }
+                      case OVERRIDE_DUKE3D:
+                        if (GetUserCVar(pln, "samsara_cl_dukemode") == 1) { gameoverride = OVERRIDE_DUKELAB; }
                         break;
 
-                      case 19:
-                        if (GetUserCVar(pln, "samsara_cl_shephardmode") >= 1) { gameoverride = 39; }
+                      case OVERRIDE_HALFLIFE:
+                        if (GetUserCVar(pln, "samsara_cl_shephardmode") >= 1) { gameoverride = OVERRIDE_HLOP; }
                         break;
 
-                      case 26:
-                        if (GetUserCVar(pln, "samsara_cl_bondmode") >= 1) { gameoverride = 40; }
+                      case OVERRIDE_GOLDENEYE:
+                        if (GetUserCVar(pln, "samsara_cl_bondmode") >= 1) { gameoverride = OVERRIDE_GOLDFINGER; }
                         break;
                     }
                 }
@@ -299,118 +344,118 @@ script "SamsaraOST_Enter" ENTER
                     LocalSetMusic(StrParam(s:gameMusicTypes[gameoverride][0][0], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 0:
-                  case 36:
-                    switchClass = gameoverride == 36;
-                    settrack = Random(1, maxGameTracks[0][switchClass][0]);
+                  case OVERRIDE_DOOM:
+                  case OVERRIDE_DOOM64:
+                    switchClass = gameoverride == OVERRIDE_DOOM64;
+                    settrack = Random(1, maxGameTracks[OVERRIDE_DOOM][switchClass][0]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[0][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_DOOM][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 3:
-                  case 37:
+                  case OVERRIDE_WOLF3D:
+                  case OVERRIDE_TOTENKOPF:
 					switchType = GetUserCVar(pln, "samsara_cl_wolf3dimf");
-                    switchClass = gameoverride == 37;
-                    settrack = Random(1, maxGameTracks[3][switchClass][switchClass ? 0 : switchType]);
+                    switchClass = gameoverride == OVERRIDE_TOTENKOPF;
+                    settrack = Random(1, maxGameTracks[OVERRIDE_WOLF3D][switchClass][switchClass ? 0 : switchType]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[3][switchClass][switchClass ? 0 : switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_WOLF3D][switchClass][switchClass ? 0 : switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-				  case 4:
+				  case OVERRIDE_HEXEN1:
                     switchType = GetUserCVar(pln, "samsara_cl_hexcd");
-                    settrack = Random(1, maxGameTracks[4][0][switchType]);
-                    LocalSetMusic(StrParam(s:gameMusicTypes[4][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    settrack = Random(1, maxGameTracks[OVERRIDE_HEXEN1][0][switchType]);
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_HEXEN1][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 5:
-                  case 38:
-                    switchClass = gameoverride == 38;
-                    settrack = Random(1, maxGameTracks[5][switchClass][0]);
+                  case OVERRIDE_DUKE3D:
+                  case OVERRIDE_DUKELAB:
+                    switchClass = gameoverride == OVERRIDE_DUKELAB;
+                    settrack = Random(1, maxGameTracks[OVERRIDE_DUKE3D][switchClass][0]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[5][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_DUKE3D][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-				  case 8:
+				  case OVERRIDE_ROTT:
                     switchType = GetUserCVar(pln, "samsara_cl_rott13ost");
-                    settrack = Random(1, maxGameTracks[8][0][switchType]);
-                    LocalSetMusic(StrParam(s:gameMusicTypes[8][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    settrack = Random(1, maxGameTracks[OVERRIDE_ROTT][0][switchType]);
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_ROTT][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-				  case 9:
+				  case OVERRIDE_BSTONE:
                     switchType = GetUserCVar(pln, "samsara_cl_bstoneimf");
-                    settrack = Random(1, maxGameTracks[9][0][switchType]);
-                    LocalSetMusic(StrParam(s:gameMusicTypes[9][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    settrack = Random(1, maxGameTracks[OVERRIDE_BSTONE][0][switchType]);
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_BSTONE][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 10:
+                  case OVERRIDE_BLOOD:
                     switchType = GetUserCVar(pln, "samsara_cl_bloodcd");
-                    settrack = Random(1, maxGameTracks[10][0][switchType]);
+                    settrack = Random(1, maxGameTracks[OVERRIDE_BLOOD][0][switchType]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[10][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_BLOOD][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-				  case 13:
+				  case OVERRIDE_C7:
                     switchType = GetUserCVar(pln, "samsara_cl_c7imf");
-                    settrack = Random(1, maxGameTracks[13][0][switchType]);
+                    settrack = Random(1, maxGameTracks[OVERRIDE_C7][0][switchType]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[13][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_C7][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-				  case 15:
+				  case OVERRIDE_DARKF:
                     switchType = GetUserCVar(pln, "samsara_cl_darkfpsx");
                     settrack = Random(1, maxGameTracks[15][0][switchType]);
 
                     LocalSetMusic(StrParam(s:gameMusicTypes[15][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 19:
-                  case 39:
+                  case OVERRIDE_HALFLIFE:
+                  case OVERRIDE_HLOP:
                     SpawnForced("HLMusicToken",GetActorX(0),GetActorY(0),GetActorZ(0),musictid);
                     if (!CheckInventory("SamsaraHeroMusicHalfLifeActive")) { ACS_NamedExecuteWithResult("SamsaraOST_HalfLifeScriptedMusicLoop",musictid); }
                     break;
 
-                  case 25:
+                  case OVERRIDE_HEXEN2:
                     switchType = GetUserCVar(pln, "samsara_cl_hex2cd");
-                    settrack = Random(1, maxGameTracks[25][0][switchType]);
+                    settrack = Random(1, maxGameTracks[OVERRIDE_HEXEN2][0][switchType]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[25][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_HEXEN2][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 26:
-                  case 40:
-					switchClass = gameoverride == 40;
-                    settrack = Random(1, maxGameTracks[26][switchClass][0]);
+                  case OVERRIDE_GOLDENEYE:
+                  case OVERRIDE_GOLDFINGER:
+					switchClass = gameoverride == OVERRIDE_GOLDFINGER;
+                    settrack = Random(1, maxGameTracks[OVERRIDE_GOLDENEYE][switchClass][0]);
                     SetInventory("BondMusicToken", settrack + 1);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[26][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_GOLDENEYE][switchClass][0], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 27:
+                  case OVERRIDE_CATACOMB:
 					if(GetUserCVar(pln, "samsara_cl_c3dimf")) LocalSetMusic("C3DTRIMF");
 					else LocalSetMusic("C3DTRACK");
                     break;
 
-                  case 28:
+                  case OVERRIDE_PAINKILLER:
                     if (!CheckInventory("SamsaraHeroMusicSamsaraOSTActive")) { ACS_NamedExecuteWithResult("SamsaraOST_AmbientFightScriptedMusic",gameoverride); }
                     break;
 
-                  case 32:
+                  case OVERRIDE_DESCENT:
                     switchType = GetUserCVar(pln, "samsara_cl_descentcd");
-                    settrack = Random(1, maxGameTracks[32][0][switchType]);
+                    settrack = Random(1, maxGameTracks[OVERRIDE_DESCENT][0][switchType]);
 
-                    LocalSetMusic(StrParam(s:gameMusicTypes[32][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
+                    LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_DESCENT][0][switchType], s:settrack < 10 ? "0" : "", d:settrack));
                     break;
 
-                  case 33:
+                  case OVERRIDE_DEUSEX:
                     if (!CheckInventory("SamsaraHeroMusicSamsaraOSTActive")) { ACS_NamedExecuteWithResult("SamsaraOST_AmbientFightScriptedMusic",gameoverride); }
                     break;
 
-				  case 35:
+				  case OVERRIDE_SOF:
 					if (!CheckInventory("SamsaraHeroMusicSamsaraOSTActive")) { ACS_NamedExecuteWithResult("SamsaraOST_AmbientFightScriptedMusic",gameoverride); }
                     break;
                 }
             }
-
+			
             SetInventory("HeroSoundTrack", herosoundtrack);
             SetInventory("HeroSoundTrackXmas", 0);
 			SetInventory("HeroSoundTrackLevel", 0);
@@ -511,7 +556,7 @@ script "SamsaraOST_HalfLifeScriptedMusicLoop" (int musictid)
 
     while (GetUserCVAR(PlayerNumber(),"samsara_cl_heromusic") == mySetting)
     {
-		if(CheckInventory("SamsaraHeroMusicGame") != 20 && CheckInventory("SamsaraHeroMusicGame") != 40)
+		if(CheckInventory("SamsaraHeroMusicGame") != OVERRIDE_HALFLIFE && CheckInventory("SamsaraHeroMusicGame") != OVERRIDE_HLOP)
 			break;
 
         if (CheckInventory("HalfLifeMusicPlayingToken"))
@@ -581,29 +626,29 @@ Script "SamsaraOST_HalfLifeScriptedMusic" (int musictid, int cause, int pln) cli
 {
 	if(pln != ConsolePlayerNumber()) terminate;
 	int settrack;
-    bool halflifeopposingforce = CheckInventory("SamsaraHeroMusicGame") == 40;
+    bool halflifeopposingforce = CheckInventory("SamsaraHeroMusicGame") == OVERRIDE_HLOP;
 
 	switch(cause)
 	{
 		case 1:
-			SetTrack = Random(1, maxGameTracks[19][halflifeopposingforce][1]);
-			PlaySound(musictid, strparam(s:gameMusicTypes[19][halflifeopposingforce][1],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
+			SetTrack = Random(1, maxGameTracks[OVERRIDE_HALFLIFE][halflifeopposingforce][1]);
+			PlaySound(musictid, strparam(s:gameMusicTypes[OVERRIDE_HALFLIFE][halflifeopposingforce][1],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
 			break;
 		case 2:
-			SetTrack = Random(1, maxGameTracks[19][halflifeopposingforce][4]);
-			PlaySound(musictid, strparam(s:gameMusicTypes[19][halflifeopposingforce][4],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
+			SetTrack = Random(1, maxGameTracks[OVERRIDE_HALFLIFE][halflifeopposingforce][4]);
+			PlaySound(musictid, strparam(s:gameMusicTypes[OVERRIDE_HALFLIFE][halflifeopposingforce][4],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
 			break;
 		case 3:
-			SetTrack = Random(1, maxGameTracks[19][halflifeopposingforce][3]);
-			PlaySound(musictid, strparam(s:gameMusicTypes[19][halflifeopposingforce][3],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
+			SetTrack = Random(1, maxGameTracks[OVERRIDE_HALFLIFE][halflifeopposingforce][3]);
+			PlaySound(musictid, strparam(s:gameMusicTypes[OVERRIDE_HALFLIFE][halflifeopposingforce][3],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
 			break;
 		case 4:
-			SetTrack = Random(1, maxGameTracks[19][halflifeopposingforce][2]);
-			PlaySound(musictid, strparam(s:gameMusicTypes[19][halflifeopposingforce][2],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
+			SetTrack = Random(1, maxGameTracks[OVERRIDE_HALFLIFE][halflifeopposingforce][2]);
+			PlaySound(musictid, strparam(s:gameMusicTypes[OVERRIDE_HALFLIFE][halflifeopposingforce][2],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
 			break;
 		case 5:
-			SetTrack = Random(1, maxGameTracks[19][halflifeopposingforce][0]);
-			PlaySound(musictid, strparam(s:gameMusicTypes[19][halflifeopposingforce][0],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
+			SetTrack = Random(1, maxGameTracks[OVERRIDE_HALFLIFE][halflifeopposingforce][0]);
+			PlaySound(musictid, strparam(s:gameMusicTypes[OVERRIDE_HALFLIFE][halflifeopposingforce][0],s:SetTrack < 10 ? "0" : "",d:SetTrack), CHAN_BODY|CHAN_NOPAUSE, 1.0, false, ATTN_NONE);
 			break;
 	}
 }
@@ -704,9 +749,9 @@ Script "SamsaraOST_AmbientFightScriptedMusic" (int type)
 		SetPointerExt(AAPTR_TRACER,0,newtid);
 		Thing_ChangeTid(newtid,0);
 		
-		if(type == 35 && themeseed > 25)
+		if(type == OVERRIDE_SOF && themeseed > 25)
 		{
-			LocalSetMusic(StrParam(s:gameMusicTypes[35][0][0], s:themeseed < 10 ? "0" : "", d:themeseed));
+			LocalSetMusic(StrParam(s:gameMusicTypes[OVERRIDE_SOF][0][0], s:themeseed < 10 ? "0" : "", d:themeseed));
 		}
 		else if(GetCvar("samsara_zscriptready") == 1)
 		{
