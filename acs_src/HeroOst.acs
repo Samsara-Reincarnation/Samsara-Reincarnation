@@ -49,10 +49,10 @@ str musicSettings[musiccount] =
 	"samsara_cl_heromusic_sof", //35
 	"samsara_cl_heromusic_outlaws", //36
 	"samsara_cl_heromusic_doom64", //classcount+1
-	"samsara_cl_heromusic_totenkopf",//classcount+2
-	"samsara_cl_heromusic_dukelab",//classcount+3
+	"samsara_cl_heromusic_totenkopf", //classcount+2
+	"samsara_cl_heromusic_dukelab", //classcount+3
 	"samsara_cl_heromusic_hlop", //classcount+4
-	"samsara_cl_heromusic_goldfinger",//classcount+5
+	"samsara_cl_heromusic_goldfinger", //classcount+5
 };
 
 #DEFINE CLASSCOUNT 37
@@ -95,11 +95,11 @@ str musicSettings[musiccount] =
 #DEFINE OVERRIDE_KINGPIN 34
 #DEFINE OVERRIDE_SOF 35
 #DEFINE OVERRIDE_OUTLAWS 36
-#DEFINE OVERRIDE_DOOM64 CLASSCOUNT+1
-#DEFINE OVERRIDE_TOTENKOPF CLASSCOUNT+2
-#DEFINE OVERRIDE_DUKELAB CLASSCOUNT+3
-#DEFINE OVERRIDE_HLOP CLASSCOUNT+4
-#DEFINE OVERRIDE_GOLDFINGER CLASSCOUNT+5
+#DEFINE OVERRIDE_DOOM64 CLASSCOUNT
+#DEFINE OVERRIDE_TOTENKOPF CLASSCOUNT+1
+#DEFINE OVERRIDE_DUKELAB CLASSCOUNT+2
+#DEFINE OVERRIDE_HLOP CLASSCOUNT+3
+#DEFINE OVERRIDE_GOLDFINGER CLASSCOUNT+4
 
 int maxGameTracks[CLASSCOUNT][MAXALTS][MAXTYPES] =
 {
@@ -556,7 +556,7 @@ script "SamsaraOST_HalfLifeScriptedMusicLoop" (int musictid)
 
     while (GetUserCVAR(PlayerNumber(),"samsara_cl_heromusic") == mySetting)
     {
-		if(CheckInventory("SamsaraHeroMusicGame") != OVERRIDE_HALFLIFE && CheckInventory("SamsaraHeroMusicGame") != OVERRIDE_HLOP)
+		if(CheckInventory("SamsaraHeroMusicGame") != OVERRIDE_HALFLIFE + 1 && CheckInventory("SamsaraHeroMusicGame") != OVERRIDE_HLOP + 1)
 			break;
 
         if (CheckInventory("HalfLifeMusicPlayingToken"))
@@ -626,7 +626,7 @@ Script "SamsaraOST_HalfLifeScriptedMusic" (int musictid, int cause, int pln) cli
 {
 	if(pln != ConsolePlayerNumber()) terminate;
 	int settrack;
-    bool halflifeopposingforce = CheckInventory("SamsaraHeroMusicGame") == OVERRIDE_HLOP;
+    bool halflifeopposingforce = CheckInventory("SamsaraHeroMusicGame") == OVERRIDE_HLOP + 1;
 
 	switch(cause)
 	{
