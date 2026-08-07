@@ -7,7 +7,6 @@ actor "Ring of Ra" : SamsaraPowerSlaveWeapon
     Weapon.AmmoType "Cell"
     Weapon.AmmoGive 48
     Weapon.AmmoUse 1
-    Obituary "%k's balls were too hot for %o."
     Tag "Ring of Ra"
     +FLOATBOB
     States
@@ -16,17 +15,17 @@ actor "Ring of Ra" : SamsaraPowerSlaveWeapon
         WROR A -1 Bright
         stop
 
-      Ready:
+	  Ready:
+	    C_RU ABCDEFGHIJK 1
+		C_D9 A 1
+      ReadyLoop:
         C_D9 AAAABBBB 1 A_WeaponReady
         loop
 
       Deselect:
-        C_D9 A 1 A_Lower
-        loop
-
-      Select:
-        C_D9 A 1 A_Raise
-        loop
+        C_RD ABCDEFGH 1
+		TNT1 A 12
+        goto Super::DeselectInstant
 
       Fire:
         C_D9 C 2 Bright
@@ -38,7 +37,7 @@ actor "Ring of Ra" : SamsaraPowerSlaveWeapon
         C_D9 D 1 Bright Offset(4,39)
         C_D9 D 1 Bright Offset(2,38) A_GiveInventory("SamsaraPowerSlaveRingOfRaAttackHandler2")
         C_D9 B 1 Bright Offset(0,37) A_ReFire
-        goto Ready
+        goto ReadyLoop
     }
 }
 
@@ -110,6 +109,7 @@ actor RingofRaFireball
     Scale 0.3
     SeeSound "Jon/RAFire"
     DeathSound "Jon/CobraDeath"
+	Obituary "%k's balls were too hot for %o."
     States
     {
       Spawn:

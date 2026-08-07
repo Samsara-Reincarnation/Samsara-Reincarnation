@@ -12,7 +12,6 @@ actor "Sacred Manacle" : SamsaraPowerSlaveWeapon
     Weapon.AmmoUse1 8
     Weapon.AmmoType2 "Cell"
     Weapon.AmmoUse2 2
-    Obituary "%k makes a pancake out of %o."
     Tag "Sacred Manacle"
     +FLOATBOB
     +NOALERT
@@ -25,19 +24,8 @@ actor "Sacred Manacle" : SamsaraPowerSlaveWeapon
 
       Ready:
         TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
-        C_D8 P 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-1,38) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-2,39) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-3,37) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-2,38) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-3,39) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-4,40) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-5,41) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-4,40) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-3,39) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-2,38) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(-1,37) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_D8 P 1 Offset(0,38) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+		TNT1 A 7
+        C_DU ABCDEFGHIJKLMNOPQ 1 
       ReadyLoop:
         TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
         C_D8 A 1 A_WeaponReady
@@ -45,15 +33,10 @@ actor "Sacred Manacle" : SamsaraPowerSlaveWeapon
 
       Deselect:
         TNT1 A 0 A_PlaySound("Jon/SacredLower",CHAN_WEAPON)
-      DeselectLoop:
         TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
-        C_D8 A 1 A_Lower
-        loop
-
-      Select:
-        TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
-        C_D8 A 1 A_Raise
-        loop
+        C_DD ABCDEFGH 1
+		TNT1 A 14
+        goto Super::DeselectInstant
 
       Fire: // Eye of Ra Gauntlet (PC) behavior
         C_D8 A 1 A_JumpIfTargetInLOS(1,0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP|JLOSF_ALLYNOJUMP,6584) // Aim first to keep going
@@ -303,6 +286,7 @@ actor PSCloudStrike
     Damage (0)
     DamageType "PSRAPower"
     Scale 0.6
+    Obituary "%k makes a pancake out of %o."	
     +BLOODLESSIMPACT
     +DONTSPLASH
     +FORCERADIUSDMG
@@ -366,6 +350,7 @@ actor PSManacleBolt
     Damage (75)
     DamageType "PSRAPower"
     MaxTargetRange 8
+	Obituary "%k makes a pancake out of %o."
     +SCREENSEEKER
     +SEEKERMISSILE
     States
