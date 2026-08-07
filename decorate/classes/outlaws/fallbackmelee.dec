@@ -1,0 +1,96 @@
+Actor Outlaws_Fist : SamsaraOutlawsWeapon
+{
+	Weapon.SlotNumber 0
+    Weapon.SelectionOrder 1000
+    Tag "Fist"
+    +WIMPY_WEAPON
+	+NOALERT
+	States
+	{
+		Spawn:
+			TNT1 A -1
+			Stop
+		Ready:
+			OL10 A 1 A_WeaponReady
+			Loop
+
+		Deselect:
+			TNT1 A 0 A_Lower
+			OL10 A 1 A_Lower
+			Loop
+
+		Select:
+			TNT1 A 0 A_Raise
+			OL10 A 1 A_Raise
+			Loop
+			
+		Fire:
+			TNT1 A 4
+			TNT1 A 0 A_GiveInventory("SamsaraOutlawsFistAttackHandler")
+			OL10 BC 4
+			OL10 A 4 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			Goto Ready
+		AltFire:
+			TNT1 A 0 A_GiveInventory("SamsaraOutlawsFistAltAttackHandler")
+			OL10 DE 4
+			Goto Ready
+	}
+}
+
+actor SamsaraOutlawsFistAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("Outlaws/Fist/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(16,true,0,"OutlawsMeleePuff")
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch(16,true,0,"OutlawsMeleePuff")
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(16,true,0,"OutlawsMeleePuff")
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch(16,true,0,"OutlawsMeleePuff")
+        stop
+    }
+}
+
+actor SamsaraOutlawsFistAltAttackHandler : Trigger
+{
+    States
+    {
+      // Attack stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("Outlaws/Fist/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
+      PickupDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
+        TNT1 A 0 A_CustomPunch(6,true,0,"OutlawsMeleePuff")
+        stop
+
+      PickupDMSpread:
+        TNT1 A 0 A_CustomPunch(6,true,0,"OutlawsMeleePuff")
+        stop
+
+      PickupCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
+        TNT1 A 0 A_CustomPunch(6,true,0,"OutlawsMeleePuff")
+        stop
+
+      PickupCoopSpread:
+        TNT1 A 0 A_CustomPunch(6,true,0,"OutlawsMeleePuff")
+        stop
+    }
+}
