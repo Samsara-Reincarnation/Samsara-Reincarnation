@@ -1,7 +1,6 @@
 actor PSM60 : SamsaraPowerSlaveWeapon
 {
     Inventory.PickupMessage "The M-60"
-    Weapon.UpSound "Jon/M60Up"
     Weapon.SlotNumber 4
     Weapon.SelectionOrder 1100
     Weapon.AmmoType1 "PSM60Reload"
@@ -21,6 +20,7 @@ actor PSM60 : SamsaraPowerSlaveWeapon
       Ready:
 	    TNT1 A 4
         TNT1 A 0 A_GunFlash("SelectBelt",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_PlaySound("Jon/M60Up",CHAN_WEAPON)
         M60_ A 1 Offset(-58,100)
 		M60_ A 1 Offset(-54,91)
 		M60_ A 1 Offset(-42,83)
@@ -78,10 +78,10 @@ actor PSM60 : SamsaraPowerSlaveWeapon
         stop
 
       Deselect:
-        TNT1 A 0 A_PlaySound("Jon/M60Down",CHAN_WEAPON)
         TNT1 A 0 A_GunFlash("DeselectBelt",GFF_NOEXTCHANGE)
 		M60_ A 1 Offset(0,34)
 		M60_ A 1 Offset(0,37)
+        TNT1 A 0 A_PlaySound("Jon/M60Down",CHAN_WEAPON)
 		M60_ A 1 Offset(0,43)
 		M60_ A 1 Offset(0,46)
 		M60_ A 1 Offset(0,52)

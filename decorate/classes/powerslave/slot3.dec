@@ -3,7 +3,6 @@ actor SamsaraPowerSlaveFlamethrowerFiringSoundCheck : Boolean {}
 actor PSFlamethrower : SamsaraPowerSlaveWeapon
 {
     Inventory.PickupMessage "The Flame-Thrower!"
-    Weapon.UpSound "Jon/FTUp"
     Weapon.SlotNumber 3
     Weapon.SelectionOrder 900
     Weapon.AmmoType "Shell"
@@ -18,7 +17,10 @@ actor PSFlamethrower : SamsaraPowerSlaveWeapon
 
 	  Ready:
 	    TNT1 A 1
-	    PSFU ABCDEFGHIJK 1
+	    PSFU ABCDEFG 1
+	    TNT1 A 0 A_PlaySound("Jon/FTUp",CHAN_WEAPON)
+	    PSFU HIJK 1
+	    EXF0 TTTUUU 1
 		goto ReadyAmmoCheck
 
       ReadyAmmoCheck:

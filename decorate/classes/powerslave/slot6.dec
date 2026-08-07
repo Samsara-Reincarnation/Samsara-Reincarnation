@@ -4,7 +4,6 @@ actor SamsaraPowerSlaveSacredManacleAttackSuccess : Boolean {}
 actor "Sacred Manacle" : SamsaraPowerSlaveWeapon
 {
     Inventory.PickupMessage "The Sacred Manacle!"
-    Weapon.UpSound "Jon/SacredRaise"
     Weapon.SlotNumber 6
     Weapon.SelectionOrder 300
     Weapon.AmmoType1 "Cell"
@@ -24,7 +23,9 @@ actor "Sacred Manacle" : SamsaraPowerSlaveWeapon
 
       Ready:
         TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
-		TNT1 A 7
+        TNT1 A 4
+        TNT1 A 1 A_PlaySound("Jon/SacredRaise",CHAN_WEAPON)
+        TNT1 A 2
         C_DU ABCDEFGHIJKLMNOPQ 1 
       ReadyLoop:
         TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
@@ -35,7 +36,7 @@ actor "Sacred Manacle" : SamsaraPowerSlaveWeapon
         TNT1 A 0 A_PlaySound("Jon/SacredLower",CHAN_WEAPON)
         TNT1 A 0 A_TakeInventory("PSSacredManacleCharges")
         C_DD ABCDEFGH 1
-		TNT1 A 14
+        TNT1 A 14
         goto Super::DeselectInstant
 
       Fire: // Eye of Ra Gauntlet (PC) behavior
