@@ -333,6 +333,21 @@ Script "DeusEx_Enter" (void)
 		int running = abs(GetPlayerInput(-1, INPUT_FORWARDMOVE)) > 6400 || abs(GetPlayerInput(-1, INPUT_SIDEMOVE)) > 6144;
 		int speedmod, augsActive, lastAugs;
 
+		if (isDead(0)) // [tv50] lazy of me
+		{
+			if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+			{
+				UsingFullScreen = true;
+				ACS_NamedExecuteWithResult("DeusEx_DrawHud",startIndex,0,0,0);
+			}
+			//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
+			else if(UsingFullScreen == true)
+			{
+				RemoveMessages(startIndex,startIndex+120);
+				UsingFullScreen = false;
+			}
+		}
+
 		while ((ClassifyActor(0) & ACTOR_ALIVE))
 		{
             SetInventory("DeusEx_Running", keyDown(BT_FORWARD) && running);
@@ -609,7 +624,7 @@ Script "DeusEx_DrawHud" (int startIndex)
 	HudMessage(d:CheckInventory("DeusEx_BioEnergy");HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_ALPHA,startIndex+104,CR_UNTRANSLATED,36.1,165.1,0.0);
 
 	
-	if(strlen(DeusExHUDWeapons[currentWeapon][3]) > 0)
+	if(StrCmp(DeusExHUDWeapons[currentWeapon][3], ""))
 	{
 		SetFont(DeusExHUDWeapons[currentWeapon][3]); 
 		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+115,CR_UNTRANSLATED,21.1,542.1,0.0);	
@@ -685,7 +700,7 @@ Script "DeusEx_DrawHud" (int startIndex)
 			SetFont("DXFONTS2");
 			HudMessage(s:DeusExHUDBeltWeapons[wep][6];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+40+wep,CR_UNTRANSLATED,292.4 + offset,578.1,0.0);
 		
-			if(strlen(DeusExHUDBeltWeapons[wep][9]) > 0) { ammotype = CheckInventory(DeusExHUDBeltWeapons[wep][9]); }
+			if(StrCmp(DeusExHUDBeltWeapons[wep][9], "")) { ammotype = CheckInventory(DeusExHUDBeltWeapons[wep][9]); }
 			else ammotype = 0;
 			HudMessage(s:DeusExHUDBeltWeapons[wep][10+ammotype];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20+wep,CR_UNTRANSLATED,292.4 + offset,567.1,0.0);
 		
@@ -738,45 +753,57 @@ Script "DeusEx_DrawHud" (int startIndex)
 	
 	SetHudSize(640,480,0);	
 	SetFont("DXFONTS2");
-	HudMessage(s:"CLIPS";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+9,"DXGren",61.4,456.1,0.0);	
 	HudMessage(s:"AMMO";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+5,"DXGren",61.4,430.1,0.0);	
-	RemoveMessages(startIndex+10,startIndex+10);
-	if((StrCmp(DeusExHUDWeapons[currentWeapon][2], "") && StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1")) || (!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
-	{
-		int dx_ammo = CheckInventory(!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") ? "Clip" : DeusExHUDWeapons[currentWeapon][2]);
-		int dx_ammo2 = GetAmmoCapacity(DeusExHUDWeapons[currentWeapon][1]);
-		if (dx_ammo2 == 0) dx_ammo2 = 1;
-		int dx_ammo3 = dx_ammo / dx_ammo2;
-		if (dx_ammo3 > 999) dx_ammo3 = 999;
-		if (CheckInventory("SamsaraReloadMode") >= 2)
-		HudMessage(d:dx_ammo3;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
-		else
-		HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
-	}
-	else
-	{
-	HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);	
-	} 
-	//Draw clip ammo
+	HudMessage(s:"CLIPS";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+9,"DXGren",61.4,456.1,0.0);	
 	RemoveMessages(startIndex+6,startIndex+6);
-
-	if (strlen(DeusExHUDWeapons[currentWeapon][1]) <= 2)
+	RemoveMessages(startIndex+10,startIndex+10);
+	if (CheckWeapon("DeusEx_AssaultRifle") && CheckInventory("SamsaraDeusExAssaultRifleAmmoType")) // [tv50] yeah I'm lazy
 	{
-	HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);	
-	}
-	else if (CheckInventory("SamsaraReloadMode") >= 2)
-	{
-		int dx_clip = CheckInventory(DeusExHUDWeapons[currentWeapon][1]);
+		// Draw ammo remaining
+		int dx_clip = CheckInventory("RocketAmmo");
 		if(dx_clip > 999) dx_clip = 999;
 		HudMessage(d:dx_clip;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);	
+
+		// Draw reloads remaining
+		HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
+	} else {
+		if (CheckInventory("SamsaraReloadMode") >= 2)
+		{
+			// Draw ammo remaining
+			if (StrCmp(DeusExHUDWeapons[currentWeapon][1], ""))
+			{
+				dx_clip = CheckInventory(DeusExHUDWeapons[currentWeapon][1]);
+				if(dx_clip > 999) dx_clip = 999;
+				HudMessage(d:dx_clip;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);	
+			}
+			else { HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0); }
+
+			// Draw reloads remaining
+			if((StrCmp(DeusExHUDWeapons[currentWeapon][2], "") && StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1")) || (!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") && CheckInventory("PistolModeOn")))
+			{
+				int dx_ammo = CheckInventory(!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") ? "Clip" : DeusExHUDWeapons[currentWeapon][2]);
+				int dx_ammo2 = GetAmmoCapacity(DeusExHUDWeapons[currentWeapon][1]);
+				if (dx_ammo2 == 0) dx_ammo2 = 1;
+				int dx_ammo3 = dx_ammo / dx_ammo2;
+				if (dx_ammo3 > 999) dx_ammo3 = 999;
+				HudMessage(d:dx_ammo3;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
+			}
+			else { HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0); }
+		} else {
+			// Draw ammo remaining
+			if (!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") && !CheckInventory("PistolModeOn")) { HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0); }
+			else if ((StrCmp(DeusExHUDWeapons[currentWeapon][1], "") && !StrCmp(DeusExHUDWeapons[currentWeapon][2], "")) || StrCmp(DeusExHUDWeapons[currentWeapon][2], ""))
+			{
+				dx_clip = StrCmp(DeusExHUDWeapons[currentWeapon][2], "") ? !StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") ? CheckInventory("Clip") : CheckInventory(DeusExHUDWeapons[currentWeapon][2]) : CheckInventory(DeusExHUDWeapons[currentWeapon][1]);
+				if(dx_clip > 999) dx_clip = 999;
+				HudMessage(d:dx_clip;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);	
+			}
+			else { HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0); }
+
+			// Draw reloads remaining
+			HudMessage(s:"N/A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+10,"DXGren",61.4,448.1,0.0);
+		}
 	}
-	else
-	{
-	dx_clip = CheckInventory(!StrCmp(DeusExHUDWeapons[currentWeapon][2], "-1") ? "Clip" : DeusExHUDWeapons[currentWeapon][2]);
-	if(dx_clip > 999) dx_clip = 999;
-	HudMessage(d:dx_clip;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+6,"DXGren",61.4,438.1,0.0);
-	}
-	
 }
 
 Script "DeusEx_DisplayInfoPlaceHolder" (void) clientside
