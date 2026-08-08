@@ -3,3 +3,13 @@ Script "Outlaws_ThrowCounter" (void)
 	SetActivatorToTarget(0);
 	SetResultValue(CheckInventory("Outlaws_ThrowCounter"));
 }
+
+Script "Outlaws_GenerateHitBox" (void)
+{
+	//Spawn the hit box, and change the activator to it.
+	int newTid = UniqueTid();
+	SpawnForced("Outlaws_DynamiteHitBox",GetActorX(0),GetActorY(0),GetActorZ(0),newTid);
+	SetPointerExt(AAPTR_TRACER,0,newTid);
+	SetActivator(newTid);
+	Thing_ChangeTid(newTid,0);
+}
