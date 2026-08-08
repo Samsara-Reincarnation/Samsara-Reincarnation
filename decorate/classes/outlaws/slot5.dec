@@ -1,0 +1,127 @@
+Actor Outlaws_Cannon : SamsaraOutlawsWeapon
+{
+	Weapon.SlotNumber 5
+    Weapon.SelectionOrder 300
+	Weapon.AmmoType1 "Outlaws_CannonMagazine"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "RocketAmmo"
+    Weapon.AmmoGive2 5
+    Tag "Hotchkiss Repeating Cannon"
+	States
+	{
+		Spawn:
+			TNT1 A -1
+			Stop
+		Ready:
+			OL05 A 1 A_WeaponReady(WRF_ALLOWRELOAD)	
+			Loop
+
+		Deselect:
+			TNT1 A 0 A_Lower
+			OL05 A 1 A_Lower
+			Loop
+
+		Select:
+			TNT1 A 0 A_Raise
+			OL05 A 1 A_Raise
+			Loop
+			
+		Fire:
+		AltFire:
+			OL05 B 0 A_JumpIfInventory("Outlaws_CannonMagazine",1,1)
+			Goto Reload
+			OL05 B 0 A_GiveInventory("SamsaraOutlawsCannonAttackHandler")
+			Goto FireFinish
+		FireFinish:
+			OL05 BC 4 Bright
+			OL05 A 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL05 A 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL05 A 0 A_Refire(1)
+			Goto Ready
+			OL05 A 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL05 A 0 A_Refire(1)
+			Goto Ready
+			OL05 A 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL05 A 0 A_Refire(1)
+			Goto Ready
+			OL05 A 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			Goto Ready
+
+		Reload:
+			OL05 A 0 A_JumpIfInventory("Outlaws_CannonMagazine",0,"Ready")
+			OL05 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+			Goto Ready
+			OL05 A 0 A_PlaySound("Outlaws/Cannon/Reload",CHAN_5)
+			OL05 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
+			OL05 A 0 A_GiveInventory("Outlaws_CannonMagazine")
+			OL05 A 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
+			Goto Ready
+	}
+}
+
+actor SamsaraOutlawsCannonAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupAttack
+		
+	  PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_CannonMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Outlaws_CannonMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+		TNT1 A 0 A_Recoil(5)
+		TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",8,20)
+		TNT1 A 0 A_PlaySound("Outlaws/Cannon/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("Outlaws_CannonProjectile",0,false,0,0,0,6)
+        stop
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("Outlaws_CannonProjectile",0,false,0,0,0,6)
+        stop
+    }
+}
+
+actor Outlaws_CannonMagazine : Ammo
+{
+    Inventory.Amount 5
+    Inventory.MaxAmount 5
+    Tag "Hotchkiss Magazine"
+    +IGNORESKILL
+}
+
+Actor Outlaws_CannonProjectile
+{
+	Damage (50)
+	Speed 20
+	Projectile
+	Gravity 0.2
+	Scale 0.5
+	DeathSound "Outlaws/Dynamite/Explosion"
+	-NOGRAVITY
+	+FORCERADIUSDMG
+	States
+	{
+		Spawn:
+			OL00 A 1
+			Loop
+		Death:
+			OL99 N 0 A_Explode(250,128)
+			OL99 N 0 A_NoGravity
+			OL99 HIJKLMN 4 Bright
+			Stop
+	}
+}

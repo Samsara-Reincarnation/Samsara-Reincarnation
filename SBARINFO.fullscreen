@@ -77,33 +77,37 @@ StatusBar Fullscreen, ForceScaled
                     IsSelected " Shotgun " { DrawImage "STY2NUM2", 136, 10; }
 
                     // Slot 3A + Slot 3B
-                    InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
+                    InInventory GotWeapon3 || "Automatic Shotgun" { DrawImage "STYSNUM3", 146, 10; }
 
                     IsSelected "Super Shotgun", "Automatic Shotgun" { DrawImage "STY2NUM3", 146, 10; }
 
                     // Slot 4A + Slot 4B + Slot 4S
-                    InInventory GotWeapon4 || " Minigun " { DrawImage "STYSNUM4", 156, 10; }
+                    InInventory GotWeapon4 || " Flamer " { DrawImage "STYSNUM4", 156, 10; }
+                    else InInventory " Minigun " { DrawImage "STYSNUM4", 156, 10; }
 
                     IsSelected " Chaingun ", " Flamer " { DrawImage "STY2NUM4", 156, 10; }
 
                     IsSelected " Minigun " { DrawImage "STY3NUM4", 156, 10; }
 
                     // Slot 5A + Slot 5B + Slot 5S
-                    InInventory GotWeapon5 || " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
+                    InInventory GotWeapon5 || "Land Mine Layer" { DrawImage "STYSNUM5", 166, 10; }
+                    else InInventory " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
 
                     IsSelected "Rocket Launcher", "Land Mine Layer" { DrawImage "STY2NUM5", 166, 10; }
 
                     IsSelected " GrenadeLauncher " { DrawImage "STY3NUM5", 166, 10; }
 
                     // Slot 6A + Slot 6B + Slot 6S
-                    InInventory GotWeapon6 || " RailGun " { DrawImage "STYSNUM6", 176, 10; }
+                    InInventory GotWeapon6 || "Stunner Rifle" { DrawImage "STYSNUM6", 176, 10; }
+                    else InInventory " RailGun " { DrawImage "STYSNUM6", 176, 10; }
 
                     IsSelected "Plasma Rifle", "Stunner Rifle" { DrawImage "STY2NUM6", 176, 10; }
 
                     IsSelected " RailGun " { DrawImage "STY3NUM6", 176, 10; }
 
                     // Slot 7A + Slot 7B + Slot 7S
-                    InInventory GotWeapon7 || " BFG10K " { DrawImage "STYSNUM7", 186, 10; }
+                    InInventory GotWeapon7 || "Pyro Cannon" { DrawImage "STYSNUM7", 186, 10; }
+                    else InInventory " BFG10K " { DrawImage "STYSNUM7", 186, 10; }
 
                     IsSelected "B.F.G. 9000", "Pyro Cannon" { DrawImage "STY2NUM7", 186, 10; }
 
@@ -705,7 +709,7 @@ StatusBar Fullscreen, ForceScaled
 
                     IsSelected " Rocket Launcher " { DrawImage "STY2NUM5", 166, 10; }
 
-                    // Slot 6
+                    // Slot 6 + Slot 6S
                     InInventory GotWeapon6 || Wolf3DLightningGun { DrawImage "STYSNUM6", 176, 10; }
 
                     IsSelected " Flamethrower " { DrawImage "STY2NUM6", 176, 10; }
@@ -752,22 +756,21 @@ StatusBar Fullscreen, ForceScaled
                         }
                         else InInventory PistolModeOn { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo Clip, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                     }
-                } else IsSelected "  Shotgun  " {
-                    InInventory Duke64UsingExplosiveShells { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ExplosiveShells, 96, 183; }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
-                } else IsSelected RPG {
-                    InInventory Duke64UsingHeatSeeking { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64HeatSeekingRockets, 96, 183; }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
-                } else IsSelected Freezethrower {
-                    InInventory Duke64UsingShrinker { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ShrinkerAmmo, 96, 183; }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 } else {
-                    UsesSecondaryAmmo
+                    InInventory SamsaraDuke64UsingAltAmmo
                     {
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        IsSelected "  Shotgun  " { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ExplosiveShells, 96, 183; }
+                        else IsSelected RPG { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64HeatSeekingRockets, 96, 183; }
+                        else IsSelected Freezethrower { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo Duke64ShrinkerAmmo, 96, 183; }
+                        else { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo2, 96, 183; }
+                    } else {
+                        UsesSecondaryAmmo
+                        {
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        }
+                        else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                     }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 }
             } else { // Original/Life's A Beach
                 IsSelected "Glock 17"
@@ -790,12 +793,16 @@ StatusBar Fullscreen, ForceScaled
                     }
                     else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo2, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 } else {
-                    UsesSecondaryAmmo
+                    InInventory SamsaraDukeUsingAltAmmo { DrawNumber 3, DUKEHUDF, BigNukemBlue, Ammo1, 96, 183; }
+                    else
                     {
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
-                        DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        UsesSecondaryAmmo
+                        {
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo1, 96, 182, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                            DrawNumber 3, DUKEHUDH, BigNukemYellow, Ammo2, 96, 188, 0, BigNukemOrange, 0, BigNukemOrange, 20;
+                        }
+                        else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                     }
-                    else { DrawNumber 3, DUKEHUDF, BigNukemYellow, Ammo1, 96, 183, 0, BigNukemOrange, 0, BigNukemOrange, 20; }
                 }
             }
 
@@ -2214,6 +2221,210 @@ StatusBar Fullscreen, ForceScaled
 
             // Inventory
             DrawSelectedInventory AlwaysShowCounter, HUDFONT_DOOM, 290, 22, 293, 30, Untranslated;
+        } else InInventory KingpinClass {
+            // Rune icon
+            InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 133, Center; }
+
+            // Doom keys
+            InInventory BlueCard { DrawImage "STKEYS0", 86, 172; }
+            InInventory YellowCard { DrawImage "STKEYS1", 98, 172; }
+            InInventory RedCard { DrawImage "STKEYS2", 110, 172; }
+            InInventory BlueSkull { DrawImage "STKEYS3", 86, 182; }
+            InInventory YellowSkull { DrawImage "STKEYS4", 98, 182; }
+            InInventory RedSkull { DrawImage "STKEYS5", 110, 182; }
+            // Chex keys
+            InInventory ChexBlueCard { DrawImage "STKEYS0", 82, 172; }
+            InInventory ChexYellowCard { DrawImage "STKEYS1", 94, 172; }
+            InInventory ChexRedCard { DrawImage "STKEYS2", 105, 172; }
+            InInventory BlueFlemKey { DrawImage "STKEYS3", 82, 182; }
+            InInventory YellowFlemKey { DrawImage "STKEYS4", 94, 182; }
+            InInventory RedFlemKey { DrawImage "STKEYS5", 105, 182; }
+            // Heretic keys
+            InInventory KeyYellow { DrawImage "YKEYICON", 85, 180; }
+            InInventory KeyGreen { DrawImage "GKEYICON", 99, 180; }
+            InInventory KeyBlue { DrawImage "BKEYICON", 112, 180; }
+            // Hexen keys
+            InInventory KeySteel { DrawImage "HEXKEY1", 84, 171; }
+            InInventory KeyCave { DrawImage "HEXKEY2", 84, 181; }
+            InInventory KeyAxe { DrawImage "HEXKEY3", 84, 191; }
+            InInventory KeyFire { DrawImage "HEXKEY4", 94, 171; }
+            InInventory KeyEmerald { DrawImage "HEXKEY5", 94, 181; }
+            InInventory KeyDungeon { DrawImage "HEXKEY6", 94, 191; }
+            InInventory KeySilver { DrawImage "HEXKEY7", 104, 171; }
+            InInventory KeyRusted { DrawImage "HEXKEY8", 104, 181; }
+            InInventory KeyHorn { DrawImage "HEXKEY9", 104, 191; }
+            InInventory KeySwamp { DrawImage "HEXKEYA", 114, 171; }
+            InInventory KeyCastle { DrawImage "HEXKEYB", 114, 181; }
+            // Strife keys
+            InInventory BaseKey { DrawImage "STRIKEY1", 84, 171; }
+            InInventory GovsKey { DrawImage "STRIKEY2", 90, 171; }
+            InInventory PassCard { DrawImage "STRIKEY3", 96, 171; }
+            InInventory IDBadge { DrawImage "STRIKEY4", 103, 171; }
+            InInventory PrisonKey { DrawImage "STRIKEY5", 109, 171; }
+            InInventory SeveredHand { DrawImage "STRIKEY6", 116, 171; }
+            InInventory Power1Key { DrawImage "STRIKEY7", 84, 178; }
+            InInventory Power2Key { DrawImage "STRIKEY8", 90, 178; }
+            InInventory Power3Key { DrawImage "STRIKEY9", 96, 178; }
+            InInventory GoldKey { DrawImage "STRIKEYA", 103, 178; }
+            InInventory IDCard { DrawImage "STRIKEYB", 109, 178; }
+            InInventory SilverKey { DrawImage "STRIKEYC", 116, 178; }
+            InInventory OracleKey { DrawImage "STRIKEYD", 84, 185; }
+            InInventory MilitaryID { DrawImage "STRIKEYE", 90, 185; }
+            InInventory OrderKey { DrawImage "STRIKEYF", 96, 185; }
+            InInventory BrassKey { DrawImage "STRIKEYG", 103, 185; }
+            InInventory RedCrystalKey { DrawImage "STRIKEYH", 109, 185; }
+            InInventory BlueCrystalKey { DrawImage "STRIKEYI", 116, 185; }
+            InInventory ChapelKey { DrawImage "STRIKEYJ", 84, 192; }
+            InInventory CatacombKey { DrawImage "STRIKEYK", 90, 192; }
+            InInventory CoreKey { DrawImage "STRIKEYL", 96, 192; }
+            InInventory MaulerKey { DrawImage "STRIKEYM", 103, 192; }
+            InInventory FactoryKey { DrawImage "STRIKEYN", 109, 192; }
+            InInventory MineKey { DrawImage "STRIKEYO", 116, 192; }
+
+            // Inventory
+            DrawSelectedInventory AlwaysShowCounter, Center, KPHUDS, 160, 184, 166, 193, KPMarble;
+
+            // Equipment
+            InInventory ExpandedHud
+            {
+                // Slot 1
+                InInventory GotWeapon0 { DrawImage "STYSNUM1", 126, 10; }
+
+                IsSelected Kingpin_Crowbar { DrawImage "STY2NUM1", 126, 10; }
+
+                // Slot 2
+                InInventory GotWeapon2 { DrawImage "STYSNUM2", 136, 10; }
+
+                IsSelected Kingpin_Shotgun { DrawImage "STY2NUM2", 136, 10; }
+
+                // Slot 3
+                InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
+
+                IsSelected Kingpin_GrenadeLauncher { DrawImage "STY2NUM3", 146, 10; }
+
+                // Slot 4
+                InInventory GotWeapon4 { DrawImage "STYSNUM4", 156, 10; }
+
+                IsSelected Kingpin_TommyGun { DrawImage "STY2NUM4", 156, 10; }
+
+                // Slot 5
+                InInventory GotWeapon5 { DrawImage "STYSNUM5", 166, 10; }
+
+                IsSelected Kingpin_Bazooka { DrawImage "STY2NUM5", 166, 10; }
+
+                // Slot 6
+                InInventory GotWeapon6 { DrawImage "STYSNUM6", 176, 10; }
+
+                IsSelected Kingpin_Flamethrower { DrawImage "STY2NUM6", 176, 10; }
+
+                // Slot 7
+                InInventory GotWeapon7 { DrawImage "STYSNUM7", 186, 10; }
+
+                IsSelected Kingpin_HMG { DrawImage "STY2NUM7", 186, 10; }
+            }
+        } else InInventory SoFClass {
+            // Rune icon
+            InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 133, Center; }
+
+            // Doom keys
+            InInventory BlueCard { DrawImage "STKEYS0", 224, 178; }
+            InInventory YellowCard { DrawImage "STKEYS1", 232, 178; }
+            InInventory RedCard { DrawImage "STKEYS2", 240, 178; }
+            InInventory BlueSkull { DrawImage "STKEYS3", 224, 185; }
+            InInventory YellowSkull { DrawImage "STKEYS4", 232, 185; }
+            InInventory RedSkull { DrawImage "STKEYS5", 240, 185; }
+            // Chex keys
+            InInventory ChexBlueCard { DrawImage "STKEYS0", 222, 176; }
+            InInventory ChexYellowCard { DrawImage "STKEYS1", 230, 176; }
+            InInventory ChexRedCard { DrawImage "STKEYS2", 238, 176; }
+            InInventory BlueFlemKey { DrawImage "STKEYS3", 222, 186; }
+            InInventory YellowFlemKey { DrawImage "STKEYS4", 230, 186; }
+            InInventory RedFlemKey { DrawImage "STKEYS5", 238, 186; }
+            // Heretic keys
+            InInventory KeyYellow { DrawImage "YKEYICON", 225, 179; }
+            InInventory KeyGreen { DrawImage "GKEYICON", 236, 179; }
+            InInventory KeyBlue { DrawImage "BKEYICON", 230, 186; }
+            // Hexen keys
+            InInventory KeySteel { DrawImage "HEXKEY1", 219, 171; }
+            InInventory KeyCave { DrawImage "HEXKEY2", 219, 181; }
+            InInventory KeyAxe { DrawImage "HEXKEY3", 219, 191; }
+            InInventory KeyFire { DrawImage "HEXKEY4", 227, 171; }
+            InInventory KeyEmerald { DrawImage "HEXKEY5", 227, 181; }
+            InInventory KeyDungeon { DrawImage "HEXKEY6", 227, 191; }
+            InInventory KeySilver { DrawImage "HEXKEY7", 235, 171; }
+            InInventory KeyRusted { DrawImage "HEXKEY8", 235, 181; }
+            InInventory KeyHorn { DrawImage "HEXKEY9", 235, 191; }
+            InInventory KeySwamp { DrawImage "HEXKEYA", 243, 171; }
+            InInventory KeyCastle { DrawImage "HEXKEYB", 243, 181; }
+            // Strife keys
+            InInventory BaseKey { DrawImage "STRIKEY1", 221, 173; }
+            InInventory GovsKey { DrawImage "STRIKEY2", 226, 173; }
+            InInventory PassCard { DrawImage "STRIKEY3", 232, 174; }
+            InInventory IDBadge { DrawImage "STRIKEY4", 238, 173; }
+            InInventory PrisonKey { DrawImage "STRIKEY5", 243, 174; }
+            InInventory SeveredHand { DrawImage "STRIKEY6", 222, 179; }
+            InInventory Power1Key { DrawImage "STRIKEY7", 229, 179; }
+            InInventory Power2Key { DrawImage "STRIKEY8", 234, 179; }
+            InInventory Power3Key { DrawImage "STRIKEY9", 239, 179; }
+            InInventory GoldKey { DrawImage "STRIKEYA", 244, 179; }
+            InInventory IDCard { DrawImage "STRIKEYB", 224, 184; }
+            InInventory SilverKey { DrawImage "STRIKEYC", 229, 184; }
+            InInventory OracleKey { DrawImage "STRIKEYD", 234, 184; }
+            InInventory MilitaryID { DrawImage "STRIKEYE", 239, 183; }
+            InInventory OrderKey { DrawImage "STRIKEYF", 244, 184; }
+            InInventory BrassKey { DrawImage "STRIKEYG", 223, 189; }
+            InInventory RedCrystalKey { DrawImage "STRIKEYH", 229, 189; }
+            InInventory BlueCrystalKey { DrawImage "STRIKEYI", 234, 189; }
+            InInventory ChapelKey { DrawImage "STRIKEYJ", 239, 188; }
+            InInventory CatacombKey { DrawImage "STRIKEYK", 244, 188; }
+            InInventory CoreKey { DrawImage "STRIKEYL", 224, 193; }
+            InInventory MaulerKey { DrawImage "STRIKEYM", 228, 193; }
+            InInventory FactoryKey { DrawImage "STRIKEYN", 233, 194; }
+            InInventory MineKey { DrawImage "STRIKEYO", 238, 194; }
+
+            // Inventory
+            DrawSelectedInventory AlwaysShowCounter, HUDFONT_DOOM, 290, 22, 293, 30, Untranslated;
+
+            // Equipment
+            InInventory ExpandedHud
+            {
+                // Slot 1
+                InInventory GotWeapon0 { DrawImage "STYSNUM1", 126, 10; }
+
+                IsSelected SoF_Pistol2 { DrawImage "STY2NUM1", 126, 10; }
+
+                // Slot 2
+                InInventory GotWeapon2 { DrawImage "STYSNUM2", 136, 10; }
+
+                IsSelected SoF_AssaultRifle { DrawImage "STY2NUM2", 136, 10; }
+
+                // Slot 3
+                InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
+
+                IsSelected SoF_Shotgun { DrawImage "STY2NUM3", 146, 10; }
+
+                // Slot 4
+                InInventory GotWeapon4 { DrawImage "STYSNUM4", 156, 10; }
+
+                IsSelected SoF_Machinegun { DrawImage "STY2NUM4", 156, 10; }
+
+                // Slot 5 + Slot 5S
+                InInventory GotWeapon5 || SoF_Flamegun { DrawImage "STYSNUM5", 166, 10; }
+
+                IsSelected SoF_Rocket { DrawImage "STY2NUM5", 166, 10; }
+
+                IsSelected SoF_Flamegun { DrawImage "STY3NUM5", 166, 10; }
+
+                // Slot 6
+                InInventory GotWeapon6 { DrawImage "STYSNUM6", 176, 10; }
+
+                IsSelected SoF_Slugger { DrawImage "STY2NUM6", 176, 10; }
+
+                // Slot 7
+                InInventory GotWeapon7 { DrawImage "STYSNUM7", 186, 10; }
+
+                IsSelected SoF_MPG { DrawImage "STY2NUM7", 186, 10; }
+            }
         }
     } else { //Default HUD for everyone else or if the legacy fullscreen HUD setting is on
         InInventory not BondWatchToken
@@ -5999,8 +6210,15 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected SoF_AssaultRifle { DrawImage "STY2NUM2", 136, 10; }
 
                 // Slot 3
-                InInventory CatacombClass
+                InInventory DoomguyClass
                 {
+                    InInventory DoomClassMode, 2 // Stronghold
+                    {
+                        InInventory GotWeapon3 || "Automatic Shotgun" { DrawImage "STYSNUM3", 146, 10; }
+                    } else { // Original/Doom 64
+                        InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
+                    }
+                } else InInventory CatacombClass {
                     InInventory Catacomb_BurstsQuickSpell { DrawImage "STYSNUM3", 146, 10; }
                 } else InInventory RTCWClass {
                     InInventory GotWeapon3 || RTCW_Snooper { DrawImage "STYSNUM3", 146, 10; }
@@ -6059,7 +6277,13 @@ StatusBar Fullscreen, ForceScaled
                 // Slot 4 + Slot 4S
                 InInventory DoomguyClass
                 {
-                    InInventory GotWeapon4 || " Minigun " { DrawImage "STYSNUM4", 156, 10; }
+                    InInventory DoomClassMode, 2 // Stronghold
+                    {
+                        InInventory GotWeapon4 || " Flamer " { DrawImage "STYSNUM4", 156, 10; }
+                        else InInventory " Minigun " { DrawImage "STYSNUM4", 156, 10; }
+                    } else { // Original/Doom 64
+                        InInventory GotWeapon4 || " Minigun " { DrawImage "STYSNUM4", 156, 10; }
+                    }
                 } else InInventory ChexClass {
                     InInventory GotWeapon4 || "Ultra Rapid Zorcher" { DrawImage "STYSNUM4", 156, 10; }
                 } else InInventory WolfenClass {
@@ -6190,7 +6414,13 @@ StatusBar Fullscreen, ForceScaled
                 // Slot 5 + Slot 5S
                 InInventory DoomguyClass
                 {
-                    InInventory GotWeapon5 || " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
+                    InInventory DoomClassMode, 2 // Stronghold
+                    {
+                        InInventory GotWeapon5 || "Land Mine Layer" { DrawImage "STYSNUM5", 166, 10; }
+                        else InInventory " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
+                    } else { // Original/Doom 64
+                        InInventory GotWeapon5 || " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
+                    }
                 } else InInventory ChexClass {
                     InInventory GotWeapon5 || "Zorch Launcher" { DrawImage "STYSNUM5", 166, 10; }
                 } else InInventory DukeClass {
@@ -6293,7 +6523,13 @@ StatusBar Fullscreen, ForceScaled
                 // Slot 6 + Slot 6S
                 InInventory DoomguyClass
                 {
-                    InInventory GotWeapon6 || " RailGun " { DrawImage "STYSNUM6", 176, 10; }
+                    InInventory DoomClassMode, 2 // Stronghold
+                    {
+                        InInventory GotWeapon6 || "Stunner Rifle" { DrawImage "STYSNUM6", 176, 10; }
+                        else InInventory " RailGun " { DrawImage "STYSNUM6", 176, 10; }
+                    } else { // Original/Doom 64
+                        InInventory GotWeapon6 || " RailGun " { DrawImage "STYSNUM6", 176, 10; }
+                    }
                 } else InInventory ChexClass {
                     InInventory GotWeapon6 || "Gigazorcher 2100" { DrawImage "STYSNUM6", 176, 10; }
                 } else InInventory CorvusClass {
@@ -6421,7 +6657,8 @@ StatusBar Fullscreen, ForceScaled
                     {
                         InInventory DoomClassMode, 2 // Stronghold
                         {
-                            InInventory GotWeapon7 || " BFG10K " { DrawImage "STYSNUM7", 186, 10; }
+                            InInventory GotWeapon7 || "Pyro Cannon" { DrawImage "STYSNUM7", 186, 10; }
+                            else InInventory " BFG10K " { DrawImage "STYSNUM7", 186, 10; }
                         } else InInventory DoomClassMode, 1 { // Doom 64
                             InInventory GotWeapon7 || " Unmaker " { DrawImage "STYSNUM7", 186, 10; }
                             else InInventory " BFG10K " { DrawImage "STYSNUM7", 186, 10; }

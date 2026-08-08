@@ -479,6 +479,10 @@ script "SamsaraDecorate" (int choice, int arg1, int arg2) //215 - SAMSARA_DECORA
     case 73:
         result = GetCVar("samsara_bossexpand");
         break;
+
+    case 74:
+        result = isPlayerOrBot(0);
+        break;
 	}
 
 	SetResultValue(result);
@@ -6748,28 +6752,6 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
                 break;
 
-              case SLOT_MINIGUN:
-                if (!CheckInventory("Golden Desert Eagle"))
-                {
-                    GiveInventory("Golden Desert Eagle", 1);
-                    GiveInventory("Clip", dmextraammo ? 60 / tossedammo * 5 / 2 : 60 / tossedammo);
-                    result = 1;
-                } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("Clip", 60 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("SamsaraDukeHasGoldenDesertEagle", 1);
-                    GiveInventory("SamsaraDuke64HasSlot4", 1);
-                }
-                break;
-
               case SLOT_ROCKETLAUNCHER:
                 if (!CheckInventory("RPG"))
                 {
@@ -6824,6 +6806,28 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 {
                     GiveInventory("SamsaraDukeHasSlot7", 1);
                     GiveInventory("SamsaraDuke64HasSlot7", 1);
+                }
+                break;
+
+              case SLOT_MINIGUN:
+                if (!CheckInventory("Golden Desert Eagle"))
+                {
+                    GiveInventory("Golden Desert Eagle", 1);
+                    GiveInventory("Clip", dmextraammo ? 60 / tossedammo * 5 / 2 : 60 / tossedammo);
+                    result = 1;
+                } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Clip", 60 / tossedammo);
+                    result = 1;
+                }
+
+                if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("SamsaraDukeHasGoldenDesertEagle", 1);
+                    GiveInventory("SamsaraDuke64HasSlot4", 1);
                 }
                 break;
 
@@ -13944,6 +13948,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_heromusic_deusex", false);
 		SetCVar("samsara_cl_heromusic_kingpin", false);
 		SetCVar("samsara_cl_heromusic_sof", false);
+		SetCVar("samsara_cl_heromusic_outlaws", false);
 		SetCVar("samsara_cl_wolf3dimf", false);
 		SetCVar("samsara_cl_hexcd", false);
 		SetCVar("samsara_cl_rott13ost", false);
@@ -14123,6 +14128,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_heromusic_deusex", false);
 		SetCVar("samsara_cl_heromusic_kingpin", false);
 		SetCVar("samsara_cl_heromusic_sof", false);
+		SetCVar("samsara_cl_heromusic_outlaws", false);
 		SetCVar("samsara_cl_wolf3dimf", false);
 		SetCVar("samsara_cl_hexcd", false);
 		SetCVar("samsara_cl_rott13ost", false);
@@ -14302,6 +14308,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_heromusic_deusex", false);
 		SetCVar("samsara_cl_heromusic_kingpin", false);
 		SetCVar("samsara_cl_heromusic_sof", false);
+		SetCVar("samsara_cl_heromusic_outlaws", false);
 		SetCVar("samsara_cl_wolf3dimf", false);
 		SetCVar("samsara_cl_hexcd", false);
 		SetCVar("samsara_cl_rott13ost", false);
@@ -14482,6 +14489,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_heromusic_deusex", false);
 		SetCVar("samsara_cl_heromusic_kingpin", false);
 		SetCVar("samsara_cl_heromusic_sof", false);
+		SetCVar("samsara_cl_heromusic_outlaws", false);
 		SetCVar("samsara_cl_wolf3dimf", false);
 		SetCVar("samsara_cl_hexcd", false);
 		SetCVar("samsara_cl_rott13ost", false);
@@ -14661,6 +14669,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_heromusic_deusex", false);
 		SetCVar("samsara_cl_heromusic_kingpin", false);
 		SetCVar("samsara_cl_heromusic_sof", false);
+		SetCVar("samsara_cl_heromusic_outlaws", false);
 		SetCVar("samsara_cl_wolf3dimf", false);
 		SetCVar("samsara_cl_hexcd", false);
 		SetCVar("samsara_cl_rott13ost", false);
@@ -16529,7 +16538,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		case 101: // tehvappy50's Settings (mainly tweaked for invasion on the zandronum side)
 
 		// General Options
-		SetCVar("samsara_jumpmod", 0);
+		SetCVar("samsara_jumpmod", isZDoom() ? 0 : (currentiwad == GAME_HEXEN ? 9 : 0));
 		SetCVar("samsara_armormode", isZDoom() ? 0 : 3);
 		SetCVar("samsara_armorpickupbehavior", 2);
 		SetCVar("samsara_speedmod", 0);
@@ -18320,6 +18329,40 @@ script "SamsaraArmorCapCheck" (int armortype, int armorcap, int maxbonuscap, int
     SetResultValue(result);
 }
 
+script "SamsaraArmorCapResultChecker" (int armortype, int ignoremaxboost) // basically used for the pawn-o-matic; will likely not expand on this script further
+{
+    int result = 0;
+
+    // initialize armor mode
+    SetArmorMode();
+
+    // adjust variable
+    if (CheckInventory("SamsaraHasProsperity")) { result = 250; }
+    else if (GetCVar("samsara_noarmorcap")) { result = INTMAX; }
+    else
+    {
+        result = ArmorAmounts[ArmorMode][armortype][1];
+
+        if (result > 0) // check if we're not using the None armor type
+        {
+            // raise cap in accordance to multi runes' prosperity_max_health cvar
+            if (CheckInventory("PowerProsperity1") && GetCVar("prosperity_max_health") > result) { result = GetCVar("prosperity_max_health"); } // only take effect if cvar is greater than variable
+
+            // if we're allowed to, take max armor boost into account
+            if (!ignoremaxboost)
+            {
+                int armormaxbonusmax = ArmorAmounts[ArmorMode][armortype][4];
+
+                if (CheckInventory("SamsaraHasMaxArmor") > armormaxbonusmax) { result += CheckInventory("SamsaraHasMaxArmor"); }
+                else if (armormaxbonusmax > 0) { result += armormaxbonusmax; }
+            }
+        }
+    }
+
+    // let scripts read off this
+    SetResultValue(result);
+}
+
 script "SamsaraPlayerMaxArmorAdjust" (int armortype, int maxbonusadd, int maxbonuscap)
 {
     // initialize armor mode
@@ -18691,6 +18734,6 @@ script "SamsaraIceDeathScreenBlend" (void) CLIENTSIDE
         Delay(1);
     }
 
-    SetInventory("PowerSamsaraIceDeathBlendHexen", 0);
     SetInventory("PowerSamsaraIceDeathBlendZDoom", 0);
+    SetInventory("PowerSamsaraIceDeathBlendHexen", 0);
 }
