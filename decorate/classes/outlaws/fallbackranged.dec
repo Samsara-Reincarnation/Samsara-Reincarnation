@@ -1,0 +1,167 @@
+Actor Outlaws_Revolver : SamsaraOutlawsWeapon
+{
+	Weapon.SlotNumber 1
+    Weapon.SelectionOrder 900
+	Weapon.AmmoType1 "Outlaws_RevolverMagazine"
+    Weapon.AmmoUse1 1
+    Weapon.AmmoType2 "Clip"
+    Weapon.AmmoGive2 50
+    Tag "Pistol"
+    +WIMPY_WEAPON
+	+NOALERT
+	States
+	{
+		Spawn:
+			TNT1 A -1
+			Stop
+		Ready:
+			OL00 C 1 A_WeaponReady(WRF_ALLOWRELOAD)	
+			loop
+
+		Deselect:
+			TNT1 A 0 A_Lower
+			OL00 C 1 A_Lower
+			Loop
+
+		Select:
+			TNT1 A 0 A_Raise
+			OL00 C 1 A_Raise
+			Loop
+			
+		Fire:
+			OL00 D 0 A_JumpIfInventory("Outlaws_RevolverMagazine",1,1)
+			Goto Reload
+			OL00 D 0 A_GiveInventory("SamsaraOutlawsRevolverAttackHandler")
+			OL00 DE 4 Bright
+			OL00 F 4 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			//Semi auto fires faster!
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			OL00 C 0 A_Refire(1)
+			Goto Ready
+			OL00 C 1 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE)
+			Goto Ready
+			
+		AltFire:
+			OL00 D 0 A_JumpIfInventory("Outlaws_RevolverMagazine",1,1)
+			Goto Reload
+			OL00 D 0 A_GiveInventory("SamsaraOutlawsRevolverAltAttackHandler")
+			OL00 IJ 4 Bright
+			Goto Ready
+			
+		Reload:
+			OL00 G 0 A_JumpIfInventory("Outlaws_RevolverMagazine",0,"Ready")
+			OL00 G 0 A_JumpIfInventory("Clip",1,1)
+			Goto Ready
+			OL00 G 0 A_PlaySound("Outlaws/Pistol/Reload",CHAN_5)
+			OL00 G 0 A_TakeInventory("Clip",1,TIF_NOTAKEINFINITE)
+			OL00 G 0 A_GiveInventory("Outlaws_RevolverMagazine")
+			OL00 G 0 A_JumpIfInventory("Outlaws_RevolverMagazine",0,"ReloadFull")
+			OL00 G 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
+			Goto ReloadFinish
+		ReloadFull:
+			OL00 H 8 A_WeaponReady(WRF_DISABLESWITCH|WRF_NOFIRE|WRF_NOBOB)
+			Goto Ready
+		//Allow reloading again, here
+		ReloadFinish:
+			OL00 G 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
+			Goto Ready
+	}
+}
+
+actor SamsaraOutlawsRevolverAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+		
+	  PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_RevolverMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Outlaws_RevolverMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+		TNT1 A 0 A_PlaySound("Outlaws/Pistol/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(4,4,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        stop
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(4,4,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        stop
+    }
+}
+
+actor SamsaraOutlawsRevolverAltAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,1)
+        goto PickupAttack
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Clip",1)
+        goto PickupAttack
+		
+	  PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_RevolverMagazine",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Outlaws_RevolverMagazine",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+		TNT1 A 0 A_PlaySound("Outlaws/Pistol/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireBullets(8,8,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        stop
+      PickupAttackCoop:
+        TNT1 A 0 A_FireBullets(8,8,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        stop
+    }
+}
+
+actor Outlaws_RevolverMagazine : Ammo
+{
+    Inventory.Amount 6
+    Inventory.MaxAmount 6
+    Tag "Revolver Magazine"
+    +IGNORESKILL
+}

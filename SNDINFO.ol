@@ -1,0 +1,43 @@
+$playersound			OLPlayer	male	*pain100	"Sounds/outlaws/player/outlaws_HIT.WAV"
+$playersounddup         OLPlayer   male	*pain75		*pain100
+$playersounddup         OLPlayer	male	*pain50		*pain100
+$playersounddup         OLPlayer	male	*pain25		*pain100
+$playersound			OLPlayer	male	*death		"Sounds/outlaws/player/outlaws_JADIE.WAV"
+$playersound 			OLPlayer   male    *taunt      silence //todo: find good taunt sounds that sound like the marshal 
+$playersound			OLPlayer	male	*gibbed		"Sounds/outlaws/player/outlaws_JADIE.WAV"
+$playersound			OLPlayer	male	*xdeath		"Sounds/outlaws/player/outlaws_JADIE.WAV"
+$playersound			OLPlayer	male	*grunt		"Sounds/outlaws/player/outlaws_LANDLITE.WAV"
+$playersound			OLPlayer	male	*land		"Sounds/outlaws/player/outlaws_LAND.WAV"
+$playersound			OLPlayer	male	*usefail	silence
+$playersound            OLPlayer   male    *poison    	"Sounds/outlaws/player/outlaws_CHOKE.WAV"
+$playersounddup			OLPlayer	male	*wimpydeath	*death
+$playersounddup			OLPlayer	male	*crazydeath	*death
+$playersounddup			OLPlayer	male	*burndeath	*death
+$playersounddup 		OLPlayer   male	*puzzfail	*usefail
+$playersound 		OLPlayer   male	*falling	"Sounds/outlaws/player/outlaws_JAFALL.WAV"
+$playersound	OLPlayer    male	*dive			"Sounds/outlaws/player/outlaws_splash.wav"
+$playersound	OLPlayer    male	*surface		"Sounds/outlaws/player/outlaws_breathe.wav"
+$playeralias	OLPlayer    male	*gasp			"Sounds/outlaws/player/outlaws_breathe.wav"
+
+Outlaws/Fist/Fire		"Sounds/Outlaws/outlaws_throw.wav"
+Outlaws/Fist/Hit		"Sounds/Outlaws/outlaws_connect.wav"
+
+Outlaws/Pistol/Fire		"Sounds/Outlaws/outlaws_pistol2.wav"
+Outlaws/Pistol/Reload	"Sounds/Outlaws/outlaws_preload.wav"
+
+Outlaws/Shotgun/Fire	"Sounds/Outlaws/outlaws_single.wav"
+Outlaws/Shotgun/Reload	"Sounds/Outlaws/outlaws_sreload.wav"
+
+Outlaws/Double/Fire		"Sounds/Outlaws/outlaws_double.wav"
+Outlaws/Sawed/Fire		"Sounds/Outlaws/outlaws_sawed.wav"
+
+Outlaws/Rifle/Fire		"Sounds/Outlaws/outlaws_rifle.wav"
+Outlaws/Rifle/Reload	"Sounds/Outlaws/outlaws_rreload.wav"
+
+Outlaws/Cannon/Fire		"Sounds/Outlaws/outlaws_badgun.wav"
+Outlaws/Cannon/Reload	"Sounds/Outlaws/outlaws_creload.wav"
+
+Outlaws/GatlingGun/Fire	"Sounds/Outlaws/outlaws_GatlShot.WAV"
+
+Outlaws/Ricochet			"Sounds/Outlaws/outlaws_ricochet.wav"
+Outlaws/Dynamite/Explosion	"Sounds/Outlaws/outlaws_dynamite.wav"
