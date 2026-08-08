@@ -155,34 +155,32 @@ Script "Kingpin_Player" (void)
 	{
 		int velX = GetActorVelX(0)>>16;
 		int velY = GetActorVelY(0)>>16;
-		
+
+		SetAmmoCapacity("Kingpin_TommyGunMagazine",50*(1+CheckInventory("Kingpin_TommyGun_MagazineCapacity")));
+		SetAmmoCapacity("Kingpin_GrenadeLauncherMagazine",3*(1+CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacity")));
+
+		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("Kingpin_Shotgun_DoubleBarrelAlternate", CheckInventory("Kingpin_ShotgunMagazine") % 2); }
+
+		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+		{
+			UsingFullScreen = true;
+			ACS_NamedExecuteWithResult("Kingpin_DrawHud",startIndex,0,0,0);
+		}
+		//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
+		else if(UsingFullScreen == true)
+		{
+			RemoveMessages(startIndex,startIndex+40);
+			UsingFullScreen = false;
+		}
+
 		if(currentplayeraction >= 0)
 		{
-			SetAmmoCapacity("Kingpin_TommyGunMagazine",50*(1+CheckInventory("Kingpin_TommyGun_MagazineCapacity")));
-			SetAmmoCapacity("Kingpin_GrenadeLauncherMagazine",3*(1+CheckInventory("Kingpin_GrenadeLauncher_MagazineCapacity")));
-
-			if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("Kingpin_Shotgun_DoubleBarrelAlternate", CheckInventory("Kingpin_ShotgunMagazine") % 2); }
-
 			if (CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
 			{
 				if (isSinglePlayer() || isCoop()) { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuffCoop", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
 				else { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuff", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
 			}
 
-			if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
-			{
-				UsingFullScreen = true;
-				ACS_NamedExecuteWithResult("Kingpin_DrawHud",startIndex,0,0,0);
-			}
-			//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
-			else if(UsingFullScreen == true)
-			{
-				RemoveMessages(startIndex,startIndex+40);
-				UsingFullScreen = false;
-			}
-				
-			else { HudMessage(s:"";HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP,5,CR_UNTRANSLATED,0.1,0.9,0.0); }
-			
 			if(CheckInventory("Kingpin_ResetPlayerAction")) 
 			{ 
 				currentplayeraction = -1; 

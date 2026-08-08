@@ -333,6 +333,21 @@ Script "DeusEx_Enter" (void)
 		int running = abs(GetPlayerInput(-1, INPUT_FORWARDMOVE)) > 6400 || abs(GetPlayerInput(-1, INPUT_SIDEMOVE)) > 6144;
 		int speedmod, augsActive, lastAugs;
 
+		if (isDead(0)) // [tv50] lazy of me
+		{
+			if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+			{
+				UsingFullScreen = true;
+				ACS_NamedExecuteWithResult("DeusEx_DrawHud",startIndex,0,0,0);
+			}
+			//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
+			else if(UsingFullScreen == true)
+			{
+				RemoveMessages(startIndex,startIndex+120);
+				UsingFullScreen = false;
+			}
+		}
+
 		while ((ClassifyActor(0) & ACTOR_ALIVE))
 		{
             SetInventory("DeusEx_Running", keyDown(BT_FORWARD) && running);
