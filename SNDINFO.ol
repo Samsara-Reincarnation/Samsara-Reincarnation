@@ -41,3 +41,7 @@ Outlaws/GatlingGun/Fire	"Sounds/Outlaws/outlaws_GatlShot.WAV"
 
 Outlaws/Ricochet			"Sounds/Outlaws/outlaws_ricochet.wav"
 Outlaws/Dynamite/Explosion	"Sounds/Outlaws/outlaws_dynamite.wav"
+
+Outlaws/Knife/Jab			"Sounds/Outlaws/outlaws_jab.wav"
+Outlaws/Knife/Hit			"Sounds/Outlaws/outlaws_knifehit.wav"
+Outlaws/Knife/Throw			"Sounds/Outlaws/outlaws_knifeby.wav"

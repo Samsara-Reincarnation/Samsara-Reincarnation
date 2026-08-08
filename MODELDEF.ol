@@ -8,3 +8,48 @@ Model Outlaws_CannonProjectile
 
 	FrameIndex OL00 A 0 0
 }
+
+Model Outlaws_KnifeProjectile
+{
+	Path "Models/Outlaws"
+	Model 0 "knife.md3"
+	Scale 8.0 8.0 8.0
+	PitchOffset -90
+	INHERITACTORPITCH
+
+	FrameIndex OL00 A 0 0
+}
+
+Model Outlaws_KnifePickup
+{
+	Path "Models/Outlaws"
+	Model 0 "knife.md3"
+	Scale 8.0 8.0 8.0
+	PitchOffset -90
+	INHERITACTORPITCH
+
+	FrameIndex OL00 A 0 0
+}
+
+Model Outlaws_DynamiteProjectile
+{
+	Path "Models/Outlaws"
+	Model 0 "dynamite.md3"
+	Scale 8.0 8.0 8.0
+	PitchOffset -90
+	INHERITACTORPITCH
+
+	FrameIndex OL00 A 0 0
+}
+
+Model Outlaws_DynamiteShootable
+{
+	Path "Models/Outlaws"
+	Model 0 "dynamite.md3"
+	Scale 8.0 8.0 8.0
+	PitchOffset -90
+	INHERITACTORPITCH
+
+	FrameIndex OL00 A 0 0
+}
+
