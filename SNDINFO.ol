@@ -48,4 +48,6 @@ Outlaws/Knife/Throw			"Sounds/Outlaws/outlaws_knifeby.wav"
 
 Outlaws/Dynamite/Fuse		"Sounds/Outlaws/outlaws_fuse.wav"
 
-Outlaws/Secret "Sounds/Outlaws/outlaws_POWERUP.WAV"
+Outlaws/ItemPickup "Sounds/Outlaws/outlaws_POWERUP.WAV"
+
+$alias Outlaws/Secret Outlaws/ItemPickup

@@ -2507,6 +2507,7 @@ actor AmmoBackpack : SamsaraAmmoPickup
         TNT1 A 0 A_JumpIfInventory("Q3Class",1,"PickupDisplayQuake3")
         TNT1 A 0 A_JumpIfInventory("DescentClass",1,"PickupDisplayDescent")
         TNT1 A 0 A_JumpIfInventory("DeusExClass",1,"PickupDisplayDeusEx")
+        TNT1 A 0 A_JumpIfInventory("OutlawsClass",1,"PickupDisplayOutlaws")
         TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
         goto PickupDisplayDefault
 
@@ -2609,6 +2610,13 @@ actor AmmoBackpack : SamsaraAmmoPickup
         //TNT1 A 0 A_GiveInventory("SamsaraAmmoPickupBlend")
         //TNT1 A 0 A_PlaySound("DeusEx/WeaponPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBackpackPickupDisplayHexenHack", 9)
+        goto PickupSuccess
+
+      PickupDisplayOutlaws:
+        //TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 3, 12, 0)
+        //TNT1 A 0 A_GiveInventory("SamsaraAmmoPickupBlend")
+        //TNT1 A 0 A_PlaySound("Outlaws/ItemPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBackpackPickupDisplayHexenHack", 10)
         goto PickupSuccess
 
       PickupSuccess:

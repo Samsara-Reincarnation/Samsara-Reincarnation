@@ -15,10 +15,10 @@ Actor Outlaws_Rifle : SamsaraOutlawsWeapon
 			Stop
 		Ready:
 			OL04 A 0 A_JumpIfInventory("Outlaws_RifleZoomed",1,"ReadyAlt")
-			OL04 A 1 A_WeaponReady(WRF_ALLOWRELOAD)	
+			OL04 A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
 			Loop
 		ReadyAlt:
-			OL04 G 1 A_WeaponReady(WRF_ALLOWRELOAD)	
+			OL04 G 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
 			Loop
 
 		Deselect:
@@ -38,19 +38,22 @@ Actor Outlaws_Rifle : SamsaraOutlawsWeapon
 			OL04 B 0 A_JumpIfInventory("Outlaws_RifleZoomed",1,"FireFinishedZoom")
 			Goto FireFinish
 		AltFire:
+		Zoom:
 			OL04 G 0 A_JumpIfInventory("Outlaws_RifleZoomed",1,"AltFireUnzoom")
 			OL04 G 0 A_ZoomFactor(4)
 			OL04 G 0 A_GiveInventory("Outlaws_RifleZoomed")
 		ZoomInHold:
 			OL04 G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			OL04 G 0 A_Refire("ZoomInHold")
+			OL04 G 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"ZoomInHold")
+			OL04 G 0 A_JumpIfInventory("SamsaraSynthFireZoom",1,"ZoomInHold")
 			Goto Ready
 		AltFireUnzoom:
-			OL04 G 0 A_ZoomFactor(1)
-			OL04 G 0 A_TakeInventory("Outlaws_RifleZoomed")
+			OL04 A 0 A_ZoomFactor(1)
+			OL04 A 0 A_TakeInventory("Outlaws_RifleZoomed")
 		ZoomOutHold:
-			OL04 G 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			OL04 G 0 A_Refire("ZoomOutHold")
+			OL04 A 1 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+			OL04 A 0 A_JumpIfInventory("SamsaraSynthFireRight",1,"ZoomOutHold")
+			OL04 A 0 A_JumpIfInventory("SamsaraSynthFireZoom",1,"ZoomOutHold")
 			Goto Ready
 		FireFinish:
 			OL04 BC 4 Bright
@@ -96,7 +99,7 @@ Actor Outlaws_Rifle : SamsaraOutlawsWeapon
 			Goto ReloadFinish
 		//Allow reloading again, here
 		ReloadFinish:
-			OL04 E 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
+			OL04 E 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM|WRF_NOBOB)
 			Goto Ready	
 	}
 }

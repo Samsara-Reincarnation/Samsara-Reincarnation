@@ -2,7 +2,7 @@ Actor Outlaws_DynamiteExists : TemporaryBoolean {}
 Actor Outlaws_DynamiteFuse : TemporaryCounter { Inventory.MaxAmount 35 }
 Actor Outlaws_Dynamite : SamsaraOutlawsWeapon
 {
-	Weapon.SlotNumber 1
+	Weapon.SlotNumber 9
     Weapon.SelectionOrder 500
 	Weapon.AmmoType1 "RocketAmmo"
     Weapon.AmmoUse1 1
@@ -237,6 +237,7 @@ Actor Outlaws_DynamiteHitBox
 	Health 5
 	Radius 8
 	Height 16
+    Tag "Dynamite"
 	+THRUACTORS
 	+SHOOTABLE
 	-SOLID
@@ -252,7 +253,7 @@ Actor Outlaws_DynamiteHitBox
 			TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
 			Loop
 		Death:
-			TNT1 A 1 A_KillTracer("None",KILS_KILLMISSILES)
+			TNT1 A 1 A_KillTracer("None",KILS_KILLMISSILES) // TO BE REDONE SINCE THIS ISN'T IN ZANDRONUM WHAT A SURPRISE
 			Stop
 		Remove:
 			TNT1 A 1
