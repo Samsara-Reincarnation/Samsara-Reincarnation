@@ -13,3 +13,13 @@ Script "Outlaws_GenerateHitBox" (void)
 	SetActivator(newTid);
 	Thing_ChangeTid(newTid,0);
 }
+
+Script "Outlaws_TNTAddFuse" (void)
+{
+	//Add the fuse to the TNT
+	int newTid = UniqueTid();
+	Thing_ChangeTid(0,newTid);
+	SetActivatorToTarget(0);
+	SetActorProperty(newTid,APROP_REACTIONTIME,CheckInventory("Outlaws_DynamiteFuse")*4);
+	Thing_ChangeTid(newTid,0);
+}

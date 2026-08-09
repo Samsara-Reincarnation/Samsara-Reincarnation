@@ -46,4 +46,6 @@ Outlaws/Knife/Jab			"Sounds/Outlaws/outlaws_jab.wav"
 Outlaws/Knife/Hit			"Sounds/Outlaws/outlaws_knifehit.wav"
 Outlaws/Knife/Throw			"Sounds/Outlaws/outlaws_knifeby.wav"
 
+Outlaws/Dynamite/Fuse		"Sounds/Outlaws/outlaws_fuse.wav"
+
 Outlaws/Secret "Sounds/Outlaws/outlaws_POWERUP.WAV"
