@@ -4634,7 +4634,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_BFG10K:
-            if (startmode != 0) { loadoutchoice = GetCVar("samsara_bitterman_slot7s") > 0 ? GetCVar("samsara_bitterman_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_bitterman_slot7s"); }
+            if (startmode != 0) { loadoutchoice = GetCVar("samsara_q2_slot7s") > 0 ? GetCVar("samsara_q2_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_q2_slot7s"); }
             else { loadoutchoice = CheckInventory("SamsaraQuake2LoadoutSlot7S"); }
             break;
         }
@@ -4705,6 +4705,19 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutSlot6S"); }
                 break;
             }
+            break;
+        }
+        break;
+
+      case CLASS_OUTLAWS:
+        switch (slot)
+        {
+          default:
+            break;
+
+          case SLOT_BFG10K:
+            if (startmode != 0) { loadoutchoice = GetCVar("samsara_anderson_slot3") > 0 ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3"); }
+            else { loadoutchoice = CheckInventory("SamsaraOutlawsLoadoutSlot3"); }
             break;
         }
         break;
@@ -10739,6 +10752,49 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
         }
         break;
+
+      case CLASS_OUTLAWS:
+        switch (slot)
+        {
+          default:
+            result = -1;
+            break;
+
+          case SLOT_SUPERSHOTGUN:
+            hasweapon = CheckInventory("Outlaws_SawedOffShotgun") || CheckInventory("Outlaws_DoubleBarrelShotgun");
+
+            if (loadoutchoice <= 0 || completeloadout) // Sawed-Off Shotgun
+            {
+                if (!hasweapon)
+                {
+                    GiveInventory("Outlaws_SawedOffShotgun", 1);
+                    GiveInventory("Shell", dmextraammo ? 6 / tossedammo * 5 / 2 : 6 / tossedammo);
+                    result = 1;
+                } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Shell", 6 / tossedammo);
+                    result = 1;
+                }
+
+                if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
+            }
+
+            if (loadoutchoice >= 1 || completeloadout) // Double Barrel Shotgun
+            {
+                if (!hasweapon)
+                {
+                    GiveInventory("Outlaws_DoubleBarrelShotgun", 1);
+                    GiveInventory("Shell", dmextraammo ? 6 / tossedammo * 5 / 2 : 6 / tossedammo);
+                    result = 1;
+                } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Shell", 6 / tossedammo);
+                    result = 1;
+                }
+
+                if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
+            }
+            break;
+        }
+        break;
     }
 
     SetResultValue(result);
@@ -14021,7 +14077,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_shephard_unique1", true);
 		SetCVar("samsara_cl_shephard_unique2", true);
 		SetCVar("samsara_cl_shephard_unique3", true);
-		SetCVar("samsara_cl_bitterman_slot7s", false);
+		SetCVar("samsara_cl_q2_slot7s", false);
 		SetCVar("samsara_cl_bond_fallbackranged", 0);
 		SetCVar("samsara_cl_bond_slot1", false);
 		SetCVar("samsara_cl_bond_slot3", false);
@@ -14033,6 +14089,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_bondgf_slot4s", false);
 		SetCVar("samsara_cl_bondgf_slot6s", false);
 		SetCVar("samsara_cl_bondgf_unique2", 0);
+		SetCVar("samsara_cl_anderson_slot3", false);
 		break;
 
 		case 1: // Samsara
@@ -14201,7 +14258,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_shephard_unique1", true);
 		SetCVar("samsara_cl_shephard_unique2", true);
 		SetCVar("samsara_cl_shephard_unique3", true);
-		SetCVar("samsara_cl_bitterman_slot7s", false);
+		SetCVar("samsara_cl_q2_slot7s", false);
 		SetCVar("samsara_cl_bond_fallbackranged", 0);
 		SetCVar("samsara_cl_bond_slot1", false);
 		SetCVar("samsara_cl_bond_slot3", false);
@@ -14213,6 +14270,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_bondgf_slot4s", false);
 		SetCVar("samsara_cl_bondgf_slot6s", false);
 		SetCVar("samsara_cl_bondgf_unique2", 0);
+		SetCVar("samsara_cl_anderson_slot3", false);
 		break;
 
 		case 2: // Samsara Reincarnation
@@ -14381,7 +14439,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_shephard_unique1", true);
 		SetCVar("samsara_cl_shephard_unique2", true);
 		SetCVar("samsara_cl_shephard_unique3", true);
-		SetCVar("samsara_cl_bitterman_slot7s", false);
+		SetCVar("samsara_cl_q2_slot7s", false);
 		SetCVar("samsara_cl_bond_fallbackranged", 0);
 		SetCVar("samsara_cl_bond_slot1", false);
 		SetCVar("samsara_cl_bond_slot3", false);
@@ -14393,6 +14451,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_bondgf_slot4s", false);
 		SetCVar("samsara_cl_bondgf_slot6s", false);
 		SetCVar("samsara_cl_bondgf_unique2", 0);
+		SetCVar("samsara_cl_anderson_slot3", false);
 		break;
 
 		// Secret presets
@@ -14562,7 +14621,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_shephard_unique1", true);
 		SetCVar("samsara_cl_shephard_unique2", true);
 		SetCVar("samsara_cl_shephard_unique3", true);
-		SetCVar("samsara_cl_bitterman_slot7s", false);
+		SetCVar("samsara_cl_q2_slot7s", false);
 		SetCVar("samsara_cl_bond_fallbackranged", 0);
 		SetCVar("samsara_cl_bond_slot1", true);
 		SetCVar("samsara_cl_bond_slot3", false);
@@ -14574,6 +14633,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_bondgf_slot4s", false);
 		SetCVar("samsara_cl_bondgf_slot6s", false);
 		SetCVar("samsara_cl_bondgf_unique2", 1);
+		SetCVar("samsara_cl_anderson_slot3", false);
 		break;
 
 		case 101: // tehvappy50's Settings
@@ -14742,7 +14802,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_shephard_unique1", true);
 		SetCVar("samsara_cl_shephard_unique2", true);
 		SetCVar("samsara_cl_shephard_unique3", false);
-		SetCVar("samsara_cl_bitterman_slot7s", false);
+		SetCVar("samsara_cl_q2_slot7s", false);
 		SetCVar("samsara_cl_bond_fallbackranged", 1);
 		SetCVar("samsara_cl_bond_slot1", true);
 		SetCVar("samsara_cl_bond_slot3", true);
@@ -14754,6 +14814,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_bondgf_slot4s", false);
 		SetCVar("samsara_cl_bondgf_slot6s", false);
 		SetCVar("samsara_cl_bondgf_unique2", 0);
+		SetCVar("samsara_cl_anderson_slot3", true);
 		break;
 	}
 }
@@ -15191,7 +15252,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_shephard_unique1", 0);
 		SetCVar("samsara_shephard_unique2", 0);
 		SetCVar("samsara_shephard_unique3", 0);
-		SetCVar("samsara_bitterman_slot7s", 0);
+		SetCVar("samsara_q2_slot7s", 0);
 		SetCVar("samsara_bond_fallbackranged", 0);
 		SetCVar("samsara_bond_slot1", 0);
 		SetCVar("samsara_bond_slot3", 0);
@@ -15203,6 +15264,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bondgf_slot4s", 0);
 		SetCVar("samsara_bondgf_slot6s", 0);
 		SetCVar("samsara_bondgf_unique2", 0);
+		SetCVar("samsara_anderson_slot3", 0);
 		break;
 
 		case 1: // Samsara
@@ -15632,7 +15694,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_shephard_unique1", 0);
 		SetCVar("samsara_shephard_unique2", 0);
 		SetCVar("samsara_shephard_unique3", 0);
-		SetCVar("samsara_bitterman_slot7s", 0);
+		SetCVar("samsara_q2_slot7s", 0);
 		SetCVar("samsara_bond_fallbackranged", 0);
 		SetCVar("samsara_bond_slot1", 0);
 		SetCVar("samsara_bond_slot3", 0);
@@ -15644,6 +15706,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bondgf_slot4s", 0);
 		SetCVar("samsara_bondgf_slot6s", 0);
 		SetCVar("samsara_bondgf_unique2", 0);
+		SetCVar("samsara_anderson_slot3", 0);
 		break;
 
 		case 2: // Samsara Reincarnation
@@ -16073,7 +16136,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_shephard_unique1", 0);
 		SetCVar("samsara_shephard_unique2", 0);
 		SetCVar("samsara_shephard_unique3", 0);
-		SetCVar("samsara_bitterman_slot7s", 0);
+		SetCVar("samsara_q2_slot7s", 0);
 		SetCVar("samsara_bond_fallbackranged", 0);
 		SetCVar("samsara_bond_slot1", 0);
 		SetCVar("samsara_bond_slot3", 0);
@@ -16085,6 +16148,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bondgf_slot4s", 0);
 		SetCVar("samsara_bondgf_slot6s", 0);
 		SetCVar("samsara_bondgf_unique2", 0);
+		SetCVar("samsara_anderson_slot3", 0);
 		break;
 
 		// Secret presets
@@ -16515,7 +16579,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_shephard_unique1", 0);
 		SetCVar("samsara_shephard_unique2", 0);
 		SetCVar("samsara_shephard_unique3", 0);
-		SetCVar("samsara_bitterman_slot7s", 0);
+		SetCVar("samsara_q2_slot7s", 0);
 		SetCVar("samsara_bond_fallbackranged", 0);
 		SetCVar("samsara_bond_slot1", 0);
 		SetCVar("samsara_bond_slot3", 0);
@@ -16527,6 +16591,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bondgf_slot4s", 0);
 		SetCVar("samsara_bondgf_slot6s", 0);
 		SetCVar("samsara_bondgf_unique2", 0);
+		SetCVar("samsara_anderson_slot3", 0);
 
 		if(GetCvar("samsara_mixerloaded"))
 		{
@@ -16962,7 +17027,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_shephard_unique1", 0);
 		SetCVar("samsara_shephard_unique2", 0);
 		SetCVar("samsara_shephard_unique3", 0);
-		SetCVar("samsara_bitterman_slot7s", 0);
+		SetCVar("samsara_q2_slot7s", 0);
 		SetCVar("samsara_bond_fallbackranged", 0);
 		SetCVar("samsara_bond_slot1", 0);
 		SetCVar("samsara_bond_slot3", 0);
@@ -16974,6 +17039,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bondgf_slot4s", 0);
 		SetCVar("samsara_bondgf_slot6s", 0);
 		SetCVar("samsara_bondgf_unique2", 0);
+		SetCVar("samsara_anderson_slot3", 0);
 
 		if(GetCvar("samsara_mixerloaded"))
 		{

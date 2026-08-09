@@ -3936,7 +3936,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraQuake2RailgunLoopSoundCheck", 0);
 				}
 
-                loadoutmode = GetCVar("samsara_bitterman_slot7s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bitterman_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_bitterman_slot7s");
+                loadoutmode = GetCVar("samsara_q2_slot7s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_q2_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_q2_slot7s");
 
                 if (loadoutmode > 1) { loadoutmode = 1; }
                 else if (loadoutmode < 0) { loadoutmode = 0; }
@@ -5448,6 +5448,45 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 			case CLASS_SOF:
                 if (CheckInventory("SoF_SniperScoped") && !CheckWeapon("SoF_SniperRifle")) { SetInventory("SoF_SniperScoped", 0); }
                 break;
+
+			case CLASS_OUTLAWS:
+                loadoutmode = GetCVar("samsara_anderson_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3");
+
+                if (loadoutmode > 1) { loadoutmode = 1; }
+                else if (loadoutmode < 0) { loadoutmode = 0; }
+
+                SetInventory("SamsaraOutlawsLoadoutSlot3", loadoutmode);
+
+                if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != CheckInventory("SamsaraOutlawsLoadoutSlot3"))
+                {
+                    ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, CheckInventory("SamsaraOutlawsLoadoutSlot3"), pln);
+                    loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = CheckInventory("SamsaraOutlawsLoadoutSlot3");
+                }
+
+                if (CheckInventory("Outlaws_SawedOffShotgun") || CheckInventory("Outlaws_DoubleBarrelShotgun"))
+                {
+                    if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                    {
+                        SetInventory("Outlaws_SawedOffShotgun", 1);
+                        SetInventory("Outlaws_DoubleBarrelShotgun", 1);
+                    } else {
+                        if (!CheckInventory("SamsaraOutlawsLoadoutSlot3"))
+                        {
+                            SetInventory("Outlaws_SawedOffShotgun", 1);
+
+                            if (CheckWeapon("Outlaws_DoubleBarrelShotgun")) { SetWeapon("Outlaws_SawedOffShotgun"); }
+
+                            SetInventory("Outlaws_DoubleBarrelShotgun", 0);
+                        } else if (CheckInventory("SamsaraOutlawsLoadoutSlot3")) {
+                            SetInventory("Outlaws_DoubleBarrelShotgun", 1);
+
+                            if (CheckWeapon("Outlaws_SawedOffShotgun")) { SetWeapon("Outlaws_DoubleBarrelShotgun"); }
+
+                            SetInventory("Outlaws_SawedOffShotgun", 0);
+                        }
+                    }
+                }
+				break;
 
 			default:
                 if (cvalue != 1)
