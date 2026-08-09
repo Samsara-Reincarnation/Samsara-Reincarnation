@@ -2890,6 +2890,19 @@ StatusBar Fullscreen, ForceScaled
                     }
 
                     DrawImage "AMSMA0", 238, 185, Center;
+                } else IsSelected Outlaws_Revolver {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawImage "HUDBAR", 250, 192;
+                        DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 193;
+                        DrawNumber 4, INDEXFONT, White, Ammo Clip, 270, 186;
+                    } else {
+                        DrawImage "HUDBAR", 250, 180;
+                        DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 181;
+                        DrawNumber 4, INDEXFONT, White, Ammo Clip, 298, 185;
+                    }
+
+                    DrawImage "AMSMA0", 238, 185, Center;
                 }
             }
 
@@ -3433,7 +3446,10 @@ StatusBar Fullscreen, ForceScaled
                     IsSelected not SoF_Machinegun, SoF_Rocket {
                     IsSelected not SoF_Flamegun, SoF_Slugger {
                     IsSelected not SoF_MPG, SoF_MPistol {
-                    IsSelected not SoF_SniperRifle
+                    IsSelected not SoF_SniperRifle, Outlaws_Revolver {
+                    IsSelected not Outlaws_Shotgun, Outlaws_SawedOffShotgun {
+                    IsSelected not Outlaws_DoubleBarrelShotgun, Outlaws_Rifle {
+                    IsSelected not Outlaws_Cannon
                     {
                         DrawImage "HUDBAR", 250, 180;
                         DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
@@ -3452,7 +3468,7 @@ StatusBar Fullscreen, ForceScaled
                                 DrawImage AmmoIcon2, 228, 192, Center;
                             }
                         }
-                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
                     // Doom Characters
                     IsSelected "Automatic Shotgun"
@@ -6033,6 +6049,74 @@ StatusBar Fullscreen, ForceScaled
 
                         DrawImage AmmoIcon2, 238, 185, Center;
                     }
+
+                    // James Anderson
+                    IsSelected Outlaws_Revolver
+                    {
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawImage "HUDBAR", 250, 180;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        }
+                    }
+
+                    IsSelected Outlaws_Shotgun, Outlaws_SawedOffShotgun
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+
+                            DrawImage "HUDBAR", 250, 192;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 270, 186;
+                        } else {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon2, 238, 185, Center;
+                    }
+
+                    IsSelected Outlaws_DoubleBarrelShotgun, Outlaws_Rifle
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+
+                            DrawImage "HUDBAR", 250, 192;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 270, 186;
+                        } else {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon2, 238, 185, Center;
+                    }
+
+                    IsSelected Outlaws_Cannon
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+
+                            DrawImage "HUDBAR", 250, 192;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 193;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 270, 186;
+                        } else {
+                            DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo2, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon2, 238, 185, Center;
+                    }
                 }
             }
 
@@ -6136,6 +6220,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected DeusEx_MiniCrossbow { DrawImage "STY2NUM1", 126, 10; }
                 IsSelected Kingpin_Crowbar { DrawImage "STY2NUM1", 126, 10; }
                 IsSelected SoF_Pistol2 { DrawImage "STY2NUM1", 126, 10; }
+                IsSelected Outlaws_Knife { DrawImage "STY2NUM1", 126, 10; }
 
                 InInventory HexenClassMode, 3 // Baratus
                 {
@@ -6212,6 +6297,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected DeusEx_Shotgun { DrawImage "STY2NUM2", 136, 10; }
                 IsSelected Kingpin_Shotgun { DrawImage "STY2NUM2", 136, 10; }
                 IsSelected SoF_AssaultRifle { DrawImage "STY2NUM2", 136, 10; }
+                IsSelected Outlaws_Shotgun { DrawImage "STY2NUM2", 136, 10; }
 
                 // Slot 3
                 InInventory DoomguyClass
@@ -6277,6 +6363,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected DeusEx_AssaultShotgun { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected Kingpin_GrenadeLauncher { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected SoF_Shotgun { DrawImage "STY2NUM3", 146, 10; }
+                IsSelected Outlaws_SawedOffShotgun, Outlaws_DoubleBarrelShotgun { DrawImage "STY2NUM3", 146, 10; }
 
                 // Slot 4 + Slot 4S
                 InInventory DoomguyClass
@@ -6395,6 +6482,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected DeusEx_AssaultRifle { DrawImage "STY2NUM4", 156, 10; }
                 IsSelected Kingpin_TommyGun { DrawImage "STY2NUM4", 156, 10; }
                 IsSelected SoF_Machinegun { DrawImage "STY2NUM4", 156, 10; }
+                IsSelected Outlaws_Rifle { DrawImage "STY2NUM4", 156, 10; }
 
                 IsSelected " Minigun " { DrawImage "STY3NUM4", 156, 10; }
                 IsSelected "Ultra Rapid Zorcher" { DrawImage "STY3NUM4", 156, 10; }
@@ -6510,6 +6598,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected DeusEx_GEPGun { DrawImage "STY2NUM5", 166, 10; }
                 IsSelected Kingpin_Bazooka { DrawImage "STY2NUM5", 166, 10; }
                 IsSelected SoF_Rocket { DrawImage "STY2NUM5", 166, 10; }
+                IsSelected Outlaws_Cannon { DrawImage "STY2NUM5", 166, 10; }
 
                 IsSelected " GrenadeLauncher " { DrawImage "STY3NUM5", 166, 10; }
                 IsSelected "Zorch Launcher" { DrawImage "STY3NUM5", 166, 10; }
@@ -6771,6 +6860,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected DeusEx_MJ12PlasmaRifle { DrawImage "STY2NUM7", 186, 10; }
                 IsSelected Kingpin_HMG { DrawImage "STY2NUM7", 186, 10; }
                 IsSelected SoF_MPG { DrawImage "STY2NUM7", 186, 10; }
+                IsSelected Outlaws_GatlingGun { DrawImage "STY2NUM7", 186, 10; }
 
                 InInventory DisruptorPSICooldown
                 {
