@@ -36,9 +36,15 @@ actor Outlaws_Knife : SamsaraOutlawsWeapon
         loop
 
       Fire:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-        TNT1 A 0 A_JumpIfInventory("Outlaws_Knives",1,1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_Knives",1,"FireStart")
+        goto FireDry
+
+      FireDry:
+        TNT1 A 0 A_ClearReFire
         goto Ready
+
+      FireStart:
         TNT1 A 0 A_TakeInventory("Outlaws_ThrowCounter")
       FireCharge:
         TNT1 A 0 A_GiveInventory("Outlaws_ThrowCounter")
