@@ -51,8 +51,8 @@ Outlaws/Knife/Throw			"Sounds/Outlaws/outlaws_knifeby.wav"
 Outlaws/Dynamite/Fuse		"Sounds/Outlaws/outlaws_fuse.wav"
 
 Outlaws/ItemPickup   "Sounds/Outlaws/outlaws_POWERUP.WAV"
-Outlaws/KnifePickup  nosoundforyoubitch // not in yet
-Outlaws/WeaponPickup nosoundforyoubitch // not in yet
-Outlaws/Twirl        nosoundforyoubitch // not in yet
+Outlaws/KnifePickup  "Sounds/Outlaws/outlaws_Cool2.wav"
+Outlaws/WeaponPickup "Sounds/Outlaws/outlaws_weapgrab.WAV"
+Outlaws/Twirl        "Sounds/Outlaws/outlaws_TWIRL.WAV"
 
-$alias Outlaws/Secret Outlaws/ItemPickup
+Outlaws/Secret "Sounds/Outlaws/outlaws_COOL.WAV"
