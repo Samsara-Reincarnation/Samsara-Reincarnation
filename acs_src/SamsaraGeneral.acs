@@ -1495,6 +1495,29 @@ Script "Samsara_UniqueKeys" (int key) NET
 	int pln = PlayerNumber();
 	switch(PlayerClass(pln))
 	{
+		case CLASS_DOOM:
+            if (!isDead(0))
+            {
+                if (CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory"))
+                {
+                    if (GetCVar("samsara_permaweaponlevel2") && CheckInventory("DoomClassMode") == 2)
+                    {
+                        PlaySound(0, "doomguy/stronghold/wpktoggleoff", CHAN_ITEM);
+                        Print(l:"SAMSARA_STRWEAPONPOWERUPKIT_OFF");
+                    }
+
+                    TakeInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                } else {
+                    if (GetCVar("samsara_permaweaponlevel2") && CheckInventory("DoomClassMode") == 2)
+                    {
+                        PlaySound(0, "doomguy/stronghold/wpktoggleon", CHAN_ITEM);
+                        Print(l:"SAMSARA_STRWEAPONPOWERUPKIT_ON");
+                    }
+
+                    GiveInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
+                }
+            }
+			break;
 		case CLASS_HERETIC:
             if (!isDead(0))
             {
@@ -2312,6 +2335,7 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("DGStrHasHomingRocketLauncher", INTMAX);
 			TakeInventory("DGStrHasPlasmaRepeater", INTMAX);
 			TakeInventory("DGStrHasWPK", INTMAX);
+			SetInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
 
 			GiveInventory(" Pistol ", 1);
 			GiveInventory(" Fist ", 1);

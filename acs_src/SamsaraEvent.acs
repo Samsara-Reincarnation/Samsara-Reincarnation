@@ -5558,8 +5558,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
         SetInventory("DukeLegacyVoices", GetUserCVar(pln, "samsara_cl_legacydukevoices"));
 
         SetInventory("SamsaraHasPermaWeaponLevel2", GetCVar("samsara_permaweaponlevel2") &&
-                                                    ((samsaraClassNum() != CLASS_HERETIC && samsaraClassNum() != CLASS_HEXEN && samsaraClassNum() != CLASS_DEMONESS) ||
-                                                    ((samsaraClassNum() == CLASS_HERETIC || samsaraClassNum() == CLASS_DEMONESS) && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory")) ||
+                                                    ((samsaraClassNum() != CLASS_DOOM && samsaraClassNum() != CLASS_HERETIC && samsaraClassNum() != CLASS_HEXEN &&
+                                                      samsaraClassNum() != CLASS_DEMONESS) ||
+                                                    ((samsaraClassNum() == CLASS_DOOM || samsaraClassNum() == CLASS_HERETIC || samsaraClassNum() == CLASS_DEMONESS) && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory")) ||
                                                     (samsaraClassNum() == CLASS_HEXEN && CheckInventory("SamsaraPermaWeaponLevel2ToggleMemory") && !GetCVar("samsara_banhextomeofpower"))));
 
         SetInventory("PowerSamsaraHasPermaWeaponLevel2IconHeretic", samsaraClassNum() == CLASS_HERETIC && CheckInventory("SamsaraHasPermaWeaponLevel2") && !CheckInventory("PowerHereticTome"));
