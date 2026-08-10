@@ -5450,6 +5450,9 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 break;
 
 			case CLASS_OUTLAWS:
+				if (CheckWeapon("Outlaws_Revolver")) { TakeInventory("SamsaraOutlawsRevolverClickSpamPrevention", 1); }
+				else { SetInventory("SamsaraOutlawsRevolverClickSpamPrevention", 0); }
+
                 loadoutmode = GetCVar("samsara_anderson_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3");
 
                 if (loadoutmode > 1) { loadoutmode = 1; }

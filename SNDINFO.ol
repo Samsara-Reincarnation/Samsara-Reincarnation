@@ -24,6 +24,7 @@ Outlaws/Fist/Hit		"Sounds/Outlaws/outlaws_connect.wav"
 
 Outlaws/Pistol/Fire		"Sounds/Outlaws/outlaws_pistol2.wav"
 Outlaws/Pistol/Reload	"Sounds/Outlaws/outlaws_preload.wav"
+Outlaws/Pistol/Empty	"Sounds/Outlaws/outlaws_pistout.wav"
 
 Outlaws/Shotgun/Fire	"Sounds/Outlaws/outlaws_single.wav"
 Outlaws/Shotgun/Reload	"Sounds/Outlaws/outlaws_sreload.wav"
