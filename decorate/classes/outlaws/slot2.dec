@@ -1,3 +1,5 @@
+actor SamsaraOutlawsShotgunClickSpamPrevention : Counter {}
+
 actor Outlaws_Shotgun : SamsaraOutlawsWeapon
 {
     Inventory.PickupMessage "Shotgun"
@@ -10,75 +12,160 @@ actor Outlaws_Shotgun : SamsaraOutlawsWeapon
     Tag "Shotgun"
     States
     {
-        Spawn:
-            OL93 B -1
-            Stop
-        Ready:
-            OL01 A 0 A_TakeInventory("Outlaws_Reloading")
-            OL01 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
-            loop
+      Spawn:
+        OL93 B -1
+        stop
 
-        Deselect:
-            TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
-        DeselectLoop:
-            TNT1 A 0 A_Lower
-            OL01 A 1 A_Lower
-            Loop
+      Ready:
+        TNT1 A 0 A_TakeInventory("Outlaws_Reloading")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyReloadable")
+      ReadyNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyNonReloadableAmmo")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"ReadyNonReloadableAmmo")
+        goto ReadyNonReloadableNoAmmo
 
-        Select:
-            TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
-        SelectLoop:
-            TNT1 A 0 A_Raise
-            OL01 A 1 A_Raise
-            Loop
+      ReadyNonReloadableNoAmmo:
+        OL01 A 1 A_WeaponReady
+        goto ReadyNoAmmoCheck
 
-        Fire:
-        AltFire:
-            OL01 B 0 A_JumpIfInventory("Outlaws_ShotgunMagazine",1,1)
-            Goto Reload
-            OL01 B 0 A_GiveInventory("SamsaraOutlawsShotgunAttackHandler")
-            OL01 BC 4 Bright
-            OL01 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            //Too spammable without this
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL01 A 0 A_Refire(1)
-            Goto Ready
-            OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            Goto Ready
+      ReadyNonReloadableAmmo:
+        OL01 A 1 A_WeaponReady
+        goto Ready
 
-        Reload:
-            OL01 E 0 A_JumpIfInventory("Outlaws_ShotgunMagazine",0,"Ready")
-            OL01 E 0 A_JumpIfInventory("Shell",1,1)
-            Goto Ready
-            OL01 E 0 A_GiveInventory("Outlaws_Reloading")
-            OL01 E 0 A_PlaySound("Outlaws/Shotgun/Reload",CHAN_5)
-            OL01 E 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
-            OL01 E 0 A_GiveInventory("Outlaws_ShotgunMagazine")
-            OL01 EF 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE|WRF_NOBOB)
-            Goto ReloadFinish
-        //Allow reloading again, here
-        ReloadFinish:
-            OL01 E 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
-            OL01 E 0 A_TakeInventory("Outlaws_Reloading")
-            Goto Ready
+      ReadyReloadable:
+        goto ReadyReloadableAllowReload
+
+      ReadyReloadableDisallowReload:
+        OL01 A 1 A_WeaponReady
+        goto Ready
+
+      ReadyReloadableAllowReload:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_ShotgunMagazine",0,"ReadyReloadableDisallowReload")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReadyReloadableDisallowReload
+        OL01 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        goto Ready
+
+      ReadyNoAmmoCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+        goto Ready
+
+      Deselect:
+        TNT1 A 0 A_TakeInventory("SamsaraOutlawsShotgunClickSpamPrevention")
+        TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        OL01 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_TakeInventory("SamsaraOutlawsShotgunClickSpamPrevention")
+        TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon")
+      SelectLoop:
+        TNT1 A 0 A_Raise
+        OL01 A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
+      FireNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"FireStart")
+        goto FireDry
+
+      FireReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_ShotgunMagazine",1,"FireStart")
+      FireReloadableDryCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+        goto FireDry
+
+      FireDry:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsShotgunClickSpamPrevention",1,"Ready")
+        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Empty",CHAN_5)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsShotgunClickSpamPrevention",4)
+        goto Ready
+
+      FireStart:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsShotgunAttackHandler")
+        OL01 BC 4 Bright
+        OL01 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        //Too spammable without this
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire(1)
+        goto FireFinish
+        OL01 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto FireFinish
+
+      FireFinish:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"Ready")
+        goto ReadyNoAmmoCheck
+
+      Reload:
+        TNT1 A 0 A_GiveInventory("Outlaws_Reloading")
+        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Reload",CHAN_5)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+      ReloadFinish:
+        OL01 EF 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE|WRF_NOBOB)
+        goto ReloadFinishAllowCheck
+
+      //Allow reloading again, here
+      ReloadFinishAllowCheck:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto Ready
+        TNT1 A 0 A_JumpIfInventory("Outlaws_ShotgunMagazine",0,"Ready")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadFinishAllow")
+        TNT1 A 0 A_JumpIfInventory("Shell",1,"ReloadFinishAllow")
+        goto Ready
+
+      ReloadFinishAllow:
+        OL01 F 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
+        goto Ready
+
+      ReloadAmmo:
+        TNT1 A 0 A_TakeInventory("SamsaraReloadCalcs") // reset
+      ReloadAmmoCalc:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_ShotgunMagazine",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadCalcs",1,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReloadFinish
+        TNT1 A 0 A_GiveInventory("SamsaraReloadCalcs")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        TNT1 A 0 A_GiveInventory("Outlaws_ShotgunMagazine")
+        loop
     }
 }
 
@@ -86,6 +173,7 @@ actor SamsaraOutlawsShotgunAttackHandler : Trigger
 {
     States
     {
+      // Ammo checking/taking stuff
       Pickup:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
       PickupNonReloadable:
@@ -110,8 +198,9 @@ actor SamsaraOutlawsShotgunAttackHandler : Trigger
       PickupAttackDM:
         TNT1 A 0 A_FireBullets(4,4,6,15,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
         stop
+
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(4,4,6,15,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(4,4,6,15,"OutlawsPuffCoop",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
         stop
     }
 }
