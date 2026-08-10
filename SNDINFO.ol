@@ -50,6 +50,9 @@ Outlaws/Knife/Throw			"Sounds/Outlaws/outlaws_knifeby.wav"
 
 Outlaws/Dynamite/Fuse		"Sounds/Outlaws/outlaws_fuse.wav"
 
-Outlaws/ItemPickup "Sounds/Outlaws/outlaws_POWERUP.WAV"
+Outlaws/ItemPickup   "Sounds/Outlaws/outlaws_POWERUP.WAV"
+Outlaws/KnifePickup  nosoundforyoubitch // not in yet
+Outlaws/WeaponPickup nosoundforyoubitch // not in yet
+Outlaws/Twirl        nosoundforyoubitch // not in yet
 
 $alias Outlaws/Secret Outlaws/ItemPickup
