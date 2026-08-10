@@ -45,12 +45,16 @@ Actor Outlaws_Dynamite : SamsaraOutlawsWeapon
 			Goto Suicide
 
 		Deselect:
+			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+		DeselectLoop:
 			TNT1 A 0 A_StopSound(CHAN_WEAPON)
 			TNT1 A 0 A_Lower
 			OL09 A 1 A_Lower
 			Loop
 
 		Select:
+			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+		SelectLoop:
 			TNT1 A 0 A_StopSound(CHAN_WEAPON)
 			TNT1 A 0 A_Raise
 			OL09 A 1 A_Raise

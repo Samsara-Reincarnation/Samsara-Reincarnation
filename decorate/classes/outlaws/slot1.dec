@@ -10,18 +10,22 @@ Actor Outlaws_Knife : SamsaraOutlawsWeapon
 	States
 	{
 		Spawn:
-			TNT1 A -1
+			OL93 A -1
 			Stop
 		Ready:
 			OL08 A 1 A_WeaponReady
 			Loop
 
 		Deselect:
+			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+		DeselectLoop:
 			TNT1 A 0 A_Lower
 			OL08 A 1 A_Lower
 			Loop
 
 		Select:
+			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+		SelectLoop:
 			TNT1 A 0 A_Raise
 			OL08 A 1 A_Raise
 			Loop

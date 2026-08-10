@@ -18,14 +18,57 @@ Actor OutlawsPlayer : SamsaraPlayerPawnNormalRedBlood
 	Player.StartItem "SamsaraTipsChecker", 1
 	Player.StartItem "Clip", 50
 	Player.ColorRange 112, 127
-	YScale 1
+	XScale 0.67
+	YScale 0.55833
 	States
 	{
 		Spawn:
-			TNT1 A -1
-			Stop
+			OL96 E 4
+			Loop
+		See:
+			OL96 A 4 A_JumpIf(sqrt(velx*velx + vely*vely) <= 8,"Walk")
+			OL96 B 4 A_JumpIf(sqrt(velx*velx + vely*vely) <= 8,"Walk")
+			OL96 C 4 A_JumpIf(sqrt(velx*velx + vely*vely) <= 8,"Walk")
+			OL96 D 4 A_JumpIf(sqrt(velx*velx + vely*vely) <= 8,"Walk")
+			Loop
+		Walk:
+			OL96 E 4 A_JumpIf(sqrt(velx*velx + vely*vely) > 8,"See")
+			OL96 F 4 A_JumpIf(sqrt(velx*velx + vely*vely) > 8,"See")
+			OL96 G 4 A_JumpIf(sqrt(velx*velx + vely*vely) > 8,"See")
+			OL96 H 4 A_JumpIf(sqrt(velx*velx + vely*vely) > 8,"See")
+			Loop
+		Missile:
+			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",4,4)
+			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",3,"Melee")
+			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",2,2)
+			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",1,"Melee")
+			OL96 IJK 4
+			Goto Spawn
+		Melee:
+			OL96 LMN 4
+			Goto Spawn
+		Pain:
+			OL96 O 4 A_Pain
+			Goto Spawn
 		Death:
-			TNT1 A -1
+			OL98 A 0 A_Jump(256,"Death1","Death2","Death3")
+		Death1:
+			OL98 A 0 A_NoBlocking
+			OL98 A 0 A_PlayerScream
+			OL98 ABCD 4
+			OL98 E -1
+			Stop
+		Death2:
+			OL98 F 0 A_NoBlocking
+			OL98 F 0 A_PlayerScream
+			OL98 FGHIJ 4
+			OL98 K -1
+			Stop
+		Death3:
+			OL98 L 0 A_NoBlocking
+			OL98 L 0 A_PlayerScream
+			OL98 LMNOP 4
+			OL98 Q -1
 			Stop
 	}
 }

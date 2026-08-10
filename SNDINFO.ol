@@ -37,7 +37,9 @@ Outlaws/Rifle/Reload	"Sounds/Outlaws/outlaws_rreload.wav"
 Outlaws/Cannon/Fire		"Sounds/Outlaws/outlaws_badgun.wav"
 Outlaws/Cannon/Reload	"Sounds/Outlaws/outlaws_creload.wav"
 
-Outlaws/GatlingGun/Fire	"Sounds/Outlaws/outlaws_GatlShot.WAV"
+Outlaws/MachineGun/Fire		"Sounds/Outlaws/outlaws_MGUN.ogg"
+
+Outlaws/GatlingGun/Fire		"Sounds/Outlaws/outlaws_GatlShot.WAV"
 
 Outlaws/Ricochet			"Sounds/Outlaws/outlaws_ricochet.wav"
 Outlaws/Dynamite/Explosion	"Sounds/Outlaws/outlaws_dynamite.wav"

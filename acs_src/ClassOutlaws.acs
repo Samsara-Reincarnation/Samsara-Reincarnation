@@ -1,3 +1,22 @@
+#DEFINE OUTLAWWEAPONS 11
+str OutlawsWeapons[OUTLAWWEAPONS][4] =
+{
+	{ "Outlaws_Fist", "", "" },
+	{ "Outlaws_Revolver", "Outlaws_RevolverMagazine", "Clip", "P" },
+	{ "Outlaws_Knife", "", "Outlaws_Knives", "" },
+	{ "Outlaws_Shotgun", "Outlaws_ShotgunMagazine", "Shell", "S" },
+	{ "Outlaws_SawedOffShotgun", "Outlaws_SawedMagazine", "Shell", "S" },
+	{ "Outlaws_DoubleBarrelShotgun", "Outlaws_DBSMagazine", "Shell", "S" },
+	{ "Outlaws_Rifle", "Outlaws_RifleMagazine", "Clip", "R" },
+	{ "Outlaws_Cannon", "Outlaws_CannonMagazine", "RocketAmmo", "C" },
+	{ "Outlaws_MachineGun", "", "Cell", "R" },
+	{ "Outlaws_GatlingGun", "", "Cell", "R" },
+	{ "Outlaws_Dynamite", "", "RocketAmmo", "" }
+};
+
+int ammoCardSpaces[OUTLAWWEAPONS] = { 0, 22, 0, 26, 26, 26, 10, 22, 10, 10, 0 };
+int turretWeapons[OUTLAWWEAPONS] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0 };
+
 Script "Outlaws_ThrowCounter" (void)
 {
 	SetActivatorToTarget(0);
@@ -22,4 +41,295 @@ Script "Outlaws_TNTAddFuse" (void)
 	SetActivatorToTarget(0);
 	SetActorProperty(newTid,APROP_REACTIONTIME,CheckInventory("Outlaws_DynamiteFuse")*4);
 	Thing_ChangeTid(newTid,0);
+}
+
+Script "Outlaws_Player" (void)
+{
+	//Auxiliary variables
+	int digit, offset;
+	int startIndex = 45600;
+	int UsingFullScreen = false;
+	int hudCardMaxPivot = 36;
+	int currentWeapon = -1;
+	
+	//Ammo counter variables
+	int ol_ammoCounter = -1;
+	int ol_ammoDigits = -1;
+	int lastAmmoCounter = -1;
+	int AmmoDigitsShifter = 0;
+	int evaluatedAmmo = false;
+	int queueAmmoShift = false;
+	int queueAmmoShiftReturn = false;
+	int ammoResetDelay = 0;
+	int previousAmmoCount = -1;
+	int capacity = -1;
+	
+	//Magazine counter variables
+	int ol_magazineCounter = -1;
+	int evaluatedMagazine = false;
+	int magazineShifters[12] = {};
+	int MagazineDigitsShifter[12] = {};
+	
+	//Turret Variables
+	int maxcapacity = -1;
+	int current = -1;
+	int amountIndex = -1;
+	
+	//Health variables
+	int ol_health = -1;
+	int healthShifters[12] = {};
+	int healthDigitsShifter[12] = {};
+	
+	//Armor variables
+	int ol_armor = -1;
+	int armorShifters[12] = {};
+	int armorDigitsShifter[12] = {};
+	
+	while(CheckInventory("OutlawsClass"))
+	{
+		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+		{
+			UsingFullScreen = true;
+			
+			//Get Current weapon
+			for(int i = 0; i < OUTLAWWEAPONS; i++)
+			{
+				if(CheckWeapon(OutlawsWeapons[i][0]))
+				{
+					currentWeapon = i;
+					SetInventory("Outlaws_WeaponToken",i+1);
+					break;
+				}
+			}
+
+			//Start drawing hud
+			SetHudSize(640,480,true);
+			
+			//Go ahead and draw Sheriff's Badge, if you have it
+			if(CheckInventory("PowerSheriffsBadgePower"))
+			{
+				SetFont(strparam(s:"OLBADGE",d:((timer()%32)/4)+1));
+				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+37,CR_UNTRANSLATED,600.0,0.2,0.0);	
+			}
+			
+			//Do nothing if the weapon is not assigned
+			if(currentWeapon >= 0)
+			{
+				//Draw ammo counter
+				if(OutlawsWeapons[currentWeapon][2] != "")
+				{
+					//If the player is reloading, set the ammoResetDelay, otherwise, decrement
+					if(CheckInventory("Outlaws_Reloading"))
+					{
+						if(previousAmmoCount == -1)
+							previousAmmoCount = ol_ammoCounter;
+							
+						ammoResetDelay = 4;
+					}
+					else ammoResetDelay--;
+
+					//This delay is present to tell us not to trigger the number shifting as long as reloading is active or could be active
+					if(ammoResetDelay <= 0 || CheckInventory("Outlaws_SwitchWeapon"))
+					{
+						ol_ammoCounter = CheckInventory(OutlawsWeapons[currentWeapon][2]);
+						//Clamp
+						if(ol_ammoCounter > 999) ol_ammoCounter = 999;
+						ol_ammoDigits = strlen(strparam(d:ol_ammoCounter));
+						
+						//Set the ammo counter on loading map
+						if(evaluatedAmmo == false)
+							lastAmmoCounter = ol_ammoCounter;
+						
+						//Check if the ammo counter changed here or not. Do not do anything. We only shift after the start of the map
+						if((lastAmmoCounter != ol_ammoCounter && evaluatedAmmo == true && !turretWeapons[currentWeapon]) || CheckInventory("Outlaws_SwitchWeapon"))
+						{
+							//if(!queueAmmoShift) AmmoDigitsShifter = 0;
+							queueAmmoShift = true;
+							if(previousAmmoCount == -1)
+								previousAmmoCount = lastAmmoCounter;
+								
+							lastAmmoCounter = ol_ammoCounter;
+						}
+						
+						//Start the shift downward
+						if(queueAmmoShift)
+						{
+							ol_ammoCounter = previousAmmoCount;
+							ol_ammoDigits = strlen(strparam(d:ol_ammoCounter));
+							if(AmmoDigitsShifter >= hudCardMaxPivot)
+							{
+								queueAmmoShiftReturn = true;
+								queueAmmoShift = false;
+							}
+							else AmmoDigitsShifter+= 4 + (CheckInventory("Outlaws_SwitchWeapon")*2);		
+						}
+						//Return back up
+						else if(queueAmmoShiftReturn)
+						{
+							previousAmmoCount = -1;
+							if(AmmoDigitsShifter <= 0)
+							{
+								queueAmmoShiftReturn = false;
+								queueAmmoShift = false;
+							}
+							else AmmoDigitsShifter-=4;
+						}
+						
+						//Draw the digits
+						capacity = ol_ammoDigits;
+						for(offset = capacity; offset > 0; offset--)
+						{
+							//Since these are aligned from the left, we need an offset for the drawing function
+							//This formula will compute the current digit
+							digit = (ol_ammoCounter % pow(10,offset)) / pow(10,offset-1);
+							SetFont(strparam(s:"OLNUMB",d:digit,s:capacity-offset == 0 ? "1" : "0"));
+							//Finally, draw the digit
+							HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+(capacity-offset),CR_UNTRANSLATED,280.1-((offset-1)*26.0),500.2 + (AmmoDigitsShifter * 1.0),0.0);	
+						}
+					}
+					
+					evaluatedAmmo = true;
+				}
+				else RemoveMessages(startIndex,startIndex+3);
+				
+				//Draw magazine counter
+				RemoveMessages(startIndex+5,startIndex+16);
+
+				//Initialize these
+				if(evaluatedMagazine == false)
+				{
+					for(i = 0; i < 12; i++)
+					{
+						magazineShifters[i] = true;
+						MagazineDigitsShifter[i] = hudCardMaxPivot;
+					}
+					evaluatedMagazine = true;
+				}
+
+				//Get the current magazine amount
+				ol_magazineCounter = CheckInventory(OutlawsWeapons[currentWeapon][1]);
+				
+				//If the weapon is a turret, we draw 10 cards
+				if(!turretWeapons[currentWeapon])
+					capacity = GetAmmoCapacity(OutlawsWeapons[currentWeapon][1]);
+				else capacity = 10;
+				
+				//Assign turret variables
+				if(turretWeapons[currentWeapon])
+				{
+					maxcapacity = GetAmmoCapacity(OutlawsWeapons[currentWeapon][2]);
+					current = CheckInventory(OutlawsWeapons[currentWeapon][2]);
+					amountIndex = (current*100/maxcapacity) / 10;
+				}
+				
+				//Now check the ammo for this weapon. If this round is inside the magazine, send it to the array, and otherwise
+				for(i = 0; i < capacity; i++)
+				{
+					if(!turretWeapons[currentWeapon])
+						magazineShifters[i] = i <= ol_magazineCounter-1;
+					else
+					{
+						magazineShifters[i] = i <= amountIndex-1;
+						ol_magazineCounter = amountIndex;
+					}
+				}
+				
+				//Draw the magazine cards
+				for(offset = capacity; offset > 0; offset--)
+				{
+					//If this bullet isn't in the magazine, shift it down. Also, if the weapon changed, force it down
+					if((!magazineShifters[offset-1] && MagazineDigitsShifter[offset-1] < hudCardMaxPivot) || CheckInventory("Outlaws_SwitchWeapon"))
+					{
+						if(MagazineDigitsShifter[offset-1] >= hudCardMaxPivot)
+							MagazineDigitsShifter[offset-1] = hudCardMaxPivot;
+						else MagazineDigitsShifter[offset-1]+=4 + (CheckInventory("Outlaws_SwitchWeapon")*2);	
+					}
+					//Otherwise, shift it up
+					else if(magazineShifters[offset-1] && MagazineDigitsShifter[offset-1] > 0)
+					{
+						if(MagazineDigitsShifter[offset-1] <= 0)
+							MagazineDigitsShifter[offset-1] = 0;
+						else MagazineDigitsShifter[offset-1]-=4;
+					}
+					SetFont(strparam(s:"OLAMM",s:OutlawsWeapons[currentWeapon][3],s:offset == ol_magazineCounter ? "1" : "0"));
+					//Finally, draw the card
+					HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+5+(capacity-offset),CR_UNTRANSLATED,160.1-((offset-1)*(ammoCardSpaces[currentWeapon]*1.0)),500.2 + (MagazineDigitsShifter[offset-1] * 1.0),0.0);	
+				}
+				
+				//Now, draw health
+				RemoveMessages(startIndex+17,startIndex+26);
+				ol_health = GetActorProperty(0,APROP_Health);
+				if(ol_health > 100) ol_health = 100;
+				if(ol_health < 0) ol_health = 0;
+				
+				//Check which health digits need to be redrawn, if any
+				for(i = 0; i < 10; i++)
+					healthShifters[i] = i <= (ol_health/10)-1;
+				
+				//Now begin the loop to draw these cards
+				for(offset = 10; offset > 0; offset--)
+				{
+					//If this digit isn't covered in the previous loop, let's move it down, shall we?
+					if((!healthShifters[offset-1] && healthDigitsShifter[offset-1] < hudCardMaxPivot))
+					{
+						if(healthDigitsShifter[offset-1] >= hudCardMaxPivot)
+							healthDigitsShifter[offset-1] = hudCardMaxPivot;
+						else healthDigitsShifter[offset-1]+=4;	
+					}
+					//Otherwise, shift it up
+					else if(healthShifters[offset-1] && healthDigitsShifter[offset-1] > 0)
+					{
+						if(healthDigitsShifter[offset-1] <= 0)
+							healthDigitsShifter[offset-1] = 0;
+						else healthDigitsShifter[offset-1]-=4;
+					}
+					
+					SetFont(strparam(s:"OLHEAL",s:offset == (ol_health/10) ? "1" : "0"));
+					//Finally, draw the card
+					HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+17+(10-offset),CR_UNTRANSLATED,380.2+((10-offset-1)*10.0),500.2 + (healthDigitsShifter[offset-1] * 1.0),0.0);	
+				}
+				
+				//Last but not least, draw armor
+				RemoveMessages(startIndex+27,startIndex+36);
+				ol_armor = CheckInventory("BasicArmor");
+				if(ol_armor > 100) ol_armor = 100;
+				if(ol_armor < 0) ol_armor = 0;
+				
+				//Check which armor digits need to be redrawn, if any
+				for(i = 0; i < 10; i++)
+					armorShifters[i] = i <= (ol_armor/10)-1;
+				
+				//Now begin the loop to draw these cards
+				for(offset = 10; offset > 0; offset--)
+				{
+					//If this digit isn't covered in the previous loop, let's move it down, shall we?
+					if((!armorShifters[offset-1] && armorDigitsShifter[offset-1] < hudCardMaxPivot))
+					{
+						if(armorDigitsShifter[offset-1] >= hudCardMaxPivot)
+							armorDigitsShifter[offset-1] = hudCardMaxPivot;
+						else armorDigitsShifter[offset-1]+=4;	
+					}
+					//Otherwise, shift it up
+					else if(armorShifters[offset-1] && armorDigitsShifter[offset-1] > 0)
+					{
+						if(armorDigitsShifter[offset-1] <= 0)
+							armorDigitsShifter[offset-1] = 0;
+						else armorDigitsShifter[offset-1]-=4;
+					}
+					
+					SetFont(strparam(s:"OLARMR",s:offset == (ol_armor/10) ? "1" : "0"));
+					//Finally, draw the card
+					HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+27+(10-offset),CR_UNTRANSLATED,520.2+((10-offset-1)*10.0),500.2 + (armorDigitsShifter[offset-1] * 1.0),0.0);	
+				}
+			}
+		}
+		//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
+		else if(UsingFullScreen == true)
+		{
+			RemoveMessages(startIndex,startIndex+40);
+			UsingFullScreen = false;		
+		}
+		
+		Delay(1);
+	}
 }

@@ -6,22 +6,27 @@ Actor Outlaws_Cannon : SamsaraOutlawsWeapon
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "RocketAmmo"
     Weapon.AmmoGive2 5
-    Tag "Hotchkiss Repeating Cannon"
+    Tag "Hawksworth Repeating Cannon"
 	States
 	{
 		Spawn:
 			TNT1 A -1
 			Stop
 		Ready:
+			OL05 A 0 A_TakeInventory("Outlaws_Reloading")
 			OL05 A 1 A_WeaponReady(WRF_ALLOWRELOAD)	
 			Loop
 
 		Deselect:
+			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+		DeselectLoop:
 			TNT1 A 0 A_Lower
 			OL05 A 1 A_Lower
 			Loop
 
 		Select:
+			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+		SelectLoop:
 			TNT1 A 0 A_Raise
 			OL05 A 1 A_Raise
 			Loop
@@ -51,10 +56,12 @@ Actor Outlaws_Cannon : SamsaraOutlawsWeapon
 			OL05 A 0 A_JumpIfInventory("Outlaws_CannonMagazine",0,"Ready")
 			OL05 A 0 A_JumpIfInventory("RocketAmmo",1,1)
 			Goto Ready
+			OL05 A 0 A_GiveInventory("Outlaws_Reloading")
 			OL05 A 0 A_PlaySound("Outlaws/Cannon/Reload",CHAN_5)
 			OL05 A 0 A_TakeInventory("RocketAmmo",1,TIF_NOTAKEINFINITE)
 			OL05 A 0 A_GiveInventory("Outlaws_CannonMagazine")
 			OL05 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE|WRF_NOBOB)
+			OL05 A 0 A_TakeInventory("Outlaws_Reloading")
 			Goto Ready
 	}
 }
@@ -99,7 +106,7 @@ actor Outlaws_CannonMagazine : Ammo
 {
     Inventory.Amount 5
     Inventory.MaxAmount 5
-    Tag "Hotchkiss Magazine"
+    Tag "Hawksworth Magazine"
     +IGNORESKILL
 }
 

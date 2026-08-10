@@ -19,15 +19,20 @@ Actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
 			TNT1 A -1
 			Stop
 		Ready:
+			OL03 A 0 A_TakeInventory("Outlaws_Reloading")
 			OL03 A 1 A_WeaponReady(WRF_ALLOWRELOAD)	
 			loop
 
 		Deselect:
+			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+		DeselectLoop:
 			TNT1 A 0 A_Lower
 			OL03 A 1 A_Lower
 			Loop
 
 		Select:
+			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+		SelectLoop:
 			TNT1 A 0 A_Raise
 			OL03 A 1 A_Raise
 			Loop
@@ -74,6 +79,7 @@ Actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
 			OL03 E 0 A_JumpIfInventory("Outlaws_SawedMagazine",0,"Ready")
 			OL03 E 0 A_JumpIfInventory("Shell",1,1)
 			Goto Ready
+			OL03 E 0 A_GiveInventory("Outlaws_Reloading")
 			OL03 E 0 A_PlaySound("Outlaws/Shotgun/Reload",CHAN_5)
 			OL03 E 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
 			OL03 E 0 A_GiveInventory("Outlaws_SawedMagazine")
@@ -86,6 +92,7 @@ Actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
 		//Allow reloading again, here
 		ReloadFinish:
 			OL03 E 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_NOBOB)
+			OL03 E 0 A_TakeInventory("Outlaws_Reloading")
 			Goto Ready	
 	}
 }
@@ -183,15 +190,20 @@ Actor Outlaws_DoubleBarrelShotgun : SamsaraOutlawsWeapon
 			TNT1 A -1
 			Stop
 		Ready:
+			OL02 A 0 A_TakeInventory("Outlaws_Reloading")
 			OL02 A 1 A_WeaponReady(WRF_ALLOWRELOAD)	
 			loop
 
 		Deselect:
+			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+		DeselectLoop:
 			TNT1 A 0 A_Lower
 			OL02 A 1 A_Lower
 			Loop
 
 		Select:
+			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+		SelectLoop:
 			TNT1 A 0 A_Raise
 			OL02 A 1 A_Raise
 			Loop
@@ -238,6 +250,7 @@ Actor Outlaws_DoubleBarrelShotgun : SamsaraOutlawsWeapon
 			OL02 E 0 A_JumpIfInventory("Outlaws_DBSMagazine",0,"Ready")
 			OL02 E 0 A_JumpIfInventory("Shell",1,1)
 			Goto Ready
+			OL02 E 0 A_GiveInventory("Outlaws_Reloading")
 			OL02 E 0 A_PlaySound("Outlaws/Shotgun/Reload",CHAN_5)
 			OL02 E 0 A_TakeInventory("Shell",1,TIF_NOTAKEINFINITE)
 			OL02 E 0 A_GiveInventory("Outlaws_DBSMagazine")

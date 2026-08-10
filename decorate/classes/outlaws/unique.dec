@@ -1,1 +1,38 @@
-// TO BE DECIDED
+Actor Outlaws_SheriffsBadge : CustomInventory
+{
+	Inventory.PickupMessage "Sheriff's Badge"
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+		Spawn:
+			OL11 ABCDEFGH 4
+			Loop
+		Pickup:
+			TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgePower",1)
+			TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgeProtection",1)
+			TNT1 A 0 A_PlaySound("Outlaws/Twirl",CHAN_ITEM)
+			Stop
+	}
+}
+
+actor OutlawsSheriffsBadgePower : SamsaraPowerupGiver
+{
+    Powerup.Type "SheriffsBadgePower"
+}
+
+actor PowerSheriffsBadgePower : PowerDamage
+{
+    Powerup.Duration -30
+    DamageFactor "Normal", 4
+}
+
+actor OutlawsSheriffsBadgeProtection : SamsaraPowerupGiver
+{
+    Powerup.Type "SheriffsBadgeProtection"
+}
+
+actor PowerSheriffsBadgeProtection : PowerProtection
+{
+    Powerup.Duration -30
+    DamageFactor "Normal", 0.5
+}

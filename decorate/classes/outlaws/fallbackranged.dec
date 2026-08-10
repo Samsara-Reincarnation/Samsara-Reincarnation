@@ -13,15 +13,20 @@ Actor Outlaws_Revolver : SamsaraOutlawsWeapon
 			TNT1 A -1
 			Stop
 		Ready:
+			OL00 C 0 A_TakeInventory("Outlaws_Reloading")
 			OL00 C 1 A_WeaponReady(WRF_ALLOWRELOAD)	
 			loop
 
 		Deselect:
+			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+		DeselectLoop:
 			TNT1 A 0 A_Lower
 			OL00 C 1 A_Lower
 			Loop
 
 		Select:
+			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+		SelectLoop:
 			TNT1 A 0 A_Raise
 			OL00 C 1 A_Raise
 			Loop
@@ -70,6 +75,7 @@ Actor Outlaws_Revolver : SamsaraOutlawsWeapon
 			Goto Reload+3 // placeholder crimeitude
 			OL00 G 0 A_JumpIfInventory("Clip",1,1)
 			Goto Ready
+			OL00 G 0 A_GiveInventory("Outlaws_Reloading")
 			OL00 G 0 A_PlaySound("Outlaws/Pistol/Reload",CHAN_5)
 			OL00 G 0 A_JumpIfInventory("PistolModeOn",1,1)
 			Goto Reload+6 // placeholder crimeitude
@@ -116,10 +122,10 @@ actor SamsaraOutlawsRevolverAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(4,4,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
         stop
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(4,4,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
         stop
     }
 }
@@ -152,10 +158,10 @@ actor SamsaraOutlawsRevolverAltAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(8,8,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(4,4,-1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
         stop
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(8,8,1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(4,4,-1,12,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
         stop
     }
 }
