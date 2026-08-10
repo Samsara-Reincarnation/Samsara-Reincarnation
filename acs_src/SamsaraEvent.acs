@@ -5450,11 +5450,16 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 break;
 
 			case CLASS_OUTLAWS:
-				if (CheckWeapon("Outlaws_Revolver")) { TakeInventory("SamsaraOutlawsRevolverClickSpamPrevention", 1); }
-				else { SetInventory("SamsaraOutlawsRevolverClickSpamPrevention", 0); }
+                if (CheckWeapon("Outlaws_Revolver")) { TakeInventory("SamsaraOutlawsRevolverClickSpamPrevention", 1); }
+                else { SetInventory("SamsaraOutlawsRevolverClickSpamPrevention", 0); }
 
-				if (CheckWeapon("Outlaws_Shotgun")) { TakeInventory("SamsaraOutlawsShotgunClickSpamPrevention", 1); }
-				else { SetInventory("SamsaraOutlawsShotgunClickSpamPrevention", 0); }
+                if (CheckWeapon("Outlaws_Shotgun")) { TakeInventory("SamsaraOutlawsShotgunClickSpamPrevention", 1); }
+                else { SetInventory("SamsaraOutlawsShotgunClickSpamPrevention", 0); }
+
+                if (CheckInventory("Outlaws_RifleZoomed") && !CheckWeapon("Outlaws_Rifle")) { SetInventory("Outlaws_RifleZoomed", 0); }
+
+                if (CheckWeapon("Outlaws_Rifle")) { TakeInventory("SamsaraOutlawsRifleClickSpamPrevention", 1); }
+                else { SetInventory("SamsaraOutlawsRifleClickSpamPrevention", 0); }
 
                 loadoutmode = GetCVar("samsara_anderson_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3");
 

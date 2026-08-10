@@ -35,6 +35,7 @@ Outlaws/Sawed/Fire		"Sounds/Outlaws/outlaws_sawed.wav"
 
 Outlaws/Rifle/Fire		"Sounds/Outlaws/outlaws_rifle.wav"
 Outlaws/Rifle/Reload	"Sounds/Outlaws/outlaws_rreload.wav"
+Outlaws/Rifle/Empty		nosoundforyoubitch
 
 Outlaws/Cannon/Fire		"Sounds/Outlaws/outlaws_badgun.wav"
 Outlaws/Cannon/Reload	"Sounds/Outlaws/outlaws_creload.wav"
