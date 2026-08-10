@@ -6,13 +6,13 @@ actor SamsaraOutlawsWeapon : Weapon
     Weapon.BobRangeX 0.4
     Weapon.BobRangeY 0.25
     Weapon.BobSpeed 1.5
-	+ALT_AMMO_OPTIONAL
-	+AMMO_OPTIONAL
+    +ALT_AMMO_OPTIONAL
+    +AMMO_OPTIONAL
     +NOALERT
     +UNDROPPABLE
 }
 
-Actor OutlawsMeleePuff
+actor OutlawsMeleePuff
 {
 	+NOINTERACTION
 	+BLOODLESSIMPACT
@@ -30,7 +30,9 @@ Actor OutlawsMeleePuff
 	}
 }
 
-Actor OutlawsPuff
+actor OutlawsMeleePuffCoop : OutlawsMeleePuff { +MTHRUSPECIES }
+
+actor OutlawsPuff
 {
 	+NOINTERACTION
 	+ALWAYSPUFF
@@ -63,7 +65,9 @@ Actor OutlawsPuff
 	}
 }
 
-Actor OutlawsPuffHole
+actor OutlawsPuffCoop : OutlawsPuff { +MTHRUSPECIES }
+
+actor OutlawsPuffHole
 {
 	+NOINTERACTION
 	+FORCEXYBILLBOARD
@@ -79,7 +83,7 @@ Actor OutlawsPuffHole
 	}
 }
 
-Actor Outlaws_BloodGenerator : CustomInventory
+actor Outlaws_BloodGenerator : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	Inventory.PickupMessage ""
@@ -94,7 +98,7 @@ Actor Outlaws_BloodGenerator : CustomInventory
 	}
 }
 
-Actor Outlaws_Blood
+actor Outlaws_Blood
 {
 	+NOINTERACTION
 	+NOGRAVITY
@@ -109,8 +113,8 @@ Actor Outlaws_Blood
 	}
 }
 
-Actor Outlaws_ThrowCounter : TemporaryCounter { Inventory.MaxAmount 15 }
+actor Outlaws_ThrowCounter : TemporaryCounter { Inventory.MaxAmount 15 }
 actor Outlaws_Reloading : TemporaryBoolean {}
 actor Outlaws_SwitchWeapon : TemporaryBoolean {}
 actor Outlaws_CrouchToken : TemporaryBoolean {}
-Actor Outlaws_WeaponToken : TemporaryCounter { Inventory.MaxAmount 11 }
+actor Outlaws_WeaponToken : TemporaryCounter { Inventory.MaxAmount 11 }

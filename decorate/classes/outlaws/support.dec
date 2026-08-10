@@ -1,109 +1,116 @@
-Actor Outlaws_DynamiteExists : TemporaryBoolean {}
-Actor Outlaws_DynamiteExplode : TemporaryBoolean {}
-Actor Outlaws_DynamiteFuse : TemporaryCounter { Inventory.MaxAmount 35 }
-Actor Outlaws_Dynamite : SamsaraOutlawsWeapon
+actor Outlaws_DynamiteExists : Boolean {}
+actor Outlaws_DynamiteExplode : Boolean {}
+actor Outlaws_DynamiteFuse : TemporaryCounter { Inventory.MaxAmount 35 }
+
+actor Outlaws_Dynamite : SamsaraOutlawsWeapon
 {
+    Inventory.PickupMessage "Dynamite"
     Weapon.SlotNumber 9
     Weapon.SelectionOrder 500
-    Weapon.AmmoType1 "RocketAmmo"
-    Weapon.AmmoUse1 1
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoUse 1
     Tag "Dynamite"
-    +NOALERT
+    +EXPLOSIVE
     States
     {
-        Spawn:
-            TNT1 A -1
-            Stop
-        Ready:
-            OL09 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse", 28, "ReadyA") // use sprite name for Spawn state (althud)
-            TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse", 21, "ReadyB")
-            TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse", 14, "ReadyC")
-            TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse", 7, "ReadyD")
-            TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse", 1, "ReadyE")
-            TNT1 A 0 A_StopSound(CHAN_WEAPON)
-            OL09 A 1 A_WeaponReady
-            Loop
-        ReadyA:
-            OL09 E 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
-            OL09 E 4 A_WeaponReady(WRF_NOSWITCH)
-            Goto Ready
-        ReadyB:
-            OL09 F 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
-            OL09 F 4 A_WeaponReady(WRF_NOSWITCH)
-            Goto Ready
-        ReadyC:
-            OL09 G 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
-            OL09 G 4 A_WeaponReady(WRF_NOSWITCH)
-            Goto Ready
-        ReadyD:
-            OL09 H 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
-            OL09 H 4 A_WeaponReady(WRF_NOSWITCH)
-            Goto Ready
-        ReadyE:
-            OL09 I 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
-            OL09 I 4 A_WeaponReady(WRF_NOSWITCH)
-            Goto Suicide
+      Spawn:
+        OL09 A -1 // althud placeholder
+        stop
 
-        Deselect:
-            TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
-        DeselectLoop:
-            TNT1 A 0 A_StopSound(CHAN_WEAPON)
-            TNT1 A 0 A_Lower
-            OL09 A 1 A_Lower
-            Loop
+      Ready:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",28,"ReadyA")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",21,"ReadyB")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",14,"ReadyC")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",7,"ReadyD")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,"ReadyE")
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        OL09 A 1 A_WeaponReady
+        loop
 
-        Select:
-            TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
-        SelectLoop:
-            TNT1 A 0 A_StopSound(CHAN_WEAPON)
-            TNT1 A 0 A_Raise
-            OL09 A 1 A_Raise
-            Loop
+      ReadyA:
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
+        OL09 E 4 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
 
-        Fire:
-            OL09 C 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,"AltThrowHold")
-            //OL09 C 0 A_GiveInventory("Outlaws_ThrowCounter",10)
-        ThrowHold:
-            OL09 C 0 A_GiveInventory("Outlaws_ThrowCounter")
-            OL09 C 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL09 C 0 A_Refire("ThrowHold")
-        ThrowFinish:
-            OL09 D 0 A_GiveInventory("SamsaraOutlawsDynamiteAttackHandler")
-            OL09 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL09 A 0 A_TakeInventory("Outlaws_ThrowCounter")
-            OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            Goto Ready
+      ReadyB:
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
+        OL09 F 4 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
 
-        AltFire:
-            OL09 B 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,"AltThrowHold")
-            OL09 B 0 A_GiveInventory("Outlaws_DynamiteFuse",35)
-            //OL09 B 0 A_GiveInventory("Outlaws_ThrowCounter",10)
-        AltStart:
-            OL09 B 0 A_PlaySound("Outlaws/Dynamite/Fuse",CHAN_WEAPON,1.0,true)
-            OL09 B 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL09 B 0 A_Refire("AltThrowHold")
-            Goto Ready
-        AltThrowHold:
-            OL09 C 0 A_JumpIfInventory("Outlaws_DynamiteFuse", 1, 1)
-            Goto Suicide
-            OL09 C 0 A_GiveInventory("Outlaws_ThrowCounter")
-            OL09 C 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
-            OL09 C 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL09 C 0 A_Refire("AltThrowHold")
-        AltThrowFinish:
-            OL09 D 0 A_GiveInventory("SamsaraOutlawsDynamiteAltAttackHandler")
-            OL09 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            OL09 A 0 A_TakeInventory("Outlaws_ThrowCounter")
-            OL09 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
-            OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            Goto Ready
+      ReadyC:
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
+        OL09 G 4 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
 
-        Suicide:
-            OL09 A 0 A_TakeInventory("Outlaws_ThrowCounter")
-            OL09 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
-            OL09 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAltAttackHandler")
-            OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-            Goto Ready
+      ReadyD:
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
+        OL09 H 4 A_WeaponReady(WRF_NOSWITCH)
+        goto Ready
+
+      ReadyE:
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
+        OL09 I 4 A_WeaponReady(WRF_NOSWITCH)
+        goto Overcook
+
+      Deselect:
+        TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+      DeselectLoop:
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_Lower
+        OL09 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon")
+      SelectLoop:
+        TNT1 A 0 A_StopSound(CHAN_WEAPON)
+        TNT1 A 0 A_Raise
+        OL09 A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,"AltFireCharge")
+      FireCharge:
+        TNT1 A 0 A_GiveInventory("Outlaws_ThrowCounter")
+        OL09 C 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire("FireCharge")
+      FireFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAttackHandler")
+        OL09 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_TakeInventory("Outlaws_ThrowCounter")
+        OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      AltFire:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,"AltFireCharge")
+        TNT1 A 0 A_GiveInventory("Outlaws_DynamiteFuse",35)
+      AltFireStart:
+        TNT1 A 0 A_PlaySound("Outlaws/Dynamite/Fuse",CHAN_WEAPON,1,true)
+        OL09 B 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire("AltFireCharge")
+        goto Ready
+
+      AltFireCharge:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,1)
+        goto Overcook
+        TNT1 A 0 A_GiveInventory("Outlaws_ThrowCounter")
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
+        OL09 C 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire("AltFireCharge")
+      AltFireFinish:
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAltAttackHandler")
+        OL09 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_TakeInventory("Outlaws_ThrowCounter")
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
+        OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
+
+      Overcook:
+        TNT1 A 0 A_TakeInventory("Outlaws_ThrowCounter")
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAltAttackHandler")
+        OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        goto Ready
     }
 }
 
@@ -111,12 +118,14 @@ actor SamsaraOutlawsDynamiteAttackHandler : Trigger
 {
     States
     {
+      // Ammo checking/taking stuff
       Pickup:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
         stop
         TNT1 A 0 A_TakeInventory("RocketAmmo",1)
         goto PickupAttack
+
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_PlaySound("Outlaws/Knife/Throw",CHAN_WEAPON)
@@ -125,8 +134,9 @@ actor SamsaraOutlawsDynamiteAttackHandler : Trigger
       PickupAttackDM:
         TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectile",0,false,0,0,0,15)
         stop
+
       PickupAttackCoop:
-        TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectile",0,false,0,0,0,15)
+        TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileCoop",0,false,0,0,0,15)
         stop
     }
 }
@@ -135,139 +145,164 @@ actor SamsaraOutlawsDynamiteAltAttackHandler : Trigger
 {
     States
     {
+      // Ammo checking/taking stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupPlaySound")
         TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
         stop
         TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        goto PickupPlaySound
+
+      // Sound playing stuff
+      PickupPlaySound:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,1)
         goto PickupAttack
+        TNT1 A 0 A_PlaySound("Outlaws/Knife/Throw",CHAN_WEAPON)
+        goto PickupAttack
+
       // Attack stuff
       PickupAttack:
-        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,1)
-        Goto PickupAttackContinue
-        TNT1 A 0 A_PlaySound("Outlaws/Knife/Throw",CHAN_WEAPON)
-      PickupAttackContinue:
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
         TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileTimed",0,false,0,0,0,15)
         stop
+
       PickupAttackCoop:
-        TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileTimed",0,false,0,0,0,15)
+        TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileTimedCoop",0,false,0,0,0,15)
         stop
     }
 }
 
-Actor Outlaws_DynamiteProjectile
+actor Outlaws_DynamiteProjectile
 {
     Projectile
-    Speed 10
-    Gravity 0.33
-    Damage (0)
-    BounceFactor 0.2
-    WallBounceFactor 0.33
-    ReactionTime 1
     Radius 6
     Height 12
-    +HEXENBOUNCE
-    -NOGRAVITY
-    +NOEXTREMEDEATH
+    Speed 10
+    Damage (0)
+    Gravity 0.33
+    ReactionTime 1
+    BounceType "Hexen"
+    BounceFactor 0.2
+    WallBounceFactor 0.33
     +BLOODLESSIMPACT
     +BOUNCEONACTORS
+    +NOEXTREMEDEATH
+    -NOGRAVITY
     +USEBOUNCESTATE
     States
     {
-        Spawn:
-            OL00 A 0 NoDelay A_SetArg(0,CallACS("Outlaws_ThrowCounter")+10)
-            OL00 A 0 A_ChangeVelocity(sqrt(velx*velx+vely*vely)*(args[0]/10),0,velz*(args[0]/10),CVF_RELATIVE|CVF_REPLACE)
-            OL00 A 0 A_SetAngle(angle+frandom(-10,10))
-            OL00 A 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
-            OL00 A 0 A_GiveInventory("Outlaws_DynamiteExists")
-        SpawnLoop:
-            OL00 A 0 A_JumpIfInventory("Outlaws_DynamiteExplode",1,"Explode")
-            OL00 A 0 A_JumpIf(sqrt(velx*velx+vely*vely+velz*velz) <= 1,"Stay")
-            OL00 A 1 A_SetPitch(pitch+15)
-            Loop
-        Stay:
-            OL00 B 0 A_Stop
-            OL00 B 0 A_SetPitch(0)
-        StayLoop:
-            OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExplode",1,"Explode")
-            OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
-            OL00 B 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
-            OL00 B 1 A_JumpIfInventory("Outlaws_DynamiteDetonate",1,"Detonate")
-            Loop
-        Bounce:
-            "####" "#" 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
-            "####" "#" 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
-            "####" "#" 1 A_Jump(256,"SpawnLoop")
-            Wait
-        Explode:
-            "####" "#" 1 A_CountDown
-            Wait
-        Death:
-            TNT1 A 0 A_NoGravity
-            TNT1 A 0 A_PlaySound("Outlaws/Dynamite/Explosion",CHAN_WEAPON)
-            TNT1 A 0 A_Explode(250,128)
-            OL99 HIJKLMN 4 Bright
-            Stop
+      Spawn:
+        OL00 A 0 NoDelay A_SetArg(0,CallACS("Outlaws_ThrowCounter")+10)
+        OL00 A 0 A_ChangeVelocity(sqrt(velx*velx+vely*vely)*(args[0]/10),0,velz*(args[0]/10),CVF_RELATIVE|CVF_REPLACE)
+        OL00 A 0 A_SetAngle(angle+frandom(-10,10))
+        OL00 A 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
+        OL00 A 0 A_GiveInventory("Outlaws_DynamiteExists")
+      SpawnLoop:
+        OL00 A 0 A_JumpIfInventory("Outlaws_DynamiteExplode",1,"Explode")
+        OL00 A 0 A_JumpIf(sqrt(velx*velx+vely*vely+velz*velz) <= 1, "Stay")
+        OL00 A 1 A_SetPitch(pitch+15)
+        loop
+
+      Stay:
+        OL00 B 0 A_Stop
+        OL00 B 0 A_SetPitch(0)
+      StayLoop:
+        OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExplode",1,"Explode")
+        OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
+        OL00 B 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
+        OL00 B 1 A_JumpIfInventory("Outlaws_DynamiteDetonate",1,"Detonate")
+        loop
+
+      Bounce:
+        "####" "#" 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
+        "####" "#" 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
+        "####" "#" 1 A_Jump(256,"SpawnLoop")
+        wait
+
+      Explode:
+        "####" "#" 1 A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_PlaySound("Outlaws/Dynamite/Explosion",CHAN_WEAPON)
+        TNT1 A 0 A_Explode(250,128,XF_HURTSOURCE,true)
+      DeathFinish:
+        OL99 HIJKLMN 4 Bright
+        stop
     }
 }
 
-Actor Outlaws_DynamiteProjectileTimed : Outlaws_DynamiteProjectile
+actor Outlaws_DynamiteProjectileCoop : Outlaws_DynamiteProjectile
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Outlaws_DynamiteProjectileTimed : Outlaws_DynamiteProjectile
 {
     States
     {
-        Spawn:
-            OL00 A 0 NoDelay A_SetArg(0,CallACS("Outlaws_ThrowCounter")+10)
-            OL00 A 0 A_ChangeVelocity(sqrt(velx*velx+vely*vely)*(args[0]/10),0,velz*(args[0]/10),CVF_RELATIVE|CVF_REPLACE)
-            OL00 A 0 A_SetAngle(angle+frandom(-10,10))
-            OL00 A 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
-            OL00 A 0 ACS_NamedExecuteWithResult("Outlaws_TNTAddFuse")
-            OL00 A 0 A_GiveInventory("Outlaws_DynamiteExists")
-            OL00 A 0 A_PlaySound("Outlaws/Dynamite/Fuse",CHAN_WEAPON,1.0,true)
-        SpawnLoop:
-            OL00 A 0 A_JumpIf(sqrt(velx*velx+vely*vely+velz*velz) <= 1,"Stay")
-            OL00 A 0 A_CountDown
-            OL00 A 1 A_SetPitch(pitch+15)
-            Loop
-        Stay:
-            OL00 B 0 A_Stop
-            OL00 B 0 A_SetPitch(0)
-        StayLoop:
-            OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
-            OL00 B 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
-            OL00 B 0 A_CountDown
-            OL00 B 1 A_JumpIfInventory("Outlaws_DynamiteDetonate",1,"Detonate")
-            Loop
+      Spawn:
+        OL00 A 0 NoDelay A_SetArg(0,CallACS("Outlaws_ThrowCounter")+10)
+        OL00 A 0 A_ChangeVelocity(sqrt(velx*velx+vely*vely)*(args[0]/10),0,velz*(args[0]/10),CVF_RELATIVE|CVF_REPLACE)
+        OL00 A 0 A_SetAngle(angle+frandom(-10,10))
+        OL00 A 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
+        OL00 A 0 ACS_NamedExecuteWithResult("Outlaws_TNTAddFuse")
+        OL00 A 0 A_GiveInventory("Outlaws_DynamiteExists")
+        OL00 A 0 A_PlaySound("Outlaws/Dynamite/Fuse",CHAN_WEAPON,1,true)
+      SpawnLoop:
+        OL00 A 0 A_JumpIf(sqrt(velx*velx+vely*vely+velz*velz) <= 1, "Stay")
+        OL00 A 0 A_Countdown
+        OL00 A 1 A_SetPitch(pitch+15)
+        loop
+
+      Stay:
+        OL00 B 0 A_Stop
+        OL00 B 0 A_SetPitch(0)
+      StayLoop:
+        OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
+        OL00 B 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
+        OL00 B 0 A_Countdown
+        OL00 B 1 A_JumpIfInventory("Outlaws_DynamiteDetonate",1,"Detonate")
+        loop
     }
 }
 
-Actor Outlaws_DynamiteHitBox
+actor Outlaws_DynamiteProjectileTimedCoop : Outlaws_DynamiteProjectileTimed
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Outlaws_DynamiteHitBox
 {
     Health 5
     Radius 8
     Height 16
     Tag "Dynamite"
-    +THRUACTORS
-    +SHOOTABLE
-    -SOLID
     +NOBLOOD
     +NOGRAVITY
+    +SHOOTABLE
+    +THRUACTORS
     States
     {
-        Spawn:
-            TNT1 A 0
-        SpawnLoop:
-            TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,1,AAPTR_TRACER)
-            Goto Remove
-            TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
-            Loop
-        Death:
-            TNT1 A 1 A_GiveInventory("Outlaws_DynamiteExplode",1,AAPTR_TRACER)
-            Stop
-        Remove:
-            TNT1 A 1
-            Stop
+      Spawn:
+        TNT1 A 0
+      SpawnLoop:
+        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,1,AAPTR_TRACER)
+        goto Remove
+        TNT1 A 1 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
+        loop
+
+      Death:
+        TNT1 A 1 A_GiveInventory("Outlaws_DynamiteExplode",1,AAPTR_TRACER)
+        stop
+
+      Remove:
+        TNT1 A 1
+        stop
     }
 }

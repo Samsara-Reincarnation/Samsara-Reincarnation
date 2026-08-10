@@ -1,38 +1,43 @@
-Actor Outlaws_MachineGun : SamsaraOutlawsWeapon
+actor Outlaws_MachineGun : SamsaraOutlawsWeapon
 {
+    Inventory.PickupMessage "Axiom Light-Weight Machine Gun"
     Weapon.SlotNumber 6
     Weapon.SelectionOrder 200
-    Weapon.AmmoType1 "Cell"
-    Weapon.AmmoUse1 1
+    Weapon.AmmoType "Cell"
+    Weapon.AmmoUse 1
     Tag "Axiom Light-Weight Machine Gun"
+    -ALT_AMMO_OPTIONAL
+    -AMMO_OPTIONAL
+    -NOALERT
     States
     {
-        Spawn:
-            OL93 G -1
-            Stop
-        Ready:
-            OL06 A 1 A_WeaponReady
-            Loop
+      Spawn:
+        OL93 G -1
+        stop
 
-        Deselect:
-            TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
-        DeselectLoop:
-            TNT1 A 0 A_Lower
-            OL06 A 1 A_Lower
-            Loop
+      Ready:
+        OL06 A 1 A_WeaponReady
+        loop
 
-        Select:
-            TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
-        SelectLoop:
-            TNT1 A 0 A_Raise
-            OL06 A 1 A_Raise
-            Loop
+      Deselect:
+        TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+      DeselectLoop:
+        TNT1 A 0 A_Lower
+        OL06 A 1 A_Lower
+        loop
 
-        Fire:
-        AltFire:
-            OL06 B 0 A_GiveInventory("SamsaraOutlawsMachineGunAttackHandler")
-            OL06 BC 2 Bright
-            Goto Ready
+      Select:
+        TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon")
+      SelectLoop:
+        TNT1 A 0 A_Raise
+        OL06 A 1 A_Raise
+        loop
+
+      Fire:
+      AltFire:
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsMachineGunAttackHandler")
+        OL06 BC 2 Bright
+        goto Ready
     }
 }
 
@@ -49,16 +54,21 @@ actor SamsaraOutlawsMachineGunAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
-        TNT1 A 0 A_Recoil(0.25)
-        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",4,12)
         TNT1 A 0 A_PlaySound("Outlaws/MachineGun/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
         TNT1 A 0 A_FireBullets(2,2,-1,30,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
-        stop
+        goto PickupFinish
+
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(2,2,-1,30,"OutlawsPuff",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,30,"OutlawsPuffCoop",FBF_NOFLASH|FBF_NORANDOM|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Recoil(0.25)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 4, 12)
         stop
     }
 }
