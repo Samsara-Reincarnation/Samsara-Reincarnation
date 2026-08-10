@@ -1,43 +1,43 @@
 Actor Outlaws_GatlingGun : SamsaraOutlawsWeapon
 {
-	Weapon.SlotNumber 7
+    Weapon.SlotNumber 7
     Weapon.SelectionOrder 100
-	Weapon.AmmoType1 "Cell"
+    Weapon.AmmoType1 "Cell"
     Weapon.AmmoUse1 2
     Tag "Ash Inc. Semi-Portable Gatling Gun"
-	States
-	{
-		Spawn:
-			OL93 H -1
-			Stop
-		Ready:
-			OL07 A 1 A_WeaponReady
-			Loop
+    States
+    {
+        Spawn:
+            OL93 H -1
+            Stop
+        Ready:
+            OL07 A 1 A_WeaponReady
+            Loop
 
-		Deselect:
-			TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
-		DeselectLoop:
-			TNT1 A 0 A_Lower
-			OL07 A 1 A_Lower
-			Loop
+        Deselect:
+            TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
+        DeselectLoop:
+            TNT1 A 0 A_Lower
+            OL07 A 1 A_Lower
+            Loop
 
-		Select:
-			TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
-		SelectLoop:
-			TNT1 A 0 A_Raise
-			OL07 A 1 A_Raise
-			Loop
-			
-		Fire:
-			OL07 B 0 A_GiveInventory("SamsaraOutlawsGatlingGunAttackHandler")
-			OL07 BC 2 Bright
-			Goto Ready
-		AltFire:
-			OL07 B 0 A_GiveInventory("SamsaraOutlawsGatlingGunAltAttackHandler")
-			OL07 BC 2 Bright
-			OL07 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-			Goto Ready
-	}
+        Select:
+            TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon",1)
+        SelectLoop:
+            TNT1 A 0 A_Raise
+            OL07 A 1 A_Raise
+            Loop
+
+        Fire:
+            OL07 B 0 A_GiveInventory("SamsaraOutlawsGatlingGunAttackHandler")
+            OL07 BC 2 Bright
+            Goto Ready
+        AltFire:
+            OL07 B 0 A_GiveInventory("SamsaraOutlawsGatlingGunAltAttackHandler")
+            OL07 BC 2 Bright
+            OL07 A 4 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto Ready
+    }
 }
 
 actor SamsaraOutlawsGatlingGunAttackHandler : Trigger
@@ -53,9 +53,9 @@ actor SamsaraOutlawsGatlingGunAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
-		TNT1 A 0 A_Recoil(1)
-		TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",4,20)
-		TNT1 A 0 A_PlaySound("Outlaws/GatlingGun/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_Recoil(1)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",4,20)
+        TNT1 A 0 A_PlaySound("Outlaws/GatlingGun/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
@@ -80,9 +80,9 @@ actor SamsaraOutlawsGatlingGunAltAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
-		TNT1 A 0 A_Recoil(1)
-		TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",4,20)
-		TNT1 A 0 A_PlaySound("Outlaws/GatlingGun/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_Recoil(1)
+        TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil",4,20)
+        TNT1 A 0 A_PlaySound("Outlaws/GatlingGun/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
