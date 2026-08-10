@@ -19,8 +19,20 @@ int turretWeapons[OUTLAWWEAPONS] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0 };
 
 Script "Outlaws_ThrowCounter" (void)
 {
-	SetActivatorToTarget(0);
-	SetResultValue(CheckInventory("Outlaws_ThrowCounter"));
+    SetActivator(0, AAPTR_TARGET);
+
+    int power = CheckInventory("Outlaws_ThrowCounter");
+    int projfired = CheckInventory("SamsaraHasSpread") ? 3 : 1;
+
+    GiveInventory("SamsaraOutlawsThrowChecks", 1);
+
+    if (CheckInventory("SamsaraOutlawsThrowChecks") >= projfired)
+    {
+        SetInventory("Outlaws_ThrowCounter", 0);
+        SetInventory("SamsaraOutlawsThrowChecks", 0);
+    }
+
+    SetResultValue(power);
 }
 
 Script "Outlaws_GenerateHitBox" (void)
