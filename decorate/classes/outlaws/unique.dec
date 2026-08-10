@@ -1,24 +1,15 @@
-Actor Outlaws_SheriffsBadge : CustomInventory
+actor Outlaws_SheriffsBadge : Trigger
 {
-	Inventory.PickupMessage "Sheriff's Badge"
-	+INVENTORY.AUTOACTIVATE
-	States
-	{
-		Spawn:
-			OL11 ABCDEFGH 4
-			Loop
-		Pickup:
-			TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgePower",1)
-			TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgeProtection",1)
-			TNT1 A 0 A_PlaySound("Outlaws/Twirl",CHAN_ITEM)
-			Stop
-	}
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgePower")
+        TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgeProtection")
+        stop
+    }
 }
 
-actor OutlawsSheriffsBadgePower : SamsaraPowerupGiver
-{
-    Powerup.Type "SheriffsBadgePower"
-}
+actor OutlawsSheriffsBadgePower : SamsaraPowerupGiver { Powerup.Type "SheriffsBadgePower" }
 
 actor PowerSheriffsBadgePower : PowerDamage
 {
@@ -26,13 +17,12 @@ actor PowerSheriffsBadgePower : PowerDamage
     DamageFactor "Normal", 4
 }
 
-actor OutlawsSheriffsBadgeProtection : SamsaraPowerupGiver
-{
-    Powerup.Type "SheriffsBadgeProtection"
-}
+actor OutlawsSheriffsBadgeProtection : SamsaraPowerupGiver { Powerup.Type "SheriffsBadgeProtection" }
 
 actor PowerSheriffsBadgeProtection : PowerProtection
 {
     Powerup.Duration -30
     DamageFactor "Normal", 0.5
 }
+
+actor Outlaws_SheriffsBadgeStrife : Outlaws_SheriffsBadge {} // to be redone as an inventory item for strife
