@@ -1,11 +1,25 @@
-actor Outlaws_SheriffsBadgePowerup : Trigger
+actor Outlaws_SheriffsBadge : CustomInventory
 {
+    Inventory.UseSound ""
+    Inventory.Icon "OL11A0"
+    Inventory.MaxAmount 3
+    Inventory.InterHubAmount 3
+    Inventory.RestrictedTo "OutlawsPlayer"
+    Tag "Sheriff's Badge"
+    +INVBAR
+    +UNDROPPABLE
     States
     {
-      Pickup:
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 24, 0), "UseFail")
+        TNT1 A 0 A_PlaySound("Outlaws/Twirl",CHAN_ITEM)
         TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgePower")
         TNT1 A 0 A_GiveInventory("OutlawsSheriffsBadgeProtection")
         stop
+
+      UseFail:
+        TNT1 A 0
+        fail
     }
 }
 
@@ -23,28 +37,4 @@ actor PowerSheriffsBadgeProtection : PowerProtection
 {
     Powerup.Duration -30
     DamageFactor "Normal", 0.5
-}
-
-actor Outlaws_SheriffsBadge : CustomInventory
-{
-    Inventory.UseSound ""
-    Inventory.Icon "OL11A0"
-    Inventory.MaxAmount 3
-    Inventory.InterHubAmount 3
-    Inventory.RestrictedTo "OutlawsPlayer"
-    Tag "Sheriff's Badge"
-    +INVBAR
-    +UNDROPPABLE
-    States
-    {
-      Use:
-        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 24, 0), "UseFail")
-        TNT1 A 0 A_PlaySound("Outlaws/Twirl",CHAN_ITEM)
-        TNT1 A 0 A_GiveInventory("Outlaws_SheriffsBadgePowerup")
-        stop
-
-      UseFail:
-        TNT1 A 0
-        fail
-    }
 }
