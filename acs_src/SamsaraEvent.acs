@@ -5467,6 +5467,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 if (CheckWeapon("Outlaws_Rifle")) { TakeInventory("SamsaraOutlawsRifleClickSpamPrevention", 1); }
                 else { SetInventory("SamsaraOutlawsRifleClickSpamPrevention", 0); }
 
+                if (CheckInventory("SamsaraOutlawsDynamiteLoopSoundCheck") && !CheckWeapon("Outlaws_Dynamite"))
+                {
+                    StopSound(0, CHAN_WEAPON);
+
+                    SetInventory("SamsaraOutlawsDynamiteLoopSoundCheck", 0);
+                }
+
                 loadoutmode = GetCVar("samsara_anderson_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3");
 
                 if (loadoutmode > 1) { loadoutmode = 1; }
