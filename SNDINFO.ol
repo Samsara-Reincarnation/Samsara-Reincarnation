@@ -59,3 +59,5 @@ Outlaws/WeaponPickup "Sounds/Outlaws/outlaws_weapgrab.WAV"
 Outlaws/Twirl        "Sounds/Outlaws/outlaws_TWIRL.WAV"
 
 Outlaws/Secret "Sounds/Outlaws/outlaws_COOL.WAV"
+
+Outlaws/YouDied "Sounds/Outlaws/outlaws_CASHOPEN.wav"
