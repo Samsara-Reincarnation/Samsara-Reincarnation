@@ -118,6 +118,7 @@ Script "Outlaws_Player" (void)
 			SetHudSize(640,480,true);
 			
 			//Go ahead and draw Sheriff's Badge, if you have it
+			/*
 			if(CheckInventory("PowerSheriffsBadgePower"))
 			{
 				int frame = ((timer()%36)/2)+1;
@@ -125,12 +126,13 @@ Script "Outlaws_Player" (void)
 				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+37,CR_UNTRANSLATED,620.1,20.1,0.0);	
 			}
 			else RemoveMessages(startIndex+37,startIndex+37);
+			*/
 			
 			//Do nothing if the weapon is not assigned
 			if(currentWeapon >= 0)
 			{
 				//Draw ammo counter
-				if(OutlawsWeapons[currentWeapon][2] != "")
+				if(StrCmp(OutlawsWeapons[currentWeapon][2], ""))
 				{
 					//If the player is reloading, set the ammoResetDelay, otherwise, decrement
 					if(CheckInventory("Outlaws_Reloading"))
