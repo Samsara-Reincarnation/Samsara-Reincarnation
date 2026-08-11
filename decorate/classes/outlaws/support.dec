@@ -22,8 +22,10 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
         stop
 
       Ready:
-        TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuseActive",1,"ReadyFuse")
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteLoopSoundStopper")
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuseActive")
+        TNT1 A 0 A_TakeInventory("Outlaws_ThrowCounter")
+        TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
         OL09 A 1 A_WeaponReady
         loop
 
@@ -37,7 +39,7 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
         OL09 I 0
         "####" "#" 0 A_TakeInventory("Outlaws_DynamiteFuse",1)
         "####" "#" 4 A_WeaponReady(WRF_NOSWITCH)
-        goto Ready
+        loop
 
       Deselect:
         TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
@@ -86,7 +88,7 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteLoopSoundStarter")
         OL09 B 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         TNT1 A 0 A_ReFire("AltFireCharge")
-        goto Ready
+        goto ReadyFuse
 
       AltFireCharge:
         TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,1)
