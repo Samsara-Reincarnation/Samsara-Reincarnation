@@ -1186,6 +1186,24 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 						maxBulkBuy = itemLimit - CheckInventory("BasicArmor");
 					}
 				}
+				//Constrain financially
+				maxBulkBuy = min(maxBulkBuy,CheckInventory("Kingpin_Cash")/pawnOMaticItemPrices[currentMenu-2][currentMenuItem]);
+				
+				//Clamp the value here
+				if(bulkCounter > maxBulkBuy)
+				{
+					bulkCounter = maxBulkBuy;
+					//Cancel transaction if out of money
+					if(maxBulkBuy == 0)
+					{
+						modSelected = 0;
+						messageDialog = random(0,1);
+						KingpinDisplayDialogue(10,0,messageDialog,0);
+						welcomeMessage = false;
+						PlaySound(sTid,StrParam(s:"PawnOMatic/LowCash",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
+						bulkCounter = -1;
+					}
+				}
 	
 				//Alter bulk counter depending on input
 				if(playerInputX != 0 || playerInputY != 0)
