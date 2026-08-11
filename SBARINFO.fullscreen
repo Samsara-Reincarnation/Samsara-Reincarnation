@@ -1417,80 +1417,88 @@ StatusBar Fullscreen, ForceScaled
                 // Inventory
                 DrawSelectedInventory AlwaysShowCounter, HUDFONT_DOOM, 290, 22, 293, 30, Untranslated;
             }
-			
-		} else InInventory CatacombClass { 
-			// Health
-			DrawImage "CATAHUD1", 14, 132;
-			DrawImage "CATAHUD2", 5, 175;
-			DrawImage "CATAHUD3", 229, 134;
-			//DrawImage "CATAHUD3", 252, 98;
-			InInventory Catacomb3D_ChargeTime { DrawBar "CATACLOD", "CATABACK", Catacomb3D_ChargeTime, Vertical, 79, 166; }
-			       
-			InInventory PowerFakeInvulnerable { DrawImage "PEFGOD0", 16, 138; }
-			else { DrawMugShot 4, disablegrin, disableouch, disablepain, disablerampage, 16, 138; }
-			
-			DrawNumber 3, CATAHUDFONT, Abyss, Health, Alignment(Right), 30, 178;
-			DrawNumber 3, CATAHUDFONT, Abyss, Armor, Alignment(Right), 64, 178;
-			
-			// 140 158 176 - y
-			// 265 304 - x
-			DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Waves, Alignment(Right), 265, 140;
-			DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_XTerminators, Alignment(Right), 304, 140;
-			DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Bursts, Alignment(Right), 265, 158;
+        } else InInventory CatacombClass {
+            // Health
+            DrawImage "CATAHUD1", 14, 132;
+            DrawImage "CATAHUD2", 5, 175;
+            DrawImage "CATAHUD3", 229, 134;
+            //DrawImage "CATAHUD3", 252, 98;
+            InInventory Catacomb3D_ChargeTime { DrawBar "CATACLOD", "CATABACK", Catacomb3D_ChargeTime, Vertical, 79, 166; }
 
-			DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Zappers, Alignment(Right), 304, 158;
-			DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Nukes, Alignment(Right), 265, 176;
-			DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Bolts, Alignment(Right), 304, 176;
-			
-			// Frags
+            InInventory PowerFakeInvulnerable { DrawImage "PEFGOD0", 16, 138; }
+            else { DrawMugShot 4, disablegrin, disableouch, disablepain, disablerampage, 16, 138; }
+
+            DrawNumber 3, CATAHUDFONT, Abyss, Health, Alignment(Right), 30, 178;
+            DrawNumber 3, CATAHUDFONT, Abyss, Armor, Alignment(Right), 64, 178;
+
+            // 140 158 176 - y
+            // 265 304 - x
+            DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Waves, Alignment(Right), 265, 140;
+            DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_XTerminators, Alignment(Right), 304, 140;
+            DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Bursts, Alignment(Right), 265, 158;
+
+            DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Zappers, Alignment(Right), 304, 158;
+            DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Nukes, Alignment(Right), 265, 176;
+            DrawNumber 2, CATAHUDFONT, Abyss, Ammo Catacomb_Bolts, Alignment(Right), 304, 176;
+
+            // Rune icon
+            InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 42, 100, Center; }
+
+            // Frags
             InInventory ChickenModeOn { DrawNumber 3, CATAHUDFONT, Abyss, ChickenKillCount, Alignment(Center), 41, 124; }
             else
             {
                 GameMode Deathmatch, Possession, TeamGame { DrawNumber 4, CATAHUDFONT, Abyss, Frags, Alignment(Center), 41, 124; }
                 else GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawNumber 9, CATAHUDFONT, Abyss, KillCountAmountTrue, Alignment(Center), 41, 124; }
             }
-			
-			// Keys
-			GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawKeyBar 100, Horizontal, ReverseRows, 10, 229, 126, 0, 6, 12; }
+
+            // Keys
+            GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawKeyBar 100, Horizontal, ReverseRows, 10, 229, 126, 0, 6, 12; }
 
             // Inventory
             DrawSelectedInventory AlwaysShowCounter, CATAHUDFONT, 290, 22, 293, 30, Abyss;
 
-			// Equipment
+            // Equipment
             InInventory ExpandedHud
             {
                 // Slot 1
                 InInventory Catacomb_WavesQuickSpell { DrawImage "STYSNUM1", 126, 10; }
+
                 IsSelected Catacomb_WavesQuickSpell { DrawImage "STY2NUM1", 126, 10; }
 
                 // Slot 2
                 InInventory Catacomb_XTerminatorsQuickSpell { DrawImage "STYSNUM2", 136, 10; }
+
                 IsSelected Catacomb_XTerminatorsQuickSpell { DrawImage "STY2NUM2", 136, 10; }
 
                 // Slot 3
                 InInventory Catacomb_BurstsQuickSpell { DrawImage "STYSNUM3", 146, 10; }
+
                 IsSelected Catacomb_BurstsQuickSpell { DrawImage "STY2NUM3", 146, 10; }
 
                 // Slot 4
                 InInventory Catacomb_ZappersQuickSpell { DrawImage "STYSNUM4", 156, 10; }
+
                 IsSelected Catacomb_ZappersQuickSpell { DrawImage "STY2NUM4", 156, 10; }
 
                 // Slot 5
                 InInventory Catacomb_NukesQuickSpell { DrawImage "STYSNUM5", 166, 10; }
+
                 IsSelected Catacomb_NukesQuickSpell { DrawImage "STY2NUM5", 166, 10; }
 
                 // Slot 6
                 InInventory Catacomb_BoltsQuickSpell { DrawImage "STYSNUM6", 176, 10; }
-                IsSelected Catacomb_BoltsQuickSpell { DrawImage "STY2NUM6", 176, 10; }
-				
-				// Slot 7
-                InInventory Catacomb_AtomicQuickSpell { DrawImage "STYSNUM7", 186, 10; }
-                IsSelected Catacomb_AtomicQuickSpell { DrawImage "STY2NUM7", 186, 10; }
-				
-				InInventory Catacomb_HourglassCooldown { DrawNumber 3, INDEXFONT, Yellow, Catacomb_HourglassCooldown, 293, 48; }
-            }
 
-			
+                IsSelected Catacomb_BoltsQuickSpell { DrawImage "STY2NUM6", 176, 10; }
+
+                // Slot 7
+                InInventory GotWeapon7 { DrawImage "STYSNUM7", 186, 10; }
+
+                IsSelected Catacomb_AtomicQuickSpell { DrawImage "STY2NUM7", 186, 10; }
+
+                // Time Freeze
+                InInventory Catacomb_HourglassCooldown { DrawNumber 3, INDEXFONT, Yellow, Catacomb_HourglassCooldown, 293, 48; }
+            }
         } else InInventory PainkillerClass {
             Alpha 0.25
             {
@@ -1593,47 +1601,48 @@ StatusBar Fullscreen, ForceScaled
 
             // Inventory
             DrawSelectedInventory AlwaysShowCounter, HUDFONT_DOOM, 290, 22, 293, 30, Untranslated;
-			
-		} else InInventory UnrealClass { 
-			// Health
-			DrawImage "UNRLHEAL", 0, 168;
-			DrawNumber 3, UNRBFONT, Untranslated, Health, Alignment(Left), 33, 172;
-			
-			// Armor
+
+        } else InInventory UnrealClass {
+            // Health
+            DrawImage "UNRLHEAL", 0, 168;
+            DrawNumber 3, UNRBFONT, Untranslated, Health, Alignment(Left), 33, 172;
+
+            // Armor
             InInventory BasicArmor, 1
             {
-			DrawImage "UNRLARMR", 0, 136;
-			DrawNumber 3, UNRBFONT, Untranslated, Armor, Alignment(Left), 33, 140;
+                DrawImage "UNRLARMR", 0, 136;
+                DrawNumber 3, UNRBFONT, Untranslated, Armor, Alignment(Left), 33, 140;
             }
-			
+
             // Ammo
-			DrawImage "UNRLAMMO", 292, 168;
-			DrawBar "UNRLAMBR", "UNRLAMBK", Ammo Clip, Vertical, 295, 181;
-			DrawBar "UNRLAMBR", "UNRLAMBK", Ammo Shell, Vertical, 301, 181;
-			DrawBar "UNRLAMBR", "UNRLAMBK", Ammo RocketAmmo, Vertical, 307, 181;
-			DrawBar "UNRLAMBR", "UNRLAMBK", Ammo Cell, Vertical, 313, 181;
-			IsSelected Unreal_AutoMag
-			{
-				InInventory SamsaraReloadMode, 2
-				{
-					InInventory PistolModeOn
-					{
-					DrawNumber 4, CMPSUNRL, Untranslated, Ammo1, Alignment(Right), 259, 161;
-					DrawNumber 4, UNRBFONT, Untranslated, Ammo Clip, Alignment(Right), 259, 172;
-					}
-					else
-					{
-					DrawNumber 4, UNRBFONT, Untranslated, Ammo1, Alignment(Right), 259, 172;
-					}
-				}
-				else
-				InInventory PistolModeOn
-				{
-				DrawNumber 4, UNRBFONT, Untranslated, Ammo Clip, Alignment(Right), 259, 172;
-				}
-			}
-			else
-            DrawNumber 4, UNRBFONT, Untranslated, Ammo1, Alignment(Right), 259, 172;
+            DrawImage "UNRLAMMO", 292, 168;
+            DrawBar "UNRLAMBR", "UNRLAMBK", Ammo Clip, Vertical, 295, 181;
+            DrawBar "UNRLAMBR", "UNRLAMBK", Ammo Shell, Vertical, 301, 181;
+            DrawBar "UNRLAMBR", "UNRLAMBK", Ammo RocketAmmo, Vertical, 307, 181;
+            DrawBar "UNRLAMBR", "UNRLAMBK", Ammo Cell, Vertical, 313, 181;
+
+            IsSelected Unreal_AutoMag
+            {
+                InInventory SamsaraReloadMode, 2
+                {
+                    InInventory PistolModeOn
+                    {
+                        DrawNumber 4, CMPSUNRL, Untranslated, Ammo1, Alignment(Right), 259, 161;
+                        DrawNumber 4, UNRBFONT, Untranslated, Ammo Clip, Alignment(Right), 259, 172;
+                    }
+                    else { DrawNumber 4, UNRBFONT, Untranslated, Ammo1, Alignment(Right), 259, 172; }
+                } else {
+                    InInventory PistolModeOn { DrawNumber 4, UNRBFONT, Untranslated, Ammo Clip, Alignment(Right), 259, 172; }
+                }
+            } else {
+                UsesSecondaryAmmo
+                {
+                    DrawNumber 4, CMPSUNRL, Untranslated, Ammo1, Alignment(Right), 259, 161;
+                    DrawNumber 4, UNRBFONT, Untranslated, Ammo2, Alignment(Right), 259, 172;
+                }
+                else { DrawNumber 4, UNRBFONT, Untranslated, Ammo1, Alignment(Right), 259, 172; }
+            }
+
             IsSelected Unreal_DispersionPistol { DrawImage "UNRLAMSF", 260, 168; }
             else IsSelected Unreal_AutoMag { DrawImage "UNRLAMSP", 260, 168; }
             else IsSelected Unreal_RazorJack { DrawImage "UNRLAMS1", 260, 168; }
@@ -1643,17 +1652,18 @@ StatusBar Fullscreen, ForceScaled
             else IsSelected Unreal_EightBall { DrawImage "UNRLAMS5", 260, 168; }
             else IsSelected Unreal_Minigun { DrawImage "UNRLAMS6", 260, 168; }
             else IsSelected Unreal_Redeemer { DrawImage "UNRLAMS7", 260, 168; }
-			else IsSelected Unreal_QuadShot { DrawImage "UNRLAM7S", 260, 168; }
-			else IsSelected Unreal_GESBioRifle { DrawImage "UNRLAMU1", 260, 168; }
-			else IsSelected Unreal_Rifle { DrawImage "UNRLAMU2", 260, 168; }
-			else IsSelected Unreal_Duster { DrawImage "UNRLAMU3", 260, 168; }
+            else IsSelected Unreal_QuadShot { DrawImage "UNRLAM7S", 260, 168; }
+            else IsSelected Unreal_GESBioRifle { DrawImage "UNRLAMU1", 260, 168; }
+            else IsSelected Unreal_Rifle { DrawImage "UNRLAMU2", 260, 168; }
+            else IsSelected Unreal_Duster { DrawImage "UNRLAMU3", 260, 168; }
 
             // Rune icon
-            InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 163, Center; }
+            InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 100, Center; }
 
             // Frags
-			DrawImage "UNRLKILL", 288, 0;
-			InInventory ChickenModeOn { DrawNumber 3, UNRBFONT, Untranslated, ChickenKillCount, Alignment(Right), 287, 4; }
+            DrawImage "UNRLKILL", 288, 0;
+
+            InInventory ChickenModeOn { DrawNumber 3, UNRBFONT, Untranslated, ChickenKillCount, Alignment(Right), 287, 4; }
             else
             {
                 GameMode Deathmatch, Possession, TeamGame { DrawNumber 4, UNRBFONT, Untranslated, Frags, Alignment(Right), 287, 4; }
@@ -1665,8 +1675,8 @@ StatusBar Fullscreen, ForceScaled
 
             // Inventory
             DrawSelectedInventory AlwaysShowCounter, UNRBFONT, 288, 32, 291, 40, Untranslated;
-			
-			// Equipment
+
+            // Equipment
             InInventory ExpandedHud
             {
                 // Slot 1
@@ -1706,7 +1716,6 @@ StatusBar Fullscreen, ForceScaled
 
                 IsSelected Unreal_QuadShot { DrawImage "STY3NUM7", 186, 10; }
             }
-
         } else InInventory RTCWClass {
             DrawNumber 4, RTCWNUMB, RTCWBrown, Health, Alignment(Right), DrawShadow(3, 3), 32, 184, Red, 10;
             DrawNumber 4, RTCWNUMB, RTCWGreen, Armor, Alignment(Right), DrawShadow(3, 3), 80, 184;
