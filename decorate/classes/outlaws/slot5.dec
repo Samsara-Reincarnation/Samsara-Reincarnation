@@ -144,7 +144,7 @@ actor SamsaraOutlawsCannonAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
-		TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_PlaySound("Outlaws/Cannon/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
@@ -192,9 +192,8 @@ actor Outlaws_CannonProjectile
         stop
 
       Death:
-		TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_NoGravity
-        TNT1 A 0 A_Explode(250,128)
+        TNT1 A 0 A_Explode(250,128,XF_HURTSOURCE,true)
       DeathFinish:
         OL99 HIJKLMN 4 Bright
         stop
