@@ -95,7 +95,7 @@ Script "SoF_Player" (void)
 		//This is an optimization, instead of calling these a bunch of times, it should only need to call it once
 		else if(UsingFullScreen == true)
 		{
-			RemoveMessages(startIndex,startIndex+40);
+			RemoveMessages(startIndex,startIndex+15);
 			UsingFullScreen = false;
 		}
 
@@ -452,60 +452,66 @@ Script "SoF_DrawHud" (int startIndex, int switchGradient)
 	SetHudSize(800,600,0);	
 	//Draw the status bar backdrop
 	SetFont("SFFULBAR");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+25,CR_UNTRANSLATED,0.1,600.2,0.0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+8,CR_UNTRANSLATED,0.1,600.2,0.0);
 	if(switchGradient > 2)
 	{
 		SetFont("SFFULLIP");
-		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+24,CR_UNTRANSLATED,800.2,568.2,0.0);
-	} else RemoveMessages(startIndex+24,startIndex+24);
+		HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+7,CR_UNTRANSLATED,800.2,568.2,0.0);
+	} else RemoveMessages(startIndex+7,startIndex+7);
 	
 	//Draw health amount
 	SetFont("SOFHUDSM");
-	HudMessage(d:sof_health;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+23,"SoFHudGreen",332.2,590.2,0.0);
+	HudMessage(d:sof_health;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+6,"SoFHudGreen",332.2,590.2,0.0);
 	
 	//Draw Health bar
 	SetFont("SOFLIFEB");
 	if(sof_health > 100) sof_health = 100;
 	SetHudClipRect(350,576,124*FixedDiv(sof_health,100)>>16,16,0);
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+26,CR_UNTRANSLATED,348.1,576.1,0.0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+9,CR_UNTRANSLATED,348.1,576.1,0.0);
 	SetHudClipRect(0,0,0,0,0);
 	
 	//Draw armor amount
 	SetFont("SOFHUDSM");
-	HudMessage(d:sof_armor;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+22,"SoFHudGreen",332.2,577.2,0.0);
+	HudMessage(d:sof_armor;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+5,"SoFHudGreen",332.2,577.2,0.0);
 	
 	//Draw Armor bar
 	SetFont("SOFARMOR");
 	if(sof_armor > 100) sof_armor = 100;
 	SetHudClipRect(330,568,152*FixedDiv(sof_armor,100)>>16,16,0);
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+21,CR_UNTRANSLATED,280.1,568.1,0.0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+4,CR_UNTRANSLATED,280.1,568.1,0.0);
 	SetHudClipRect(0,0,0,0,0);
 
 	//Draw the magazine counter
-	RemoveMessages(startIndex+20,startIndex+20);
+	RemoveMessages(startIndex+3,startIndex+3);
 	if (CheckInventory("SamsaraReloadMode") >= 2)
 	{
 		SetFont("SOFSCONB");
 		int sof_clip = CheckInventory(SoFWeapons[selectedWeapon][1]);
 		if(sof_clip > 99) sof_clip = 99;
-		HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+20,CR_UNTRANSLATED,736.1,580.2,0.0);
+		HudMessage(s:strparam(s:(sof_clip < 10 ? "0" : ""),d:sof_clip);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+3,CR_UNTRANSLATED,736.1,580.2,0.0);
 	}
 	
 	//Display the total ammo amount
-	RemoveMessages(startIndex+19,startIndex+19);
+	RemoveMessages(startIndex+2,startIndex+2);
 	if ((StrCmp(SoFWeapons[selectedWeapon][2], "") && StrCmp(SoFWeapons[selectedWeapon][2], "-1")) || (!StrCmp(SoFWeapons[selectedWeapon][2], "-1") && CheckInventory("PistolModeOn")))
 	{
 		SetFont("SOFHUDSM");
 		int sof_ammo = CheckInventory(!StrCmp(SoFWeapons[selectedWeapon][2], "-1") ? "Clip" : SoFWeapons[selectedWeapon][2]);
 		if(sof_ammo > 999) sof_ammo = 999;
-		HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+19,"SoFHudGreen",722.2,583.2,0.0);
+		HudMessage(d:sof_ammo;HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+2,"SoFHudGreen",722.2,583.2,0.0);
 	}
 	
 	//Display the weapon name widget. If there is 5 pixels left, raise the drawing id of the moving widget
 	SetFont("SFFULWEP");
-	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+28,CR_UNTRANSLATED,800.2,599.2 - switchGradient*1.0,0.0);
+	HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+11,CR_UNTRANSLATED,800.2,599.2 - switchGradient*1.0,0.0);
 	SetFont("SOFHUDSM");
-	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+27,"SoFHudGreen",722.1,567.2 - switchGradient*1.0,0.0);
+	HudMessage(s:SoFWeapons[selectedWeapon][3];HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+10,"SoFHudGreen",722.1,567.2 - switchGradient*1.0,0.0);
+	
+	//Now might as well draw kills here
+	SetFont("SOFHUDSM");
+	int sof_kills = CheckInventory("KillCountAmountTrue");
+	if(sof_kills > 999999) sof_kills = 999999;
+	HudMessage(s:strparam(s:"Kills\n",d:sof_kills);HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN|HUDMSG_COLORSTRING,startIndex+1,"SoFHudGreen",46.4,580.2,0.0);
 }
 
 // This should help route actual server side information to the client
@@ -587,21 +593,21 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 		case 5:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Armor");
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Armor");
 				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:5,s:"\c[SoFHUDWhite] - Ammo 2") : "";
 			}
 			break;
 		case 6:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 4");
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Ammo 4");
 				secondaryReward = multiplier >= 4 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/4,s:"\c[SoFHUDWhite] - Health") : "";
 			}
 			break;
 		case 7:
 			if(reward)
 			{
-				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite]- Ammo 4");
+				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Ammo 4");
 				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/10,s:"\c[SoFHUDWhite] - Ammo 3") : "";
 			}
 			break;
