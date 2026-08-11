@@ -92,7 +92,6 @@ actor Outlaws_Rifle : SamsaraOutlawsWeapon
         goto Ready
 
       FireStart:
-        TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsRifleAttackHandler")
         TNT1 A 0 A_JumpIfInventory("Outlaws_RifleZoomed",1,"FireContinueZoom")
       FireContinue:
@@ -218,6 +217,7 @@ actor SamsaraOutlawsRifleAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
+		TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_PlaySound("Outlaws/Rifle/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")

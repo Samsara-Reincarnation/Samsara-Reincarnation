@@ -120,9 +120,11 @@ Script "Outlaws_Player" (void)
 			//Go ahead and draw Sheriff's Badge, if you have it
 			if(CheckInventory("PowerSheriffsBadgePower"))
 			{
-				SetFont(strparam(s:"OLBADGE",d:((timer()%32)/4)+1));
-				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+37,CR_UNTRANSLATED,600.0,0.2,0.0);	
+				int frame = ((timer()%36)/2)+1;
+				SetFont(strparam(s:"OLBADG",s:frame < 10 ? "0" : "",d:frame));
+				HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+37,CR_UNTRANSLATED,620.1,20.1,0.0);	
 			}
+			else RemoveMessages(startIndex+37,startIndex+37);
 			
 			//Do nothing if the weapon is not assigned
 			if(currentWeapon >= 0)
@@ -140,20 +142,20 @@ Script "Outlaws_Player" (void)
 					}
 					else ammoResetDelay--;
 
-					//This delay is present to tell us not to trigger the number shifting as long as reloading is active or could be active
-					if(ammoResetDelay <= 0 || CheckInventory("Outlaws_SwitchWeapon"))
+					//Only do this while the delay is inactive
+					if(ammoResetDelay <= 0)
 					{
 						ol_ammoCounter = CheckInventory(OutlawsWeapons[currentWeapon][2]);
 						//Clamp
 						if(ol_ammoCounter > 999) ol_ammoCounter = 999;
 						ol_ammoDigits = strlen(strparam(d:ol_ammoCounter));
-						
+					
 						//Set the ammo counter on loading map
 						if(evaluatedAmmo == false)
 							lastAmmoCounter = ol_ammoCounter;
 						
 						//Check if the ammo counter changed here or not. Do not do anything. We only shift after the start of the map
-						if((lastAmmoCounter != ol_ammoCounter && evaluatedAmmo == true && !turretWeapons[currentWeapon]) || CheckInventory("Outlaws_SwitchWeapon"))
+						if((ammoResetDelay <= 0 && lastAmmoCounter != ol_ammoCounter && evaluatedAmmo == true && !turretWeapons[currentWeapon]) || CheckInventory("Outlaws_SwitchWeapon"))
 						{
 							//if(!queueAmmoShift) AmmoDigitsShifter = 0;
 							queueAmmoShift = true;
@@ -186,18 +188,18 @@ Script "Outlaws_Player" (void)
 							}
 							else AmmoDigitsShifter-=4;
 						}
-						
-						//Draw the digits
-						capacity = ol_ammoDigits;
-						for(offset = capacity; offset > 0; offset--)
-						{
-							//Since these are aligned from the left, we need an offset for the drawing function
-							//This formula will compute the current digit
-							digit = (ol_ammoCounter % pow(10,offset)) / pow(10,offset-1);
-							SetFont(strparam(s:"OLNUMB",d:digit,s:capacity-offset == 0 ? "1" : "0"));
-							//Finally, draw the digit
-							HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+(capacity-offset),CR_UNTRANSLATED,280.1-((offset-1)*26.0),500.2 + (AmmoDigitsShifter * 1.0),0.0);	
-						}
+					}
+					
+					//Draw the digits
+					capacity = ol_ammoDigits;
+					for(offset = capacity; offset > 0; offset--)
+					{
+						//Since these are aligned from the left, we need an offset for the drawing function
+						//This formula will compute the current digit
+						digit = (ol_ammoCounter % pow(10,offset)) / pow(10,offset-1);
+						SetFont(strparam(s:"OLNUMB",d:digit,s:capacity-offset == 0 ? "1" : "0"));
+						//Finally, draw the digit
+						HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+(capacity-offset),CR_UNTRANSLATED,280.1-((offset-1)*26.0),500.2 + (AmmoDigitsShifter * 1.0),0.0);	
 					}
 					
 					evaluatedAmmo = true;

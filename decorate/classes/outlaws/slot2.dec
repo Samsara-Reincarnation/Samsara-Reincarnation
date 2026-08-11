@@ -96,7 +96,6 @@ actor Outlaws_Shotgun : SamsaraOutlawsWeapon
         goto Ready
 
       FireStart:
-        TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsShotgunAttackHandler")
         OL01 BC 4 Bright
         OL01 D 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
@@ -192,6 +191,7 @@ actor SamsaraOutlawsShotgunAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
+		TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")

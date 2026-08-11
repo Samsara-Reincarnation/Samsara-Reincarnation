@@ -9,7 +9,6 @@ actor Outlaws_MachineGun : SamsaraOutlawsWeapon
     -ALT_AMMO_OPTIONAL
     +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
     -AMMO_OPTIONAL
-    -NOALERT
     States
     {
       Spawn:
@@ -55,6 +54,7 @@ actor SamsaraOutlawsMachineGunAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
+		TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_PlaySound("Outlaws/MachineGun/Fire",CHAN_WEAPON)
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
