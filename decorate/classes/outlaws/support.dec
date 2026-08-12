@@ -188,6 +188,7 @@ actor SamsaraOutlawsDynamiteAttackHandler : Trigger
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_PlaySound("Outlaws/Knife/Throw",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackInfinite")
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
@@ -196,6 +197,17 @@ actor SamsaraOutlawsDynamiteAttackHandler : Trigger
 
       PickupAttackCoop:
         TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileCoop",0,false,0,0,0,15)
+        stop
+
+      PickupAttackInfinite:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackInfiniteCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackInfiniteCoop")
+      PickupAttackInfiniteDM:
+        TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileInfinite",0,false,0,0,0,15)
+        stop
+
+      PickupAttackInfiniteCoop:
+        TNT1 A 0 A_FireCustomMissile("Outlaws_DynamiteProjectileInfiniteCoop",0,false,0,0,0,15)
         stop
     }
 }
@@ -323,7 +335,15 @@ actor Outlaws_DynamiteProjectile
         OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
         OL00 B 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
         OL00 B 1 A_JumpIfInventory("Outlaws_DynamiteExplode",1,"Explode")
+        OL00 B 0 A_JumpIfInventory("OutlawsClass",1,1,AAPTR_TARGET)
         loop
+        OL00 B 0 A_JumpIfInventory("RocketAmmo",0,"StayLoop",AAPTR_TARGET)
+        OL00 B 0 A_JumpIfCloser(48,"TakeRocket")
+        loop
+
+      TakeRocket:
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAmmoRefund",1,AAPTR_TARGET)
+        stop
 
       Bounce:
         "####" "#" 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
@@ -350,6 +370,27 @@ actor Outlaws_DynamiteProjectile
 }
 
 actor Outlaws_DynamiteProjectileCoop : Outlaws_DynamiteProjectile
+{
+    Species "Player"
+    +THRUSPECIES
+}
+
+actor Outlaws_DynamiteProjectileInfinite : Outlaws_DynamiteProjectile
+{
+    States
+    {
+      Stay:
+        OL00 B 0 A_Stop
+        OL00 B 0 A_SetPitch(0)
+      StayLoop:
+        OL00 B 0 A_JumpIfInventory("Outlaws_DynamiteExists",1,2)
+        OL00 B 0 ACS_NamedExecuteWithResult("Outlaws_GenerateHitBox")
+        OL00 B 1 A_JumpIfInventory("Outlaws_DynamiteExplode",1,"Explode")
+        loop
+    }
+}
+
+actor Outlaws_DynamiteProjectileInfiniteCoop : Outlaws_DynamiteProjectileInfinite
 {
     Species "Player"
     +THRUSPECIES
@@ -425,6 +466,17 @@ actor Outlaws_DynamiteHitBox
 
       Remove:
         TNT1 A 1
+        stop
+    }
+}
+
+actor SamsaraOutlawsDynamiteAmmoRefund : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_PlaySound("Outlaws/ItemPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 A_GiveInventory("Ammo3IgnoreSkill",1)
         stop
     }
 }
