@@ -11,6 +11,7 @@ actor Outlaws_Cannon : SamsaraOutlawsWeapon
     Weapon.AmmoGive2 5
     Tag "Hawksworth Repeating Cannon"
     +EXPLOSIVE
+    +NOAUTOFIRE
     States
     {
       Spawn:
@@ -91,6 +92,7 @@ actor Outlaws_Cannon : SamsaraOutlawsWeapon
         TNT1 A 0 A_ReFire(1)
         goto Ready
         OL05 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
 
       Reload:
@@ -99,6 +101,7 @@ actor Outlaws_Cannon : SamsaraOutlawsWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
       ReloadFinish:
         OL05 A 8 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE|WRF_NOBOB)
+        TNT1 A 0 A_ReFire
         goto ReloadFinishAllowCheck
 
       //Allow reloading again, here

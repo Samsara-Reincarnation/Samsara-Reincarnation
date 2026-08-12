@@ -999,16 +999,22 @@ actor DukePipebomb
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM A 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		TNT1 A 0 A_JumpIfCloser(20,"Remove1")
-		Loop
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,1,AAPTR_TARGET)
+        loop
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,"Death1",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfCloser(20,"TakeRocket")
+        loop
 
 	Death2:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM B 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		TNT1 A 0 A_JumpIfCloser(20,"Remove2")
-		Loop
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,1,AAPTR_TARGET)
+        loop
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,"Death2",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfCloser(20,"TakeRocket")
+        loop
 
 	Explode:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",0) //This must be cleared when we get here so double explosions don't happen!
@@ -1025,18 +1031,9 @@ actor DukePipebomb
 		TNT1 A 1 A_Explode(140,210)
 		Stop
 
-	Remove1:
-		PBOM A 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death1")
-		Goto RemoveEnd
-
-	Remove2:
-		PBOM B 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death2")
-		Goto RemoveEnd
-
-	RemoveEnd:
-		TNT1 A 0 A_GiveToTarget("SamsaraDukePipebombAmmoRefund")
-		TNT1 A 0 Thing_Remove(0)
-		Stop
+      TakeRocket:
+        TNT1 A 0 A_GiveInventory("SamsaraDukePipebombAmmoRefund",1,AAPTR_TARGET)
+        stop
 	}
 }
 
@@ -1074,14 +1071,14 @@ actor DukePipebombInfinite : DukePipebomb
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM A 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		Loop
+		loop
 
 	Death2:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM B 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		Loop
+		loop
 	}
 }
 
@@ -1315,24 +1312,22 @@ actor DukePipebombBeach : DukePipebomb
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM C 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		TNT1 A 0 A_JumpIfCloser(20,"Remove1")
-		Loop
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,1,AAPTR_TARGET)
+        loop
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,"Death1",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfCloser(20,"TakeRocket")
+        loop
 
 	Death2:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM D 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		TNT1 A 0 A_JumpIfCloser(20,"Remove2")
-		Loop
-
-	Remove1:
-		PBOM C 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death1")
-		Goto RemoveEnd
-
-	Remove2:
-		PBOM D 1 A_JumpIfInTargetInventory("RocketAmmo",0,"Death2")
-		Goto RemoveEnd
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,1,AAPTR_TARGET)
+        loop
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,"Death2",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfCloser(20,"TakeRocket")
+        loop
 	}
 }
 
@@ -1370,14 +1365,14 @@ actor DukePipebombBeachInfinite : DukePipebombBeach
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM C 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		Loop
+		loop
 
 	Death2:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
 		PBOM D 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		Loop
+		loop
 	}
 }
 
@@ -1588,19 +1583,23 @@ actor Duke64Pipebomb
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
-		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		PBOM E 1
-		TNT1 A 0 A_JumpIfCloser(20,"Remove1")
-		Loop
+		PBOM E 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,1,AAPTR_TARGET)
+        loop
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,"Death1",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfCloser(20,"TakeRocket")
+        loop
 
 	Death2:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
-		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		PBOM F 1
-		TNT1 A 0 A_JumpIfCloser(20,"Remove2")
-		Loop
+		PBOM F 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+        TNT1 A 0 A_JumpIfInventory("DukeClass",1,1,AAPTR_TARGET)
+        loop
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",0,"Death2",AAPTR_TARGET)
+        TNT1 A 0 A_JumpIfCloser(20,"TakeRocket")
+        loop
 
 	Explode:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",0) //This must be cleared when we get here so double explosions don't happen!
@@ -1621,19 +1620,9 @@ actor Duke64Pipebomb
 		TNT1 A 1 A_SpawnItemEx("MLExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 		Stop
 
-	Remove1:
-		TNT1 A 0 A_JumpIfInTargetInventory("RocketAmmo",0,"Death1")
-		PBOM E 1
-		TNT1 A 0 A_GiveToTarget("SamsaraDukePipebombAmmoRefund")
-		TNT1 A 0 Thing_Remove(0)
-		Stop
-
-	Remove2:
-		TNT1 A 0 A_JumpIfInTargetInventory("RocketAmmo",0,"Death2")
-		PBOM F 1
-		TNT1 A 0 A_GiveToTarget("SamsaraDukePipebombAmmoRefund")
-		TNT1 A 0 Thing_Remove(0)
-		Stop
+      TakeRocket:
+        TNT1 A 0 A_GiveInventory("SamsaraDukePipebombAmmoRefund",1,AAPTR_TARGET)
+        stop
 	}
 }
 
@@ -1675,17 +1664,15 @@ actor Duke64PipebombInfinite : Duke64Pipebomb
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
-		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		PBOM E 1
-		Loop
+		PBOM E 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		loop
 
 	Death2:
 		TNT1 A 0 A_ChangeFlag("SHOOTABLE",1)
 		TNT1 A 0 A_Gravity
 		TNT1 A 0 A_JumpIfHealthLower(1,"Explode")
-		TNT1 A 0 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
-		PBOM F 1
-		Loop
+		PBOM F 1 A_JumpIfInTargetInventory ("DukeKaboom",1,"Explode")
+		loop
 	}
 }
 
