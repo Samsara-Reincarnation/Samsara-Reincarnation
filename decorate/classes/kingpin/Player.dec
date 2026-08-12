@@ -411,11 +411,13 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 			KI1D ABCDEF 3
 			Loop
 		Pain:
+			TNT1 A 0 A_TakeInventory("Hexen2EnemyFireDetector", 1)
 			TNT1 A 0 A_Pain
 			TNT1 A 0 A_GiveInventory("Kingpin_ResetPlayerAction")
 			Goto Spawn
 		Death:
 			TNT1 A 0 A_SpawnItem("UniversalBloodyHellGoreDeathEffect")
+		Death.Massacre:
 			TNT1 A 0 A_PlayerScream
 			TNT1 A 0 A_NoBlocking
 			TNT1 A 0 A_Jump(256,"Death1","Death2","Death3","Death4")
@@ -438,6 +440,23 @@ Actor Kingpin_Thug : SamsaraPlayerPawnNormalRedBlood
 		CrouchDeath:
 			KAXC ABCDEFGHIJK 4
 			KAXC L -1
+			Stop
+		Death.KingpinMelee:
+		Death.KingpinBleedshot:
+		Death.KingpinBullet:
+			"####" A -1 A_Jump(256, "Death")
+			Wait
+		XDeath:
+			"####" A 0 A_ChangeFlag("SOLID",false)
+			"####" A 0 A_SpawnItemEx("Kingpin_GibSpawner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION) // gibs aren't spawning for player
+			"####" A 5 A_FadeOut
+			TNT1 A -1
+			Stop
+		XDeath.Massacre:
+			"####" A 0 A_ChangeFlag("SOLID",false)
+			"####" A 0 A_SpawnItemEx("Kingpin_GibSpawnerMassacre",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION)
+			"####" A 5 A_FadeOut
+			TNT1 A -1
 			Stop
 		Dummy:
 			KA00 A 0 A_Stop KA01 A 0 A_Stop KA02 A 0 A_Stop KA03 A 0 A_Stop

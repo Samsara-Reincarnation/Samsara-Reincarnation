@@ -651,6 +651,26 @@ Actor SoF_GibSpawner
 	}
 }
 
+Actor SoF_GibSpawnerMassacre : SoF_GibSpawner
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraZScript", 0, 6)
+			TNT1 A 0 A_PlaySound("SoF/Impact/Gore/HeadShot",CHAN_AUTO,0.75)
+			TNT1 A 0 A_SetUserVar("user_count", CallACS("SoF_Decorate",6))
+		SpawnLoop:
+			TNT1 A 0 A_JumpIfInventory("Counter",user_count,"SpawnRemove")
+			TNT1 A 0 A_GiveInventory("Counter",1)
+			TNT1 A 0 A_SpawnItemEx("SoF_MeatChunk",random(-8,8),random(-8,8),random(-16,16),random(-5,5),random(-5,5),frandom(2,6),Random(1,360),SXF_TRANSFERSCALE|SXF_TRANSFERTRANSLATION)
+			Loop
+		SpawnRemove:
+			TNT1 A 1
+			Stop
+	}
+}
+
 Actor SoF_BurningGibSpawner : SoF_GibSpawner
 {
 	DamageType "SoFPhosphorus"
