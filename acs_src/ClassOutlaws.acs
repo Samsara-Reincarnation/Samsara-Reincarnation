@@ -161,8 +161,12 @@ Script "Outlaws_Player" (void)
 						{
 							//if(!queueAmmoShift) AmmoDigitsShifter = 0;
 							queueAmmoShift = true;
-							if(previousAmmoCount == -1)
+							
+							//FIX - Turret weapons never use the last ammo counter, but probably do need ol_ammoCounter instead
+							if(previousAmmoCount == -1 && !turretWeapons[currentWeapon])
 								previousAmmoCount = lastAmmoCounter;
+							else if(previousAmmoCount == -1)
+								previousAmmoCount = ol_ammoCounter;
 								
 							lastAmmoCounter = ol_ammoCounter;
 						}
