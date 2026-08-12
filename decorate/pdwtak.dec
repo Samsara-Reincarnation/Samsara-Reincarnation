@@ -2154,14 +2154,14 @@ actor JCDentonDiesWhenHeIsKilled: PeopleDieParticle
 actor ThugDieParticle: PeopleDieParticle
 {
     RenderStyle Add
-    Alpha 0.75
+    Alpha 0.9
 
-    Scale 0.75
+    Scale 1.0
 
     States
     {
       Spawn:
-        DPLM AAAAAABBBBBB 1 bright A_FadeOut(0.02)
+        KP02 HHHHHH 1 bright A_FadeOut(0.02)
         loop
     }
 }
@@ -2192,10 +2192,11 @@ actor ThugDiesWhenHeIsKilled: PeopleDieParticle
     States
     {
       Spawn:
-        DMSL B 0 bright
-        DMSL B 8 bright A_PlaySound("doomguy/rocklx", CHAN_BODY, 1, 0, ATTN_NONE)
-        DMSL C 6 bright
-        DMSL D 4 bright
+        TNT1 A 0
+        TNT1 A 0 A_PlaySound("Kingpin/Explosion", CHAN_BODY, 1.0, 0, ATTN_NONE)
+        TNT1 AAAAAAAA 0 A_CustomMissile("Kingpin_ExplosionTrail",20,0,frandom(0,360),CMF_AIMDIRECTION,frandom(-30,75))
+        TNT1 A 0 A_SpawnItemEx("Kingpin_ExplosionEffect",0,0,32*scalex,0,0,0,0,SXF_TRANSFERSCALE)
+        TNT1 A 1 A_SpawnItemEx("Kingpin_ExplosionSmoke",0,0,32*scalex,0,0,0,0,SXF_TRANSFERSCALE)
         stop
     }
 }
@@ -2205,12 +2206,12 @@ actor JohnMullinsDieParticle: PeopleDieParticle
     RenderStyle Add
     Alpha 0.75
 
-    Scale 0.75
+    Scale 0.25
 
     States
     {
       Spawn:
-        DPLM AAAAAABBBBBB 1 bright A_FadeOut(0.02)
+        SF00 TTTTTT 1 bright A_FadeOut(0.02)
         loop
     }
 }
@@ -2241,10 +2242,12 @@ actor JohnMullinsDiesWhenHeIsKilled: PeopleDieParticle
     States
     {
       Spawn:
-        DMSL B 0 bright
-        DMSL B 8 bright A_PlaySound("doomguy/rocklx", CHAN_BODY, 1, 0, ATTN_NONE)
-        DMSL C 6 bright
-        DMSL D 4 bright
+        TNT1 A 0
+        TNT1 A 0 A_PlaySound("SoF/Weapons/Rocket/BigExplode", CHAN_BODY, 1.0, 0, ATTN_NONE)
+        TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("SoF_ExplosionLargeSpark",frandom(0,8),frandom(0,8),frandom(0,360),CMF_AIMDIRECTION,frandom(35,90))
+        TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSpark",0,0,0,frandom(-6,6),0,frandom(-6,6),frandom(0,90))
+        TNT1 AAAAA 0 A_SpawnItemEx("SoF_ExplosionSmoke",0,0,0,frandom(-1,1),frandom(-1,1),frandom(1,2),frandom(0,90))
+        TNT1 A 0 A_SpawnItemEx("SoF_ExplosionBig")
         stop
     }
 }
@@ -2254,12 +2257,12 @@ actor JamesAndersonDieParticle: PeopleDieParticle
     RenderStyle Add
     Alpha 0.75
 
-    Scale 0.75
+    Scale 0.5
 
     States
     {
       Spawn:
-        DPLM AAAAAABBBBBB 1 bright A_FadeOut(0.02)
+        OL99 FFFFFF 1 bright A_FadeOut(0.02)
         loop
     }
 }
@@ -2285,15 +2288,14 @@ actor JamesAndersonDiePulse: PeopleDieParticle
 actor JamesAndersonDiesWhenHeIsKilled: PeopleDieParticle
 {
     RenderStyle Add
-    Scale 2.5
+    Scale 1.0
 
     States
     {
       Spawn:
-        DMSL B 0 bright
-        DMSL B 8 bright A_PlaySound("doomguy/rocklx", CHAN_BODY, 1, 0, ATTN_NONE)
-        DMSL C 6 bright
-        DMSL D 4 bright
+        OL99 H 0 bright
+        OL99 H 4 bright A_PlaySound("Outlaws/Dynamite/Explosion", CHAN_BODY, 1, 0, ATTN_NONE)
+        OL99 IJKLMN 4 Bright
         stop
     }
 }
