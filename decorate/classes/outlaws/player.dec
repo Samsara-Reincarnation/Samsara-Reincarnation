@@ -23,8 +23,9 @@ Actor OutlawsPlayer : SamsaraPlayerPawnTotalGibRedBlood
 	States
 	{
 		Spawn:
-			OL96 E 4
-			Loop
+            OL96 E 0 NoDelay ACS_NamedExecuteWithResult("DisableVoodooDoll")
+			OL96 E -1
+			Stop
 		See:
 			OL96 A 4 A_JumpIf(sqrt(velx*velx + vely*vely) <= 8,"Walk")
 			OL96 B 4 A_JumpIf(sqrt(velx*velx + vely*vely) <= 8,"Walk")
@@ -42,11 +43,11 @@ Actor OutlawsPlayer : SamsaraPlayerPawnTotalGibRedBlood
 			OL96 H 4 A_JumpIf(sqrt(velx*velx + vely*vely) > 8,"See")
 			Loop
 		Missile:
-			TNT1 A 0 A_GiveInventory("Hexen2EnemyFireDetector", 1)
 			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",4,4)
 			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",3,"Melee")
 			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",2,2)
 			OL96 I 0 A_JumpIfInventory("Outlaws_WeaponToken",1,"Melee")
+			TNT1 A 0 A_GiveInventory("Hexen2EnemyFireDetector", 1)
 			OL96 IJK 4
 			TNT1 A 0 A_TakeInventory("Hexen2EnemyFireDetector", 1)
 			Goto Spawn
