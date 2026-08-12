@@ -26,8 +26,17 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
         TNT1 A 0 A_TakeInventory("Outlaws_ThrowCounter")
         TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuseActive")
         TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyAmmo")
+        goto ReadyNoAmmo
+
+      ReadyNoAmmo:
+        TNT1 A 1 A_WeaponReady
+        goto Ready
+
+      ReadyAmmo:
         OL09 A 1 A_WeaponReady
-        loop
+        goto Ready
 
       ReadyFuse:
         TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuse",1,1)
@@ -49,8 +58,17 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
         TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuseActive")
         TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
         TNT1 A 0 A_Lower
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"DeselectLoopAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"DeselectLoopAmmo")
+        goto DeselectLoopNoAmmo
+
+      DeselectLoopNoAmmo:
+        TNT1 A 1 A_Lower
+        goto DeselectLoop
+
+      DeselectLoopAmmo:
         OL09 A 1 A_Lower
-        loop
+        goto DeselectLoop
 
       Select:
         TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon")
@@ -60,8 +78,17 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
         TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuseActive")
         TNT1 A 0 A_TakeInventory("Outlaws_DynamiteFuse")
         TNT1 A 0 A_Raise
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectLoopAmmo")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectLoopAmmo")
+        goto SelectLoopNoAmmo
+
+      SelectLoopNoAmmo:
+        TNT1 A 1 A_Raise
+        goto SelectLoop
+
+      SelectLoopAmmo:
         OL09 A 1 A_Raise
-        loop
+        goto SelectLoop
 
       Fire:
         TNT1 A 0 A_JumpIfInventory("Outlaws_DynamiteFuseActive",1,"AltFireCharge")
@@ -285,8 +312,8 @@ actor Outlaws_DynamiteProjectile
         TNT1 A 0 A_NoGravity
         TNT1 A 0 A_PlaySound("Outlaws/Dynamite/Explosion",CHAN_WEAPON)
         TNT1 A 0 A_SetDamageType("Explosive") // putting it here just in case
+        TNT1 A 0 A_Explode(200,128,0,true)
         TNT1 A 0 A_Explode(50,128,XF_HURTSOURCE,true)
-        TNT1 A 0 A_Explode(200,128,0)
         TNT1 A 0 A_ChangeFlag("NOTIMEFREEZE",false)
       DeathFinish:
         OL99 HIJKLMN 4 Bright
