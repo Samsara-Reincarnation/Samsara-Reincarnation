@@ -1,3 +1,5 @@
+actor SamsaraOutlawsCannonClickSpamPrevention : Counter {}
+
 actor Outlaws_Cannon : SamsaraOutlawsWeapon
 {
     Inventory.PickupMessage "Hawksworth Repeating Cannon"
@@ -34,6 +36,7 @@ actor Outlaws_Cannon : SamsaraOutlawsWeapon
       Deselect:
         TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
       DeselectLoop:
+        TNT1 A 0 A_TakeInventory("SamsaraOutlawsCannonClickSpamPrevention")
         TNT1 A 0 A_Lower
         OL05 A 1 A_Lower
         loop
@@ -41,6 +44,7 @@ actor Outlaws_Cannon : SamsaraOutlawsWeapon
       Select:
         TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon")
       SelectLoop:
+        TNT1 A 0 A_TakeInventory("SamsaraOutlawsCannonClickSpamPrevention")
         TNT1 A 0 A_Raise
         OL05 A 1 A_Raise
         loop
@@ -68,6 +72,9 @@ actor Outlaws_Cannon : SamsaraOutlawsWeapon
 
       FireDry:
         TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsCannonClickSpamPrevention",1,"Ready")
+        TNT1 A 0 A_PlaySound("Outlaws/Cannon/Empty",CHAN_5)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsCannonClickSpamPrevention",4)
         goto Ready
 
       FireStart:

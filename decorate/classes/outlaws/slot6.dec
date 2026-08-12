@@ -1,3 +1,5 @@
+actor SamsaraOutlawsMachineGunClickSpamPrevention : Counter {}
+
 actor Outlaws_MachineGun : SamsaraOutlawsWeapon
 {
     Inventory.PickupMessage "Axiom Light-Weight Machine Gun"
@@ -22,6 +24,7 @@ actor Outlaws_MachineGun : SamsaraOutlawsWeapon
       Deselect:
         TNT1 A 0 A_GiveInventory("Outlaws_SwitchWeapon")
       DeselectLoop:
+        TNT1 A 0 A_TakeInventory("SamsaraOutlawsMachineGunClickSpamPrevention")
         TNT1 A 0 A_Lower
         OL06 A 1 A_Lower
         loop
@@ -29,6 +32,7 @@ actor Outlaws_MachineGun : SamsaraOutlawsWeapon
       Select:
         TNT1 A 0 A_TakeInventory("Outlaws_SwitchWeapon")
       SelectLoop:
+        TNT1 A 0 A_TakeInventory("SamsaraOutlawsMachineGunClickSpamPrevention")
         TNT1 A 0 A_Raise
         OL06 A 1 A_Raise
         loop
@@ -43,6 +47,9 @@ actor Outlaws_MachineGun : SamsaraOutlawsWeapon
 
       FireDry:
         TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsMachineGunClickSpamPrevention",1,"Ready")
+        TNT1 A 0 A_PlaySound("Outlaws/MachineGun/Empty",CHAN_5)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsMachineGunClickSpamPrevention",4)
         goto Ready
     }
 }
