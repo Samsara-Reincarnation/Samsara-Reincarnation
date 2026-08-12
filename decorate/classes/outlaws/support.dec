@@ -15,6 +15,7 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
     +ALT_USES_BOTH // only one ammo type with same ammo amount use, so this makes alt fire behave as intended
     -AMMO_OPTIONAL
     +EXPLOSIVE
+    +NOAUTOFIRE
     States
     {
       Spawn:
@@ -107,10 +108,12 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
 
       FireFinish:
         OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
 
       FireFinishLast:
         TNT1 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
 
       AltFire:
@@ -146,10 +149,12 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
 
       AltFireFinish:
         OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
 
       AltFireFinishLast:
         TNT1 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
 
       OvercookLastShotCalc:
@@ -164,11 +169,13 @@ actor Outlaws_Dynamite : SamsaraOutlawsWeapon
       Overcook:
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAltOvercookAttackHandler")
         OL09 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
 
       OvercookLast:
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsDynamiteAltOvercookAttackHandler")
         TNT1 A 4 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+        TNT1 A 0 A_ReFire
         goto Ready
     }
 }
