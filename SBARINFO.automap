@@ -883,7 +883,7 @@ StatusBar Automap, ForceScaled
                 }
 
                 // Slot 7
-                InInventory GotWeapon6
+                InInventory GotWeapon7
                 {
                     DrawImage "DOOM7BNT", 250, 2;
 
@@ -13242,6 +13242,161 @@ StatusBar Automap, ForceScaled
                 DrawImage "SOFBT9Y", 291, 4;
                 DrawImage "SOFWP9Y", 285, 13;
             }
+        }*/
+    }
+
+    PlayerType OutlawsPlayer
+    {
+        DrawImage "OLBAR", 0, 168;
+
+        InInventory SamsaraReloadMode, 2
+        {
+            IsSelected Outlaws_Revolver, Outlaws_Shotgun { DrawNumber 3, OLHUDF, Untranslated, Ammo1, Alignment(Center), 42, 172; }
+            else IsSelected Outlaws_SawedOffShotgun, Outlaws_DoubleBarrelShotgun { DrawNumber 3, OLHUDF, Untranslated, Ammo1, Alignment(Center), 42, 172; }
+            else IsSelected Outlaws_Rifle, Outlaws_Cannon { DrawNumber 3, OLHUDF, Untranslated, Ammo1, Alignment(Center), 42, 172; }
+        }
+
+        IsSelected Outlaws_Revolver
+        {
+            InInventory PistolModeOn
+            {
+                DrawNumber 3, OLHUDF, Untranslated, Ammo Clip, Alignment(Center), 102, 172;
+
+                DrawImage "OLAMMZ1", 12, 174;
+            }
+        } else IsSelected Outlaws_Shotgun, Outlaws_SawedOffShotgun {
+            DrawNumber 3, OLHUDF, Untranslated, Ammo2, Alignment(Center), 102, 172;
+
+            // feh
+            WeaponAmmo Clip { DrawImage "OLAMMZ1", 12, 174; }
+            WeaponAmmo Shell { DrawImage "OLAMMZ2", 12, 174; }
+            WeaponAmmo RocketAmmo { DrawImage "OLAMMZ3", 12, 174; }
+            WeaponAmmo Cell { DrawImage "OLAMMZ4", 12, 174; }
+        } else IsSelected Outlaws_DoubleBarrelShotgun, Outlaws_Rifle {
+            DrawNumber 3, OLHUDF, Untranslated, Ammo2, Alignment(Center), 102, 172;
+
+            // feh
+            WeaponAmmo Clip { DrawImage "OLAMMZ1", 12, 174; }
+            WeaponAmmo Shell { DrawImage "OLAMMZ2", 12, 174; }
+            WeaponAmmo RocketAmmo { DrawImage "OLAMMZ3", 12, 174; }
+            WeaponAmmo Cell { DrawImage "OLAMMZ4", 12, 174; }
+        } else IsSelected Outlaws_Cannon {
+            DrawNumber 3, OLHUDF, Untranslated, Ammo2, Alignment(Center), 102, 172;
+
+            // feh
+            WeaponAmmo Clip { DrawImage "OLAMMZ1", 12, 174; }
+            WeaponAmmo Shell { DrawImage "OLAMMZ2", 12, 174; }
+            WeaponAmmo RocketAmmo { DrawImage "OLAMMZ3", 12, 174; }
+            WeaponAmmo Cell { DrawImage "OLAMMZ4", 12, 174; }
+        } else {
+            DrawNumber 3, OLHUDF, Untranslated, Ammo1, Alignment(Center), 102, 172;
+
+            // feh
+            WeaponAmmo Clip { DrawImage "OLAMMZ1", 12, 174; }
+            WeaponAmmo Shell { DrawImage "OLAMMZ2", 12, 174; }
+            WeaponAmmo RocketAmmo { DrawImage "OLAMMZ3", 12, 174; }
+            WeaponAmmo Cell { DrawImage "OLAMMZ4", 12, 174; }
+        }
+
+        DrawNumber 3, OLHUDF, Untranslated, Health, Alignment(Center), 218, 172;
+        DrawNumber 3, OLHUDF, Untranslated, Armor, Alignment(Center), 278, 172;
+
+        InInventory ChickenModeOn { DrawNumber 5, OLHUDF, Untranslated, ChickenKillCount, Alignment(Center), 160, 172; }
+        else
+        {
+            GameMode Deathmatch, Possession, TeamGame { DrawNumber 5, OLHUDF, Untranslated, Frags, Alignment(Center), 160, 172; }
+            else GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawNumber 5, OLHUDF, Untranslated, KillCountAmountTrue, Alignment(Center), 160, 172; }
+            //no need for kill notches when the kill counter can go so high
+        }
+
+        InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 46, Center; }
+
+        DrawSelectedInventory AlwaysShowCounter, OLHUDF, 290, 32, 293, 40, Untranslated;
+
+        GameMode TeamGame, CTF, OneFlagCTF, Skulltag, TeamPossession, TeamLMS, Domination
+        {
+            DrawImage Translatable "CLRCHEX", 145, 169;
+
+            InInventory SamsaraTeamTextActivated
+            {
+                InInventory SamsaraCurrentTeamIndicator, 8 { DrawString CMPSDUKE, Purple, "PURPLE", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 7 { DrawString CMPSDUKE, Orange, "ORANGE", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 6 { DrawString CMPSDUKE, White, "WHITE", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 5 { DrawString CMPSDUKE, Black, "BLACK", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 4 { DrawString CMPSDUKE, Gold, "GOLD", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 3 { DrawString CMPSDUKE, Green, "GREEN", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 2 { DrawString CMPSDUKE, Red, "RED", 10, 158; }
+                else InInventory SamsaraCurrentTeamIndicator, 1 { DrawString CMPSDUKE, Blue, "BLUE", 10, 158; }
+            }
+        }
+
+        // had nowhere else to put the keys ¯\/(ツ)\/¯
+        // Doom keys
+        InInventory BlueCard { DrawImage "STKEYS0", 0, 166; }
+        InInventory YellowCard { DrawImage "STKEYS1", 8, 166; }
+        InInventory RedCard { DrawImage "STKEYS2", 16, 166; }
+        InInventory BlueSkull { DrawImage "STKEYS3", 24, 165; }
+        InInventory YellowSkull { DrawImage "STKEYS4", 32, 165; }
+        InInventory RedSkull { DrawImage "STKEYS5", 40, 165; }
+        // Chex keys
+        InInventory ChexBlueCard { DrawImage "STKEYS0", 0, 163; }
+        InInventory ChexYellowCard { DrawImage "STKEYS1", 8, 163; }
+        InInventory ChexRedCard { DrawImage "STKEYS2", 16, 163; }
+        InInventory BlueFlemKey { DrawImage "STKEYS3", 24, 164; }
+        InInventory YellowFlemKey { DrawImage "STKEYS4", 32, 164; }
+        InInventory RedFlemKey { DrawImage "STKEYS5", 40, 164; }
+        // Heretic keys
+        InInventory KeyYellow { DrawImage "YKEYICON", 0, 166; }
+        InInventory KeyGreen { DrawImage "GKEYICON", 11, 166; }
+        InInventory KeyBlue { DrawImage "BKEYICON", 22, 166; }
+        // Hexen keys
+        InInventory KeySteel { DrawImage "HEXKEY1", 0, 164; }
+        InInventory KeyCave { DrawImage "HEXKEY2", 11, 164; }
+        InInventory KeyAxe { DrawImage "HEXKEY3", 22, 164; }
+        InInventory KeyFire { DrawImage "HEXKEY4", 33, 163; }
+        InInventory KeyEmerald { DrawImage "HEXKEY5", 44, 165; }
+        InInventory KeyDungeon { DrawImage "HEXKEY6", 55, 163; }
+        InInventory KeySilver { DrawImage "HEXKEY7", 66, 164; }
+        InInventory KeyRusted { DrawImage "HEXKEY8", 77, 165; }
+        InInventory KeyHorn { DrawImage "HEXKEY9", 88, 164; }
+        InInventory KeySwamp { DrawImage "HEXKEYA", 99, 164; }
+        InInventory KeyCastle { DrawImage "HEXKEYB", 110, 163; }
+        // Strife keys
+        InInventory BaseKey { DrawImage "STRIKEY1", 0, 166; }
+        InInventory GovsKey { DrawImage "STRIKEY2", 8, 166; }
+        InInventory PassCard { DrawImage "STRIKEY3", 16, 166; }
+        InInventory IDBadge { DrawImage "STRIKEY4", 24, 166; }
+        InInventory PrisonKey { DrawImage "STRIKEY5", 32, 166; }
+        InInventory SeveredHand { DrawImage "STRIKEY6", 40, 166; }
+        InInventory Power1Key { DrawImage "STRIKEY7",48, 166; }
+        InInventory Power2Key { DrawImage "STRIKEY8", 56, 166; }
+        InInventory Power3Key { DrawImage "STRIKEY9", 64, 166; }
+        InInventory GoldKey { DrawImage "STRIKEYA", 72, 166; }
+        InInventory IDCard { DrawImage "STRIKEYB", 80, 166; }
+        InInventory SilverKey { DrawImage "STRIKEYC", 88, 166; }
+        InInventory OracleKey { DrawImage "STRIKEYD", 96, 166; }
+        InInventory MilitaryID { DrawImage "STRIKEYE", 104, 166; }
+        InInventory OrderKey { DrawImage "STRIKEYF", 112, 166; }
+        InInventory BrassKey { DrawImage "STRIKEYG", 120, 166; }
+        InInventory RedCrystalKey { DrawImage "STRIKEYH", 128, 166; }
+        InInventory BlueCrystalKey { DrawImage "STRIKEYI", 136, 166; }
+        InInventory ChapelKey { DrawImage "STRIKEYJ", 144, 166; }
+        InInventory CatacombKey { DrawImage "STRIKEYK", 152, 166; }
+        InInventory CoreKey { DrawImage "STRIKEYL", 160, 166; }
+        InInventory MaulerKey { DrawImage "STRIKEYM", 168, 166; }
+        InInventory FactoryKey { DrawImage "STRIKEYN", 176, 166; }
+        InInventory MineKey { DrawImage "STRIKEYO", 184, 166; }
+
+        /*InInventory ExpandedHud
+        {
+            DrawImage "OLBARTR", 0, 0; //this is a guide
+
+            // better if done through acs
+            InInventory GotWeapon0 { DrawImage "OLWPS1", 3, -10; }
+
+            IsSelected Outlaws_Knife { DrawImage "OLWPS1", 3, 3; }
+
+            DrawImage "OLBART", 0, 0;
         }*/
     }
 
