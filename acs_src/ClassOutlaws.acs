@@ -1,4 +1,4 @@
-#DEFINE OUTLAWWEAPONS 11
+#DEFINE OUTLAWWEAPONS 12
 str OutlawsWeapons[OUTLAWWEAPONS][4] =
 {
 	{ "Outlaws_Fist", "", "" },
@@ -10,12 +10,13 @@ str OutlawsWeapons[OUTLAWWEAPONS][4] =
 	{ "Outlaws_Rifle", "Outlaws_RifleMagazine", "Clip", "R" },
 	{ "Outlaws_Cannon", "Outlaws_CannonMagazine", "RocketAmmo", "C" },
 	{ "Outlaws_MachineGun", "", "Cell", "R" },
+	{ "Outlaws_OrganGun", "Outlaws_OrganGunMagazine", "Cell", "R" },
 	{ "Outlaws_GatlingGun", "", "Cell", "R" },
 	{ "Outlaws_Dynamite", "", "RocketAmmo", "" }
 };
 
-int ammoCardSpaces[OUTLAWWEAPONS] = { 0, 22, 0, 26, 26, 26, 10, 22, 10, 10, 0 };
-int turretWeapons[OUTLAWWEAPONS] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0 };
+int ammoCardSpaces[OUTLAWWEAPONS] = { 0, 22, 0, 26, 26, 26, 10, 22, 10, 10, 10, 0 };
+int turretWeapons[OUTLAWWEAPONS] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 };
 
 Script "Outlaws_ThrowCounter" (void)
 {
@@ -53,6 +54,11 @@ Script "Outlaws_TNTAddFuse" (void)
 	SetActivatorToTarget(0);
 	GiveActorInventory(newTid, "Outlaws_DynamiteProjectileTimer", CheckInventory("Outlaws_DynamiteFuse") * 4); //SetActorProperty(newTid,APROP_REACTIONTIME,CheckInventory("Outlaws_DynamiteFuse")*4);
 	Thing_ChangeTid(newTid,0);
+}
+
+Script "Outlaws_OrganGunMagazineSync" (void)
+{
+	SetInventory("Outlaws_OrganGunSecondaryCounter",CheckInventory("Outlaws_OrganGunMagazine"));
 }
 
 Script "Outlaws_Player" (void)
@@ -96,6 +102,9 @@ Script "Outlaws_Player" (void)
 	int ol_armor = -1;
 	int armorShifters[12] = {};
 	int armorDigitsShifter[12] = {};
+	
+	//Used for organ gun magazine
+	GiveInventory("Outlaws_OrganGunSecondaryCounter",7);
 	
 	while(CheckInventory("OutlawsClass"))
 	{
