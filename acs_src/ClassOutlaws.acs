@@ -56,9 +56,17 @@ Script "Outlaws_TNTAddFuse" (void)
 	Thing_ChangeTid(newTid,0);
 }
 
-Script "Outlaws_OrganGunMagazineSync" (void)
+Script "Outlaws_OrganGunMagazineSync" (int arg1)
 {
-	SetInventory("Outlaws_OrganGunSecondaryCounter",CheckInventory("Outlaws_OrganGunMagazine"));
+    if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraOutlawsOrganGunSecondaryCounter", CheckInventory("Outlaws_OrganGunMagazine") % 8); }
+    else
+    {
+        if (arg1 > 0)
+        {
+            if (!CheckInventory("SamsaraOutlawsOrganGunSecondaryCounter")) { SetInventory("SamsaraOutlawsOrganGunSecondaryCounter", 7); }
+            else { TakeInventory("SamsaraOutlawsOrganGunSecondaryCounter", 1); }
+        }
+    }
 }
 
 Script "Outlaws_Player" (void)
@@ -103,11 +111,10 @@ Script "Outlaws_Player" (void)
 	int armorShifters[12] = {};
 	int armorDigitsShifter[12] = {};
 	
-	//Used for organ gun magazine
-	GiveInventory("Outlaws_OrganGunSecondaryCounter",7);
-	
 	while(CheckInventory("OutlawsClass"))
 	{
+		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraOutlawsOrganGunSecondaryCounter", CheckInventory("Outlaws_OrganGunMagazine") % 8); }
+
 		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
 		{
 			UsingFullScreen = true;

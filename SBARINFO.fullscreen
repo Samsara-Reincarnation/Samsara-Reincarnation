@@ -3628,7 +3628,7 @@ StatusBar Fullscreen, ForceScaled
                     IsSelected not SoF_SniperRifle, Outlaws_Revolver {
                     IsSelected not Outlaws_Shotgun, Outlaws_SawedOffShotgun {
                     IsSelected not Outlaws_DoubleBarrelShotgun, Outlaws_Rifle {
-                    IsSelected not Outlaws_Cannon
+                    IsSelected not Outlaws_Cannon, Outlaws_OrganGun
                     {
                         DrawImage "HUDBAR", 250, 180;
                         DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
@@ -6278,7 +6278,7 @@ StatusBar Fullscreen, ForceScaled
                         DrawImage AmmoIcon2, 238, 185, Center;
                     }
 
-                    IsSelected Outlaws_Cannon
+                    IsSelected Outlaws_Cannon, Outlaws_OrganGun
                     {
                         DrawImage "HUDBAR", 250, 180;
                         InInventory SamsaraReloadMode, 2
@@ -6851,6 +6851,8 @@ StatusBar Fullscreen, ForceScaled
                 } else InInventory RTCWClass {
                     InInventory GotWeapon6 || RTCW_MG42 { DrawImage "STYSNUM6", 176, 10; }
                     else InInventory RTCW_Browning { DrawImage "STYSNUM6", 176, 10; }
+                } else InInventory OutlawsClass {
+                    InInventory GotWeapon6 || Outlaws_OrganGun { DrawImage "STYSNUM6", 176, 10; }
                 } else {
                     InInventory GotWeapon6 { DrawImage "STYSNUM6", 176, 10; }
                 }
@@ -6922,6 +6924,7 @@ StatusBar Fullscreen, ForceScaled
                 IsSelected Goldeneye_ArabahViper { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected Goldfinger_M1Garand, Goldfinger_Kar98k { DrawImage "STY3NUM6", 176, 10; }
                 IsSelected RTCW_MG42, RTCW_Browning { DrawImage "STY3NUM6", 176, 10; }
+                IsSelected Outlaws_OrganGun { DrawImage "STY3NUM6", 176, 10; }
 
                 // Slot 7 + Slot 7S
                 InInventory not PainkillerClass
