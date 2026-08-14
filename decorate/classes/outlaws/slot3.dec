@@ -91,6 +91,8 @@ actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Shell",1,1)
         goto FireDry
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto FireWaterCheck
         // loading the second shell with 1 shell will feel a little weird, but it's something
         TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsSawedOffShotgunFired",1,"Reload")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
@@ -127,6 +129,8 @@ actor Outlaws_SawedOffShotgun : SamsaraOutlawsWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Shell",1,1)
         goto FireDry
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto AltFireWaterCheck
         TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsSawedOffShotgunFired",0,"Reload")
         goto AltFireWaterCheck
 
@@ -436,8 +440,10 @@ actor Outlaws_DoubleBarrelShotgun : SamsaraOutlawsWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Shell",1,1)
         goto FireDry
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto FireWaterCheck
         // loading the second shell with 1 shell will feel a little weird, but it's something
-        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsDoubleBarrelShotgunFired",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsSawedOffShotgunFired",1,"Reload")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireWaterCheck")
         TNT1 A 0 A_JumpIfInventory("Shell",2,"FireWaterCheck")
         goto FireDry
@@ -472,7 +478,9 @@ actor Outlaws_DoubleBarrelShotgun : SamsaraOutlawsWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Shell",1,1)
         goto FireDry
-        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsDoubleBarrelShotgunFired",0,"Reload")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto AltFireWaterCheck
+        TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsSawedOffShotgunFired",0,"Reload")
         goto AltFireWaterCheck
 
       AltFireReloadable:

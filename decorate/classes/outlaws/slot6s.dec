@@ -59,6 +59,8 @@ actor Outlaws_OrganGun : SamsaraOutlawsWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Cell",8,1)
         goto FireDry
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto FireWaterCheck
         TNT1 A 0 A_JumpIfInventory("SamsaraOutlawsOrganGunPrimaryFired",1,"Reload")
         goto FireWaterCheck
 
@@ -282,46 +284,6 @@ actor SamsaraOutlawsOrganGunAttackHandler1 : Trigger
       // Initializing stuff
       Pickup:
         TNT1 A 0 A_TakeInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        goto PickupAmmoCheckRight
-
-      // Ammo checking/taking stuff (right)
-      PickupAmmoCheckRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
-      PickupAmmoCheckRightNonReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Cell",1)
-        goto PickupAttackRight
-
-      PickupAmmoCheckRightReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
-        goto PickupAttackRight
-
-      // Attack stuff (right)
-      PickupAttackRight:
-        TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
-      PickupAttackRightDM:
-        TNT1 A 0 A_FireBullets(frandom(-2,0),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      PickupAttackRightCoop:
-        TNT1 A 0 A_FireBullets(frandom(-2,0),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      // Finishing stuff (right)
-      PickupFinishRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckLeft")
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
         goto PickupAmmoCheckLeft
 
       // Ammo checking/taking stuff (left)
@@ -330,14 +292,14 @@ actor SamsaraOutlawsOrganGunAttackHandler1 : Trigger
       PickupAmmoCheckLeftNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Cell",1)
         goto PickupAttackLeft
 
       PickupAmmoCheckLeftReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
         goto PickupAttackLeft
 
@@ -358,6 +320,46 @@ actor SamsaraOutlawsOrganGunAttackHandler1 : Trigger
 
       // Finishing stuff (left)
       PickupFinishLeft:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRight")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto PickupAmmoCheckRight
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
+        goto PickupAmmoCheckRight
+
+      // Ammo checking/taking stuff (right)
+      PickupAmmoCheckRight:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
+      PickupAmmoCheckRightNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttackRight
+
+      PickupAmmoCheckRightReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
+        goto PickupAttackRight
+
+      // Attack stuff (right)
+      PickupAttackRight:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireBullets(frandom(-2,0),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireBullets(frandom(-2,0),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      // Finishing stuff (right)
+      PickupFinishRight:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupRecoil")
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
         goto PickupRecoil
@@ -381,46 +383,6 @@ actor SamsaraOutlawsOrganGunAttackHandler2 : Trigger
       // Initializing stuff
       Pickup:
         TNT1 A 0 A_TakeInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        goto PickupAmmoCheckRight
-
-      // Ammo checking/taking stuff (right)
-      PickupAmmoCheckRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
-      PickupAmmoCheckRightNonReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Cell",1)
-        goto PickupAttackRight
-
-      PickupAmmoCheckRightReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
-        goto PickupAttackRight
-
-      // Attack stuff (right)
-      PickupAttackRight:
-        TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
-      PickupAttackRightDM:
-        TNT1 A 0 A_FireBullets(frandom(-3,-1),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      PickupAttackRightCoop:
-        TNT1 A 0 A_FireBullets(frandom(-3,-1),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      // Finishing stuff (right)
-      PickupFinishRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckLeft")
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
         goto PickupAmmoCheckLeft
 
       // Ammo checking/taking stuff (left)
@@ -429,14 +391,14 @@ actor SamsaraOutlawsOrganGunAttackHandler2 : Trigger
       PickupAmmoCheckLeftNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Cell",1)
         goto PickupAttackLeft
 
       PickupAmmoCheckLeftReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
         goto PickupAttackLeft
 
@@ -457,6 +419,46 @@ actor SamsaraOutlawsOrganGunAttackHandler2 : Trigger
 
       // Finishing stuff (left)
       PickupFinishLeft:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRight")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto PickupAmmoCheckRight
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
+        goto PickupAmmoCheckRight
+
+      // Ammo checking/taking stuff (right)
+      PickupAmmoCheckRight:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
+      PickupAmmoCheckRightNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttackRight
+
+      PickupAmmoCheckRightReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
+        goto PickupAttackRight
+
+      // Attack stuff (right)
+      PickupAttackRight:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireBullets(frandom(-3,-1),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireBullets(frandom(-3,-1),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      // Finishing stuff (right)
+      PickupFinishRight:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupRecoil")
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
         goto PickupRecoil
@@ -480,46 +482,6 @@ actor SamsaraOutlawsOrganGunAttackHandler3 : Trigger
       // Initializing stuff
       Pickup:
         TNT1 A 0 A_TakeInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        goto PickupAmmoCheckRight
-
-      // Ammo checking/taking stuff (right)
-      PickupAmmoCheckRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
-      PickupAmmoCheckRightNonReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Cell",1)
-        goto PickupAttackRight
-
-      PickupAmmoCheckRightReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
-        goto PickupAttackRight
-
-      // Attack stuff (right)
-      PickupAttackRight:
-        TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
-      PickupAttackRightDM:
-        TNT1 A 0 A_FireBullets(frandom(-4,-2),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      PickupAttackRightCoop:
-        TNT1 A 0 A_FireBullets(frandom(-4,-2),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      // Finishing stuff (right)
-      PickupFinishRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckLeft")
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
         goto PickupAmmoCheckLeft
 
       // Ammo checking/taking stuff (left)
@@ -528,14 +490,14 @@ actor SamsaraOutlawsOrganGunAttackHandler3 : Trigger
       PickupAmmoCheckLeftNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Cell",1)
         goto PickupAttackLeft
 
       PickupAmmoCheckLeftReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
         goto PickupAttackLeft
 
@@ -556,6 +518,46 @@ actor SamsaraOutlawsOrganGunAttackHandler3 : Trigger
 
       // Finishing stuff (left)
       PickupFinishLeft:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRight")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto PickupAmmoCheckRight
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
+        goto PickupAmmoCheckRight
+
+      // Ammo checking/taking stuff (right)
+      PickupAmmoCheckRight:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
+      PickupAmmoCheckRightNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttackRight
+
+      PickupAmmoCheckRightReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
+        goto PickupAttackRight
+
+      // Attack stuff (right)
+      PickupAttackRight:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireBullets(frandom(-4,-2),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireBullets(frandom(-4,-2),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      // Finishing stuff (right)
+      PickupFinishRight:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupRecoil")
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
         goto PickupRecoil
@@ -579,46 +581,6 @@ actor SamsaraOutlawsOrganGunAttackHandler4 : Trigger
       // Initializing stuff
       Pickup:
         TNT1 A 0 A_TakeInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        goto PickupAmmoCheckRight
-
-      // Ammo checking/taking stuff (right)
-      PickupAmmoCheckRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
-      PickupAmmoCheckRightNonReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Cell",1)
-        goto PickupAttackRight
-
-      PickupAmmoCheckRightReloadable:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
-        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
-        goto PickupAttackRight
-
-      // Attack stuff (right)
-      PickupAttackRight:
-        TNT1 A 0 A_AlertMonsters
-        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
-      PickupAttackRightDM:
-        TNT1 A 0 A_FireBullets(frandom(-5,-3),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      PickupAttackRightCoop:
-        TNT1 A 0 A_FireBullets(frandom(-5,-3),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
-        goto PickupFinishRight
-
-      // Finishing stuff (right)
-      PickupFinishRight:
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckLeft")
-        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
-        goto PickupAmmoCheckLeft
-        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
         goto PickupAmmoCheckLeft
 
       // Ammo checking/taking stuff (left)
@@ -627,14 +589,14 @@ actor SamsaraOutlawsOrganGunAttackHandler4 : Trigger
       PickupAmmoCheckLeftNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Cell",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Cell",1)
         goto PickupAttackLeft
 
       PickupAmmoCheckLeftReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackLeft")
         TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
-        goto PickupRecoil
+        goto PickupAmmoCheckRight
         TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
         goto PickupAttackLeft
 
@@ -655,6 +617,46 @@ actor SamsaraOutlawsOrganGunAttackHandler4 : Trigger
 
       // Finishing stuff (left)
       PickupFinishLeft:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRight")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
+        goto PickupAmmoCheckRight
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimaryFired",1)
+        goto PickupAmmoCheckRight
+
+      // Ammo checking/taking stuff (right)
+      PickupAmmoCheckRight:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupAmmoCheckRightReloadable")
+      PickupAmmoCheckRightNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttackRight
+
+      PickupAmmoCheckRightReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttackRight")
+        TNT1 A 0 A_JumpIfInventory("Outlaws_OrganGunMagazine",1,1)
+        goto PickupRecoil
+        TNT1 A 0 A_TakeInventory("Outlaws_OrganGunMagazine",1)
+        goto PickupAttackRight
+
+      // Attack stuff (right)
+      PickupAttackRight:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("Outlaws/Shotgun/Fire",CHAN_WEAPON)
+        TNT1 A 0 A_GiveInventory("SamsaraOutlawsOrganGunPrimarySuccess")
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackRightCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackRightCoop")
+      PickupAttackRightDM:
+        TNT1 A 0 A_FireBullets(frandom(-5,-3),frandom(-2,2),-1,20,"OutlawsPuff",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      PickupAttackRightCoop:
+        TNT1 A 0 A_FireBullets(frandom(-5,-3),frandom(-2,2),-1,20,"OutlawsPuffCoop",FBF_NORANDOM|FBF_EXPLICITANGLE|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinishRight
+
+      // Finishing stuff (right)
+      PickupFinishRight:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupRecoil")
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",1,1)
         goto PickupRecoil
