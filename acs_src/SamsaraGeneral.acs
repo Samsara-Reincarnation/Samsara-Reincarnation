@@ -6929,7 +6929,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     result = 1;
                 }
 
-                if (startmode <= -1) { GiveInventory("ShrinkerAmmo", GetAmmoCapacity("ShrinkerAmmo")); }
+                if (startmode <= -1 && GetCVar("samsara_lmsuniques")) { GiveInventory("ShrinkerAmmo", GetAmmoCapacity("ShrinkerAmmo")); }
 
                 if (startmode != 0) { result = 1; }
 
@@ -7069,7 +7069,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     result = 1;
                 }
 
-                if (startmode <= -1 && GetCVar("samsara_lmsuniques")) { GiveInventory("Duke64ShrinkerAmmo", GetAmmoCapacity("Duke64ShrinkerAmmo")); }
+                if (startmode <= -1 && GetCVar("samsara_lmsuniques")) { GiveInventory("ShrinkerAmmo", GetAmmoCapacity("ShrinkerAmmo")); }
 
                 if (startmode != 0) { result = 1; }
 
@@ -12917,20 +12917,19 @@ script "Samsara_GiveBackpack" (int startmode)
         {
           default: // Original/Life's a Beach
             GiveInventory("Backpack", 1);
+
+            if (startmode >= 0) { GiveInventory("ShrinkerAmmo", 2); } // do not give in LMS
             break;
 
           case 2: // Duke Nukem 64
-            int curshrinkerammo = CheckInventory("ShrinkerAmmo");
-
             GiveInventory("Backpack", 1);
-            SetInventory("ShrinkerAmmo", curshrinkerammo); // leave our duke 3D shrinker ammo untouched because we cannot use it
 
             if (startmode >= 0) // do not give in LMS
             {
                 GiveInventory("Duke64DumDums", 6);
                 GiveInventory("Duke64ExplosiveShells", 2);
                 GiveInventory("Duke64HeatSeekingRockets", 3);
-                GiveInventory("Duke64ShrinkerAmmo", 2);
+                GiveInventory("ShrinkerAmmo", 2);
             }
             break;
         }

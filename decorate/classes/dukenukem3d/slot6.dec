@@ -663,7 +663,7 @@ actor Freezethrower : DukeWeapon
 		Stop
 	FlashB64:
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-		TNT1 A 0 A_JumpIfInventory("Duke64ShrinkerAmmo",1,1)
+		TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",1,1)
 		goto OutOfAmmo64_2
 		TNT1 A 0 A_AlertMonsters
 		D6SH A 4 A_PlayWeaponSound("duke64/shrinkerfire")
@@ -1070,9 +1070,9 @@ actor SamsaraDuke64ExpanderShrinkerAttackHandler : Trigger
       // Ammo checking/taking stuff
       Pickup:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
-        TNT1 A 0 A_JumpIfInventory("Duke64ShrinkerAmmo",1,1)
+        TNT1 A 0 A_JumpIfInventory("ShrinkerAmmo",1,1)
         stop
-        TNT1 A 0 A_TakeInventory("Duke64ShrinkerAmmo",1)
+        TNT1 A 0 A_TakeInventory("ShrinkerAmmo",1)
         goto PickupAttack
 
       // Attack stuff
@@ -1089,13 +1089,13 @@ actor SamsaraDuke64ExpanderShrinkerAttackHandler : Trigger
     }
 }
 
-actor Duke64ShrinkerAmmo : Ammo
+/*actor Duke64ShrinkerAmmo : Ammo
 {
     Inventory.MaxAmount 20
     Ammo.BackpackMaxAmount 40
     Inventory.Icon "AMSMQ0"
     Tag "Shrinker Ammo"
-}
+}*/
 
 Actor ShrinkMissile64
 {
