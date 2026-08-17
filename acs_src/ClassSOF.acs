@@ -912,18 +912,21 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
 			break;
 		case 14:
 			SetActivator(0,AAPTR_TRACER);
-			if((CheckInventory("SoF_MPG_InflationCounter") < 30) && (ClassifyActor(0) & ACTOR_ALIVE) && !CheckFlag(0,"NOBLOOD") && !CheckFlag(0,"BOSS"))
+			if((CheckInventory("SoF_MPG_InflationCounter") < 30) && (ClassifyActor(0) & ACTOR_ALIVE))
 			{
-				SetActorState(0,"SoFMPGLaserExpand",true);
-				SetResultValue(0);
+				if (CheckActorState(0,"SoFMPGLaserExpand",1))
+				{
+					SetActorState(0,"SoFMPGLaserExpand",true);
+					SetResultValue(0);
+				}
+				else
+				{
+					SetResultValue(12);
+				}
 			}
 			else if(CheckInventory("SoF_MPG_InflationCounter") >= 30)
 			{
 				SetResultValue(GetActorProperty(0,APROP_SpawnHealth)+5000);
-			}
-			else
-			{
-				SetResultValue(12);
 			}
 			break;
 		case 15:
