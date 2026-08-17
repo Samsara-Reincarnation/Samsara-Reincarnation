@@ -16,7 +16,6 @@ actor SamsaraOutlawsWeapon : Weapon
 actor OutlawsMeleePuff
 {
 	+NOINTERACTION
-	+BLOODLESSIMPACT
 	+NOEXTREMEDEATH
 	+NODAMAGETHRUST
 	Radius 1
@@ -44,8 +43,7 @@ actor OutlawsPuff
 	+NODAMAGETHRUST
 	Renderstyle Translucent
 	Alpha 0.5
-	XScale 0.80
-	YScale 0.60
+	Decal OutlawsBulletDecal
 	Radius 2
 	Height 2
 	States
@@ -56,7 +54,7 @@ actor OutlawsPuff
 		Crash:
 			OL99 B 0 A_Jump(192,2)
 			OL99 B 0 A_PlaySound("Outlaws/Ricochet",CHAN_BODY)
-			OL99 B 0 A_SpawnItemEx("OutlawsPuffHole")
+			//OL99 B 0 A_SpawnItemEx("OutlawsPuffHole")
 			OL99 BBCDEF 4
 			Stop
 		XDeath:
@@ -92,9 +90,14 @@ actor Outlaws_BloodGenerator : CustomInventory
 	{
 		Pickup:
 			TNT1 A 0
+			TNT1 A 0 A_CheckFlag(NOBLOOD, "PickupFail")
+			TNT1 A 0 A_SpawnItemEx("Switchable_FlyingBlood",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)	
 			TNT1 A 0 A_SpawnItemEx("Outlaws_Blood",radius*cos(CallACS("SamsaraBloodGeneratorReturn",1)),radius*sin(CallACS("SamsaraBloodGeneratorReturn",1)),CallACS("SamsaraBloodGeneratorReturn",2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEPOSITION)
 			TNT1 A 0
 			stop
+		PickupFail:
+			TNT1 A 1
+			Stop
 	}
 }
 
@@ -107,7 +110,7 @@ actor Outlaws_Blood
 	States
 	{
 		Spawn:
-			TNT1 A 0 A_SpawnItemEx("Switchable_FlyingBlood",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),33|SXF_TRANSFERTRANSLATION)
+			TNT1 A 0
 			OL99 OPQ 4 A_Stop
 			Stop
 	}

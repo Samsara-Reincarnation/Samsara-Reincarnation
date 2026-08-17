@@ -60,7 +60,7 @@ actor Outlaws_Knife : SamsaraOutlawsWeapon
 
       AltFire:
         TNT1 A 0 A_GiveInventory("SamsaraOutlawsKnifeAltAttackHandler")
-        OL08 DA 4
+        OL08 DA 8
         goto Ready
     }
 }
@@ -115,20 +115,20 @@ actor SamsaraOutlawsKnifeAltAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupCoop")
       PickupDM:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupDMSpread")
-        TNT1 A 0 A_CustomPunch(40,true,0,"OutlawsKnifePuff")
+        TNT1 A 0 A_CustomPunch(45,true,0,"OutlawsKnifePuff")
         stop
 
       PickupDMSpread:
-        TNT1 A 0 A_CustomPunch(40*3,true,0,"OutlawsKnifePuff")
+        TNT1 A 0 A_CustomPunch(45*3,true,0,"OutlawsKnifePuff")
         stop
 
       PickupCoop:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupCoopSpread")
-        TNT1 A 0 A_CustomPunch(40,true,0,"OutlawsKnifePuffCoop")
+        TNT1 A 0 A_CustomPunch(45,true,0,"OutlawsKnifePuffCoop")
         stop
 
       PickupCoopSpread:
-        TNT1 A 0 A_CustomPunch(40*3,true,0,"OutlawsKnifePuffCoop")
+        TNT1 A 0 A_CustomPunch(45*3,true,0,"OutlawsKnifePuffCoop")
         stop
     }
 }
