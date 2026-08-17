@@ -839,8 +839,13 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
 		case 7:
 			newtid = UniqueTID();
 			SpawnForced("SoF_GibberLooker",GetActorX(0),GetActorY(0),GetActorZ(0),newtid);
-			SetActorAngle(newtid,GetActorAngle(0));
+			//Flip the angle of this thing so it faces backward
 			SetPointerExt(AAPTR_TRACER,0,newtid);
+			//Assign the shooter to this object
+			SetActivator(0,AAPTR_TARGET);
+			SetPointerExt(AAPTR_TARGET,0,newtid);
+			//Change the angle, the same as the shooter
+			SetActorAngle(newtid,GetActorAngle(0));
 			break;
 		case 8:
 			SetActivator(0,AAPTR_TRACER);

@@ -367,11 +367,13 @@ Actor SoF_GibberLooker
 	+ISMONSTER
 	-COUNTKILL
 	+STANDSTILL
+	-LOOKALLAROUND
+	+NOTARGET
 	States
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 1 A_LookEx(LOF_NOSOUNDCHECK,32,512,0,10,"Quit")
+			TNT1 A 1 A_LookEx(LOF_NOSOUNDCHECK,64,512,0,20,"Quit")
 			Stop
 		Quit:
 			TNT1 A 2 ACS_NamedExecuteWithResult("SoF_Decorate",8)
@@ -475,6 +477,17 @@ Actor SoF_DeathGibber
 			TNT1 A 0 A_GiveToTarget("SoF_LengTcheMultiplier",1)
 			TNT1 A 0 A_GiveInventory("SoF_IsDeathGibber")
 			TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",5,1)
+			Goto ShootableCorpseLoop
+		Pain.SoFShotgun:
+		Pain.SoF44:
+		Pain.SoFSlug:
+			TNT1 A 0 A_ChangeFlag("NOPAIN",true)
+			TNT1 A 0 A_GiveToTarget("SoF_AlexMurphyTimer",CallACS("SoF_Decorate",17,2))
+			TNT1 A 0 A_GiveToTarget("SoF_AlexMurphyMultiplier",1)
+			TNT1 A 0 A_GiveInventory("SoF_IsDeathGibber")
+			TNT1 A 0 ACS_NamedExecuteWithResult("SoF_Decorate",5,1)
+			TNT1 A 1 A_Warp(AAPTR_Master,0,0,0,0,WARPF_NOCHECKPOSITION) //Don't let multiple pellets give the bonus at once
+			TNT1 A 0 A_ChangeFlag("NOPAIN",false)
 			Goto ShootableCorpseLoop
 		Death:
 			TNT1 A 0 A_GiveToTarget("SoF_AlexMurphyTimer",CallACS("SoF_Decorate",17,2))
