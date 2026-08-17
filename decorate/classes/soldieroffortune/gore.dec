@@ -331,6 +331,7 @@ Actor SoF_SMGDeathGibber
 	-SOLID
 	+NODAMAGE
 	+VULNERABLE
+	+QUICKTORETALIATE
 	States
 	{
 		Spawn:
@@ -373,9 +374,11 @@ Actor SoF_GibberLooker
 	{
 		Spawn:
 			TNT1 A 0
-			TNT1 A 1 A_LookEx(LOF_NOSOUNDCHECK,64,512,0,20,"Quit")
+			TNT1 A 1 A_LookEx(LOF_NOSOUNDCHECK,32,512,0,20,"Quit")
 			Stop
 		Quit:
+			TNT1 A 0 A_JumpIfTargetInLOS(1,20,0,512,32)
+			Stop
 			TNT1 A 2 ACS_NamedExecuteWithResult("SoF_Decorate",8)
 			Stop
 	}
@@ -453,6 +456,7 @@ Actor SoF_DeathGibber
 	+SHOOTABLE
 	-SOLID
 	+VULNERABLE
+	+QUICKTORETALIATE
 	States
 	{
 		Spawn:
