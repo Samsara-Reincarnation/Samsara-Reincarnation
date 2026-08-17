@@ -879,31 +879,6 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
 			SetInventory("SoF_GibberDamageType",0);
 			SetResultValue(result);
 			break;
-		case 11:
-			newtid = UniqueTid();
-			SpawnForced("SoF_RocketFlare",GetActorX(0),GetActorY(0),GetActorZ(0),newTid);
-			SetPointerExt(AAPTR_MASTER,0,newTid);
-			while(ClassifyActor(0) > 1)
-			{
-				Warp(newtid,-20.0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_INTERPOLATE);
-				Delay(1);
-			}
-			Thing_Remove(newtid);
-			break;
-		case 12:
-			newtid = UniqueTid();
-			oldtid = UniqueTid();
-			SpawnForced("SoF_SlugParticle",GetActorX(0),GetActorY(0),GetActorZ(0),newTid);
-			SpawnForced("SoF_SlugFlare",GetActorX(0),GetActorY(0),GetActorZ(0),oldtid);
-			while(ClassifyActor(0) > 1)
-			{
-				Warp(newtid,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_INTERPOLATE);
-				Warp(oldtid,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_INTERPOLATE);
-				Delay(1);
-			}
-			Thing_Remove(newtid);
-			Thing_Remove(oldtid);
-			break;
 		case 13:
 			GiveInventory("SoF_MPG_AmmoTaker", 1);
 			GiveInventory("SoF_MPG_FireToken",1);
@@ -1010,6 +985,41 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
                 }
             }
             break;
+	}
+}
+
+Script "SoF_Decorate_Client" (int operation, int arg1, int arg2) CLIENTSIDE
+{
+	int newtid = 0;
+	int oldTid = 0;
+	int result = 0;
+	switch(operation)
+	{
+		case 1:
+			newtid = UniqueTid();
+			SpawnForced("SoF_RocketFlare",GetActorX(0),GetActorY(0),GetActorZ(0),newTid);
+			SetPointerExt(AAPTR_MASTER,0,newTid);
+			while(ClassifyActor(0) > 1)
+			{
+				Warp(newtid,-20.0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_INTERPOLATE);
+				Delay(1);
+			}
+			Thing_Remove(newtid);
+			break;
+		case 2:
+			newtid = UniqueTid();
+			oldtid = UniqueTid();
+			SpawnForced("SoF_SlugParticle",GetActorX(0),GetActorY(0),GetActorZ(0),newTid);
+			SpawnForced("SoF_SlugFlare",GetActorX(0),GetActorY(0),GetActorZ(0),oldtid);
+			while(ClassifyActor(0) > 1)
+			{
+				Warp(newtid,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_INTERPOLATE);
+				Warp(oldtid,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_MOVEPTR|WARPF_INTERPOLATE);
+				Delay(1);
+			}
+			Thing_Remove(newtid);
+			Thing_Remove(oldtid);
+			break;
 	}
 }
 
