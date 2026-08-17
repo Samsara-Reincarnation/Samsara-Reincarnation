@@ -914,7 +914,7 @@ Script "SoF_Decorate" (int operation, int arg1, int arg2)
 			SetActivator(0,AAPTR_TRACER);
 			if((CheckInventory("SoF_MPG_InflationCounter") < 30) && (ClassifyActor(0) & ACTOR_ALIVE))
 			{
-				if (CheckActorState(0,"SoFMPGLaserExpand",1))
+				if (GetActorProperty(0, APROP_Accuracy) == -1) //if (CheckActorState(0,"SoFMPGLaserExpand",1))
 				{
 					SetActorState(0,"SoFMPGLaserExpand",true);
 					SetResultValue(0);
