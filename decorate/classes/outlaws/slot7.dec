@@ -84,11 +84,11 @@ actor SamsaraOutlawsGatlingGunAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_RailAttack(100,0,false,None,None,RGF_SILENT|32,0,"OutlawsPuff",2,2)
+        TNT1 A 0 A_RailAttack(100,0,false,None,None,RGF_SILENT|32,0,"OutlawsGatlingPuff",2,2)
         goto PickupFinish
 
       PickupAttackCoop:
-        TNT1 A 0 A_RailAttack(100,0,false,None,None,RGF_SILENT|32,0,"OutlawsPuffCoop",2,2)
+        TNT1 A 0 A_RailAttack(100,0,false,None,None,RGF_SILENT|32,0,"OutlawsGatlingPuffCoop",2,2)
         goto PickupFinish
 
       // Finishing stuff
@@ -134,7 +134,7 @@ actor SamsaraOutlawsGatlingGunAltAttackHandler : Trigger
     }
 }
 
-actor OutlawsGatlingPuff : OutlawsPuff {}
+actor OutlawsGatlingPuff : OutlawsPuff { +FORCEDECAL }
 
 actor OutlawsGatlingPuffCoop : OutlawsGatlingPuff
 {
