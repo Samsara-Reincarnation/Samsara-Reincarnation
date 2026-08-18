@@ -1663,7 +1663,7 @@ Script "Samsara_UniqueKeys" (int key) NET
 			ACS_NamedExecuteWithResult("Unreal_RevertUpgrade",0,0,0);
 			break;
 		case CLASS_RTCW:
-			ACS_NamedExecuteWithResult("RTCW_Kick",0,0,0);
+			if (key == 0) { ACS_NamedExecuteWithResult("RTCW_Kick",0,0,0); }
 			break;
 		case CLASS_DESCENT:
 			if (isZDoom() && (GetCVar("samsara_zscriptready") == 1) && GetCVar("samsara_descentflight") >= 2 && !CheckInventory("DescentGuidedController") && !CheckInventory("CompendiumOpened") && !isDead(0)) { GiveInventory("DescentRollToken", 1); }
