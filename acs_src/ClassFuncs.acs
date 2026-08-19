@@ -105,7 +105,7 @@ script "GlobalRecoil" (int duration, int intensity, int halfdampen, int forced) 
 }
 
 //Script that will determine the necessary damage to inflict
-Script "ScriptedBulletDamage" (int idamage)
+Script "ScriptedBulletDamage" (int idamage, int type)
 {
 	//Damage value that will be applied
 	int damage = 0;
@@ -136,6 +136,10 @@ Script "ScriptedBulletDamage" (int idamage)
 	{
 		case CLASS_HALFLIFE:
 			damage = ACS_NamedExecuteWithResult("HalfLife_BulletDamage",idamage);
+			break;
+		case CLASS_GOLDENEYE:
+			if (type >= 1) { damage = ACS_NamedExecuteWithResult("Goldeneye_SlapperDamage",idamage); }
+			else { damage = ACS_NamedExecuteWithResult("BondHitBox",idamage); }
 			break;
 		case CLASS_KINGPIN:
 			damage = ACS_NamedExecuteWithResult("Kingpin_BulletDamage",idamage);

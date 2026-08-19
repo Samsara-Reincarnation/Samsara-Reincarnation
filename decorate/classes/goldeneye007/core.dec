@@ -84,6 +84,7 @@ actor Goldeneye_BulletTracer : FastProjectile
     Speed 96
     Damage (0)
     DamageType "GEBullet"
+	Tag "GEBullet"
     RenderStyle "Add"
     Alpha 0.5
     Decal "Goldeneye_BulletChip"
@@ -111,7 +112,7 @@ actor Goldeneye_BulletTracer : FastProjectile
       XDeath:
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsets")
         TNT1 A 0 A_GiveInventory("GE_BloodGenerator",1,AAPTR_TRACER)
-        TNT1 A 0 A_Explode(CallACS("BondHitBox", user_damage),8,0,false,8)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
         TNT1 A 1 A_RearrangePointers(AAPTR_TRACER,AAPTR_NULL,AAPTR_NULL)
         stop
 
@@ -120,7 +121,7 @@ actor Goldeneye_BulletTracer : FastProjectile
       CrashFinish:
         TNT1 AAAAAAAA 0 A_SpawnItemEx("Goldeneye_Debris",random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-360,360),SXF_NOCHECKPOSITION)
         TNT1 A 0 A_SpawnItemEx("Goldeneye_BulletImpact_Smokeless",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-        TNT1 A 1 A_Explode(CallACS("BondHitBox", user_damage),8,0,false,8)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
         stop
     }
 }
@@ -206,6 +207,7 @@ actor Goldeneye_BulletPuff
     Speed 0
     Damage (0)
     DamageType "GEBullet"
+	Tag "GEBullet"
     RenderStyle "Add"
     Alpha 0.5
     +DONTBLAST
@@ -224,7 +226,7 @@ actor Goldeneye_BulletPuff
     States
     {
       Spawn:
-		TNT1 A 1 NoDelay A_Explode(CallACS("BondHitBox", user_damage),8,0,false,8)
+		TNT1 A 1 NoDelay ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
 	  Death:
 	  Crash:
 	  DeathFinish:
@@ -234,7 +236,7 @@ actor Goldeneye_BulletPuff
       XDeath:
 		TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsets")
         TNT1 A 0 A_GiveInventory("GE_BloodGenerator",1,AAPTR_TRACER)
-		TNT1 A 0 A_Explode(CallACS("BondHitBox", user_damage),4,0,false,4)
+		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
         TNT1 A 1 A_RearrangePointers(AAPTR_TRACER,AAPTR_NULL,AAPTR_NULL)
         stop
     }
