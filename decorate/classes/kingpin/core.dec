@@ -32,12 +32,13 @@ Actor Kingpin_BulletSmoke
 	Scale 0.25
 	Decal KingpinBulletHole
 	DamageType "KingpinBullet"
+	Tag "KingpinBullet"
 	States
 	{
 		Spawn:
 			TNT1 A 0
 			TNT1 A 0 A_PlaySound("Kingpin/HitMetal",CHAN_5)
-			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,0,false,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage")
 			KP00 A -1 ACS_NamedExecuteWithResult("Kingpin_FX",1,10,0.75*65536)
 			Stop
 		Melee:
@@ -49,7 +50,7 @@ Actor Kingpin_BulletSmoke
 			Stop
 		XDeath:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
-			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,0,false,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage")
 			TNT1 A 1 A_GiveInventory("Kingpin_BloodGenerator",1,AAPTR_TRACER)
 			Stop
 	}
@@ -68,7 +69,7 @@ Actor Kingpin_BulletSmokeBleed : Kingpin_BulletSmoke
 		Spawn:
 			TNT1 A 0
 			TNT1 A 0 A_PlaySound("Kingpin/HitMetal",CHAN_5)
-			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,0,false,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage")
 			KP00 A -1 ACS_NamedExecuteWithResult("Kingpin_FX",1,10,0.75*65536)
 			Stop
 		Melee:
@@ -80,7 +81,7 @@ Actor Kingpin_BulletSmokeBleed : Kingpin_BulletSmoke
 			Stop
 		XDeath:
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
-			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,0,false,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage")
 			TNT1 A 1 A_GiveInventory("Kingpin_BloodChunkGenerator",1,AAPTR_TRACER)
 			Stop
 	}
@@ -103,13 +104,14 @@ Actor Kingpin_MeleeSmoke
 	Height 2
 	Scale 0.25
 	DamageType "KingpinMelee"
+	Tag "KingpinMelee"
 	States
 	{
 		Spawn:
 		Melee:
 			TNT1 A 0
 			TNT1 A 0 A_PlaySound("Kingpin/Pipe/HitMetal",CHAN_5)
-			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,0,false,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage")
 			KP00 A -1 ACS_NamedExecuteWithResult("Kingpin_FX",1,10,0.75*65536)
 			Stop
 		Crash:
@@ -119,7 +121,7 @@ Actor Kingpin_MeleeSmoke
 		XDeath:
 			TNT1 A 0 A_PlaySound("Kingpin/Pipe/HitBody",CHAN_5)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
-			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage",damage),8,0,false,8)
+			TNT1 A 0 A_Explode(CallACS("Kingpin_BulletDamage"),8,0,false,8)
 			TNT1 A 1 A_GiveInventory("Kingpin_BloodGenerator",1,AAPTR_TRACER)
 			Stop
 	}

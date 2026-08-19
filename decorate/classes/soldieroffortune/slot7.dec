@@ -425,6 +425,7 @@ Actor SoF_MPGLaserProjectile : FastProjectile
     Damage (0)
     Speed 2048
     DamageType "SoFMPGLaser"
+	Tag "SoFMPGLaser"
 	Obituary "%o was microwaved by %k's MPG."
     +SKYEXPLODE
     +BLOODLESSIMPACT
@@ -445,7 +446,7 @@ Actor SoF_MPGLaserProjectile : FastProjectile
 
         XDeath:
             TNT1 A 0 ACS_NamedExecuteWithResult("SoF_BloodGenerator_Offsets")
-            TNT1 A 0 A_Explode(CallACS("SoF_BulletDamage",ACS_NamedExecuteWithResult("SoF_Decorate",14)),4,!XF_HURTSOURCE,0,4)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",ACS_NamedExecuteWithResult("SoF_Decorate",14))
             TNT1 A 0 A_GiveInventory("SoF_BloodGenerator",1,AAPTR_TRACER)
             goto DrawBeam
 

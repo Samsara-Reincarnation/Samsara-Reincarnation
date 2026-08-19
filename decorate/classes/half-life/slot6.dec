@@ -3562,16 +3562,17 @@ actor HLSawCounter : Ammo
 Actor HLSawBullet : HLBullet
 {
     DamageType "HLLaser"
+	Tag "HLLaser"
     Damage (0)
     -NOEXTREMEDEATH
     Scale 0.5
     States
     {
         Crash:
-            TNT1 A 0 A_Explode(35,8,!XF_HURTSOURCE,0,8)
+            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",35)
             Goto Super::Death
         XDeath:
-            TNT1 A 0 A_Explode(35,8,!XF_HURTSOURCE,0,8)
+            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",35)
             Goto Super::XDeath
     }
 }
@@ -3579,16 +3580,17 @@ Actor HLSawBullet : HLBullet
 Actor HLSawBulletCoop : HLBulletCoop
 {
     DamageType "HLLaser"
+	Tag "HLLaser"
     Damage (0)
     -NOEXTREMEDEATH
     Scale 0.5
     States
     {
         Crash:
-            TNT1 A 0 A_Explode(35,8,!XF_HURTSOURCE,0,8)
+            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",35)
             Goto Super::Death
         XDeath:
-            TNT1 A 0 A_Explode(35,8,!XF_HURTSOURCE,0,8)
+            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",35)
             Goto Super::XDeath
     }
 }

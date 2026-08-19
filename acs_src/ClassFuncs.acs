@@ -103,3 +103,60 @@ script "GlobalRecoil" (int duration, int intensity, int halfdampen, int forced) 
         Delay(1);
     }
 }
+
+//Script that will determine the necessary damage to inflict
+Script "ScriptedBulletDamage" (int idamage)
+{
+	//Damage value that will be applied
+	int damage = 0;
+	
+	//Get the current tid of the monster and generate a new one
+	int newTid = UniqueTid();
+	int myTid = ActivatorTid();
+	
+	//Generate new tid for the projectile
+	int projTid = UniqueTid();
+	Thing_ChangeTid(0,projTid);
+	
+	//Now assign the monster a new temporary tid
+	SetActivator(0,AAPTR_TRACER);
+	Thing_ChangeTid(0,newTid);
+	//Get the enemy health - Zandronum netplay related
+	int enemyHealth = GetActorProperty(0,APROP_Health);
+	
+	//Get the activator's player class
+	SetActivator(projTid,AAPTR_TARGET);
+	int pClass = PlayerClass(0);
+	
+	//Set the tid back to the projectile
+	SetActivator(projTid);
+
+	//Get the amount of damage to do based on the class script
+	switch(pClass)
+	{
+		case CLASS_HALFLIFE:
+			damage = ACS_NamedExecuteWithResult("HalfLife_BulletDamage",idamage);
+			break;
+		case CLASS_KINGPIN:
+			damage = ACS_NamedExecuteWithResult("Kingpin_BulletDamage",idamage);
+			break;
+		case CLASS_SOF:
+			damage = ACS_NamedExecuteWithResult("SoF_BulletDamage",idamage);	
+			break;
+	}
+	
+	//Now damage the actor as the projectile
+	SetActivator(projTid,AAPTR_TARGET);
+	
+	//In Zandronum netplay, enemies can gib even if the puff has NOEXTREMEDEATH, this is here to check if it should just simply kill the enemy
+	//We're using NameTag as Zandronum doesn't support DamageType but we can use another property that is supported as an exploit
+	int noExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH");
+	
+	//Behavior must change depending on if the NOEXTREMEDEATH flag exists
+	//If NOEXTREMEDEATH is present, just take away as much health that's needed to zero them out
+	Thing_Damage2(newTid, noExtremeDeath && (enemyHealth - damage < 0) ? enemyHealth : damage, GetActorProperty(projTid,APROP_NameTag));
+	
+	//Revert tids
+	Thing_ChangeTid(newTid,myTid);
+	Thing_ChangeTid(projTid,0);
+}
