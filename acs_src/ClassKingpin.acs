@@ -935,10 +935,10 @@ Script "Kingpin_PawnOMatic_Initiate" (void) Net
 	}
 }
 
-str pawnOMaticItemOptions[2][8] =
+str pawnOMaticItemOptions[2][8][2] =
 {
-	{ "Clip", "Shell", "RocketAmmo", "Cell" },
-	{ "HealPack0", "HealPack1", "HealPack2", "SuperHealth", "ArmorScrap", "ArmorPack1", "ArmorPack3", "MegaPack" }
+	{ {"Clip", ""}, {"Shell", ""}, {"RocketAmmo", ""}, {"Cell", ""} },
+	{ {"HealPack0", ""}, {"HealPack1", ""}, {"HealPack2", "PawnOMAtic/Medikit"}, {"SuperHealth", ""}, {"ArmorScrap", ""}, {"ArmorPack1", ""}, {"ArmorPack3", ""}, {"MegaPack", ""} },
 };
 
 //Number of options followed by prices
@@ -955,7 +955,7 @@ int pawnOMaticItemBulkBuy[2][8] =
 	{ 1, 0, 0, 0, 2 }
 };
 
-str pawnOMaticUpgradeOptions [7][4][2] =
+str pawnOMaticUpgradeOptions[7][4][2] =
 {
 	{ {"Kingpin_Pistol_Reload", "PawnOMAtic/Mod1/Reload"}, {"Kingpin_Pistol_RateOfFire", "PawnOMAtic/Mod1/RateOfFire"}, {"Kingpin_Pistol_Magnum", "PawnOMAtic/Mod1/Magnum"}, {"Kingpin_Pistol_Silencer", "PawnOMAtic/Mod1/Silencer"} },
 	{ {"Kingpin_Shotgun_DoubleBarrel", "PawnOMAtic/Mod2/DoubleBarrel"}, {"Kingpin_Shotgun_BleedShot", "PawnOMAtic/Mod2/BleedShot"}, {"Kingpin_Shotgun_Magazine", "PawnOMAtic/Mod2/Magazine"}, {"Kingpin_Shotgun_SelectFire", "PawnOMAtic/Mod2/SelectFire"} },
@@ -1042,22 +1042,24 @@ str SharkySoldNoBuy[2][3] =
 	{ "Nah? How 'bout somethin' else?", "Okay, find somethin' else you like.", "Nah?" }
 };
 
-str SharkyDenied[3][2] =
+str SharkyDenied[5][4] =
 {
 	{ "Hey, you don't have enough cash...", "You ain't got enough money." },
 	{ "Hey, that mod ain't gonna do you any good unless you've got the gun to go with it.", "Hey, you gotta have the right piece for that thing... Otherwise, it's worthless." },
-	{ "Hey, you already got that.", "Hey, you don't need two... You already got one." }
+	{ "Hey, you already got that.", "Hey, you don't need two... You already got one." },
+	{ "Hey, you're all full up... You can't hold any more.", "You don't need any more health... You're full up.", "Hey, you don't need any more... You're all patched up now.", "Hey, you're fine... You don't need any more health." },
+	{ "Hey, you can't carry any more.", "You're maxed out." }
 };
 
 str SharkyRandomWeapons[9] =
 {
-	"Very good choice.",
-	"Heh, my personal favorite.",
+	"Hey, very good choice.",
+	"Haha, my personal favorite.",
 	"Oh, I like that one a lot.",
 	"Very good choice.",
-	"Nice selection.",
+	"Yeah, nice selection.",
 	"That'll work.",
-	"Boom! Heh heh heh.",
+	"Boom! Heheheh.",
 	"So you're gonna take this one...",
 	"Awright."
 };
@@ -1066,7 +1068,7 @@ str SharkyHealthArmorStrings[8][2] =
 {
 	{ "What, got yourself a papercut? Don't you worry.", "This will heal a cut or bruise, but you may want more." },
 	{ "Stimpack, okay.", "Not a bad choice, a stimpack." },
-	{ "Those medkits'll get you through some scrapes...", "If you're really hurtin', that thing'll do you some good..." },
+	{ "Ah, those medkits'll get you through some scrapes, huh?", "Hey, if you're really hurtin', that thing'll do you some good, huh?" },
 	{ "Soulspheres are the best health item I sell.", "This will do more than I heal ya up." },
 	{ "Needing a minor patch up, huh?", "Just a small patch up. Alright?" },
 	{ "Ahh, green armor. Not the best, but decent enough.", "Nice, green armor. Can't go wrong with that." },
@@ -1076,10 +1078,10 @@ str SharkyHealthArmorStrings[8][2] =
 
 str SharkyAmmoStrings[4][2] =
 {
-	{ "Alright, you wanna buy some bullets?", "You wanna purchase some bullets... That it?" },
-	{ "Shotgun shells.", "You wanna buy some shotgun shells, eh?" },
-	{ "Explosives. Very nasty, you wanna buy 'em?", "Explosives... You want 'em?" },
-	{ "Gonna do a little touch up work, eh?", "Gas canisters and .308 rounds, very deadly." }
+	{ "Alright, you wanna buy some bullets?", "So you wanna purchase some bullets... That it?" },
+	{ "So you wanna buy some shotgun shells, eh?", "Shotgun shells." },
+	{ "Heh. Explosives. Very nasty, you wanna buy 'em?", "Explosives... You want 'em?" },
+	{ "Yeah, gas canisters and .308 rounds, very deadly.", "Gonna do a little touch up work, eh? Gas canisters and .308 rounds." }
 };
 
 function void KingpinDisplayDialogue(int arg1, int arg2, int arg3, int arg4)
@@ -1193,8 +1195,8 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 				//Check ammo
 				if(currentMenu == 3)
 				{
-					itemLimit = GetAmmoCapacity(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1]);
-					maxBulkBuy = itemLimit - CheckInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1]);
+					itemLimit = GetAmmoCapacity(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0]);
+					maxBulkBuy = itemLimit - CheckInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0]);
 				}
 				else if(currentMenu == 4)
 				{
@@ -1602,25 +1604,62 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 					if(currentMenuItem < pawnOMaticItemPrices[currentMenu-2][0]+1)
 					{
 						bool hitlimit = false;
+						int itemtype = 0;
 
 						if (currentMenu == 2) { hitlimit = CheckInventory(KingpinWeapons[currentMenuItem-1][0]); }
-						else if (currentMenu == 3) { hitlimit = CheckInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1]) >= GetAmmoCapacity(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1]); }
-						else if (currentMenu == 4)
+						else if (currentMenu == 3)
 						{
-							if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack0") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "SuperHealth")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200); }
-							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack1") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "HealPack2")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1); }
-							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorScrap")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 0, 0, 0, 2); }
-							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack1")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 5); }
-							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "ArmorPack3")) { hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 7); }
-							else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1], "MegaPack")) { hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200) && ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 11); }
+							hitlimit = CheckInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0]) >= GetAmmoCapacity(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0]);
+							itemtype = 2;
+						} else if (currentMenu == 4) {
+							if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "HealPack0") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "SuperHealth"))
+							{
+								hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200);
+								itemtype = 1;
+							} else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "HealPack1") || !StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "HealPack2")) {
+								hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1);
+								itemtype = 1;
+							} else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "ArmorScrap")) {
+								hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 0, 0, 0, 2);
+								itemtype = 2;
+							} else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "ArmorPack1")) {
+								hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 5);
+								itemtype = 2;
+							} else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "ArmorPack3")) {
+								hitlimit = ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 7);
+								itemtype = 2;
+							} else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "MegaPack")) {
+								hitlimit = GetActorProperty(0, APROP_Health) >= ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1, 200) && ACS_NamedExecuteWithResult("SamsaraArmorCapCheck", 11);
+								itemtype = 2;
+							}
 						}
 
 						if(hitlimit)
 						{
-							messageDialog = random(0,1);
-							KingpinDisplayDialogue(10,2,messageDialog,0);
+							switch (itemtype)
+							{
+								default:
+									messageDialog = random(0,1);
+									KingpinDisplayDialogue(10,2,messageDialog,0);
+									break;
+
+								case 1:
+									messageDialog = random(0,3);
+									KingpinDisplayDialogue(10,3,messageDialog,0);
+									break;
+
+								case 2:
+									messageDialog = random(0,1);
+									KingpinDisplayDialogue(10,4,messageDialog,0);
+									break;
+							}
 							welcomeMessage = false;
-							PlaySound(sTid,StrParam(s:"PawnOMatic/AlreadyHave",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
+							switch (itemtype)
+							{
+								default: PlaySound(sTid,StrParam(s:"PawnOMatic/AlreadyHave",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE); break;
+								case 1: PlaySound(sTid,StrParam(s:"PawnOMatic/AlreadyHaveHealth",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE); break;
+								case 2: PlaySound(sTid,StrParam(s:"PawnOMatic/AlreadyHaveItem",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE); break;
+							}
 						}
 						else if(CheckInventory("Kingpin_Cash") < pawnOMaticItemPrices[currentMenu-2][currentMenuItem])
 						{
@@ -1640,6 +1679,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 								{
 									messageDialog = random(0,8);
 									KingpinDisplayDialogue(2,currentMenuItem,messageDialog,0);
+									PlaySound(sTid,StrParam(s:"PawnOMatic/Weapon",d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE);
 								}
 
 								//Purchase Ammo, Health and Armor
@@ -1647,6 +1687,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 								{
 									messageDialog = random(0,1);
 									KingpinDisplayDialogue(currentMenu,currentMenuItem,messageDialog,pawnOMaticItemBulkBuy[currentMenu-3][currentMenuItem-1] > 0 ? bulkCounter : 0);
+									if (StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][1], "")) { PlaySound(sTid,StrParam(s:pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][1],d:messageDialog+1),CHAN_VOICE,1.0,0,ATTN_NONE); }
 								}
 								welcomeMessage = false;
 								
@@ -1665,7 +1706,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 										GiveInventory("SamsaraPickupAndShutUp",1);
 										//Looks like I will need a for loop for things like health
 										for(int give = 0; give < bulkCounter; give++) 
-											GiveInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1],1);
+											GiveInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0],1);
 										TakeInventory("SamsaraPickupAndShutUp",INTMAX);
 										
 										messageDialog = random(0,2);
