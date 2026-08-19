@@ -109,6 +109,7 @@ Actor RTCW_KnifeAttack : FastProjectile
 	Damage (0)
 	Renderstyle Add
 	DamageType "RTCWKnife"
+	Tag "RTCWKnife"
 	Decal "RTCW_BulletMark"
 	+HITTRACER
 	+FORCERADIUSDMG
@@ -137,7 +138,7 @@ Actor RTCW_KnifeAttack : FastProjectile
 		XDeath:
 			TNT1 A 0 A_PlaySound("RTCW/Knife/Hit")
 		XDeathFinish:
-			TNT1 A 0 A_Explode(CallACS("RTCW_KnifeDamage"),4,!XF_HURTSOURCE,0,4)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",0,3)
 			TNT1 A 0 A_FaceTarget(0,0)
 			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsetsWithBleedAngle")
 			TNT1 A 0 A_GiveInventory("RTCW_BloodGenerator",1,AAPTR_TRACER)
