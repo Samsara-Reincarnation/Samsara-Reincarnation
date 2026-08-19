@@ -105,7 +105,7 @@ script "GlobalRecoil" (int duration, int intensity, int halfdampen, int forced) 
 }
 
 //Script that will determine the necessary damage to inflict
-Script "ScriptedBulletDamage" (int idamage, int type, int ndamage)
+Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 {
 	//Damage value that will be applied
 	int damage = 0;
@@ -142,7 +142,7 @@ Script "ScriptedBulletDamage" (int idamage, int type, int ndamage)
 			else { damage = ACS_NamedExecuteWithResult("BondHitBox",idamage); }
 			break;
 		case CLASS_UNREAL:
-			damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, ndamage);
+			damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, arg2);
 			break;
 		case CLASS_RTCW:
 			if (type >= 3) { damage = ACS_NamedExecuteWithResult("RTCW_KnifeDamage",0); }
@@ -151,9 +151,8 @@ Script "ScriptedBulletDamage" (int idamage, int type, int ndamage)
 			else { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage); }
 			break;
 		case CLASS_DEUSEX:
-			if (type >= 2) { damage = ACS_NamedExecuteWithResult("DeusEx_BackDamage", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", 2, idamage)); }
-			else if (type == 1) { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", 3, idamage)); }
-			else { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", 1, idamage)); }
+			if (type >= 1) { damage = ACS_NamedExecuteWithResult("DeusEx_BackDamage", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", arg2, idamage)); }
+			else { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", arg2, idamage)); }
 			break;
 		case CLASS_KINGPIN:
 			damage = ACS_NamedExecuteWithResult("Kingpin_BulletDamage",idamage);
