@@ -142,7 +142,8 @@ Script "ScriptedBulletDamage" (int idamage, int type)
 			else { damage = ACS_NamedExecuteWithResult("BondHitBox",idamage); }
 			break;
 		case CLASS_UNREAL:
-			damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, 150);
+			if (type >= 1) { damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, 105); }
+			else { damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, 150); }
 			break;
 		case CLASS_RTCW:
 			if (type >= 3) { damage = ACS_NamedExecuteWithResult("RTCW_KnifeDamage",0); }
