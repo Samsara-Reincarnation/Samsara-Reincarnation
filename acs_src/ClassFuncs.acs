@@ -150,6 +150,11 @@ Script "ScriptedBulletDamage" (int idamage, int type)
 			else if (type >= 1) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,1); }
 			else { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage); }
 			break;
+		case CLASS_DEUSEX:
+			if (type >= 2) { damage = ACS_NamedExecuteWithResult("DeusEx_BackDamage", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", 2, idamage)); }
+			else if (type >= 1) { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", 3, idamage)); }
+			else { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", 1, idamage)); }
+			break;
 		case CLASS_KINGPIN:
 			damage = ACS_NamedExecuteWithResult("Kingpin_BulletDamage",idamage);
 			break;
