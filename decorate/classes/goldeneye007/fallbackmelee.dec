@@ -286,13 +286,15 @@ actor Goldeneye_SlapperTracer : FastProjectile
       XDeath:
         TNT1 A 0 A_PlaySound("Goldeneye/Punch")
       XDeathFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1)
+        TNT1 A 0 A_SetUserVar("user_damage",20)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,160)
         goto Death
 
       Crash:
         TNT1 A 0 A_PlaySound("Goldeneye/SlapperMetal")
       CrashFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1)
+        TNT1 A 0 A_SetUserVar("user_damage",20)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,160)
         goto Death
     }
 }

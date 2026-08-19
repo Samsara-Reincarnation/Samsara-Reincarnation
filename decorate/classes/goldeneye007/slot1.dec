@@ -1061,7 +1061,8 @@ actor Goldeneye_HuntingKnifeTracer : Goldeneye_SlapperTracer
     Crash:
         TNT1 A 0 A_PlaySound("Goldeneye/HuntingKnife")
     XDeathFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1)
+        TNT1 A 0 A_SetUserVar("user_damage",50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,200)
         goto Death
     }
 }
@@ -1080,22 +1081,16 @@ actor Goldeneye_HuntingKnifeTracerSoundSource : Goldeneye_HuntingKnifeTracer
     Crash:
         TNT1 A 0 A_PlaySound("GoldeneyeSource/HuntingKnife")
     XDeathFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1)
+        TNT1 A 0 A_SetUserVar("user_damage",50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,200)
         goto Death
     }
 }
 
-actor Goldeneye_HuntingKnifeTracerCoopSoundSource : Goldeneye_HuntingKnifeTracerCoop
+actor Goldeneye_HuntingKnifeTracerCoopSoundSource : Goldeneye_HuntingKnifeTracerSoundSource
 {
-    States
-    {
-    XDeath:
-    Crash:
-        TNT1 A 0 A_PlaySound("GoldeneyeSource/HuntingKnife")
-    XDeathFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1)
-        goto Death
-    }
+    Species "Player"
+    +THRUSPECIES
 }
 
 actor SamsaraGoldenEyeHuntingKnifeAttackSoundPlayer : Trigger
@@ -1718,7 +1713,8 @@ actor Goldfinger_GolfClubTracer : Goldeneye_SlapperTracer
     Crash:
         TNT1 A 0 A_PlaySound("Goldfinger/GolfClub")
     XDeathFinish:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1)
+        TNT1 A 0 A_SetUserVar("user_damage",50)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,200)
         goto Death
     }
 }

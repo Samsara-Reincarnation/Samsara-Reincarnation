@@ -1365,7 +1365,7 @@ Script "BondHitBox" (int damage)
 	Thing_ChangeTID(newtid,oldTID);
 }
 
-Script "Goldeneye_SlapperDamage" (int isKnife)
+Script "Goldeneye_SlapperDamage" (int damage, int backstabdmg)
 {
 	int slapperX = GetActorX(0);
 	int slapperY = GetActorY(0);
@@ -1373,16 +1373,8 @@ Script "Goldeneye_SlapperDamage" (int isKnife)
 
 	int relativeAngle = abs(relativeAngleToXY(0, slapperX, slapperY) - 0.5);
 
-	if (relativeAngle < 0.6 && relativeAngle > 0.4)
-	{
-		if (isKnife) { SetResultValue(200); }
-		else { SetResultValue(160); }
-	}
-	else
-	{
-		if (isKnife) { SetResultValue(50); }
-		else { SetResultValue(20); }
-	}
+	if (relativeAngle < 0.6 && relativeAngle > 0.4) { SetResultValue(backstabdmg); }
+	else { SetResultValue(damage); }
 }
 
 Script "Goldeneye_BuildTank" (int goldfinger)
