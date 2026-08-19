@@ -319,18 +319,10 @@ actor Goldeneye_SlapperTracerSoundSource : Goldeneye_SlapperTracer
     }
 }
 
-actor Goldeneye_SlapperTracerCoopSoundSource : Goldeneye_SlapperTracerCoop
+actor Goldeneye_SlapperTracerCoopSoundSource : Goldeneye_SlapperTracerSoundSource
 {
-    States
-    {
-      XDeath:
-        TNT1 A 0 A_PlaySound("GoldeneyeSource/Punch")
-        goto XDeathFinish
-
-      Crash:
-        TNT1 A 0 A_PlaySound("GoldeneyeSource/SlapperMetal")
-        goto CrashFinish
-    }
+    Species "Player"
+    +THRUSPECIES
 }
 
 actor SamsaraGoldfingerSlapperAttackHandler : Trigger
