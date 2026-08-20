@@ -37,10 +37,12 @@ actor OutlawsPuff
 	+NOINTERACTION
 	+ALWAYSPUFF
 	+PUFFONACTORS
+	+PUFFGETSOWNER
 	+HITTRACER
 	+BLOODLESSIMPACT
 	+NOEXTREMEDEATH
 	+NODAMAGETHRUST
+	+NOTIMEFREEZE
 	DamageType "OLBullet"
 	Tag "OLBullet"
 	Renderstyle Translucent
@@ -57,6 +59,7 @@ actor OutlawsPuff
 			OL99 B 0 A_Jump(192,2)
 			OL99 B 0 A_PlaySound("Outlaws/Ricochet",CHAN_BODY)
 			//OL99 B 0 A_SpawnItemEx("OutlawsPuffHole")
+			OL99 B 0 A_ChangeFlag("NOTIMEFREEZE",false)
 			OL99 BBCDEF 4
 			Stop
 		XDeath:
