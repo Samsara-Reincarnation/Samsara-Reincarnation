@@ -41,6 +41,8 @@ actor OutlawsPuff
 	+BLOODLESSIMPACT
 	+NOEXTREMEDEATH
 	+NODAMAGETHRUST
+	DamageType "OLBullet"
+	Tag "OLBullet"
 	Renderstyle Translucent
 	Alpha 0.5
 	Decal OutlawsBulletDecal
@@ -49,7 +51,7 @@ actor OutlawsPuff
 	States
 	{
 		Spawn:
-			TNT1 A 1
+			TNT1 A 1 NoDelay ACS_NamedExecuteWithResult("ScriptedBulletDamage",args[0])
 			Stop
 		Crash:
 			OL99 B 0 A_Jump(192,2)
@@ -58,6 +60,7 @@ actor OutlawsPuff
 			OL99 BBCDEF 4
 			Stop
 		XDeath:
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",args[0])
 			TNT1 A 1 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsets")
 			TNT1 A 1 A_GiveInventory("Outlaws_BloodGenerator",1,AAPTR_TRACER)
 			Stop

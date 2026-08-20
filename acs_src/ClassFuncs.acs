@@ -107,6 +107,9 @@ script "GlobalRecoil" (int duration, int intensity, int halfdampen, int forced) 
 //Script that will determine the necessary damage to inflict
 Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 {
+	//If the damage called is 0, "this script can fuck off" - Vappy
+	if(idamage == 0) terminate;
+
 	//Damage value that will be applied
 	int damage = 0;
 	
@@ -134,6 +137,8 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	//Get the amount of damage to do based on the class script
 	switch(pClass)
 	{
+		//Would be the exact same script
+		case CLASS_OUTLAWS:
 		case CLASS_HALFLIFE:
 			damage = ACS_NamedExecuteWithResult("HalfLife_BulletDamage",idamage);
 			break;

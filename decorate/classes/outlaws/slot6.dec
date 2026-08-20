@@ -73,11 +73,11 @@ actor SamsaraOutlawsMachineGunAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(2,2,-1,30,"OutlawsPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"Outlaws_MachineGunPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(2,2,-1,30,"OutlawsPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"Outlaws_MachineGunPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -87,3 +87,6 @@ actor SamsaraOutlawsMachineGunAttackHandler : Trigger
         stop
     }
 }
+
+Actor Outlaws_MachineGunPuff : OutlawsPuff { Args 30 }
+Actor Outlaws_MachineGunPuffCoop : OutlawsPuffCoop { Args 30 }

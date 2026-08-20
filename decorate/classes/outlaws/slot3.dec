@@ -282,11 +282,11 @@ actor SamsaraOutlawsSawedOffAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(10,10,30,7,"OutlawsPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(10,10,30,0,"Outlaws_SawedPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(10,10,30,7,"OutlawsPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(10,10,30,0,"Outlaws_SawedPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -327,11 +327,11 @@ actor SamsaraOutlawsSawedOffAltAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(10,10,15,7,"OutlawsPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(10,10,15,0,"Outlaws_SawedPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(10,10,15,7,"OutlawsPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(10,10,15,0,"Outlaws_SawedPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -351,6 +351,9 @@ actor Outlaws_SawedMagazine : Ammo
     Tag "Sawed-Off Shotgun Magazine"
     +IGNORESKILL
 }
+
+Actor Outlaws_SawedPuff : OutlawsPuff { Args 7 }
+Actor Outlaws_SawedPuffCoop : OutlawsPuffCoop { Args 7 }
 
 // Double Barrel Shotgun
 
@@ -632,11 +635,11 @@ actor SamsaraOutlawsDBSAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(5,5,10,18,"OutlawsPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,10,0,"Outlaws_DBSPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(5,5,10,18,"OutlawsPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,10,0,"Outlaws_DBSPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -677,11 +680,11 @@ actor SamsaraOutlawsDBSAltAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(5,5,5,18,"OutlawsPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,5,0,"Outlaws_DBSPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(5,5,5,18,"OutlawsPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,5,0,"Outlaws_DBSPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -701,3 +704,6 @@ actor Outlaws_DBSMagazine : Ammo
     Tag "Double Barrel Shotgun Magazine"
     +IGNORESKILL
 }
+
+Actor Outlaws_DBSPuff : OutlawsPuff { Args 18 }
+Actor Outlaws_DBSPuffCoop : OutlawsPuffCoop { Args 18 }

@@ -230,11 +230,11 @@ actor SamsaraOutlawsRifleAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
-        TNT1 A 0 A_FireBullets(0.2,0.2,-1,60,"OutlawsPuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(0.2,0.2,-1,0,"Outlaws_RiflePuff",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         stop
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(0.2,0.2,-1,60,"OutlawsPuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(0.2,0.2,-1,0,"Outlaws_RiflePuffCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         stop
     }
 }
@@ -246,3 +246,6 @@ actor Outlaws_RifleMagazine : Ammo
     Tag "Rifle Magazine"
     +IGNORESKILL
 }
+
+Actor Outlaws_RiflePuff : OutlawsPuff { Args 60 }
+Actor Outlaws_RiflePuffCoop : OutlawsPuffCoop { Args 60 }
