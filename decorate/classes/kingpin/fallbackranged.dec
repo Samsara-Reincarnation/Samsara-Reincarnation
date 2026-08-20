@@ -389,14 +389,29 @@ actor SamsaraKingpinPistolAttackHandler : Trigger
       // Attack stuff
       PickupAttack:
         TNT1 A 0 A_FireCustomMissile("Kingpin_Casing",-90,false,4,4)
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
-      PickupAttackDM:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_Pistol_Magnum",1,"PickupAttackMagnum")
+      // Normal
+      PickupAttackNormal:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackNormalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackNormalCoop")
+      PickupAttackNormalDM:
         TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_PistolSmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
-      PickupAttackCoop:
+      PickupAttackNormalCoop:
         TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_PistolSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Magnum
+      PickupAttackMagnum:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackMagnumCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackMagnumCoop")
+      PickupAttackMagnumDM:
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_PistolSmokeMagnum",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      PickupAttackMagnumCoop:
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_PistolSmokeMagnumCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -414,6 +429,14 @@ actor Kingpin_PistolMagazine : Ammo
     +IGNORESKILL
 }
 
-actor Kingpin_PistolSmoke : Kingpin_BulletSmoke { Obituary "%o was busted by %k's cap." }
+actor Kingpin_PistolSmoke : Kingpin_BulletSmoke
+{
+    Args 15
+    Obituary "%o was busted by %k's cap."
+}
 
 actor Kingpin_PistolSmokeCoop : Kingpin_PistolSmoke { +MTHRUSPECIES }
+
+actor Kingpin_PistolSmokeMagnum : Kingpin_PistolSmoke { Args 30 }
+
+actor Kingpin_PistolSmokeMagnumCoop : Kingpin_PistolSmokeMagnum { +MTHRUSPECIES }

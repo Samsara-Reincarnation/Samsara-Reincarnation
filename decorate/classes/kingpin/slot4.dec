@@ -172,29 +172,59 @@ actor SamsaraKingpinTommyGunAttackHandler : Trigger
 
       // Attack stuff
       PickupAttack:
-        TNT1 A 0 A_JumpIfInventory("Kingpin_TommyGun_Accuracy",1,"PickupAttackAccurate")
+        TNT1 A 0 A_JumpIfInventory("Kingpin_TommyGun_Damage",1,"PickupAttackBigBore")
+      // Normal
+      PickupAttackNormal:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_TommyGun_Accuracy",1,"PickupAttackNormalAccurate")
       // Inaccurate
-      PickupAttackInaccurate:
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackInaccurateCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackInaccurateCoop")
-      PickupAttackInaccurateDM:
+      PickupAttackNormalInaccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackNormalInaccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackNormalInaccurateCoop")
+      PickupAttackNormalInaccurateDM:
         TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_TommySmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
-      PickupAttackInaccurateCoop:
+      PickupAttackNormalInaccurateCoop:
         TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_TommySmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Accurate
-      PickupAttackAccurate:
-        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackAccurateCoop")
-        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackAccurateCoop")
-      PickupAttackAccurateDM:
+      PickupAttackNormalAccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackNormalAccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackNormalAccurateCoop")
+      PickupAttackNormalAccurateDM:
         TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_TommySmoke",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
-      PickupAttackAccurateCoop:
+      PickupAttackNormalAccurateCoop:
         TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_TommySmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Big bore
+      PickupAttackBigBore:
+        TNT1 A 0 A_JumpIfInventory("Kingpin_TommyGun_Accuracy",1,"PickupAttackBigBoreAccurate")
+      // Inaccurate
+      PickupAttackBigBoreInaccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackBigBoreInaccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackBigBoreInaccurateCoop")
+      PickupAttackBigBoreInaccurateDM:
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_TommySmokeDamage",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      PickupAttackBigBoreInaccurateCoop:
+        TNT1 A 0 A_FireBullets(4,4,-1,0,"Kingpin_TommySmokeDamageCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      // Accurate
+      PickupAttackBigBoreAccurate:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackBigBoreAccurateCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackBigBoreAccurateCoop")
+      PickupAttackBigBoreAccurateDM:
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_TommySmokeDamage",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        goto PickupFinish
+
+      PickupAttackBigBoreAccurateCoop:
+        TNT1 A 0 A_FireBullets(2,2,-1,0,"Kingpin_TommySmokeDamageCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -223,6 +253,14 @@ actor Kingpin_TommyGunMagazine : Ammo
     +IGNORESKILL
 }
 
-actor Kingpin_TommySmoke : Kingpin_BulletSmoke { Obituary "%o bowed to %k's tommy gun." }
+actor Kingpin_TommySmoke : Kingpin_BulletSmoke
+{
+    Args 14
+    Obituary "%o bowed to %k's tommy gun."
+}
 
 actor Kingpin_TommySmokeCoop : Kingpin_TommySmoke { +MTHRUSPECIES }
+
+actor Kingpin_TommySmokeDamage : Kingpin_TommySmoke { Args 20 }
+
+actor Kingpin_TommySmokeDamageCoop : Kingpin_TommySmokeDamage { +MTHRUSPECIES }

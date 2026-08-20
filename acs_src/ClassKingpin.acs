@@ -826,13 +826,16 @@ Script "Kingpin_ScopeClient" (void) clientside
 	HudMessage(s:""; HUDMSG_PLAIN|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 1600, CR_UNTRANSLATED, 128.0, 128.0, 0.1, 0.0);
 }
 
-Script "Kingpin_BulletDamage" (void)
+Script "Kingpin_BulletDamage" (int damage)
 {
 	int bulletX = GetActorX(0);
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
-	int damage = ACS_NamedExecuteWithResult("Kingpin_DetermineBulletDamage");
+
 	SetActivator(0,AAPTR_Tracer);
+
+	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
+
 	int monsterX = GetActorX(0);
 	int monsterY = GetActorY(0);
 	int monsterZ = GetActorZ(0);
@@ -841,7 +844,6 @@ Script "Kingpin_BulletDamage" (void)
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
 	int health = GetActorProperty(0,APROP_SpawnHealth);
 
-	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
 	/*if(CheckInventory("RTCW_MetalMonster"))
 	{
 		PlaySound(0,"RTCW/BulletHitMetal",CHAN_6,0.5,0,ATTN_NORM);
@@ -896,20 +898,6 @@ Script "Kingpin_BulletDamage" (void)
 		else
 			SetResultValue(damage);
 	}
-}
-
-Script "Kingpin_DetermineBulletDamage" (void)
-{
-	SetActivator(0,AAPTR_Target);
-	int damage;
-	if(CheckWeapon("Kingpin_Pipe")) damage = 15;
-	if(CheckWeapon("Kingpin_Crowbar")) damage = 30;
-	if(CheckWeapon("Kingpin_Pistol")) damage = CheckInventory("Kingpin_Pistol_Magnum") ? 30 : 15;
-	if(CheckWeapon("Kingpin_Shotgun")) damage = 15;
-	if(CheckWeapon("Kingpin_Tommygun")) damage = CheckInventory("Kingpin_Tommygun_Damage") ? 20 : 14;
-	if(CheckWeapon("Kingpin_HMG")) damage = 150;
-		
-	SetResultValue(damage);
 }
 
 Script "Kingpin_PawnOMatic_Initiate" (void) Net

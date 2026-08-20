@@ -1106,7 +1106,11 @@ Script "SoF_BulletDamage" (int damage)
 	int bulletX = GetActorX(0);
 	int bulletY = GetActorY(0);
 	int bulletZ = GetActorZ(0);
+
 	SetActivator(0,AAPTR_Tracer);
+
+	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
+
 	int monsterX = GetActorX(0);
 	int monsterY = GetActorY(0);
 	int monsterZ = GetActorZ(0);
@@ -1115,8 +1119,6 @@ Script "SoF_BulletDamage" (int damage)
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
 	int monsterAngle, vang, angle;
 	int health = GetActorProperty(0,APROP_SpawnHealth);
-
-	if(CheckFlag(0,"NOBLOOD")) { SetResultValue(damage); terminate; }
 
 	if (health >= 1000)
 	{

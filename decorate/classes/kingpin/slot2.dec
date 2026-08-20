@@ -676,7 +676,7 @@ actor SamsaraKingpinShotgunSingleAttackHandler : Trigger
         goto PickupFinish
 
       PickupAttackNormalCoop:
-        TNT1 A 0 A_FireBullets(5,5,6,0,"Kingpin_BulletSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,6,0,"Kingpin_ShotgunSmokeCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Bleed shot rounds
@@ -684,11 +684,11 @@ actor SamsaraKingpinShotgunSingleAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackBleedShotCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackBleedShotCoop")
       PickupAttackBleedShotDM:
-        TNT1 A 0 A_FireBullets(5,5,6,0,"Kingpin_BulletSmokeBleed",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,6,0,"Kingpin_ShotgunSmokeBleed",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       PickupAttackBleedShotCoop:
-        TNT1 A 0 A_FireBullets(5,5,6,0,"Kingpin_BulletSmokeBleedCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
+        TNT1 A 0 A_FireBullets(5,5,6,0,"Kingpin_ShotgunSmokeBleedCoop",FBF_NORANDOM|FBF_NOFLASH|FBF_NORANDOMPUFFZ)
         goto PickupFinish
 
       // Finishing stuff
@@ -784,10 +784,18 @@ actor Kingpin_ShotgunMagazine : Ammo
     +IGNORESKILL
 }
 
-actor Kingpin_ShotgunSmoke : Kingpin_BulletSmoke { Obituary "%o accepted %k's load." }
+actor Kingpin_ShotgunSmoke : Kingpin_BulletSmoke
+{
+    Args 15
+    Obituary "%o accepted %k's load."
+}
 
 actor Kingpin_ShotgunSmokeCoop : Kingpin_ShotgunSmoke { +MTHRUSPECIES }
 
-actor Kingpin_ShotgunSmokeBleed : Kingpin_BulletSmokeBleed { Obituary "%o accepted %k's load." }
+actor Kingpin_ShotgunSmokeBleed : Kingpin_BulletSmokeBleed
+{
+    Args 15
+    Obituary "%o accepted %k's load."
+}
 
 actor Kingpin_ShotgunSmokeBleedCoop : Kingpin_ShotgunSmokeBleed { +MTHRUSPECIES }
