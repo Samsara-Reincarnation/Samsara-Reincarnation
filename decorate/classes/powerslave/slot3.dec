@@ -3,13 +3,11 @@ actor SamsaraPowerSlaveFlamethrowerFiringSoundCheck : Boolean {}
 actor PSFlamethrower : SamsaraPowerSlaveWeapon
 {
     Inventory.PickupMessage "The Flame-Thrower!"
-    Weapon.UpSound "Jon/FTUp"
     Weapon.SlotNumber 3
     Weapon.SelectionOrder 900
     Weapon.AmmoType "Shell"
     Weapon.AmmoGive 15
     Weapon.AmmoUse 1
-    Obituary "%k made a BBQ out of %o."
     Tag "Flamethrower"
     States
     {
@@ -17,32 +15,23 @@ actor PSFlamethrower : SamsaraPowerSlaveWeapon
         WFTR A -1
         stop
 
-      Ready:
+	  Ready:
+	    TNT1 A 1
+	    PSFU ABCDEFG 1
+	    TNT1 A 0 A_PlaySound("Jon/FTUp",CHAN_WEAPON)
+	    PSFU HIJKLMNOPQ 1
+      ReadyLoop:
         TNT1 A 0 A_TakeInventory("SamsaraPowerSlaveFlamethrowerFiringSoundCheck")
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
-        TNT1 A 0 A_JumpIfInventory("Shell",1,"ReadyAmmo")
-        goto ReadyNoAmmo
-
-      ReadyNoAmmo:
-        PSFT A 1 A_WeaponReady
-        goto Ready
-
-      ReadyAmmo:
-        EXF0 RRRSSSTTTUUU 1 A_WeaponReady
-        goto Ready
+        EXF0 RSTU 1 A_WeaponReady
+        loop
 
       Deselect:
         TNT1 A 0 A_GiveInventory("SamsaraPowerSlaveFlamethrowerFiringSoundStopper")
         TNT1 A 0 A_PlaySound("Jon/FTDown",CHAN_WEAPON)
-      DeselectLoop:
-        TNT1 A 0 A_GiveInventory("SamsaraPowerSlaveFlamethrowerFiringSoundStopper")
-        PSFT A 1 A_Lower
-        wait
-
-      Select:
-        TNT1 A 0 A_TakeInventory("SamsaraPowerSlaveFlamethrowerFiringSoundCheck")
-        PSFT A 1 A_Raise
-        loop
+		EXF0 R 1
+        PSFD ABCDEFGHI 1
+		TNT1 A 3
+        goto Super::DeselectInstant
 
       Fire:
         PSFT EF 1
@@ -59,7 +48,7 @@ actor PSFlamethrower : SamsaraPowerSlaveWeapon
         EXF0 L 2 A_PlaySound("Jon/FTSteam",CHAN_WEAPON)
         EXF0 MNOPQ 2
         PSFT A 2
-        goto Ready
+        goto ReadyLoop
     }
 }
 
@@ -151,6 +140,7 @@ actor PSFTProjA
     //RenderStyle "Add"
     //Alpha 0.8
     Scale 0.4
+	Obituary "%k made a BBQ out of %o."
     +THRUGHOST
     States
     {

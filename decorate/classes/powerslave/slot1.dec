@@ -9,7 +9,6 @@ actor " Anubis Mine " : SamsaraPowerSlaveWeapon
     Weapon.AmmoType "RocketAmmo"
     Weapon.AmmoGive 5
     Weapon.AmmoUse 1
-    Obituary "%o was buried by %k's amun bombs."
     Tag "Amun Bombs"
     +EXPLOSIVE
     +NOALERT
@@ -20,7 +19,21 @@ actor " Anubis Mine " : SamsaraPowerSlaveWeapon
         AG_N B -1
         stop
 
-      Ready:
+	  Ready:
+	    TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadySelect")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadySelect")
+		goto ReadySelectNoAmmo
+
+      ReadySelect:
+		TNT1 A 5	  
+	  	ANGU ABCDEFGHIJKLM 1
+        goto ReadyAmmoCheck
+		
+	  ReadySelectNoAmmo:
+	    TNT1 A 0
+		goto ReadyAmmoCheck
+
+      ReadyAmmoCheck:
         TNT1 A 0 A_TakeInventory("PS_AMUNHOLD")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReadyAmmo")
         TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"ReadyAmmo")
@@ -28,11 +41,11 @@ actor " Anubis Mine " : SamsaraPowerSlaveWeapon
 
       ReadyNoAmmo:
         TNT1 A 1 A_WeaponReady
-        goto Ready
-
+        goto ReadyAmmoCheck
+	
       ReadyAmmo:
         AN_G A 1 A_WeaponReady
-        goto Ready
+        goto ReadyAmmoCheck
 
       Deselect:
         TNT1 A 0 A_TakeInventory("PS_AMUNHOLD")
@@ -45,22 +58,13 @@ actor " Anubis Mine " : SamsaraPowerSlaveWeapon
         goto Deselect
 
       DeselectAmmo:
-        AN_G A 1 A_Lower
-        goto Deselect
-
-      Select:
-        TNT1 A 0 A_TakeInventory("PS_AMUNHOLD")
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"SelectAmmo")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"SelectAmmo")
-        goto SelectNoAmmo
+        ANGD ABCDE 1
+		TNT1 A 8
+        goto Super::DeselectInstant	
 
       SelectNoAmmo:
-        TNT1 A 1 A_Raise
-        goto Select
-
-      SelectAmmo:
-        AN_G A 1 A_Raise
-        goto Select
+        TNT1 A 0 
+        goto ReadyNoAmmo
 
       Fire:
         AN_G A 1 Offset(0,36)
@@ -105,17 +109,10 @@ actor " Anubis Mine " : SamsaraPowerSlaveWeapon
         AN_G C 1 Offset(0,87)
         AN_G C 1 Offset(0,99)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
-        goto Ready
-        AN_G A 1 Offset(61,97)
-        AN_G A 1 Offset(56,81)
-        AN_G A 1 Offset(43,76)
-        AN_G A 1 Offset(31,63)
-        AN_G A 1 Offset(24,52)
-        AN_G A 1 Offset(18,44)
-        AN_G A 1 Offset(9,39)
-        AN_G A 1 Offset(2,34)
-        goto Ready
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)		
+        goto ReadyAmmoCheck
+		TNT1 A 0 Offset(0,32)
+		goto Ready
     }
 }
 
@@ -279,6 +276,7 @@ actor ExAmunMine
     Damage (85)
     DamageType "PSExplosive"
     Scale 0.24
+	Obituary "%o was buried by %k's amun bombs."
     +DONTREFLECT
     +DONTSPLASH
     +FORCEXYBILLBOARD

@@ -6,7 +6,6 @@ actor PSCobraStaff : SamsaraPowerSlaveWeapon
     Weapon.AmmoType "Rocketammo"
     Weapon.AmmoGive 5
     Weapon.AmmoUse 1
-    Obituary "%o was devoured by %k's Cobra."
     Tag "Cobra Staff"
     +EXPLOSIVE
     States
@@ -17,40 +16,36 @@ actor PSCobraStaff : SamsaraPowerSlaveWeapon
         loop
 
       Ready:
-        C_H_ Z 3 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_H_ L 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+	    TNT1 A 2
+        C_HU ABCDEF 1
         TNT1 A 0 A_PlaySound("Jon/CobraHI",CHAN_WEAPON)
-        C_H_ L 2 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_H_ MN 3 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-        C_H_ OYXW 4 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
+		C_HU GHIJKLMNOPQRSTUVWX 1
       ReadyLoop:
         C_H_ V 1 A_WeaponReady
         loop
 
       Deselect:
-        C_H_ U 1 A_Lower
-        loop
-
-      Select:
-        C_H_ Z 1 A_Raise
-        loop
+        C_HD ABCDFGHIJ 1 A_Lower
+		C_HD JJJ 1
+		TNT1 A 1
+        goto Super::DeselectInstant
 
       Fire:
         C_H_ U 1
       Hold:
-        C_H_ A 1 Bright A_PlaySound("Jon/CobraStart")
+        C_H_ A 1 A_PlaySound("Jon/CobraStart")
         C_H_ BC 4 Bright
         C_H_ D 3 Bright
         C_H_ E 2 Bright
         C_H_ F 1 Bright A_GiveInventory("SamsaraPowerSlaveCobraStaffAttackHandler")
         C_H_ F 1 Bright Offset(0,38)
         C_H_ F 1 Bright Offset(0,39)
-        C_H_ G 3 Bright Offset(0,37)
-        C_H_ G 2 Bright Offset(0,40)
-        C_H_ G 1 Bright Offset(0,38)
-        C_H_ G 1 Bright Offset(0,36)
-        C_H_ G 1 Bright Offset(0,30)
-        C_H_ G 1 Bright Offset(0,26) A_ReFire
+        C_H_ G 3 Offset(0,37)
+        C_H_ G 2 Offset(0,40)
+        C_H_ G 1 Offset(0,38)
+        C_H_ A 1 Offset(0,36)
+        C_H_ A 1 Offset(0,30)
+        C_H_ A 1 Offset(0,26) A_ReFire
         goto ReadyLoop
     }
 }
@@ -88,11 +83,13 @@ actor SamsaraPowerSlaveCobraStaffAttackHandler : Trigger
 
       // Finishing stuff
       PickupFinish:
-        TNT1 A 0 A_SpawnItemEx("CobraFakeFlash",cos(pitch)*55,0,40-(sin(pitch)*40),cos(pitch)*0,0,-sin(pitch)*0,0,SXF_CLIENTSIDE|SXF_TRANSFERPITCH)
+        TNT1 A 0
         stop
     }
 }
 
+
+//TBD: add these sprites into the weapon's firing animation
 actor CobraFakeFlash
 {
     Radius 1
@@ -121,6 +118,7 @@ actor CobraStaffSnake
     DamageType "PSExplosive"
     Scale 0.5
     DeathSound "Jon/CobraDeath"
+    Obituary "%o was devoured by %k's Cobra."	
     +SEEKERMISSILE
     +THRUGHOST
     States

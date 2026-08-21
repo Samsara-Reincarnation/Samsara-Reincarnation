@@ -1,7 +1,6 @@
 actor PSM60 : SamsaraPowerSlaveWeapon
 {
     Inventory.PickupMessage "The M-60"
-    Weapon.UpSound "Jon/M60Up"
     Weapon.SlotNumber 4
     Weapon.SelectionOrder 1100
     Weapon.AmmoType1 "PSM60Reload"
@@ -19,11 +18,31 @@ actor PSM60 : SamsaraPowerSlaveWeapon
         stop
 
       Ready:
+	    TNT1 A 4
+        TNT1 A 0 A_GunFlash("SelectBelt",GFF_NOEXTCHANGE)
+        TNT1 A 0 A_PlaySound("Jon/M60Up",CHAN_WEAPON)
+        M60_ A 1 Offset(-58,100)
+		M60_ A 1 Offset(-54,91)
+		M60_ A 1 Offset(-42,83)
+		M60_ A 1 Offset(-31,73)
+		M60_ A 1 Offset(-19,64)
+		M60_ A 1 Offset(-7,55)
+		M60_ A 1 Offset(-7,55)
+		M60_ A 1 Offset(-2,49)
+		M60_ A 1 Offset(0,44)
+		M60_ A 1 Offset(0,40)
+		M60_ A 1 Offset(0,37)
+		M60_ A 1 Offset(0,33)
+		M60_ A 4
+        //TBD: fix the weapon sprite moving by 1 Y and 1 X when going into idle
+        goto ReadyAmmoCheck
+
+      ReadyAmmoCheck:
         TNT1 A 0 A_GunFlash("ReadyBelt",GFF_NOEXTCHANGE)
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"ReadyAllowReload")
       ReadyDisallowReload:
         M60_ A 1 A_WeaponReady
-        goto Ready
+        goto ReadyAmmoCheck
 
       ReadyAllowReload:
         TNT1 A 0 A_JumpIfInventory("PSM60Reload",0,"ReadyDisallowReload")
@@ -32,7 +51,7 @@ actor PSM60 : SamsaraPowerSlaveWeapon
         TNT1 A 0 A_JumpIfInventory("Clip",1,1)
         goto ReadyDisallowReload
         M60_ A 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        goto Ready
+        goto ReadyAmmoCheck
 
       ReadyBelt:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyBeltReloadable")
@@ -59,11 +78,20 @@ actor PSM60 : SamsaraPowerSlaveWeapon
         stop
 
       Deselect:
-        TNT1 A 0 A_PlaySound("Jon/M60Down",CHAN_WEAPON)
-      DeselectStart:
         TNT1 A 0 A_GunFlash("DeselectBelt",GFF_NOEXTCHANGE)
-        M60R A 1 A_Lower
-        loop
+		M60_ A 1 Offset(0,34)
+		M60_ A 1 Offset(0,37)
+        TNT1 A 0 A_PlaySound("Jon/M60Down",CHAN_WEAPON)
+		M60_ A 1 Offset(0,43)
+		M60_ A 1 Offset(0,46)
+		M60_ A 1 Offset(0,52)
+		M60_ A 1 Offset(0,59)
+		M60_ A 1 Offset(0,67)
+		M60_ A 1 Offset(0,76)
+		M60_ A 1 Offset(0,86)
+		M60_ A 1 Offset(0,99)
+		TNT1 A 14
+        goto Super::DeselectInstant
 
       DeselectBelt:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"DeselectBeltReloadable")
@@ -88,11 +116,6 @@ actor PSM60 : SamsaraPowerSlaveWeapon
       DeselectBeltStart:
         "####" "#" -1
         stop
-
-      Select:
-        TNT1 A 0 A_GunFlash("SelectBelt",GFF_NOEXTCHANGE)
-        M60R B 1 A_Raise
-        loop
 
       SelectBelt:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"SelectBeltReloadable")
@@ -209,7 +232,7 @@ actor PSM60 : SamsaraPowerSlaveWeapon
 
       FireFinishReFire:
         TNT1 A 0 A_ReFire
-        goto Ready
+        goto ReadyAmmoCheck
 
       FireBelt:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireBeltReloadable")
@@ -315,7 +338,7 @@ actor PSM60 : SamsaraPowerSlaveWeapon
         M60_ X 2 Offset(-10,40)
         M60R AB 2 Offset(0,37)
         M60_ A 1
-        goto Ready
+        goto ReadyAmmoCheck
 
       ReloadBelt:
         M60A B 0 A_JumpIfInventory("PSM60Reload",28,"ReloadBeltStart")

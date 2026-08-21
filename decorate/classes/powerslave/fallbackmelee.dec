@@ -3,7 +3,6 @@ actor SamsaraPowerSlaveMacheteFireAnim : Boolean {}
 actor PSMachete : SamsaraPowerSlaveWeapon
 {
     Inventory.PickupMessage "A Machete!"
-    Weapon.UpSound "PS/SlashUp"
     Weapon.SlotNumber 0
     Weapon.SelectionOrder 4900
     Weapon.Kickback 100
@@ -13,20 +12,24 @@ actor PSMachete : SamsaraPowerSlaveWeapon
     +NOALERT
     +WIMPY_WEAPON
     States
-    {
-      Ready:
+    {	
+	  Ready:
+	    TNT1 A 6
+        TNT1 A 0 A_PlaySound("PS/SlashUp",CHAN_WEAPON)
+        KNFU ABCDEFGH 1
+		TNT1 A 5
+        KNFU IJKLMN 1
+		goto ReadyLoop
+		
+      ReadyLoop:
         KNF_ I 1 A_WeaponReady
         loop
 
-      Deselect:
-        TNT1 A 0 A_PlaySound("PS/SlashDown",CHAN_WEAPON)
-        KNF_ I 1 A_Lower
-        wait
-
-      Select:
-        KNF_ ABCDEFGH 1
-        KNF_ I 1 A_Raise
-        wait
+	  Deselect:
+	    TNT1 A 0 A_PlaySound("PS/SlashDown",CHAN_WEAPON)
+	    KNFD ABC 1
+		TNT1 A 3
+		goto Super::DeselectInstant
 
       Fire:
         TNT1 A 0 A_JumpIfInventory("SamsaraPowerSlaveMacheteFireAnim",1,"Fire2")
@@ -121,7 +124,7 @@ actor PSMachete : SamsaraPowerSlaveWeapon
 
       FireFinish:
         TNT1 A 0 A_ReFire
-        goto Ready
+        goto ReadyLoop
     }
 }
 
