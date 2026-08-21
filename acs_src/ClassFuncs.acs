@@ -125,7 +125,7 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	SetActivator(0,AAPTR_TRACER);
 	Thing_ChangeTid(0,newTid);
 	//Get the enemy health - Zandronum netplay related
-	int enemyHealth = GetActorProperty(0,APROP_Health);
+	int enemyHealth = GetActorProperty(newTid,APROP_Health);
 	
 	//Get the activator's player class
 	SetActivator(projTid,AAPTR_TARGET);
@@ -172,11 +172,12 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	
 	//In Zandronum netplay, enemies can gib even if the puff has NOEXTREMEDEATH, this is here to check if it should just simply kill the enemy
 	//We're using NameTag as Zandronum doesn't support DamageType but we can use another property that is supported as an exploit
-	int noExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH");
+	int disableExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH") && (enemyHealth - damage < 0);
 	
 	//Behavior must change depending on if the NOEXTREMEDEATH flag exists
-	//If NOEXTREMEDEATH is present, just take away as much health that's needed to zero them out
-	Thing_Damage2(newTid, noExtremeDeath && (enemyHealth - damage < 0) ? enemyHealth : damage, GetActorProperty(projTid,APROP_NameTag));
+	//If NOEXTREMEDEATH is present, set enemy health to 1 and subtract a small number from the health instead
+	if(disableExtremeDeath) SetActorProperty(newTid,APROP_Health,1);
+	Thing_Damage2(newTid, disableExtremeDeath ? 4 : damage, GetActorProperty(projTid,APROP_NameTag));
 	
 	//Revert tids
 	Thing_ChangeTid(newTid,myTid);
