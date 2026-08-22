@@ -175,6 +175,8 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	//int disableExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH") && (enemyHealth - damage < 0);
 	str projNameTag = GetActorProperty(projTid, APROP_NameTag);
 	
+	if (!StrCmp(projNameTag, "HLLaser") && CheckActorInventory(projTid, "HLShockProjectileIsHLEgonDamage")) { projNameTag = "HLEgon"; }
+	
 	//Behavior must change depending on if the NOEXTREMEDEATH flag exists
 	//If NOEXTREMEDEATH is present, set enemy health to 1 and subtract a small number from the health instead
 	//if(disableExtremeDeath) SetActorProperty(newTid,APROP_Health,1);
