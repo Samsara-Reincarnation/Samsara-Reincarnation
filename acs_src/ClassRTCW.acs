@@ -1490,7 +1490,7 @@ Script "RTCW_SpawnRocketFlare" (void)
 	Thing_Remove(flaretid);
 }
 
-Script "RTCW_KnifeDamage" (int hint)
+Script "RTCW_KnifeDamage" (int hint, int damage, int backstabdmg)
 {
 	int knifeX = GetActorX(0);
 	int knifeY = GetActorY(0);
@@ -1506,7 +1506,7 @@ Script "RTCW_KnifeDamage" (int hint)
 		if(knifeZ > monsterZ + (monsterHeight / 3) && relativeAngle < 0.6 && relativeAngle > 0.4)
 		{
 			if(hint == 0)
-				SetResultValue(200);
+				SetResultValue(backstabdmg);
 			else
 				SetResultValue(1);
 
@@ -1515,7 +1515,7 @@ Script "RTCW_KnifeDamage" (int hint)
 	}
 
 	if(hint == 0)
-		SetResultValue(15);
+		SetResultValue(damage);
 	else
 		SetResultValue(0);
 }

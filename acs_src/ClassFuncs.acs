@@ -150,7 +150,7 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 			damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, arg2);
 			break;
 		case CLASS_RTCW:
-			if (type >= 3) { damage = ACS_NamedExecuteWithResult("RTCW_KnifeDamage",0); }
+			if (type >= 3) { damage = ACS_NamedExecuteWithResult("RTCW_KnifeDamage",0,idamage,arg2); }
 			else if (type == 2) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,2); }
 			else if (type == 1) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,1); }
 			else { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage); }
@@ -172,12 +172,14 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	
 	//In Zandronum netplay, enemies can gib even if the puff has NOEXTREMEDEATH, this is here to check if it should just simply kill the enemy
 	//We're using NameTag as Zandronum doesn't support DamageType but we can use another property that is supported as an exploit
-	int disableExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH") && (enemyHealth - damage < 0);
+	//int disableExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH") && (enemyHealth - damage < 0);
+	str projNameTag = GetActorProperty(projTid, APROP_NameTag);
 	
 	//Behavior must change depending on if the NOEXTREMEDEATH flag exists
 	//If NOEXTREMEDEATH is present, set enemy health to 1 and subtract a small number from the health instead
-	if(disableExtremeDeath) SetActorProperty(newTid,APROP_Health,1);
-	Thing_Damage2(newTid, disableExtremeDeath ? 4 : damage, GetActorProperty(projTid,APROP_NameTag));
+	//if(disableExtremeDeath) SetActorProperty(newTid,APROP_Health,1);
+	//Thing_Damage2(newTid, disableExtremeDeath ? 4 : damage, projNameTag);
+	Thing_Damage2(newTid, damage, projNameTag);
 	
 	//Revert tids
 	Thing_ChangeTid(newTid,myTid);
