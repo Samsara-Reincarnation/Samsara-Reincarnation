@@ -1486,7 +1486,11 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 			HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,56,CR_UNTRANSLATED,600.0,400.0,0.0);	
 		}
 		
-		SetFont(strparam(s:"KPSELE",d:currentItem));
+		//Draw the selected item next to price
+		if(triggerItems && currentMenu == 1)
+			SetFont(strparam(s:"KPSELE",d:currentItem));
+		else
+			SetFont(strparam(s:"KPSEL2",d:currentItem));
 		HudMessage(s:"A";HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP,55,CR_UNTRANSLATED,600.0,400.0,0.0);
 		
 		SetFont(strparam(s:"KPSTLT1",d:currentMenu));
