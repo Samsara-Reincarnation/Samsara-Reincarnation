@@ -113,19 +113,17 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	//Damage value that will be applied
 	int damage = 0;
 	
-	//Get the current tid of the monster and generate a new one
-	int newTid = UniqueTid();
-	int myTid = ActivatorTid();
-	
 	//Generate new tid for the projectile
 	int projTid = UniqueTid();
 	Thing_ChangeTid(0,projTid);
 	
-	//Now assign the monster a new temporary tid
+	//Get the current tid of the monster and generate a new one
 	SetActivator(0,AAPTR_TRACER);
+	int myTid = ActivatorTid();
+	int newTid = UniqueTid();
+
+	//Now assign the monster a new temporary tid
 	Thing_ChangeTid(0,newTid);
-	//Get the enemy health - Zandronum netplay related
-	int enemyHealth = GetActorProperty(newTid,APROP_Health);
 	
 	//Get the activator's player class
 	SetActivator(projTid,AAPTR_TARGET);
@@ -172,15 +170,10 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	
 	//In Zandronum netplay, enemies can gib even if the puff has NOEXTREMEDEATH, this is here to check if it should just simply kill the enemy
 	//We're using NameTag as Zandronum doesn't support DamageType but we can use another property that is supported as an exploit
-	//int disableExtremeDeath = CheckFlag(projTid,"NOEXTREMEDEATH") && (enemyHealth - damage < 0);
 	str projNameTag = GetActorProperty(projTid, APROP_NameTag);
 	
 	if (!StrCmp(projNameTag, "HLLaser") && CheckActorInventory(projTid, "HLShockProjectileIsHLEgonDamage")) { projNameTag = "HLEgon"; }
 	
-	//Behavior must change depending on if the NOEXTREMEDEATH flag exists
-	//If NOEXTREMEDEATH is present, set enemy health to 1 and subtract a small number from the health instead
-	//if(disableExtremeDeath) SetActorProperty(newTid,APROP_Health,1);
-	//Thing_Damage2(newTid, disableExtremeDeath ? 4 : damage, projNameTag);
 	Thing_Damage2(newTid, damage, projNameTag);
 	
 	//Revert tids
