@@ -123,25 +123,33 @@ actor "Plasma Repeater" : Weapon
 
 	HoldPowered1:
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrRepeaterPoweredAttackAmount") // reset
-	HoldPowered1Loop:
+	HoldPowered1Loop1:
 		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrRepeaterPoweredAttackAmount")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"HoldPowered1LoopAttack")
-		TNT1 A 0 A_JumpIfInventory("Cell",1,"HoldPowered1LoopAttack")
-		goto HoldPowered1LoopContinue
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"HoldPowered1Loop1Attack")
+		TNT1 A 0 A_JumpIfInventory("Cell",1,"HoldPowered1Loop1Attack")
+		goto HoldPowered1Loop1Continue
 
-	HoldPowered1LoopAttack:
+	HoldPowered1Loop1Attack:
 		TNT1 A 0 A_GunFlash
-	HoldPowered1LoopContinue:
+	HoldPowered1Loop1Continue:
 		TNT1 A 0 A_TakeInventory("SamsaraTakingAmmo")
 		REPG E 2 Bright A_GiveInventory("SamsaraDoomguyStrRepeaterPoweredAttackHandler1")
 		TNT1 A 0 A_TakeInventory("SamsaraTakingAmmo")
 		REPG F 2 Bright A_GiveInventory("SamsaraDoomguyStrRepeaterPoweredAttackHandler1")
+	HoldPowered1Loop2:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"HoldPowered1Loop2Attack")
+		TNT1 A 0 A_JumpIfInventory("Cell",1,"HoldPowered1Loop2Attack")
+		goto HoldPowered1Loop2Continue
+
+	HoldPowered1Loop2Attack:
+		TNT1 A 0 A_GunFlash
+	HoldPowered1Loop2Continue:
 		TNT1 A 0 A_TakeInventory("SamsaraTakingAmmo")
 		REPG G 2 Bright A_GiveInventory("SamsaraDoomguyStrRepeaterPoweredAttackHandler1")
 		TNT1 A 0 A_GiveInventory("SamsaraTakingAmmo")
 		REPG H 2 Bright A_GiveInventory("SamsaraDoomguyStrRepeaterPoweredAttackHandler1")
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrRepeaterPoweredAttackAmount",0,"HoldPoweredReFire")
-		goto HoldPowered1Loop
+		goto HoldPowered1Loop1
 
 	HoldPowered2: // no need to do ammo calls since this is only called from HoldPowered1's refire
 		TNT1 A 0 A_GunFlash
