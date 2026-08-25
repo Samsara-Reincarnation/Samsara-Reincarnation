@@ -1,0 +1,2069 @@
+actor RTCWClass : Boolean {}
+
+Actor RTCW_Blazkowicz : SamsaraPlayerPawnNormalRedBlood
+{
+	Player.Scoreicon "SR31ICON"
+	Speed 1
+	Health 100
+	Radius 16
+	Height 56
+	Mass 100
+	PainChance 0
+	//Friction 0.25
+	Player.ViewHeight 46
+	Player.DisplayName "Return to Castle Wolfenstein"
+	Player.SoundClass "RTCWBlazkowicz"
+	Player.StartItem "RTCW_Luger"
+	Player.StartItem "RTCW_Knife"
+	Player.StartItem "RTCWClass"
+	Player.StartItem "IsSamsaraClass", 1
+	Player.StartItem "SamsaraTipsChecker", 1
+	Player.StartItem "RTCW_LugerMagazine", 8
+	Player.StartItem "RTCW_MP40Magazine", 32
+	Player.StartItem "RTCW_MauserMagazine", 10
+	Player.StartItem "RTCW_FG42Magazine", 20
+	Player.StartItem "RTCW_StG44Magazine", 30
+	Player.StartItem "RTCW_PanzerfaustMagazine", 1
+	Player.StartItem "RTCW_K43Magazine", 10
+	Player.StartItem "RTCW_K43Grenade", 1
+	Player.StartItem "RTCW_VenomMagazine", 500
+	Player.StartItem "RTCW_MG42Magazine", 150
+	Player.StartItem "RTCW_ShotgunMagazine", 6
+	Player.StartItem "RTCW_ColtMagazine", 8
+	Player.StartItem "RTCW_ColtMagazine2", 8
+	Player.StartItem "RTCW_ThompsonMagazine", 30
+	Player.StartItem "RTCW_SnooperMagazine", 5
+	Player.StartItem "RTCW_BARMagazine", 20
+	Player.StartItem "RTCW_M1GarandMagazine", 8
+	Player.StartItem "RTCW_M1GarandGrenade", 1
+	Player.StartItem "RTCW_BrowningMagazine", 150
+	Player.StartItem "RTCW_StenMagazine", 32
+	Player.StartItem "Clip", 50
+	Player.Face "RBJ"
+	Player.ColorRange 128, 143
+	Species "Player"
+	XScale 0.9
+	YScale 0.9
+	BloodType "SamsaraBloodyHellBlood"
+	//Player.AttackZOffset 22
+	//+DONTTRANSLATE
+	States
+	{
+		Spawn:
+			RA00 A 0 NoDelay ACS_NamedExecuteWithResult("DisableVoodooDoll")
+			Goto Super::Spawn
+		//Knife
+		SpawnKnife:
+			RA00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop
+		CrouchKnife:
+			RA12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeeKnife:
+			RA01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlKnife:
+			RA13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpKnife:
+			RA02 ABCD 2
+		JumpLoopKnife:
+			RA02 E 2
+			Loop
+		JumpFinishKnife:
+			RA02 FGHIJKLMNO 2
+			Goto SpawnKnife
+		KickKnife:
+			RA10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RA11 ABCDEFGHIJKL 1
+			Goto SpawnKnife
+		SwimKnife:
+			RA18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RA19 ABCDEFG 2
+			Loop
+		Pain1Knife:
+			RA03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnKnife
+		Pain2Knife:
+			RA04 ABCDEFGHIJKLMN 2
+			Goto SpawnKnife
+		Death1Knife:
+			RA06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RA07 ABCDEFGHIJKLMN 2
+			RA07 O -1
+			Stop
+		Death2Knife:
+			RA08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RA09 ABCD 2
+			RA09 E -1
+			Stop
+		BurnKnife:
+			RA14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RA15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RA16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RA17 ABCDE 2
+			RA17 F -1
+			Stop
+		SpawnToRunKnife:		"####" "#" 5 A_ClearTarget	Goto SeeKnife
+		RunToSpawnKnife:		"####" "#" 5 A_ClearTarget	Goto SpawnKnife
+		CrouchToCrawlKnife:		"####" "#" 5 A_ClearTarget	Goto CrawlKnife
+		CrawlToCrouchKnife:		"####" "#" 5 A_ClearTarget	Goto CrouchKnife
+		SwimToSpawnKnife:		"####" "#" 9 A_ClearTarget	Goto SpawnKnife
+		SpawnToSwimKnife:		"####" "#" 9 A_ClearTarget	Goto SwimKnife
+
+		//Luger
+		SpawnLuger:
+			RB00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop
+		CrouchLuger:
+			RB12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeeLuger:
+			RB01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlLuger:
+			RB13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpLuger:
+			RB02 ABCD 2
+		JumpLoopLuger:
+			RB02 E 2
+			Loop
+		JumpFinishLuger:
+			RB02 FGHIJKLMNO 2
+			Goto SpawnLuger
+		KickLuger:
+			RB10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RB11 ABCDEFGHIJKL 1
+			Goto SpawnLuger
+		SwimLuger:
+			RB18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RB19 ABCDEFG 2
+			Loop
+		Pain1Luger:
+			RB03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnLuger
+		Pain2Luger:
+			RB04 ABCDEFGHIJKLMN 2
+			Goto SpawnLuger
+		Death1Luger:
+			RB06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RB07 ABCDEFGHIJKLMN 2
+			RB07 O -1
+			Stop
+		Death2Luger:
+			RB08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RB09 ABCD 2
+			RB09 E -1
+			Stop
+		BurnLuger:
+			RB14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RB15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RB16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RB17 ABCDE 2
+			RB17 F -1
+			Stop
+		SpawnToRunLuger:		"####" "#" 5 A_ClearTarget	Goto SeeLuger
+		RunToSpawnLuger:		"####" "#" 5 A_ClearTarget	Goto SpawnLuger
+		CrouchToCrawlLuger:		"####" "#" 5 A_ClearTarget	Goto CrawlLuger
+		CrawlToCrouchLuger:		"####" "#" 5 A_ClearTarget	Goto CrouchLuger
+		SwimToSpawnLuger:		"####" "#" 9 A_ClearTarget	Goto SpawnLuger
+		SpawnToSwimLuger:		"####" "#" 9 A_ClearTarget	Goto SwimLuger
+
+		//LugerSil
+		SpawnLugerSil:
+			RC00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop
+		CrouchLugerSil:
+			RC12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeeLugerSil:
+			RC01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlLugerSil:
+			RC13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpLugerSil:
+			RC02 ABCD 2
+		JumpLoopLugerSil:
+			RC02 E 2
+			Loop
+		JumpFinishLugerSil:
+			RC02 FGHIJKLMNO 2
+			Goto SpawnLugerSil
+		KickLugerSil:
+			RC10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RC11 ABCDEFGHIJKL 1
+			Goto SpawnLugerSil
+		SwimLugerSil:
+			RC18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RC19 ABCDEFG 2
+			Loop
+		Pain1LugerSil:
+			RC03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnLugerSil
+		Pain2LugerSil:
+			RC04 ABCDEFGHIJKLMN 2
+			Goto SpawnLugerSil
+		Death1LugerSil:
+			RC06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RC07 ABCDEFGHIJKLMN 2
+			RC07 O -1
+			Stop
+		Death2LugerSil:
+			RC08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RC09 ABCD 2
+			RC09 E -1
+			Stop
+		BurnLugerSil:
+			RC14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RC15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RC16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RC17 ABCDE 2
+			RC17 F -1
+			Stop
+		SpawnToRunLugerSil:			"####" "#" 5 A_ClearTarget	Goto SeeLugerSil
+		RunToSpawnLugerSil:			"####" "#" 5 A_ClearTarget	Goto SpawnLugerSil
+		CrouchToCrawlLugerSil:		"####" "#" 5 A_ClearTarget	Goto CrawlLugerSil
+		CrawlToCrouchLugerSil:		"####" "#" 5 A_ClearTarget	Goto CrouchLugerSil
+		SwimToSpawnLugerSil:		"####" "#" 9 A_ClearTarget	Goto SpawnLugerSil
+		SpawnToSwimLugerSil:		"####" "#" 9 A_ClearTarget	Goto SwimLugerSil
+
+		//Colt
+		SpawnColt:
+			RD00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop
+		CrouchColt:
+			RD12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeeColt:
+			RD01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlColt:
+			RD13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpColt:
+			RD02 ABCD 2
+		JumpLoopColt:
+			RD02 E 2
+			Loop
+		JumpFinishColt:
+			RD02 FGHIJKLMNO 2
+			Goto SpawnColt
+		KickColt:
+			RD10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RD11 ABCDEFGHIJKL 1
+			Goto SpawnColt
+		SwimColt:
+			RD18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RD19 ABCDEFG 2
+			Loop
+		Pain1Colt:
+			RD03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnColt
+		Pain2Colt:
+			RD04 ABCDEFGHIJKLMN 2
+			Goto SpawnColt
+		Death1Colt:
+			RD06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RD07 ABCDEFGHIJKLMN 2
+			RD07 O -1
+			Stop
+		Death2Colt:
+			RD08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RD09 ABCD 2
+			RD09 E -1
+			Stop
+		BurnColt:
+			RD14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RD15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RD16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RD17 ABCDE 2
+			RD17 F -1
+			Stop
+		SpawnToRunColt:			"####" "#" 5 A_ClearTarget	Goto SeeColt
+		RunToSpawnColt:			"####" "#" 5 A_ClearTarget	Goto SpawnColt
+		CrouchToCrawlColt:		"####" "#" 5 A_ClearTarget	Goto CrawlColt
+		CrawlToCrouchColt:		"####" "#" 5 A_ClearTarget	Goto CrouchColt
+		SwimToSpawnColt:		"####" "#" 9 A_ClearTarget	Goto SpawnColt
+		SpawnToSwimColt:		"####" "#" 9 A_ClearTarget	Goto SwimColt
+
+		//ColtDual
+		SpawnColtDual:
+			RE00 ABCDEFGHIJKLMNOPQRSTUV 2
+			Loop
+		CrouchColtDual:
+			RE12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeeColtDual:
+			RE01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlColtDual:
+			RE13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpColtDual:
+			RE02 ABCD 2
+		JumpLoopColtDual:
+			RE02 E 2
+			Loop
+		JumpFinishColtDual:
+			RE02 FGHIJKLMNO 2
+			Goto SpawnColtDual
+		KickColtDual:
+			RE10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RE11 ABCDEFGHIJKL 1
+			Goto SpawnColtDual
+		SwimColtDual:
+			RE18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RE19 ABCDEFG 2
+			Loop
+		Pain1ColtDual:
+			RE03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnColtDual
+		Pain2ColtDual:
+			RE04 ABCDEFGHIJKLMN 2
+			Goto SpawnColtDual
+		Death1ColtDual:
+			RE06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RE07 ABCDEFGHIJKLMN 2
+			RE07 O -1
+			Stop
+		Death2ColtDual:
+			RE08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RE09 ABCD 2
+			RE09 E -1
+			Stop
+		BurnColtDual:
+			RE14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RE15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RE16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RE17 ABCDE 2
+			RE17 F -1
+			Stop
+		SpawnToRunColtDual:		"####" "#" 5 A_ClearTarget	Goto SeeColtDual
+		RunToSpawnColtDual:		"####" "#" 5 A_ClearTarget	Goto SpawnColtDual
+		CrouchToCrawlColtDual:	"####" "#" 5 A_ClearTarget	Goto CrawlColtDual
+		CrawlToCrouchColtDual:	"####" "#" 5 A_ClearTarget	Goto CrouchColtDual
+		SwimToSpawnColtDual:	"####" "#" 9 A_ClearTarget	Goto SpawnColtDual
+		SpawnToSwimColtDual:	"####" "#" 9 A_ClearTarget	Goto SwimColtDual
+
+		//Grenade
+		SpawnGrenade:
+			RF00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop
+		CrouchGrenade:
+			RF12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeeGrenade:
+			RF01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlGrenade:
+			RF13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpGrenade:
+			RF02 ABCD 2
+		JumpLoopGrenade:
+			RF02 E 2
+			Loop
+		JumpFinishGrenade:
+			RF02 FGHIJKLMNO 2
+			Goto SpawnGrenade
+		ThrowGrenade:
+			RF20 XTABCDEFGHIJKLMNOPQRSTUVWX 2
+			Goto SpawnGrenade
+		KickGrenade:
+			RF10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RF11 ABCDEFGHIJKL 1
+			Goto SpawnGrenade
+		SwimGrenade:
+			RF18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RF19 ABCDEFG 2
+			Loop
+		Pain1Grenade:
+			RF03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnGrenade
+		Pain2Grenade:
+			RF04 ABCDEFGHIJKLMN 2
+			Goto SpawnGrenade
+		Death1Grenade:
+			RF06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RF07 ABCDEFGHIJKLMN 2
+			RF07 O -1
+			Stop
+		Death2Grenade:
+			RF08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RF09 ABCD 2
+			RF09 E -1
+			Stop
+		BurnGrenade:
+			RF14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RF15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RF16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RF17 ABCDE 2
+			RF17 F -1
+			Stop
+		SpawnToRunGrenade:		"####" "#" 5 A_ClearTarget	Goto SeeGrenade
+		RunToSpawnGrenade:		"####" "#" 5 A_ClearTarget	Goto SpawnGrenade
+		CrouchToCrawlGrenade:	"####" "#" 5 A_ClearTarget	Goto CrawlGrenade
+		CrawlToCrouchGrenade:	"####" "#" 5 A_ClearTarget	Goto CrouchGrenade
+		SwimToSpawnGrenade:		"####" "#" 9 A_ClearTarget	Goto SpawnGrenade
+		SpawnToSwimGrenade:		"####" "#" 9 A_ClearTarget	Goto SwimGrenade
+
+		//Pineapple
+		SpawnPineapple:
+			RG00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop
+		CrouchPineapple:
+			RG12 ABCDEFGHIJKLMNO 4
+			Loop
+		SeePineapple:
+			RG01 ABCDEFGHIJKL 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlPineapple:
+			RG13 ABCDEFGHIJKLMN 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpPineapple:
+			RG02 ABCD 2
+		JumpLoopPineapple:
+			RG02 E 2
+			Loop
+		JumpFinishPineapple:
+			RG02 FGHIJKLMNO 2
+			Goto SpawnPineapple
+		ThrowPineapple:
+			RG20 XTABCDEFGHIJKLMNOPQRSTUVWX 2
+			Goto SpawnPineapple
+		KickPineapple:
+			RG10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RG11 ABCDEFGHIJKL 1
+			Goto SpawnPineapple
+		SwimPineapple:
+			RG18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RG19 ABCDEFG 2
+			Loop
+		Pain1Pineapple:
+			RG03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnPineapple
+		Pain2Pineapple:
+			RG04 ABCDEFGHIJKLMN 2
+			Goto SpawnPineapple
+		Death1Pineapple:
+			RG06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RG07 ABCDEFGHIJKLMN 2
+			RG07 O -1
+			Stop
+		Death2Pineapple:
+			RG08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RG09 ABCD 2
+			RG09 E -1
+			Stop
+		BurnPineapple:
+			RG14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RG15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RG16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RG17 ABCDE 2
+			RG17 F -1
+			Stop
+		SpawnToRunPineapple:		"####" "#" 5 A_ClearTarget	Goto SeePineapple
+		RunToSpawnPineapple:		"####" "#" 5 A_ClearTarget	Goto SpawnPineapple
+		CrouchToCrawlPineapple:		"####" "#" 5 A_ClearTarget	Goto CrawlPineapple
+		CrawlToCrouchPineapple:		"####" "#" 5 A_ClearTarget	Goto CrouchPineapple
+		SwimToSpawnPineapple:		"####" "#" 9 A_ClearTarget	Goto SpawnPineapple
+		SpawnToSwimPineapple:		"####" "#" 9 A_ClearTarget	Goto SwimPineapple
+
+		//MP40
+		SpawnMP40:
+			RH00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchMP40:
+			RH12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeMP40:
+			RH01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlMP40:
+			RH13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpMP40:
+			RH02 ABCD 2
+		JumpLoopMP40:
+			RH02 E 2
+			Loop
+		JumpFinishMP40:
+			RH02 FGHIJKLMNO 2
+			Goto SpawnMP40
+		KickMP40:
+			RH10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RH11 ABCDEFGHIJKL 1
+			Goto SpawnMP40
+		SwimMP40:
+			RH18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RH19 ABCD 2
+			Loop
+		Pain1MP40:
+			RH03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnMP40
+		Pain2MP40:
+			RH04 ABCDEFGHIJKLMN 2
+			Goto SpawnMP40
+		Death1MP40:
+			RH06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RH07 ABCDEFGHIJKLMN 2
+			RH07 O -1
+			Stop
+		Death2MP40:
+			RH08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RH09 ABCD 2
+			RH09 E -1
+			Stop
+		BurnMP40:
+			RH14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RH15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RH16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RH17 ABCDE 2
+			RH17 F -1
+			Stop
+		SpawnToRunMP40:			"####" "#" 5 A_ClearTarget	Goto SeeMP40
+		RunToSpawnMP40:			"####" "#" 5 A_ClearTarget	Goto SpawnMP40
+		CrouchToCrawlMP40:		"####" "#" 5 A_ClearTarget	Goto CrawlMP40
+		CrawlToCrouchMP40:		"####" "#" 5 A_ClearTarget	Goto CrouchMP40
+		SwimToSpawnMP40:		"####" "#" 9 A_ClearTarget	Goto SpawnMP40
+		SpawnToSwimMP40:		"####" "#" 9 A_ClearTarget	Goto SwimMP40
+
+		//Thompson
+		SpawnThompson:
+			RI00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchThompson:
+			RI12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeThompson:
+			RI01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlThompson:
+			RI13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpThompson:
+			RI02 ABCD 2
+		JumpLoopThompson:
+			RI02 E 2
+			Loop
+		JumpFinishThompson:
+			RI02 FGHIJKLMNO 2
+			Goto SpawnThompson
+		KickThompson:
+			RI10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RI11 ABCDEFGHIJKL 1
+			Goto SpawnThompson
+		SwimThompson:
+			RI18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RI19 ABCD 2
+			Loop
+		Pain1Thompson:
+			RI03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnThompson
+		Pain2Thompson:
+			RI04 ABCDEFGHIJKLMN 2
+			Goto SpawnThompson
+		Death1Thompson:
+			RI06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RI07 ABCDEFGHIJKLMN 2
+			RI07 O -1
+			Stop
+		Death2Thompson:
+			RI08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RI09 ABCD 2
+			RI09 E -1
+			Stop
+		BurnThompson:
+			RI14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RI15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RI16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RI17 ABCDE 2
+			RI17 F -1
+			Stop
+		SpawnToRunThompson:			"####" "#" 5 A_ClearTarget	Goto SeeThompson
+		RunToSpawnThompson:			"####" "#" 5 A_ClearTarget	Goto SpawnThompson
+		CrouchToCrawlThompson:		"####" "#" 5 A_ClearTarget	Goto CrawlThompson
+		CrawlToCrouchThompson:		"####" "#" 5 A_ClearTarget	Goto CrouchThompson
+		SwimToSpawnThompson:		"####" "#" 9 A_ClearTarget	Goto SpawnThompson
+		SpawnToSwimThompson:		"####" "#" 9 A_ClearTarget	Goto SwimThompson
+
+		//Mauser
+		SpawnMauser:
+			RJ00 ABCDEFGHIJKL 4
+			Loop
+		CrouchMauser:
+			RJ12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeMauser:
+			RJ01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlMauser:
+			RJ13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpMauser:
+			RJ02 ABCD 2
+		JumpLoopMauser:
+			RJ02 E 2
+			Loop
+		JumpFinishMauser:
+			RJ02 FGHIJKLMNO 2
+			Goto SpawnMauser
+		KickMauser:
+			RJ10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RJ11 ABCDEFGHIJKL 1
+			Goto SpawnMauser
+		SwimMauser:
+			RJ18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RJ19 ABCD 2
+			Loop
+		Pain1Mauser:
+			RJ03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnMauser
+		Pain2Mauser:
+			RJ04 ABCDEFGHIJKLMN 2
+			Goto SpawnMauser
+		Death1Mauser:
+			RJ06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RJ07 ABCDEFGHIJKLMN 2
+			RJ07 O -1
+			Stop
+		Death2Mauser:
+			RJ08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RJ09 ABCD 2
+			RJ09 E -1
+			Stop
+		BurnMauser:
+			RJ14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RJ15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RJ16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RJ17 ABCDE 2
+			RJ17 F -1
+			Stop
+		SpawnToRunMauser:		"####" "#" 5 A_ClearTarget	Goto SeeMauser
+		RunToSpawnMauser:		"####" "#" 5 A_ClearTarget	Goto SpawnMauser
+		CrouchToCrawlMauser:	"####" "#" 5 A_ClearTarget	Goto CrawlMauser
+		CrawlToCrouchMauser:	"####" "#" 5 A_ClearTarget	Goto CrouchMauser
+		SwimToSpawnMauser:		"####" "#" 9 A_ClearTarget	Goto SpawnMauser
+		SpawnToSwimMauser:		"####" "#" 9 A_ClearTarget	Goto SwimMauser
+
+		//Snooper
+		SpawnSnooper:
+			RK00 ABCDEFGHIJKL 4
+			Loop
+		CrouchSnooper:
+			RK12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeSnooper:
+			RK01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlSnooper:
+			RK13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpSnooper:
+			RK02 ABCD 2
+		JumpLoopSnooper:
+			RK02 E 2
+			Loop
+		JumpFinishSnooper:
+			RK02 FGHIJKLMNO 2
+			Goto SpawnSnooper
+		KickSnooper:
+			RK10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RK11 ABCDEFGHIJKL 1
+			Goto SpawnSnooper
+		SwimSnooper:
+			RK18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RK19 ABCD 2
+			Loop
+		Pain1Snooper:
+			RK03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnSnooper
+		Pain2Snooper:
+			RK04 ABCDEFGHIJKLMN 2
+			Goto SpawnSnooper
+		Death1Snooper:
+			RK06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RK07 ABCDEFGHIJKLMN 2
+			RK07 O -1
+			Stop
+		Death2Snooper:
+			RK08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RK09 ABCD 2
+			RK09 E -1
+			Stop
+		BurnSnooper:
+			RK14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RK15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RK16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RK17 ABCDE 2
+			RK17 F -1
+			Stop
+		SpawnToRunSnooper:		"####" "#" 5 A_ClearTarget	Goto SeeSnooper
+		RunToSpawnSnooper:		"####" "#" 5 A_ClearTarget	Goto SpawnSnooper
+		CrouchToCrawlSnooper:	"####" "#" 5 A_ClearTarget	Goto CrawlSnooper
+		CrawlToCrouchSnooper:	"####" "#" 5 A_ClearTarget	Goto CrouchSnooper
+		SwimToSpawnSnooper:		"####" "#" 9 A_ClearTarget	Goto SpawnSnooper
+		SpawnToSwimSnooper:		"####" "#" 9 A_ClearTarget	Goto SwimSnooper
+
+		//FG42
+		SpawnFG42:
+			RL00 ABCDEFGHIJKL 4
+			Loop
+		CrouchFG42:
+			RL12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeFG42:
+			RL01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlFG42:
+			RL13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpFG42:
+			RL02 ABCD 2
+		JumpLoopFG42:
+			RL02 E 2
+			Loop
+		JumpFinishFG42:
+			RL02 FGHIJKLMNO 2
+			Goto SpawnFG42
+		KickFG42:
+			RL10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RL11 ABCDEFGHIJKL 1
+			Goto SpawnFG42
+		SwimFG42:
+			RL18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RL19 ABCD 2
+			Loop
+		Pain1FG42:
+			RL03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnFG42
+		Pain2FG42:
+			RL04 ABCDEFGHIJKLMN 2
+			Goto SpawnFG42
+		Death1FG42:
+			RL06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RL07 ABCDEFGHIJKLMN 2
+			RL07 O -1
+			Stop
+		Death2FG42:
+			RL08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RL09 ABCD 2
+			RL09 E -1
+			Stop
+		BurnFG42:
+			RL14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RL15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RL16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RL17 ABCDE 2
+			RL17 F -1
+			Stop
+		SpawnToRunFG42:		"####" "#" 5 A_ClearTarget	Goto SeeFG42
+		RunToSpawnFG42:		"####" "#" 5 A_ClearTarget	Goto SpawnFG42
+		CrouchToCrawlFG42:	"####" "#" 5 A_ClearTarget	Goto CrawlFG42
+		CrawlToCrouchFG42:	"####" "#" 5 A_ClearTarget	Goto CrouchFG42
+		SwimToSpawnFG42:	"####" "#" 9 A_ClearTarget	Goto SpawnFG42
+		SpawnToSwimFG42:	"####" "#" 9 A_ClearTarget	Goto SwimFG42
+
+		//Panzerfaust
+		SpawnPanzerfaust:
+			RM00 ABCDEFGHIJKLMNOPQRSTU 4
+			Loop
+		CrouchPanzerfaust:
+			RM12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeePanzerfaust:
+			RM01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlPanzerfaust:
+			RM13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpPanzerfaust:
+			RM02 ABCD 2
+		JumpLoopPanzerfaust:
+			RM02 E 2
+			Loop
+		JumpFinishPanzerfaust:
+			RM02 FGHIJKLMNO 2
+			Goto SpawnPanzerfaust
+		KickPanzerfaust:
+			RM10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RM11 ABCDEFGHIJKL 1
+			Goto SpawnPanzerfaust
+		SwimPanzerfaust:
+			RM18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RM19 ABCD 2
+			Loop
+		Pain1Panzerfaust:
+			RM03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnPanzerfaust
+		Pain2Panzerfaust:
+			RM04 ABCDEFGHIJKLMN 2
+			Goto SpawnPanzerfaust
+		Death1Panzerfaust:
+			RM06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RM07 ABCDEFGHIJKLMN 2
+			RM07 O -1
+			Stop
+		Death2Panzerfaust:
+			RM08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RM09 ABCD 2
+			RM09 E -1
+			Stop
+		BurnPanzerfaust:
+			RM14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RM15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RM16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RM17 ABCDE 2
+			RM17 F -1
+			Stop
+		SpawnToRunPanzerfaust:		"####" "#" 5 A_ClearTarget	Goto SeePanzerfaust
+		RunToSpawnPanzerfaust:		"####" "#" 5 A_ClearTarget	Goto SpawnPanzerfaust
+		CrouchToCrawlPanzerfaust:	"####" "#" 5 A_ClearTarget	Goto CrawlPanzerfaust
+		CrawlToCrouchPanzerfaust:	"####" "#" 5 A_ClearTarget	Goto CrouchPanzerfaust
+		SwimToSpawnPanzerfaust:		"####" "#" 9 A_ClearTarget	Goto SpawnPanzerfaust
+		SpawnToSwimPanzerfaust:		"####" "#" 9 A_ClearTarget	Goto SwimPanzerfaust
+
+		//Venom
+		SpawnVenom:
+			RN00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchVenom:
+			RN12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeVenom:
+			RN01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlVenom:
+			RN13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpVenom:
+			RN02 ABCD 2
+		JumpLoopVenom:
+			RN02 E 2
+			Loop
+		JumpFinishVenom:
+			RN02 FGHIJKLMNO 2
+			Goto SpawnVenom
+		KickVenom:
+			RN10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RN11 ABCDEFGHIJKL 1
+			Goto SpawnVenom
+		SwimVenom:
+			RN18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RN19 ABCD 2
+			Loop
+		Pain1Venom:
+			RN03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnVenom
+		Pain2Venom:
+			RN04 ABCDEFGHIJKLMN 2
+			Goto SpawnVenom
+		Death1Venom:
+			RN06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RN07 ABCDEFGHIJKLMN 2
+			RN07 O -1
+			Stop
+		Death2Venom:
+			RN08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RN09 ABCD 2
+			RN09 E -1
+			Stop
+		BurnVenom:
+			RN14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RN15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RN16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RN17 ABCDE 2
+			RN17 F -1
+			Stop
+		SpawnToRunVenom:			"####" "#" 5 A_ClearTarget	Goto SeeVenom
+		RunToSpawnVenom:			"####" "#" 5 A_ClearTarget	Goto SpawnVenom
+		CrouchToCrawlVenom:			"####" "#" 5 A_ClearTarget	Goto CrawlVenom
+		CrawlToCrouchVenom:			"####" "#" 5 A_ClearTarget	Goto CrouchVenom
+		SwimToSpawnVenom:			"####" "#" 9 A_ClearTarget	Goto SpawnVenom
+		SpawnToSwimVenom:			"####" "#" 9 A_ClearTarget	Goto SwimVenom
+
+		//Tesla
+		SpawnTesla:
+			RO00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchTesla:
+			RO12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeTesla:
+			RO01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlTesla:
+			RO13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpTesla:
+			RO02 ABCD 2
+		JumpLoopTesla:
+			RO02 E 2
+			Loop
+		JumpFinishTesla:
+			RO02 FGHIJKLMNO 2
+			Goto SpawnTesla
+		KickTesla:
+			RO10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RO11 ABCDEFGHIJKL 1
+			Goto SpawnTesla
+		SwimTesla:
+			RO18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RO19 ABCD 2
+			Loop
+		Pain1Tesla:
+			RO03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnTesla
+		Pain2Tesla:
+			RO04 ABCDEFGHIJKLMN 2
+			Goto SpawnTesla
+		Death1Tesla:
+			RO06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RO07 ABCDEFGHIJKLMN 2
+			RO07 O -1
+			Stop
+		Death2Tesla:
+			RO08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RO09 ABCD 2
+			RO09 E -1
+			Stop
+		BurnTesla:
+			RO14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RO15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RO16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RO17 ABCDE 2
+			RO17 F -1
+			Stop
+		SpawnToRunTesla:			"####" "#" 5 A_ClearTarget	Goto SeeTesla
+		RunToSpawnTesla:			"####" "#" 5 A_ClearTarget	Goto SpawnTesla
+		CrouchToCrawlTesla:			"####" "#" 5 A_ClearTarget	Goto CrawlTesla
+		CrawlToCrouchTesla:			"####" "#" 5 A_ClearTarget	Goto CrouchTesla
+		SwimToSpawnTesla:			"####" "#" 9 A_ClearTarget	Goto SpawnTesla
+		SpawnToSwimTesla:			"####" "#" 9 A_ClearTarget	Goto SwimTesla
+
+		//Flamethrower
+		SpawnFlamethrower:
+			RP00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchFlamethrower:
+			RP12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeFlamethrower:
+			RP01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlFlamethrower:
+			RP13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpFlamethrower:
+			RP02 ABCD 2
+		JumpLoopFlamethrower:
+			RP02 E 2
+			Loop
+		JumpFinishFlamethrower:
+			RP02 FGHIJKLMNO 2
+			Goto SpawnFlamethrower
+		KickFlamethrower:
+			RP10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RP11 ABCDEFGHIJKL 1
+			Goto SpawnFlamethrower
+		SwimFlamethrower:
+			RP18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RP19 ABCD 2
+			Loop
+		Pain1Flamethrower:
+			RP03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnFlamethrower
+		Pain2Flamethrower:
+			RP04 ABCDEFGHIJKLMN 2
+			Goto SpawnFlamethrower
+		Death1Flamethrower:
+			RP06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RP07 ABCDEFGHIJKLMN 2
+			RP07 O -1
+			Stop
+		Death2Flamethrower:
+			RP08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RP09 ABCD 2
+			RP09 E -1
+			Stop
+		BurnFlamethrower:
+			RP14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RP15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RP16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RP17 ABCDE 2
+			RP17 F -1
+			Stop
+		SpawnToRunFlamethrower:			"####" "#" 5 A_ClearTarget	Goto SeeFlamethrower
+		RunToSpawnFlamethrower:			"####" "#" 5 A_ClearTarget	Goto SpawnFlamethrower
+		CrouchToCrawlFlamethrower:		"####" "#" 5 A_ClearTarget	Goto CrawlFlamethrower
+		CrawlToCrouchFlamethrower:		"####" "#" 5 A_ClearTarget	Goto CrouchFlamethrower
+		SwimToSpawnFlamethrower:		"####" "#" 9 A_ClearTarget	Goto SpawnFlamethrower
+		SpawnToSwimFlamethrower:		"####" "#" 9 A_ClearTarget	Goto SwimFlamethrower
+
+		//Sten
+		SpawnSten:
+			RQ00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchSten:
+			RQ12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeSten:
+			RQ01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlSten:
+			RQ13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpSten:
+			RQ02 ABCD 2
+		JumpLoopSten:
+			RQ02 E 2
+			Loop
+		JumpFinishSten:
+			RQ02 FGHIJKLMNO 2
+			Goto SpawnSten
+		KickSten:
+			RQ10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RQ11 ABCDEFGHIJKL 1
+			Goto SpawnSten
+		SwimSten:
+			RQ18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RQ19 ABCD 2
+			Loop
+		Pain1Sten:
+			RQ03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnSten
+		Pain2Sten:
+			RQ04 ABCDEFGHIJKLMN 2
+			Goto SpawnSten
+		Death1Sten:
+			RQ06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RQ07 ABCDEFGHIJKLMN 2
+			RQ07 O -1
+			Stop
+		Death2Sten:
+			RQ08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RQ09 ABCD 2
+			RQ09 E -1
+			Stop
+		BurnSten:
+			RQ14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RQ15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RQ16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RQ17 ABCDE 2
+			RQ17 F -1
+			Stop
+		SpawnToRunSten:			"####" "#" 5 A_ClearTarget	Goto SeeSten
+		RunToSpawnSten:			"####" "#" 5 A_ClearTarget	Goto SpawnSten
+		CrouchToCrawlSten:		"####" "#" 5 A_ClearTarget	Goto CrawlSten
+		CrawlToCrouchSten:		"####" "#" 5 A_ClearTarget	Goto CrouchSten
+		SwimToSpawnSten:		"####" "#" 9 A_ClearTarget	Goto SpawnSten
+		SpawnToSwimSten:		"####" "#" 9 A_ClearTarget	Goto SwimSten
+
+		//StG44
+		SpawnStG44:
+			RS00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchStG44:
+			RS12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeStG44:
+			RS01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlStG44:
+			RS13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpStG44:
+			RS02 ABCD 2
+		JumpLoopStG44:
+			RS02 E 2
+			Loop
+		JumpFinishStG44:
+			RS02 FGHIJKLMNO 2
+			Goto SpawnStG44
+		KickStG44:
+			RS10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RS11 ABCDEFGHIJKL 1
+			Goto SpawnStG44
+		SwimStG44:
+			RS18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RS19 ABCD 2
+			Loop
+		Pain1StG44:
+			RS03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnStG44
+		Pain2StG44:
+			RS04 ABCDEFGHIJKLMN 2
+			Goto SpawnStG44
+		Death1StG44:
+			RS06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RS07 ABCDEFGHIJKLMN 2
+			RS07 O -1
+			Stop
+		Death2StG44:
+			RS08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RS09 ABCD 2
+			RS09 E -1
+			Stop
+		BurnStG44:
+			RS14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RS15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RS16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RS17 ABCDE 2
+			RS17 F -1
+			Stop
+		SpawnToRunStG44:			"####" "#" 5 A_ClearTarget	Goto SeeStG44
+		RunToSpawnStG44:			"####" "#" 5 A_ClearTarget	Goto SpawnStG44
+		CrouchToCrawlStG44:		"####" "#" 5 A_ClearTarget	Goto CrawlStG44
+		CrawlToCrouchStG44:		"####" "#" 5 A_ClearTarget	Goto CrouchStG44
+		SwimToSpawnStG44:		"####" "#" 9 A_ClearTarget	Goto SpawnStG44
+		SpawnToSwimStG44:		"####" "#" 9 A_ClearTarget	Goto SwimStG44
+
+		//BAR
+		SpawnBAR:
+			RT00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchBAR:
+			RT12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeBAR:
+			RT01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlBAR:
+			RT13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpBAR:
+			RT02 ABCD 2
+		JumpLoopBAR:
+			RT02 E 2
+			Loop
+		JumpFinishBAR:
+			RT02 FGHIJKLMNO 2
+			Goto SpawnBAR
+		KickBAR:
+			RT10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RT11 ABCDEFGHIJKL 1
+			Goto SpawnBAR
+		SwimBAR:
+			RT18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RT19 ABCD 2
+			Loop
+		Pain1BAR:
+			RT03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnBAR
+		Pain2BAR:
+			RT04 ABCDEFGHIJKLMN 2
+			Goto SpawnBAR
+		Death1BAR:
+			RT06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RT07 ABCDEFGHIJKLMN 2
+			RT07 O -1
+			Stop
+		Death2BAR:
+			RT08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RT09 ABCD 2
+			RT09 E -1
+			Stop
+		BurnBAR:
+			RT14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RT15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RT16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RT17 ABCDE 2
+			RT17 F -1
+			Stop
+		SpawnToRunBAR:			"####" "#" 5 A_ClearTarget	Goto SeeBAR
+		RunToSpawnBAR:			"####" "#" 5 A_ClearTarget	Goto SpawnBAR
+		CrouchToCrawlBAR:		"####" "#" 5 A_ClearTarget	Goto CrawlBAR
+		CrawlToCrouchBAR:		"####" "#" 5 A_ClearTarget	Goto CrouchBAR
+		SwimToSpawnBAR:		"####" "#" 9 A_ClearTarget	Goto SpawnBAR
+		SpawnToSwimBAR:		"####" "#" 9 A_ClearTarget	Goto SwimBAR
+
+		//K43
+		SpawnK43:
+			RU00 ABCDEFGHIJKL 4
+			Loop
+		CrouchK43:
+			RU12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeK43:
+			RU01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlK43:
+			RU13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpK43:
+			RU02 ABCD 2
+		JumpLoopK43:
+			RU02 E 2
+			Loop
+		JumpFinishK43:
+			RU02 FGHIJKLMNO 2
+			Goto SpawnK43
+		KickK43:
+			RU10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RU11 ABCDEFGHIJKL 1
+			Goto SpawnK43
+		SwimK43:
+			RU18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RU19 ABCD 2
+			Loop
+		Pain1K43:
+			RU03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnK43
+		Pain2K43:
+			RU04 ABCDEFGHIJKLMN 2
+			Goto SpawnK43
+		Death1K43:
+			RU06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RU07 ABCDEFGHIJKLMN 2
+			RU07 O -1
+			Stop
+		Death2K43:
+			RU08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RU09 ABCD 2
+			RU09 E -1
+			Stop
+		BurnK43:
+			RU14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RU15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RU16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RU17 ABCDE 2
+			RU17 F -1
+			Stop
+		SpawnToRunK43:		"####" "#" 5 A_ClearTarget	Goto SeeK43
+		RunToSpawnK43:		"####" "#" 5 A_ClearTarget	Goto SpawnK43
+		CrouchToCrawlK43:	"####" "#" 5 A_ClearTarget	Goto CrawlK43
+		CrawlToCrouchK43:	"####" "#" 5 A_ClearTarget	Goto CrouchK43
+		SwimToSpawnK43:		"####" "#" 9 A_ClearTarget	Goto SpawnK43
+		SpawnToSwimK43:		"####" "#" 9 A_ClearTarget	Goto SwimK43
+
+		//M1Garand
+		SpawnM1Garand:
+			RV00 ABCDEFGHIJKL 4
+			Loop
+		CrouchM1Garand:
+			RV12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeM1Garand:
+			RV01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlM1Garand:
+			RV13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpM1Garand:
+			RV02 ABCD 2
+		JumpLoopM1Garand:
+			RV02 E 2
+			Loop
+		JumpFinishM1Garand:
+			RV02 FGHIJKLMNO 2
+			Goto SpawnM1Garand
+		KickM1Garand:
+			RV10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RV11 ABCDEFGHIJKL 1
+			Goto SpawnM1Garand
+		SwimM1Garand:
+			RV18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RV19 ABCD 2
+			Loop
+		Pain1M1Garand:
+			RV03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnM1Garand
+		Pain2M1Garand:
+			RV04 ABCDEFGHIJKLMN 2
+			Goto SpawnM1Garand
+		Death1M1Garand:
+			RV06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RV07 ABCDEFGHIJKLMN 2
+			RV07 O -1
+			Stop
+		Death2M1Garand:
+			RV08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RV09 ABCD 2
+			RV09 E -1
+			Stop
+		BurnM1Garand:
+			RV14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RV15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RV16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RV17 ABCDE 2
+			RV17 F -1
+			Stop
+		SpawnToRunM1Garand:		"####" "#" 5 A_ClearTarget	Goto SeeM1Garand
+		RunToSpawnM1Garand:		"####" "#" 5 A_ClearTarget	Goto SpawnM1Garand
+		CrouchToCrawlM1Garand:	"####" "#" 5 A_ClearTarget	Goto CrawlM1Garand
+		CrawlToCrouchM1Garand:	"####" "#" 5 A_ClearTarget	Goto CrouchM1Garand
+		SwimToSpawnM1Garand:		"####" "#" 9 A_ClearTarget	Goto SpawnM1Garand
+		SpawnToSwimM1Garand:		"####" "#" 9 A_ClearTarget	Goto SwimM1Garand
+
+		//MG42
+		SpawnMG42:
+			RW00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchMG42:
+			RW12 ABCDEFGHIJKLMNOPQRWTUVWXY 8
+			Loop
+		SeeMG42:
+			RW01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlMG42:
+			RW13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpMG42:
+			RW02 ABCD 2
+		JumpLoopMG42:
+			RW02 E 2
+			Loop
+		JumpFinishMG42:
+			RW02 FGHIJKLMNO 2
+			Goto SpawnMG42
+		KickMG42:
+			RW10 ABCDEFGHIJKLMNOPQRWTUVWXYZ 1
+			RW11 ABCDEFGHIJKL 1
+			Goto SpawnMG42
+		SwimMG42:
+			RW18 ABCDEFGHIJKLMNOPQRWTUVWXYZ 2
+			RW19 ABCD 2
+			Loop
+		Pain1MG42:
+			RW03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnMG42
+		Pain2MG42:
+			RW04 ABCDEFGHIJKLMN 2
+			Goto SpawnMG42
+		Death1MG42:
+			RW06 ABCDEFGHIJKLMNOPQRWTUVXYZ 2
+			RW07 ABCDEFGHIJKLMN 2
+			RW07 O -1
+			Stop
+		Death2MG42:
+			RW08 ABCDEFGHIJKLMNOPQRWTUVXYZ 2
+			RW09 ABCD 2
+			RW09 E -1
+			Stop
+		BurnMG42:
+			RW14 ABCDEFGHIJKLMNOPQRWTUVWXYZ 2
+			RW15 ABCDEFGHIJKLMNOPQRWTUVWXYZ 2
+			RW16 ABCDEFGHIJKLMNOPQRWTUVWXYZ 2
+			RW17 ABCDE 2
+			RW17 F -1
+			Stop
+		SpawnToRunMG42:			"####" "#" 5 A_ClearTarget	Goto SeeMG42
+		RunToSpawnMG42:			"####" "#" 5 A_ClearTarget	Goto SpawnMG42
+		CrouchToCrawlMG42:		"####" "#" 5 A_ClearTarget	Goto CrawlMG42
+		CrawlToCrouchMG42:		"####" "#" 5 A_ClearTarget	Goto CrouchMG42
+		SwimToSpawnMG42:		"####" "#" 9 A_ClearTarget	Goto SpawnMG42
+		SpawnToSwimMG42:		"####" "#" 9 A_ClearTarget	Goto SwimMG42
+
+		//Browning
+		SpawnBrowning:
+			RX00 ABCDEFGHIJKLMNOPQR 4
+			Loop
+		CrouchBrowning:
+			RX12 ABCDEFGHIJKLMNOPQRXTUVWXY 8
+			Loop
+		SeeBrowning:
+			RX01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlBrowning:
+			RX13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpBrowning:
+			RX02 ABCD 2
+		JumpLoopBrowning:
+			RX02 E 2
+			Loop
+		JumpFinishBrowning:
+			RX02 FGHIJKLMNO 2
+			Goto SpawnBrowning
+		KickBrowning:
+			RX10 ABCDEFGHIJKLMNOPQRXTUVWXYZ 1
+			RX11 ABCDEFGHIJKL 1
+			Goto SpawnBrowning
+		SwimBrowning:
+			RX18 ABCDEFGHIJKLMNOPQRXTUVWXYZ 2
+			RX19 ABCD 2
+			Loop
+		Pain1Browning:
+			RX03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnBrowning
+		Pain2Browning:
+			RX04 ABCDEFGHIJKLMN 2
+			Goto SpawnBrowning
+		Death1Browning:
+			RX06 ABCDEFGHIJKLMNOPQRXTUVXYZ 2
+			RX07 ABCDEFGHIJKLMN 2
+			RX07 O -1
+			Stop
+		Death2Browning:
+			RX08 ABCDEFGHIJKLMNOPQRXTUVXYZ 2
+			RX09 ABCD 2
+			RX09 E -1
+			Stop
+		BurnBrowning:
+			RX14 ABCDEFGHIJKLMNOPQRXTUVWXYZ 2
+			RX15 ABCDEFGHIJKLMNOPQRXTUVWXYZ 2
+			RX16 ABCDEFGHIJKLMNOPQRXTUVWXYZ 2
+			RX17 ABCDE 2
+			RX17 F -1
+			Stop
+		SpawnToRunBrowning:			"####" "#" 5 A_ClearTarget	Goto SeeBrowning
+		RunToSpawnBrowning:			"####" "#" 5 A_ClearTarget	Goto SpawnBrowning
+		CrouchToCrawlBrowning:		"####" "#" 5 A_ClearTarget	Goto CrawlBrowning
+		CrawlToCrouchBrowning:		"####" "#" 5 A_ClearTarget	Goto CrouchBrowning
+		SwimToSpawnBrowning:		"####" "#" 9 A_ClearTarget	Goto SpawnBrowning
+		SpawnToSwimBrowning:		"####" "#" 9 A_ClearTarget	Goto SwimBrowning
+
+		//Shotgun
+		SpawnShotgun:
+			RY00 ABCDEFGHIJKL 4
+			Loop
+		CrouchShotgun:
+			RY12 ABCDEFGHIJKLMNOPQRSTUVWXY 8
+			Loop
+		SeeShotgun:
+			RY01 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		CrawlShotgun:
+			RY13 ABCDEFGHIJKLM 2 A_SetTics(CallACS("RTCW_PlayerVelocity"))
+			Loop
+		JumpShotgun:
+			RY02 ABCD 2
+		JumpLoopShotgun:
+			RY02 E 2
+			Loop
+		JumpFinishShotgun:
+			RY02 FGHIJKLMNO 2
+			Goto SpawnShotgun
+		KickShotgun:
+			RY10 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
+			RY11 ABCDEFGHIJKL 1
+			Goto SpawnShotgun
+		SwimShotgun:
+			RY18 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RY19 ABCD 2
+			Loop
+		Pain1Shotgun:
+			RY03 ABCDEFGHIJKLMNOPQ 2
+			Goto SpawnShotgun
+		Pain2Shotgun:
+			RY04 ABCDEFGHIJKLMN 2
+			Goto SpawnShotgun
+		Death1Shotgun:
+			RY06 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RY07 ABCDEFGHIJKLMN 2
+			RY07 O -1
+			Stop
+		Death2Shotgun:
+			RY08 ABCDEFGHIJKLMNOPQRSTUVXYZ 2
+			RY09 ABCD 2
+			RY09 E -1
+			Stop
+		BurnShotgun:
+			RY14 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RY15 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RY16 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+			RY17 ABCDE 2
+			RY17 F -1
+			Stop
+		SpawnToRunShotgun:		"####" "#" 5 A_ClearTarget	Goto SeeShotgun
+		RunToSpawnShotgun:		"####" "#" 5 A_ClearTarget	Goto SpawnShotgun
+		CrouchToCrawlShotgun:	"####" "#" 5 A_ClearTarget	Goto CrawlShotgun
+		CrawlToCrouchShotgun:	"####" "#" 5 A_ClearTarget	Goto CrouchShotgun
+		SwimToSpawnShotgun:		"####" "#" 9 A_ClearTarget	Goto SpawnShotgun
+		SpawnToSwimShotgun:		"####" "#" 9 A_ClearTarget	Goto SwimShotgun
+
+		//Misc
+		Pain:
+			RA03 A 1 A_Pain
+			TNT1 A 0 A_Jump(128,"Pain2")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",20,"Pain1K43")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",19,"Pain1BAR")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",18,"Pain1StG44")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",17,"Pain1Sten")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",16,"Pain1Flamethrower")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",15,"Pain1Tesla")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",14,"Pain1Venom")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",13,"Pain1Panzerfaust")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",12,"Pain1FG42")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",11,"Pain1Snooper")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",10,"Pain1Mauser")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",9,"Pain1Thompson")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",8,"Pain1MP40")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",7,"Pain1Pineapple")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",6,"Pain1Grenade")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",5,"Pain1ColtDual")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",4,"Pain1Colt")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",3,"Pain1LugerSil")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",2,"Pain1Luger")
+			Goto Pain1Knife
+		Pain2:
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",20,"Pain2K43")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",19,"Pain2BAR")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",18,"Pain2StG44")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",17,"Pain2Sten")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",16,"Pain2Flamethrower")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",15,"Pain2Tesla")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",14,"Pain2Venom")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",13,"Pain2Panzerfaust")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",12,"Pain2FG42")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",11,"Pain2Snooper")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",10,"Pain2Mauser")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",9,"Pain2Thompson")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",8,"Pain2MP40")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",7,"Pain2Pineapple")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",6,"Pain2Grenade")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",5,"Pain2ColtDual")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",4,"Pain2Colt")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",3,"Pain2LugerSil")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",2,"Pain2Luger")
+			Goto Pain2Knife
+		Pain.Shock:
+		Pain.Tesla:
+			CBGS A 8 A_Pain
+			Goto Spawn
+		Death:
+			TNT1 A 0 A_SpawnItemEx("UniversalBloodyHellGoreDeathEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		Death.Massacre:
+			TNT1 A 0 A_NoBlocking
+			TNT1 A 0 A_PlayerScream
+			TNT1 A 0 A_Jump(128,"Death2")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",20,"Death1K43")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",19,"Death1BAR")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",18,"Death1StG44")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",17,"Death1Sten")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",16,"Death1Flamethrower")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",15,"Death1Tesla")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",14,"Death1Venom")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",13,"Death1Panzerfaust")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",12,"Death1FG42")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",11,"Death1Snooper")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",10,"Death1Mauser")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",9,"Death1Thompson")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",8,"Death1MP40")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",7,"Death1Pineapple")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",6,"Death1Grenade")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",5,"Death1ColtDual")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",4,"Death1Colt")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",3,"Death1LugerSil")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",2,"Death1Luger")
+			Goto Death1Knife
+		Death2:
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",20,"Death2K43")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",19,"Death2BAR")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",18,"Death2StG44")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",17,"Death2Sten")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",16,"Death2Flamethrower")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",15,"Death2Tesla")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",14,"Death2Venom")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",13,"Death2Panzerfaust")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",12,"Death2FG42")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",11,"Death2Snooper")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",10,"Death2Mauser")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",9,"Death2Thompson")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",8,"Death2MP40")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",7,"Death2Pineapple")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",6,"Death2Grenade")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",5,"Death2ColtDual")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",4,"Death2Colt")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",3,"Death2LugerSil")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",2,"Death2Luger")
+			Goto Death2Knife
+		Burn:
+			TNT1 A 0 A_PlayerScream
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",20,"BurnK43")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",19,"BurnBAR")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",18,"BurnStG44")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",17,"BurnSten")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",16,"BurnFlamethrower")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",15,"BurnTesla")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",14,"BurnVenom")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",13,"BurnPanzerfaust")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",12,"BurnFG42")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",11,"BurnSnooper")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",10,"BurnMauser")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",9,"BurnThompson")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",8,"BurnMP40")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",6,"BurnGrenade")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",5,"BurnColtDual")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",4,"BurnColt")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",3,"BurnLugerSil")
+			TNT1 A 0 A_JumpIfInventory("RTCW_WeaponToken",2,"BurnLuger")
+			Goto BurnKnife
+		Death.RTCWVenomBullet:
+			"####" "#" 0 A_JumpIfHealthLower(-50,"RTCWXDeath")
+			"####" "#" 0 A_SpawnItemEx("RTCW_DeathGibber",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			TNT1 A -1 A_Jump(256,"Death")
+			wait
+		Death.RTCWExplosive:
+		RTCWXDeath:
+		RTCWXDeath2:
+		XDeath:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_SpawnItemEx("RTCW_GibSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			TNT1 A 5 A_FadeOut
+			TNT1 A -1
+			Stop
+		XDeath.Massacre:
+			TNT1 A 0 A_ChangeFlag("SOLID",false)
+			TNT1 A 0 A_SpawnItemEx("RTCW_GibSpawnerMassacre",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+			TNT1 A 5 A_FadeOut
+			TNT1 A -1
+			Stop
+		Pain.ShrinkerDMG:
+            TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 70), "Spawn")
+			TNT1 A 0 A_ChangeFlag("NOPAIN",true)
+			TNT1 A 0 A_ChangeFlag("NODAMAGE",true)
+			UF00 A 0 ACS_NamedExecuteAlways("Samsara_PlayerShrinker")
+			"####" "#" 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			"####" "#" 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			"####" "#" 0 A_PlaySound("duke/shrink")
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 0 A_SpawnItemEx("RTCW_Blazkowicz_ShrinkEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+			"####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 4 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+			TNT1 A 0 A_ChangeFlag("NOPAIN",false)
+			TNT1 A 0 A_ChangeFlag("NODAMAGE",false)
+			Goto Spawn
+		Lean:
+			TNT1 A 1
+			Loop
+		Spawn:
+			Goto SpawnKnife
+	}
+}
+
+Actor RTCW_Blazkowicz_Shrink : RTCW_Blazkowicz
+{
+	Player.ForwardMove 0.25
+	Player.SideMove 0.25
+	Player.MorphWeapon "ShrunkWeapon"
+	Player.ViewHeight 8
+	DamageFactor "ZorchPistol", 0.0
+	DamageFactor "Zorch", 0.0
+	DamageFactor "ZorchKamikaze", 0.0
+	DamageFactor "PhasingZorch", 0.0
+	DamageFactor "ZorchSpectral", 0.0
+	MaxStepHeight 2
+	Height 8
+	Radius 4
+	-SOLID
+	+NOPAIN
+	States
+	{
+		Spawn:
+			RA00 ABCDEFGHIJKLMNOPQRSTU 2
+			Loop		
+		See:
+			RA01 ABCDEFGHIJKL 2
+			Loop
+		Death.PhosFire:
+		Death.PhosFireCoop:
+		Death.HexGreenFire:
+		Death.HexenQuietusFire:
+		Death.QuakeFire:
+		Death.FireExplosive:
+		Death.PGFire:
+		Death.WTRangedFire:
+		Death.WolfenFlamethrower:
+		Death.MarathonFire:
+		Death.MarathonPlasmaFire:
+		Burn:
+		Death.TotenkopfFire:
+		Death.DukeDamage:
+		Death.DukePistol:
+		Death.MightyBoot:
+		Death.DukeExplosive:
+		Death.HexenMedusa:
+		Death.ExpanderDMG:
+		XDeath.ExpanderDMG:
+		Death.ExpanderDMGCoop:
+		XDeath.ExpanderDMGCoop:
+		Death.QuakeDamage:
+		Death.QuakePistol:
+		Death.QuakeElectric:
+		Death.NotQuadded:
+		Death.QuakeExplosive:
+		Death.QuakeLaser:
+		XDeath.QuakeDamage:
+		XDeath.QuakePistol:
+		XDeath.QuakeElectric:
+		XDeath.NotQuadded:
+		XDeath.QuakeExplosive:
+		XDeath.QuakeLaser:
+		Death.RottExplosive:
+		Death.RottFire:
+		Death.RottDisintegrate:
+		Death.CalebFire:
+		Death.LifeLeech:
+		Death.CalebNapalm:
+		Death.Vodoo:
+		Death.VoodooPuff:
+		Death.DynamiteCoop:
+		Death.Dynamite:
+		Death.Shock:  
+		Death.Tesla:
+		Death.CalebBullet:
+		Disintegrate:
+		Death.StrifeMauler:
+		Death.EradExplosive:
+		Death.EradNova:
+		Death.EradShock:
+		Death.EradExplosive2:
+		Death.EradDisc:
+		Death.EradPiercingDart:
+		Death.EradGreenFire:
+		Death.EradCoopGreenFire:
+		Death.Nuke:
+		Death.HLLaser:
+		Death.HLExplosive:
+		Death.HLRPGExplosive:
+		Death.HLEgon:
+		Death.FreemanGibs:
+		Death.SWFist:
+		Death.SWKatana:
+		Death.SWShuriken:
+		Death.SWSticky:
+		Death.SWStickyCoop:
+		Death.SWGrenade:
+		Death.SWNuke:
+		Death.SWRocket:
+		Death.SWRailgun:
+		Death.SWRailgunCoop:
+		Death.SWNukeCoop:
+		Death.SWFlame:
+		Death.SWFlame2:
+		Death.SWFlame2Coop:
+		Death.SWFlame3:	
+		Death.SWBullet:
+		Death.PSRAPower:
+		Death.PSRAPowerCoop:
+		Death.PSExplosive:
+		Death.PSExplosiveCoop:
+		Death.PSBullet:
+		Death.PSFire:
+		Death.PSFire:
+		Death.LeonardDamage2:
+		Death.LeonardDamage3:
+		Death.LeonardDamage0:
+		Death.LeonardDamage1:	
+		Death.BittermanDamage:
+		Death.Hexen2Damage:
+		Death.Hexen2Fire:
+		Death.Hexen2Electric:
+		Death.Hexen2Extreme:
+		Death.Hexen2ElectricExtreme:
+		Death.Painkiller:
+		Death.PainkillerBullet:
+		Death.PainkillerElectro:
+		Death.PainkillerExplosive:
+		Death.PainkillerShuriken:
+		Death.PainkillerDemon:
+		Death.PainkillerStake:
+		Death.PainkillerFire:
+		PainkillerGib:
+		Death.UnrealDamage:
+		Death.UnrealPlasma:
+		Death.UnrealSludge:
+		Death.ASMDShockTrace:
+		Death.UnrealExplosive:
+		Death.UnrealRazor:
+		Death.UnrealExtreme:
+		Death.UnrealRedeemer:
+		Death.UnrealShredded:
+		UnrealXDeath:
+		Death.RTCWVenomBullet:
+		Death.RTCWExplosive:
+		RTCWXDeath:
+		RTCWXDeath2:
+		Death.Q3Explosive:
+		Death.Q3Energy:
+		Death.Q3BFG:
+		XDeath.Q3Explosive:
+		XDeath.Q3Energy:
+		Death.DeusExPistolFire:
+		Death.DeusExFlamed:
+		Death.DeusExLAM:
+		Death.DeusExRifleExploded:
+		Death.DeusExSabotPistol:
+		Death.DeusExSabot:
+		Death.DeusExBurned:
+		Death.DeusExExploded:
+		Death.DeusExDroneExploded:
+		DeusXDeath:
+		Death:
+		XDeath:
+		Death.Massacre:
+		XDeath.Massacre:
+		Death.Squish:
+		XDeath.Squish:
+			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1
+			stop
+        Death.DukeIce:
+        Death.HexenIce:
+        Death.WTMeleeIce:
+        Death.WTRangedIce:
+        Death.DoomDamageTypeIce:
+            TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraIceDeathScreenBlend")
+        Ice: // this has some hardcoded nonsense to it
+            TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+            TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+            TNT1 A 1 A_CheckPlayerDone
+            wait
+		Death.DukeSquish:
+		XDeath.DukeSquish:
+			TNT1 A 0 A_GiveToTarget("DukeStomp", 1)
+			TNT1 A 0 SetPlayerProperty(0,1,PROP_TOTALLYFROZEN)
+			RA00 A 15
+			TNT1 A 0 A_Jump(64,2)
+			TNT1 A 0 A_GiveToTarget("DukeBootTaunt",1)
+			TNT1 A 0 SetPlayerProperty(0,0,PROP_TOTALLYFROZEN)
+			TNT1 A 0 A_PlaySound("duke/enemygib", CHAN_BODY)
+			TNT1 A 1 A_SpawnItemEx("DukeBloodPool",0,0,0,0,0,0,0,SXF_USEBLOODCOLOR|SXF_NOCHECKPOSITION)
+			TNT1 A -1
+			stop
+	}
+}
+
+actor RTCW_Blazkowicz_ShrinkEffect : RTCW_Blazkowicz
+{
+	-ISMONSTER
+	-COUNTKILL
+	-SHOOTABLE
+	-SOLID
+	+NOINTERACTION
+	-NOGRAVITY
+	+CLIENTSIDEONLY	
+	Renderstyle Translucent
+	Alpha 0.4
+	States
+	{
+		Spawn:
+			RA00 A 0
+			RA00 A 0 A_SetUserVar("user_scalex", scalex*65536.0)
+			RA00 A 0 A_SetUserVar("user_scaley", scaley*65536.0)
+			"####" "#" 1 A_SetScale(0.95*(user_scalex/65536.0),0.95*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.9*(user_scalex/65536.0),0.9*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.85*(user_scalex/65536.0),0.85*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.8*(user_scalex/65536.0),0.8*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.75*(user_scalex/65536.0),0.75*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.7*(user_scalex/65536.0),0.7*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.65*(user_scalex/65536.0),0.65*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.6*(user_scalex/65536.0),0.6*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.55*(user_scalex/65536.0),0.55*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.5*(user_scalex/65536.0),0.5*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.45*(user_scalex/65536.0),0.45*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.4*(user_scalex/65536.0),0.4*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.35*(user_scalex/65536.0),0.35*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.3*(user_scalex/65536.0),0.3*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.25*(user_scalex/65536.0),0.25*(user_scaley/65536.0))
+			"####" "#" 1 A_SetScale(0.2*(user_scalex/65536.0),0.2*(user_scaley/65536.0))
+			Stop
+	}
+}
+
+Actor RTCW_BlazkowiczFlash
+{
+	RenderStyle Translucent
+	Height 4
+	Radius 2
+	XScale 0.9
+	YScale 0.9
+	+NOINTERACTION
+    +NOTIMEFREEZE
+	+BRIGHT
+	States
+	{
+		Spawn:
+			TNT1 A 2
+			Stop
+		//Luger
+		SpawnLuger:			RB00 A 2 A_Stop	Stop
+		CrouchLuger:		RB12 A 2 A_Stop	Stop
+		SeeLuger:			RB01 A 2 A_Stop	Stop
+		CrawlLuger:			RB13 A 2 A_Stop	Stop
+		JumpLuger:			RB02 A 2 A_Stop	Stop
+		JumpStopLuger:		RB02 F 2 A_Stop	Stop
+		Pain1Luger:			RB03 G 2 A_Stop	Stop
+		Pain2Luger:			RB04 E 2 A_Stop	Stop
+		//Colt
+		SpawnColt:			RD00 A 2 A_Stop	Stop
+		CrouchColt:			RD12 A 2 A_Stop	Stop
+		SeeColt:			RD01 A 2 A_Stop	Stop
+		CrawlColt:			RD13 A 2 A_Stop	Stop
+		JumpColt:			RD02 A 2 A_Stop	Stop
+		JumpStopColt:		RD02 F 2 A_Stop	Stop
+		Pain1Colt:			RD03 G 2 A_Stop	Stop
+		Pain2Colt:			RD04 E 2 A_Stop	Stop
+		//ColtDual
+		SpawnColtDual:		RE00 A 2 A_Stop	Stop
+		CrouchColtDual:		RE12 A 2 A_Stop	Stop
+		SeeColtDual:		RE01 A 2 A_Stop	Stop
+		CrawlColtDual:		RE13 A 2 A_Stop	Stop
+		JumpColtDual:		RE02 A 2 A_Stop	Stop
+		JumpStopColtDual:	RE02 F 2 A_Stop	Stop
+		Pain1ColtDual:		RE03 G 2 A_Stop	Stop
+		Pain2ColtDual:		RE04 E 2 A_Stop	Stop
+		//MP40
+		SpawnMP40:			RH00 A 2 A_Stop	Stop
+		CrouchMP40:			RH12 A 2 A_Stop	Stop
+		SeeMP40:			RH01 A 2 A_Stop	Stop
+		CrawlMP40:			RH13 A 2 A_Stop	Stop
+		JumpMP40:			RH02 A 2 A_Stop	Stop
+		JumpStopMP40:		RH02 F 2 A_Stop	Stop
+		Pain1MP40:			RH03 G 2 A_Stop	Stop
+		Pain2MP40:			RH04 E 2 A_Stop	Stop
+		//Thompson
+		SpawnThompson:		RI00 A 2 A_Stop	Stop
+		CrouchThompson:		RI12 A 2 A_Stop	Stop
+		SeeThompson:		RI01 A 2 A_Stop	Stop
+		CrawlThompson:		RI13 A 2 A_Stop	Stop
+		JumpThompson:		RI02 A 2 A_Stop	Stop
+		JumpStopThompson:	RI02 F 2 A_Stop	Stop
+		Pain1Thompson:		RI03 G 2 A_Stop	Stop
+		Pain2Thompson:		RI04 E 2 A_Stop	Stop
+		//Mauser
+		SpawnMauser:		RJ00 A 2 A_Stop	Stop
+		CrouchMauser:		RJ12 A 2 A_Stop	Stop
+		SeeMauser:			RJ01 A 2 A_Stop	Stop
+		CrawlMauser:		RJ13 A 2 A_Stop	Stop
+		JumpMauser:			RJ02 A 2 A_Stop	Stop
+		JumpStopMauser:		RJ02 F 2 A_Stop	Stop
+		Pain1Mauser:		RJ03 G 2 A_Stop	Stop
+		Pain2Mauser:		RJ04 E 2 A_Stop	Stop
+		//Snooper
+		SpawnSnooper:		RK00 A 2 A_Stop	Stop
+		CrouchSnooper:		RK12 A 2 A_Stop	Stop
+		SeeSnooper:			RK01 A 2 A_Stop	Stop
+		CrawlSnooper:		RK13 A 2 A_Stop	Stop
+		JumpSnooper:		RK02 A 2 A_Stop	Stop
+		JumpStopSnooper:	RK02 F 2 A_Stop	Stop
+		Pain1Snooper:		RK03 G 2 A_Stop	Stop
+		Pain2Snooper:		RK04 E 2 A_Stop	Stop
+		//FG42
+		SpawnFG42:			RL00 A 2 A_Stop	Stop
+		CrouchFG42:			RL12 A 2 A_Stop	Stop
+		SeeFG42:			RL01 A 2 A_Stop	Stop
+		CrawlFG42:			RL13 A 2 A_Stop	Stop
+		JumpFG42:			RL02 A 2 A_Stop	Stop
+		JumpStopFG42:		RL02 F 2 A_Stop	Stop
+		Pain1FG42:			RL03 G 2 A_Stop	Stop
+		Pain2FG42:			RL04 E 2 A_Stop	Stop
+		//Panzerfaust
+		SpawnPanzerfaust:	RM00 A 2 A_Stop	Stop
+		CrouchPanzerfaust:	RM12 A 2 A_Stop	Stop
+		SeePanzerfaust:		RM01 A 2 A_Stop	Stop
+		CrawlPanzerfaust:	RM13 A 2 A_Stop	Stop
+		JumpPanzerfaust:	RM02 A 2 A_Stop	Stop
+		JumpStopPanzerfaust:RM02 F 2 A_Stop	Stop
+		Pain1Panzerfaust:	RM03 G 2 A_Stop	Stop
+		Pain2Panzerfaust:	RM04 E 2 A_Stop	Stop
+		//Venom
+		SpawnVenom:			RN00 A 2 A_Stop	Stop
+		CrouchVenom:		RN12 A 2 A_Stop	Stop
+		SeeVenom:			RN01 A 2 A_Stop	Stop
+		CrawlVenom:			RN13 A 2 A_Stop	Stop
+		JumpVenom:			RN02 A 2 A_Stop	Stop
+		JumpStopVenom:		RN02 F 2 A_Stop	Stop
+		Pain1Venom:			RN03 G 2 A_Stop	Stop
+		Pain2Venom:			RN04 E 2 A_Stop	Stop
+		//StG44
+		SpawnStG44:			RS00 A 2 A_Stop	Stop
+		CrouchStG44:		RS12 A 2 A_Stop	Stop
+		SeeStG44:			RS01 A 2 A_Stop	Stop
+		CrawlStG44:			RS13 A 2 A_Stop	Stop
+		JumpStG44:			RS02 A 2 A_Stop	Stop
+		JumpStopStG44:		RS02 F 2 A_Stop	Stop
+		Pain1StG44:			RS03 G 2 A_Stop	Stop
+		Pain2StG44:			RS04 E 2 A_Stop	Stop
+		//BAR
+		SpawnBAR:			RT00 A 2 A_Stop	Stop
+		CrouchBAR:			RT12 A 2 A_Stop	Stop
+		SeeBAR:				RT01 A 2 A_Stop	Stop
+		CrawlBAR:			RT13 A 2 A_Stop	Stop
+		JumpBAR:			RT02 A 2 A_Stop	Stop
+		JumpStopBAR:		RT02 F 2 A_Stop	Stop
+		Pain1BAR:			RT03 G 2 A_Stop	Stop
+		Pain2BAR:			RT04 E 2 A_Stop	Stop
+		//K43
+		SpawnK43:			RU00 A 2 A_Stop	Stop
+		CrouchK43:			RU12 A 2 A_Stop	Stop
+		SeeK43:				RU01 A 2 A_Stop	Stop
+		CrawlK43:			RU13 A 2 A_Stop	Stop
+		JumpK43:			RU02 A 2 A_Stop	Stop
+		JumpStopK43:		RU02 F 2 A_Stop	Stop
+		Pain1K43:			RU03 G 2 A_Stop	Stop
+		Pain2K43:			RU04 E 2 A_Stop	Stop
+		//M1Garand
+		SpawnM1Garand:		RV00 A 2 A_Stop	Stop
+		CrouchM1Garand:		RV12 A 2 A_Stop	Stop
+		SeeM1Garand:		RV01 A 2 A_Stop	Stop
+		CrawlM1Garand:		RV13 A 2 A_Stop	Stop
+		JumpM1Garand:		RV02 A 2 A_Stop	Stop
+		JumpStopM1Garand:	RV02 F 2 A_Stop	Stop
+		Pain1M1Garand:		RV03 G 2 A_Stop	Stop
+		Pain2M1Garand:		RV04 E 2 A_Stop	Stop
+		//MG42
+		SpawnMG42:			RW00 A 2 A_Stop	Stop
+		CrouchMG42:			RW12 A 2 A_Stop	Stop
+		SeeMG42:			RW01 A 2 A_Stop	Stop
+		CrawlMG42:			RW13 A 2 A_Stop	Stop
+		JumpMG42:			RW02 A 2 A_Stop	Stop
+		JumpStopMG42:		RW02 F 2 A_Stop	Stop
+		Pain1MG42:			RW03 G 2 A_Stop	Stop
+		Pain2MG42:			RW04 E 2 A_Stop	Stop
+		//Browning
+		SpawnBrowning:		RX00 A 2 A_Stop	Stop
+		CrouchBrowning:		RX12 A 2 A_Stop	Stop
+		SeeBrowning:		RX01 A 2 A_Stop	Stop
+		CrawlBrowning:		RX13 A 2 A_Stop	Stop
+		JumpBrowning:		RX02 A 2 A_Stop	Stop
+		JumpStopBrowning:	RX02 F 2 A_Stop	Stop
+		Pain1Browning:		RX03 G 2 A_Stop	Stop
+		Pain2Browning:		RX04 E 2 A_Stop	Stop
+		//Shotgun
+		SpawnShotgun:		RY00 A 2 A_Stop	Stop
+		CrouchShotgun:		RY12 A 2 A_Stop	Stop
+		SeeShotgun:			RY01 A 2 A_Stop	Stop
+		CrawlShotgun:		RY13 A 2 A_Stop	Stop
+		JumpShotgun:		RY02 A 2 A_Stop	Stop
+		JumpStopShotgun:	RY02 F 2 A_Stop	Stop
+		Pain1Shotgun:		RY03 G 2 A_Stop	Stop
+		Pain2Shotgun:		RY04 E 2 A_Stop	Stop
+	}
+}
+
+Actor RTCWBlazkoDummy
+{
+	Height 4
+	Radius 2
+	+NOINTERACTION
+	States
+	{
+		Spawn:
+			DGUY A 1
+			Loop
+	}
+}
