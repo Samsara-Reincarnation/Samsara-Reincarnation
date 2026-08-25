@@ -322,6 +322,10 @@ Script "Outlaws_Player" (void)
 					}
 					
 					SetFont(strparam(s:"OLHEAL",s:offset == (ol_health/10) ? "1" : "0"));
+					
+					//Is the player dead? Draw the skull
+					if(ol_health <= 0) SetFont("OLDEAD");
+						
 					//Finally, draw the card
 					HudMessage(s:"A";HUDMSG_NOTWITHFULLMAP|HUDMSG_PLAIN,startIndex+17+(10-offset),CR_UNTRANSLATED,380.2+((10-offset-1)*10.0),500.2 + (healthDigitsShifter[offset-1] * 1.0),0.0);	
 				}
