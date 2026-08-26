@@ -467,12 +467,12 @@ actor "Desert Eagle" : HLWeapon
         0P00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualReloadable")
       ReadyActualNonReloadable:
         0P00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualNonReloadableShephard")
-        0P00 A 2 A_WeaponReady
+        0P00 A 2 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActualJump
 
       ReadyActualReloadable:
         0P00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualReloadableShephard")
-        0P00 A 2 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P00 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActualJump
 
       ReadyActualJump:
@@ -486,78 +486,78 @@ actor "Desert Eagle" : HLWeapon
         0P00 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle1Reloadable")
       ReadyActualIdle1NonReloadable:
         0P00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1NonReloadableShephard")
-        0P00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady
+        0P00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle1Reloadable:
         0P00 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle1ReloadableShephard")
-        0P00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle2:
         0P03 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle2Reloadable")
       ReadyActualIdle2NonReloadable:
         0P03 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2NonReloadableShephard")
-        0P03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P05 ABCDEFGH 1 A_WeaponReady
+        0P03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P05 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle2Reloadable:
         0P03 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle2ReloadableShephard")
-        0P03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P05 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P05 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle3:
         0P06 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle3Reloadable")
       ReadyActualIdle3NonReloadable:
         0P06 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle3NonReloadableShephard")
-        0P06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady
+        0P06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle3Reloadable:
         0P06 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle3ReloadableShephard")
-        0P06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle4:
         0P08 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle4Reloadable")
       ReadyActualIdle4NonReloadable:
         0P08 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle4NonReloadableShephard")
-        0P08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady
+        0P08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle4Reloadable:
         0P08 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle4ReloadableShephard")
-        0P08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle5:
         0P11 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualIdle5Reloadable")
       ReadyActualIdle5NonReloadable:
         0P11 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle5NonReloadableShephard")
-        0P11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        0P13 ABCDEFGH 1 A_WeaponReady
+        0P11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        0P13 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle5Reloadable:
         0P11 A 0 A_JumpIfInventory("HalfLifeOpposingForce",1,"ReadyActualIdle5ReloadableShephard")
-        0P11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        0P13 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        0P11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        0P13 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualAmmoCheck:
@@ -715,6 +715,7 @@ actor "Desert Eagle" : HLWeapon
         goto ReadyActual
 
       AltFire:
+      Zoom:
         0P00 A 0 A_TakeInventory("SamsaraHalfLifeLaserSightHidden")
         0P00 A 0 A_JumpIfInventory("HLDeagleLaserActivated",1,"AltFireDeactivate")
       AltFireActivate:
@@ -750,9 +751,9 @@ actor "Desert Eagle" : HLWeapon
         0P19 ABCDEFGHIJK 1 A_WeaponReady(WRF_NOFIRE)
         0P19 L 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
       ReloadFinish:
-        0P19 LM 1 A_WeaponReady
+        0P19 LM 1 A_WeaponReady(WRF_ALLOWZOOM)
         0P19 N 0 A_TakeInventory("SamsaraHalfLifeLaserSightHidden")
-        0P19 NO 1 A_WeaponReady
+        0P19 NO 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReloadAmmo:
@@ -773,9 +774,9 @@ actor "Desert Eagle" : HLWeapon
         0P17 ABCDEFGHIJK 1 A_WeaponReady(WRF_NOFIRE)
         0P17 L 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmoless")
       ReloadFinishAmmoless:
-        0P17 LM 1 A_WeaponReady
+        0P17 LM 1 A_WeaponReady(WRF_ALLOWZOOM)
         0P17 N 0 A_TakeInventory("SamsaraHalfLifeLaserSightHidden")
-        0P17 NO 1 A_WeaponReady
+        0P17 NO 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReloadAmmoAmmoless:
@@ -792,69 +793,69 @@ actor "Desert Eagle" : HLWeapon
 
       // Adrian Shephard
       ReadyActualNonReloadableShephard:
-        OP00 A 2 A_WeaponReady
+        OP00 A 2 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActualJump
 
       ReadyActualReloadableShephard:
-        OP00 A 2 A_WeaponReady(WRF_ALLOWRELOAD)
+        OP00 A 2 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActualJump
 
       ReadyActualIdle1NonReloadableShephard:
-        OP00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady
+        OP00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle1ReloadableShephard:
-        OP00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        OP00 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP01 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP02 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle2NonReloadableShephard:
-        OP03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP05 ABCDEFGH 1 A_WeaponReady
+        OP03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP05 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle2ReloadableShephard:
-        OP03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP05 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        OP03 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP04 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP05 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle3NonReloadableShephard:
-        OP06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady
+        OP06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle3ReloadableShephard:
-        OP06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        OP06 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP07 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle4NonReloadableShephard:
-        OP08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady
+        OP08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle4ReloadableShephard:
-        OP08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        OP08 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP09 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP10 ABCDEFGHIJKLMNOPQRSTUVW 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle5NonReloadableShephard:
-        OP11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady
-        OP13 ABCDEFGH 1 A_WeaponReady
+        OP11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWZOOM)
+        OP13 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyActualIdle5ReloadableShephard:
-        OP11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD)
-        OP13 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        OP11 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP12 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+        OP13 ABCDEFGH 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReadyShephard:
@@ -934,9 +935,9 @@ actor "Desert Eagle" : HLWeapon
         OP19 ABCDEFGHIJK 1 A_WeaponReady(WRF_NOFIRE)
         OP19 L 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoShephard")
       ReloadFinishShephard:
-        OP19 LM 1 A_WeaponReady
+        OP19 LM 1 A_WeaponReady(WRF_ALLOWZOOM)
         OP19 N 0 A_TakeInventory("SamsaraHalfLifeLaserSightHidden")
-        OP19 NO 1 A_WeaponReady
+        OP19 NO 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReloadAmmoShephard:
@@ -956,9 +957,9 @@ actor "Desert Eagle" : HLWeapon
         OP17 ABCDEFGHIJK 1 A_WeaponReady(WRF_NOFIRE)
         OP17 L 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoAmmolessShephard")
       ReloadFinishAmmolessShephard:
-        OP17 LM 1 A_WeaponReady
+        OP17 LM 1 A_WeaponReady(WRF_ALLOWZOOM)
         OP17 N 0 A_TakeInventory("SamsaraHalfLifeLaserSightHidden")
-        OP17 NO 1 A_WeaponReady
+        OP17 NO 1 A_WeaponReady(WRF_ALLOWZOOM)
         goto ReadyActual
 
       ReloadAmmoAmmolessShephard:

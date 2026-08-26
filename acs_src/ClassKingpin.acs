@@ -173,13 +173,29 @@ Script "Kingpin_Player" (void)
 			UsingFullScreen = false;
 		}
 
+		int laserdelay;
+
 		if(currentplayeraction >= 0)
 		{
-			if (CheckInventory("Kingpin_Bazooka_LaserSystem") && CheckWeapon("Kingpin_Bazooka"))
+			if (CheckWeapon("Kingpin_Bazooka") && CheckInventory("Kingpin_Bazooka_LaserSystem"))
 			{
-				if (isSinglePlayer() || isCoop()) { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuffCoop", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
-				else { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuff", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
+				if (laserdelay > 0) { laserdelay -= 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"); }
+
+				if (laserdelay < 0) { laserdelay = 0; } // just in case
+
+				if (GetPlayerInput(-1, INPUT_BUTTONS) & BT_ZOOM && laserdelay <= 0)
+				{
+					SetInventory("SamsaraKingpinBazookaLaserActivated", !CheckInventory("SamsaraKingpinBazookaLaserActivated"));
+					laserdelay = 5;
+				}
+
+				if (CheckInventory("SamsaraKingpinBazookaLaserActivated"))
+				{
+					if (isSinglePlayer() || isCoop()) { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuffCoop", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
+					else { LineAttack(0, GetActorAngle(0), GetActorPitch(0), 0, "Kingpin_Bazooka_LaserPuff", "None", 8192.0, FHF_NORANDOMPUFFZ|FHF_NOIMPACTDECAL, 0); }
+				}
 			}
+			else { laserdelay = 0; }
 
 			if(CheckInventory("Kingpin_ResetPlayerAction")) 
 			{ 
@@ -319,7 +335,9 @@ Script "Kingpin_Player" (void)
 		{
 			if(ClassifyActor(0) & ACTOR_ALIVE)
 				currentplayeraction = 0;
-				
+
+			laserdelay = 0;
+
 			Delay(1);
 		}
 	}
