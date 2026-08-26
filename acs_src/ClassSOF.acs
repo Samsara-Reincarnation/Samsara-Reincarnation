@@ -58,6 +58,7 @@ Script "SoF_Player" (void)
 	lastWeapon = CheckInventory("SoF_SelectedWeapon");
 	while(CheckInventory("SoFClass"))
 	{
+		SetInventory("SamsaraSOFMachinegunReloadDisplay", CheckInventory("SoF_MachinegunMagazine")); // placed here for netplay purposes
 		if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraSOFRocketCycle", CheckInventory("SoF_RocketMagazine") % 4); }
 
 		if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
@@ -1406,3 +1407,5 @@ Script "SoF_CheckWeapon" (void)
 		}
 	}	
 }
+
+script "SoFMachinegunReloadDisplayInit" (void) { SetInventory("SamsaraSOFMachinegunReloadDisplay", CheckInventory("SoF_MachinegunMagazine")); } // also used for netplay, funnily enough

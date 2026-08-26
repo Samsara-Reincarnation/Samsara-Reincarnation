@@ -1,3 +1,5 @@
+actor SamsaraSOFMachinegunReloadDisplay : Counter {} // I don't feel like duplicating states, so here's this
+
 ACTOR SoF_Machinegun : SoF_Weapon
 {
     Weapon.SlotNumber 4
@@ -615,6 +617,8 @@ ACTOR SoF_Machinegun : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             "####" "#" 0 A_JumpIfInventory("Clip",2,1)
             Goto ReadyActual
+            "####" "#" 0 ACS_NamedExecuteWithResult("SoFMachinegunReloadDisplayInit")
+/*
             "####" "#" 0 A_TakeInventory("SoF_WeaponAnimFrame")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",11,"RELOAD_B")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",10,"RELOAD_B")
@@ -627,71 +631,72 @@ ACTOR SoF_Machinegun : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",3,"RELOAD_B")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",2,"RELOAD_B")
             "####" "#" 0 A_JumpIfInventory("SoF_WeaponAnimState",1,"RELOAD_A")
-        RELOAD_START:
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",9,"RELOAD_START_1")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",8,"RELOAD_START_2")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",7,"RELOAD_START_3")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",6,"RELOAD_START_4")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",5,"RELOAD_START_5")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",4,"RELOAD_START_6")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",3,"RELOAD_START_7")
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",2,"RELOAD_START_8")
-        RELOAD_START_0:
-            SF0A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF0A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF0A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_1:
-            SF1A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF1A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF1A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_2:
-            SF2A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF2A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF2A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_3:
-            SF3A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF3A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF3A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_4:
-            SF4A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF4A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF4A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_5:
-            SF5A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF5A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF5A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_6:
-            SF6A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF6A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF6A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_7:
-            SF7A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF7A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF7A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
-        RELOAD_START_8:
-            SF8A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            SF8A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
-            SF8A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
-            Goto RELOAD_LOOP
+*/
         RELOAD_LOOP:
-            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",0,"RELOAD_FINISH")
+            TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",0,"RELOAD_START")
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             TNT1 A 0 A_JumpIfInventory("Clip",2,1)
-            Goto RELOAD_FINISH
+            Goto RELOAD_START
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
             TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
             TNT1 A 0 A_TakeInventory("Clip",2)
             TNT1 A 0 A_GiveInventory("SoF_MachinegunMagazine")
             Loop
+        RELOAD_START:
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",9,"RELOAD_START_1")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",8,"RELOAD_START_2")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",7,"RELOAD_START_3")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",6,"RELOAD_START_4")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",5,"RELOAD_START_5")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",4,"RELOAD_START_6")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",3,"RELOAD_START_7")
+            TNT1 A 0 A_JumpIfInventory("SamsaraSOFMachinegunReloadDisplay",2,"RELOAD_START_8")
+        RELOAD_START_0:
+            SF0A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF0A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF0A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_1:
+            SF1A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF1A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF1A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_2:
+            SF2A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF2A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF2A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_3:
+            SF3A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF3A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF3A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_4:
+            SF4A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF4A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF4A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_5:
+            SF5A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF5A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF5A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_6:
+            SF6A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF6A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF6A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_7:
+            SF7A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF7A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF7A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
+        RELOAD_START_8:
+            SF8A ABCDEFGHIJKLM 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            SF8A N 0 A_PlaySound("SoF/Weapons/mgun/Reload",CHAN_AUTO)
+            SF8A NOPQRSTUV 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+            Goto RELOAD_FINISH
         RELOAD_FINISH:
             TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",9,"RELOAD_FINISH_1")
             TNT1 A 0 A_JumpIfInventory("SoF_MachinegunMagazine",8,"RELOAD_FINISH_2")
