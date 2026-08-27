@@ -4,7 +4,6 @@ actor Kingpin_Shotgun_SelectFire : Boolean {}
 actor Kingpin_Shotgun_BleedShot : Boolean {}
 actor Kingpin_Shotgun_DoubleBarrelAlternate : Boolean {}
 actor SamsaraKingpinShotgunAmmoCheckFailed : Boolean {} // just in case
-actor SamsaraKingpinShotgunDoubleEmptySoundPlaying : Boolean {}
 
 actor Kingpin_Shotgun : Kingpin_Weapon
 {
@@ -284,8 +283,8 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"FireContinueDoubleMagazine")
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireContinueDoubleSelect")
         KP20 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP20 J 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
-        KP20 J 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+        KP20 J 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,3)
+        KP20 JJ 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP20 J 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
         KP20 JKLMNOPQ 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP21 E 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
@@ -297,6 +296,8 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         goto ReloadCheck
 
       FireContinueDoubleSelect:
+        KP20 F 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,3)
+        KP20 FF 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP20 FGH 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP21 IE 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         goto FireFinishDouble
@@ -304,8 +305,8 @@ actor Kingpin_Shotgun : Kingpin_Weapon
       FireContinueDoubleMagazine:
         KP30 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireContinueDoubleMagazineSelect")
         KP30 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP30 J 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
-        KP30 J 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+        KP30 J 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,3)
+        KP30 JJ 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP30 J 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
         KP30 JKLMNOPQ 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP31 E 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
@@ -317,6 +318,8 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         goto ReloadCheck
 
       FireContinueDoubleMagazineSelect:
+        KP30 F 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,3)
+        KP30 FF 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP30 FGH 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP31 IE 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         goto FireFinishDoubleMagazine
@@ -327,8 +330,8 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"FireContinueLastDoubleMagazine")
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireContinueDoubleSelect")
         KP20 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP20 R 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
-        KP20 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+        KP20 R 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,3)
+        KP20 RR 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP20 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
       FireFinishLastDouble:
         KP20 R 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
@@ -340,8 +343,8 @@ actor Kingpin_Shotgun : Kingpin_Weapon
       FireContinueLastDoubleMagazine:
         KP30 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"FireContinueDoubleMagazineSelect")
         KP30 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
-        KP30 R 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
-        KP30 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
+        KP30 R 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,3)
+        KP30 RR 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP30 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
       FireFinishLastDoubleMagazine:
         KP31 R 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
@@ -401,11 +404,17 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         goto AltFireContinueLastDouble
 
       AltFireContinueDouble:
-        KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_DoubleBarrelAlternate",1,1)
-        goto AltFireContinueLastDouble
+        KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_DoubleBarrelAlternate",1,"AltFireContinueDouble2")
+      AltFireContinueDouble1:
         KP20 F 0 A_GiveInventory("SamsaraKingpinShotgunSingleAttackHandler")
         KP20 F 0 ACS_NamedExecuteWithResult("Kingpin_Decorate", 12, 1)
-        KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"AltFireContinueDoubleMagazine")
+        KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"AltFireContinueDoubleMagazineSelect")
+        goto AltFireContinueDoubleSelect
+
+      AltFireContinueDouble2:
+        KP20 F 0 A_GiveInventory("SamsaraKingpinShotgunSingleAttackHandler")
+        KP20 F 0 ACS_NamedExecuteWithResult("Kingpin_Decorate", 12, 1)
+        KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"AltFireContinueDoubleMagazine2")
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"AltFireContinueDoubleSelect")
         KP20 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP20 J 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
@@ -420,14 +429,14 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         KP21 E 0 A_JumpIfInventory("Kingpin_ShotgunMagazine",1,"ReadyActual")
         goto ReloadCheck
 
-      AltFireContinueDoubleSelect:
+      AltFireContinueDoubleSelect: // also used for left barrel without select fire
         KP20 F 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
         KP20 F 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
         KP20 FGH 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP21 I 6 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         goto AltFireFinishDouble
 
-      AltFireContinueDoubleMagazine:
+      AltFireContinueDoubleMagazine2:
         KP30 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"AltFireContinueDoubleMagazineSelect")
         KP30 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP30 J 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
@@ -452,14 +461,11 @@ actor Kingpin_Shotgun : Kingpin_Weapon
       AltFireContinueLastDouble:
         KP20 F 0 A_GiveInventory("SamsaraKingpinShotgunSingleAttackHandler")
         KP20 F 0 ACS_NamedExecuteWithResult("Kingpin_Decorate", 12, 1)
-        KP20 F 0 A_GiveInventory("SamsaraKingpinShotgunDoubleEmptySoundHandler")
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_Magazine",1,"AltFireContinueLastDoubleMagazine")
         KP20 F 0 A_JumpIfInventory("Kingpin_Shotgun_SelectFire",1,"AltFireContinueDoubleSelect")
         KP20 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP20 R 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
         KP20 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
-        KP20 R 0 A_JumpIfInventory("SamsaraKingpinShotgunDoubleEmptySoundPlaying",1,1)
-        goto AltFireFinishLastDouble
         KP20 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
       AltFireFinishLastDouble:
         KP20 R 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
@@ -473,8 +479,6 @@ actor Kingpin_Shotgun : Kingpin_Weapon
         KP30 FGHI 3 A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
         KP30 R 0 A_JumpIfInventory("SamsaraKingpinShotgunAmmoCheckFailed",1,2)
         KP30 R 0 A_FireCustomMissile("Kingpin_ShellCasing",-90,0,4,4)
-        KP30 R 0 A_JumpIfInventory("SamsaraKingpinShotgunDoubleEmptySoundPlaying",1,1)
-        goto AltFireFinishLastDoubleMagazine
         KP30 R 0 A_PlaySound("Kingpin/Shotgun/Cock",CHAN_5)
       AltFireFinishLastDoubleMagazine:
         KP30 R 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
@@ -759,19 +763,6 @@ actor SamsaraKingpinShotgunDoubleAttackHandler : Trigger
         TNT1 A 0 A_Recoil(1)
         TNT1 A 0 A_Quake(3,2,0,32,"nosoundforyoubitch")
         TNT1 A 0 ACS_NamedExecuteWithResult("GlobalRecoil", 5, 260, 0, 0)
-        stop
-    }
-}
-
-actor SamsaraKingpinShotgunDoubleEmptySoundHandler : Trigger
-{
-    States
-    {
-      Pickup:
-        TNT1 A 0 A_JumpIfInventory("Kingpin_Shotgun_DoubleBarrelAlternate",1,2)
-        TNT1 A 0 A_GiveInventory("SamsaraKingpinShotgunDoubleEmptySoundPlaying")
-        stop
-        TNT1 A 0 A_TakeInventory("SamsaraKingpinShotgunDoubleEmptySoundPlaying")
         stop
     }
 }
