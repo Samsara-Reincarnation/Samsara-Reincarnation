@@ -245,7 +245,17 @@ Actor Q3LightningBeam : FastProjectile
 
 Actor Q3LightningBeamCoop : Q3LightningBeam { +THRUSPECIES Species "Player" }
 
-Actor Q3LightningBeamDM : Q3LightningBeam { Damage (5) }
+Actor Q3LightningBeamDM : Q3LightningBeam
+{
+	Damage (5)
+	States
+	{
+		Spawn:
+			TNT1 A 0
+			TNT1 A 3
+			goto Death
+	}
+}
 
 Actor Q3LightningBeamSoundTeamArena : Q3LightningBeam
 {
