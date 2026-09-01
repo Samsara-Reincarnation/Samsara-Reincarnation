@@ -2358,12 +2358,16 @@ Script "Painkiller_BlackTarot_CardLoop" (int type, int extra)
 			HudMessage(s:""; HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP|HUDMSG_LAYER_UNDERHUD, 32600, 0, 0.0, 0.0, 0.5, 0.1);
 			break;
 		case 14:
-			while(CheckInventory("Painkiller_GoldActive"))
+			if (!CheckInventory("SamsaraHasPermaWeaponLevel2"))
 			{
-				GiveInventory("Painkiller_WeaponModifier_Token", 1);
-				Delay(5);
+				while(CheckInventory("Painkiller_GoldActive"))
+				{
+					GiveInventory("Painkiller_WeaponModifier_Token", 1);
+					Delay(5);
+				}
+				TakeInventory("Painkiller_WeaponModifier_Token", 1);
 			}
-			TakeInventory("Painkiller_WeaponModifier_Token", 1);
+			else { Print(s:"Weapon Modifier can't be used when \"Permanent Powered Weapons\" is on. Please select a different gold card."); }
 			break;
 	}
 	StopSound(0,CHAN_7);
