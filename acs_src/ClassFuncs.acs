@@ -123,7 +123,10 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	int newTid = UniqueTid();
 
 	//Now assign the monster a new temporary tid
-	Thing_ChangeTid(0,newTid);
+	//We need to actually make sure unique bosses that do specials actually perform them
+	if(thingCountName(GetActorClass(0),myTid) > 1)
+		Thing_ChangeTid(0,newTid);
+	else newTid = myTid;
 	
 	//Get the activator's player class
 	SetActivator(projTid,AAPTR_TARGET);
