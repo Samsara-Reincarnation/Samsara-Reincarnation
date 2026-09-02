@@ -124,9 +124,8 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 
 	//Now assign the monster a new temporary tid
 	//We need to actually make sure unique bosses that do specials actually perform them
-	if(thingCountName(GetActorClass(0),myTid) > 1)
-		Thing_ChangeTid(0,newTid);
-	else newTid = myTid;
+	if (myTid != 0 && ThingCountName(GetActorClass(0), myTid) == 1) { newTid = myTid; }
+	else { Thing_ChangeTid(0, newTid); }
 	
 	//Get the activator's player class
 	SetActivator(projTid,AAPTR_TARGET);
@@ -138,9 +137,8 @@ Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 	//Get the amount of damage to do based on the class script
 	switch(pClass)
 	{
-		//Would be the exact same script
-		case CLASS_OUTLAWS:
 		case CLASS_HALFLIFE:
+		case CLASS_OUTLAWS: //Would be the exact same script
 			damage = ACS_NamedExecuteWithResult("HalfLife_BulletDamage",idamage);
 			break;
 		case CLASS_GOLDENEYE:
