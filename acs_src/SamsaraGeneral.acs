@@ -10815,6 +10815,21 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             result = -1;
             break;
 
+          case SLOT_CHAINSAW:
+            if (!CheckInventory("Outlaws_Knife"))
+            {
+                GiveInventory("Outlaws_Knife", 1);
+                if (dropped <= 0 && startmode == 0 && weaponstay) { SetInventory("OutlawsKnifeAmmoLastPickupTime", Timer() + ammopickuptimer); }
+                result = 1;
+            } else if ((CheckInventory("Outlaws_Knives") < GetAmmoCapacity("Outlaws_Knives") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) ||
+                       (!CheckInventory("Outlaws_Knives") && (Timer() >= CheckInventory("OutlawsKnifeAmmoLastPickupTime") || dropped >= 1 || startmode != 0 || !weaponstay)))
+            {
+                GiveInventory("Outlaws_Knife", 1);
+                if (dropped <= 0 && startmode == 0 && weaponstay) { SetInventory("OutlawsKnifeAmmoLastPickupTime", Timer() + ammopickuptimer); }
+                result = 1;
+            }
+            break;
+
           case SLOT_SUPERSHOTGUN:
             hasweapon = CheckInventory("Outlaws_SawedOffShotgun") || CheckInventory("Outlaws_DoubleBarrelShotgun");
 
