@@ -539,6 +539,8 @@ str HL_HUD_WeaponBarGraphics[HALFLIFESLOTS][6] =
 
 script "Freeman_Loop" (void)
 {
+    ACS_NamedExecuteWithResult("HalfLifeFootStepGenerator");
+
 	int longJumpDelay = 0;
 	int longJumpCharges = 0;
 	int longJumpChargeFade = 0;
@@ -1650,17 +1652,19 @@ Script "HalfLifeAllyWalkRunSpeed" (int set)
 	}
 }
 
-Script "HalfLifeFootStepGenerator" enter
+Script "HalfLifeFootStepGenerator" (void)
 {
-	if((ClassifyActor(0) & ACTOR_WORLD))
+	if((ClassifyActor(0) & ACTOR_WORLD) || !CheckInventory("HalfLifeClass"))
 		terminate;
 		
-	if(CheckInventory("HalfLifeClass"))
+	while(CheckInventory("HalfLifeClass"))
 	{
 		int speedx, speedy, lasttimer, velocity, movement;
-		
+
 		while((ClassifyActor(0) & ACTOR_ALIVE))
 		{
+            if (!CheckInventory("HalfLifeClass")) { break; }
+
 			//we'll handle crouch here too
 			if(GetActorViewHeight(0) <=  GetActorViewHeight(0) / 2 << 16)
 				GiveInventory("HalfLifeCrouching",1);
@@ -1685,6 +1689,8 @@ Script "HalfLifeFootStepGenerator" enter
 			
 			Delay(1);
 		}
+
+		Delay(1);
 	}
 }
 

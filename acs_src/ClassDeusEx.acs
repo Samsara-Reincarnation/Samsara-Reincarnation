@@ -317,8 +317,7 @@ Script "DeusEx_GetWeaponSkill" ( int weapontype )
 
 Script "DeusEx_Enter" (void)
 {
-//	ACS_NamedExecuteWithResult("SamsaraOST_DeusExScriptedMusic");
-	if((ClassifyActor(0) & ACTOR_WORLD))
+	if((ClassifyActor(0) & ACTOR_WORLD) || !CheckInventory("DeusExClass"))
 		terminate;
 		
 	int loopTid = 0;
@@ -352,6 +351,8 @@ Script "DeusEx_Enter" (void)
 
 		while ((ClassifyActor(0) & ACTOR_ALIVE))
 		{
+            if (!CheckInventory("DeusExClass")) { break; }
+
             SetInventory("DeusEx_Running", keyDown(BT_FORWARD) && running);
             SetInventory("DeusEx_Jumping", keyDown(BT_JUMP));
             SetInventory("DeusEx_Crouching", keyDown(BT_CROUCH)); //GetActorViewHeight(0) <= GetActorViewHeight(0) / 2 << 16
@@ -520,6 +521,7 @@ Script "DeusEx_Enter" (void)
 		Delay(1);
 	}
 	RemoveMessages(2001,2007);
+	if(UsingFullScreen == true) { RemoveMessages(startIndex,startIndex+120); }
 }
 
 /*str DeusExHUDWeapons[14][9] =
