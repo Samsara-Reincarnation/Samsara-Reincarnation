@@ -694,13 +694,13 @@ Script "SoF_HandleLean" (void)
 	int leanCounter = 0;
 	//Need it to remain centered so it does nothing stupid
 	SetInventory("SoF_LeanCounter",5);
-	while(true)
+	while(CheckInventory("SoFClass"))
 	{
 		// Do lean stuff. I gotta do this system earlier than I'd like unfortunately
 		int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
 		int sideMove = GetPlayerInput(-1,INPUT_SIDEMOVE);
 		ChangeActorRoll(0,0.00625*leanCounter,1);
-		if((buttons & BT_USER1 || buttons & BT_USER2) && sideMove != 0)
+		if((buttons & BT_USER1 || buttons & BT_USER2) && sideMove != 0 && !isDead(0))
 		{
 			if(sideMove < 0)
 			{
