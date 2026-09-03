@@ -1110,29 +1110,29 @@ function void KingpinDisplayDialogue(int arg1, int arg2, int arg3, int arg4)
 			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyWelcome[arg3]);
 			break;
 		case 1:
-			text = strparam(s:"\c[KPPawnOMaticWhite]", s:pawnOMaticUpgradeDialogue[arg2][arg3][arg4], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticUpgradePrices[arg2][arg3], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticUpgradePrices[arg2][arg3] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+			text = strparam(s:"\c[KPPawnOMaticWhite]", s:pawnOMaticUpgradeDialogue[arg2][arg3][arg4], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticUpgradePrices[arg2][arg3], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticUpgradePrices[arg2][arg3] == 1 ? "" : "s", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			break;
 		case 2:
-			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyRandomWeapons[arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[0][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[0][arg2] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+			text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyRandomWeapons[arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[0][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[0][arg2] == 1 ? "" : "s", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			break;
 		case 3: 
 			if(pawnOMaticItemBulkBuy[arg1-3][arg2-1] == 0)
-				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[1][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[1][arg2] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[1][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[1][arg2] == 1 ? "" : "s", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			else
 			{
 				if(arg4 > 0)
-					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[1][arg2]*arg4, s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[1][arg2]*arg4 > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
+					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyAmmoStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[1][arg2]*arg4, s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[1][arg2]*arg4 == 1 ? "" : "s", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
 				else
 					text = strparam(s:"\c[KPPawnOMaticRed](Activate again to cancel)");
 			}
 			break;
 		case 4:
 			if(pawnOMaticItemBulkBuy[arg1-3][arg2-1] == 0)
-				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[2][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[2][arg2] > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
+				text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" That will be \c[KPPawnOMaticRed]",d:pawnOMaticItemPrices[2][arg2], s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[2][arg2] == 1 ? "" : "s", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase)");
 			else
 			{
 				if(arg4 > 0)
-					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[2][arg2]*arg4, s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[2][arg2]*arg4 > 1 ? "s" : "", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
+					text = strparam(s:"\c[KPPawnOMaticWhite]", s:SharkyHealthArmorStrings[arg2-1][arg3], s:" You want \c[KPPawnOMaticRed]",d:arg4, s:"\c[KPPawnOMaticWhite]? That will be \c[KPPawnOMaticRed]", d:pawnOMaticItemPrices[2][arg2]*arg4, s:"\c[KPPawnOMaticWhite] dollar", s:pawnOMaticItemPrices[2][arg2]*arg4 == 1 ? "" : "s", s:".", s:"\n\n\c[KPPawnOMaticRed](Activate again to purchase - Use movement keys to adjust amount)");
 				else
 					text = strparam(s:"\c[KPPawnOMaticRed](Activate again to cancel)");
 			}
