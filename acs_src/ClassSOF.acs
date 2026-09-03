@@ -153,7 +153,7 @@ Script "SoF_Player" (void)
 				currentplayeraction = SOF_ACTION_RESET;
 			
 			// Dead
-			if(ClassifyActor(0) & ACTOR_DEAD) 
+			if(isDead(0))
 			{
 				GiveInventory("SoF_EnablePain",1);
 				int DeathSine = sin(GetActorAngle(0));
@@ -419,7 +419,7 @@ Script "SoF_Player" (void)
 		}
 		else
 		{
-			if(ClassifyActor(0) & ACTOR_ALIVE)
+			if(!isDead(0))
 				currentplayeraction = 0;
 				
 			Delay(1);
@@ -733,20 +733,36 @@ Script "SoF_HandleLean" (void)
 			if(leanCounter < 0)
 			{
 				//SetInventory("SoF_Leaning",2);
-				leanCounter++;
-				doLean(4.0);
+				if (isDead(0))
+				{
+					doLean(4.0 * -leanCounter);
+					leanCounter = 0;
+				} else {
+					leanCounter++;
+					doLean(4.0);
+				}
 			}
 			else if(leanCounter > 0)
 			{
 				//SetInventory("SoF_Leaning",1);
-				leanCounter--;
-				doLean(-4.0);
+				if (isDead(0))
+				{
+					doLean(-4.0 * leanCounter);
+					leanCounter = 0;
+				} else {
+					leanCounter--;
+					doLean(-4.0);
+				}
 			}
 			else { SetPlayerProperty(0,0,PROP_FROZEN); TakeInventory("SoF_FullyLeaned",1); }
 		}
 		
-		if(buttons & BT_ATTACK) SetInventory("SoF_Shooting",1);
-		else SetInventory("SoF_Shooting",0);
+		if (!isDead(0))
+		{
+			if(buttons & BT_ATTACK) SetInventory("SoF_Shooting",1);
+			else SetInventory("SoF_Shooting",0);
+		}
+		else { SetInventory("SoF_Shooting", 0); }
 		
 		SetInventory("SoF_LeanCounter",5+(leanCounter/2));
 		
