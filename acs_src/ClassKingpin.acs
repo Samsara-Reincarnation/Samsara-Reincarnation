@@ -922,12 +922,15 @@ Script "Kingpin_BulletDamage" (int damage)
 
 Script "Kingpin_PawnOMatic_Initiate" (void) Net
 {
+	if (isDead(0)) { terminate; }
+
 	if(!CheckInventory("Kingpin_PawnOMaticOpen"))
 	{
 		if(!CheckInventory("CompendiumOpened"))
 		{
 			int sTid = uniqueTid();
 			GiveInventory("Kingpin_PawnOMaticOpen",1);
+			SetInventory("Kingpin_PawnOMaticExiting",0);
 			SetPlayerProperty(0,1,PROP_TOTALLYFROZEN);
 			SpawnForced("Kingpin_PawnOMaticSoundController",0,0,0,sTid);
 			SetInventory("Kingpin_PawnOMaticSoundTid",sTid);
@@ -938,6 +941,7 @@ Script "Kingpin_PawnOMatic_Initiate" (void) Net
 	else
 	{
 		TakeInventory("Kingpin_PawnOMaticOpen",1);
+		GiveInventory("Kingpin_PawnOMaticExiting",1);
 		SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
 	}
 }
@@ -1175,11 +1179,11 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 	int triggerItems;
 	int modSelected;
 	int bulkCounter = 1;
-	int welcomed = false;
+	bool welcomed = false;
 	int messageDialog = 0;
 	//Variables related to bulk buying
 	int maxBulkBuy, itemLimit;
-	while(CheckInventory("Kingpin_PawnOMaticOpen"))
+	while(CheckInventory("Kingpin_PawnOMaticOpen") && !isDead(0))
 	{
 		//Draw the default stuff for pawn-o-matic. Also, get input
 		int playerInputX = GetPlayerInput(-1,INPUT_SIDEMOVE);
@@ -1367,6 +1371,7 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 						if(currentMenu == 8) 
 						{
 							TakeInventory("Kingpin_PawnOMaticOpen",1);
+							GiveInventory("Kingpin_PawnOMaticExiting",1);
 							SetPlayerProperty(0,0,PROP_TOTALLYFROZEN);
 							break;
 						}		
@@ -1780,10 +1785,16 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 	}
 	
 	// Play the exit sound and stop other noises
-	PlaySound(sTid,"PawnOMatic/Exit",CHAN_VOICE,1.0,0,ATTN_NONE);
+	if (CheckInventory("Kingpin_PawnOMaticExiting"))
+	{
+		PlaySound(sTid,"PawnOMatic/Exit",CHAN_VOICE,1.0,0,ATTN_NONE);
+		SetInventory("Kingpin_PawnOMaticExiting", 0);
+	}
+	else { StopSound(sTid,CHAN_VOICE); }
 	StopSound(sTid,CHAN_5);
 	StopSound(sTid,CHAN_6);
 	Thing_Remove(sTid);
+	SetInventory("Kingpin_PawnOMaticOpen",0); // player got killed
 	SetInventory("Kingpin_PawnOMaticSoundTid",0);
 	RemoveMessages(50,63);
 }
