@@ -143,7 +143,7 @@ Script "Q2HUDLowHealth" (void)
 		{ GiveInventory("HUDLowHP",1); Delay(20); TakeInventory("HUDLowHP",1); Delay(20); }
 	}
 }
-Script "Q2HUDHPDown" Enter
+Script "Q2HUDHPDown" (void)
 {
 	Int HP1,HP2;
 	While(CheckInventory("BittermanClass"))
@@ -155,7 +155,7 @@ Script "Q2HUDHPDown" Enter
 		{ GiveInventory("HUDHPDown",1); Delay(6); TakeInventory("HUDHPDown",1);}
 	}
 }
-Script "Q2HUDArmorDown" Enter
+Script "Q2HUDArmorDown" (void)
 {
 	Int A1,A2;
 	While(CheckInventory("BittermanClass"))
@@ -167,25 +167,30 @@ Script "Q2HUDArmorDown" Enter
 		{ GiveInventory("HUDArmorDown",1); Delay(6); TakeInventory("HUDArmorDown",1);}
 	}
 }
-Script "Q2JumpCheck" Enter
+Script "Q2JumpCheck" (void)
 {
 	While(CheckInventory("BittermanClass"))
 	{
 		While(GetActorVelZ(0)==0)
 		{
 			Delay(1);
-			If((GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP) && GetActorVelZ(0)>1.0)
+
+			if (!CheckInventory("BittermanClass")) { break; }
+
+			If((GetPlayerInput(-1,INPUT_BUTTONS) & BT_JUMP) && GetActorVelZ(0)>1.0 && !isDead(0))
 			SetActorState(0,"Jump");
 		}
 		Delay(1);
 	}
 }
-Script "Q2CrouchCheck" Enter
+Script "Q2CrouchCheck" (void)
 {
 	While(CheckInventory("BittermanClass"))
 	{
 		While(isCrouching(28.0))
 		{
+			if (!CheckInventory("BittermanClass")) { break; }
+
 			GiveInventory("IsCrouching",1);
 			TakeInventory("IsNotCrouching",1);
 			Delay(1);
