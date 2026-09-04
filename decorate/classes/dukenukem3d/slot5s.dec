@@ -1,6 +1,5 @@
 actor SamsaraDukeIncineratorFire : Boolean {}
 actor SamsaraDukeHasIncinerator : Boolean {}
-actor SamsaraDukeIncineratorFireToken : TemporaryCounter { Inventory.MaxAmount 2 }
 actor SamsaraDuke_IsBurning : TemporaryBoolean {} // we'll do it like this for now
 
 actor "Duke3D_Incinerator" : DukeWeapon
@@ -159,13 +158,14 @@ actor "Duke3D_Incinerator" : DukeWeapon
 		TNT1 A 0 A_JumpIfInventory("SamsaraCurrentWaterLevel",0,"FlashAUnderwater")
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_Light1
-		TNT1 A 0 A_TakeInventory("SamsaraDukeIncineratorFireToken")
 		DUIN I 1 Bright A_PlaySound("duke/incinerator",CHAN_WEAPON)
+		TNT1 A 0 A_TakeInventory("SamsaraTakingAmmo")
 		DUIN J 1 Bright A_GiveInventory("SamsaraDukeIncineratorAttackHandler")
 		DUIN K 1 Bright
 		DUIN L 1 Bright A_Light0
 		TNT1 A 0 A_GiveInventory("SamsaraDukeIncineratorAttackHandler")
 		DUIN MNO 1 Bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
+		TNT1 A 0 A_GiveInventory("SamsaraTakingAmmo")
 		TNT1 A 0 A_GiveInventory("SamsaraDukeIncineratorAttackHandler")
 		DUIN STIJKL 1 Bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
 		DUIN MN 1 Bright A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
@@ -220,24 +220,18 @@ actor SamsaraDukeIncineratorAttackHandler : Trigger
 {
     States
     {
-      // Ammo checking/taking stuff
       Pickup:
-		TNT1 A 0 A_JumpIfInventory("SamsaraDukeIncineratorFireToken",1,1)
-		Goto ConsumeAmmo
-		TNT1 A 0 A_GiveInventory("SamsaraDukeIncineratorFireToken")
-		Goto PickupAttack
-	  ConsumeAmmo:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
         stop
+        TNT1 A 0 A_JumpIfInventory("SamsaraTakingAmmo",1,1)
+        goto PickupAttack
         TNT1 A 0 A_TakeInventory("RocketAmmo",1)
-		TNT1 A 0 A_GiveInventory("SamsaraDukeIncineratorFireToken")
         goto PickupAttack
 
       // Attack stuff
       PickupAttack:
-        //TNT1 A 0 A_PlaySound("duke/incinerator",CHAN_WEAPON)
-		TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"PickupAttackIgnoreWater")
+        TNT1 A 0 A_JumpIfInventory("SamsaraCanFireWeaponsUnderwater",1,"PickupAttackIgnoreWater")
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
       PickupAttackDM:
@@ -247,11 +241,11 @@ actor SamsaraDukeIncineratorAttackHandler : Trigger
       PickupAttackCoop:
         TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjCoop",random(-3,3),false,5,1)
         stop
-		
-	  PickupAttackIgnoreWater:
-	    TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoopIgnoreWater")
+
+      PickupAttackIgnoreWater:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoopIgnoreWater")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoopIgnoreWater")
-	  PickupAttackDMIgnoreWater:
+      PickupAttackDMIgnoreWater:
         TNT1 A 0 A_FireCustomMissile("Duke3DIncineratorProjIgnoreWater",random(-3,3),false,5,1)
         stop
 
@@ -284,7 +278,7 @@ actor Duke3DIncineratorProj
 	{
 		Spawn:
 			//Add some variety to each projectile
-			DUIF L 0 NoDelay A_SetGravity(frandom(0.25,0.35))
+			DUIF L 0 Bright NoDelay A_SetGravity(frandom(0.25,0.35))
 			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			DUIF L 0 Bright A_JumpIf(waterlevel >= 2, "FuckWater")
 			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
@@ -365,7 +359,7 @@ actor Duke3DIncineratorProjIgnoreWater : Duke3DIncineratorProj
 	{
 		Spawn:
 			//Add some variety to each projectile
-			DUIF L 0 NoDelay A_SetGravity(frandom(0.25,0.35))
+			DUIF L 0 Bright NoDelay A_SetGravity(frandom(0.25,0.35))
 			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			DUIF L 1 Bright Light("DUKE3D_DEVASTATOR_EXPLOSION_X1")
 			DUIF L 0 Bright A_SpawnItemEx("IncineratorTrailL",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
