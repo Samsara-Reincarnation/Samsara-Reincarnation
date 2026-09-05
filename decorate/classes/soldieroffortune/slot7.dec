@@ -420,6 +420,7 @@ Actor SoF_MPG_PainExtender : TemporaryBoolean {}
 
 Actor SoF_MPGLaserProjectile : FastProjectile
 {
+    Args 12
     Height 2
     Radius 1
     Damage (0)
@@ -445,7 +446,7 @@ Actor SoF_MPGLaserProjectile : FastProjectile
 
         XDeath:
             TNT1 A 0 ACS_NamedExecuteWithResult("SoF_BloodGenerator_Offsets")
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",ACS_NamedExecuteWithResult("SoF_Decorate",14))
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", ACS_NamedExecuteWithResult("SoF_Decorate", 14, args[0]))
             TNT1 A 0 A_GiveInventory("SoF_BloodGenerator",1,AAPTR_TRACER)
             goto DrawBeam
 
