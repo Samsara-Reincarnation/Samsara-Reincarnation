@@ -386,95 +386,24 @@ actor RTCW_SnooperMagazine : Ammo
 
 Actor RTCW_SnooperTracer : RTCW_Tracer
 {
+    Args 100, 0
 	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,0)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_SnooperTracerCoop : RTCW_SnooperTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_SnooperTracerDM : RTCW_Tracer
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",70,0)
-			Goto Super::Death
+Actor RTCW_SnooperTracerDM : RTCW_SnooperTracer { Args 70, 0 }
 
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",70,0)
-			Goto Super::XDeath
-	}
-}
-
-Actor RTCW_SnooperTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,1)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_SnooperTracerSoundConsole : RTCW_SnooperTracer { Args 100, 1 }
 
 Actor RTCW_SnooperTracerCoopSoundConsole : RTCW_SnooperTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_SnooperTracerDMSoundConsole : RTCW_TracerSoundConsole
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",70,1)
-			Goto Super::Death
+Actor RTCW_SnooperTracerDMSoundConsole : RTCW_SnooperTracer { Args 70, 1 }
 
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",70,1)
-			Goto Super::XDeath
-	}
-}
-
-Actor RTCW_SnooperTracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_SnooperTracerSoundET : RTCW_SnooperTracer { Args 100, 2 }
 
 Actor RTCW_SnooperTracerCoopSoundET : RTCW_SnooperTracerSoundET { +THRUSPECIES Species "Player" }
 
-Actor RTCW_SnooperTracerDMSoundET : RTCW_TracerSoundET
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",70,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",70,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_SnooperTracerDMSoundET : RTCW_SnooperTracer { Args 70, 2 }
 
 actor RTCW_SnooperVision : PowerLightAmp { Powerup.Color InverseMap }

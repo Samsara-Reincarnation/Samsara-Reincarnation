@@ -429,87 +429,22 @@ actor RTCW_MauserMagazine : Ammo
 //Dunno what it was, but I think this is a fair value
 Actor RTCW_MauserTracer : RTCW_Tracer
 {
+    Args 150, 0
 	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",150,0)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",150,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_MauserTracerCoop : RTCW_MauserTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_MauserTracerDM : RTCW_Tracer
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",140,0)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",140,0)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_MauserTracerDM : RTCW_MauserTracer { Args 140, 0 }
 
-Actor RTCW_MauserTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",150,1)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",150,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_MauserTracerSoundConsole : RTCW_MauserTracer { Args 150, 1 }
 
 Actor RTCW_MauserTracerCoopSoundConsole : RTCW_MauserTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_MauserTracerDMSoundConsole : RTCW_TracerSoundConsole
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",140,1)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",140,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_MauserTracerDMSoundConsole : RTCW_MauserTracer { Args 140, 1 }
 
-Actor RTCW_MauserTracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",150,2)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",150,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_MauserTracerSoundET : RTCW_MauserTracer { Args 150, 2 }
 
 Actor RTCW_MauserTracerCoopSoundET : RTCW_MauserTracerSoundET { +THRUSPECIES Species "Player" }
 
-Actor RTCW_MauserTracerDMSoundET : RTCW_TracerSoundET
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",140,2)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",140,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_MauserTracerDMSoundET : RTCW_MauserTracer { Args 140, 2 }

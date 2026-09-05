@@ -132,6 +132,7 @@ actor SamsaraRTCWKickAttackHandler : Trigger
 
 Actor RTCW_Tracer : FastProjectile
 {
+    Args 0
 	Height 4
 	Radius 2
 	Speed 256
@@ -155,7 +156,7 @@ Actor RTCW_Tracer : FastProjectile
 			RW00 A 1
 			Loop
 		Crash:
-			//TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 0, 0),8,!XF_HURTSOURCE,0,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0], args[1])
 		Death:
 		DeathFinish:
 			TNT1 A 0 A_Jump(248,6)
@@ -167,7 +168,7 @@ Actor RTCW_Tracer : FastProjectile
 			Stop
 		XDeath:
 			TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_TRACER,AAPTR_TARGET,AAPTR_TARGET)
-			//TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 0, 0),8,!XF_HURTSOURCE,0,8)
+			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0], args[1])
 			//TNT1 A 0 A_PlaySound("RTCW/BulletHitFlesh",CHAN_BODY,0.5)
 		XDeathFinish:
 			TNT1 A 0 A_FaceTarget(0,0)
@@ -176,38 +177,6 @@ Actor RTCW_Tracer : FastProjectile
 			TNT1 A 1
 			Stop
 	}
-}
-
-Actor RTCW_TracerSoundConsole : RTCW_Tracer
-{
-	/*States
-	{
-		Crash:
-			//TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 0, 1),8,!XF_HURTSOURCE,0,8)
-			goto DeathFinish
-
-		XDeath:
-			TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_TRACER,AAPTR_TARGET,AAPTR_TARGET)
-			//TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 0, 1),8,!XF_HURTSOURCE,0,8)
-			//TNT1 A 0 A_PlaySound("RTCWConsole/BulletHitFlesh",CHAN_BODY,0.5)
-			goto XDeathFinish
-	}*/
-}
-
-Actor RTCW_TracerSoundET : RTCW_Tracer
-{
-	/*States
-	{
-		Crash:
-			//TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 0, 2),8,!XF_HURTSOURCE,0,8)
-			goto DeathFinish
-
-		XDeath:
-			TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_TRACER,AAPTR_TARGET,AAPTR_TARGET)
-			//TNT1 A 0 A_Explode(CallACS("RTCW_BulletDamage", 0, 2),8,!XF_HURTSOURCE,0,8)
-			//TNT1 A 0 A_PlaySound("RTCWET/BulletHitFlesh",CHAN_BODY,0.5)
-			goto XDeathFinish
-	}*/
 }
 
 Actor RTCW_SmokePuff

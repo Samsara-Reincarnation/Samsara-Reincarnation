@@ -396,51 +396,16 @@ actor RTCW_StG44Magazine : Ammo
 //Was 19 damage
 Actor RTCW_StG44Tracer : RTCW_Tracer
 {
+    Args 15, 0
 	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",15,0)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",15,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_StG44TracerCoop : RTCW_StG44Tracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_StG44TracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",15,1)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",15,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_StG44TracerSoundConsole : RTCW_StG44Tracer { Args 15, 1 }
 
 Actor RTCW_StG44TracerCoopSoundConsole : RTCW_StG44TracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_StG44TracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",15,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",15,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_StG44TracerSoundET : RTCW_StG44Tracer { Args 15, 2 }
 
 Actor RTCW_StG44TracerCoopSoundET : RTCW_StG44TracerSoundET { +THRUSPECIES Species "Player" }

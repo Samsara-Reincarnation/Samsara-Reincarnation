@@ -505,50 +505,14 @@ actor RTCW_LugerMagazine : Ammo
 }
 
 //Was 6 damage, now 12
-Actor RTCW_LugerTracer : RTCW_Tracer
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",13,0)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",13,0)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_LugerTracer : RTCW_Tracer { Args 13, 0 }
 
 Actor RTCW_LugerTracerCoop : RTCW_LugerTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_LugerTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",13,1)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",13,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_LugerTracerSoundConsole : RTCW_LugerTracer { Args 13, 1 }
 
 Actor RTCW_LugerTracerCoopSoundConsole : RTCW_LugerTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_LugerTracerSoundET : RTCW_TracerSoundET
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",13,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",13,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_LugerTracerSoundET : RTCW_LugerTracer { Args 13, 2 }
 
 Actor RTCW_LugerTracerCoopSoundET : RTCW_LugerTracerSoundET { +THRUSPECIES Species "Player" }

@@ -613,52 +613,17 @@ actor RTCW_K43Grenade : Ammo
 
 Actor RTCW_K43Tracer : RTCW_Tracer
 {
+    Args 80, 0
 	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",80,0)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",80,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_K43TracerCoop : RTCW_K43Tracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_K43TracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",80,1)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",80,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_K43TracerSoundConsole : RTCW_K43Tracer { Args 80, 1 }
 
 Actor RTCW_K43TracerCoopSoundConsole : RTCW_K43TracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_K43TracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",80,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",80,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_K43TracerSoundET : RTCW_K43Tracer { Args 80, 2 }
 
 Actor RTCW_K43TracerCoopSoundET : RTCW_K43TracerSoundET { +THRUSPECIES Species "Player" }
 

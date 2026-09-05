@@ -1097,55 +1097,18 @@ actor RTCW_VenomMagazine : Ammo
 //Was 12, now 24
 Actor RTCW_VenomTracer : RTCW_Tracer
 {
+    Args 16, 0
 	DamageType "RTCWVenomBullet"
 	Tag "RTCWVenomBullet"
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16,0)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_VenomTracerCoop : RTCW_VenomTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_VenomTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	DamageType "RTCWVenomBullet"
-	Tag "RTCWVenomBullet"
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16,1)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_VenomTracerSoundConsole : RTCW_VenomTracer { Args 16, 1 }
 
 Actor RTCW_VenomTracerCoopSoundConsole : RTCW_VenomTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_VenomTracerSoundET : RTCW_TracerSoundET
-{
-	DamageType "RTCWVenomBullet"
-	Tag "RTCWVenomBullet"
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_VenomTracerSoundET : RTCW_VenomTracer { Args 16, 2 }
 
 Actor RTCW_VenomTracerCoopSoundET : RTCW_VenomTracerSoundET { +THRUSPECIES Species "Player" }
 

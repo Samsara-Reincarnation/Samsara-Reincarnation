@@ -349,47 +349,14 @@ actor RTCW_StenMagazine : Ammo
 }
 
 //Was 10 damage, now 20
-Actor RTCW_StenTracer : RTCW_Tracer
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",25,0)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",25,0)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_StenTracer : RTCW_Tracer { Args 25, 0 }
 
 Actor RTCW_StenTracerCoop : RTCW_StenTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_StenTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",25,1)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",25,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_StenTracerSoundConsole : RTCW_StenTracer { Args 25, 1 }
 
 Actor RTCW_StenTracerCoopSoundConsole : RTCW_StenTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_StenTracerSoundET : RTCW_TracerSoundET
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",25,2)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",25,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_StenTracerSoundET : RTCW_StenTracer { Args 25, 2 }
 
 Actor RTCW_StenTracerCoopSoundET : RTCW_StenTracerSoundET { +THRUSPECIES Species "Player" }

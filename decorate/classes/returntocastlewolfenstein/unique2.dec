@@ -362,49 +362,22 @@ actor RTCW_ShotgunMagazine : Ammo
 
 Actor RTCW_ShotgunTracer : RTCW_Tracer
 {
+    Args 14, 0
 	States
 	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",14,0)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",14,0)
-			Goto Super::XDeath
+      XDeath:
+        TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
+        goto Super::XDeath
 	}
 }
 
 Actor RTCW_ShotgunTracerCoop : RTCW_ShotgunTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_ShotgunTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",14,1)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",14,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_ShotgunTracerSoundConsole : RTCW_ShotgunTracer { Args 14, 1 }
 
 Actor RTCW_ShotgunTracerCoopSoundConsole : RTCW_ShotgunTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_ShotgunTracerSoundET : RTCW_TracerSoundET
-{
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",14,2)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("RTCW_Decorate",47)
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",14,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_ShotgunTracerSoundET : RTCW_ShotgunTracer { Args 14, 2 }
 
 Actor RTCW_ShotgunTracerCoopSoundET : RTCW_ShotgunTracerSoundET { +THRUSPECIES Species "Player" }
 

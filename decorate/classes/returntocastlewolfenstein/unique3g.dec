@@ -472,54 +472,18 @@ actor RTCW_BrowningMagazine : Ammo
 
 Actor RTCW_BrowningTracer : RTCW_Tracer
 {
-	+THRUGHOST
+    Args 36, 0
 	DamageType "RTCWVenomBullet"
 	Tag "RTCWVenomBullet"
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",36,0)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",36,0)
-			Goto Super::XDeath
-	}
+	+THRUGHOST
 }
 
 Actor RTCW_BrowningTracerCoop : RTCW_BrowningTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_BrowningTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	DamageType "RTCWVenomBullet"
-	Tag "RTCWVenomBullet"
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",36,1)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",36,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_BrowningTracerSoundConsole : RTCW_BrowningTracer { Args 36, 1 }
 
 Actor RTCW_BrowningTracerCoopSoundConsole : RTCW_BrowningTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_BrowningTracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	DamageType "RTCWVenomBullet"
-	Tag "RTCWVenomBullet"
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",36,2)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",36,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_BrowningTracerSoundET : RTCW_BrowningTracer { Args 36, 2 }
 
 Actor RTCW_BrowningTracerCoopSoundET : RTCW_BrowningTracerSoundET { +THRUSPECIES Species "Player" }

@@ -668,52 +668,17 @@ actor RTCW_M1GarandGrenade : Ammo
 
 Actor RTCW_M1GarandTracer : RTCW_Tracer
 {
+    Args 100, 0
 	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,0)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_M1GarandTracerCoop : RTCW_M1GarandTracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_M1GarandTracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,1)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_M1GarandTracerSoundConsole : RTCW_M1GarandTracer { Args 100, 1 }
 
 Actor RTCW_M1GarandTracerCoopSoundConsole : RTCW_M1GarandTracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_M1GarandTracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,2)
-			Goto Super::Death
-
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",100,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_M1GarandTracerSoundET : RTCW_M1GarandTracer { Args 100, 2 }
 
 Actor RTCW_M1GarandTracerCoopSoundET : RTCW_M1GarandTracerSoundET { +THRUSPECIES Species "Player" }
 

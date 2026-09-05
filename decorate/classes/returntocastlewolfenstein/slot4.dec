@@ -422,48 +422,16 @@ actor RTCW_FG42Magazine : Ammo
 //Was 15, now 40
 Actor RTCW_FG42Tracer : RTCW_Tracer
 {
+    Args 30, 0
 	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",30,0)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",30,0)
-			Goto Super::XDeath
-	}
 }
 
 Actor RTCW_FG42TracerCoop : RTCW_FG42Tracer { +THRUSPECIES Species "Player" }
 
-Actor RTCW_FG42TracerSoundConsole : RTCW_TracerSoundConsole
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",30,1)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",30,1)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_FG42TracerSoundConsole : RTCW_FG42Tracer { Args 30, 1 }
 
 Actor RTCW_FG42TracerCoopSoundConsole : RTCW_FG42TracerSoundConsole { +THRUSPECIES Species "Player" }
 
-Actor RTCW_FG42TracerSoundET : RTCW_TracerSoundET
-{
-	+THRUGHOST
-	States
-	{
-		Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",30,2)
-			Goto Super::Death
-		XDeath:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",30,2)
-			Goto Super::XDeath
-	}
-}
+Actor RTCW_FG42TracerSoundET : RTCW_FG42Tracer { Args 30, 2 }
 
 Actor RTCW_FG42TracerCoopSoundET : RTCW_FG42TracerSoundET { +THRUSPECIES Species "Player" }
