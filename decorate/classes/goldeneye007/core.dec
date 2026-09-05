@@ -77,7 +77,7 @@ Actor Goldfinger_VehiclePreference : TemporaryBoolean {}
 
 actor Goldeneye_BulletTracer : FastProjectile
 {
-    var int user_damage;
+    Args 0
     Projectile
     Radius 2
     Height 4
@@ -89,7 +89,6 @@ actor Goldeneye_BulletTracer : FastProjectile
     Alpha 0.5
     Decal "Goldeneye_BulletChip"
     +DONTBLAST
-    +FORCERADIUSDMG
     +HITTRACER
     +NODAMAGETHRUST
     +NOEXTREMEDEATH
@@ -112,7 +111,7 @@ actor Goldeneye_BulletTracer : FastProjectile
       XDeath:
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsets")
         TNT1 A 0 A_GiveInventory("GE_BloodGenerator",1,AAPTR_TRACER)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         TNT1 A 1 A_RearrangePointers(AAPTR_TRACER,AAPTR_NULL,AAPTR_NULL)
         stop
 
@@ -121,7 +120,7 @@ actor Goldeneye_BulletTracer : FastProjectile
       CrashFinish:
         TNT1 AAAAAAAA 0 A_SpawnItemEx("Goldeneye_Debris",random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-360,360),SXF_NOCHECKPOSITION)
         TNT1 A 0 A_SpawnItemEx("Goldeneye_BulletImpact_Smokeless",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         stop
     }
 }
@@ -201,7 +200,7 @@ Actor Goldeneye_BulletImpact_Smokeless : Goldeneye_BulletImpact
 
 actor Goldeneye_BulletPuff
 {
-    var int user_damage;
+    Args 0
     Radius 2
     Height 4
     Speed 0
@@ -211,7 +210,6 @@ actor Goldeneye_BulletPuff
     RenderStyle "Add"
     Alpha 0.5
     +DONTBLAST
-    +FORCERADIUSDMG
     +HITTRACER
     +NODAMAGETHRUST
     +NOEXTREMEDEATH
@@ -226,7 +224,7 @@ actor Goldeneye_BulletPuff
     States
     {
       Spawn:
-		TNT1 A 1 NoDelay ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+		TNT1 A 1 NoDelay ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
 	  Death:
 	  Crash:
 	  DeathFinish:
@@ -236,7 +234,7 @@ actor Goldeneye_BulletPuff
       XDeath:
 		TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraBloodGeneratorOffsets")
         TNT1 A 0 A_GiveInventory("GE_BloodGenerator",1,AAPTR_TRACER)
-		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         TNT1 A 1 A_RearrangePointers(AAPTR_TRACER,AAPTR_NULL,AAPTR_NULL)
         stop
     }

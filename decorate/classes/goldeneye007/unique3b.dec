@@ -186,6 +186,7 @@ actor SamsaraGoldenEyeWatchLaserAttackHandler : Trigger
 
 actor Goldeneye_LaserRay : Goldeneye_BulletTracer
 {
+    Args 5
     Speed 0
     RenderStyle "Translucent"
     States
@@ -195,19 +196,15 @@ actor Goldeneye_LaserRay : Goldeneye_BulletTracer
         stop
 
       XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",5)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         TNT1 A 0 A_SpawnItemEx("Goldeneye_BulletImpact",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         goto Death
-		
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",5)
-        goto Super::Crash
     }
 }
 
 actor Goldeneye_InvisibleRay : Goldeneye_BulletTracerThruGhost
 {
+    Args 5
     Speed 128
     States
     {
@@ -217,8 +214,7 @@ actor Goldeneye_InvisibleRay : Goldeneye_BulletTracerThruGhost
 
       Death:
       Crash:
-		TNT1 A 0 A_SetUserVar("user_damage",5)
-		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         TNT1 AAAAAAAA 0 A_SpawnItemEx("Goldeneye_Debris",random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-360,360),SXF_NOCHECKPOSITION)
       DeathFinish:
         TNT1 A 0 A_PlaySound("Goldeneye/Zap")
@@ -226,8 +222,7 @@ actor Goldeneye_InvisibleRay : Goldeneye_BulletTracerThruGhost
         stop
 
       XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",5)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         goto DeathFinish
     }
 }
@@ -244,8 +239,7 @@ actor Goldeneye_InvisibleRaySoundSource : Goldeneye_InvisibleRay
     {
       Death:
       Crash:
-		TNT1 A 0 A_SetUserVar("user_damage",5)
-		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+		TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         TNT1 AAAAAAAA 0 A_SpawnItemEx("Goldeneye_Debris",random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-1,1),random(-360,360),SXF_NOCHECKPOSITION)
       DeathFinish:
         TNT1 A 0 A_PlaySound("GoldeneyeSource/Zap")
@@ -253,8 +247,7 @@ actor Goldeneye_InvisibleRaySoundSource : Goldeneye_InvisibleRay
         stop
 
       XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",5)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         goto DeathFinish
     }
 }

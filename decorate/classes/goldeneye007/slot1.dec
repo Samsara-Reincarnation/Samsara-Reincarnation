@@ -595,7 +595,6 @@ actor Goldeneye_ThrowingKnivesAmmoIgnoreSkill : Goldeneye_ThrowingKnivesAmmo { +
 actor Goldeneye_KnifeProjectile
 {
     var int user_pitch;
-    var int user_damage;
     Projectile
     Radius 6
     Height 8
@@ -1055,15 +1054,13 @@ actor SamsaraGoldenEyeHuntingKnifeAttackHandler : Trigger
 
 actor Goldeneye_HuntingKnifeTracer : Goldeneye_SlapperTracer
 {
+    Args 50, 200, 1
     States
     {
     XDeath:
     Crash:
         TNT1 A 0 A_PlaySound("Goldeneye/HuntingKnife")
-    XDeathFinish:
-        TNT1 A 0 A_SetUserVar("user_damage",50)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,200)
-        goto Death
+        goto XDeathFinish
     }
 }
 
@@ -1080,10 +1077,7 @@ actor Goldeneye_HuntingKnifeTracerSoundSource : Goldeneye_HuntingKnifeTracer
     XDeath:
     Crash:
         TNT1 A 0 A_PlaySound("GoldeneyeSource/HuntingKnife")
-    XDeathFinish:
-        TNT1 A 0 A_SetUserVar("user_damage",50)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,200)
-        goto Death
+        goto XDeathFinish
     }
 }
 
@@ -1318,8 +1312,8 @@ actor Goldfinger_OddjobHatAmmo : Ammo
 
 actor Goldfinger_HatProjectile
 {
-    var int user_damage;
     Projectile
+    Args 250
     Radius 6
     Height 8
     Speed 20
@@ -1364,8 +1358,7 @@ actor Goldfinger_HatProjectile
         GE00 A 0 A_PlaySound("silence",CHAN_VOICE)
         GE00 A 0 A_StopSound(CHAN_VOICE)
         GE00 A 0 A_PlaySound("Goldeneye/HitBody",CHAN_VOICE)
-        GE00 A 0 A_SetUserVar("user_damage",250)
-        GE00 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage)
+        GE00 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
         goto SpawnLoop
 
       Death:
@@ -1707,15 +1700,13 @@ actor SamsaraGoldfingerGolfClubAttackHandler : Trigger
 
 actor Goldfinger_GolfClubTracer : Goldeneye_SlapperTracer
 {
+    Args 50, 200, 1
     States
     {
     XDeath:
     Crash:
         TNT1 A 0 A_PlaySound("Goldfinger/GolfClub")
-    XDeathFinish:
-        TNT1 A 0 A_SetUserVar("user_damage",50)
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",user_damage,1,200)
-        goto Death
+        goto XDeathFinish
     }
 }
 

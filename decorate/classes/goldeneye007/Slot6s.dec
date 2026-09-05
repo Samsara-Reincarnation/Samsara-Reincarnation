@@ -566,7 +566,6 @@ actor Goldeneye_CougarDualMagazine : Ammo
 
 actor Goldeneye_CougarTracer : FastProjectile
 {
-    var int user_damage;
     Projectile
     Radius 2
     Height 4
@@ -601,34 +600,13 @@ actor Goldeneye_CougarTracer : FastProjectile
     }
 }
 
-Actor Goldeneye_CougarPuff : Goldeneye_BulletPuff
-{
-    States
-    {
-      Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        Goto Super::Spawn
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        Goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        goto Super::Crash
-    }
-}
-
-actor Goldeneye_CougarPuffCoop : Goldeneye_CougarPuff
-{
-	//+ALLOWTHRUFLAGS // doesn't exist in zandronum yet
-	+MTHRUSPECIES
-}
-
 actor Goldeneye_CougarTracerCoop : Goldeneye_CougarTracer
 {
     Species "Player"
     +THRUSPECIES
 }
+
+actor Goldeneye_CougarPuff : Goldeneye_BulletPuff { Args 100 }
 
 actor Goldeneye_CougarTracerSoundSource : Goldeneye_CougarTracer
 {
@@ -649,6 +627,12 @@ actor Goldeneye_CougarTracerCoopSoundSource : Goldeneye_CougarTracerSoundSource
 {
     Species "Player"
     +THRUSPECIES
+}
+
+actor Goldeneye_CougarPuffCoop : Goldeneye_CougarPuff
+{
+	//+ALLOWTHRUFLAGS // doesn't exist in zandronum yet
+	+MTHRUSPECIES
 }
 
 // Silver PP7
@@ -1454,22 +1438,7 @@ actor Goldeneye_SilverPP7DualMagazine : Ammo
     +IGNORESKILL
 }
 
-Actor Goldeneye_SilverPP7Puff : Goldeneye_BulletPuff
-{
-    States
-    {
-      Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SetUserVar("user_damage",80)
-        Goto Super::Spawn
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",80)
-        Goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",80)
-        goto Super::Crash
-    }
-}
+Actor Goldeneye_SilverPP7Puff : Goldeneye_BulletPuff { Args 80 }
 
 actor Goldeneye_SilverPP7PuffCoop : Goldeneye_SilverPP7Puff
 {
@@ -2256,18 +2225,7 @@ actor Goldeneye_ArabahViperDualMagazine : Ammo
     +IGNORESKILL
 }
 
-actor Goldeneye_ArabahViperTracer : Goldeneye_BulletTracer
-{
-    States
-    {
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        goto Super::Crash
-    }
-}
+actor Goldeneye_ArabahViperTracer : Goldeneye_BulletTracer { Args 100 }
 
 actor Goldeneye_ArabahViperTracerCoop : Goldeneye_ArabahViperTracer
 {
@@ -2275,18 +2233,7 @@ actor Goldeneye_ArabahViperTracerCoop : Goldeneye_ArabahViperTracer
     +THRUSPECIES
 }
 
-actor Goldeneye_ArabahViperTracerSoundSource : Goldeneye_BulletTracerSoundSource
-{
-    States
-    {
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        goto Super::Crash
-    }
-}
+actor Goldeneye_ArabahViperTracerSoundSource : Goldeneye_BulletTracerSoundSource { Args 100 }
 
 actor Goldeneye_ArabahViperTracerCoopSoundSource : Goldeneye_ArabahViperTracerSoundSource
 {
@@ -2857,22 +2804,7 @@ actor Goldfinger_M1GarandDualMagazine : Ammo
     +IGNORESKILL
 }
 
-Actor Goldfinger_M1GarandPuff : Goldeneye_BulletPuff
-{
-    States
-    {
-      Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SetUserVar("user_damage",85)
-        Goto Super::Spawn
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",85)
-        Goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",85)
-        goto Super::Crash
-    }
-}
+Actor Goldfinger_M1GarandPuff : Goldeneye_BulletPuff { Args 85 }
 
 actor Goldfinger_M1GarandPuffCoop : Goldfinger_M1GarandPuff
 {
@@ -3445,22 +3377,7 @@ actor Goldfinger_Kar98kDualMagazine : Ammo
     +IGNORESKILL
 }
 
-Actor Goldfinger_Kar98kPuff : Goldeneye_BulletPuff
-{
-    States
-    {
-      Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        Goto Super::Spawn
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        Goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",100)
-        goto Super::Crash
-    }
-}
+Actor Goldfinger_Kar98kPuff : Goldeneye_BulletPuff { Args 100 }
 
 actor Goldfinger_Kar98kPuffCoop : Goldfinger_Kar98kPuff
 {

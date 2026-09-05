@@ -360,7 +360,6 @@ actor SamsaraGoldenEyeMoonrakerLaserSwitchSoundPlayer : Trigger
 
 actor Goldeneye_MoonrakerRay : FastProjectile
 {
-    var int user_damage;
     Projectile
     Radius 2
     Height 4
@@ -396,23 +395,7 @@ actor Goldeneye_MoonrakerRay : FastProjectile
     }
 }
 
-Actor Goldeneye_MoonrakerPuff : Goldeneye_BulletPuff
-{
-	Damage (25)
-    States
-    {
-      Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SetUserVar("user_damage",25)
-        Goto Super::Spawn
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",25)
-        Goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",25)
-        goto Super::Crash
-    }
-}
+Actor Goldeneye_MoonrakerPuff : Goldeneye_BulletPuff { Args 25 }
 
 actor Goldeneye_MoonrakerPuffCoop : Goldeneye_MoonrakerPuff
 {
@@ -750,7 +733,6 @@ actor SamsaraGoldfingerLaserDualAttackHandler : Trigger
 
 actor Goldfinger_LaserRay : FastProjectile
 {
-    var int user_damage;
     Projectile
     Radius 2
     Height 4

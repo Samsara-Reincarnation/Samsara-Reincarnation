@@ -778,18 +778,7 @@ actor Goldeneye_GoldPP7DualMagazine : Ammo
     +IGNORESKILL
 }
 
-actor Goldeneye_GoldPP7Tracer : Goldeneye_BulletTracer
-{
-    States
-    {
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        goto Super::Crash
-    }
-}
+actor Goldeneye_GoldPP7Tracer : Goldeneye_BulletTracer { Args 1000 }
 
 actor Goldeneye_GoldPP7TracerCoop : Goldeneye_GoldPP7Tracer
 {
@@ -797,18 +786,7 @@ actor Goldeneye_GoldPP7TracerCoop : Goldeneye_GoldPP7Tracer
     +THRUSPECIES
 }
 
-actor Goldeneye_GoldPP7TracerSoundSource : Goldeneye_BulletTracerSoundSource
-{
-    States
-    {
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        goto Super::Crash
-    }
-}
+actor Goldeneye_GoldPP7TracerSoundSource : Goldeneye_BulletTracerSoundSource { Args 1000 }
 
 actor Goldeneye_GoldPP7TracerCoopSoundSource : Goldeneye_GoldPP7TracerSoundSource
 {
@@ -1339,22 +1317,7 @@ actor Goldfinger_GoldMagnumDualMagazine : Ammo
     +IGNORESKILL
 }
 
-Actor Goldfinger_GoldMagnumPuff : Goldeneye_BulletPuff
-{
-    States
-    {
-      Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        Goto Super::Spawn
-      XDeath:
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        Goto Super::XDeath
-	  Crash:
-        TNT1 A 0 A_SetUserVar("user_damage",1000)
-        goto Super::Crash
-    }
-}
+Actor Goldfinger_GoldMagnumPuff : Goldeneye_BulletPuff { Args 1000 }
 
 actor Goldfinger_GoldMagnumPuffCoop : Goldfinger_GoldMagnumPuff
 {
