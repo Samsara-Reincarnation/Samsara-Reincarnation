@@ -1690,10 +1690,9 @@ actor HLSniperCounter : Ammo
     +IGNORESKILL
 }
 
-Actor HLM40A1Bullet : HLBullet
+Actor HLM40A1Bullet : HLBulletThruGhost
 {
     Args 150
-    +THRUGHOST
     States
     {
       Spawn:
@@ -1709,41 +1708,39 @@ actor HLM40A1BulletCoop : HLM40A1Bullet
     +THRUSPECIES
 }
 
-actor HLM40A1Puff : HLBulletPuff
+actor HLM40A1Puff : HLBulletPuffThruGhost
 {
     Args 150
     +NODAMAGETHRUST
     +NOTIMEFREEZE
     +PUFFGETSOWNER
     +HITTRACER
-    +THRUGHOST
     States
     {
-        Spawn:
-            TNT1 A 0
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
-            Goto Super::Spawn
+      Spawn:
+        TNT1 A 0
+      XDeath:
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
+        goto Super::Spawn
     }
 }
 
 actor HLM40A1PuffCoop : HLM40A1Puff { +MTHRUSPECIES }
 
-actor HLM40A1PuffZoomed : HLBulletPuff
+actor HLM40A1PuffZoomed : HLBulletPuffThruGhost
 {
     Args 150
     +NODAMAGETHRUST
     +NOTIMEFREEZE
     +PUFFGETSOWNER
     +HITTRACER
-    +THRUGHOST
     States
     {
-        Spawn:
-            TNT1 A 0
-        XDeath:
-            TNT1 A 1 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
-            stop
+      Spawn:
+        TNT1 A 0
+      XDeath:
+        TNT1 A 1 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
+        stop
     }
 }
 
