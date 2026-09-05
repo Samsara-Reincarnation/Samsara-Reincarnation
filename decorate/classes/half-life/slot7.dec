@@ -938,6 +938,7 @@ Actor HLEgonKiller : FastProjectile
     +CANNOTPUSH
     +NODAMAGETHRUST
     +DONTBLAST
+    Args 35
     Speed 300
     Radius 3
     Height 6
@@ -951,7 +952,7 @@ Actor HLEgonKiller : FastProjectile
         Loop
     Crash:
     XDeath:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",35)
+        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage", args[0])
     Death:
         TNT1 A 0 A_SpawnItemEx("HLEgonPuff",0,0,0,0,0,0,0,SXF_CLIENTSIDE|SXF_NOCHECKPOSITION)
         TNT1 A 2 ACS_NamedExecuteWithResult("HL2678",1)
@@ -961,16 +962,7 @@ Actor HLEgonKiller : FastProjectile
 
 Actor HLEgonKiller_Coop : HLEgonKiller { Species "Player" +THRUSPECIES +DONTHARMCLASS +DONTHARMSPECIES +MTHRUSPECIES }
 
-Actor HLEgonKiller_DM : HLEgonKiller
-{
-    States
-    {
-    Crash:
-    XDeath:
-        TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",20)
-        goto Death
-    }
-}
+Actor HLEgonKiller_DM : HLEgonKiller { Args 20 }
 
 Actor HLEgonKillerPuff
 {

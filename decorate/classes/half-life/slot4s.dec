@@ -371,31 +371,15 @@ actor HLUziCounter : Ammo
     +IGNORESKILL
 }
 
-Actor HLUziBullet : HLBullet {
-    +THRUGHOST
-    Damage (0)
+Actor HLUziBullet : HLBullet
+{
+    Args 16
     Scale 0.5
-    States
-    {
-        Crash:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::Death
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::XDeath
-    }
+    +THRUGHOST
 }
-Actor HLUziBulletCoop : HLBulletCoop {
-    +THRUGHOST
-    Damage (0)
-    Scale 0.5
-    States
-    {
-        Crash:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::Death
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::XDeath
-    }
+
+Actor HLUziBulletCoop : HLUziBullet
+{
+    Species "Player"
+    +THRUSPECIES
 }

@@ -505,33 +505,17 @@ actor HLMP5Counter : Ammo
     +IGNORESKILL
 }
 
-Actor HLMP5Bullet : HLBullet {
-    +THRUGHOST
-    Damage (0)
+Actor HLMP5Bullet : HLBullet
+{
+    Args 10
     Scale 0.5
-    States
-    {
-        Crash:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",10)
-            Goto Super::Death
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",10)
-            Goto Super::XDeath
-    }
+    +THRUGHOST
 }
-Actor HLMP5BulletCoop : HLBulletCoop {
-    +THRUGHOST
-    Damage (0)
-    Scale 0.5
-    States
-    {
-        Crash:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",10)
-            Goto Super::Death
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",10)
-            Goto Super::XDeath
-    }
+
+Actor HLMP5BulletCoop : HLMP5Bullet
+{
+    Species "Player"
+    +THRUSPECIES
 }
 
 Actor HLMP5Grenade

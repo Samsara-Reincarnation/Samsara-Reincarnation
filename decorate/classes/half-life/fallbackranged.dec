@@ -672,32 +672,12 @@ actor HL9mmCounter : Ammo
     +IGNORESKILL
 }
 
-Actor HL9mmBullet : HLBullet
-{
-    Damage (0)
-    States
-    {
-        Crash:
-			TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::Death
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::XDeath
-    }
-}
+Actor HL9mmBullet : HLBullet { Args 16 }
 
-Actor HL9mmBulletCoop : HLBulletCoop
+Actor HL9mmBulletCoop : HL9mmBullet
 {
-    Damage (0)
-    States
-    {
-        Crash:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::Death
-        XDeath:
-            TNT1 A 0 ACS_NamedExecuteWithResult("ScriptedBulletDamage",16)
-            Goto Super::XDeath
-    }
+    Species "Player"
+    +THRUSPECIES
 }
 
 Actor HL9MMMuzzleFlash
