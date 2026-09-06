@@ -1730,11 +1730,22 @@ Script "Kingpin_PawnOMatic" (int playerNum, int sTid) Net
 									if(bulkCounter > 0)
 									{
 										TakeInventory("Kingpin_Cash",pawnOMaticItemPrices[currentMenu-2][currentMenuItem] * bulkCounter);
-									
+
+										str actualammotogive = "Placeholder";
+
+                                        // [tv50] lazy check
+										if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "Clip")) { actualammotogive = "Ammo1IgnoreSkill"; }
+										else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "Shell")) { actualammotogive = "Ammo2IgnoreSkill"; }
+										else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "RocketAmmo")) { actualammotogive = "Ammo3IgnoreSkill"; }
+										else if (!StrCmp(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0], "Cell")) { actualammotogive = "Ammo4IgnoreSkill"; }
+
 										GiveInventory("SamsaraPickupAndShutUp",1);
 										//Looks like I will need a for loop for things like health
-										for(int give = 0; give < bulkCounter; give++) 
-											GiveInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0],1);
+										for(int give = 0; give < bulkCounter; give++)
+										{
+											if (StrCmp(actualammotogive, "Placeholder")) { GiveInventory(actualammotogive,1); }
+											else { GiveInventory(pawnOMaticItemOptions[currentMenu-3][currentMenuItem-1][0],1); }
+										}
 										TakeInventory("SamsaraPickupAndShutUp",INTMAX);
 										
 										messageDialog = random(0,2);
