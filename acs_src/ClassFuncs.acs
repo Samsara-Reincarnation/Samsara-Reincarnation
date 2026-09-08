@@ -107,77 +107,89 @@ script "GlobalRecoil" (int duration, int intensity, int halfdampen, int forced) 
 //Script that will determine the necessary damage to inflict
 Script "ScriptedBulletDamage" (int idamage, int type, int arg2)
 {
-	//If the damage called is 0, "this script can fuck off" - Vappy
-	if(idamage == 0) terminate;
+    //If the damage called is 0, "this script can fuck off" - Vappy
+    if(idamage == 0) terminate;
 
-	//Damage value that will be applied
-	int damage = 0;
-	
-	//Generate new tid for the projectile
-	int projTid = UniqueTid();
-	Thing_ChangeTid(0,projTid);
-	
-	//Get the current tid of the monster and generate a new one
-	SetActivator(0,AAPTR_TRACER);
-	int myTid = ActivatorTid();
-	int newTid = UniqueTid();
+    //Damage value that will be applied
+    int damage = 0;
 
-	//Now assign the monster a new temporary tid
-	//We need to actually make sure unique bosses that do specials actually perform them
-	if (myTid != 0 && ThingCount(T_NONE, myTid) == 1) { newTid = myTid; }
-	else { Thing_ChangeTid(0, newTid); }
-	
-	//Get the activator's player class
-	SetActivator(projTid,AAPTR_TARGET);
-	int pClass = PlayerClass(0);
-	
-	//Set the tid back to the projectile
-	SetActivator(projTid);
+    //Store PAINLESS flag
+    bool projHasPainless = CheckFlag(0, "PAINLESS");
 
-	//Get the amount of damage to do based on the class script
-	switch(pClass)
-	{
-		case CLASS_HALFLIFE:
-		case CLASS_OUTLAWS: //Would be the exact same script
-			damage = ACS_NamedExecuteWithResult("HalfLife_BulletDamage",idamage);
-			break;
-		case CLASS_GOLDENEYE:
-			if (type >= 1) { damage = ACS_NamedExecuteWithResult("Goldeneye_SlapperDamage",idamage,arg2); }
-			else { damage = ACS_NamedExecuteWithResult("BondHitBox",idamage); }
-			break;
-		case CLASS_UNREAL:
-			damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, arg2);
-			break;
-		case CLASS_RTCW:
-			if (type >= 3) { damage = ACS_NamedExecuteWithResult("RTCW_KnifeDamage",0,idamage,arg2); }
-			else if (type == 2) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,2); }
-			else if (type == 1) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,1); }
-			else { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage); }
-			break;
-		case CLASS_DEUSEX:
-			if (type >= 1) { damage = ACS_NamedExecuteWithResult("DeusEx_BackDamage", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", arg2, idamage)); }
-			else { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", arg2, idamage)); }
-			break;
-		case CLASS_KINGPIN:
-			damage = ACS_NamedExecuteWithResult("Kingpin_BulletDamage",idamage);
-			break;
-		case CLASS_SOF:
-			damage = ACS_NamedExecuteWithResult("SoF_BulletDamage",idamage);	
-			break;
-	}
-	
-	//Now damage the actor as the projectile
-	SetActivator(projTid,AAPTR_TARGET);
-	
-	//In Zandronum netplay, enemies can gib even if the puff has NOEXTREMEDEATH, this is here to check if it should just simply kill the enemy
-	//We're using NameTag as Zandronum doesn't support DamageType but we can use another property that is supported as an exploit
-	str projNameTag = GetActorProperty(projTid, APROP_NameTag);
-	
-	if (!StrCmp(projNameTag, "HLLaser") && CheckActorInventory(projTid, "HLShockProjectileIsHLEgonDamage")) { projNameTag = "HLEgon"; }
-	
-	Thing_Damage2(newTid, damage, projNameTag);
-	
-	//Revert tids
-	Thing_ChangeTid(newTid,myTid);
-	Thing_ChangeTid(projTid,0);
+    //Generate new tid for the projectile
+    int projTid = UniqueTid();
+    Thing_ChangeTid(0,projTid);
+
+    //Switch to monster
+    SetActivator(0,AAPTR_TRACER);
+
+    //Store NOPAIN flag
+    bool monHasNoPain = CheckFlag(0, "NOPAIN");
+
+    //Get the current tid of the monster and generate a new one
+    int myTid = ActivatorTid();
+    int newTid = UniqueTid();
+
+    //Now assign the monster a new temporary tid
+    //We need to actually make sure unique bosses that do specials actually perform them
+    if (myTid != 0 && ThingCount(T_NONE, myTid) == 1) { newTid = myTid; }
+    else { Thing_ChangeTid(0, newTid); }
+
+    //Get the activator's player class
+    SetActivator(projTid,AAPTR_TARGET);
+    int pClass = PlayerClass(0);
+
+    //Set the tid back to the projectile
+    SetActivator(projTid);
+
+    //Get the amount of damage to do based on the class script
+    switch(pClass)
+    {
+        case CLASS_HALFLIFE:
+        case CLASS_OUTLAWS: //Would be the exact same script
+            damage = ACS_NamedExecuteWithResult("HalfLife_BulletDamage",idamage);
+            break;
+        case CLASS_GOLDENEYE:
+            if (type >= 1) { damage = ACS_NamedExecuteWithResult("Goldeneye_SlapperDamage",idamage,arg2); }
+            else { damage = ACS_NamedExecuteWithResult("BondHitBox",idamage); }
+            break;
+        case CLASS_UNREAL:
+            damage = ACS_NamedExecuteWithResult("UnrealHitBox", idamage, arg2);
+            break;
+        case CLASS_RTCW:
+            if (type >= 3) { damage = ACS_NamedExecuteWithResult("RTCW_KnifeDamage",0,idamage,arg2); }
+            else if (type == 2) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,2); }
+            else if (type == 1) { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage,1); }
+            else { damage = ACS_NamedExecuteWithResult("RTCW_BulletDamage",idamage); }
+            break;
+        case CLASS_DEUSEX:
+            if (type >= 1) { damage = ACS_NamedExecuteWithResult("DeusEx_BackDamage", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", arg2, idamage)); }
+            else { damage = ACS_NamedExecuteWithResult("DeusEx_DamageModifiers", ACS_NamedExecuteWithResult("DeusEx_WeaponSkillDamage", arg2, idamage)); }
+            break;
+        case CLASS_KINGPIN:
+            damage = ACS_NamedExecuteWithResult("Kingpin_BulletDamage",idamage);
+            break;
+        case CLASS_SOF:
+            damage = ACS_NamedExecuteWithResult("SoF_BulletDamage",idamage);
+            break;
+    }
+
+    //Now damage the actor as the projectile
+    SetActivator(projTid,AAPTR_TARGET);
+
+    //In Zandronum netplay, enemies can gib even if the puff has NOEXTREMEDEATH, this is here to check if it should just simply kill the enemy
+    //We're using NameTag as Zandronum doesn't support DamageType but we can use another property that is supported as an exploit
+    str projNameTag = GetActorProperty(projTid, APROP_NameTag);
+
+    if (!StrCmp(projNameTag, "HLLaser") && CheckActorInventory(projTid, "HLShockProjectileIsHLEgonDamage")) { projNameTag = "HLEgon"; }
+
+    if (projHasPainless && !monHasNoPain) { GiveActorInventory(newTid, "SamsaraNoPainEnabler", 1); } // hack to make PAINLESS work
+
+    Thing_Damage2(newTid, damage, projNameTag);
+
+    if (projHasPainless && !monHasNoPain) { GiveActorInventory(newTid, "SamsaraNoPainDisabler", 1); } // undo hack
+
+    //Revert tids
+    Thing_ChangeTid(newTid,myTid);
+    Thing_ChangeTid(projTid,0);
 }
