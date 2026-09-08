@@ -3899,6 +3899,14 @@ Script "Samsara_ResetInventory" (void)
 			SetWeapon("Outlaws_Revolver");
 			break;
 	}
+
+	if (!(CheckInventory("QuakeClass") || CheckInventory("RottClass") || CheckInventory("HalfLifeClass") || CheckInventory("CatacombClass") || CheckInventory("PainkillerClass"))) { SetInventory("Clip", 50); }
+
+    if (CheckInventory("IsSamsaraClass"))
+    {
+        GiveInventory("SamsaraPistolStartMapChangeHack", 1);
+        GiveInventory("Samsara_ModeWeaponChange", 1);
+    }
 }
 
 script "Samsara_FillInventory" (void)
