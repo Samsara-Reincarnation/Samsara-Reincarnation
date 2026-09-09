@@ -112,7 +112,7 @@ ACTOR SoF_Shotgun : SoF_Weapon
             SF09 BCD 2 A_WeaponReady(WRF_NOFIRE|WRF_NOSWITCH)
             SF09 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"RELOAD_AMMO")
         RELOAD_LOOP_CONTINUE:
-            SF09 A 0 A_Refire("SKIPRELOAD")
+            SF09 A 0 A_JumpIfInventory("SamsaraSynthFireLeft",1,"SKIPRELOAD") //A_Refire("SKIPRELOAD")
             Goto RELOAD_LOOP
         SKIPRELOAD:
             SF09 A 0 A_JumpIfInventory("SamsaraReloadMode",0,"FIRE")
