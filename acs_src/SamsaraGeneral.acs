@@ -2232,7 +2232,7 @@ Script "Samsara_Laser" (int type, int space, int height) clientside
 //													Inventory Reset
 //======================================================================================================================
 
-Script "Samsara_ResetInventory" (void)
+Script "Samsara_ResetInventory" (int takexp)
 {
 	int pln = PlayerNumber();
 	ClearInventory();
@@ -2972,7 +2972,7 @@ Script "Samsara_ResetInventory" (void)
 			TakeInventory("WTInvisibilityPhial", INTMAX);
 			TakeInventory("WTFireProofPhial", INTMAX);
 			
-			if (GetCvar("samsara_pistolstart") >= 2 && CheckInventory("PistolStartEnabled"))
+			if (takexp)
 			{
 				SetInventory("WTExperience", 0);
 				SetInventory("WTLevel", 1);
@@ -3182,7 +3182,7 @@ Script "Samsara_ResetInventory" (void)
 			SetInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
 			TakeInventory("Hexen2ForceCube", INTMAX);
 
-			if (GetCvar("samsara_pistolstart") >= 2 && CheckInventory("PistolStartEnabled"))
+			if (takexp)
 			{
 				SetInventory("Hexen2Level", 1);
 				SetInventory("Hexen2Experience", 0);
@@ -3676,7 +3676,7 @@ Script "Samsara_ResetInventory" (void)
 			SetInventory("SamsaraDeusExGEPGunAmmoType", 0);
 			SetInventory("SamsaraDeusExPlasmaRifleAmmoType", 0);
 
-			if (GetCvar("samsara_pistolstart") >= 2 && CheckInventory("PistolStartEnabled"))
+			if (takexp)
 			{
 				TakeInventory("DeusEx_LowTechSkill", 4);
 				TakeInventory("DeusEx_PistolSkill", 4);
@@ -3693,7 +3693,7 @@ Script "Samsara_ResetInventory" (void)
 				SetInventory("SamsaraDeusExStartingSkillsGiven", 0);
 			}
 
-			if (GetCvar("samsara_pistolstart") >= 2 && CheckInventory("PistolStartEnabled"))
+			if (takexp)
 			{
 				SetAmmoCapacity("DeusEx_GlockMagazine", 4);
 				SetAmmoCapacity("DeusEx_MiniXBowMagazine", 6);
@@ -3717,7 +3717,7 @@ Script "Samsara_ResetInventory" (void)
 			GiveInventory("DeusEx_SniperMagazine", GetAmmoCapacity("DeusEx_SniperMagazine"));
 			GiveInventory("DeusEx_StealthMagazine", GetAmmoCapacity("DeusEx_StealthMagazine"));
 
-			if (GetCvar("samsara_pistolstart") >= 2 && CheckInventory("PistolStartEnabled"))
+			if (takexp)
 			{
 				SetAmmoCapacity("DeusEx_GlockSpread", 120);
 				SetAmmoCapacity("DeusEx_XBowSpread", 40);
