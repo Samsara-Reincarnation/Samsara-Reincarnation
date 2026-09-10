@@ -2337,6 +2337,12 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("DGStrHasWPK", INTMAX);
 			SetInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
 
+			if (!CheckInventory("SamsaraDoom64StartingUnmakerArtifactsGiven"))
+			{
+				if (GetCVar("samsara_unmakerartifacts") > 0 && !CheckInventory("SamsaraDoomguyInDoom64CE")) { GiveInventory("SamsaraDoom64UnmakerArtifact", GetCVar("samsara_unmakerartifacts")); }
+				SetInventory("SamsaraDoom64StartingUnmakerArtifactsGiven", 1);
+			}
+
 			GiveInventory(" Pistol ", 1);
 			GiveInventory(" Fist ", 1);
 			GiveInventory("DoomguyClass", 1);
@@ -2776,6 +2782,32 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("AccuracyUpgrade1", INTMAX);
 			TakeInventory("AccuracyUpgrade2", INTMAX);
 
+			if (!CheckInventory("StrifeguyStartingUpgradesHasBeenGiven"))
+			{
+				if (!(isLMS() || GetCVar("samsara_lmsrules")) || ((isLMS() || GetCVar("samsara_lmsrules")) && !GetCVar("samsara_lmsuniques")))
+				{
+					int sup = GetCVar("samsara_strifeupgrades");
+					int supdone = 0;
+
+					if (sup > 10) { sup = 10; }
+					else if (sup < 0) { sup = 0; }
+
+					while (supdone < sup)
+					{
+						GiveInventory("StaminaUpgradeDamage", 10);
+						GiveInventory("AccuracyUpgrade1", 10);
+						GiveInventory("AccuracyUpgrade2", 10);
+
+						ACS_NamedExecuteWithResult("SamsaraPlayerSpawnHealthAdjust", 10, 1, 7, 100);
+						ACS_NamedExecuteWithResult("SamsaraPlayerHealer");
+
+						supdone++;
+					}
+				}
+
+				GiveInventory("StrifeguyStartingUpgradesHasBeenGiven", 1);
+			}
+
 			GiveInventory("IsSamsaraClass", 1);
 			GiveInventory("StrifeClass", 1);
 			GiveInventory("Punch Dagger", 1);
@@ -2789,6 +2821,7 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory(" Arachnicator ", INTMAX);
 			TakeInventory("EradRovingMine", INTMAX);
 			TakeInventory("EradMiniTankDetonator", INTMAX);
+			TakeInventory("EradicatorPipAllowControl", INTMAX);
 			TakeInventory("  Sonic Shock  ", INTMAX);
 			TakeInventory("Death Bomb", INTMAX);
 			TakeInventory("Cluster Bomb", INTMAX);
@@ -3462,6 +3495,8 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("Painkiller_ArmorRegeneration", INTMAX);
 			TakeInventory("Painkiller_Fear", INTMAX);
 			TakeInventory("Painkiller_666Ammo", INTMAX);
+			TakeInventory("Painkiller_TarotMPUses", INTMAX);
+			TakeInventory("Painkiller_TarotUsage", INTMAX);
 			TakeInventory("Painkiller_GoldSlot1", INTMAX);
 			TakeInventory("Painkiller_GoldSlot2", INTMAX);
 			TakeInventory("Painkiller_GoldSlot3", INTMAX);
@@ -3492,6 +3527,8 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("Painkiller_GoldAmount", 999999);
 			SetInventory("Painkiller_GoldGiven", 0);
 			SetInventory("Clip", 0);
+
+			ACS_NamedExecuteWithResult("Painkiller_BlackTarotRestore");
 
 			SetInventory("Shell", 20);
 			SetInventory("Cell", 25);
@@ -3690,6 +3727,7 @@ Script "Samsara_ResetInventory" (int takexp)
 				TakeInventory("DeusEx_LowTechPoints", 99999);
 				TakeInventory("DeusEx_MedicinePoints", 99999);
 				TakeInventory("DeusEx_EnviroPoints", 99999);
+				TakeInventory("DeusEx_StartingSkills", 99999);
 				SetInventory("SamsaraDeusExStartingSkillsGiven", 0);
 			}
 
@@ -3765,6 +3803,20 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("DeusEx_Augmentation_EyeSlot",1);
 			TakeInventory("DeusEx_AugmentationUpgradeCannister",99);
 			TakeInventory("DeusEx_AugmentationBioEnergyCell",99);
+
+			if (!CheckInventory("SamsaraDeusExStartingSkillsGiven"))
+			{
+				if (isSinglePlayer() || isCoop())
+				{
+					if (GetCVar("samsara_deusexstartingskills") > 0) { SetInventory("DeusEx_StartingSkills", GetCVar("samsara_deusexstartingskills")); }
+				} else {
+					if (GetCVar("samsara_deusexstartingskills") >= 4) { SetInventory("DeusEx_StartingSkills", 4); }
+					else if (GetCVar("samsara_deusexstartingskills") >= 2) { SetInventory("DeusEx_StartingSkills", 3); }
+					else { SetInventory("DeusEx_StartingSkills", 1); }
+				}
+
+				SetInventory("SamsaraDeusExStartingSkillsGiven", 1);
+			}
 
 			GiveInventory("DeusEx_Augmentation_InfoLink",1);
 			GiveInventory("DeusEx_Augmentation_IFF",1);
