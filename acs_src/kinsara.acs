@@ -355,26 +355,7 @@ script "PistolStart" ENTER
 
 		GiveInventory("PistolStartEnabled", 1);
 
-		// Grondoval and Demoness require special treatment for starting with the correct amount of health.
-		int pln = PlayerNumber();
-		switch(PlayerClass(pln))
-		{
-			case 18:
-				SetActorProperty (0, APROP_Health, pistolstart >= 2 ? 100 : 100 + CheckInventory("SamsaraWitchavenHealthIncrease"));
-				SetActorProperty (0, APROP_SpawnHealth, pistolstart >= 2 ? 100 : 100 + CheckInventory("SamsaraWitchavenHealthIncrease"));
-				break;
-
-			case 25:
-				SetActorProperty (0, APROP_Health, pistolstart >= 2 ? 70 : 70 + CheckInventory("Hexen2HealthAdd"));
-				SetActorProperty (0, APROP_SpawnHealth, pistolstart >= 2 ? 70 : 70 + CheckInventory("Hexen2HealthAdd"));
-				break;
-
-			default:
-				SetActorProperty (0, APROP_Health, 100);
-				SetActorProperty (0, APROP_SpawnHealth, 100);
-				break;
-		}
-
+		ACS_NamedExecuteWithResult("Samsara_ResetHealth", pistolstart >= 2 ? 1 : 0);
 		ACS_NamedExecuteWithResult("Samsara_ResetInventory", pistolstart >= 2 ? 1 : 0);
 		
         ACS_NamedExecuteWithResult("PistolStartDisplay");
