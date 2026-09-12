@@ -185,7 +185,8 @@ actor SamsaraMarathonSpanker2AttackHandler : Trigger
         stop
 
       PickupAttackCoop:
-        TNT1 A 0 A_FireBullets(0,0,7,random(4,6)*7,"SpnkrAutoPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,6,random(4,6)*7,"SpnkrAutoPuffBlankCoop",FBF_NORANDOM|FBF_NOFLASH)
+        TNT1 A 0 A_FireBullets(0,0,1,random(4,6)*7,"SpnkrAutoPuffCoop",FBF_NORANDOM|FBF_NOFLASH)
         stop
     }
 }
@@ -219,6 +220,20 @@ actor SpnkrAutoPuff
 }
 
 actor SpnkrAutoPuffCoop : SpnkrAutoPuff { +MTHRUSPECIES }
+
+actor SpnkrAutoPuffBlank : SpnkrAutoPuff
+{
+    Decal ""
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 1
+        stop
+    }
+}
+
+actor SpnkrAutoPuffBlankCoop : SpnkrAutoPuffBlank { +MTHRUSPECIES }
 
 actor SpnkrBeam
 {
