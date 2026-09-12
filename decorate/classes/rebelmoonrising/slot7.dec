@@ -89,6 +89,7 @@ actor RMR-BigPlasma : FastProjectile
     Scale 0.5
     DeathSound "RMR/PlasmaCB"
     Obituary "%k overcharged %o with the plasma cannon."
+	+FORCERADIUSDMG
     +FORCEXYBILLBOARD
     +WINDTHRUST
     States
@@ -98,7 +99,7 @@ actor RMR-BigPlasma : FastProjectile
         loop
 
       Death:
-        RMZ3 C 4 Bright Light("RMRPURPLEPLASMABOOM") A_Explode(500,64,0)
+        RMZ3 C 4 Bright Light("RMRPURPLEPLASMABOOM") A_Explode(500,128,0)
         RMZ3 DE 4 Bright Light("RMRPURPLEPLASMABOOM")
         RMZ3 F 3 Bright Light("RMRPURPLEPLASMABOOM") A_FadeOut
         stop
@@ -108,7 +109,7 @@ actor RMR-BigPlasma : FastProjectile
 actor RMR-BigPlasmaCoop : RMR-BigPlasma
 {
     Speed 100
-    Damage (1000)
+    Damage (500)
     Species "Player"
     +THRUSPECIES
 }
