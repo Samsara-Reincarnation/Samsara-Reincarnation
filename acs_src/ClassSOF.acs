@@ -576,7 +576,7 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 			if(reward)
 			{
 				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Ammo 1");
-				secondaryReward = multiplier >= 2 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite] - Ammo 2") : "";
+				secondaryReward = multiplier >= 5 ? strParam(s:", \c[SoFHUDRed]",d:multiplier/5,s:"\c[SoFHUDWhite] - Ammo 2") : "";
 			}
 			break;
 		case 3:
@@ -597,7 +597,7 @@ Script "SoF_DrawBrutalityClient" (int type, int reward, int brutalityCounter, in
 			if(reward)
 			{
 				primaryReward = strparam(s:"\c[SoFHUDRed]",d:multiplier,s:"\c[SoFHUDWhite] - Armor");
-				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:5,s:"\c[SoFHUDWhite] - Ammo 2") : "";
+				secondaryReward = multiplier >= 10 ? strParam(s:", \c[SoFHUDRed]",d:3,s:"\c[SoFHUDWhite] - Ammo 2") : "";
 			}
 			break;
 		case 6:
@@ -650,41 +650,46 @@ Script "SoF_BrutalityRewards" (int type)
 		case 0:
 			GiveInventory("Clip",CheckInventory("SoF_BulletSpongeMultiplier"));
 			if(CheckInventory("SoF_BulletSpongeMultiplier") >= 5)
-				GiveInventory("ArmorScrapArmorNormal",CheckInventory("SoF_BulletSpongeMultiplier")/5);
+				ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -(CheckInventory("SoF_BulletSpongeMultiplier")/5), 0, 2);
 			break;
 		case 1:
-			GiveInventory("HealthBonus",CheckInventory("SoF_LengTcheMultiplier"));
+			if(CheckInventory("SoF_LengTcheMultiplier"))
+				ACS_NamedExecuteWithResult("SamsaraPlayerHealer", CheckInventory("SoF_LengTcheMultiplier"), 200);
 			if(CheckInventory("SoF_LengTcheMultiplier") >= 20)
 				GiveInventory("SoF_Knives",1);
 			break;
 		case 2:
 			GiveInventory("Clip",CheckInventory("SoF_AlexMurphyMultiplier"));
-			if(CheckInventory("SoF_AlexMurphyMultiplier") >= 2)
+			if(CheckInventory("SoF_AlexMurphyMultiplier") >= 5)
 				GiveInventory("Shell",CheckInventory("SoF_AlexMurphyMultiplier")/5);
 			break;
 		case 3:
-			GiveInventory("ArmorScrapArmorNormal",CheckInventory("SoF_TheJuicerMultiplier"));
+			if(CheckInventory("SoF_TheJuicerMultiplier"))
+				ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -CheckInventory("SoF_TheJuicerMultiplier"), 0, 2);
 			if(CheckInventory("SoF_TheJuicerMultiplier")/4)
 				GiveInventory("RocketAmmo",CheckInventory("SoF_TheJuicerMultiplier")/4);
 			break;
 		case 4:
-			GiveInventory("HealthBonus",CheckInventory("SoF_TheEvisceratorMultiplier"));
-			GiveInventory("ArmorScrapArmorNormal",CheckInventory("SoF_TheEvisceratorMultiplier"));
+			if(CheckInventory("SoF_TheEvisceratorMultiplier"))
+				ACS_NamedExecuteWithResult("SamsaraPlayerHealer", CheckInventory("SoF_TheEvisceratorMultiplier"), 200);
+			if(CheckInventory("SoF_TheEvisceratorMultiplier"))
+				ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -CheckInventory("SoF_TheEvisceratorMultiplier"), 0, 2);
 			break;
 		case 5:
-			GiveInventory("ArmorScrapArmorNormal",CheckInventory("SoF_MelonPopperMultiplier"));
+			if(CheckInventory("SoF_MelonPopperMultiplier"))
+				ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -CheckInventory("SoF_MelonPopperMultiplier"), 0, 2);
 			if(CheckInventory("SoF_MelonPopperMultiplier") >= 10)
 				GiveInventory("Shell",3);
 			break;
 		case 6:
 			GiveInventory("Cell",CheckInventory("SoF_TVDinnerMultiplier"));
 			if(CheckInventory("SoF_TVDinnerMultiplier")/4)
-				GiveInventory("HealthBonus",CheckInventory("SoF_TVDinnerMultiplier")/4);
+				ACS_NamedExecuteWithResult("SamsaraPlayerHealer", CheckInventory("SoF_TVDinnerMultiplier") / 4, 200);
 			break;
 		case 7:
 			GiveInventory("Cell",CheckInventory("SoF_RoastedMultiplier"));
-			if(CheckInventory("SoF_RoastedMultiplier")/4)
-				GiveInventory("RocketAmmo",CheckInventory("SoF_TVDinnerMultiplier")/10);
+			if(CheckInventory("SoF_RoastedMultiplier")/10)
+				GiveInventory("RocketAmmo",CheckInventory("SoF_RoastedMultiplier")/10);
 			break;
 	}
 }

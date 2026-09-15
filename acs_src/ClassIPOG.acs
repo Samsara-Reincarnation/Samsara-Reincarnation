@@ -13,19 +13,19 @@ Script "GreedScript" (void) //704
 		{		
 			if (armordamage == 0) // ... and if the player has no armor, gives both HP and Armor on same proportions
 			{
-				GiveInventory("ArmorScrapArmorNormal", healthdamage / 2);
+				if (healthdamage / 2 > 0) { ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -(healthdamage / 2), 0, 2); }
 				if (healthdamage + (healthdamage / 2) > 0) { ACS_NamedExecuteWithResult("SamsaraPlayerHealer", healthdamage + (healthdamage / 2), 200); }
 			}
 			else // ... but if the player has armor, gives both HP and Armors on different proportions, based on armor's protection percentage
 				{
 					if (2 * healthdamage > 0) { ACS_NamedExecuteWithResult("SamsaraPlayerHealer", 2 * healthdamage, 200); }
-					GiveInventory("ArmorScrapArmorNormal", 2 * armordamage);		
+					if (2 * armordamage > 0) { ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -(2 * armordamage), 0, 2); }
 				}
 		}
 		else // ... Else, if the player had no damage over his/her Health, but had on Armor, then give stuff
 			{
 				if (armordamage / 2 > 0) { ACS_NamedExecuteWithResult("SamsaraPlayerHealer", armordamage / 2, 200); }
-				GiveInventory("ArmorScrapArmorNormal", armordamage + (armordamage / 2));		
+				if (armordamage + (armordamage / 2) > 0) { ACS_NamedExecuteWithResult("SamsaraArmorAdjust", ARMOR_BONUS1, -(armordamage + (armordamage / 2)), 0, 2); }
 			}
 	
 	oldarmor = CheckInventory("BasicArmor");

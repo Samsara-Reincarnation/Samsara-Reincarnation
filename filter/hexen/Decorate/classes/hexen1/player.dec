@@ -783,7 +783,17 @@ Actor PariasArmorRepair : Trigger
 	States
 	{
 		Pickup:
-			TNT1 A 0 A_RadiusGive("ArmorScrap100",256,RGF_PLAYERS|RGF_NOSIGHT,1)
+			TNT1 A 0 A_RadiusGive("PariasArmorRepairToPlayers",256,RGF_PLAYERS|RGF_NOSIGHT,1)
+			Stop
+	}
+}
+Actor PariasArmorRepairToPlayers : Trigger
+{
+	States
+	{
+		Pickup:
+			TNT1 A 0 A_JumpIfInventory("BasicArmor",100,"PickupStop")
+			TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraArmorAdjust", 0, -1, 0, -4)
 			Stop
 	}
 }
