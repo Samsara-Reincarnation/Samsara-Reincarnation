@@ -18985,3 +18985,24 @@ script "SamsaraIceDeathScreenBlend" (void) CLIENTSIDE
     SetInventory("PowerSamsaraIceDeathBlendZDoom", 0);
     SetInventory("PowerSamsaraIceDeathBlendHexen", 0);
 }
+
+script "SamsaraEquipmentStartCall" (int type, int respawning)
+{
+    if ((type <= -1 || type == 0) && (isLMS() || GetCVar("samsara_lmsrules"))) { ApplyLMS(); }
+
+    if (type <= -1 || type == 1) { HandleBackpackSpawn(respawning); }
+
+    if (type <= -1 || type == 2)
+    {
+        for (int i = SLOT_FIST; i <= SLOT_BFG10K; i++) { HandleSlotSpawn(i, respawning); }
+    }
+
+    if (type <= -1 || type == 3) { HandleUniqueSpawn(respawning); }
+
+    if (type <= -1 || type >= 4)
+    {
+        int oldInstagib;
+        HandleInstagib(GetCVar("instagib") != oldInstagib);
+        oldInstagib = GetCVar("instagib");
+    }
+}
