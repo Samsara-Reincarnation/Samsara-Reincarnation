@@ -175,7 +175,7 @@ script "SamsaraQPowers" (int startTime, int respawning) //636 -- SAMSARA_QPOWERS
 
                 offset++;
 
-                if (oQuadTimer <= 0 || oHealth <= 0) { GiveInventory("QuadDamagePower", 1); }
+                if (oQuadTimer <= 0 || oHealth <= 0) { GiveInventory("SamsaraQuakeQuadDamagePower", 1); }
             }
             else
             {
@@ -186,7 +186,7 @@ script "SamsaraQPowers" (int startTime, int respawning) //636 -- SAMSARA_QPOWERS
                     HudMessage(s:""; HUDMSG_PLAIN, 58101, CR_UNTRANSLATED, 0, 0, 1);
                     HudMessage(s:""; HUDMSG_PLAIN, 58102, CR_UNTRANSLATED, 0, 0, 1);
                 }
-                TakeInventory("QuadDamagePower", 1);
+                TakeInventory("SamsaraQuakeQuadDamagePower", 1);
 
                 if (CheckInventory("SamsaraHasDisabledInventoryCooldown"))
                 {
@@ -210,7 +210,7 @@ script "SamsaraQPowers" (int startTime, int respawning) //636 -- SAMSARA_QPOWERS
 
             if (quadTimer == -QUAD_THRESHOLD)
             {
-                if (CheckInventory("CantQuad") && CheckInventory("QuadDamageItem") && GetCVar("samsara_permaquad") && !CheckInventory("SamsaraHasDisabledInventoryCooldown") && !UnloadingNow)
+                if (CheckInventory("CantQuad") && CheckInventory("SamsaraQuakeQuadDamageItem") && GetCVar("samsara_permaquad") && !CheckInventory("SamsaraHasDisabledInventoryCooldown") && !UnloadingNow)
                 {
                     if (CheckInventory("SamsaraAlternateSoundToken") >= 2) { LocalAmbientSound("quakeweps/dmc/quadready", 96); } // Deathmatch Classic
                     else if (CheckInventory("SamsaraAlternateSoundToken") == 1) { LocalAmbientSound("quakeweps/rerelease/quadready", 96); } // Rerelease
