@@ -5446,6 +5446,27 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 break;
 
 			case CLASS_SOF:
+				if (CheckInventory("SamsaraSOFFlameGunPrimaryFiringSoundCheck") && !CheckWeapon("SoF_Flamegun"))
+				{
+					StopSound(0, CHAN_WEAPON);
+
+					SetInventory("SamsaraSOFFlameGunPrimaryFiringSoundCheck", 0);
+				}
+
+				if (CheckInventory("SamsaraSOFMPGPrimaryFiringSoundCheck") && !CheckWeapon("SoF_MPG"))
+				{
+					StopSound(0, CHAN_WEAPON);
+
+					SetInventory("SamsaraSOFMPGPrimaryFiringSoundCheck", 0);
+				}
+
+				if (CheckInventory("SamsaraSOFSniperRifleZoomingSoundCheck") && !CheckWeapon("SoF_SniperRifle"))
+				{
+					StopSound(0, CHAN_5);
+
+					SetInventory("SamsaraSOFSniperRifleZoomingSoundCheck", 0);
+				}
+
                 if (CheckInventory("SoF_SniperScoped") && !CheckWeapon("SoF_SniperRifle")) { SetInventory("SoF_SniperScoped", 0); }
                 break;
 
