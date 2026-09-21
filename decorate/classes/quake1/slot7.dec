@@ -347,37 +347,6 @@ ACTOR LGBeamProjectile : MjolnirProjectile
 }
 
 ACTOR LGBeamProjectileCoop : LGBeamProjectile { Damage (60) +THRUSPECIES +MTHRUSPECIES Species "Player" }
-ACTOR LGBeamProjectile2 : LGBeamProjectileCoop
-{
-    Damage (50)
-    States
-    {
-        Spawn:
-            TNT1 A 0
-            TNT1 A 0 A_ChangeFlag("PAINLESS",random(false,true))
-            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", true)
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,-velx,-vely,-velz,0,WARPF_ABSOLUTEOFFSET|WARPF_NOCHECKPOSITION)
-            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", false)
-            TNT1 A 0 A_SpawnItemEx("LGBeam",0,0,0,(velx*0.001), (vely*0.001), (velz*0.001), Angle, SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_ABSOLUTEANGLE)
-            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", true)
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET|WARPF_NOCHECKPOSITION)
-        Moving:
-            TNT1 A 0 A_JumpIfCloser(496,1)
-            Stop
-            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", false)
-            TNT1 A 0 A_SpawnItemEx("LGBeam",0,0,0,(velx*0.001), (vely*0.001), (velz*0.001), Angle, SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_ABSOLUTEANGLE)
-            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", true)
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
-            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,"Moving")
-            stop
-        Remove:
-            TNT1 A 1
-            stop
-            }
-}
 
 actor LGBeam
 {
@@ -696,6 +665,36 @@ Actor PlasmaCellBall_Coop : PlasmaCellBall
     +DONTHARMSPECIES
     +MTHRUSPECIES
     Species "Player"
+    States
+    {
+    Death:
+        BAL7 A 0 A_StopSound(CHAN_ITEM)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,0,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,30,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,60,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,90,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,120,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,150,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,180,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,210,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,240,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,270,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,300,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,330,CMF_AIMDIRECTION)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        TNT1 A 0 A_GiveInventory("SamsaraRangerNoSelfDamage",1,AAPTR_TARGET)
+        TNT1 A 0 A_Explode(600,200)
+        TNT1 A 0 A_TakeInventory("PowerSamsaraRangerNoSelfDamage",1,0,AAPTR_TARGET)
+        BAL7 A 5 Light("QUAKE_1_PLASMA_BALL") A_Explode(200,200)
+        Stop
+    }
 }
 
 Actor PlasmaCellBallSoundRerelease : PlasmaCellBall
@@ -716,6 +715,36 @@ Actor PlasmaCellBall_CoopSoundRerelease : PlasmaCellBallSoundRerelease
     +DONTHARMSPECIES
     +MTHRUSPECIES
     Species "Player"
+    States
+    {
+    Death:
+        BAL7 A 0 A_StopSound(CHAN_ITEM)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,0,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,30,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,60,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,90,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,120,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,150,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,180,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,210,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,240,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,270,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,300,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,330,CMF_AIMDIRECTION)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        TNT1 A 0 A_GiveInventory("SamsaraRangerNoSelfDamage",1,AAPTR_TARGET)
+        TNT1 A 0 A_Explode(600,200)
+        TNT1 A 0 A_TakeInventory("PowerSamsaraRangerNoSelfDamage",1,0,AAPTR_TARGET)
+        BAL7 A 5 Light("QUAKE_1_PLASMA_BALL") A_Explode(200,200)
+        Stop
+    }
 }
 
 Actor PlasmaCellBallSoundDMC : PlasmaCellBall
@@ -736,6 +765,36 @@ Actor PlasmaCellBall_CoopSoundDMC : PlasmaCellBallSoundDMC
     +DONTHARMSPECIES
     +MTHRUSPECIES
     Species "Player"
+    States
+    {
+    Death:
+        BAL7 A 0 A_StopSound(CHAN_ITEM)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,0,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,30,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,60,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,90,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,120,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,150,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,180,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,210,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,240,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,270,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,300,CMF_AIMDIRECTION)
+        TNT1 A 0 A_CustomMissile("PlasmaCellBallZapper_Coop",0,0,330,CMF_AIMDIRECTION)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        BAL7 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PlasmaDebris",Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1,Random(-3,3)+1)
+        TNT1 A 0 A_GiveInventory("SamsaraRangerNoSelfDamage",1,AAPTR_TARGET)
+        TNT1 A 0 A_Explode(600,200)
+        TNT1 A 0 A_TakeInventory("PowerSamsaraRangerNoSelfDamage",1,0,AAPTR_TARGET)
+        BAL7 A 5 Light("QUAKE_1_PLASMA_BALL") A_Explode(200,200)
+        Stop
+    }
 }
 
 Actor PlasmaCellBallZapper
@@ -778,6 +837,55 @@ Actor PlasmaCellBallZapper_Coop : PlasmaCellBallZapper
     +DONTHARMCLASS
     +DONTHARMSPECIES
     +MTHRUSPECIES
+    States
+    {
+    See:
+        TNT1 A 0
+        TNT1 A 0 A_JumpIfCloser(256,"Missile")
+        Stop
+    Missile:
+        TNT1 A 0 A_CustomMissile("LGBeamProjectile2Coop",0)
+        goto Death
+    }
+}
+
+ACTOR LGBeamProjectile2 : LGBeamProjectile
+{
+    Damage (50)
+    States
+    {
+        Spawn:
+            TNT1 A 0
+            TNT1 A 0 A_ChangeFlag("PAINLESS",random(false,true))
+            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", true)
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,-velx,-vely,-velz,0,WARPF_ABSOLUTEOFFSET|WARPF_NOCHECKPOSITION)
+            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", false)
+            TNT1 A 0 A_SpawnItemEx("LGBeam",0,0,0,(velx*0.001), (vely*0.001), (velz*0.001), Angle, SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_ABSOLUTEANGLE)
+            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", true)
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET|WARPF_NOCHECKPOSITION)
+        Moving:
+            TNT1 A 0 A_JumpIfCloser(496,1)
+            Stop
+            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", false)
+            TNT1 A 0 A_SpawnItemEx("LGBeam",0,0,0,(velx*0.001), (vely*0.001), (velz*0.001), Angle, SXF_ABSOLUTEPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_ABSOLUTEANGLE)
+            TNT1 A 0 A_ChangeFlag("CLIENTSIDEONLY", true)
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,1) stop
+            TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx/5,vely/5,velz/5,0,WARPF_ABSOLUTEOFFSET,"Moving")
+            stop
+        Remove:
+            TNT1 A 1
+            stop
+    }
+}
+
+ACTOR LGBeamProjectile2Coop : LGBeamProjectile2
+{
+    Species "Player"
+    +MTHRUSPECIES
+    +THRUSPECIES
 }
 
 ACTOR PlasmaDebris
