@@ -152,6 +152,7 @@ ACTOR SoF_Rocket : SoF_Weapon
             "####" "#" 0 A_JumpIfInventory("RocketAmmo",1,1)
             Goto ReadyActual
         RELOAD_START:
+			SF07 A 0 A_TakeInventory("SoF_ShootingToken") // for reloadmode 1 altfire
             SF07 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"RELOAD_LOOP")
             goto RELOAD_FINISH
         RELOAD_LOOP:
