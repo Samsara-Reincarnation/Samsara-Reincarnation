@@ -192,10 +192,14 @@ actor CircleFlameDM : CircleFlame
     States
     {
       Death:
-        CFCF QR 3 Bright
+        CFCF Q 3 Bright Light("CFLAME1")
+        CFCF R 3 Bright Light("CFLAME2")
         TNT1 A 0 A_Explode(5,20,0)
       DeathFinish:
-        CFCF STUVWXYZ 3 Bright
+        CFCF STUV 3 Bright Light("CFLAME2")
+        CFCF WX 3 Bright Light("CFLAME3")
+        CFCF Y 3 Bright Light("CFLAME4")
+        CFCF Z 3 Bright Light("CFLAME5")
         stop
     }
 }
@@ -212,7 +216,8 @@ actor CircleFlame2 : CircleFlame1
     States
     {
       Death:
-        CFCF QR 3 Bright
+        CFCF Q 3 Bright Light("CFLAME1")
+        CFCF R 3 Bright Light("CFLAME2")
         TNT1 A 0 A_Explode(32,64,0)
         goto DeathFinish
     }
