@@ -704,6 +704,7 @@ Script "SoF_HandleLean" (void)
 		// Do lean stuff. I gotta do this system earlier than I'd like unfortunately
 		int buttons = GetPlayerInput(-1,INPUT_BUTTONS);
 		int sideMove = GetPlayerInput(-1,INPUT_SIDEMOVE);
+		bool wasfrozen;
 		ChangeActorRoll(0,0.00625*leanCounter,1);
 		if((buttons & BT_USER1 || buttons & BT_USER2) && sideMove != 0 && !isDead(0))
 		{
@@ -711,6 +712,7 @@ Script "SoF_HandleLean" (void)
 			{
 				SetInventory("SoF_Leaning",1);
 				SetPlayerProperty(0,1,PROP_FROZEN);
+				wasfrozen = true;
 				SetActorVelocity(0,0,0,GetActorVelZ(0),0,0);
 				if(leanCounter > -8)
 				{
@@ -722,6 +724,7 @@ Script "SoF_HandleLean" (void)
 			{
 				SetInventory("SoF_Leaning",2);
 				SetPlayerProperty(0,1,PROP_FROZEN);
+				wasfrozen = true;
 				SetActorVelocity(0,0,0,GetActorVelZ(0),0,0);
 				if(leanCounter < 8)
 				{
@@ -758,8 +761,15 @@ Script "SoF_HandleLean" (void)
 					leanCounter--;
 					doLean(-4.0);
 				}
+			} else {
+				if (wasfrozen)
+				{
+					SetPlayerProperty(0,0,PROP_FROZEN);
+					wasfrozen = false;
+				}
+
+				TakeInventory("SoF_FullyLeaned",1);
 			}
-			else { SetPlayerProperty(0,0,PROP_FROZEN); TakeInventory("SoF_FullyLeaned",1); }
 		}
 		
 		if (!isDead(0))
