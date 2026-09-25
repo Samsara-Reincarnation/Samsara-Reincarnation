@@ -5563,7 +5563,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
         SetInventory("SamsaraDoom64UnmakerArtifact2Icon", CheckInventory("UnmakerUpgrade2Icon"));
         SetInventory("SamsaraDoom64UnmakerArtifact3Icon", CheckInventory("UnmakerUpgrade3Icon"));
 
-        SetInventory("SamsaraUsingVerticalSpread", IsZDoom() && GetUserCVar(pln, "vertspread") && !GetCVar("sv_novertspread"));
+        SetInventory("SamsaraUsingVerticalSpread", (GetUserCVar(pln, "samsara_cl_vertspread") && GetCVar("samsara_vertspread") <= 0) || GetCVar("samsara_vertspread") >= 2);
 
         SetInventory("DoomNoBFGAim", (GetCVar("sv_nobfgaim") && isZDoom()) || (!GetCVar("sv_bfgfreeaim") && !isZDoom()));
 
