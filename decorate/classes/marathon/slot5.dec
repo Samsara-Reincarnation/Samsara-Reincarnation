@@ -8,7 +8,7 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
     Weapon.AmmoType1 "SpankerAmmo"
     Weapon.AmmoUse1 1
     Weapon.AmmoType2 "RocketAmmo"
-    Weapon.AmmoGive2 2
+    Weapon.AmmoGive2 6
     Tag "SPNKR-XP SSM Launcher"
     +EXPLOSIVE
     States
@@ -29,7 +29,7 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("SpankerAmmo",0,"ReadyDisallowReload")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,1)
         goto ReadyDisallowReload
         MSPN A 1 A_WeaponReady(WRF_ALLOWRELOAD)
         goto ReadyAmmoCheck
@@ -40,7 +40,7 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"Ready")
         TNT1 A 0 A_JumpIfInventory("SpankerAmmo",1,"Ready")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,"Reload")
         goto Ready
 
       // oh this isn't pleasant to look at
@@ -360,11 +360,11 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("SpankerAmmo",0,"Select0")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,1)
         goto Select0
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        TNT1 A 0 A_TakeInventory("RocketAmmo",3)
         TNT1 A 0 A_GiveInventory("SpankerAmmo")
         loop
 
@@ -373,7 +373,7 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireReloadable")
       FireNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireStart")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"FireStart")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,"FireStart")
         goto Ready
 
       FireReloadable:
@@ -381,7 +381,7 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("SpankerAmmo",1,"FireStart")
       FireReloadableDryCheck:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"Reload")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"Reload")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,"Reload")
         goto Ready
 
       FireStart:
@@ -392,7 +392,7 @@ actor "SPNKR-XP SSM Launcher" : SamsaraMarathonWeapon
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireStartReloadable")
       FireStartNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireAttack")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,"FireAttack")
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,"FireAttack")
         goto FireContinue
 
       FireStartReloadable:
@@ -528,9 +528,9 @@ actor SamsaraMarathonSpankerAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
       PickupNonReloadable:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
-        TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        TNT1 A 0 A_JumpIfInventory("RocketAmmo",3,1)
         stop
-        TNT1 A 0 A_TakeInventory("RocketAmmo",1)
+        TNT1 A 0 A_TakeInventory("RocketAmmo",3)
         goto PickupAttack
 
       PickupReloadable:
