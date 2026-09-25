@@ -1153,7 +1153,7 @@ Script "SoF_BulletDamage" (int damage)
 	int monsterWidth = GetActorProperty(0,APROP_Radius)*2;
 	int monsterAngle, vang, angle;
 	int health = GetActorProperty(0,APROP_SpawnHealth);
-	bool isdeathgibber = GetActorClass(0) == "SoF_DeathGibber";
+	bool isdeathgibber = GetActorClass(0) == "SoF_DeathGibber", issmgdeathgibber = GetActorClass(0) == "SoF_SMGDeathGibber";
 
 	if (health >= 1000)
 	{
@@ -1174,7 +1174,7 @@ Script "SoF_BulletDamage" (int damage)
 				GiveInventory("SoF_BloodHeadshotGenerator",1);
 			}
 
-			SetResultValue(damage * (1 + !isdeathgibber));
+			SetResultValue(damage * (1 + (!isdeathgibber && !issmgdeathgibber)));
 		}
 		else
 		{
@@ -1209,7 +1209,7 @@ Script "SoF_BulletDamage" (int damage)
 			//if(StrLeft(GetActorClass(0),4)=="RTCW" && GetCvar("samsara_mixerloaded"))
 				//GiveInventory("RTCW_RemoveHat",1);
 
-			SetResultValue(damage * (1 + !isdeathgibber));
+			SetResultValue(damage * (1 + (!isdeathgibber && !issmgdeathgibber)));
 		}
 		else if(bulletType == 1 || bulletType == 3)
 		{
