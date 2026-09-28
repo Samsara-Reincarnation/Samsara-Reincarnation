@@ -58,7 +58,7 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			//Health Bars
             if (GetCVar("screenblocks") < 11)
             {
-			    SetHudSize(320,240,1);
+			    SetHudSize(320,200,1);
 
 			    SetFont("health3D");
 
@@ -69,13 +69,31 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			    if (GetActorProperty(0, APROP_HEALTH) < 1)    { SetFont("TNT1A0"); }
 
 			    if (GetActorProperty(0, APROP_HEALTH) >= 100)
-				    HudMessage(s:healthcount[10];0,rottstartid+11556,0,17.1,  239.1,0.1);
+				    HudMessage(s:healthcount[10];0,rottstartid+11556,0,20.1,  182.1,0.1);
 			    else
 			    if (GetActorProperty(0, APROP_HEALTH) > 10)
-				    HudMessage(s:healthcount[GetActorProperty(0, APROP_HEALTH)/10];0,rottstartid+11556,0,17.1 , 239.1,0.1);
+				    HudMessage(s:healthcount[GetActorProperty(0, APROP_HEALTH)/10];0,rottstartid+11556,0,20.1 , 182.1,0.1);
 			    else
 			    if(GetActorProperty(0, APROP_HEALTH) != 0)
-				    HudMessage(s:healthcount[1];0,rottstartid+11556,0,17.1 , 239.1,0.1);
+				    HudMessage(s:healthcount[1];0,rottstartid+11556,0,20.1 , 182.1,0.1);
+					
+					
+				SetFont("health3D");
+
+			    if (CheckInventory("BasicArmor") > 100)  { SetFont("health3d"); }
+			    if (CheckInventory("BasicArmor") <= 100) { SetFont("health3c"); }
+			    if (CheckInventory("BasicArmor") <= 40)  { SetFont("health2c"); }
+			    if (CheckInventory("BasicArmor") <= 20)  { SetFont("health1c"); }
+			    if (CheckInventory("BasicArmor") < 1)    { SetFont("TNT1A0"); }
+
+			    if (CheckInventory("BasicArmor") >= 100)
+				    HudMessage(s:healthcount[10];0,rottstartid+11555,0,20.1,  197.1,0.1);
+			    else
+			    if (CheckInventory("BasicArmor") > 10)
+				    HudMessage(s:healthcount[CheckInventory("BasicArmor")/10];0,rottstartid+11555,0,20.1 , 197.1,0.1);
+			    else
+			    if(CheckInventory("BasicArmor") != 0)
+				    HudMessage(s:healthcount[1];0,rottstartid+11555,0,20.1 , 197.1,0.1);
             }
 	
 			//Dying sounds
@@ -172,7 +190,7 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 	    		}
             }
 
-			SetHudSize(640, 480, 1);	
+			SetHudSize(320, 200, 1);	
 			if (CheckWeapon("DrunkMissiles"))
 			{
 				p_ammo = CheckInventory("DMissiles"); // Yes I know this could be made into arrays, I'm lazeh
@@ -183,15 +201,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;
 				
-				SetFont("PDNKZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO4C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				HudMessage(d:CheckInventory("DMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMD0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -211,16 +222,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PBAZZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO1C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("RottMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMA0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);				
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -240,16 +243,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PFBMZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO2C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("FBMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMC0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);			
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -269,16 +264,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PDSKA0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMOAC");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("DMMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);			
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMS0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -298,16 +285,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PSPLZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO6C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("SMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);			
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMO0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -327,16 +306,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PFWLZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO5C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("FWMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);				
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMT0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);		
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -356,13 +327,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PBATB0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO8C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("BMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);			
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 			}
 
 			if (CheckWeapon("Dark Staff"))
@@ -375,13 +341,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("PKE_B0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,470.0,0.1);
 				SetFont("AMMO7C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("DSEnergy"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);			
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
 			}
 
 			if (CheckWeapon("HeatSeeker"))
@@ -393,16 +354,9 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				else
 				if(p_ammo != 0)
 					p_ammo = 1;	
-				SetFont("PHSEZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,634.0  ,455.1,0.1);
+
 				SetFont("AMMO3C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,635.2  ,478.1,0.1);						
-				SetHudSize(480, 360, 1);
-				SetFont("AMSMB0");
-				HudMessage(s:"A"; 0, rottstartid+11576, -1, 490.0  , 360.1, 0.1);	
-				SetFont("ScoreFont");
-				SetHudSize(640, 480, 1);
-				HudMessage(d:CheckInventory("HSMissiles"); 0, rottstartid+11577, -1,549.2  , 465.1,0.1);	
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);						
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -414,10 +368,6 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			
 			if (CheckWeapon("God Hand"))
 			{
-				HudMessage(s:"";0,rottstartid+11578,0,580.5  ,470.0,0.1);
-				SetFont("INF_C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
 				SetFont("GDMODEP");
 				SetHudSize(320, 200, 1);
 				SetHudClipRect(184,0,16,13); 
@@ -427,37 +377,15 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 
 			if (CheckWeapon("Doggie"))
 			{
-				HudMessage(s:"";0,rottstartid+11578,0,580.5  ,470.0,0.1);
-				SetFont("AMMO10C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
 				SetFont("DGMODEP");
 				SetHudSize(320, 200, 1);
 				SetHudClipRect(184,0,16,13); 
 				HudMessage(s:"A"; HUDMSG_NOTWITHFULLMAP, rottstartid+11380, 0, 192.1 , 23.1 - ((GetActorPowerupTics(0,"PowerDoggyMorph")/81) * 1.0), 0.1);
 				SetHudClipRect(0,0,0,0);
 			}
-
-			if (CheckWeapon("RPistol"))
-			{
-				SetFont("PPSTZ0");
-				HudMessage(s:"A";0,rottstartid+11578,0,590.5  ,470.0,0.1);
-				SetFont("INF_C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
-				SetFont("AMMO9C");	
-				HudMessage(s:"A";0,rottstartid+11580,0,613.1  ,478.1,0.1);				
-			}
 			
 			if (CheckWeapon("Double Pistols"))
 			{
-				SetFont("PPSTZ0");
-				HudMessage(s:"AA";0,rottstartid+11578,0,565.5  ,470.0,0.1);
-				SetFont("INF_C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
-				SetFont("AMMO9C");	
-				HudMessage(s:"A";0,rottstartid+11580,0,613.1  ,478.1,0.1);				
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -467,23 +395,8 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
                 }
 			}
 
-			if (CheckWeapon("RottKnife"))
-			{
-				HudMessage(s:"";0,rottstartid+11578,0,580.5  ,470.0,0.1);
-				SetFont("INF_C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
-			}
-
 			if (CheckWeapon("MP40"))
 			{
-				SetFont("PM40Z0");
-				HudMessage(s:"A";0,rottstartid+11578,0,585.5  ,480.0,0.1);
-				SetFont("INF_C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
-				SetFont("AMMO9C");
-				HudMessage(s:"A";0,rottstartid+11580,0,613.1  ,478.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -495,13 +408,6 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			
 			if (CheckWeapon("RoTTM60"))
 			{
-				SetFont("PM60Z0");
-				HudMessage(s:"A";0,rottstartid+11578,0,585.5  ,480.0,0.1);
-				SetFont("INF_C");
-				SetHudSize(640,480,1);
-				HudMessage(s:"A";0,rottstartid+11579,0,595.1  ,478.1,0.1);
-				SetFont("AMMO9C");
-				HudMessage(s:"A";0,rottstartid+11580,0,613.1  ,478.1,0.1);
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -517,11 +423,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 
             if (GetCVar("screenblocks") < 11)
             {
-                if (GetActorProperty(0, APROP_HEALTH) > 0)
+                /*if (GetActorProperty(0, APROP_HEALTH) > 0)
                 {
                     SetFont("RHEARTX2");
                     HudMessage(s:"A"; 0, rottstartid+11567, 0, 7.1,   238.1, 0.1);
-                }
+                }*/
 			
                 SetFont("SCORBACK");
                 HudMessage(s:"A"; HUDMSG_PLAIN|HUDMSG_NOTWITHFULLMAP, rottstartid+11401, -1, 0.1, 0.1, 0.1);	
