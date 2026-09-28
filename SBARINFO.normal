@@ -4014,17 +4014,17 @@ StatusBar Normal, ForceScaled
         InInventory FactoryKey { DrawImage "STRIKEYN", 128, 185; }
         InInventory MineKey { DrawImage "STRIKEYO", 134, 185; }
 
-        InInventory ChickenModeOn { DrawNumber 5, LifeFont, Untranslated, ChickenKillCount, fillzeros, 219, 169; }
+        InInventory ChickenModeOn { DrawNumber 5, LifeFont, Untranslated, ChickenKillCount, FillZeros, 219, 169; }
         else
         {
-            GameMode Deathmatch, Possession, TeamGame { DrawNumber 5, LifeFont, Untranslated, Frags, fillzeros, 219, 169; }
-            else GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawNumber 5, LifeFont, Untranslated, KillCountAmountTrue, fillzeros, 219, 169; }
+            GameMode Deathmatch, Possession, TeamGame { DrawNumber 5, LifeFont, Untranslated, Frags, FillZeros, 219, 169; }
+            else GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawNumber 5, LifeFont, Untranslated, KillCountAmountTrue, FillZeros, 219, 169; }
         }
 
         InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 68, Center; }
 
         DrawSelectedInventory AlwaysShowCounter, Center, ROTTFONT, 160, 184, 169, 192, Untranslated;
-		//DrawSelectedInventory AlwaysShowCounter, Center, KPHUDS, 160, 184, 166, 193, KPWhite;
+        //DrawSelectedInventory AlwaysShowCounter, Center, KPHUDS, 160, 184, 166, 193, KPWhite;
 
         GameMode TeamGame, CTF, OneFlagCTF, Skulltag, TeamPossession, TeamLMS, Domination
         {
@@ -4183,24 +4183,64 @@ StatusBar Normal, ForceScaled
                 else { DrawBar "SAM_BAR1", "SAM_BAR0", KillCountBar, Horizontal, 238, 162; }
             }
         }
-		
-		IsSelected "Double Pistols" { DrawImage "PPS2Z0", 286, 170; DrawImage "INF_C", 296, 198; DrawImage "AMMO9C", 314, 198; }
-		IsSelected "RPistol" { DrawImage "PPSTZ0", 286, 170; DrawImage "INF_C", 296, 198; DrawImage "AMMO9C", 314, 198; }
-		IsSelected "MP40" { DrawImage "PM40Z0", 286, 170; DrawImage "INF_C", 296, 198; DrawImage "AMMO9C", 314, 198; }
-		IsSelected "HeatSeeker" { DrawImage "PHSEZ0", 286, 170; DrawImage "AMSMB0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo HSMissiles, fillzeros, 249, 169;}
-		IsSelected "Bazooka" { DrawImage "PBAZZ0", 286, 170; DrawImage "AMSMA0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo RottMissiles, fillzeros, 249, 169;}
-		IsSelected " Firebomb " { DrawImage "PFBMZ0", 286, 170; DrawImage "AMSMC0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo FBMissiles, fillzeros, 249, 169;}
-		IsSelected "DrunkMissiles" { DrawImage "PDNKZ0", 286, 170; DrawImage "AMSMD0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo DMissiles, fillzeros, 249, 169;}
-		IsSelected "FlameWall" { DrawImage "PFWLZ0", 286, 170; DrawImage "AMSMT0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo FWMissiles, fillzeros, 249, 169;}
-		IsSelected "RoTTM60" { DrawImage "PM60Z0", 286, 170; DrawImage "INF_C", 296, 198; DrawImage "AMMO9C", 314, 198; }
-		IsSelected "Doomstick" { DrawImage "PDSKZ0", 286, 170; DrawImage "AMSMS0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo DMMissiles, fillzeros, 249, 169;}
-		IsSelected "Split Missile" { DrawImage "PSPLZ0", 286, 170; DrawImage "AMSMO0", 311, 199; DrawNumber 3, ScoreFont, untranslated, Ammo SMissiles, fillzeros, 249, 169;}
-		IsSelected "Excalibat" { DrawImage "PBATB0", 286, 170; DrawImage "AMMO8C", 312, 198; DrawNumber 3, ScoreFont, untranslated, Ammo BMissiles, fillzeros, 249, 169;}
-		IsSelected "Dark Staff" { DrawImage "PKE_Z0", 286, 170; DrawImage "AMMO7C", 312, 198; DrawNumber 3, ScoreFont, untranslated, Ammo DSEnergy, fillzeros, 249, 169;}
-		IsSelected "RottKnife" { DrawImage "INF_C", 305, 198; }
-		IsSelected "God Hand" { DrawImage "INF_C", 305, 198; }
-		IsSelected "Doggie" { DrawImage "AMMO10C", 304, 198; }
 
+        IsSelected RottKnife { DrawImage "INF_C", 305, 198; }
+        else IsSelected RPistol
+        {
+            DrawImage "PPSTZ0", 286, 170;
+            DrawImage "INF_C", 296, 198;
+            DrawImage "AMMO9C", 314, 198;
+        } else IsSelected "Double Pistols" {
+            DrawImage "PPS2Z0", 286, 170;
+            DrawImage "INF_C", 296, 198;
+            DrawImage "AMMO9C", 314, 198;
+        } else IsSelected MP40 {
+            DrawImage "PM40Z0", 286, 170;
+            DrawImage "INF_C", 296, 198;
+            DrawImage "AMMO9C", 314, 198;
+        } else IsSelected HeatSeeker {
+            DrawImage "PHSEZ0", 286, 170;
+            DrawImage "AMSMB0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected Bazooka {
+            DrawImage "PBAZZ0", 286, 170;
+            DrawImage "AMSMA0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected RoTTM60 {
+            DrawImage "PM60Z0", 286, 170;
+            DrawImage "INF_C", 296, 198;
+            DrawImage "AMMO9C", 314, 198;
+        } else IsSelected " Firebomb " {
+            DrawImage "PFBMZ0", 286, 170;
+            DrawImage "AMSMC0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected Doomstick {
+            DrawImage "PDSKZ0", 286, 170;
+            DrawImage "AMSMS0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected DrunkMissiles {
+            DrawImage "PDNKZ0", 286, 170;
+            DrawImage "AMSMD0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected "Split Missile" {
+            DrawImage "PSPLZ0", 286, 170;
+            DrawImage "AMSMO0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected FlameWall {
+            DrawImage "PFWLZ0", 286, 170;
+            DrawImage "AMSMT0", 311, 199;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected Excalibat {
+            DrawImage "PBATB0", 286, 170;
+            DrawImage "AMMO8C", 312, 198;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        } else IsSelected "Dark Staff" {
+            DrawImage "PKE_Z0", 286, 170;
+            DrawImage "AMMO7C", 312, 198;
+            DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+        }
+        else IsSelected "God Hand" { DrawImage "INF_C", 305, 198; }
+        else IsSelected Doggie { DrawImage "AMMO10C", 304, 198; }
     }
 
     PlayerType BlakeStone
