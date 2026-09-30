@@ -56,67 +56,59 @@ Actor " Hunting Rifle With Scope " : RRWeapon
 			Goto SetSoberViewFire
 			TNT1 A 0 A_JumpIfInventory("IMUSTRELOADTHISRIFLEx",1,"Reload")
 			TNT1 A 0 A_JumpIfInventory("RZoomed",1,"ZoomFire")
-			R_HC GG 1 Bright
-			R_HC BBCC 1 Bright
+			R_HC GBC 2 Bright
 		Hold:
 			TNT1 A 0 A_JumpIfInventory("RZoomed",1,"ZoomHold")
+			TNT1 A 0 A_GiveInventory("IMUSTRELOADTHISRIFLEx",1)
 			TNT1 A 0 A_PlaySound("RR/RifleF",CHAN_WEAPON)
 			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
-			R_HC C 1 Bright A_FireBullets(1.25,1.25,1,100,"RRPuff",FBF_NORANDOM|FBF_USEAMMO)
+			TNT1 A 0 A_FireBullets(1.25,1.25,1,100,"RRPuff",FBF_NORANDOM|FBF_USEAMMO)
 			Goto A
-			R_HC C 1 Bright A_FireBullets(1.25,1.25,1,100,"RRPuffCoop",FBF_NORANDOM|FBF_USEAMMO)
+			TNT1 A 0 A_FireBullets(1.25,1.25,1,100,"RRPuffCoop",FBF_NORANDOM|FBF_USEAMMO)
 		A:
 			TNT1 A 0 A_AlertMonsters
-			R_HC CDDDDDDDDDDDDDDDDCCCCCC 1 Bright
-			TNT1 A 0 A_GiveInventory("IMUSTRELOADTHISRIFLEx",1)
-			R_HC C 1 Bright
+			R_HC C 2 Bright
+			R_HC D 16 Bright
+			R_HC C 7 Bright
 		Reload:
 			TNT1 A 0 A_JumpIfInventory("Clip",5,1)
 			Goto Ready
 			TNT1 A 0 A_PlaySound("RR/RifleR",CHAN_BODY)
-			R_HC EEE 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			R_HC EFF 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			R_HC III 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			TNT1 A 0 A_TakeInventory("IMUSTRELOADTHISRIFLEx",1)
-			R_HC IIIIHHHHHHHHIIIIIIIIIHHHHHHHHHHHHH 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC E 4 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC F 2 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC I 7 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC H 8 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC I 9 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC H 13 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			TNT1 A 0 Bright A_Refire //Only chance to hold fire
 			Goto Ready
 		ZoomFire:
-			R_HC CCC 1 Bright
-			TNT1 A 0 A_GiveInventory("IMUSTRELOADTHISRIFLEx",1)
-			TNT1 A 0 A_PlaySound("RR/RifleF",CHAN_WEAPON)
-			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
-			R_HC C 1 Bright A_FireBullets(0,0,1,100,"RRPuff",FBF_NORANDOM|FBF_USEAMMO)
-			Goto B
-			R_HC C 1 Bright A_FireBullets(0,0,1,100,"RRPuffCoop",FBF_NORANDOM|FBF_USEAMMO)
-		B:
-			TNT1 A 0 A_AlertMonsters
-			R_HC DDDDDDDDDDDDDDDCCCCCC 1 Bright
-			R_HC C 1 Bright
-			Goto Reload
+			R_HC C 3 Bright
 		ZoomHold:
 			TNT1 A 0 A_GiveInventory("IMUSTRELOADTHISRIFLEx",1)
 			TNT1 A 0 A_PlaySound("RR/RifleF",CHAN_WEAPON)
 			TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,2)
-			R_HC C 1 Bright A_FireBullets(0,0,1,100,"RRPuff",FBF_NORANDOM|FBF_USEAMMO)
-			Goto B_
-			R_HC C 1 Bright A_FireBullets(0,0,1,100,"RRPuffCoop",FBF_NORANDOM|FBF_USEAMMO)
-		B_:
+			TNT1 A 0 A_FireBullets(0,0,1,100,"RRPuff",FBF_NORANDOM|FBF_USEAMMO)
+			Goto B
+			TNT1 A 0 A_FireBullets(0,0,1,100,"RRPuffCoop",FBF_NORANDOM|FBF_USEAMMO)
+		B:
 			TNT1 A 0 A_AlertMonsters
-			R_HC DDDDDDDDDDDDDDDCCCCCC 1 Bright
-			R_HC C 1 Bright
+			R_HC C 2 Bright
+			R_HC D 16 Bright
+			R_HC C 7 Bright
 			Goto Reload
 		AltFire:
         Zoom:
 			TNT1 A 0 A_JumpIfInventory("RZoomed",1,"Zoomout")
 			TNT1 A 0 A_ZoomFactor(3.5)
-			R_HC GGGBBBCCC 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC GBC 3 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			TNT1 A 0
 			TNT1 A 0 A_GiveInventory("RZoomed",1)
 			Goto ZoomReady
 		Zoomout:
 			TNT1 A 0 A_ZoomFactor(1.0)
-			R_HC CCCBBBGGG 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			R_HC CBG 3 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			TNT1 A 0
 			TNT1 A 0 A_TakeInventory("RZoomed",2)
 			Goto Ready
@@ -234,17 +226,15 @@ Actor " Chicken Crossbow " : RRWeapon
 			Goto A
 			TNT1 A 0 A_FireCustomMissile("RRCHICKENBOMB_3",0,1,8,0)
 		A:
-			CH_R CCC 1 Bright
-			CH_R DDDDDDDD 1 Bright
+			CH_R C 3 Bright
+			CH_R D 8 Bright
 		Reload:
 			TNT1 A 0 A_JumpIfInventory("ChickenAmmo",1,1)
 			Goto ReadyAmmoless
 			TNT1 A 0 A_PlaySound("RR/XBOWReload",CHAN_BODY)
-			CH_R EEEE 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			CH_R FFFF 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			CH_R GGGG 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			CH_R HHHHH 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
-			CH_R AAAAAA 1 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			CH_R EFG 4 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			CH_R H 5 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
+			CH_R A 6 Bright A_WeaponReady(WRF_NOBOB|WRF_NOFIRE|WRF_NOSWITCH)
 			Goto Ready
 		IntroTaunt:
 			TNT1 A 0 A_JumpIfInventory("SamsaraBallgag",1,2)
