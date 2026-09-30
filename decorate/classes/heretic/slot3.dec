@@ -109,13 +109,13 @@ actor CrossbowFX1B : CrossbowFX1
     States
     {
       Spawn:
-        FX03 B -1 Bright Light("BIGBOWBOLT")
+        HCBS B -1 Bright Light("BIGBOWBOLT")
         stop
 
       Death:
-        FX03 H 8 Bright Light("BIGBOWBOLT_X1")
-        FX03 I 8 Bright Light("BIGBOWBOLT_X2")
-        FX03 J 8 Bright Light("BIGBOWBOLT_X3")
+        HCBS H 8 Bright Light("BIGBOWBOLT_X1")
+        HCBS I 8 Bright Light("BIGBOWBOLT_X2")
+        HCBS J 8 Bright Light("BIGBOWBOLT_X3")
         stop
     }
 }
@@ -133,13 +133,13 @@ actor CrossbowFX12 : CrossbowFX1
     States
     {
       Spawn:
-        FX03 B -1 Bright Light("BIGBOWBOLT")
+        HCBS B -1 Bright Light("BIGBOWBOLT")
         stop
 
       Death:
-        FX03 H 8 Bright Light("BIGBOWBOLT_X1")
-        FX03 I 8 Bright Light("BIGBOWBOLT_X2")
-        FX03 J 8 Bright Light("BIGBOWBOLT_X3")
+        HCBS H 8 Bright Light("BIGBOWBOLT_X1")
+        HCBS I 8 Bright Light("BIGBOWBOLT_X2")
+        HCBS J 8 Bright Light("BIGBOWBOLT_X3")
         stop
     }
 }
@@ -161,13 +161,13 @@ actor CrossbowFX3B : CrossbowFX3
     States
     {
       Spawn:
-        FX03 A -1 Bright Light("SMALLBOWBOLT")
+        HCBS A -1 Bright Light("SMALLBOWBOLT")
         stop
 
       Death:
-        FX03 C 8 Bright Light("SMALLBOWBOLT_X1")
-        FX03 D 8 Bright Light("SMALLBOWBOLT_X2")
-        FX03 E 8 Bright Light("SMALLBOWBOLT_X3")
+        HCBS C 8 Bright Light("SMALLBOWBOLT_X1")
+        HCBS D 8 Bright Light("SMALLBOWBOLT_X2")
+        HCBS E 8 Bright Light("SMALLBOWBOLT_X3")
         stop
     }
 }
@@ -184,13 +184,13 @@ actor CrossbowFX32 : CrossbowFX3
     States
     {
       Spawn:
-        FX03 A -1 Bright Light("SMALLBOWBOLT")
+        HCBS A -1 Bright Light("SMALLBOWBOLT")
         stop
 
       Death:
-        FX03 C 8 Bright Light("SMALLBOWBOLT_X1")
-        FX03 D 8 Bright Light("SMALLBOWBOLT_X2")
-        FX03 E 8 Bright Light("SMALLBOWBOLT_X3")
+        HCBS C 8 Bright Light("SMALLBOWBOLT_X1")
+        HCBS D 8 Bright Light("SMALLBOWBOLT_X2")
+        HCBS E 8 Bright Light("SMALLBOWBOLT_X3")
         stop
     }
 }
@@ -245,13 +245,13 @@ actor CrossbowFX2B : CrossbowFX2
     States
     {
       Spawn:
-        FX03 B 1 Bright Light("BIGBOWBOLT") A_SpawnItemEx("CrossbowFX4",random2[BoltSpark]()*0.015625,random2[BoltSpark]()*0.015625,0,0,0,0,0,SXF_ABSOLUTEPOSITION,50)
+        HCBS B 1 Bright Light("BIGBOWBOLT") A_SpawnItemEx("CrossbowFX4BCorvus",random2[BoltSpark]()*0.015625,random2[BoltSpark]()*0.015625,0,0,0,0,0,SXF_ABSOLUTEPOSITION,50)
         loop
 
       Death:
-        FX03 H 8 Bright Light("BIGBOWBOLT_X1")
-        FX03 I 8 Bright Light("BIGBOWBOLT_X2")
-        FX03 J 8 Bright Light("BIGBOWBOLT_X3")
+        HCBS H 8 Bright Light("BIGBOWBOLT_X1")
+        HCBS I 8 Bright Light("BIGBOWBOLT_X2")
+        HCBS J 8 Bright Light("BIGBOWBOLT_X3")
         stop
     }
 }
@@ -269,21 +269,30 @@ actor CrossbowFX22 : CrossbowFX2
     States
     {
       Spawn:
-        FX03 B 1 Bright Light("BIGBOWBOLT") A_SpawnItemEx("CrossbowFX4",random2[BoltSpark]()*0.015625,random2[BoltSpark]()*0.015625,0,0,0,0,0,SXF_ABSOLUTEPOSITION,50)
+        HCBS B 1 Bright Light("BIGBOWBOLT") A_SpawnItemEx("CrossbowFX4BCorvus",random2[BoltSpark]()*0.015625,random2[BoltSpark]()*0.015625,0,0,0,0,0,SXF_ABSOLUTEPOSITION,50)
         loop
 
       Death:
-        FX03 H 8 Bright Light("BIGBOWBOLT_X1")
-        FX03 I 8 Bright Light("BIGBOWBOLT_X2")
-        FX03 J 8 Bright Light("BIGBOWBOLT_X3")
+        HCBS H 8 Bright Light("BIGBOWBOLT_X1")
+        HCBS I 8 Bright Light("BIGBOWBOLT_X2")
+        HCBS J 8 Bright Light("BIGBOWBOLT_X3")
         stop
     }
 }
 
-actor CrossbowFX5 : CrossbowFX4 replaces CrossbowFX4
+actor CrossbowFX4B : CrossbowFX4 replaces CrossbowFX4
 {
-    DamageType "CorvusCrossbow"
-    +CLIENTSIDEONLY
-    Alpha 0.75
     Gravity 0.095 //Gravity 0.85 //+LOWGRAVITY //+NOGRAVITY
+    Alpha 0.75
+    +CLIENTSIDEONLY
+}
+
+actor CrossbowFX4BCorvus : CrossbowFX4B
+{
+    States
+    {
+      Spawn:
+        HCBS FG 8 Bright
+        stop
+    }
 }

@@ -669,7 +669,7 @@ actor "Pyro Cannon" : Weapon
 		stop
 
 	Ready:
-		PYRG A 1 A_WeaponReady
+		PYRG H 1 A_WeaponReady
 		loop
 
 	// Unpowered
@@ -678,7 +678,7 @@ actor "Pyro Cannon" : Weapon
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectPowered")
 	DeselectContinue:
 		TNT1 A 0 A_Lower
-		PYRG A 1 A_Lower
+		PYRG H 1 A_Lower
 		goto Deselect
 
 	Select:
@@ -686,15 +686,15 @@ actor "Pyro Cannon" : Weapon
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectPowered")
 	SelectContinue:
 		TNT1 A 0 A_Raise
-		PYRG A 1 A_Raise
+		PYRG H 1 A_Raise
 		goto Select
 
 	Fire:
-		PYRG A 5
-		PYRG B 8 Bright A_GunFlash
-		PYRG C 10 Bright A_GiveInventory("SamsaraDoomguyStrPyroCannonAttackHandler")
-		PYRG DEFG 5 Bright
-		PYRG A 5 A_ReFire
+		PYRG H 5
+		PYRG I 8 Bright A_GunFlash
+		PYRG J 10 Bright A_GiveInventory("SamsaraDoomguyStrPyroCannonAttackHandler")
+		PYRG KLMN 5 Bright
+		PYRG H 5 A_ReFire
 		goto Ready
 
 	Flash:

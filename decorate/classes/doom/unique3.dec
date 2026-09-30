@@ -7,7 +7,7 @@ actor DGStrHasWPK : Counter { Inventory.MaxAmount 3 }
 actor SamsaraDoomguyStrWeaponPowerItem : CustomInventory
 {
     Inventory.UseSound ""
-    Inventory.Icon "POWIA0"
+    Inventory.Icon "POWIB0"
     Inventory.MaxAmount 3
     Inventory.InterHubAmount 3
     Inventory.RestrictedTo "DoomguyPlayer"
@@ -17,7 +17,7 @@ actor SamsaraDoomguyStrWeaponPowerItem : CustomInventory
     States
     {
       Use:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"UseFailPPW")
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 71), "UseFailPPW")
         TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 13, 0), "UseFail")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,2)
         TNT1 A 0 A_TakeInventory("DGStrHasWPK",1)
