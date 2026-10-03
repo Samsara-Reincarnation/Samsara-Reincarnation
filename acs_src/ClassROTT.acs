@@ -50,6 +50,47 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 	int randnum, turn, frags, p_ammo, eyey=0.1, eyex=0, phealth, rhealth;
 	while(CheckInventory("RottClass"))
 	{
+	
+		if (GetCVar("screenblocks") >= 11) //had to duplicate this here to make sure hp/armor bars appear on automap at all times -- zax
+        {
+			SetHudSize(320,200,1);
+
+			SetFont("health3D");
+
+		    if (GetActorProperty(0, APROP_HEALTH) > 100)  { SetFont("health3d"); }
+		    if (GetActorProperty(0, APROP_HEALTH) <= 100) { SetFont("health3c"); }
+		    if (GetActorProperty(0, APROP_HEALTH) <= 40)  { SetFont("health2c"); }
+		    if (GetActorProperty(0, APROP_HEALTH) <= 20)  { SetFont("health1c"); }
+		    if (GetActorProperty(0, APROP_HEALTH) < 1)    { SetFont("TNT1A0"); }
+
+		    if (GetActorProperty(0, APROP_HEALTH) >= 100)
+			    HudMessage(s:healthcount[10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11556,0,20.1,  182.1,0.1);
+		    else
+		    if (GetActorProperty(0, APROP_HEALTH) > 10)
+			    HudMessage(s:healthcount[GetActorProperty(0, APROP_HEALTH)/10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11556,0,20.1 , 182.1,0.1);
+		    else
+		    if(GetActorProperty(0, APROP_HEALTH) != 0)
+			    HudMessage(s:healthcount[1];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11556,0,20.1 , 182.1,0.1);
+					
+					
+			SetFont("health3D");
+
+		    if (CheckInventory("BasicArmor") > 100)  { SetFont("health3d"); }
+		    if (CheckInventory("BasicArmor") <= 100) { SetFont("health3c"); }
+		    if (CheckInventory("BasicArmor") <= 40)  { SetFont("health2c"); }
+		    if (CheckInventory("BasicArmor") <= 20)  { SetFont("health1c"); }
+		    if (CheckInventory("BasicArmor") < 1)    { SetFont("TNT1A0"); }
+
+		    if (CheckInventory("BasicArmor") >= 100)
+			    HudMessage(s:healthcount[10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11555,0,20.1,  197.1,0.1);
+		    else
+		    if (CheckInventory("BasicArmor") > 10)
+			    HudMessage(s:healthcount[CheckInventory("BasicArmor")/10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11555,0,20.1 , 197.1,0.1);
+		    else
+		    if(CheckInventory("BasicArmor") != 0)
+			    HudMessage(s:healthcount[1];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11555,0,20.1 , 197.1,0.1);
+        }
+			
 		if (GetCVar("screenblocks") < 11 || (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD")))
 		{	
 			int time;
@@ -95,6 +136,46 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			    if(CheckInventory("BasicArmor") != 0)
 				    HudMessage(s:healthcount[1];0,rottstartid+11555,0,20.1 , 197.1,0.1);
             }
+			
+			else if (GetCVar("screenblocks") >= 11)
+            {
+			    SetHudSize(320,200,1);
+
+			    SetFont("health3D");
+
+			    if (GetActorProperty(0, APROP_HEALTH) > 100)  { SetFont("health3d"); }
+			    if (GetActorProperty(0, APROP_HEALTH) <= 100) { SetFont("health3c"); }
+			    if (GetActorProperty(0, APROP_HEALTH) <= 40)  { SetFont("health2c"); }
+			    if (GetActorProperty(0, APROP_HEALTH) <= 20)  { SetFont("health1c"); }
+			    if (GetActorProperty(0, APROP_HEALTH) < 1)    { SetFont("TNT1A0"); }
+
+			    if (GetActorProperty(0, APROP_HEALTH) >= 100)
+				    HudMessage(s:healthcount[10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11556,0,20.1,  182.1,0.1);
+			    else
+			    if (GetActorProperty(0, APROP_HEALTH) > 10)
+				    HudMessage(s:healthcount[GetActorProperty(0, APROP_HEALTH)/10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11556,0,20.1 , 182.1,0.1);
+			    else
+			    if(GetActorProperty(0, APROP_HEALTH) != 0)
+				    HudMessage(s:healthcount[1];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11556,0,20.1 , 182.1,0.1);
+					
+					
+				SetFont("health3D");
+
+			    if (CheckInventory("BasicArmor") > 100)  { SetFont("health3d"); }
+			    if (CheckInventory("BasicArmor") <= 100) { SetFont("health3c"); }
+			    if (CheckInventory("BasicArmor") <= 40)  { SetFont("health2c"); }
+			    if (CheckInventory("BasicArmor") <= 20)  { SetFont("health1c"); }
+			    if (CheckInventory("BasicArmor") < 1)    { SetFont("TNT1A0"); }
+
+			    if (CheckInventory("BasicArmor") >= 100)
+				    HudMessage(s:healthcount[10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11555,0,20.1,  197.1,0.1);
+			    else
+			    if (CheckInventory("BasicArmor") > 10)
+				    HudMessage(s:healthcount[CheckInventory("BasicArmor")/10];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11555,0,20.1 , 197.1,0.1);
+			    else
+			    if(CheckInventory("BasicArmor") != 0)
+				    HudMessage(s:healthcount[1];HUDMSG_NOTWITH3DVIEW|HUDMSG_NOTWITHOVERLAYMAP,rottstartid+11555,0,20.1 , 197.1,0.1);
+            }
 	
 			//Dying sounds
 			if(GetActorProperty(0, APROP_HEALTH) <= 0)
@@ -106,7 +187,7 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			}
 			else { dyingsound = false; }
 
-			if(GetActorProperty(0, APROP_HEALTH) <= 20 && dyingtimer >= 175)
+			if(GetActorProperty(0, APROP_HEALTH) <= 20 && dyingtimer >= 175 && !isDead(0))
 			{
 				LocalAmbientSound("gen/dying",127);
 				dyingtimer = 0;
@@ -120,7 +201,12 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 			{
 				SetFont("FIREP");
 				SetHudSize(320, 200, 1);
-				HudMessage(s:"A"; 0, rottstartid+11379, 0, 209.1  , 11.1, 0.1);
+				HudMessage(s:"A"; 0, rottstartid+11379, 0, 168.1  , 11.1, 0.1);
+				
+				if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+				{
+				HudMessage(s:"A"; 0, rottstartid+11351, 0, 40.1  , 180.1, 0.1);
+				}
 			}
 		
 			if (CheckInventory("PowerBulletProofVest"))
@@ -128,6 +214,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				SetFont("ARMORP");
 				SetHudSize(320, 200, 1);
 				HudMessage(s:"A"; 0, rottstartid+11379, 0, 209.1  , 11.1, 0.1);
+				
+				if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+				{
+				HudMessage(s:"A"; 0, rottstartid+11351, 0, 40.1  , 180.1, 0.1);
+				}
 			}
 
 			// Weapon Display
@@ -201,8 +292,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;
 				
-				SetFont("AMMO4C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				if (GetCVar("screenblocks") < 11)
+				{
+					SetFont("AMMO4C");
+					HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -222,8 +316,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("AMMO1C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				if (GetCVar("screenblocks") < 11)
+				{
+					SetFont("AMMO1C");
+					HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -243,8 +340,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
-				SetFont("AMMO2C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				if (GetCVar("screenblocks") < 11)
+				{
+					SetFont("AMMO2C");
+					HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -264,8 +364,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
+				if (GetCVar("screenblocks") < 11)
+				{
 				SetFont("AMMOAC");
 				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -285,8 +388,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
+				if (GetCVar("screenblocks") < 11)
+				{
 				SetFont("AMMO6C");
 				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -306,8 +412,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
+				if (GetCVar("screenblocks") < 11)
+				{
 				SetFont("AMMO5C");
 				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -327,8 +436,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
+				if (GetCVar("screenblocks") < 11)
+				{
 				SetFont("AMMO8C");
 				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 			}
 
 			if (CheckWeapon("Dark Staff"))
@@ -341,8 +453,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;			
 			
+				if (GetCVar("screenblocks") < 11)
+				{
 				SetFont("AMMO7C");
 				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);
+				}
 			}
 
 			if (CheckWeapon("HeatSeeker"))
@@ -355,8 +470,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				if(p_ammo != 0)
 					p_ammo = 1;	
 
+				if (GetCVar("screenblocks") < 11)
+				{
 				SetFont("AMMO3C");
-				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);						
+				HudMessage(s:  ammocounter[p_ammo];0,rottstartid+11579,0,307.2  ,198.1,0.1);	
+				}
 
                 if (CheckInventory("ExpandedHud") && GetCVar("screenblocks") == 11)
                 {
@@ -372,6 +490,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				SetHudSize(320, 200, 1);
 				SetHudClipRect(184,0,16,13); 
 				HudMessage(s:"A"; HUDMSG_NOTWITHFULLMAP, rottstartid+11380, 0, 192.1  , 23.1 - ((GetActorPowerupTics(0,"PowerGodProtection")/81) * 1.0), 0.1);
+				if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+				{
+				SetHudClipRect(32,186,16,13); 
+				HudMessage(s:"A"; HUDMSG_NOTWITHFULLMAP, rottstartid+11350, 0, 40.1  , 209.1 - ((GetActorPowerupTics(0,"PowerGodProtection")/81) * 1.0), 0.1);
+				}
 				SetHudClipRect(0,0,0,0);
 			}
 
@@ -381,6 +504,11 @@ SCRIPT "RoTT452" (void) CLIENTSIDE //452
 				SetHudSize(320, 200, 1);
 				SetHudClipRect(184,0,16,13); 
 				HudMessage(s:"A"; HUDMSG_NOTWITHFULLMAP, rottstartid+11380, 0, 192.1 , 23.1 - ((GetActorPowerupTics(0,"PowerDoggyMorph")/81) * 1.0), 0.1);
+				if (GetCVar("screenblocks") == 11 && CheckInventory("SamsaraUsingNewFullscreenHUD"))
+				{
+				SetHudClipRect(32,186,16,13); 
+				HudMessage(s:"A"; HUDMSG_NOTWITHFULLMAP, rottstartid+11350, 0, 40.1  , 209.1 - ((GetActorPowerupTics(0,"PowerDoggyMorph")/81) * 1.0), 0.1);
+				}
 				SetHudClipRect(0,0,0,0);
 			}
 			

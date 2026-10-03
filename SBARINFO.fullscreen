@@ -1056,7 +1056,16 @@ StatusBar Fullscreen, ForceScaled
                 InInventory SamsaraQuadDamageCooldownDisplay { DrawNumber 3, INDEXFONT, Red, SamsaraQuadDamageCooldownDisplay, 293, 48; }
             }
         } else InInventory RottClass {
-            // Armor
+			DrawImage "ROTTBAR4", 0, 168;
+			DrawImage "ROTTBAR5", 288, 168;
+			DrawImage "RHEARTX3", 0, 152;
+			DrawNumber 3, ROTTFONT2, Untranslated, Health, Alignment(Right), 48, 153, 0, red, 25, blue, 101;
+			InInventory BasicArmor, 1
+			{
+			DrawImage "ARMORF", 0, 136;
+			DrawNumber 3, ROTTFONT2, Untranslated, Armor, Alignment(Right), 48, 137, 0, red, 25, blue, 101;
+			}
+          /*  // Armor
             InInventory BasicArmor, 101 { DrawNumber 4, ROTTFONT, Blue, Armor, Alignment(Left), 22, 182; }
             else { DrawNumber 4, ROTTFONT, Gold, Armor, Alignment(Left), 22, 182; }
             InInventory BasicArmor, 1
@@ -1078,7 +1087,7 @@ StatusBar Fullscreen, ForceScaled
             // Health
             DrawNumber 4, ROTTFONT, Untranslated, Health, Alignment(Left), 22, 172;
             InInventory PowerStrength { DrawImage "HLTHICO2", 10, 172; }
-            else { DrawImage "HLTHICON", 10, 172; }
+            else { DrawImage "HLTHICON", 10, 172; }*/
 
             // Ally cell phone progress
             GameMode SinglePlayer, Cooperative, Invasion, Survival
@@ -1103,68 +1112,73 @@ StatusBar Fullscreen, ForceScaled
             }*/
 
             // Keys
-            GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawKeyBar 100, Horizontal, ReverseRows, 10, 221, 156, 0, 14, 12; }
+            GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawKeyBar 100, Horizontal, ReverseRows, 4, 291, 189, 0, 14, 12; }
 
             // Inventory
-            DrawSelectedInventory AlwaysShowCounter, HUDFONT_SAMS, 290, 22, 293, 30, Untranslated;
+            DrawSelectedInventory AlwaysShowCounter, Center, ROTTFONT, 17, 184, 25, 192, Untranslated;
+			
+			DrawImage "RSKULL", 306, 135;
+            //DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 137;
+			InInventory ChickenModeOn { DrawNumber 3, ROTTFONT2, Untranslated, ChickenKillCount, 303, 137; }
+			else
+			{
+            GameMode Deathmatch, Possession, TeamGame { DrawNumber 3, ROTTFONT2, Untranslated, Frags, 303, 137; }
+            else GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawNumber 3, ROTTFONT2, Untranslated, KillCountAmountTrue, 303, 137; }
+			}
 
-            IsSelected RottKnife { DrawImage "INF_C", 305, 198; }
+            IsSelected RottKnife { DrawImage "INF_C", 305, 164; }
             else IsSelected RPistol
             {
-                DrawImage "PPSTZ0", 286, 170;
-                DrawImage "INF_C", 296, 198;
-                DrawImage "AMMO9C", 314, 198;
+                DrawImage "PPSTZ0", 288, 168;
+                DrawImage "AMMO0D", 288, 152;
             } else IsSelected "Double Pistols" {
-                DrawImage "PPS2Z0", 286, 170;
-                DrawImage "INF_C", 296, 198;
-                DrawImage "AMMO9C", 314, 198;
+                DrawImage "PPS2Z0", 288, 168;
+                DrawImage "AMMO0D", 288, 152;
             } else IsSelected MP40 {
-                DrawImage "PM40Z0", 286, 170;
-                DrawImage "INF_C", 296, 198;
-                DrawImage "AMMO9C", 314, 198;
+                DrawImage "PM40Z0", 288, 168;
+                DrawImage "AMMO0D", 288, 152;
             } else IsSelected HeatSeeker {
-                DrawImage "PHSEZ0", 286, 170;
-                DrawImage "AMSMB0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PHSEZ0", 288, 168;
+                DrawImage "AMSMB0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected Bazooka {
-                DrawImage "PBAZZ0", 286, 170;
-                DrawImage "AMSMA0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PBAZZ0", 288, 168;
+                DrawImage "AMSMA0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected RoTTM60 {
-                DrawImage "PM60Z0", 286, 170;
-                DrawImage "INF_C", 296, 198;
-                DrawImage "AMMO9C", 314, 198;
+                DrawImage "PM60Z0", 288, 168;
+                DrawImage "AMMO0D", 288, 152;
             } else IsSelected " Firebomb " {
-                DrawImage "PFBMZ0", 286, 170;
-                DrawImage "AMSMC0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PFBMZ0", 288, 168;
+                DrawImage "AMSMC0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected Doomstick {
-                DrawImage "PDSKZ0", 286, 170;
-                DrawImage "AMSMS0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PDSKZ0", 288, 168;
+                DrawImage "AMSMS0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected DrunkMissiles {
-                DrawImage "PDNKZ0", 286, 170;
-                DrawImage "AMSMD0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PDNKZ0", 288, 168;
+                DrawImage "AMSMD0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected "Split Missile" {
-                DrawImage "PSPLZ0", 286, 170;
-                DrawImage "AMSMO0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PSPLZ0", 288, 168;
+                DrawImage "AMSMO0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected FlameWall {
-                DrawImage "PFWLZ0", 286, 170;
-                DrawImage "AMSMT0", 311, 199;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PFWLZ0", 288, 168;
+                DrawImage "AMSMT0", 312, 166;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected Excalibat {
-                DrawImage "PBATB0", 286, 170;
-                DrawImage "AMMO8C", 312, 198;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PBATB0", 288, 168;
+                DrawImage "AMMO8C", 313, 165;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             } else IsSelected "Dark Staff" {
-                DrawImage "PKE_Z0", 286, 170;
-                DrawImage "AMMO7C", 312, 198;
-                DrawNumber 3, ScoreFont, Untranslated, Ammo1, FillZeros, 249, 169;
+                DrawImage "PKE_Z0", 288, 168;
+                DrawImage "AMMO7C", 313, 165;
+                DrawNumber 3, ROTTFONT2, Untranslated, Ammo1, 303, 153;
             }
-            else IsSelected "God Hand" { DrawImage "INF_C", 305, 198; }
-            else IsSelected Doggie { DrawImage "AMMO10C", 304, 198; }
+            else IsSelected "God Hand" { DrawImage "INF_C", 305, 164; }
+            else IsSelected Doggie { DrawImage "AMMO10C", 304, 164; }
         } else InInventory HalfLifeClass {
             // Rune icon
             InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 163, Center; }
