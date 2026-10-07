@@ -60,9 +60,21 @@ actor DFSuperCharge : CustomInventory
     {
       Use:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"UseFailPPW")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteInventory",1,"UseInfinite")
         TNT1 A 0 A_PlaySound("katarn/itemuse",CHAN_ITEM)
         TNT1 A 0 A_GiveInventory("KatarnFireRateUp")
         stop
+
+      UseInfinite:
+        TNT1 A 0 A_JumpIfInventory("KatarnFireRateUp",1,"UseInfiniteOff")
+      UseInfiniteOn:
+        TNT1 A 0 A_PlaySound("katarn/itemuse",CHAN_ITEM)
+        TNT1 A 0 A_GiveInventory("KatarnFireRateUp")
+        fail
+
+      UseInfiniteOff:
+        TNT1 A 0 A_TakeInventory("KatarnFireRateUp")
+        fail
 
       UseFailPPW:
         TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 18, 4)

@@ -3239,11 +3239,21 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 {
                     if (CheckInventory("KatarnFireRateUp"))
                     {
-                        TakeInventory("KatarnBlazeIt", 1);
-                        SetInventory("KatarnBlazeItTimer", CheckInventory("KatarnBlazeIt") / 35);
+                        if (CheckInventory("SamsaraHasInfiniteInventory"))
+                        {
+                            if (!CheckInventory("DFSuperCharge")) { SetInventory("DFSuperCharge", 1); }
+                        } else if (!CheckInventory("SamsaraHasInfiniteInventory")) {
+                            if (CheckInventory("DFSuperCharge")) { SetInventory("DFSuperCharge", 0); }
+                            TakeInventory("KatarnBlazeIt", 1);
+                        }
                     }
+
+                    SetInventory("KatarnBlazeItTimer", CheckInventory("KatarnBlazeIt") / 35);
+                } else {
+                    SetInventory("KatarnFireRateUp", 0);
+                    if (CheckInventory("DFSuperCharge")) { SetInventory("DFSuperCharge", 0); } // just in case
+                    SetInventory("KatarnBlazeItTimer", 0);
                 }
-                else { SetInventory("KatarnFireRateUp", 0); }
 				break;
 			case CLASS_POGREED:
 				ipogmode = GetUserCVar(pln, "samsara_cl_ipogmode");
