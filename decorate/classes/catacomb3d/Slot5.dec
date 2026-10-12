@@ -454,6 +454,57 @@ Actor Catacomb_GigaNuke : Catacomb_NukeProjectile3X
     }
 }
 
+// FIREBALL: START
+
+Actor Catacomb_NukeFireballProjectile : Catacomb_NukeProjectile
+{
+    Speed 20
+    Damage (0)
+    Radius 10
+    Height 10
+    Scale 1.5
+    DeathSound "Catacomb/Explosion"
+    +FORCERADIUSDMG
+    DamageType "FireExplosive"
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(400, 80, 0, True)
+            CT00 MNO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_NukeFireballProjectile2X : Catacomb_NukeFireballProjectile
+{
+    Scale 2.0
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(800, 100, 0, True)
+            CT00 MNO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_NukeFireballProjectile3X : Catacomb_NukeFireballProjectile
+{
+    Scale 2.5
+    States
+    {
+        Death:
+            CT00 M 0 A_Explode(1200, 120, 0, True)
+            CT00 MNO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_NukeFireballProjectileCoop : Catacomb_NukeFireballProjectile { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
+Actor Catacomb_NukeFireballProjectile2XCoop : Catacomb_NukeFireballProjectile2X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
+Actor Catacomb_NukeFireballProjectile3XCoop : Catacomb_NukeFireballProjectile3X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
+
+// FIREBALL: END
+
 Actor Catacomb_NukeProjectileBounce : Catacomb_NukeProjectile
 {
     +BOUNCEONWALLS

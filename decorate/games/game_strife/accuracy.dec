@@ -1262,6 +1262,30 @@ actor BondStrifeUnique3 : BondStrifeUnique1
     }
 }
 
+actor CatacombStrifeUnique : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_Jump(256,"PickupFireball","PickupSpread","PickupFast","PickupBounce")
+      PickupFireball:
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombFireRingInventory")
+        stop
+
+      PickupSpread:
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombSpreadShotInventory")
+        stop
+
+      PickupFast:
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombRapidFireInventory")
+        stop
+
+      PickupBounce:
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombBounceShotInventory")
+        stop
+    }
+}
+
 actor UnrealStrifeUnique1 : Trigger
 {
     States

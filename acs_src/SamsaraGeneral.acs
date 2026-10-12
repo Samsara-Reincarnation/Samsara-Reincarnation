@@ -483,6 +483,14 @@ script "SamsaraDecorate" (int choice, int arg1, int arg2) //215 - SAMSARA_DECORA
     case 74:
         result = isPlayerOrBot(0);
         break;
+
+    case 75:
+        result = GetCVar("samsara_catacombholdrings");
+        break;
+
+    case 76:
+        result = GetCVar("samsara_outlawsholdbadges");
+        break;
 	}
 
 	SetResultValue(result);
@@ -3487,14 +3495,14 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("Catacomb_BoltsQuickSpell", INTMAX);
 			TakeInventory("SamsaraCatacombCanUseBolts", INTMAX);
 			TakeInventory("Catacomb_AtomicQuickspell", INTMAX);
-			TakeInventory("PowerCatacomb_SpreadShot", INTMAX);
-			TakeInventory("PowerCatacomb_SpreadShotInventoryItem", INTMAX);
 			TakeInventory("PowerCatacomb_FireRing", INTMAX);
-			TakeInventory("PowerCatacomb_FireRingInventoryItem", INTMAX);
-			TakeInventory("PowerCatacomb_BounceShot", INTMAX);
-			TakeInventory("PowerCatacomb_BounceShotInventoryItem", INTMAX);
+			TakeInventory("SamsaraCatacombFireRingInventory", INTMAX);
+			TakeInventory("PowerCatacomb_SpreadShot", INTMAX);
+			TakeInventory("SamsaraCatacombSpreadShotInventory", INTMAX);
 			TakeInventory("PowerCatacomb_RapidFire", INTMAX);
-			TakeInventory("PowerCatacomb_RapidFireInventoryItem", INTMAX);
+			TakeInventory("SamsaraCatacombRapidFireInventory", INTMAX);
+			TakeInventory("PowerCatacomb_BounceShot", INTMAX);
+			TakeInventory("SamsaraCatacombBounceShotInventory", INTMAX);
 			TakeInventory("Catacomb_Hourglass", INTMAX);
 			TakeInventory("Catacomb_HourglassCooldown", INTMAX);
 
@@ -3962,7 +3970,7 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("Outlaws_Cannon", INTMAX);
 			TakeInventory("Outlaws_MachineGun", INTMAX);
 			TakeInventory("Outlaws_GatlingGun", INTMAX);
-			TakeInventory("Outlaws_SheriffsBadge", INTMAX);
+			TakeInventory("SamsaraOutlawsSheriffsBadgeInventory", INTMAX);
 			TakeInventory("Outlaws_Dynamite", INTMAX);
 
 			GiveInventory("Outlaws_Fist", 1);
@@ -4326,6 +4334,13 @@ script "Samsara_FillInventory" (void)
 			GiveInventory("SamsaraCatacombCanUseZappers", 1);
 			GiveInventory("SamsaraCatacombCanUseNukes", 1);
 			GiveInventory("SamsaraCatacombCanUseBolts", 1);
+			if (GetCVar("samsara_catacombholdrings"))
+			{
+				GiveInventory("SamsaraCatacombFireRingInventory", 3);
+				GiveInventory("SamsaraCatacombSpreadShotInventory", 3);
+				GiveInventory("SamsaraCatacombRapidFireInventory", 3);
+				GiveInventory("SamsaraCatacombBounceShotInventory", 3);
+			}
 			GiveInventory("Catacomb_SmallHealthPotion",99);
 			GiveInventory("Catacomb_LargeHealthPotion",99);
 			GiveInventory("Catacomb_Hourglass",1);
@@ -4457,6 +4472,10 @@ script "Samsara_FillInventory" (void)
 			GiveInventory("Kingpin_HMG_AntiMaterial", 1);
 			GiveInventory("Kingpin_HMG_CoolingRod", 1);
 			GiveInventory("Kingpin_HMG_TacticalScope", 1);
+			break;
+
+		case CLASS_OUTLAWS:
+			if (GetCVar("samsara_outlawsholdbadges")) { GiveInventory("SamsaraOutlawsSheriffsBadgeInventory", 3); }
 			break;
 	}
 
@@ -12694,6 +12713,37 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
         }
         break;
 
+      case CLASS_CATACOMB:
+        switch (unum)
+        {
+          default:
+            result = -1;
+            break;
+
+          case SLOT_UNIQUE1:
+            if (!GetCVar("samsara_catacombholdrings"))
+            {
+                GiveInventory("SamsaraCatacombRandomGemPickup", 1);
+                result = 1;
+            } else {
+                if (CheckInventory("SamsaraCatacombFireRingInventory") < 3 || CheckInventory("SamsaraCatacombSpreadShotInventory") < 3 || CheckInventory("SamsaraCatacombRapidFireInventory") < 3 ||
+                    CheckInventory("SamsaraCatacombBounceShotInventory") < 3)
+                {
+                    if (startmode <= -1)
+                    {
+                        GiveInventory("SamsaraCatacombFireRingInventory", 3);
+                        GiveInventory("SamsaraCatacombSpreadShotInventory", 3);
+                        GiveInventory("SamsaraCatacombRapidFireInventory", 3);
+                        GiveInventory("SamsaraCatacombBounceShotInventory", 3);
+                    }
+                    else { GiveInventory("SamsaraCatacombRandomGemPickup", 1); }
+                    result = 1;
+                }
+            }
+            break;
+        }
+        break;
+
       case CLASS_PAINKILLER:
         switch (unum)
         {
@@ -12821,6 +12871,30 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
             {
                 GiveInventory("DeusEx_NanoSword", 1);
                 result = 1;
+            }
+            break;
+        }
+        break;
+
+      case CLASS_OUTLAWS:
+        switch (unum)
+        {
+          default:
+            result = -1;
+            break;
+
+          case SLOT_UNIQUE1:
+            if (!GetCVar("samsara_outlawsholdbadges"))
+            {
+                GiveInventory("SamsaraOutlawsSheriffsBadgePickup", 1);
+                result = 1;
+            } else {
+                if (CheckInventory("SamsaraOutlawsSheriffsBadgeInventory") < 3)
+                {
+                    if (startmode <= -1) { GiveInventory("SamsaraOutlawsSheriffsBadgeInventory", 3); }
+                    else { GiveInventory("SamsaraOutlawsSheriffsBadgePickup", 1); }
+                    result = 1;
+                }
             }
             break;
         }
@@ -15140,12 +15214,14 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bloodakimbomode", 0);
 		SetCVar("samsara_hlgaussjump", false);
 		SetCVar("samsara_hlexplosivebolts", 3);
+		SetCVar("samsara_catacombholdrings", false);
 		SetCVar("samsara_nodemonmorph", false);
 		SetCVar("samsara_notarotcardlimit", false);
 		SetCVar("samsara_nopainkillercorpseremoval", false);
 		SetCVar("samsara_descentflight", 2);
 		SetCVar("samsara_deusexmovementpenalty", true);
 		SetCVar("samsara_nosofbrutalities", false);
+		SetCVar("samsara_outlawsholdbadges", true);
 
 		// Serverside Ability Options
 		SetCVar("samsara_banjetpack", true);
@@ -15585,12 +15661,14 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bloodakimbomode", 0);
 		SetCVar("samsara_hlgaussjump", false);
 		SetCVar("samsara_hlexplosivebolts", 3);
+		SetCVar("samsara_catacombholdrings", false);
 		SetCVar("samsara_nodemonmorph", false);
 		SetCVar("samsara_notarotcardlimit", false);
 		SetCVar("samsara_nopainkillercorpseremoval", false);
 		SetCVar("samsara_descentflight", 2);
 		SetCVar("samsara_deusexmovementpenalty", false);
 		SetCVar("samsara_nosofbrutalities", false);
+		SetCVar("samsara_outlawsholdbadges", true);
 
 		// Serverside Ability Options
 		SetCVar("samsara_banjetpack", false);
@@ -16030,12 +16108,14 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bloodakimbomode", 0);
 		SetCVar("samsara_hlgaussjump", false);
 		SetCVar("samsara_hlexplosivebolts", 3);
+		SetCVar("samsara_catacombholdrings", false);
 		SetCVar("samsara_nodemonmorph", false);
 		SetCVar("samsara_notarotcardlimit", false);
 		SetCVar("samsara_nopainkillercorpseremoval", false);
 		SetCVar("samsara_descentflight", 2);
 		SetCVar("samsara_deusexmovementpenalty", false);
 		SetCVar("samsara_nosofbrutalities", false);
+		SetCVar("samsara_outlawsholdbadges", true);
 
 		// Serverside Ability Options
 		SetCVar("samsara_banjetpack", false);
@@ -16476,12 +16556,14 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bloodakimbomode", 3);
 		SetCVar("samsara_hlgaussjump", false);
 		SetCVar("samsara_hlexplosivebolts", 3);
+		SetCVar("samsara_catacombholdrings", false);
 		SetCVar("samsara_nodemonmorph", false);
 		SetCVar("samsara_notarotcardlimit", false);
 		SetCVar("samsara_nopainkillercorpseremoval", true);
 		SetCVar("samsara_descentflight", 2);
 		SetCVar("samsara_deusexmovementpenalty", true);
 		SetCVar("samsara_nosofbrutalities", true);
+		SetCVar("samsara_outlawsholdbadges", true);
 
 		// Serverside Ability Options
 		SetCVar("samsara_banjetpack", false);
@@ -16927,12 +17009,14 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_bloodakimbomode", 2);
 		SetCVar("samsara_hlgaussjump", false);
 		SetCVar("samsara_hlexplosivebolts", 3);
+		SetCVar("samsara_catacombholdrings", false);
 		SetCVar("samsara_nodemonmorph", false);
 		SetCVar("samsara_notarotcardlimit", false);
 		SetCVar("samsara_nopainkillercorpseremoval", false);
 		SetCVar("samsara_descentflight", 1);
 		SetCVar("samsara_deusexmovementpenalty", false);
 		SetCVar("samsara_nosofbrutalities", false);
+		SetCVar("samsara_outlawsholdbadges", true);
 
 		// Serverside Ability Options
 		SetCVar("samsara_banjetpack", false);

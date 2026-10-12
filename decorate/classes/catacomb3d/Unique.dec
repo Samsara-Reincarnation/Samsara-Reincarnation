@@ -1,81 +1,78 @@
-actor Catacomb_RandomGem : Trigger
+actor SamsaraCatacombRandomGemPickup : Trigger
 {
     States
     {
       Pickup:
-        TNT1 A 0 A_Jump(256,"PickupFireball","PickupSpread","PickupFast","PickupBounce")
-      PickupFireball:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraDecorate", 75), "PickupInventory")
+      PickupPowerup:
+        TNT1 A 0 A_Jump(256,"PickupPowerupFireball","PickupPowerupSpread","PickupPowerupFast","PickupPowerupBounce")
+      PickupPowerupFireball:
         TNT1 A 0 A_TakeInventory("PowerCatacomb_SpreadShot")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_RapidFire")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_BounceShot")
         TNT1 A 0 A_GiveInventory("Catacomb_FireRing")
         stop
 
-      PickupSpread:
+      PickupPowerupSpread:
         TNT1 A 0 A_TakeInventory("PowerCatacomb_FireRing")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_RapidFire")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_BounceShot")
         TNT1 A 0 A_GiveInventory("Catacomb_SpreadShot")
         stop
 
-      PickupFast:
+      PickupPowerupFast:
         TNT1 A 0 A_TakeInventory("PowerCatacomb_FireRing")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_SpreadShot")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_BounceShot")
         TNT1 A 0 A_GiveInventory("Catacomb_RapidFire")
         stop
 
-      PickupBounce:
+      PickupPowerupBounce:
         TNT1 A 0 A_TakeInventory("PowerCatacomb_FireRing")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_SpreadShot")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_RapidFire")
         TNT1 A 0 A_GiveInventory("Catacomb_BounceShot")
         stop
+
+      PickupInventory:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombFireRingInventory",0,1)
+        goto PickupInventorySuccess
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombSpreadShotInventory",0,1)
+        goto PickupInventorySuccess
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombRapidFireInventory",0,1)
+        goto PickupInventorySuccess
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombBounceShotInventory",0,"PickupInventoryFail")
+        goto PickupInventorySuccess
+
+      PickupInventorySuccess:
+        TNT1 A 0 A_Jump(256,"PickupInventorySuccessFireball","PickupInventorySuccessSpread","PickupInventorySuccessFast","PickupInventorySuccessBounce")
+      PickupInventorySuccessFireball:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombFireRingInventory",0,"PickupInventorySuccess")
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombFireRingInventory")
+        stop
+
+      PickupInventorySuccessSpread:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombSpreadShotInventory",0,"PickupInventorySuccess")
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombSpreadShotInventory")
+        stop
+
+      PickupInventorySuccessFast:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombRapidFireInventory",0,"PickupInventorySuccess")
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombRapidFireInventory")
+        stop
+
+      PickupInventorySuccessBounce:
+        TNT1 A 0 A_JumpIfInventory("SamsaraCatacombBounceShotInventory",0,"PickupInventorySuccess")
+        TNT1 A 0 A_GiveInventory("SamsaraCatacombBounceShotInventory")
+        stop
+
+      PickupInventoryFail:
+        TNT1 A 0
+        fail
     }
-}	
+}
 
-actor Catacomb_RandomGemStrife : Trigger
-{
-    States
-    {
-	Pickup:
-		TNT1 A 0 A_JumpIfInventory("Catacomb_FireRingInventoryItem",0,1)
-		goto PickupSuccess
-		TNT1 A 0 A_JumpIfInventory("Catacomb_SpreadShotInventoryItem",0,1)
-		goto PickupSuccess
-		TNT1 A 0 A_JumpIfInventory("Catacomb_RapidFireInventoryItem",0,1)
-		goto PickupSuccess
-		TNT1 A 0 A_JumpIfInventory("Catacomb_BounceShotInventoryItem",0,"PickupFail")
-		goto PickupSuccess
-
-	PickupSuccess:
-		TNT1 A 0 A_Jump(256,"PickupFireball","PickupSpread","PickupFast","PickupBounce")
-		goto PickupFireball
-
-	PickupFireball:
-		TNT1 A 0 A_JumpIfInventory("Catacomb_FireRingInventoryItem",0,"PickupSuccess")
-		TNT1 A 0 A_GiveInventory("Catacomb_FireRingInventoryItem")
-		stop
-	PickupSpread:
-		TNT1 A 0 A_JumpIfInventory("Catacomb_SpreadShotInventoryItem",0,"PickupSuccess")
-		TNT1 A 0 A_GiveInventory("Catacomb_SpreadShotInventoryItem")
-		stop
-	PickupFast:
-		TNT1 A 0 A_JumpIfInventory("Catacomb_RapidFireInventoryItem",0,"PickupSuccess")
-		TNT1 A 0 A_GiveInventory("Catacomb_RapidFireInventoryItem")
-		stop
-	PickupBounce:
-		TNT1 A 0 A_JumpIfInventory("Catacomb_BounceShotInventoryItem",0,"PickupSuccess")
-		TNT1 A 0 A_GiveInventory("Catacomb_BounceShotInventoryItem")
-		stop
-
-	PickupFail:
-		TNT1 A 0
-		stop
-    }
-}	
-
-actor Catacomb_FireRingInventoryItem : CustomInventory
+actor SamsaraCatacombFireRingInventory : CustomInventory
 {
     Inventory.UseSound ""
     Inventory.Icon "CTAAP0"
@@ -85,72 +82,72 @@ actor Catacomb_FireRingInventoryItem : CustomInventory
     Tag "Ring of Fire"
     +INVBAR
     +UNDROPPABLE
-	States
+    States
     {
-	Use:
-		TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 0), "UseFail")
-		TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 0), "UseFail")
+        TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
         TNT1 A 0 A_TakeInventory("PowerCatacomb_SpreadShot")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_RapidFire")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_BounceShot")
         TNT1 A 0 A_GiveInventory("Catacomb_FireRing")
-		stop
+        stop
 
-	UseFail:
-		TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 20)
-		fail
+      UseFail:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraClientDecorate", 0, 20)
+        fail
     }
 }
 
-actor Catacomb_SpreadShotInventoryItem : Catacomb_FireRingInventoryItem
+actor SamsaraCatacombSpreadShotInventory : SamsaraCatacombFireRingInventory
 {
     Inventory.Icon "CTAAQ0"
     Tag "Ring of Earth"
-	States
+    States
     {
-	Use:
-		TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 1), "UseFail")
-		TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 1), "UseFail")
+        TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
         TNT1 A 0 A_TakeInventory("PowerCatacomb_FireRing")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_RapidFire")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_BounceShot")
         TNT1 A 0 A_GiveInventory("Catacomb_SpreadShot")
         stop
-	}
+    }
 }
 
-actor Catacomb_RapidFireInventoryItem : Catacomb_FireRingInventoryItem
+actor SamsaraCatacombRapidFireInventory : SamsaraCatacombFireRingInventory
 {
     Inventory.Icon "CTAAR0"
     Tag "Ring of Water"
-	States
+    States
     {
-	Use:
-		TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 2), "UseFail")
-		TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 2), "UseFail")
+        TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
         TNT1 A 0 A_TakeInventory("PowerCatacomb_FireRing")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_SpreadShot")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_BounceShot")
         TNT1 A 0 A_GiveInventory("Catacomb_RapidFire")
         stop
-	}
+    }
 }
 
-actor Catacomb_BounceShotInventoryItem : Catacomb_FireRingInventoryItem
+actor SamsaraCatacombBounceShotInventory : SamsaraCatacombFireRingInventory
 {
     Inventory.Icon "CTAAS0"
     Tag "Ring of Lightning"
-	States
+    States
     {
-	Use:
-		TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 3), "UseFail")
-		TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
+      Use:
+        TNT1 A 0 A_JumpIf(CallACS("SamsaraPowerupTimerActiveChecker", 22, 3), "UseFail")
+        TNT1 A 0 A_PlaySound("Catacomb/GemGet",CHAN_ITEM)
         TNT1 A 0 A_TakeInventory("PowerCatacomb_FireRing")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_SpreadShot")
         TNT1 A 0 A_TakeInventory("PowerCatacomb_RapidFire")
         TNT1 A 0 A_GiveInventory("Catacomb_BounceShot")
         stop
-	}
+    }
 }
 
 actor Catacomb_FireRing : SamsaraPowerupGiver { Powerup.Type "Catacomb_FireRing" }
@@ -168,240 +165,3 @@ actor PowerCatacomb_RapidFire : PowerDoubleFiringSpeed { Powerup.Duration -90 }
 actor Catacomb_BounceShot : SamsaraPowerupGiver { Powerup.Type "Catacomb_BounceShot" }
 
 actor PowerCatacomb_BounceShot : Powerup { Powerup.Duration -90 }
-
-Actor Catacomb_FireBallProjectileV2 : Catacomb_FireballProjectile 
-{ 
-	Damage(15)
-    -THRUGHOST
-	States
-	{
-		Spawn:
-			CT00 KL 2 BRIGHT
-			Loop		
-		Death:
-			CT00 M 4 BRIGHT A_Explode(10,30, 0, 0)
-			CT00 NO 4 BRIGHT
-			Stop
-	}
-}
-
-Actor Catacomb_FireBallProjectileV2_2X : Catacomb_FireBallProjectileV2 { 
-	Damage (30) 
-	States
-	{
-		Spawn:
-			CT00 ST 2 BRIGHT
-			Loop	
-		Death:
-			CT00 U 4 BRIGHT A_Explode(20,30, 0, 0)
-			CT00 VW 4 BRIGHT
-			Stop
-	}	
-} 
-Actor Catacomb_FireBallProjectileV2_3X : Catacomb_FireBallProjectileV2 
-{ 
-	Damage (45) 
-	States
-	{
-		Spawn:
-			CTA1 AB 2 BRIGHT
-			Loop	
-		Death:
-			CT00 M 4 BRIGHT A_Explode(30,30, 0, 0)
-			CT00 NO 4 BRIGHT
-			Stop
-	}			
-} 
-
-Actor Catacomb_BurstFireballProjectile : Catacomb_BurstMissileProjectile
-{
-	Scale 2.0
-	Speed 20
-	States	
-	{
-		Death:
-			CT00 M 0 BRIGHT A_Explode(60, 82, 0, 0, 18)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2", 0, 0, angle-180, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2", 0, 0, angle-160, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2", 0, 0, angle-140, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2", 0, 0, angle-200, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2", 0, 0, angle-220, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)		
-			CT00 MNO 4 BRIGHT
-			Stop
-	}
-}		
-
-Actor Catacomb_BurstFireballProjectile2X : Catacomb_BurstFireballProjectile
-{
-	Damage (20)
-	States
-	{
-		Death:
-			CT00 U 0 BRIGHT A_Explode(120, 82, 0, 0, 18)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2X", 0, 0, angle-180, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2X", 0, 0, angle-160, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2X", 0, 0, angle-140, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2X", 0, 0, angle-200, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2X", 0, 0, angle-220, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)		
-			CT00 UVW 4 BRIGHT
-			Stop
-	}
-}		
-
-Actor Catacomb_BurstFireballProjectile3X : Catacomb_BurstFireballProjectile
-{
-	Damage (30)
-	States
-	{
-		Death:
-			CT00 M 0 BRIGHT A_Explode(180, 82, 0, 0, 18)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3X", 0, 0, angle-180, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3X", 0, 0, angle-160, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3X", 0, 0, angle-140, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3X", 0, 0, angle-200, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 M 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3X", 0, 0, angle-220, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)	
-			CT00 MNO 4 BRIGHT
-			Stop
-	}
-}	
-
-Actor Catacomb_NukeFireballProjectile : Catacomb_NukeProjectile
-{
-	Speed 20
-	Damage (0)
-	Radius 10 
-	Height 10
-	Scale 1.5
-	DeathSound "Catacomb/Explosion"
-	+FORCERADIUSDMG
-	DamageType "FireExplosive"
-	States
-	{
-		Death:
-			CT00 M 0 A_Explode(400, 80, 0, True)
-			CT00 MNO 4 BRIGHT
-			Stop			
-	}
-}	
-
-Actor Catacomb_NukeFireballProjectile2X : Catacomb_NukeFireballProjectile
-{
-	Scale 2.0
-	States
-	{
-		Death:
-			CT00 M 0 A_Explode(800, 100, 0, True)
-			CT00 MNO 4 BRIGHT
-			Stop			
-	}
-}
-
-Actor Catacomb_NukeFireballProjectile3X : Catacomb_NukeFireballProjectile
-{
-	Scale 2.5
-	States
-	{
-		Death:
-			CT00 M 0 A_Explode(1200, 120, 0, True)
-			CT00 MNO 4 BRIGHT
-			Stop			
-	}
-}
-
-Actor Catacomb_FireBallProjectileV2Coop : Catacomb_FireBallProjectileV2 { +THRUSPECIES Species "Player" }
-Actor Catacomb_FireBallProjectileV2_2XCoop : Catacomb_FireBallProjectileV2_2X { +THRUSPECIES Species "Player" }
-Actor Catacomb_FireBallProjectileV2_3XCoop : Catacomb_FireBallProjectileV2_3X { +THRUSPECIES Species "Player" }
-
-Actor Catacomb_BurstFireballProjectileCoop : Catacomb_BurstFireballProjectile 
-{ 
-	+THRUSPECIES 
-	Species "Player" 
-	States
-	{
-		Death:
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2Coop", 0, 0, angle-180, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2Coop", 0, 0, angle-160, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2Coop", 0, 0, angle-140, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2Coop", 0, 0, angle-200, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2Coop", 0, 0, angle-220, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)		
-			CT00 UVW 4 BRIGHT
-			Stop
-	}
-}		
-
-Actor Catacomb_BurstFireballProjectile2XCoop : Catacomb_BurstFireballProjectile2X 
-{ 
-	+THRUSPECIES 
-	Species "Player" 
-	States
-	{
-		Death:
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2XCoop", 0, 0, angle-180, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2XCoop", 0, 0, angle-160, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2XCoop", 0, 0, angle-140, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2XCoop", 0, 0, angle-200, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_2XCoop", 0, 0, angle-220, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)		
-			CT00 UVW 4 BRIGHT
-			Stop
-	}
-}		
-
-Actor Catacomb_BurstFireballProjectile3XCoop : Catacomb_BurstFireballProjectile3X 
-{ 
-	+THRUSPECIES 
-	Species "Player" 
-	States
-	{
-		Death:
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3XCoop", 0, 0, angle-180, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3XCoop", 0, 0, angle-160, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3XCoop", 0, 0, angle-140, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3XCoop", 0, 0, angle-200, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)
-			CT00 U 0 BRIGHT A_CustomMissile("Catacomb_FireballProjectileV2_3XCoop", 0, 0, angle-220, CMF_TRACKOWNER|CMF_ABSOLUTEANGLE)		
-			CT00 UVW 4 BRIGHT
-			Stop
-	}
-}	
-
-Actor Catacomb_NukeFireballProjectileCoop : Catacomb_NukeFireballProjectile { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
-Actor Catacomb_NukeFireballProjectile2XCoop : Catacomb_NukeFireballProjectile2X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
-Actor Catacomb_NukeFireballProjectile3XCoop : Catacomb_NukeFireballProjectile3X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
-
-Actor Catacomb_FireballProjectileV3 : Catacomb_FireballProjectile
-{
-	States
-	{
-		Death:
-			CT00 M 0 BRIGHT A_Explode(30, 30, 0, 0)
-			CT00 MNO 4 BRIGHT
-			Stop
-	}
-}	
-
-Actor Catacomb_FireballProjectileV3_2X : Catacomb_FireballProjectileV3
-{
-	Damage (60)
-	States
-	{
-		Death:
-			CT00 M 0 BRIGHT A_Explode(60, 30, 0, 0)
-			CT00 MNO 4 BRIGHT
-			Stop
-	}
-}		
-
-Actor Catacomb_FireballProjectileV3_3X : Catacomb_FireballProjectileV3
-{
-	Damage (90)
-	States
-	{
-		Death:
-			CT00 M 0 BRIGHT A_Explode(90, 30, 0, 0)
-			CT00 MNO 4 BRIGHT
-			Stop
-	}
-}	
-
-Actor Catacomb_FireballProjectileV3Coop : Catacomb_FireballProjectileV3 { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
-Actor Catacomb_FireballProjectileV3_2XCoop : Catacomb_FireballProjectileV3_2X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
-Actor Catacomb_FireballProjectileV3_3XCoop : Catacomb_FireballProjectileV3_3X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }

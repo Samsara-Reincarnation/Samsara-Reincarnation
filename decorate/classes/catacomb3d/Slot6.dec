@@ -543,7 +543,6 @@ Actor Catacomb_Bolts : Ammo
     }
 }
 
-
 Actor Catacomb_FireballProjectile : Catacomb_MagicMissileProjectile
 {
     Speed 25
@@ -588,6 +587,101 @@ Actor Catacomb_FireballProjectile3X : Catacomb_FireballProjectile
             Loop
     }
 }
+
+// FIREBALL (NON-BOLTS): START
+
+Actor Catacomb_FireBallProjectileV2 : Catacomb_FireballProjectile
+{
+    Damage(15)
+    -THRUGHOST
+    States
+    {
+        Spawn:
+            CT00 KL 2 BRIGHT
+            Loop
+        Death:
+            CT00 M 4 BRIGHT A_Explode(10,30, 0, 0)
+            CT00 NO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_FireBallProjectileV2_2X : Catacomb_FireBallProjectileV2 {
+    Damage (30)
+    States
+    {
+        Spawn:
+            CT00 ST 2 BRIGHT
+            Loop
+        Death:
+            CT00 U 4 BRIGHT A_Explode(20,30, 0, 0)
+            CT00 VW 4 BRIGHT
+            Stop
+    }
+}
+Actor Catacomb_FireBallProjectileV2_3X : Catacomb_FireBallProjectileV2
+{
+    Damage (45)
+    States
+    {
+        Spawn:
+            CTA1 AB 2 BRIGHT
+            Loop
+        Death:
+            CT00 M 4 BRIGHT A_Explode(30,30, 0, 0)
+            CT00 NO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_FireBallProjectileV2Coop : Catacomb_FireBallProjectileV2 { +THRUSPECIES Species "Player" }
+Actor Catacomb_FireBallProjectileV2_2XCoop : Catacomb_FireBallProjectileV2_2X { +THRUSPECIES Species "Player" }
+Actor Catacomb_FireBallProjectileV2_3XCoop : Catacomb_FireBallProjectileV2_3X { +THRUSPECIES Species "Player" }
+
+// FIREBALL (NON-BOLTS): END
+
+// FIREBALL (BOLTS): START
+
+Actor Catacomb_FireballProjectileV3 : Catacomb_FireballProjectile
+{
+    States
+    {
+        Death:
+            CT00 M 0 BRIGHT A_Explode(30, 30, 0, 0)
+            CT00 MNO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_FireballProjectileV3_2X : Catacomb_FireballProjectileV3
+{
+    Damage (60)
+    States
+    {
+        Death:
+            CT00 M 0 BRIGHT A_Explode(60, 30, 0, 0)
+            CT00 MNO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_FireballProjectileV3_3X : Catacomb_FireballProjectileV3
+{
+    Damage (90)
+    States
+    {
+        Death:
+            CT00 M 0 BRIGHT A_Explode(90, 30, 0, 0)
+            CT00 MNO 4 BRIGHT
+            Stop
+    }
+}
+
+Actor Catacomb_FireballProjectileV3Coop : Catacomb_FireballProjectileV3 { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
+Actor Catacomb_FireballProjectileV3_2XCoop : Catacomb_FireballProjectileV3_2X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
+Actor Catacomb_FireballProjectileV3_3XCoop : Catacomb_FireballProjectileV3_3X { +THRUSPECIES +MTHRUSPECIES Species "Player" +DONTHARMCLASS +DONTHARMSPECIES }
+
+// FIREBALL (BOLTS): END
 
 Actor Catacomb_FireballProjectileBounce : Catacomb_FireballProjectile
 {
