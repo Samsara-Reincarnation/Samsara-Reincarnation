@@ -375,12 +375,7 @@ script "SamsaraDecorate" (int choice, int arg1, int arg2) //215 - SAMSARA_DECORA
 		break;
 
 	case 52:
-		if (arg1 > 1)
-		{
-			if (GetCVar("samsara_pdwtak_fulldamagedistance") > GetCVar("samsara_pdwtak_distance")) { result = GetCVar("samsara_pdwtak_distance"); }
-			else if (GetCVar("samsara_pdwtak_fulldamagedistance") < 0) { result = 0; }
-			else { result = GetCVar("samsara_pdwtak_fulldamagedistance"); }
-		}
+		if (arg1 > 1) { result = middle(0, GetCVar("samsara_pdwtak_fulldamagedistance"), GetCVar("samsara_pdwtak_distance")); }
 		else if (arg1 == 1) { result = GetCVar("samsara_pdwtak_distance"); }
 		else { result = GetCVar("samsara_pdwtak_damage"); }
 		break;
@@ -1694,48 +1689,13 @@ Script "Samsara_UniqueKeys" (int key) NET
 
 script "SamsaraGetSettings" (void) NET //676 -- SAMSARA_GETSETTINGS
 {
-    int noHealthCap, noArmorCap;
-	int lmsHP = GetCVar("samsara_lmshealth"), lmsArmor = GetCVar("samsara_lmsarmor");
-    int lmsArmorTier = 1 + GetCVar("samsara_lmsarmortier");
-	int lmsUlt = GetCVar("samsara_lmsbfg9000"), lmsUltSkulltag = GetCVar("samsara_lmsbfg10k");
-	int lmsUnique;
-	int ultStay, highLow;
-    int pdwtakDamage = GetCVar("samsara_pdwtak_damage"), pdwtakDistance = GetCVar("samsara_pdwtak_distance"), pdwtakFullDamageDistance = GetCVar("samsara_pdwtak_fulldamagedistance");
-
-	if (GetCVar("samsara_nohealthcap")) { noHealthCap = "on"; }
-	else { noHealthCap = "off"; }
-
-	if (GetCVar("samsara_noarmorcap")) { noArmorCap = "on"; }
-	else { noArmorCap = "off"; }
-
-    if (lmsHP < 0) { lmsHP = 0; }
-
-    if (lmsArmor < 0) { lmsArmor = 0; }
-
-    if (lmsArmorTier > 5) { lmsArmorTier = 5; }
-    else if (lmsArmorTier < 1) { lmsArmorTier = 1; }
-
-	if (GetCVar("samsara_lmsuniques")) { lmsUnique = "\cdwith"; }
-	else { lmsUnique = "\cgwithout"; }
-
-	if (GetCVar("samsara_lmsbfg9000")) { lmsUlt = "\cdwith"; }
-	else { lmsUlt = "\cgwithout"; }
-
-	if (GetCVar("samsara_lmsbfg10k")) { lmsUltSkulltag = "\cdwith"; }
-	else { lmsUltSkulltag = "\cgwithout"; }
-
-	if (GetCVar("samsara_permault")) { ultStay = "\cdstay"; }
-	else { ultStay = "\cado not stay"; }
-
-	if (GetCVar("samsara_jumpmod") < 0) { highLow = "\calower"; }
-	else { highLow = "\cfhigher"; }
-
-    if (pdwtakDamage < 0) { pdwtakDamage = 0; }
-
-    if (pdwtakDistance < 0) { pdwtakDistance = 0; }
-
-    if (pdwtakFullDamageDistance > pdwtakDistance) { pdwtakFullDamageDistance = pdwtakDistance; }
-    else if (pdwtakFullDamageDistance < 0) { pdwtakFullDamageDistance = 0; }
+    str noHealthCap = cond(GetCVar("samsara_nohealthcap"), "on", "off"), noArmorCap = cond(GetCVar("samsara_noarmorcap"), "on", "off");
+	int lmsHP = max(GetCVar("samsara_lmshealth"), 0), lmsArmor = max(GetCVar("samsara_lmsarmor"), 0);
+    int lmsArmorTier = middle(1, 1 + GetCVar("samsara_lmsarmortier"), 5);
+	str lmsUlt = cond(GetCVar("samsara_lmsbfg9000"), "\cdwith", "\cgwithout"), lmsUltSkulltag = cond(GetCVar("samsara_lmsbfg10k"), "\cdwith", "\cgwithout");
+	str lmsUnique = cond(GetCVar("samsara_lmsuniques"), "\cdwith", "\cgwithout");
+	str ultStay = cond(GetCVar("samsara_permault"), "\cdstay", "\cado not stay"), highLow = cond(GetCVar("samsara_jumpmod") < 0, "\calower", "\cfhigher");
+    int pdwtakDamage = max(GetCVar("samsara_pdwtak_damage"), 0), pdwtakDistance = max(GetCVar("samsara_pdwtak_distance"), 0), pdwtakFullDamageDistance = middle(0, GetCVar("samsara_pdwtak_fulldamagedistance"), pdwtakDistance);
 
 	SetHudSize(640, 480, 1);
 
@@ -1756,9 +1716,11 @@ script "SamsaraGetSettings" (void) NET //676 -- SAMSARA_GETSETTINGS
 			HUDMSG_FADEOUT, 6762, CR_WHITE, 50.1, 96.0, 3.0, 1.0);
 	}
 
-	if (GetCVar("samsara_jumpmod"))
+	if (GetCVar("samsara_jumpmod") != 0)
 	{
-		HudMessage(s:"You jump \cn", d:abs(GetCVar("samsara_jumpmod")), s:"\c- units ", s:highLow, s:"\c- than normal.";
+		int jumpunits = abs(GetCVar("samsara_jumpmod"));
+
+		HudMessage(s:"You jump \cn", d:jumpunits, s:"\c- unit", s:cond(jumpunits == 1, "", "s"), s:" ", s:highLow, s:"\c- than normal.";
 				HUDMSG_FADEOUT, 6763, CR_WHITE, 50.1, 112.0, 3.0, 1.0);
 	}
 	else
@@ -1770,82 +1732,37 @@ script "SamsaraGetSettings" (void) NET //676 -- SAMSARA_GETSETTINGS
 	HudMessage(s:"Your running speed is \cf", s:SpeedModeNames[GetCVar("samsara_speedmod") + 6], s:"\c-.";
 		HUDMSG_FADEOUT, 6764, CR_WHITE, 50.1, 128.0, 3.0, 1.0);
 
+	HudMessage(s:"Flight items are ", s:cond(GetCVar("samsara_banjetpack"), "\cgbanned", "\cdallowed"), s:"\c-.";
+			HUDMSG_FADEOUT, 6765, CR_WHITE, 50.1, 144.0, 3.0, 1.0);
 
-	if (GetCVar("samsara_banjetpack"))
-	{
-		HudMessage(s:"Flight items are \cgbanned", s:"\c-.";
-				HUDMSG_FADEOUT, 6765, CR_WHITE, 50.1, 144.0, 3.0, 1.0);
-	}
-	else
-	{
-		HudMessage(s:"Flight items are \cdallowed", s:"\c-.";
-				HUDMSG_FADEOUT, 6765, CR_WHITE, 50.1, 144.0, 3.0, 1.0);
-	}
+	HudMessage(s:"Wolfenstein Style movement is ", s:cond(GetCVar("samsara_banwolfmove"), "\cgbanned", "\cdallowed"), s:"\c-.";
+			HUDMSG_FADEOUT, 6766, CR_WHITE, 50.1, 160.0, 3.0, 1.0);
 
-	if (GetCVar("samsara_banwolfmove"))
-	{
-		HudMessage(s:"Wolfenstein Style movement is \cgbanned", s:"\c-.";
-				HUDMSG_FADEOUT, 6766, CR_WHITE, 50.1, 160.0, 3.0, 1.0);
-	}
-	else
-	{
-		HudMessage(s:"Wolfenstein Style movement is \cdallowed", s:"\c-.";
-				HUDMSG_FADEOUT, 6766, CR_WHITE, 50.1, 160.0, 3.0, 1.0);
-	}
+	HudMessage(s:"Custom gravities are ", s:cond(GetCVar("samsara_nocustomgravity"), "\cadisabled", "\cdenabled"), s:"\c-.";
+			HUDMSG_FADEOUT, 6767, CR_WHITE, 50.1, 176.0, 3.0, 1.0);
 
-	if (GetCVar("samsara_nocustomgravity"))
+	if (GetCVar("samsara_reloadmode") >= 2)
 	{
-		HudMessage(s:"Custom gravities are \cadisabled", s:"\c-.";
-				HUDMSG_FADEOUT, 6767, CR_WHITE, 50.1, 176.0, 3.0, 1.0);
-	}
-	else
-	{
-		HudMessage(s:"Custom gravities are \cdenabled", s:"\c-.";
-				HUDMSG_FADEOUT, 6767, CR_WHITE, 50.1, 176.0, 3.0, 1.0);
-	}
-
-	if (GetCVar("samsara_reloadmode") == 3)
-	{
-		HudMessage(s:"Reloading is \cdenabled", s:"\c-.", s:" Some classes are able to reload manually.";
+		HudMessage(s:"Reloading is \cdenabled\c-. Some classes are ", s:cond(GetCVar("samsara_reloadmode") >= 3, "", "un"), s:"able to reload manually.";
 				HUDMSG_FADEOUT, 6768, CR_WHITE, 50.1, 192.0, 3.0, 1.0);
-	}
-	else if (GetCVar("samsara_reloadmode") == 2)
-	{
-		HudMessage(s:"Reloading is \cdenabled", s:"\c-.", s:" Some classes are unable to reload manually.";
-				HUDMSG_FADEOUT, 6768, CR_WHITE, 50.1, 192.0, 3.0, 1.0);
-	}
-	else if (GetCVar("samsara_reloadmode") == 1)
-	{
-		HudMessage(s:"Reloading is \cadisabled", s:"\c-.", s:" Weapons with single shot magazines perform reload animations.";
-				HUDMSG_FADEOUT, 6768, CR_WHITE, 50.1, 192.0, 3.0, 1.0);
-	}
-	else
-	{
-		HudMessage(s:"Reloading is \cadisabled", s:"\c-.", s:" Weapons with single shot magazines do not perform reload animations.";
+	} else {
+		HudMessage(s:"Reloading is \cadisabled\c-. Weapons with single shot magazines ", s:cond(GetCVar("samsara_reloadmode") == 1, "", "do not "), s:"perform reload animations.";
 				HUDMSG_FADEOUT, 6768, CR_WHITE, 50.1, 192.0, 3.0, 1.0);
 	}
 
-	if (GetCVar("samsara_bottomlessmagazines"))
-	{
-		HudMessage(s:"Bottomless magazines are \cdenabled", s:"\c-.";
-				HUDMSG_FADEOUT, 6769, CR_WHITE, 50.1, 208.0, 3.0, 1.0);
-	}
-	else
-	{
-		HudMessage(s:"Bottomless magazines are \cadisabled", s:"\c-.";
-				HUDMSG_FADEOUT, 6769, CR_WHITE, 50.1, 208.0, 3.0, 1.0);
-	}
+	HudMessage(s:"Bottomless magazines are ", s:cond(GetCVar("samsara_bottomlessmagazines"), "\cdenabled", "\cadisabled"), s:"\c-.";
+			HUDMSG_FADEOUT, 6769, CR_WHITE, 50.1, 208.0, 3.0, 1.0);
 
-	HudMessage(s:"Shotgun/Chainsaw/Unique/Backpack start: \cd", d:GetCVar("samsara_shotgunstart"), s:"\c- / \ca", d:GetCvar("samsara_chainsawstart"), s:"\c- / \cn", d:GetCvar("samsara_uniquestart"), s:"\c- / \cf", d:GetCvar("samsara_backpackstart");
+	HudMessage(s:"Shotgun/Chainsaw/Unique/Backpack start: \cd", d:middle(0, GetCVar("samsara_shotgunstart"), 2), s:"\c- / \ca", d:middle(0, GetCVar("samsara_chainsawstart"), 2), s:"\c- / \cn", d:middle(0, GetCVar("samsara_uniquestart"), 4), s:"\c- / \cf", d:GetCVar("samsara_backpackstart");
 			HUDMSG_FADEOUT, 6774, CR_WHITE, 50.1, 288.0, 3.0, 1.0);
 
-	HudMessage(s:"PDWTAK explosions deal \cf", d:pdwtakDamage, s:" damage\c- across \ck", d:pdwtakDistance, s:" map units", s:"\c- (full damage applied in \ci", d:pdwtakFullDamageDistance, s:" map units", s:"\c-).";
+	HudMessage(s:"PDWTAK explosions deal \cf", d:pdwtakDamage, s:" damage\c- across \ck", d:pdwtakDistance, s:" map unit", s:cond(pdwtakDistance == 1, "", "s"), s:"\c- (full damage applied in \ci", d:pdwtakFullDamageDistance, s:" map unit", s:cond(pdwtakFullDamageDistance == 1, "", "s"), s:"\c-).";
 			HUDMSG_FADEOUT, 6770, CR_WHITE, 50.1, 224.0, 3.0, 1.0);
 
-	HudMessage(s:"PPW Mode is ", s:cond(GetCVar("samsara_permaweaponlevel2"), "\cdon\c-.", "\caoff\c-.");
+	HudMessage(s:"PPW Mode is ", s:cond(GetCVar("samsara_permaweaponlevel2"), "\cdon", "\caoff"), s:"\c-.";
 			HUDMSG_FADEOUT, 6771, CR_WHITE, 50.1, 240.0, 3.0, 1.0);
 
-	HudMessage(s:"STTP3K Mode is ", s:cond(GetCVar("samsara_superturboturkeypuncher3000"), "\cdon\c-.", "\caoff\c-.");
+	HudMessage(s:"STTP3K Mode is ", s:cond(GetCVar("samsara_superturboturkeypuncher3000") > 0, cond(GetCVar("samsara_superturboturkeypuncher3000") >= 3, "\cdon (friendly)", cond(GetCVar("samsara_superturboturkeypuncher3000") == 2, "\cdon (cowardly)", "\cdon (aggressive)")), "\caoff"), s:"\c-.";
 			HUDMSG_FADEOUT, 6772, CR_WHITE, 50.1, 256.0, 3.0, 1.0);
 
 	HudMessage(s:"Limitless Health/Armor is \ca", s:noHealthCap, s:"\c- / \cd", s:noArmorCap, s:"\c-.";
