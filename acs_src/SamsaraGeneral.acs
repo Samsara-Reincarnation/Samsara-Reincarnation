@@ -996,7 +996,7 @@ script "Samsara_DoHLWeaponSwitch" (int mode, int pln)
 		SetHudSize(1280,960,1);
 		for(int a = 0; a < 7; a++)
 		{
-			SetFont(strparam(s:CheckInventory("SamsaraModeCounter") == 0 ? "HWMSLOT" : "OPFWM",d:a+1));
+			SetFont(strparam(s:cond(CheckInventory("SamsaraModeCounter"), "OPFWM", "HWMSLOT"),d:a+1));
 			HudMessage(s:"a";HUDMSG_PLAIN|HUDMSG_ADDBLEND|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP,32100+a,0,((a*24.0)+(mode<a)*152.0)+0.1,heightOffset,0.0,0.5);
 			int validWeapon = 0;
 			for(int b = 0; b < 5; b++)
@@ -1007,7 +1007,7 @@ script "Samsara_DoHLWeaponSwitch" (int mode, int pln)
 					{
 						if(b == CheckInventory("SamsaraOriginalKeyCounter"))
 						{
-							SetFont(CheckInventory("SamsaraModeCounter") == 0 ? "HLWPNSL0" : "OPWPNSL0");
+							SetFont(cond(CheckInventory("SamsaraModeCounter"), "OPWPNSL0", "HLWPNSL0"));
 							HudMessage(s:"a";HUDMSG_PLAIN|HUDMSG_ADDBLEND|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP,32229,0,((a*24.0)+(mode<a)*152.0)+0.1,heightOffset+((validWeapon+1)*48.0)-12.0,0.0,0.5);
 							SetFont(strparam(s:HLWeaponGraphics[CheckInventory("SamsaraModeCounter")][a][b],s:"H"));
 							HudMessage(s:"a";HUDMSG_PLAIN|HUDMSG_ADDBLEND|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP,32200+(10*a)+validWeapon,0,((a*24.0)+(mode<a)*152.0)+0.1,heightOffset+((validWeapon+1)*48.0)-12.0,0.0,0.5);
@@ -1020,7 +1020,7 @@ script "Samsara_DoHLWeaponSwitch" (int mode, int pln)
 					}
 					else
 					{
-						SetFont(CheckInventory("SamsaraModeCounter") == 0 ? "HWMSLOT" : "OPFWMB");
+						SetFont(cond(CheckInventory("SamsaraModeCounter"), "OPFWMB", "HWMSLOT"));
 						HudMessage(s:"a";HUDMSG_PLAIN|HUDMSG_ADDBLEND|HUDMSG_ALPHA|HUDMSG_NOTWITHFULLMAP,32200+(10*a)+validWeapon,0,((a*24.0)+(mode<a)*152.0)+0.1,heightOffset+((validWeapon+1)*24.0),0.0,0.5);
 					}
 					validWeapon++;
@@ -1820,10 +1820,10 @@ Script "Samsara_KillCount" (int override)
                 int presentTid = UniqueTid();
                 int presentScale = 0.25;
 
-                if (health >= (isBoss ? GetCVar("samsara_pinatapartybosshealthtier5") : GetCVar("samsara_pinatapartyhealthtier5"))) { presentScale += 0.7; }
-                else if (health >= (isBoss ? GetCVar("samsara_pinatapartybosshealthtier4") : GetCVar("samsara_pinatapartyhealthtier4"))) { presentScale += 0.525; }
-                else if (health >= (isBoss ? GetCVar("samsara_pinatapartybosshealthtier3") : GetCVar("samsara_pinatapartyhealthtier3"))) { presentScale += 0.35; }
-                else if (health >= (isBoss ? GetCVar("samsara_pinatapartybosshealthtier2") : GetCVar("samsara_pinatapartyhealthtier2"))) { presentScale += 0.175; }
+                if (health >= (cond(isBoss, GetCVar("samsara_pinatapartybosshealthtier5"), GetCVar("samsara_pinatapartyhealthtier5")))) { presentScale += 0.7; }
+                else if (health >= (cond(isBoss, GetCVar("samsara_pinatapartybosshealthtier4"), GetCVar("samsara_pinatapartyhealthtier4")))) { presentScale += 0.525; }
+                else if (health >= (cond(isBoss, GetCVar("samsara_pinatapartybosshealthtier3"), GetCVar("samsara_pinatapartyhealthtier3")))) { presentScale += 0.35; }
+                else if (health >= (cond(isBoss, GetCVar("samsara_pinatapartybosshealthtier2"), GetCVar("samsara_pinatapartyhealthtier2")))) { presentScale += 0.175; }
 
                 if (GetCVar("samsara_merrychristmas")) { SpawnForced("SamsaraPinataPartyXmasGift", x, y, z, presentTid); }
                 else { SpawnForced("SamsaraPinataPartyPerformanceContainer", x, y, z, presentTid); }
@@ -2169,13 +2169,13 @@ Script "Samsara_ResetHealth" (int takexp)
 	switch(PlayerClass(pln))
 	{
 		case CLASS_WITCHAVEN:
-			SetActorProperty (0, APROP_Health, 100 + (takexp ? 0 : CheckInventory("SamsaraWitchavenHealthIncrease")));
-			SetActorProperty (0, APROP_SpawnHealth, 100 + (takexp ? 0 : CheckInventory("SamsaraWitchavenHealthIncrease")));
+			SetActorProperty (0, APROP_Health, 100 + (cond(takexp, 0, CheckInventory("SamsaraWitchavenHealthIncrease"))));
+			SetActorProperty (0, APROP_SpawnHealth, 100 + (cond(takexp, 0, CheckInventory("SamsaraWitchavenHealthIncrease"))));
 			break;
 
 		case CLASS_DEMONESS:
-			SetActorProperty (0, APROP_Health, 70 + (takexp ? 0 : CheckInventory("Hexen2HealthAdd")));
-			SetActorProperty (0, APROP_SpawnHealth, 70 + (takexp ? 0 : CheckInventory("Hexen2HealthAdd")));
+			SetActorProperty (0, APROP_Health, 70 + (cond(takexp, 0, CheckInventory("Hexen2HealthAdd"))));
+			SetActorProperty (0, APROP_SpawnHealth, 70 + (cond(takexp, 0, CheckInventory("Hexen2HealthAdd"))));
 			break;
 
 		default:
@@ -4858,7 +4858,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Super Shotgun"))
                 {
                     GiveInventory("Super Shotgun", 1);
-                    GiveInventory("Shell", dmextraammo ? 8 / tossedammo * 5 / 2 : 8 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 8 / tossedammo * 5 / 2, 8 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 8 / tossedammo);
@@ -4880,7 +4880,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory(" Chaingun ", 1);
-                        GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Clip", 20 / tossedammo);
@@ -4895,7 +4895,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory(" Machine Gun ", 1);
-                        GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Clip", 20 / tossedammo);
@@ -4941,7 +4941,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Plasma Rifle", 1);
-                        GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Cell", 40 / tossedammo);
@@ -4956,7 +4956,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory(" Incinerator ", 1);
-                        GiveInventory("Cell", dmextraammo ? 80 / tossedammo * 5 / 2 : 80 / tossedammo); // 20 fuel = 40 cells, doubled to bring it more in line with plasma. adjust if needed
+                        GiveInventory("Cell", cond(dmextraammo, 80 / tossedammo * 5 / 2, 80 / tossedammo)); // 20 fuel = 40 cells, doubled to bring it more in line with plasma. adjust if needed
                         result = 1;
                     } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Cell", 80 / tossedammo);
@@ -4983,7 +4983,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("B.F.G. 9000", 1);
-                        GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Cell", 40 / tossedammo);
@@ -4998,7 +4998,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("B.F.G. 2704", 1);
-                        GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Cell", 40 / tossedammo);
@@ -5013,7 +5013,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Calamity Blade", 1);
-                        GiveInventory("Cell", dmextraammo ? 80 / tossedammo * 5 / 2 : 80 / tossedammo); // 20 fuel = 40 cells, doubled to bring it more in line with bfg. adjust if needed
+                        GiveInventory("Cell", cond(dmextraammo, 80 / tossedammo * 5 / 2, 80 / tossedammo)); // 20 fuel = 40 cells, doubled to bring it more in line with bfg. adjust if needed
                         result = 1;
                     } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Cell", 80 / tossedammo);
@@ -5082,7 +5082,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" BFG10K "))
                 {
                     GiveInventory(" BFG10K ", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 * 5 / 2 : 40);
+                    GiveInventory("Cell", cond(dmextraammo, 40 * 5 / 2, 40));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40);
@@ -5107,7 +5107,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Super Shotgun"))
                 {
                     GiveInventory("Super Shotgun", 1);
-                    GiveInventory("Shell", dmextraammo ? 8 / tossedammo * 5 / 2 : 8 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 8 / tossedammo * 5 / 2, 8 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 8 / tossedammo);
@@ -5125,7 +5125,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" Chaingun "))
                 {
                     GiveInventory(" Chaingun ", 1);
-                    GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 20 / tossedammo);
@@ -5166,7 +5166,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Plasma Rifle"))
                 {
                     GiveInventory("Plasma Rifle", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40 / tossedammo);
@@ -5188,7 +5188,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("B.F.G. 9000"))
                 {
                     GiveInventory("B.F.G. 9000", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40 / tossedammo);
@@ -5200,7 +5200,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" Unmaker "))
                 {
                     GiveInventory(" Unmaker ", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40 / tossedammo);
@@ -5275,7 +5275,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" BFG10K "))
                 {
                     GiveInventory(" BFG10K ", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 * 5 / 2 : 40);
+                    GiveInventory("Cell", cond(dmextraammo, 40 * 5 / 2, 40));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40);
@@ -5300,7 +5300,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Super Shotgun"))
                 {
                     GiveInventory("Super Shotgun", 1);
-                    GiveInventory("Shell", dmextraammo ? 8 / tossedammo * 5 / 2 : 8 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 8 / tossedammo * 5 / 2, 8 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 8 / tossedammo);
@@ -5312,7 +5312,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Automatic Shotgun"))
                 {
                     GiveInventory("Automatic Shotgun", 1);
-                    GiveInventory("Shell", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 20 / tossedammo);
@@ -5340,7 +5340,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" Chaingun "))
                 {
                     GiveInventory(" Chaingun ", 1);
-                    GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 20 / tossedammo);
@@ -5352,7 +5352,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" Flamer "))
                 {
                     GiveInventory(" Flamer ", 1);
-                    GiveInventory("DoomguyStrGas", dmextraammo ? 48 / tossedammo * 5 / 2 : 48 / tossedammo);
+                    GiveInventory("DoomguyStrGas", cond(dmextraammo, 48 / tossedammo * 5 / 2, 48 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("DoomguyStrGas") < GetAmmoCapacity("DoomguyStrGas") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("DoomguyStrGas", 48 / tossedammo);
@@ -5390,7 +5390,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Land Mine Layer"))
                 {
                     GiveInventory("Land Mine Layer", 1);
-                    GiveInventory("DoomguyStrMines", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                    GiveInventory("DoomguyStrMines", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("DoomguyStrMines") < GetAmmoCapacity("DoomguyStrMines") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("DoomguyStrMines", 5 / tossedammo);
@@ -5419,7 +5419,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Plasma Rifle"))
                 {
                     GiveInventory("Plasma Rifle", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40 / tossedammo);
@@ -5431,7 +5431,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Stunner Rifle"))
                 {
                     GiveInventory("Stunner Rifle", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40 / tossedammo);
@@ -5460,7 +5460,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("B.F.G. 9000"))
                 {
                     GiveInventory("B.F.G. 9000", 1);
-                    GiveInventory("Cell", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 40 / tossedammo);
@@ -5472,7 +5472,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Pyro Cannon"))
                 {
                     GiveInventory("Pyro Cannon", 1);
-                    GiveInventory("DoomguyStrGas", dmextraammo ? 48 / tossedammo * 5 / 2 : 48 / tossedammo);
+                    GiveInventory("DoomguyStrGas", cond(dmextraammo, 48 / tossedammo * 5 / 2, 48 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("DoomguyStrGas") < GetAmmoCapacity("DoomguyStrGas") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("DoomguyStrGas", 48 / tossedammo);
@@ -5547,7 +5547,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory(" BFG10K "))
                 {
                     GiveInventory(" BFG10K ", 1);
-                    GiveInventory("Cell", dmextraammo ? 60 * 5 / 2 : 60);
+                    GiveInventory("Cell", cond(dmextraammo, 60 * 5 / 2, 60));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 60);
@@ -5683,7 +5683,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Machine Gun"))
                 {
                     GiveInventory("Machine Gun", 1);
-                    GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 20 / tossedammo);
@@ -5705,7 +5705,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Mauser Rifle"))
                 {
                     GiveInventory("Mauser Rifle", 1);
-                    GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 20 / tossedammo);
@@ -5960,7 +5960,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Totenkopf_Mauser"))
                 {
                     GiveInventory("Totenkopf_Mauser", 1);
-                    GiveInventory("Clip", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
 
                     if (!CheckInventory("Totenkopf_IHaveDualMausers") && dualgiveboth)
                     {
@@ -6039,7 +6039,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Totenkopf_Kar98k"))
                 {
                     GiveInventory("Totenkopf_Kar98k", 1);
-                    GiveInventory("Shell", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 5 / tossedammo);
@@ -6061,7 +6061,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Totenkopf_STG44"))
                 {
                     GiveInventory("Totenkopf_STG44", 1);
-                    GiveInventory("Shell", dmextraammo ? 30 / tossedammo * 5 / 2 : 30 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 30 / tossedammo * 5 / 2, 30 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 30 / tossedammo);
@@ -6275,7 +6275,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Bishop's Shortsword", 1);
-                        GiveInventory("Clip", dmextraammo ? 25 / tossedammo * 5 / 2 : 25 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 25 / tossedammo * 5 / 2, 25 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Clip", 25 / tossedammo);
@@ -6290,7 +6290,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Wand of Embers", 1);
-                        GiveInventory("Clip", dmextraammo ? 25 / tossedammo * 5 / 2 : 25 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 25 / tossedammo * 5 / 2, 25 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Clip", 25 / tossedammo);
@@ -6417,7 +6417,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Timon's Axe"))
                 {
                     GiveInventory("Timon's Axe", 1);
-                    GiveInventory("Clip", dmextraammo ? 25 / tossedammo * 5 / 2 : 25 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 25 / tossedammo * 5 / 2, 25 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 25 / tossedammo);
@@ -6550,7 +6550,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Fire Blast"))
                 {
                     GiveInventory("Fire Blast", 1);
-                    GiveInventory("Clip", dmextraammo ? 25 / tossedammo * 5 / 2 : 25 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 25 / tossedammo * 5 / 2, 25 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 25 / tossedammo);
@@ -6676,7 +6676,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Timon's Axe"))
                 {
                     GiveInventory("Timon's Axe", 1);
-                    GiveInventory("Clip", dmextraammo ? 25 / tossedammo * 5 / 2 : 25 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 25 / tossedammo * 5 / 2, 25 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 25 / tossedammo);
@@ -6777,7 +6777,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Chaingun Cannon", 1);
-                        GiveInventory("Clip", dmextraammo ? 50 / tossedammo * 5 / 2 : 50 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 50 / tossedammo * 5 / 2, 50 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Clip", 50 / tossedammo);
@@ -6792,7 +6792,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Duke3D_M16", 1);
-                        GiveInventory("Clip", dmextraammo ? 40 / tossedammo * 5 / 2 : 40 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
                         result = 1;
                     } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                         GiveInventory("Clip", 40 / tossedammo);
@@ -6872,7 +6872,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Golden Desert Eagle"))
                 {
                     GiveInventory("Golden Desert Eagle", 1);
-                    GiveInventory("Clip", dmextraammo ? 60 / tossedammo * 5 / 2 : 60 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 60 / tossedammo * 5 / 2, 60 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 60 / tossedammo);
@@ -6988,7 +6988,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Chaingun Cannon"))
                 {
                     GiveInventory("Chaingun Cannon", 1);
-                    GiveInventory("Clip", dmextraammo ? 50 / tossedammo * 5 / 2 : 50 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 50 / tossedammo * 5 / 2, 50 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Clip", 50 / tossedammo);
@@ -7219,8 +7219,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             if (!CheckInventory("MA-75B Assault Rifle"))
             {
                 GiveInventory("MA-75B Assault Rifle", 1);
-                GiveInventory("Clip", dmextraammo ? 52 * 5 / 2 : 52);
-                GiveInventory("RocketAmmo", dmextraammo ? 7 * 5 / 2 : 7);
+                GiveInventory("Clip", cond(dmextraammo, 52 * 5 / 2, 52));
+                GiveInventory("RocketAmmo", cond(dmextraammo, 7 * 5 / 2, 7));
                 result = 1;
             } else if ((CheckInventory("Clip") < GetAmmoCapacity("Clip") / tosseddiv || CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv) && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("Clip", 52);
@@ -7233,8 +7233,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             if (!CheckInventory("ONI-71 Wave Motion Cannon"))
             {
                 GiveInventory("ONI-71 Wave Motion Cannon", 1);
-                GiveInventory("Cell", dmextraammo ? 40 * 5 / 2 : 40);
-                GiveInventory("RocketAmmo", dmextraammo ? 15 * 5 / 2 : 15);
+                GiveInventory("Cell", cond(dmextraammo, 40 * 5 / 2, 40));
+                GiveInventory("RocketAmmo", cond(dmextraammo, 15 * 5 / 2, 15));
                 result = 1;
             } else if ((CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv || CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv) && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("Cell", 40);
@@ -7247,7 +7247,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             if (!CheckInventory("Mercury Class Fusion Rifle"))
             {
                 GiveInventory("Mercury Class Fusion Rifle", 1);
-                GiveInventory("Cell", dmextraammo ? 20 * 5 / 2 : 20);
+                GiveInventory("Cell", cond(dmextraammo, 20 * 5 / 2, 20));
                 result = 1;
             } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("Cell", 20);
@@ -7272,7 +7272,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Mjolnir", 1);
-                    GiveInventory("Cell", dmextraammo ? 80 / tossedammo * 5 / 2 : 80 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 80 / tossedammo * 5 / 2, 80 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 80 / tossedammo);
@@ -7438,7 +7438,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             if (!CheckInventory("BloodProximityTNT"))
             {
                 GiveInventory("BloodProximityTNT", 1);
-                GiveInventory("RocketAmmo", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                GiveInventory("RocketAmmo", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
                 result = 1;
             } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("RocketAmmo", 5 / tossedammo);
@@ -7450,7 +7450,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             if (!CheckInventory("BloodRemoteTNT"))
             {
                 GiveInventory("BloodRemoteTNT", 1);
-                GiveInventory("RocketAmmo", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                GiveInventory("RocketAmmo", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
                 result = 1;
             } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("RocketAmmo", 5 / tossedammo);
@@ -7920,7 +7920,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             if (!CheckInventory("IPOGGrenadeToken"))
             {
                 GiveInventory("IPOGGrenadeToken", 1);
-                GiveInventory("RocketAmmo", dmextraammo ? 5 * 5 / 2 : 5);
+                GiveInventory("RocketAmmo", cond(dmextraammo, 5 * 5 / 2, 5));
                 result = 1;
             } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                 GiveInventory("RocketAmmo", 5);
@@ -8123,7 +8123,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory(".357 Python", 1);
-                    GiveInventory("Shell", dmextraammo ? 6 / tossedammo * 5 / 2 : 6 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 6 / tossedammo * 5 / 2, 6 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 6 / tossedammo);
@@ -8138,7 +8138,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Desert Eagle", 1);
-                    GiveInventory("Shell", dmextraammo ? 7 / tossedammo * 5 / 2 : 7 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 7 / tossedammo * 5 / 2, 7 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 7 / tossedammo);
@@ -8176,7 +8176,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory(" RPG ", 1);
-                    GiveInventory("RocketAmmo", dmextraammo ? 2 / tossedammo * 5 / 2 : 2 / tossedammo);
+                    GiveInventory("RocketAmmo", cond(dmextraammo, 2 / tossedammo * 5 / 2, 2 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("RocketAmmo", 2 / tossedammo);
@@ -8191,7 +8191,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Spore Launcher", 1);
-                    GiveInventory("RocketAmmo", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                    GiveInventory("RocketAmmo", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("RocketAmmo", 5 / tossedammo);
@@ -8212,7 +8212,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Gauss Cannon", 1);
-                    GiveInventory("Cell", dmextraammo ? 50 / tossedammo * 5 / 2 : 50 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 50 / tossedammo * 5 / 2, 50 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 50 / tossedammo);
@@ -8227,7 +8227,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("M249 Squad Automatic Weapon", 1);
-                    GiveInventory("Cell", dmextraammo ? 100 / tossedammo * 5 / 2 : 100 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 100 / tossedammo * 5 / 2, 100 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 100 / tossedammo);
@@ -8248,7 +8248,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("E.G.O.N.", 1);
-                    GiveInventory("Cell", dmextraammo ? 50 / tossedammo * 5 / 2 : 50 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 50 / tossedammo * 5 / 2, 50 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 50 / tossedammo);
@@ -8263,7 +8263,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Displacer Cannon", 1);
-                    GiveInventory("Cell", dmextraammo ? 60 / tossedammo * 5 / 2 : 60 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 60 / tossedammo * 5 / 2, 60 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 60 / tossedammo);
@@ -8408,7 +8408,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Q2Trap", 1);
-                    GiveInventory("Cell", dmextraammo ? 50 / tossedammo * 5 / 2 : 50 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 50 / tossedammo * 5 / 2, 50 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 50 / tossedammo);
@@ -8423,7 +8423,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Q2Disruptor", 1);
-                    GiveInventory("Cell", dmextraammo ? 60 / tossedammo * 5 / 2 : 60 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 60 / tossedammo * 5 / 2, 60 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 60 / tossedammo);
@@ -8469,7 +8469,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                         if (!givenammo)
                         {
-                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", dmextraammo ? 1 / tossedammo * 5 / 2 : 1 / tossedammo);
+                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", cond(dmextraammo, 1 / tossedammo * 5 / 2, 1 / tossedammo));
                             GiveInventory("Goldfinger_OddjobHatAmmo", 1); // giving a hat on pickup. ignore dropped calculations
                             givenammo = true;
                         }
@@ -8560,7 +8560,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                         if (!givenammo)
                         {
-                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", dmextraammo ? 1 / tossedammo * 5 / 2 : 1 / tossedammo); // giving knives on pickup
+                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", cond(dmextraammo, 1 / tossedammo * 5 / 2, 1 / tossedammo)); // giving knives on pickup
                             GiveInventory("Goldfinger_OddjobHatAmmo", 1); // giving a hat on pickup. ignore dropped calculations
                             givenammo = true;
                         }
@@ -8756,7 +8756,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldeneye_AutoShotgun", 1);
-                        GiveInventory("Shell", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                        GiveInventory("Shell", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -8812,7 +8812,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldeneye_Shotgun", 1);
-                        GiveInventory("Shell", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                        GiveInventory("Shell", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -9123,7 +9123,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Goldeneye_Phantom"))
                 {
                     GiveInventory("Goldeneye_Phantom", 1);
-                    GiveInventory("Clip", dmextraammo ? 50 / tossedammo * 5 / 2 : 50 / tossedammo);
+                    GiveInventory("Clip", cond(dmextraammo, 50 / tossedammo * 5 / 2, 50 / tossedammo));
 
                     if (!CheckInventory("Goldeneye_PhantomDualToken") && dualgiveboth)
                     {
@@ -9264,7 +9264,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldeneye_Cougar", 1);
-                        GiveInventory("Cell", dmextraammo ? 24 / tossedammo * 5 / 2 : 24 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 24 / tossedammo * 5 / 2, 24 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -9320,7 +9320,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldeneye_SilverPP7", 1);
-                        GiveInventory("Cell", dmextraammo ? 28 / tossedammo * 5 / 2 : 28 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 28 / tossedammo * 5 / 2, 28 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -9376,7 +9376,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldeneye_ArabahViper", 1);
-                        GiveInventory("Cell", dmextraammo ? 21 / tossedammo * 5 / 2 : 21 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 21 / tossedammo * 5 / 2, 21 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -9447,7 +9447,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Goldeneye_GoldenGun"))
                 {
                     GiveInventory("Goldeneye_GoldenGun", 1);
-                    GiveInventory("Goldeneye_GoldenGunRounds", dmextraammo ? 3 / tossedammo * 5 / 2 : 3 / tossedammo);
+                    GiveInventory("Goldeneye_GoldenGunRounds", cond(dmextraammo, 3 / tossedammo * 5 / 2, 3 / tossedammo));
 
                     if (!CheckInventory("Goldeneye_GoldenGunDualToken") && dualgiveboth)
                     {
@@ -9533,7 +9533,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                         if (!givenammo)
                         {
-                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", dmextraammo ? 1 / tossedammo * 5 / 2 : 1 / tossedammo); // giving knives on pickup
+                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", cond(dmextraammo, 1 / tossedammo * 5 / 2, 1 / tossedammo)); // giving knives on pickup
                             GiveInventory("Goldfinger_OddjobHatAmmo", 1); // ignore dropped calculations
                             givenammo = true;
                         }
@@ -9609,7 +9609,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                         if (!givenammo)
                         {
-                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", dmextraammo ? 1 / tossedammo * 5 / 2 : 1 / tossedammo); // giving knives on pickup
+                            GiveInventory("Goldeneye_ThrowingKnivesAmmo", cond(dmextraammo, 1 / tossedammo * 5 / 2, 1 / tossedammo)); // giving knives on pickup
                             GiveInventory("Goldfinger_OddjobHatAmmo", 1); // giving a hat on pickup. ignore dropped calculations
                             givenammo = true;
                         }
@@ -9814,7 +9814,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldfinger_Shotgun", 1);
-                        GiveInventory("Shell", dmextraammo ? 5 / tossedammo * 5 / 2 : 5 / tossedammo);
+                        GiveInventory("Shell", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -9870,7 +9870,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldfinger_OverUnder", 1);
-                        GiveInventory("Shell", dmextraammo ? 2 / tossedammo * 5 / 2 : 2 / tossedammo);
+                        GiveInventory("Shell", cond(dmextraammo, 2 / tossedammo * 5 / 2, 2 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -10185,7 +10185,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldfinger_ThompsonDrum", 1);
-                        GiveInventory("Clip", dmextraammo ? 100 / tossedammo * 5 / 2 : 100 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 100 / tossedammo * 5 / 2, 100 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -10241,7 +10241,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldfinger_Thompson", 1);
-                        GiveInventory("Clip", dmextraammo ? 20 / tossedammo * 5 / 2 : 20 / tossedammo);
+                        GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -10383,7 +10383,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldfinger_M1Garand", 1);
-                        GiveInventory("Cell", dmextraammo ? 24 / tossedammo * 5 / 2 : 24 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 24 / tossedammo * 5 / 2, 24 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -10439,7 +10439,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (!hasweapon)
                     {
                         GiveInventory("Goldfinger_Kar98k", 1);
-                        GiveInventory("Cell", dmextraammo ? 15 / tossedammo * 5 / 2 : 15 / tossedammo);
+                        GiveInventory("Cell", cond(dmextraammo, 15 / tossedammo * 5 / 2, 15 / tossedammo));
 
                         if (!hasdualtoken && dualgiveboth)
                         {
@@ -10510,7 +10510,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!CheckInventory("Goldfinger_M14"))
                 {
                     GiveInventory("Goldfinger_M14", 1);
-                    GiveInventory("Cell", dmextraammo ? 60 / tossedammo * 5 / 2 : 60 / tossedammo);
+                    GiveInventory("Cell", cond(dmextraammo, 60 / tossedammo * 5 / 2, 60 / tossedammo));
 
                     if (!CheckInventory("Goldeneye_GoldenGunDualToken") && dualgiveboth)
                     {
@@ -10829,7 +10829,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Outlaws_SawedOffShotgun", 1);
-                    GiveInventory("Shell", dmextraammo ? 6 / tossedammo * 5 / 2 : 6 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 6 / tossedammo * 5 / 2, 6 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 6 / tossedammo);
@@ -10844,7 +10844,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (!hasweapon)
                 {
                     GiveInventory("Outlaws_DoubleBarrelShotgun", 1);
-                    GiveInventory("Shell", dmextraammo ? 6 / tossedammo * 5 / 2 : 6 / tossedammo);
+                    GiveInventory("Shell", cond(dmextraammo, 6 / tossedammo * 5 / 2, 6 / tossedammo));
                     result = 1;
                 } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Shell", 6 / tossedammo);
@@ -14520,10 +14520,10 @@ script "SamsaraClientSidePresetSelection" (void)
 		case 100: // cubebert's Settings
 
 		// General Player Preferences
-		SetCVar("samsara_cl_wolfmove", isZDoom() ? true : false);
+		SetCVar("samsara_cl_wolfmove", cond(isZDoom(), true, false));
 		SetCVar("samsara_cl_wolfmovebob", false);
 		SetCVar("samsara_cl_smoothanims", false);
-		SetCVar("samsara_cl_weaponhud", isZDoom() ? false : true);
+		SetCVar("samsara_cl_weaponhud", cond(isZDoom(), false, true));
 		SetCVar("samsara_cl_legacyfullscreenhud", true);
 		SetCVar("samsara_cl_teamtext", true);
 		SetCVar("samsara_cl_pickupmode", 1);
@@ -14535,7 +14535,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_noadditivepickups", false);
 		SetCVar("samsara_cl_ballgag", false);
 		SetCVar("samsara_cl_idleballgag", false);
-		SetCVar("samsara_cl_norecoil", isZDoom() ? false : true);
+		SetCVar("samsara_cl_norecoil", cond(isZDoom(), false, true));
 		SetCVar("samsara_cl_sinerecoil", false);
 		SetCVar("samsara_cl_merrychristmassnow", true);
 		SetCVar("samsara_cl_xmasmusic", false);
@@ -14544,9 +14544,9 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_oldcompendiumgraphics", true);
 		SetCVar("samsara_cl_classtips", false);
 		SetCVar("samsara_cl_showversionnumber", false);
-		SetCVar("samsara_cl_autoinventoryhealth", isZDoom() ? 0 : 50);
+		SetCVar("samsara_cl_autoinventoryhealth", cond(isZDoom(), 0, 50));
 		SetCVar("samsara_cl_maxedinventoryhealthpickup", 1);
-		SetCVar("samsara_cl_autoinventoryarmor", isZDoom() ? false : true);
+		SetCVar("samsara_cl_autoinventoryarmor", cond(isZDoom(), false, true));
 		SetCVar("samsara_cl_maxedinventoryarmorpickup", false);
 		SetCVar("samsara_cl_footstepsounds", true);
 
@@ -14649,7 +14649,7 @@ script "SamsaraClientSidePresetSelection" (void)
 
 		// Blood and Gore Preferences
 		SetCVar("samsara_cl_bloodyhell", 2);
-		SetCVar("samsara_cl_bloodypersistent", isZDoom() ? true : false);
+		SetCVar("samsara_cl_bloodypersistent", cond(isZDoom(), true, false));
 
 		// Character Equipment Loadout Options
 		SetCVar("samsara_cl_doomguy_fallbackranged", false);
@@ -16685,18 +16685,18 @@ script "SamsaraServerSidePresetSelection" (void)
 		case 101: // tehvappy50's Settings (mainly tweaked for invasion on the zandronum side)
 
 		// General Options
-		SetCVar("samsara_jumpmod", isZDoom() ? 0 : (currentiwad == GAME_HEXEN ? 9 : 0));
-		SetCVar("samsara_armormode", isZDoom() ? 0 : 3);
+		SetCVar("samsara_jumpmod", cond(isZDoom(), 0, cond(currentiwad == GAME_HEXEN, 9, 0)));
+		SetCVar("samsara_armormode", cond(isZDoom(), 0, 3));
 		SetCVar("samsara_armorpickupbehavior", 2);
 		SetCVar("samsara_speedmod", 0);
 		SetCVar("samsara_nohealth", false);
 		SetCVar("samsara_nohealthcap", false);
 		SetCVar("samsara_noarmorcap", false);
-		SetCVar("samsara_nomonologues", isZDoom() ? false : true);
+		SetCVar("samsara_nomonologues", cond(isZDoom(), false, true));
 		SetCVar("samsara_experiencegain", 2);
 		SetCVar("samsara_dukesoundboard", false);
 		SetCVar("samsara_microwavepop", false);
-		SetCVar("samsara_unmakerartifacts", isZDoom() ? 0 : 3);
+		SetCVar("samsara_unmakerartifacts", cond(isZDoom(), 0, 3));
 		SetCVar("samsara_strifeupgrades", 0);
 		SetCVar("samsara_mp_startingGold", 1500);
 		SetCVar("samsara_deusexstartingskills", 0);
@@ -16758,11 +16758,11 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_allloadoutequipment", false);
 
 		// Weapon Options
-		SetCVar("samsara_permault", isZDoom() ? false : true);
-		SetCVar("samsara_dualpickup", isZDoom() ? 2 : 3);
-		SetCVar("samsara_uniquestart", isZDoom() ? 0 : 4);
-		SetCVar("samsara_chainsawstart", isZDoom() ? 0 : 1);
-		SetCVar("samsara_shotgunstart", isZDoom() ? 0 : 1);
+		SetCVar("samsara_permault", cond(isZDoom(), false, true));
+		SetCVar("samsara_dualpickup", cond(isZDoom(), 2, 3));
+		SetCVar("samsara_uniquestart", cond(isZDoom(), 0, 4));
+		SetCVar("samsara_chainsawstart", cond(isZDoom(), 0, 1));
+		SetCVar("samsara_shotgunstart", cond(isZDoom(), 0, 1));
 		SetCVar("samsara_ssgstart", 0);
 		SetCVar("samsara_chaingunstart", 0);
 		SetCVar("samsara_minigunstart", 0);
@@ -16772,13 +16772,13 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_railgunstart", 0);
 		SetCVar("samsara_bfg9000start", 0);
 		SetCVar("samsara_bfg10kstart", 0);
-		SetCVar("samsara_backpackstart", isZDoom() ? false : true);
-		SetCVar("samsara_reloadmode", isZDoom() ? 2 : 1);
+		SetCVar("samsara_backpackstart", cond(isZDoom(), false, true));
+		SetCVar("samsara_reloadmode", cond(isZDoom(), 2, 1));
 		SetCVar("samsara_bottomlessmagazines", false);
-		SetCVar("samsara_weaponoverheating", isZDoom() ? 2 : 0);
-		SetCVar("samsara_underwaterweapons", isZDoom() ? 0 : 2);
+		SetCVar("samsara_weaponoverheating", cond(isZDoom(), 2, 0));
+		SetCVar("samsara_underwaterweapons", cond(isZDoom(), 0, 2));
 		SetCVar("samsara_noinventorycooldown", false);
-		SetCVar("samsara_pistolammo", isZDoom() ? true : false);
+		SetCVar("samsara_pistolammo", cond(isZDoom(), true, false));
 		SetCVar("samsara_pistolstart", 0);
 		SetCVar("samsara_slotmode", 11);
 		SetCVar("samsara_instagibspread", false);
@@ -16799,22 +16799,22 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_skulltagreplace", false);
 
 		// Item Options
-		SetCVar("samsara_randomitems", isZDoom() ? 25 : 0);
-		SetCVar("samsara_randomitemextras", isZDoom() ? true : false);
-		SetCVar("samsara_randomitempool", isZDoom() ? true : false);
+		SetCVar("samsara_randomitems", cond(isZDoom(), 25, 0));
+		SetCVar("samsara_randomitemextras", cond(isZDoom(), true, false));
+		SetCVar("samsara_randomitempool", cond(isZDoom(), true, false));
 
 		// Random Character Spawn Options
-		SetCVar("samsara_misccharspawn_duke3d", isZDoom() ? 4 : 0);
-		SetCVar("samsara_misccharspawn_rott", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_blood", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_strife", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_rmr", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_halflife", isZDoom() ? 4 : 0);
-		SetCVar("samsara_misccharspawn_sw", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_ps", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_rr", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_quake2", isZDoom() ? true : false);
-		SetCVar("samsara_misccharspawn_hexen2", isZDoom() ? true : false);
+		SetCVar("samsara_misccharspawn_duke3d", cond(isZDoom(), 4, 0));
+		SetCVar("samsara_misccharspawn_rott", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_blood", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_strife", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_rmr", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_halflife", cond(isZDoom(), 4, 0));
+		SetCVar("samsara_misccharspawn_sw", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_ps", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_rr", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_quake2", cond(isZDoom(), true, false));
+		SetCVar("samsara_misccharspawn_hexen2", cond(isZDoom(), true, false));
 
 		// Class-Based Ability Options
 		SetCVar("samsara_absolutionunmaker", false);
@@ -16823,7 +16823,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_allowcurvusremotebomb", true);
 		SetCVar("samsara_allowcurvusproxybomb", true);
 		SetCVar("samsara_bombwalls", false);
-		SetCVar("samsara_extralifeteleport", isZDoom() ? true : false);
+		SetCVar("samsara_extralifeteleport", cond(isZDoom(), true, false));
 		SetCVar("samsara_banhextomeofpower", false);
 		SetCVar("samsara_bossexpand", false);
 		SetCVar("samsara_fullradiusdmg", true);
@@ -16851,20 +16851,20 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_proximitybehavior", false);
 		SetCVar("samsara_weaponbalance", 2);
 		SetCVar("samsara_permaquad", true);
-		SetCVar("samsara_banmorphovum", isZDoom() ? false : true);
+		SetCVar("samsara_banmorphovum", cond(isZDoom(), false, true));
 
 		// Item Replacement Options
 		SetCVar("samsara_replace_backpack", 0);
 		SetCVar("samsara_replace_computermap", 0);
-		SetCVar("samsara_replace_berserk", currentiwad == GAME_STRIFE ? 13 : 0);
+		SetCVar("samsara_replace_berserk", cond(currentiwad == GAME_STRIFE, 13, 0));
 		SetCVar("samsara_replace_blursphere", 0);
 		SetCVar("samsara_replace_invulnerability", 0);
 		SetCVar("samsara_replace_lightamplifier", 0);
-		SetCVar("samsara_replace_teleport", isZDoom() ? 0 : 23);
-		SetCVar("samsara_replace_banishment", isZDoom() ? 0 : 23);
+		SetCVar("samsara_replace_teleport", cond(isZDoom(), 0, 23));
+		SetCVar("samsara_replace_banishment", cond(isZDoom(), 0, 23));
 		SetCVar("samsara_replace_invisibilitysphere", 0);
-		SetCVar("samsara_replace_timefreeze", isZDoom() ? 0 : 20);
-		SetCVar("samsara_replace_randompowerup", isZDoom() ? 0 : 20);
+		SetCVar("samsara_replace_timefreeze", cond(isZDoom(), 0, 20));
+		SetCVar("samsara_replace_randompowerup", cond(isZDoom(), 0, 20));
 		SetCVar("samsara_replace_chainsaw", 0);
 		SetCVar("samsara_replace_shotgun", 0);
 		SetCVar("samsara_replace_supershotgun", 0);
@@ -17267,22 +17267,22 @@ script "Samsara_PinataHandler" (int health, int radius, int height, int actortyp
 
     if (!naughty)
     {
-        if (health >= (boss ? GetCVar("samsara_pinatapartybosshealthtier5") : GetCVar("samsara_pinatapartyhealthtier5"))) // Legendary
+        if (health >= (cond(boss, GetCVar("samsara_pinatapartybosshealthtier5"), GetCVar("samsara_pinatapartyhealthtier5")))) // Legendary
         {
             currentpooltier = 5;
-            currentpoolamount = GetCVar("samsara_pinatapartyextras") ? 14 : 12;
-        } else if (health >= (boss ? GetCVar("samsara_pinatapartybosshealthtier4") : GetCVar("samsara_pinatapartyhealthtier4"))) { // Epic
+            currentpoolamount = cond(GetCVar("samsara_pinatapartyextras"), 14, 12);
+        } else if (health >= (cond(boss, GetCVar("samsara_pinatapartybosshealthtier4"), GetCVar("samsara_pinatapartyhealthtier4")))) { // Epic
             currentpooltier = 4;
-            currentpoolamount = GetCVar("samsara_pinatapartyextras") ? 31 : 16;
-        } else if (health >= (boss ? GetCVar("samsara_pinatapartybosshealthtier3") : GetCVar("samsara_pinatapartyhealthtier3"))) { // Rare
+            currentpoolamount = cond(GetCVar("samsara_pinatapartyextras"), 31, 16);
+        } else if (health >= (cond(boss, GetCVar("samsara_pinatapartybosshealthtier3"), GetCVar("samsara_pinatapartyhealthtier3")))) { // Rare
             currentpooltier = 3;
-            currentpoolamount = GetCVar("samsara_pinatapartyextras") ? 28 : 21;
-        } else if (health >= (boss ? GetCVar("samsara_pinatapartybosshealthtier2") : GetCVar("samsara_pinatapartyhealthtier2"))) { // Uncommon
+            currentpoolamount = cond(GetCVar("samsara_pinatapartyextras"), 28, 21);
+        } else if (health >= (cond(boss, GetCVar("samsara_pinatapartybosshealthtier2"), GetCVar("samsara_pinatapartyhealthtier2")))) { // Uncommon
             currentpooltier = 2;
-            currentpoolamount = GetCVar("samsara_pinatapartyextras") ? 24 : 17;
-        } else if (health >= (boss ? GetCVar("samsara_pinatapartybosshealthtier1") : GetCVar("samsara_pinatapartyhealthtier1"))) { // Common
+            currentpoolamount = cond(GetCVar("samsara_pinatapartyextras"), 24, 17);
+        } else if (health >= (cond(boss, GetCVar("samsara_pinatapartybosshealthtier1"), GetCVar("samsara_pinatapartyhealthtier1")))) { // Common
             currentpooltier = 1;
-            currentpoolamount = GetCVar("samsara_pinatapartyextras") ? 13 : 9;
+            currentpoolamount = cond(GetCVar("samsara_pinatapartyextras"), 13, 9);
         }
 
         if (currentpooltier <= 0) { terminate; }
@@ -18874,11 +18874,11 @@ script "SamsaraMapRevealerPickup" (void) { MapRevealerPickedUp = true; }
 
 script "SamsaraSemiAuto" (int offhand)
 {
-    SetInventory(offhand ? "SamsaraFiringFullAuto2" : "SamsaraFiringFullAuto", 1);
+    SetInventory(cond(offhand, "SamsaraFiringFullAuto2", "SamsaraFiringFullAuto"), 1);
 
     until (!(GetPlayerInput (-1, INPUT_BUTTONS) & BT_ATTACK)) { Delay(1); }
 
-    SetInventory(offhand ? "SamsaraFiringFullAuto2" : "SamsaraFiringFullAuto", 0);
+    SetInventory(cond(offhand, "SamsaraFiringFullAuto2", "SamsaraFiringFullAuto"), 0);
 }
 
 script "SamsaraSetRenderStyle" (int styletype) { SetActorProperty(0, APROP_RenderStyle, styletype); }

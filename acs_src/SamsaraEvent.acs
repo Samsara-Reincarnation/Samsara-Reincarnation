@@ -336,11 +336,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
         } else {
             if (!(isLMS() || GetCVar("samsara_lmsrules")) || ((isLMS() || GetCVar("samsara_lmsrules")) && !GetCVar("samsara_lmsuniques")))
             {
-                int sup = GetCVar("samsara_strifeupgrades");
+                int sup = middle(0, GetCVar("samsara_strifeupgrades"), 10);
                 int supdone = 0;
-
-                if (sup > 10) { sup = 10; }
-                else if (sup < 0) { sup = 0; }
 
                 while (supdone < sup)
                 {
@@ -616,10 +613,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraDoomguyStrBFGReadySoundCheck", 0);
 				}
 
-				doommode = GetUserCVar(pln, "samsara_cl_doommode");
-
-                if (doommode > 2) { doommode = 2; }
-                else if (doommode < 0) { doommode = 0; }
+				doommode = middle(0, GetUserCVar(pln, "samsara_cl_doommode"), 2);
 
 				if(doommode == 2)
 				{
@@ -1236,10 +1230,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 }
                 else { SetInventory("Totenkopf_Sniper", 0); }
 
-				wolfmode = GetUserCVar(pln, "samsara_cl_wolfmode");
-
-                if (wolfmode > 2) { wolfmode = 2; }
-                else if (wolfmode < 0) { wolfmode = 0; }
+				wolfmode = middle(0, GetUserCVar(pln, "samsara_cl_wolfmode"), 2);
 
 				if(wolfmode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
 				{
@@ -1576,10 +1567,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     SetInventory("SamsaraHexenBloodscourgePoweredFiringSoundCheck", 0);
                 }
 
-				hexmode = GetUserCVar(pln, "samsara_cl_hexclass");
-
-                if (hexmode > 3) { hexmode = 3; }
-                else if (hexmode < 0) { hexmode = 0; }
+				hexmode = middle(0, GetUserCVar(pln, "samsara_cl_hexclass"), 3);
 
 				if(hexmode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
 				{
@@ -2314,10 +2302,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraDuke64PlasmaCannonLoopSoundCheck", 0);
 				}
 
-				dukemode = GetUserCVar(pln, "samsara_cl_dukemode");
-
-                if (dukemode > 2) { dukemode = 2; }
-                else if (dukemode < 0) { dukemode = 0; }
+				dukemode = middle(0, GetUserCVar(pln, "samsara_cl_dukemode"), 2);
 
 				if(dukemode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
 				{
@@ -2758,10 +2743,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                 if (CheckInventory("God Hand") && !CheckWeapon("God Hand") && !CheckInventory("PowerGodProtection")) { TakeInventory("God Hand", 1); }
 
-				rottmode = GetUserCVar(pln, "samsara_cl_rottmode");
-
-                if (rottmode > 4) { rottmode = 4; }
-                else if (rottmode < 0) { rottmode = 0; }
+				rottmode = middle(0, GetUserCVar(pln, "samsara_cl_rottmode"), 4);
 
 				//only run these actions if the value changes
 				if(rottmode != previousvalue)
@@ -2829,10 +2811,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                 TakeInventory("SamsaraBStoneAutoChargePistolCooldown", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
 
-				blakemode = GetUserCVar(pln, "samsara_cl_bsaog");
-
-                if (blakemode > 1) { blakemode = 1; }
-                else if (blakemode < 0) { blakemode = 0; }
+				blakemode = middle(0, GetUserCVar(pln, "samsara_cl_bsaog"), 1);
 
 				if(blakemode != previousvalue)
 				{
@@ -2913,10 +2892,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraEradicatorFlamethrowerFiringSoundCheck", 0);
 				}
 
-				eradmode = GetUserCVar(pln, "samsara_cl_eradmode");
-
-                if (eradmode > 3) { eradmode = 3; }
-                else if (eradmode < 0) { eradmode = 0; }
+				eradmode = middle(0, GetUserCVar(pln, "samsara_cl_eradmode"), 3);
 
 				//only run these actions if the value changes
 				if(eradmode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
@@ -3179,10 +3155,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 }
 				break;
 			case CLASS_POGREED:
-				ipogmode = GetUserCVar(pln, "samsara_cl_ipogmode");
-
-                if (ipogmode > 4) { ipogmode = 4; }
-                else if (ipogmode < 0) { ipogmode = 0; }
+				ipogmode = middle(0, GetUserCVar(pln, "samsara_cl_ipogmode"), 4);
 
 				//only run these actions if the value changes
 				if(ipogmode != previousvalue)
@@ -3275,10 +3248,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					}
 				}
 
-				halflifemode = GetUserCVar(pln, "samsara_cl_shephardmode");
-
-                if (halflifemode > 1) { halflifemode = 1; }
-                else if (halflifemode < 0) { halflifemode = 0; }
+				halflifemode = middle(0, GetUserCVar(pln, "samsara_cl_shephardmode"), 1);
 
 				if(halflifemode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
 				{
@@ -3797,12 +3767,10 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				break;
 
 			case CLASS_BOND:
-				bondmode = GetUserCVar(pln, "samsara_cl_bondmode");
+				bondmode = middle(0, GetUserCVar(pln, "samsara_cl_bondmode"), 1);
+
 				SetInventory("Goldfinger_VehiclePreference",GetUserCvar(pln, "samsara_cl_usedb5"));
-				
-				if (bondmode > 1) { bondmode = 1; }
-                else if (bondmode < 0) { bondmode = 0; }
-				
+
 				if(bondmode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
 				{
                     haspistol = CheckInventory("Goldeneye_PP7Silenced");
