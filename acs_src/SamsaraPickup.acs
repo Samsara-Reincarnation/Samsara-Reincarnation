@@ -10,8 +10,8 @@ script "SamsaraClientClass" (int slot) CLIENTSIDE //228 -- SAMSARA_CLIENT_CLASS
     int toClass = SamsaraClientClass - 1;
     int displaymode;
 
-    if (GetCVar("samsara_runninginzdoom")) { displaymode = GetCVar("samsara_zd_pickupmode"); }
-    else { displaymode = GetUserCVar(ConsolePlayerNumber(), "samsara_cl_pickupmode"); }
+    if (GetCVar("samsara_runninginzdoom")) { displaymode = middle(0, GetCVar("samsara_zd_pickupmode"), 2); }
+    else { displaymode = middle(0, GetUserCVar(ConsolePlayerNumber(), "samsara_cl_pickupmode"), 2); }
 
     int oldslot = slot;
     int success = 0;
