@@ -154,7 +154,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 	int doommode, dukemode, hexmode, wolfmode, rottmode, blakemode, eradmode, ipogmode, halflifemode, bondmode, cvalue;
     int previousvalue = -1;
     int extrajumpz;
-    int loadoutmode;
     int dualpickupcheck;
 	int targettid;
 	int bot = PlayerIsBot(pln);
@@ -945,33 +944,10 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         SetInventory("Calamity Blade", 0);
                     }
                 } else {
-                    loadoutmode = GetCVar("samsara_doomguy_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_fallbackranged");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraDoomOriginalLoadoutFallbackRanged", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_doomguy_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot4") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot4");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraDoomOriginalLoadoutSlot4", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_doomguy_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot6") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot6");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraDoomOriginalLoadoutSlot6", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_doomguy_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_doomguy_slot7") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot7");
-
-                    if (loadoutmode > 2) { loadoutmode = 2; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraDoomOriginalLoadoutSlot7", loadoutmode);
+                    SetInventory("SamsaraDoomOriginalLoadoutFallbackRanged", middle(0, cond(GetCVar("samsara_doomguy_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_doomguy_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_doomguy_fallbackranged")), 1));
+                    SetInventory("SamsaraDoomOriginalLoadoutSlot4", middle(0, cond(GetCVar("samsara_doomguy_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_doomguy_slot4") - 1, GetUserCVar(pln, "samsara_cl_doomguy_slot4")), 1));
+                    SetInventory("SamsaraDoomOriginalLoadoutSlot6", middle(0, cond(GetCVar("samsara_doomguy_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_doomguy_slot6") - 1, GetUserCVar(pln, "samsara_cl_doomguy_slot6")), 1));
+                    SetInventory("SamsaraDoomOriginalLoadoutSlot7", middle(0, cond(GetCVar("samsara_doomguy_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_doomguy_slot7") - 1, GetUserCVar(pln, "samsara_cl_doomguy_slot7")), 2));
 
                     if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraDoomOriginalLoadoutFallbackRanged"))
                     {
@@ -1146,12 +1122,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 previousvalue = 0;
             }
 
-            loadoutmode = GetCVar("samsara_chex_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_chex_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_chex_fallbackranged");
-
-            if (loadoutmode > 1) { loadoutmode = 1; }
-            else if (loadoutmode < 0) { loadoutmode = 0; }
-
-            SetInventory("SamsaraChexLoadoutFallbackRanged", loadoutmode);
+            SetInventory("SamsaraChexLoadoutFallbackRanged", middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1));
 
             if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraChexLoadoutFallbackRanged"))
             {
@@ -2233,42 +2204,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					previousvalue = hexmode;
 				}
 
-                if (hexmode >= 3)
+                if (hexmode >= 3) { SetInventory("SamsaraHexen1LoadoutUnique3", middle(0, cond(GetCVar("samsara_baratus_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_baratus_unique3") - 1, GetUserCVar(pln, "samsara_cl_baratus_unique3")), 1)); }
+                else if (hexmode == 2) { SetInventory("SamsaraHexen1LoadoutUnique3", middle(0, cond(GetCVar("samsara_daedolon_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_daedolon_unique3") - 1, GetUserCVar(pln, "samsara_cl_daedolon_unique3")), 1)); }
+                else if (hexmode == 1) { SetInventory("SamsaraHexen1LoadoutUnique3", middle(0, cond(GetCVar("samsara_pariasclassic_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_pariasclassic_unique3") - 1, GetUserCVar(pln, "samsara_cl_pariasclassic_unique3")), 1)); }
+                else
                 {
-                    loadoutmode = GetCVar("samsara_baratus_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_baratus_unique3") - 1 : GetUserCVar(pln, "samsara_cl_baratus_unique3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
-                } else if (hexmode == 2) {
-                    loadoutmode = GetCVar("samsara_daedolon_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_daedolon_unique3") - 1 : GetUserCVar(pln, "samsara_cl_daedolon_unique3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
-                } else if (hexmode == 1) {
-                    loadoutmode = GetCVar("samsara_pariasclassic_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_pariasclassic_unique3") - 1 : GetUserCVar(pln, "samsara_cl_pariasclassic_unique3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
-                } else {
-                    loadoutmode = GetCVar("samsara_parias_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_parias_slot3") - 1 : GetUserCVar(pln, "samsara_cl_parias_slot3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHexen1ClericLoadoutSlot3", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_parias_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_parias_unique3") - 1 : GetUserCVar(pln, "samsara_cl_parias_unique3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHexen1LoadoutUnique3", loadoutmode);
+                    SetInventory("SamsaraHexen1ClericLoadoutSlot3", middle(0, cond(GetCVar("samsara_parias_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_parias_slot3") - 1, GetUserCVar(pln, "samsara_cl_parias_slot3")), 1));
+                    SetInventory("SamsaraHexen1LoadoutUnique3", middle(0, cond(GetCVar("samsara_parias_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_parias_unique3") - 1, GetUserCVar(pln, "samsara_cl_parias_unique3")), 1));
                 }
 
                 if (hexmode >= 1)
@@ -2616,22 +2558,8 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					previousvalue = dukemode;
 				}
 
-                if (dukemode == 1)
-                {
-                    loadoutmode = GetCVar("samsara_dukelab_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_dukelab_slot4") - 1 : GetUserCVar(pln, "samsara_cl_dukelab_slot4");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraDukeLoadoutSlot4", loadoutmode);
-                } else if (dukemode <= 0) {
-                    loadoutmode = GetCVar("samsara_duke_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_duke_slot4") - 1 : GetUserCVar(pln, "samsara_cl_duke_slot4");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraDukeLoadoutSlot4", loadoutmode);
-                }
+                if (dukemode == 1) { SetInventory("SamsaraDukeLoadoutSlot4", middle(0, cond(GetCVar("samsara_dukelab_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_dukelab_slot4") - 1, GetUserCVar(pln, "samsara_cl_dukelab_slot4")), 1)); }
+                else if (dukemode <= 0) { SetInventory("SamsaraDukeLoadoutSlot4", middle(0, cond(GetCVar("samsara_duke_slot4") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_duke_slot4") - 1, GetUserCVar(pln, "samsara_cl_duke_slot4")), 1)); }
 				
                 if (dukemode == 2)
                 {
@@ -2776,12 +2704,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     }
                 }
 
-                loadoutmode = GetCVar("samsara_ranger_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_ranger_slot1") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot1");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraQuake1LoadoutSlot1", loadoutmode);
+                SetInventory("SamsaraQuake1LoadoutSlot1", middle(0, cond(GetCVar("samsara_ranger_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_ranger_slot1") - 1, GetUserCVar(pln, "samsara_cl_ranger_slot1")), 1));
 
                 if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraQuake1LoadoutSlot1"))
                 {
@@ -3376,131 +3299,25 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
                 if (halflifemode)
                 {
-                    loadoutmode = GetCVar("samsara_shephard_fallbackmelee") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_fallbackmelee") - 1 : GetUserCVar(pln, "samsara_cl_shephard_fallbackmelee");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutFallbackMelee", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_slot1") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot1");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot1", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_slot3") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot3", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_slot5") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_slot5") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot5");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot5", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_slot6") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot6");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot6", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_slot7") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot7");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot7", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_unique1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_unique1") - 1 : GetUserCVar(pln, "samsara_cl_shephard_unique1");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutUnique1", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_unique2") - 1 : GetUserCVar(pln, "samsara_cl_shephard_unique2");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutUnique2", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_shephard_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_shephard_unique3") - 1 : GetUserCVar(pln, "samsara_cl_shephard_unique3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutUnique3", loadoutmode);
+                    SetInventory("SamsaraHalfLifeLoadoutFallbackMelee", middle(0, cond(GetCVar("samsara_shephard_fallbackmelee") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_fallbackmelee") - 1, GetUserCVar(pln, "samsara_cl_shephard_fallbackmelee")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot1", middle(0, cond(GetCVar("samsara_shephard_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_slot1") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot1")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot3", middle(0, cond(GetCVar("samsara_shephard_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_slot3") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot3")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot5", middle(0, cond(GetCVar("samsara_shephard_slot5") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_slot5") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot5")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot6", middle(0, cond(GetCVar("samsara_shephard_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_slot6") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot6")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot7", middle(0, cond(GetCVar("samsara_shephard_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_slot7") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot7")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutUnique1", middle(0, cond(GetCVar("samsara_shephard_unique1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_unique1") - 1, GetUserCVar(pln, "samsara_cl_shephard_unique1")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutUnique2", middle(0, cond(GetCVar("samsara_shephard_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_unique2") - 1, GetUserCVar(pln, "samsara_cl_shephard_unique2")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutUnique3", middle(0, cond(GetCVar("samsara_shephard_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_shephard_unique3") - 1, GetUserCVar(pln, "samsara_cl_shephard_unique3")), 1));
                 } else {
-                    loadoutmode = GetCVar("samsara_freeman_fallbackmelee") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_fallbackmelee") - 1 : GetUserCVar(pln, "samsara_cl_freeman_fallbackmelee");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutFallbackMelee", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_slot1") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot1");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot1", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_slot3") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot3", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_slot5") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_slot5") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot5");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot5", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_slot6") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot6");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot6", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_slot7") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot7");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutSlot7", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_unique1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_unique1") - 1 : GetUserCVar(pln, "samsara_cl_freeman_unique1");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutUnique1", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_unique2") - 1 : GetUserCVar(pln, "samsara_cl_freeman_unique2");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutUnique2", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_freeman_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_freeman_unique3") - 1 : GetUserCVar(pln, "samsara_cl_freeman_unique3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraHalfLifeLoadoutUnique3", loadoutmode);
+                    SetInventory("SamsaraHalfLifeLoadoutFallbackMelee", middle(0, cond(GetCVar("samsara_freeman_fallbackmelee") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_fallbackmelee") - 1, GetUserCVar(pln, "samsara_cl_freeman_fallbackmelee")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot1", middle(0, cond(GetCVar("samsara_freeman_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_slot1") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot1")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot3", middle(0, cond(GetCVar("samsara_freeman_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_slot3") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot3")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot5", middle(0, cond(GetCVar("samsara_freeman_slot5") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_slot5") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot5")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot6", middle(0, cond(GetCVar("samsara_freeman_slot6") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_slot6") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot6")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutSlot7", middle(0, cond(GetCVar("samsara_freeman_slot7") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_slot7") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot7")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutUnique1", middle(0, cond(GetCVar("samsara_freeman_unique1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_unique1") - 1, GetUserCVar(pln, "samsara_cl_freeman_unique1")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutUnique2", middle(0, cond(GetCVar("samsara_freeman_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_unique2") - 1, GetUserCVar(pln, "samsara_cl_freeman_unique2")), 1));
+                    SetInventory("SamsaraHalfLifeLoadoutUnique3", middle(0, cond(GetCVar("samsara_freeman_unique3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_freeman_unique3") - 1, GetUserCVar(pln, "samsara_cl_freeman_unique3")), 1));
                 }
 
                 if (loadoutPrevValue[pln][SLOT_FIST] != CheckInventory("SamsaraHalfLifeLoadoutFallbackMelee"))
@@ -3946,12 +3763,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraQuake2RailgunLoopSoundCheck", 0);
 				}
 
-                loadoutmode = GetCVar("samsara_q2_slot7s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_q2_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_q2_slot7s");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraQuake2LoadoutSlot7S", loadoutmode);
+                SetInventory("SamsaraQuake2LoadoutSlot7S", middle(0, cond(GetCVar("samsara_q2_slot7s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_q2_slot7s") - 1, GetUserCVar(pln, "samsara_cl_q2_slot7s")), 1));
 
                 if (loadoutPrevValue[pln][SLOT_BFG10K] != CheckInventory("SamsaraQuake2LoadoutSlot7S"))
                 {
@@ -4010,40 +3822,11 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				{
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_goldeneyesounds"));
 
-                    loadoutmode = GetCVar("samsara_bond_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_slot1") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot1");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldenEyeLoadoutSlot1", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bond_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_bond_fallbackranged");
-
-                    if (loadoutmode > 3) { loadoutmode = 3; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldenEyeLoadoutFallbackRanged", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bond_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_slot3") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldenEyeLoadoutSlot3", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bond_slot6s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_slot6s") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot6s");
-
-                    if (loadoutmode > 2) { loadoutmode = 2; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldenEyeLoadoutSlot6S", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bond_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bond_unique2") - 1 : GetUserCVar(pln, "samsara_cl_bond_unique2");
-
-                    if (loadoutmode > 2) { loadoutmode = 2; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldenEyeLoadoutUnique2", loadoutmode);
+                    SetInventory("SamsaraGoldenEyeLoadoutSlot1", middle(0, cond(GetCVar("samsara_bond_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bond_slot1") - 1, GetUserCVar(pln, "samsara_cl_bond_slot1")), 1));
+                    SetInventory("SamsaraGoldenEyeLoadoutFallbackRanged", middle(0, cond(GetCVar("samsara_bond_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bond_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_bond_fallbackranged")), 3));
+                    SetInventory("SamsaraGoldenEyeLoadoutSlot3", middle(0, cond(GetCVar("samsara_bond_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bond_slot3") - 1, GetUserCVar(pln, "samsara_cl_bond_slot3")), 1));
+                    SetInventory("SamsaraGoldenEyeLoadoutSlot6S", middle(0, cond(GetCVar("samsara_bond_slot6s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bond_slot6s") - 1, GetUserCVar(pln, "samsara_cl_bond_slot6s")), 2));
+                    SetInventory("SamsaraGoldenEyeLoadoutUnique2", middle(0, cond(GetCVar("samsara_bond_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bond_unique2") - 1, GetUserCVar(pln, "samsara_cl_bond_unique2")), 2));
 
                     if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraGoldenEyeLoadoutSlot1"))
                     {
@@ -4582,47 +4365,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 				{
 					SetInventory("SamsaraAlternateSoundToken", 0);
 
-                    loadoutmode = GetCVar("samsara_bondgf_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_slot1") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot1");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldfingerLoadoutSlot1", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bondgf_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_fallbackranged");
-
-                    if (loadoutmode > 4) { loadoutmode = 4; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldfingerLoadoutFallbackRanged", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bondgf_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_slot3") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot3");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldfingerLoadoutSlot3", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bondgf_slot4s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_slot4s") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot4s");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldfingerLoadoutSlot4S", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bondgf_slot6s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_slot6s") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot6s");
-
-                    if (loadoutmode > 1) { loadoutmode = 1; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldfingerLoadoutSlot6S", loadoutmode);
-
-                    loadoutmode = GetCVar("samsara_bondgf_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_bondgf_unique2") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_unique2");
-
-                    if (loadoutmode > 2) { loadoutmode = 2; }
-                    else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                    SetInventory("SamsaraGoldfingerLoadoutUnique2", loadoutmode);
+                    SetInventory("SamsaraGoldfingerLoadoutSlot1", middle(0, cond(GetCVar("samsara_bondgf_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bondgf_slot1") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot1")), 1));
+                    SetInventory("SamsaraGoldfingerLoadoutFallbackRanged", middle(0, cond(GetCVar("samsara_bondgf_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bondgf_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_bondgf_fallbackranged")), 4));
+                    SetInventory("SamsaraGoldfingerLoadoutSlot3", middle(0, cond(GetCVar("samsara_bondgf_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bondgf_slot3") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot3")), 1));
+                    SetInventory("SamsaraGoldfingerLoadoutSlot4S", middle(0, cond(GetCVar("samsara_bondgf_slot4s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bondgf_slot4s") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot4s")), 1));
+                    SetInventory("SamsaraGoldfingerLoadoutSlot6S", middle(0, cond(GetCVar("samsara_bondgf_slot6s") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bondgf_slot6s") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot6s")), 1));
+                    SetInventory("SamsaraGoldfingerLoadoutUnique2", middle(0, cond(GetCVar("samsara_bondgf_unique2") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_bondgf_unique2") - 1, GetUserCVar(pln, "samsara_cl_bondgf_unique2")), 2));
 
                     if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraGoldfingerLoadoutSlot1"))
                     {
@@ -5517,12 +5265,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     SetInventory("SamsaraOutlawsDynamiteLoopSoundCheck", 0);
                 }
 
-                loadoutmode = GetCVar("samsara_anderson_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment") ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3");
-
-                if (loadoutmode > 1) { loadoutmode = 1; }
-                else if (loadoutmode < 0) { loadoutmode = 0; }
-
-                SetInventory("SamsaraOutlawsLoadoutSlot3", loadoutmode);
+                SetInventory("SamsaraOutlawsLoadoutSlot3", middle(0, cond(GetCVar("samsara_anderson_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_anderson_slot3") - 1, GetUserCVar(pln, "samsara_cl_anderson_slot3")), 1));
 
                 if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != CheckInventory("SamsaraOutlawsLoadoutSlot3"))
                 {

@@ -2739,11 +2739,8 @@ Script "Samsara_ResetInventory" (int takexp)
 			{
 				if (!(isLMS() || GetCVar("samsara_lmsrules")) || ((isLMS() || GetCVar("samsara_lmsrules")) && !GetCVar("samsara_lmsuniques")))
 				{
-					int sup = GetCVar("samsara_strifeupgrades");
+					int sup = middle(0, GetCVar("samsara_strifeupgrades"), 10);
 					int supdone = 0;
-
-					if (sup > 10) { sup = 10; }
-					else if (sup < 0) { sup = 0; }
 
 					while (supdone < sup)
 					{
@@ -4428,73 +4425,43 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
         break;
 
       case CLASS_DOOM:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_doommode") : CheckInventory("DoomClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 2);
         break;
 
       case CLASS_WOLFEN:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_wolfmode") : CheckInventory("WolfenClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_wolfmode"), CheckInventory("WolfenClassMode")), 2);
         break;
 
       case CLASS_HEXEN:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_hexclass") : CheckInventory("HexenClassMode");
-
-        if (altclasschoice > 3) { altclasschoice = 3; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_hexclass"), CheckInventory("HexenClassMode")), 3);
         break;
 
       case CLASS_DUKE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_dukemode") : CheckInventory("DukeClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_dukemode"), CheckInventory("DukeClassMode")), 2);
         break;
 
       /*case CLASS_ROTT:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_rottmode") : CheckInventory("RottMode");
-
-        if (altclasschoice > 4) { altclasschoice = 4; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_rottmode"), CheckInventory("RottMode")), 4);
         break;*/
 
       /*case CLASS_BLAKE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_bsaog") : CheckInventory("BlakeAOGToken");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_bsaog"), CheckInventory("BlakeAOGToken")), 1);
         break;*/
 
       case CLASS_ERAD:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_eradmode") : CheckInventory("EradMode");
-
-        if (altclasschoice > 3) { altclasschoice = 3; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_eradmode"), CheckInventory("EradMode")), 3);
         break;
 
       /*case CLASS_POGREED:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_ipogmode") : CheckInventory("IpogMode");
-
-        if (altclasschoice > 4) { altclasschoice = 4; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_ipogmode"), CheckInventory("IpogMode")), 4);
         break;*/
 
       case CLASS_HALFLIFE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_shephardmode") : CheckInventory("HalfLifeOpposingForce");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_shephardmode"), CheckInventory("HalfLifeOpposingForce")), 1);
         break;
 
       case CLASS_BOND:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_bondmode") : CheckInventory("BondClassMode");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_bondmode"), CheckInventory("BondClassMode")), 1);
         break;
     }
 
@@ -4519,23 +4486,23 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_PISTOL:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_doomguy_fallbackranged") > 0 ? GetCVar("samsara_doomguy_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_fallbackranged"); }
-                else { loadoutchoice = CheckInventory("SamsaraDoomOriginalLoadoutFallbackRanged"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_doomguy_fallbackranged") > 0, GetCVar("samsara_doomguy_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_doomguy_fallbackranged")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDoomOriginalLoadoutFallbackRanged"), 1); }
                 break;
 
               case SLOT_CHAINGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_doomguy_slot4") > 0 ? GetCVar("samsara_doomguy_slot4") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot4"); }
-                else { loadoutchoice = CheckInventory("SamsaraDoomOriginalLoadoutSlot4"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_doomguy_slot4") > 0, GetCVar("samsara_doomguy_slot4") - 1, GetUserCVar(pln, "samsara_cl_doomguy_slot4")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDoomOriginalLoadoutSlot4"), 1); }
                 break;
 
               case SLOT_PLASMARIFLE:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_doomguy_slot6") > 0 ? GetCVar("samsara_doomguy_slot6") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot6"); }
-                else { loadoutchoice = CheckInventory("SamsaraDoomOriginalLoadoutSlot6"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_doomguy_slot6") > 0, GetCVar("samsara_doomguy_slot6") - 1, GetUserCVar(pln, "samsara_cl_doomguy_slot6")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDoomOriginalLoadoutSlot6"), 1); }
                 break;
 
               case SLOT_BFG9000:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_doomguy_slot7") > 0 ? GetCVar("samsara_doomguy_slot7") - 1 : GetUserCVar(pln, "samsara_cl_doomguy_slot7"); }
-                else { loadoutchoice = CheckInventory("SamsaraDoomOriginalLoadoutSlot7"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_doomguy_slot7") > 0, GetCVar("samsara_doomguy_slot7") - 1, GetUserCVar(pln, "samsara_cl_doomguy_slot7")), 2); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDoomOriginalLoadoutSlot7"), 2); }
                 break;
             }
             break;
@@ -4549,8 +4516,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_PISTOL:
-            if (startmode != 0) { loadoutchoice = GetCVar("samsara_chex_fallbackranged") > 0 ? GetCVar("samsara_chex_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_chex_fallbackranged"); }
-            else { loadoutchoice = CheckInventory("SamsaraChexLoadoutFallbackRanged"); }
+            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
+            else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
             break;
         }
         break;
@@ -4568,8 +4535,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_SUPERSHOTGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_parias_slot3") > 0 ? GetCVar("samsara_parias_slot3") - 1 : GetUserCVar(pln, "samsara_cl_parias_slot3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHexen1ClericLoadoutSlot3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_parias_slot3") > 0, GetCVar("samsara_parias_slot3") - 1, GetUserCVar(pln, "samsara_cl_parias_slot3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHexen1ClericLoadoutSlot3"), 1); }
                 break;
             }
             break;
@@ -4589,8 +4556,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_CHAINGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_duke_slot4") > 0 ? GetCVar("samsara_duke_slot4") - 1 : GetUserCVar(pln, "samsara_cl_duke_slot4"); }
-                else { loadoutchoice = CheckInventory("SamsaraDukeLoadoutSlot4"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_duke_slot4") > 0, GetCVar("samsara_duke_slot4") - 1, GetUserCVar(pln, "samsara_cl_duke_slot4")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDukeLoadoutSlot4"), 1); }
                 break;
             }
 
@@ -4601,8 +4568,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_CHAINGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_dukelab_slot4") > 0 ? GetCVar("samsara_dukelab_slot4") - 1 : GetUserCVar(pln, "samsara_cl_dukelab_slot4"); }
-                else { loadoutchoice = CheckInventory("SamsaraDukeLoadoutSlot4"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_dukelab_slot4") > 0, GetCVar("samsara_dukelab_slot4") - 1, GetUserCVar(pln, "samsara_cl_dukelab_slot4")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDukeLoadoutSlot4"), 1); }
                 break;
             }
             break;
@@ -4616,8 +4583,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_CHAINSAW:
-            if (startmode != 0) { loadoutchoice = GetCVar("samsara_ranger_slot1") > 0 ? GetCVar("samsara_ranger_slot1") - 1 : GetUserCVar(pln, "samsara_cl_ranger_slot1"); }
-            else { loadoutchoice = CheckInventory("SamsaraQuake1LoadoutSlot1"); }
+            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_ranger_slot1") > 0, GetCVar("samsara_ranger_slot1") - 1, GetUserCVar(pln, "samsara_cl_ranger_slot1")), 1); }
+            else { loadoutchoice = middle(0, CheckInventory("SamsaraQuake1LoadoutSlot1"), 1); }
             break;
         }
         break;
@@ -4635,33 +4602,33 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_FIST:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_fallbackmelee") > 0 ? GetCVar("samsara_freeman_fallbackmelee") - 1 : GetUserCVar(pln, "samsara_cl_freeman_fallbackmelee"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutFallbackMelee"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_fallbackmelee") > 0, GetCVar("samsara_freeman_fallbackmelee") - 1, GetUserCVar(pln, "samsara_cl_freeman_fallbackmelee")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutFallbackMelee"), 1); }
                 break;
 
               case SLOT_CHAINSAW:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_slot1") > 0 ? GetCVar("samsara_freeman_slot1") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot1"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot1"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_slot1") > 0, GetCVar("samsara_freeman_slot1") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot1")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot1"), 1); }
                 break;
 
               case SLOT_SUPERSHOTGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_slot3") > 0 ? GetCVar("samsara_freeman_slot3") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_slot3") > 0, GetCVar("samsara_freeman_slot3") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot3"), 1); }
                 break;
 
               case SLOT_ROCKETLAUNCHER:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_slot5") > 0 ? GetCVar("samsara_freeman_slot5") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot5"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot5"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_slot5") > 0, GetCVar("samsara_freeman_slot5") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot5")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot5"), 1); }
                 break;
 
               case SLOT_PLASMARIFLE:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_slot6") > 0 ? GetCVar("samsara_freeman_slot6") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot6"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot6"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_slot6") > 0, GetCVar("samsara_freeman_slot6") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot6")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot6"), 1); }
                 break;
 
               case SLOT_BFG9000:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_slot7") > 0 ? GetCVar("samsara_freeman_slot7") - 1 : GetUserCVar(pln, "samsara_cl_freeman_slot7"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot7"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_slot7") > 0, GetCVar("samsara_freeman_slot7") - 1, GetUserCVar(pln, "samsara_cl_freeman_slot7")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot7"), 1); }
                 break;
             }
             break;
@@ -4673,33 +4640,33 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_FIST:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_fallbackmelee") > 0 ? GetCVar("samsara_shephard_fallbackmelee") - 1 : GetUserCVar(pln, "samsara_cl_shephard_fallbackmelee"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutFallbackMelee"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_fallbackmelee") > 0, GetCVar("samsara_shephard_fallbackmelee") - 1, GetUserCVar(pln, "samsara_cl_shephard_fallbackmelee")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutFallbackMelee"), 1); }
                 break;
 
               case SLOT_CHAINSAW:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_slot1") > 0 ? GetCVar("samsara_shephard_slot1") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot1"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot1"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_slot1") > 0, GetCVar("samsara_shephard_slot1") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot1")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot1"), 1); }
                 break;
 
               case SLOT_SUPERSHOTGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_slot3") > 0 ? GetCVar("samsara_shephard_slot3") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_slot3") > 0, GetCVar("samsara_shephard_slot3") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot3"), 1); }
                 break;
 
               case SLOT_ROCKETLAUNCHER:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_slot5") > 0 ? GetCVar("samsara_shephard_slot5") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot5"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot5"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_slot5") > 0, GetCVar("samsara_shephard_slot5") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot5")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot5"), 1); }
                 break;
 
               case SLOT_PLASMARIFLE:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_slot6") > 0 ? GetCVar("samsara_shephard_slot6") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot6"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot6"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_slot6") > 0, GetCVar("samsara_shephard_slot6") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot6")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot6"), 1); }
                 break;
 
               case SLOT_BFG9000:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_slot7") > 0 ? GetCVar("samsara_shephard_slot7") - 1 : GetUserCVar(pln, "samsara_cl_shephard_slot7"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutSlot7"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_slot7") > 0, GetCVar("samsara_shephard_slot7") - 1, GetUserCVar(pln, "samsara_cl_shephard_slot7")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutSlot7"), 1); }
                 break;
             }
             break;
@@ -4713,8 +4680,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_BFG10K:
-            if (startmode != 0) { loadoutchoice = GetCVar("samsara_q2_slot7s") > 0 ? GetCVar("samsara_q2_slot7s") - 1 : GetUserCVar(pln, "samsara_cl_q2_slot7s"); }
-            else { loadoutchoice = CheckInventory("SamsaraQuake2LoadoutSlot7S"); }
+            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_q2_slot7s") > 0, GetCVar("samsara_q2_slot7s") - 1, GetUserCVar(pln, "samsara_cl_q2_slot7s")), 1); }
+            else { loadoutchoice = middle(0, CheckInventory("SamsaraQuake2LoadoutSlot7S"), 1); }
             break;
         }
         break;
@@ -4732,23 +4699,23 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_CHAINSAW:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bond_slot1") > 0 ? GetCVar("samsara_bond_slot1") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot1"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldenEyeLoadoutSlot1"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bond_slot1") > 0, GetCVar("samsara_bond_slot1") - 1, GetUserCVar(pln, "samsara_cl_bond_slot1")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldenEyeLoadoutSlot1"), 1); }
                 break;
 
               case SLOT_PISTOL:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bond_fallbackranged") > 0 ? GetCVar("samsara_bond_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_bond_fallbackranged"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldenEyeLoadoutFallbackRanged"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bond_fallbackranged") > 0, GetCVar("samsara_bond_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_bond_fallbackranged")), 3); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldenEyeLoadoutFallbackRanged"), 3); }
                 break;
 
               case SLOT_SUPERSHOTGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bond_slot3") > 0 ? GetCVar("samsara_bond_slot3") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot3"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldenEyeLoadoutSlot3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bond_slot3") > 0, GetCVar("samsara_bond_slot3") - 1, GetUserCVar(pln, "samsara_cl_bond_slot3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldenEyeLoadoutSlot3"), 1); }
                 break;
 
               case SLOT_RAILGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bond_slot6s") > 0 ? GetCVar("samsara_bond_slot6s") - 1 : GetUserCVar(pln, "samsara_cl_bond_slot6s"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldenEyeLoadoutSlot6S"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bond_slot6s") > 0, GetCVar("samsara_bond_slot6s") - 1, GetUserCVar(pln, "samsara_cl_bond_slot6s")), 2); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldenEyeLoadoutSlot6S"), 2); }
                 break;
             }
             break;
@@ -4760,28 +4727,28 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
 
               case SLOT_CHAINSAW:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bondgf_slot1") > 0 ? GetCVar("samsara_bondgf_slot1") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot1"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutSlot1"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bondgf_slot1") > 0, GetCVar("samsara_bondgf_slot1") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot1")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldfingerLoadoutSlot1"), 1); }
                 break;
 
               case SLOT_PISTOL:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bondgf_fallbackranged") > 0 ? GetCVar("samsara_bondgf_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_fallbackranged"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutFallbackRanged"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bondgf_fallbackranged") > 0, GetCVar("samsara_bondgf_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_bondgf_fallbackranged")), 4); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldfingerLoadoutFallbackRanged"), 4); }
                 break;
 
               case SLOT_SUPERSHOTGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bondgf_slot3") > 0 ? GetCVar("samsara_bondgf_slot3") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot3"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutSlot3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bondgf_slot3") > 0, GetCVar("samsara_bondgf_slot3") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldfingerLoadoutSlot3"), 1); }
                 break;
 
               case SLOT_MINIGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bondgf_slot4s") > 0 ? GetCVar("samsara_bondgf_slot4s") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot4s"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutSlot4S"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bondgf_slot4s") > 0, GetCVar("samsara_bondgf_slot4s") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot4s")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldfingerLoadoutSlot4S"), 1); }
                 break;
 
               case SLOT_RAILGUN:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bondgf_slot6s") > 0 ? GetCVar("samsara_bondgf_slot6s") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_slot6s"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutSlot6S"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bondgf_slot6s") > 0, GetCVar("samsara_bondgf_slot6s") - 1, GetUserCVar(pln, "samsara_cl_bondgf_slot6s")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldfingerLoadoutSlot6s"), 1); }
                 break;
             }
             break;
@@ -4795,17 +4762,17 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
             break;
 
           case SLOT_SUPERSHOTGUN:
-            if (startmode != 0) { loadoutchoice = GetCVar("samsara_anderson_slot3") > 0 ? GetCVar("samsara_anderson_slot3") - 1 : GetUserCVar(pln, "samsara_cl_anderson_slot3"); }
-            else { loadoutchoice = CheckInventory("SamsaraOutlawsLoadoutSlot3"); }
+            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_anderson_slot3") > 0, GetCVar("samsara_anderson_slot3") - 1, GetUserCVar(pln, "samsara_cl_anderson_slot3")), 1); }
+            else { loadoutchoice = middle(0, CheckInventory("SamsaraOutlawsLoadoutSlot3"), 1); }
             break;
         }
         break;
     }
 
-    bool completeloadout = startmode != 0 ? GetCVar("samsara_allloadoutequipment") : CheckInventory("SamsaraHasAllLoadoutEquipment");
+    bool completeloadout = cond(startmode != 0, GetCVar("samsara_allloadoutequipment"), CheckInventory("SamsaraHasAllLoadoutEquipment"));
 
     // Weapon stay setting
-    bool weaponstay = slot == SLOT_BFG9000 || slot == SLOT_BFG10K ? GetCVar("samsara_permault") : GetCVar("sv_weaponstay");
+    bool weaponstay = cond(slot == SLOT_BFG9000 || slot == SLOT_BFG10K, GetCVar("samsara_permault"), GetCVar("sv_weaponstay"));
 
     // Last pickup map coordinates initialization
     bool setcoords = false; // might rename this to setdualcoords
@@ -4824,10 +4791,10 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
     bool hasdualtoken = false;
 
     // Ammo halver for equipment dropped by dead monsters (only necessary for ammo types not used in the array)
-    int tossedammo = dropped >= 2 ? 2 : 1;
+    int tossedammo = cond(dropped >= 2, 2, 1);
 
     // Hack for tossed pickups multiplying ammo capacity by 4 for checking (see SamsaraGiveWeapon in SamsaraPickup.acs) (not necessary for ammo types not used in the array)
-    int tosseddiv = dropped >= 2 && !GetCVar("samsara_noammocap") ? 4 : 1;
+    int tosseddiv = cond(dropped >= 2 && !GetCVar("samsara_noammocap"), 4, 1);
 
     // Extra ammo on first pickup in Doom deathmatch (amount * 5 / 2)
     bool dmextraammo = !isSinglePlayer() && !isCoop() && (currentiwad == GAME_DOOM || currentiwad == GAME_CHEX) && !GetCVar("sv_noextraammo");
@@ -4868,7 +4835,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
               case SLOT_PISTOL:
                 hasweapon = CheckInventory(" Pistol ") || CheckInventory(" Rifle ");
 
-                if (loadoutchoice <= 0 || completeloadout) // Pistol
+                if (loadoutchoice == 0 || completeloadout) // Pistol
                 {
                     if (!hasweapon)
                     {
@@ -4877,7 +4844,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Rifle
+                if (loadoutchoice == 1 || completeloadout) // Rifle
                 {
                     if (!hasweapon)
                     {
@@ -4908,7 +4875,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
               case SLOT_CHAINGUN:
                 hasweapon = CheckInventory(" Chaingun ") || CheckInventory(" Machine Gun ");
 
-                if (loadoutchoice <= 0 || completeloadout) // Chaingun
+                if (loadoutchoice == 0 || completeloadout) // Chaingun
                 {
                     if (!hasweapon)
                     {
@@ -4923,7 +4890,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Machine Gun
+                if (loadoutchoice == 1 || completeloadout) // Machine Gun
                 {
                     if (!hasweapon)
                     {
@@ -4969,7 +4936,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
               case SLOT_PLASMARIFLE:
                 hasweapon = CheckInventory("Plasma Rifle") || CheckInventory(" Incinerator ");
 
-                if (loadoutchoice <= 0 || completeloadout) // Plasma Rifle
+                if (loadoutchoice == 0 || completeloadout) // Plasma Rifle
                 {
                     if (!hasweapon)
                     {
@@ -4984,7 +4951,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Incinerator
+                if (loadoutchoice == 1 || completeloadout) // Incinerator
                 {
                     if (!hasweapon)
                     {
@@ -5011,7 +4978,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
               case SLOT_BFG9000:
                 hasweapon = CheckInventory("B.F.G. 9000") || CheckInventory("B.F.G. 2704") || CheckInventory("Calamity Blade");
 
-                if (loadoutchoice <= 0 || completeloadout) // B.F.G. 9000
+                if (loadoutchoice == 0 || completeloadout) // B.F.G. 9000
                 {
                     if (!hasweapon)
                     {
@@ -5041,7 +5008,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
                 }
 
-                if (loadoutchoice >= 2 || completeloadout) // Calamity Blade
+                if (loadoutchoice == 2 || completeloadout) // Calamity Blade
                 {
                     if (!hasweapon)
                     {
@@ -5606,7 +5573,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_PISTOL:
             hasweapon = CheckInventory("Mini-Zorcher") || CheckInventory("Micro-Zorcher");
 
-            if (loadoutchoice <= 0 || completeloadout) // Mini-Zorcher
+            if (loadoutchoice == 0 || completeloadout) // Mini-Zorcher
             {
                 if (!hasweapon)
                 {
@@ -5615,7 +5582,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Micro-Zorcher
+            if (loadoutchoice == 1 || completeloadout) // Micro-Zorcher
             {
                 if (!hasweapon)
                 {
@@ -6303,7 +6270,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
               case SLOT_SUPERSHOTGUN:
                 hasweapon = CheckInventory("Bishop's Shortsword") || CheckInventory("Wand of Embers");
 
-                if (loadoutchoice <= 0 || completeloadout) // Bishop's Shortsword
+                if (loadoutchoice == 0 || completeloadout) // Bishop's Shortsword
                 {
                     if (!hasweapon)
                     {
@@ -6318,7 +6285,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Wand of Embers
+                if (loadoutchoice == 1 || completeloadout) // Wand of Embers
                 {
                     if (!hasweapon)
                     {
@@ -6805,7 +6772,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
               case SLOT_CHAINGUN:
                 hasweapon = CheckInventory("Chaingun Cannon") || CheckInventory("Duke3D_M16");
 
-                if (loadoutchoice <= 0 || completeloadout) // Chaingun Cannon/Water Repeater
+                if (loadoutchoice == 0 || completeloadout) // Chaingun Cannon/Water Repeater
                 {
                     if (!hasweapon)
                     {
@@ -6820,7 +6787,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // M16
+                if (loadoutchoice == 1 || completeloadout) // M16
                 {
                     if (!hasweapon)
                     {
@@ -7300,7 +7267,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_CHAINSAW:
             hasweapon = CheckInventory("Mjolnir") || CheckInventory("Q1Chainsaw");
 
-            if (loadoutchoice <= 0 || completeloadout) // Mjolnir
+            if (loadoutchoice == 0 || completeloadout) // Mjolnir
             {
                 if (!hasweapon)
                 {
@@ -7315,7 +7282,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Chainsaw
+            if (loadoutchoice == 1 || completeloadout) // Chainsaw
             {
                 if (!hasweapon)
                 {
@@ -8076,7 +8043,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_FIST:
             hasweapon = CheckInventory("Crowbar") || CheckInventory("Combat Knife");
 
-            if (loadoutchoice <= 0 || completeloadout) // Crowbar
+            if (loadoutchoice == 0 || completeloadout) // Crowbar
             {
                 if (!hasweapon)
                 {
@@ -8085,7 +8052,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Combat Knife
+            if (loadoutchoice == 1 || completeloadout) // Combat Knife
             {
                 if (!hasweapon)
                 {
@@ -8100,7 +8067,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_CHAINSAW:
             hasweapon = CheckInventory("Hornetgun") || CheckInventory("Shock Roach");
 
-            if (loadoutchoice <= 0 || completeloadout) // Hivehand
+            if (loadoutchoice == 0 || completeloadout) // Hivehand
             {
                 if (!hasweapon)
                 {
@@ -8109,7 +8076,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Shock Roach
+            if (loadoutchoice == 1 || completeloadout) // Shock Roach
             {
                 if (!hasweapon)
                 {
@@ -8151,7 +8118,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_SUPERSHOTGUN:
             hasweapon = CheckInventory(".357 Python") || CheckInventory("Desert Eagle");
 
-            if (loadoutchoice <= 0 || completeloadout) // .357 Python
+            if (loadoutchoice == 0 || completeloadout) // .357 Python
             {
                 if (!hasweapon)
                 {
@@ -8166,7 +8133,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Desert Eagle
+            if (loadoutchoice == 1 || completeloadout) // Desert Eagle
             {
                 if (!hasweapon)
                 {
@@ -8204,7 +8171,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_ROCKETLAUNCHER:
             hasweapon = CheckInventory(" RPG ") || CheckInventory("Spore Launcher");
 
-            if (loadoutchoice <= 0 || completeloadout) // RPG
+            if (loadoutchoice == 0 || completeloadout) // RPG
             {
                 if (!hasweapon)
                 {
@@ -8219,7 +8186,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("RocketAmmo", GetAmmoCapacity("RocketAmmo")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Spore Launcher
+            if (loadoutchoice == 1 || completeloadout) // Spore Launcher
             {
                 if (!hasweapon)
                 {
@@ -8240,7 +8207,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_PLASMARIFLE:
             hasweapon = CheckInventory("Gauss Cannon") || CheckInventory("M249 Squad Automatic Weapon");
 
-            if (loadoutchoice <= 0 || completeloadout) // Tau Cannon
+            if (loadoutchoice == 0 || completeloadout) // Tau Cannon
             {
                 if (!hasweapon)
                 {
@@ -8255,7 +8222,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // M249 Squad Automatic Weapon
+            if (loadoutchoice == 1 || completeloadout) // M249 Squad Automatic Weapon
             {
                 if (!hasweapon)
                 {
@@ -8276,7 +8243,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_BFG9000:
             hasweapon = CheckInventory("E.G.O.N.") || CheckInventory("Displacer Cannon");
 
-            if (loadoutchoice <= 0 || completeloadout) // Gluon Gun
+            if (loadoutchoice == 0 || completeloadout) // Gluon Gun
             {
                 if (!hasweapon)
                 {
@@ -8291,7 +8258,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Displacer Cannon
+            if (loadoutchoice == 1 || completeloadout) // Displacer Cannon
             {
                 if (!hasweapon)
                 {
@@ -8436,7 +8403,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_BFG10K:
             hasweapon = CheckInventory("Q2Trap") || CheckInventory("Q2Disruptor");
 
-            if (loadoutchoice <= 0 || completeloadout) // Trap
+            if (loadoutchoice == 0 || completeloadout) // Trap
             {
                 if (!hasweapon)
                 {
@@ -8451,7 +8418,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Disruptor
+            if (loadoutchoice == 1 || completeloadout) // Disruptor
             {
                 if (!hasweapon)
                 {
@@ -8494,7 +8461,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_ThrowingKnivesDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_KnifeLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // Throwing Knives
+                if (loadoutchoice == 0 || completeloadout) // Throwing Knives
                 {
                     if (!hasweapon)
                     {
@@ -8585,7 +8552,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     // equipment start ammo giving handled later on
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Hunting Knife
+                if (loadoutchoice == 1 || completeloadout) // Hunting Knife
                 {
                     if (!hasweapon)
                     {
@@ -8679,7 +8646,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasweapon = CheckInventory("Goldeneye_PP7Silenced") || CheckInventory("Goldeneye_Klobb") || CheckInventory("Goldeneye_PP7SpecialIssue") ||
                             CheckInventory("Goldeneye_DD44");
 
-                if (loadoutchoice <= 0 || completeloadout) // PP7 Special Issue (Silenced)
+                if (loadoutchoice == 0 || completeloadout) // PP7 Special Issue (Silenced)
                 {
                     if (!hasweapon)
                     {
@@ -8706,7 +8673,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     }
                 }
 
-                if (loadoutchoice >= 3 || completeloadout) // DD44 Dostovei
+                if (loadoutchoice == 3 || completeloadout) // DD44 Dostovei
                 {
                     if (!hasweapon)
                     {
@@ -8784,7 +8751,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_AutoShotgunDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_AutoShotgunLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // Automatic Shotgun
+                if (loadoutchoice == 0 || completeloadout) // Automatic Shotgun
                 {
                     if (!hasweapon)
                     {
@@ -8840,7 +8807,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Shotgun
+                if (loadoutchoice == 1 || completeloadout) // Shotgun
                 {
                     if (!hasweapon)
                     {
@@ -9292,7 +9259,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_CougarDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_CougarLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // Cougar Magnum
+                if (loadoutchoice == 0 || completeloadout) // Cougar Magnum
                 {
                     if (!hasweapon)
                     {
@@ -9404,7 +9371,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
                 }
 
-                if (loadoutchoice >= 2 || completeloadout) // Arabah Viper
+                if (loadoutchoice == 2 || completeloadout) // Arabah Viper
                 {
                     if (!hasweapon)
                     {
@@ -9558,7 +9525,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_ThrowingKnivesDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_KnifeLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // Oddjob's Hat
+                if (loadoutchoice == 0 || completeloadout) // Oddjob's Hat
                 {
                     if (!hasweapon)
                     {
@@ -9634,7 +9601,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     // equipment start ammo giving handled later on
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Golf Club
+                if (loadoutchoice == 1 || completeloadout) // Golf Club
                 {
                     if (!hasweapon)
                     {
@@ -9728,7 +9695,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasweapon = CheckInventory("Goldfinger_PPKSilenced") || CheckInventory("Goldfinger_PPK") || CheckInventory("Goldfinger_ColtM1911") ||
                             CheckInventory("Goldfinger_LugerP08") || CheckInventory("Goldfinger_WaltherP38");
 
-                if (loadoutchoice <= 0 || completeloadout) // PPK/s (Silenced)
+                if (loadoutchoice == 0 || completeloadout) // PPK/s (Silenced)
                 {
                     if (!hasweapon)
                     {
@@ -9764,7 +9731,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     }
                 }
 
-                if (loadoutchoice >= 4 || completeloadout) // Walther P38
+                if (loadoutchoice == 4 || completeloadout) // Walther P38
                 {
                     if (!hasweapon)
                     {
@@ -9842,7 +9809,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_AutoShotgunDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_AutoShotgunLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // Remington 870
+                if (loadoutchoice == 0 || completeloadout) // Remington 870
                 {
                     if (!hasweapon)
                     {
@@ -9898,7 +9865,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Over/Under
+                if (loadoutchoice == 1 || completeloadout) // Over/Under
                 {
                     if (!hasweapon)
                     {
@@ -10213,7 +10180,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_PhantomDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_PhantomLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // Thompson (Drum Mag)
+                if (loadoutchoice == 0 || completeloadout) // Thompson (Drum Mag)
                 {
                     if (!hasweapon)
                     {
@@ -10269,7 +10236,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // M1928A Thompson
+                if (loadoutchoice == 1 || completeloadout) // M1928A Thompson
                 {
                     if (!hasweapon)
                     {
@@ -10411,7 +10378,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_CougarDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_CougarLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // M1 Garand
+                if (loadoutchoice == 0 || completeloadout) // M1 Garand
                 {
                     if (!hasweapon)
                     {
@@ -10467,7 +10434,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Karabiner 98k
+                if (loadoutchoice == 1 || completeloadout) // Karabiner 98k
                 {
                     if (!hasweapon)
                     {
@@ -10857,7 +10824,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_SUPERSHOTGUN:
             hasweapon = CheckInventory("Outlaws_SawedOffShotgun") || CheckInventory("Outlaws_DoubleBarrelShotgun");
 
-            if (loadoutchoice <= 0 || completeloadout) // Sawed-Off Shotgun
+            if (loadoutchoice == 0 || completeloadout) // Sawed-Off Shotgun
             {
                 if (!hasweapon)
                 {
@@ -10872,7 +10839,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Double Barrel Shotgun
+            if (loadoutchoice == 1 || completeloadout) // Double Barrel Shotgun
             {
                 if (!hasweapon)
                 {
@@ -10919,73 +10886,43 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
         break;
 
       case CLASS_DOOM:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_doommode") : CheckInventory("DoomClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 2);
         break;
 
       case CLASS_WOLFEN:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_wolfmode") : CheckInventory("WolfenClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_wolfmode"), CheckInventory("WolfenClassMode")), 2);
         break;
 
       case CLASS_HEXEN:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_hexclass") : CheckInventory("HexenClassMode");
-
-        if (altclasschoice > 3) { altclasschoice = 3; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_hexclass"), CheckInventory("HexenClassMode")), 3);
         break;
 
       case CLASS_DUKE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_dukemode") : CheckInventory("DukeClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_dukemode"), CheckInventory("DukeClassMode")), 2);
         break;
 
       /*case CLASS_ROTT:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_rottmode") : CheckInventory("RottMode");
-
-        if (altclasschoice > 4) { altclasschoice = 4; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_rottmode"), CheckInventory("RottMode")), 4);
         break;*/
 
       /*case CLASS_BLAKE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_bsaog") : CheckInventory("BlakeAOGToken");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_bsaog"), CheckInventory("BlakeAOGToken")), 1);
         break;*/
 
       case CLASS_ERAD:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_eradmode") : CheckInventory("EradMode");
-
-        if (altclasschoice > 3) { altclasschoice = 3; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_eradmode"), CheckInventory("EradMode")), 3);
         break;
 
       /*case CLASS_POGREED:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_ipogmode") : CheckInventory("IpogMode");
-
-        if (altclasschoice > 4) { altclasschoice = 4; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_ipogmode"), CheckInventory("IpogMode")), 4);
         break;*/
 
       case CLASS_HALFLIFE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_shephardmode") : CheckInventory("HalfLifeOpposingForce");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_shephardmode"), CheckInventory("HalfLifeOpposingForce")), 1);
         break;
 
       case CLASS_BOND:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_bondmode") : CheckInventory("BondClassMode");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_bondmode"), CheckInventory("BondClassMode")), 1);
         break;
     }
 
@@ -11010,8 +10947,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE3:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_parias_unique3") > 0 ? GetCVar("samsara_parias_unique3") - 1 : GetUserCVar(pln, "samsara_cl_parias_unique3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHexen1LoadoutUnique3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_parias_unique3") > 0, GetCVar("samsara_parias_unique3") - 1, GetUserCVar(pln, "samsara_cl_parias_unique3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHexen1LoadoutUnique3"), 1); }
                 break;
             }
             break;
@@ -11023,8 +10960,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE3:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_pariasclassic_unique3") > 0 ? GetCVar("samsara_pariasclassic_unique3") - 1 : GetUserCVar(pln, "samsara_cl_pariasclassic_unique3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHexen1LoadoutUnique3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_pariasclassic_unique3") > 0, GetCVar("samsara_pariasclassic_unique3") - 1, GetUserCVar(pln, "samsara_cl_pariasclassic_unique3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHexen1LoadoutUnique3"), 1); }
                 break;
             }
             break;
@@ -11036,8 +10973,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE3:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_daedolon_unique3") > 0 ? GetCVar("samsara_daedolon_unique3") - 1 : GetUserCVar(pln, "samsara_cl_daedolon_unique3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHexen1LoadoutUnique3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_daedolon_unique3") > 0, GetCVar("samsara_daedolon_unique3") - 1, GetUserCVar(pln, "samsara_cl_daedolon_unique3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHexen1LoadoutUnique3"), 1); }
                 break;
             }
             break;
@@ -11049,8 +10986,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE3:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_baratus_unique3") > 0 ? GetCVar("samsara_baratus_unique3") - 1 : GetUserCVar(pln, "samsara_cl_baratus_unique3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHexen1LoadoutUnique3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_baratus_unique3") > 0, GetCVar("samsara_baratus_unique3") - 1, GetUserCVar(pln, "samsara_cl_baratus_unique3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHexen1LoadoutUnique3"), 1); }
                 break;
             }
             break;
@@ -11070,18 +11007,18 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE1:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_unique1") > 0 ? GetCVar("samsara_freeman_unique1") - 1 : GetUserCVar(pln, "samsara_cl_freeman_unique1"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutUnique1"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_unique1") > 0, GetCVar("samsara_freeman_unique1") - 1, GetUserCVar(pln, "samsara_cl_freeman_unique1")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutUnique1"), 1); }
                 break;
 
               case SLOT_UNIQUE2:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_unique2") > 0 ? GetCVar("samsara_freeman_unique2") - 1 : GetUserCVar(pln, "samsara_cl_freeman_unique2"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutUnique2"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_unique2") > 0, GetCVar("samsara_freeman_unique2") - 1, GetUserCVar(pln, "samsara_cl_freeman_unique2")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutUnique2"), 1); }
                 break;
 
               case SLOT_UNIQUE3:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_freeman_unique3") > 0 ? GetCVar("samsara_freeman_unique3") - 1 : GetUserCVar(pln, "samsara_cl_freeman_unique3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutUnique3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_freeman_unique3") > 0, GetCVar("samsara_freeman_unique3") - 1, GetUserCVar(pln, "samsara_cl_freeman_unique3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutUnique3"), 1); }
                 break;
             }
             break;
@@ -11093,18 +11030,18 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE1:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_unique1") > 0 ? GetCVar("samsara_shephard_unique1") - 1 : GetUserCVar(pln, "samsara_cl_shephard_unique1"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutUnique1"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_unique1") > 0, GetCVar("samsara_shephard_unique1") - 1, GetUserCVar(pln, "samsara_cl_shephard_unique1")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutUnique1"), 1); }
                 break;
 
               case SLOT_UNIQUE2:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_unique2") > 0 ? GetCVar("samsara_shephard_unique2") - 1 : GetUserCVar(pln, "samsara_cl_shephard_unique2"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutUnique2"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_unique2") > 0, GetCVar("samsara_shephard_unique2") - 1, GetUserCVar(pln, "samsara_cl_shephard_unique2")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutUnique2"), 1); }
                 break;
 
               case SLOT_UNIQUE3:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_shephard_unique3") > 0 ? GetCVar("samsara_shephard_unique3") - 1 : GetUserCVar(pln, "samsara_cl_shephard_unique3"); }
-                else { loadoutchoice = CheckInventory("SamsaraHalfLifeLoadoutUnique3"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_shephard_unique3") > 0, GetCVar("samsara_shephard_unique3") - 1, GetUserCVar(pln, "samsara_cl_shephard_unique3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraHalfLifeLoadoutUnique3"), 1); }
                 break;
             }
             break;
@@ -11124,8 +11061,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE2:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bond_unique2") > 0 ? GetCVar("samsara_bond_unique2") - 1 : GetUserCVar(pln, "samsara_cl_bond_unique2"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldenEyeLoadoutUnique2"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bond_unique2") > 0, GetCVar("samsara_bond_unique2") - 1, GetUserCVar(pln, "samsara_cl_bond_unique2")), 2); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldenEyeLoadoutUnique2"), 2); }
                 break;
             }
             break;
@@ -11137,8 +11074,8 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
 
               case SLOT_UNIQUE2:
-                if (startmode != 0) { loadoutchoice = GetCVar("samsara_bondgf_unique2") > 0 ? GetCVar("samsara_bondgf_unique2") - 1 : GetUserCVar(pln, "samsara_cl_bondgf_unique2"); }
-                else { loadoutchoice = CheckInventory("SamsaraGoldfingerLoadoutUnique2"); }
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_bondgf_unique2") > 0, GetCVar("samsara_bondgf_unique2") - 1, GetUserCVar(pln, "samsara_cl_bondgf_unique2")), 2); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraGoldfingerLoadoutUnique2"), 2); }
                 break;
             }
             break;
@@ -11146,7 +11083,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
         break;
     }
 
-    bool completeloadout = startmode != 0 ? GetCVar("samsara_allloadoutequipment") : CheckInventory("SamsaraHasAllLoadoutEquipment");
+    bool completeloadout = cond(startmode != 0, GetCVar("samsara_allloadoutequipment"), CheckInventory("SamsaraHasAllLoadoutEquipment"));
 
     // Inventory check
     bool hasweapon = false;
@@ -11175,7 +11112,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
     }
 
     // Ban porkalator handling
-    if (classnum == CLASS_HEXEN && unum == SLOT_UNIQUE3 && morphitemsbanned && loadoutchoice >= 1 && !completeloadout)
+    if (classnum == CLASS_HEXEN && unum == SLOT_UNIQUE3 && morphitemsbanned && loadoutchoice == 1 && !completeloadout)
     {
         if (startmode == 1 || startmode == 3) { unum = SLOT_UNIQUE2; }
         else
@@ -11668,13 +11605,13 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
 
           case SLOT_UNIQUE3:
             if (((CheckInventory("SamsaraHexenTomeOfPower") && !GetCVar("samsara_banhextomeofpower")) || (CheckInventory("SamsaraLesserTomeInventoryRaven") >= 16 && GetCVar("samsara_banhextomeofpower"))) && CheckInventory("SamsaraHexenDiscOfRepulsion") &&
-                ((CheckInventory("SamsaraHexenDarkServant") && (loadoutchoice <= 0 || completeloadout)) || ((CheckInventory("SamsaraHexenPorkalator") >= 16 || morphitemsbanned)) && (loadoutchoice >= 1 || completeloadout)) &&
+                ((CheckInventory("SamsaraHexenDarkServant") && (loadoutchoice == 0 || completeloadout)) || ((CheckInventory("SamsaraHexenPorkalator") >= 16 || morphitemsbanned)) && (loadoutchoice == 1 || completeloadout)) &&
                 (!CheckInventory("SamsaraHexenTomeOfPowerCooldown") || GetCVar("samsara_banhextomeofpower")) &&
                 CheckInventory("PortMysticAmbit") < 16)
             { result = 1; } // if maxed out on everything but mystic ambit incant, treat this unique as the giver
             else
             {
-                if (loadoutchoice <= 0 || completeloadout) // Dark Servant
+                if (loadoutchoice == 0 || completeloadout) // Dark Servant
                 {
                     if (!CheckInventory("SamsaraHexenDarkServant"))
                     {
@@ -11683,7 +11620,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                     }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Porkalator
+                if (loadoutchoice == 1 || completeloadout) // Porkalator
                 {
                     if (CheckInventory("SamsaraHexenPorkalator") < 16 && !morphitemsbanned)
                     {
@@ -11816,7 +11753,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
             break;
 
           case SLOT_UNIQUE1:
-            GiveInventory(startmode <= -1 ? "UpgradesLMS" : "Upgrades", 1);
+            GiveInventory(cond(startmode <= -1, "UpgradesLMS", "Upgrades"), 1);
             result = 1;
             break;
         }
@@ -11857,7 +11794,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                     (GetCVar("samsara_cl_maxedinventoryhealthpickup") >= 2 && (GetActorProperty(0, APROP_Health) < ACS_NamedExecuteWithResult("SamsaraPlayerHealer", -1) || ACS_NamedExecuteWithResult("SamsaraPlayerOxygenAdjuster", 0, -1, 0))) ||
                     GetCVar("samsara_nohealthcap"))
                 {
-                    GiveInventory("RMRJetPack", startmode <= -1 ? 3 : 1);
+                    GiveInventory("RMRJetPack", cond(startmode <= -1, 3, 1));
                     result = 1;
                 }
             }
@@ -11875,10 +11812,10 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE1:
             if (!CheckInventory("DFSuperCharge")) // this is called if we don't have one, or if it's currently active (treat it like a standard powerup in this case)
             {
-                GiveInventory(startmode <= -1 ? "KatarnSuperchargeLMS" : "KatarnSupercharge", 1);
+                GiveInventory(cond(startmode <= -1, "KatarnSuperchargeLMS", "KatarnSupercharge"), 1);
                 result = 1;
             } else if (CheckInventory("KatarnBlazeIt") < 2100) {
-                GiveInventory(startmode <= -1 ? "KatarnSuperchargeLMS" : "KatarnSupercharge", 1);
+                GiveInventory(cond(startmode <= -1, "KatarnSuperchargeLMS", "KatarnSupercharge"), 1);
                 result = 1;
             }
             break;
@@ -11927,7 +11864,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 if (CheckInventory("ShieldCharge") < 3 || CheckInventory("IPOGProximityMineItem") < 10 || CheckInventory("IPOGTimeBombItem") < 10 ||
                     CheckInventory("IPOGCloneItem") < 5 || canmedtube)
                 {
-                    GiveInventory(startmode != 0 ? "IPOGRandomItemGeneratorStart" : "IPOGRandomItemGenerator", 1);
+                    GiveInventory(cond(startmode != 0, "IPOGRandomItemGeneratorStart", "IPOGRandomItemGenerator"), 1);
                     result = 1;
                 }
             }
@@ -11966,7 +11903,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE1:
             if (CheckInventory("WTStrengthPhial") < 10)
             {
-                GiveInventory("WTStrengthPhial", startmode <= -1 ? 10 : 1);
+                GiveInventory("WTStrengthPhial", cond(startmode <= -1, 10, 1));
                 result = 1;
             }
             break;
@@ -11983,7 +11920,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE1:
             hasweapon = CheckInventory("SamsaraHalfLifeAcquiredUnique1");
 
-            if (loadoutchoice <= 0 || completeloadout) // Snarks
+            if (loadoutchoice == 0 || completeloadout) // Snarks
             {
                 if (!hasweapon)
                 {
@@ -11999,7 +11936,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 if (startmode <= -1) { GiveInventory("HLSqueakAmmo", GetAmmoCapacity("HLSqueakAmmo")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // Mk 2 Grenades
+            if (loadoutchoice == 1 || completeloadout) // Mk 2 Grenades
             {
                 if (!hasweapon)
                 {
@@ -12025,7 +11962,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE2:
             hasweapon = CheckInventory("HL Crossbow") || CheckInventory("M40A1 Sniper Rifle");
 
-            if (loadoutchoice <= 0 || completeloadout) // Crossbow
+            if (loadoutchoice == 0 || completeloadout) // Crossbow
             {
                 if (!hasweapon)
                 {
@@ -12039,7 +11976,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 if (startmode <= -1) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
             }
 
-            if (loadoutchoice >= 1 || completeloadout) // M40A1 Sniper Rifle
+            if (loadoutchoice == 1 || completeloadout) // M40A1 Sniper Rifle
             {
                 if (!hasweapon)
                 {
@@ -12061,12 +11998,12 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
 
             if (!GetCVar("samsara_banjetpack"))
             {
-                if (loadoutchoice <= 0 || completeloadout) // Long Jump Module
+                if (loadoutchoice == 0 || completeloadout) // Long Jump Module
                 {
                     if (!hasweapon) { GiveInventory("SamsaraHalfLifeCanLongJump", 1); }
                 }
 
-                if (loadoutchoice >= 1 || completeloadout) // Barnacle Grapple
+                if (loadoutchoice == 1 || completeloadout) // Barnacle Grapple
                 {
                     if (!hasweapon) { GiveInventory("HLOPBarnacle", 1); }
                 }
@@ -12093,7 +12030,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE2:
             if (CheckInventory("HeatSeekingCard") < 2)
             {
-                GiveInventory("HeatSeekingCard", startmode <= -1 ? 2 : 1);
+                GiveInventory("HeatSeekingCard", cond(startmode <= -1, 2, 1));
                 result = 1;
             }
             break;
@@ -12129,7 +12066,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                     CheckInventory("Clip") < GetAmmoCapacity("Clip") || CheckInventory("Shell") < GetAmmoCapacity("Shell") || CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") ||
                     CheckInventory("Cell") < GetAmmoCapacity("Cell"))
                 {
-                    GiveInventory(startmode != 0 ? "RandomMagicItemStart" : "RandomMagicItem", 1);
+                    GiveInventory(cond(startmode != 0, "RandomMagicItemStart", "RandomMagicItem"), 1);
                     result = 1;
                 }
             }
@@ -12302,7 +12239,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
           case SLOT_UNIQUE2:
             if (CheckInventory("Hexen2ForceCube") < 20)
             {
-                GiveInventory("Hexen2ForceCube", startmode <= -1 ? 20 : 1); // I don't think 20's needed for LMS, but just in case
+                GiveInventory("Hexen2ForceCube", cond(startmode <= -1, 20, 1)); // I don't think 20's needed for LMS, but just in case
                 result = 1;
             }
             break;
@@ -12360,7 +12297,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_D5KDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_D5KLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // D5K Deutsche (Silenced)
+                if (loadoutchoice == 0 || completeloadout) // D5K Deutsche (Silenced)
                 {
                     if (!hasweapon)
                     {
@@ -12422,7 +12359,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                     if (startmode <= -1) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
                 }
 
-                if (loadoutchoice >= 2 || completeloadout) // D5K Deutsche
+                if (loadoutchoice == 2 || completeloadout) // D5K Deutsche
                 {
                     if (!hasweapon)
                     {
@@ -12516,7 +12453,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 hasdualtoken = CheckInventory("Goldeneye_D5KDualToken");
                 duallimited = duallimiting && CheckInventory("Goldeneye_D5KLevelLimiter");
 
-                if (loadoutchoice <= 0 || completeloadout) // UZI (9mm)
+                if (loadoutchoice == 0 || completeloadout) // UZI (9mm)
                 {
                     if (!hasweapon)
                     {
@@ -12578,7 +12515,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                     if (startmode <= -1) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
                 }
 
-                if (loadoutchoice >= 2 || completeloadout) // Smith and Wesson Model 36
+                if (loadoutchoice == 2 || completeloadout) // Smith and Wesson Model 36
                 {
                     if (!hasweapon)
                     {
@@ -12839,73 +12776,43 @@ script "Samsara_GiveBackpack" (int startmode)
         break;
 
       case CLASS_DOOM:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_doommode") : CheckInventory("DoomClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 2);
         break;
 
       case CLASS_WOLFEN:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_wolfmode") : CheckInventory("WolfenClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_wolfmode"), CheckInventory("WolfenClassMode")), 2);
         break;
 
       case CLASS_HEXEN:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_hexclass") : CheckInventory("HexenClassMode");
-
-        if (altclasschoice > 3) { altclasschoice = 3; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_hexclass"), CheckInventory("HexenClassMode")), 3);
         break;
 
       case CLASS_DUKE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_dukemode") : CheckInventory("DukeClassMode");
-
-        if (altclasschoice > 2) { altclasschoice = 2; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_dukemode"), CheckInventory("DukeClassMode")), 2);
         break;
 
       /*case CLASS_ROTT:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_rottmode") : CheckInventory("RottMode");
-
-        if (altclasschoice > 4) { altclasschoice = 4; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_rottmode"), CheckInventory("RottMode")), 4);
         break;*/
 
       /*case CLASS_BLAKE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_bsaog") : CheckInventory("BlakeAOGToken");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_bsaog"), CheckInventory("BlakeAOGToken")), 1);
         break;*/
 
       case CLASS_ERAD:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_eradmode") : CheckInventory("EradMode");
-
-        if (altclasschoice > 3) { altclasschoice = 3; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_eradmode"), CheckInventory("EradMode")), 3);
         break;
 
       /*case CLASS_POGREED:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_ipogmode") : CheckInventory("IpogMode");
-
-        if (altclasschoice > 4) { altclasschoice = 4; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_ipogmode"), CheckInventory("IpogMode")), 4);
         break;*/
 
       case CLASS_HALFLIFE:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_shephardmode") : CheckInventory("HalfLifeOpposingForce");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_shephardmode"), CheckInventory("HalfLifeOpposingForce")), 1);
         break;
 
       case CLASS_BOND:
-        altclasschoice = startmode != 0 ? GetUserCVar(pln, "samsara_cl_bondmode") : CheckInventory("BondClassMode");
-
-        if (altclasschoice > 1) { altclasschoice = 1; }
-        else if (altclasschoice < 0) { altclasschoice = 0; }
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_bondmode"), CheckInventory("BondClassMode")), 1);
         break;
     }
 
@@ -12918,12 +12825,12 @@ script "Samsara_GiveBackpack" (int startmode)
         break;
 
       case CLASS_CHEX:
-        if (startmode != 0) { loadoutchoice = GetCVar("samsara_chex_fallbackranged") > 0 ? GetCVar("samsara_chex_fallbackranged") - 1 : GetUserCVar(pln, "samsara_cl_chex_fallbackranged"); }
-        else { loadoutchoice = CheckInventory("SamsaraChexLoadoutFallbackRanged"); }
+        if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
+        else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
         break;
     }
 
-    bool completeloadout = startmode != 0 ? GetCVar("samsara_allloadoutequipment") : CheckInventory("SamsaraHasAllLoadoutEquipment");
+    bool completeloadout = cond(startmode != 0, GetCVar("samsara_allloadoutequipment"), CheckInventory("SamsaraHasAllLoadoutEquipment"));
 
     // Extra ammo on first pickup in Doom deathmatch (amount * 5 / 2)
     bool dmextraammo = !isSinglePlayer() && !isCoop() && (currentiwad == GAME_DOOM || currentiwad == GAME_CHEX) && !GetCVar("sv_noextraammo");
@@ -12965,8 +12872,8 @@ script "Samsara_GiveBackpack" (int startmode)
       case CLASS_CHEX:
         GiveInventory("Backpack", 1);
 
-        if (loadoutchoice <= 0 || completeloadout) { GiveInventory("Dual Mini-Zorchers", 1); } // Dual Mini-Zorchers
-        if (loadoutchoice >= 1 || completeloadout) { GiveInventory("Dual Micro-Zorchers", 1); } // Dual Micro-Zorchers
+        if (loadoutchoice == 0 || completeloadout) { GiveInventory("Dual Mini-Zorchers", 1); } // Dual Mini-Zorchers
+        if (loadoutchoice == 1 || completeloadout) { GiveInventory("Dual Micro-Zorchers", 1); } // Dual Micro-Zorchers
         break;
 
       case CLASS_WOLFEN:
@@ -13137,7 +13044,7 @@ script "Samsara_GiveBackpack" (int startmode)
 
         if (CheckInventory("UDPistolUpgrade") < 4)
         {
-            GiveInventory("UDPistolUpgrade", startmode <= -1 ? 4 : 1);
+            GiveInventory("UDPistolUpgrade", cond(startmode <= -1, 4, 1));
 
             if (startmode != 0) { SetInventory("UDPistolUpgradePreferred", CheckInventory("UDPistolUpgrade")); }
             else { GiveInventory("UnrealDoUpgradeRevert", 1); }
@@ -13159,7 +13066,7 @@ script "Samsara_GiveBackpack" (int startmode)
 
       case CLASS_DESCENT:
         GiveInventory("Backpack", 1);
-        GiveInventory("DescentLaserLevel", startmode <= -1 ? 5 : 1);
+        GiveInventory("DescentLaserLevel", cond(startmode <= -1, 5, 1));
         if (CheckInventory("DescentLaserLevel") >= 4 && !CheckInventory("DescentPrimaryCounter")) { GiveInventory("DescentPrimaryCounter", 1); }
         break;
 
