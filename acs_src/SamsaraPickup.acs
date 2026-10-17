@@ -1,4 +1,4 @@
-int msgColors[26] = 
+int msgColors[26] =
 {
     "\ca", "\cb", "\cc", "\cd", "\ce", "\cf", "\cg", "\ch", "\ci", "\cj", "\ck", "\cl", "\cm",
     "\cn", "\co", "\cp", "\cq", "\cr", "\cs", "\ct", "\cu", "\cv", "\cw", "\cx", "\cy", "\cz",
@@ -6,27 +6,22 @@ int msgColors[26] =
 
 script "SamsaraClientClass" (int slot) CLIENTSIDE //228 -- SAMSARA_CLIENT_CLASS
 {
-	int alternativeclass;
-    int toClass = SamsaraClientClass-1;
+    int alternativeclass;
+    int toClass = SamsaraClientClass - 1;
     int displaymode;
-    if (GetCVar("samsara_runninginzdoom") == 1)
-    {
-        displaymode = GetCVar("samsara_zd_pickupmode");
-    } else {
-        displaymode = GetUserCVar(ConsolePlayerNumber(), "samsara_cl_pickupmode");
-    }
+
+    if (GetCVar("samsara_runninginzdoom")) { displaymode = GetCVar("samsara_zd_pickupmode"); }
+    else { displaymode = GetUserCVar(ConsolePlayerNumber(), "samsara_cl_pickupmode"); }
+
     int oldslot = slot;
     int success = 0;
-    
+
     int hasSlot = SamsaraClientWeps[slot];
 
     if (displaymode != 0)
     {
-        if ((SamsaraItemFlash >= (Timer() - 35)) && (Timer() >= 70))
-        {
-            Spawn("SamsaraChangeFlash", GetActorX(0), GetActorY(0), GetActorZ(0));
-        }
-        
+        if ((SamsaraItemFlash >= (Timer() - 35)) && (Timer() >= 70)) { Spawn("SamsaraChangeFlash", GetActorX(0), GetActorY(0), GetActorZ(0)); }
+
         if (toClass == -1)
         {
             SetActorState(0, "NoGuy");
@@ -43,163 +38,37 @@ script "SamsaraClientClass" (int slot) CLIENTSIDE //228 -- SAMSARA_CLIENT_CLASS
           default:
             statetojump = "NoGuy";
             break;
-            
+
           case 1:
-            if (!success) 
-			{ 
-				switch(SamsaraAlternativeClass)
-				{
-					case 0:
-						statetojump = PickupStates[toClass][3];
-						break;
-					case 1:
-						statetojump = PickupStates[toClass][11];
-						break;
-					case 2:
-						statetojump = PickupStates[toClass][15];
-						break;
-					case 3:
-						statetojump = PickupStates[toClass][19];
-						break;
-					case 4:
-						statetojump = PickupStates[toClass][23];
-						break;
-				}
-			}
+            if (!success) { statetojump = PickupStates[toClass][SamsaraAlternativeClass][3]; }
             break;
-            
+
           case 2:
-            if (!success) 
-			{ 
-				switch(SamsaraAlternativeClass)
-				{
-					case 0:
-						statetojump = PickupStates[toClass][0];
-						break;
-					case 1:
-						statetojump = PickupStates[toClass][8];
-						break;
-					case 2:
-						statetojump = PickupStates[toClass][12];
-						break;
-					case 3:
-						statetojump = PickupStates[toClass][16];
-						break;
-					case 4:
-						statetojump = PickupStates[toClass][20];
-						break;
-				}
-			}
+            if (!success) { statetojump = PickupStates[toClass][SamsaraAlternativeClass][0]; }
             break;
         }
-    }
-    else switch (displaymode)
-    {
-      default:
-        statetojump = "NoGuy";
-        break;
-        
-      case 1:
-        if ((SamsaraClientWepFlashes[slot] >= (Timer() - 35)) && (Timer() >= 35))
+    } else {
+        switch (displaymode)
         {
-            Spawn("SamsaraChangeFlash2", GetActorX(0), GetActorY(0), GetActorZ(0));
-        }
-        
-        if (!success)
-        {
-            if (hasSlot) 
-			{ 
-				switch(SamsaraAlternativeClass)
-				{
-					case 0:
-						statetojump = PickupStates[toClass][1];
-						break;
-					case 1:
-						statetojump = PickupStates[toClass][9];
-						break;
-					case 2:
-						statetojump = PickupStates[toClass][13];
-						break;
-					case 3:
-						statetojump = PickupStates[toClass][17];
-						break;
-					case 4:
-						statetojump = PickupStates[toClass][21];
-						break;
-				}
-			}
-            else         
-			{ 
-				switch(SamsaraAlternativeClass)
-				{
-					case 0:
-						statetojump = PickupStates[toClass][2];
-						break;
-					case 1:
-						statetojump = PickupStates[toClass][10];
-						break;
-					case 2:
-						statetojump = PickupStates[toClass][14];
-						break;
-					case 3:
-						statetojump = PickupStates[toClass][18];
-						break;
-					case 4:
-						statetojump = PickupStates[toClass][22];
-						break;
-				}
-			}
-        }
-        break;
-        
-      case 2:
-        switch (slot)
-        {
-          case SLOT_CHAINSAW:
-			switch(SamsaraAlternativeClass)
-			{
-				case 0:
-					statetojump = PickupStates[toClass][0];
-					break;
-				case 1:
-					statetojump = PickupStates[toClass][8];
-					break;
-				case 2:
-					statetojump = PickupStates[toClass][12];
-					break;
-				case 3:
-					statetojump = PickupStates[toClass][16];
-					break;
-				case 4:
-					statetojump = PickupStates[toClass][20];
-					break;
-			}
+          default:
+            statetojump = "NoGuy";
+            break;
+
+          case 1:
+            if ((SamsaraClientWepFlashes[slot] >= (Timer() - 35)) && (Timer() >= 35)) { Spawn("SamsaraChangeFlash2", GetActorX(0), GetActorY(0), GetActorZ(0)); }
+
+            if (!success)
+            {
+                if (hasSlot) { statetojump = PickupStates[toClass][SamsaraAlternativeClass][1]; }
+                else { statetojump = PickupStates[toClass][SamsaraAlternativeClass][2]; }
+            }
+            break;
+
+          case 2:
+            if (!success) { statetojump = PickupStates[toClass][SamsaraAlternativeClass][0]; }
             break;
         }
-          
-        if (!success) 
-		{ 
-			switch(SamsaraAlternativeClass)
-			{
-				case 0:
-					statetojump = PickupStates[toClass][0];
-					break;
-				case 1:
-					statetojump = PickupStates[toClass][8];
-					break;
-				case 2:
-					statetojump = PickupStates[toClass][12];
-					break;
-				case 3:
-					statetojump = PickupStates[toClass][16];
-					break;
-				case 4:
-					statetojump = PickupStates[toClass][20];
-					break;
-			}
-		}
-        break;
-    }
+     }
 
     if (StrCmp(statetojump, "NoGuy"))
     {
@@ -226,7 +95,7 @@ script "SamsaraGiveWeapon" (int slot, int dropped, int silent) //229 -- SAMSARA_
     // clients were running this before, that's bad
     if (!IsServer) { terminate; }
 
-    if (slot < 0 || slot >= SLOTCOUNT) { terminate; }    
+    if (slot < 0 || slot >= SLOTCOUNT) { terminate; }
 
     int weaponStay = !!GetCVar("sv_weaponstay");
 
@@ -242,7 +111,7 @@ script "SamsaraGiveWeapon" (int slot, int dropped, int silent) //229 -- SAMSARA_
     int a1Full = 0, a2Full = 0;
     int a1diff = 0, a2diff = 0;
 
-    int weapon  = ClassWeapons[pclass][slot][S_WEP],        wepbool = !!StrLen(weapon); 
+    int weapon  = ClassWeapons[pclass][slot][S_WEP],        wepbool = !!StrLen(weapon);
     int ammo1   = ClassWeapons[pclass][slot][S_AMMO1],      a1bool  = !!StrLen(ammo1);
     int ammo2   = ClassWeapons[pclass][slot][S_AMMO2],      a2bool  = !!StrLen(ammo2);
     int check   = ClassWeapons[pclass][slot][S_CHECKITEM],  chkbool = !!StrLen(check);
@@ -277,8 +146,8 @@ script "SamsaraGiveWeapon" (int slot, int dropped, int silent) //229 -- SAMSARA_
 
     if (dropped >= 2 && !GetCVar("samsara_noammocap"))
     {
-		if (a1bool) { SetAmmoCapacity(ammo1, a1max2); }
-		if (a2bool) { SetAmmoCapacity(ammo2, a2max2); }
+        if (a1bool) { SetAmmoCapacity(ammo1, a1max2); }
+        if (a2bool) { SetAmmoCapacity(ammo2, a2max2); }
     }
 
     // check for both the weapon AND the check item
@@ -364,9 +233,9 @@ script "SamsaraGiveWeapon" (int slot, int dropped, int silent) //229 -- SAMSARA_
         SetInventory(ammo2, a2cnt + a2drop);
 
         // go back to normal ammo capacity
-		if (a1bool) { SetAmmoCapacity(ammo1, a1max); }
-		if (a2bool) { SetAmmoCapacity(ammo2, a2max); }
-	}
+        if (a1bool) { SetAmmoCapacity(ammo1, a1max); }
+        if (a2bool) { SetAmmoCapacity(ammo2, a2max); }
+    }
 
     // make sure we're not over max ammo capacity
     if (CheckInventory(ammo1) > GetAmmoCapacity(ammo1))
@@ -388,7 +257,7 @@ script "SamsaraGiveWeapon" (int slot, int dropped, int silent) //229 -- SAMSARA_
 script "SamsaraGiveUnique" (int alt) //231 -- SAMSARA_GIVEUNIQUE
 {
     if (!IsServer) { terminate; }
-    
+
     int uniqueGet = 0;
     int pclass = samsaraClassNum();
 
@@ -397,7 +266,7 @@ script "SamsaraGiveUnique" (int alt) //231 -- SAMSARA_GIVEUNIQUE
         uniqueGet = GiveUnique(pclass, alt, 0);
         alt--;
     }
-    
+
     if (uniqueGet && IsServer)
     {
         // flipped because order is handled the opposite in hexen
@@ -432,7 +301,7 @@ script "SamsaraGiveUnique" (int alt) //231 -- SAMSARA_GIVEUNIQUE
 
         if (CheckInventory("SamsaraHeroMusicHalfLifeActive") && !CheckInventory("HalfLifeMusicPlayingToken")) { GiveInventory("HLMusicWeapon", 1); }
     }
-    
+
     SetResultValue(uniqueGet);
 }
 
@@ -475,10 +344,10 @@ script "SamsaraClientWeaponPickup" (int slot, int dropped) CLIENTSIDE //616 -- S
     PlaySound(0, pickupsound, CHAN_ITEM|CHAN_MAYBE_LOCAL);
 
     if (!CheckInventory("PickupFlashesAreDisabled"))
-	{
-		FadeRange(ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], ClassFades[pclass][3],
-		ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], 0.0, itof(ClassFades[pclass][4]) / 35);
-	}
+    {
+        FadeRange(ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], ClassFades[pclass][3],
+        ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], 0.0, itof(ClassFades[pclass][4]) / 35);
+    }
 }
 
 script "SamsaraClientUniquePickup" (int alt) CLIENTSIDE //633 -- SAMSARA_CLIENT_UNIQUEPICKUP
@@ -516,10 +385,10 @@ script "SamsaraClientUniquePickup" (int alt) CLIENTSIDE //633 -- SAMSARA_CLIENT_
     PlaySound(0, pickupsound, CHAN_ITEM|CHAN_MAYBE_LOCAL);
 
     if (!CheckInventory("PickupFlashesAreDisabled"))
-	{
-		FadeRange(ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], ClassFades[pclass][3],
-		ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], 0.0, itof(ClassFades[pclass][4]) / 35);
-	}
+    {
+        FadeRange(ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], ClassFades[pclass][3],
+        ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], 0.0, itof(ClassFades[pclass][4]) / 35);
+    }
 }
 
 script "SamsaraClientMiscPickup" (int choice, int slot, int dropped) CLIENTSIDE
@@ -562,19 +431,19 @@ script "SamsaraClientMiscPickup" (int choice, int slot, int dropped) CLIENTSIDE
     PlaySound(0, pickupsound, CHAN_ITEM|CHAN_MAYBE_LOCAL);
 
     if (!CheckInventory("PickupFlashesAreDisabled"))
-	{
-		FadeRange(ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], ClassFades[pclass][3],
-		ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], 0.0, itof(ClassFades[pclass][4]) / 35);
-	}
+    {
+        FadeRange(ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], ClassFades[pclass][3],
+        ClassFades[pclass][0], ClassFades[pclass][1], ClassFades[pclass][2], 0.0, itof(ClassFades[pclass][4]) / 35);
+    }
 }
 
 Script "SamsaraForceGrinMugShot" (void)
 {
-	// Prevents classes without grinning mugshots from using the script
-	if (!(CheckInventory("QuakeClass") || CheckInventory("CatacombClass")))
-	{
-		SetMugShotState("Grin");
-	}
+    // Prevents classes without grinning mugshots from using the script
+    if (!(CheckInventory("QuakeClass") || CheckInventory("CatacombClass")))
+    {
+        SetMugShotState("Grin");
+    }
 }
 
 script "SamsaraWeaponTaunt" (void)
