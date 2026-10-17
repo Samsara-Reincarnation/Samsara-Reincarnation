@@ -1411,11 +1411,8 @@ Script "SoF_DoScope" (void) clientside
 
         int curammo = 0;
 
-        if (CheckInventory("SamsaraReloadMode") >= 2) { curammo = CheckInventory("SoF_SniperMagazine"); }
-        else { curammo = CheckInventory("Shell"); }
-
-        if (curammo > 6) { curammo = 6; }
-        else if (curammo < 0) { curammo = 0; }
+        if (CheckInventory("SamsaraReloadMode") >= 2) { curammo = middle(0, CheckInventory("SoF_SniperMagazine"), 6); }
+        else { curammo = middle(0, CheckInventory("Shell"), 6); }
 
 		for(int a = 0; a < curammo; a++)
 		{

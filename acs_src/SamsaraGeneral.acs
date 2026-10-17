@@ -1690,12 +1690,12 @@ Script "Samsara_UniqueKeys" (int key) NET
 script "SamsaraGetSettings" (void) NET //676 -- SAMSARA_GETSETTINGS
 {
     str noHealthCap = cond(GetCVar("samsara_nohealthcap"), "on", "off"), noArmorCap = cond(GetCVar("samsara_noarmorcap"), "on", "off");
-	int lmsHP = max(GetCVar("samsara_lmshealth"), 0), lmsArmor = max(GetCVar("samsara_lmsarmor"), 0);
+	int lmsHP = max(0, GetCVar("samsara_lmshealth")), lmsArmor = max(0, GetCVar("samsara_lmsarmor"));
     int lmsArmorTier = middle(1, 1 + GetCVar("samsara_lmsarmortier"), 5);
 	str lmsUlt = cond(GetCVar("samsara_lmsbfg9000"), "\cdwith", "\cgwithout"), lmsUltSkulltag = cond(GetCVar("samsara_lmsbfg10k"), "\cdwith", "\cgwithout");
 	str lmsUnique = cond(GetCVar("samsara_lmsuniques"), "\cdwith", "\cgwithout");
 	str ultStay = cond(GetCVar("samsara_permault"), "\cdstay", "\cado not stay"), highLow = cond(GetCVar("samsara_jumpmod") < 0, "\calower", "\cfhigher");
-    int pdwtakDamage = max(GetCVar("samsara_pdwtak_damage"), 0), pdwtakDistance = max(GetCVar("samsara_pdwtak_distance"), 0), pdwtakFullDamageDistance = middle(0, GetCVar("samsara_pdwtak_fulldamagedistance"), pdwtakDistance);
+    int pdwtakDamage = max(0, GetCVar("samsara_pdwtak_damage")), pdwtakDistance = max(0, GetCVar("samsara_pdwtak_distance")), pdwtakFullDamageDistance = middle(0, GetCVar("samsara_pdwtak_fulldamagedistance"), pdwtakDistance);
 
 	SetHudSize(640, 480, 1);
 

@@ -203,53 +203,19 @@ script "SamsaraOST_Enter" ENTER
 
     int pln = PlayerNumber();
     int altskin, settrack, lastmode, lastgame, lastwolf3d, lasthex, lastrott, lastbstone, lastblud, lastc7, lastdarkf, lasthex2, lastc3d, lastdescent;
-    int herosoundtrack = GetUserCVar(pln, "samsara_cl_heromusic");
+    int herosoundtrack = middle(0, GetUserCVar(pln, "samsara_cl_heromusic"), 3);
     int gameoverride;
-	int wolf3dimf = GetUserCVar(pln, "samsara_cl_wolf3dimf");
-	int hexencd = GetUserCVar(pln, "samsara_cl_hexcd");
-	int rott13 = GetUserCVar(pln, "samsara_cl_rott13ost");
-	int bstoneimf = GetUserCVar(pln, "samsara_cl_bstoneimf");
-    int bloodcd = GetUserCVar(pln, "samsara_cl_bloodcd");
-	int c7imf = GetUserCVar(pln, "samsara_cl_c7imf");
-	int darkfpsx = GetUserCVar(pln, "samsara_cl_darkfpsx");
-    int hexen2cd = GetUserCVar(pln, "samsara_cl_hex2cd");
-	int c3dimf = GetUserCVar(pln, "samsara_cl_c3dimf");
-    int descentcd = GetUserCVar(pln, "samsara_cl_descentcd");
+	int wolf3dimf = middle(0, GetUserCVar(pln, "samsara_cl_wolf3dimf"), 1);
+	int hexencd = middle(0, GetUserCVar(pln, "samsara_cl_hexcd"), 1);
+	int rott13 = middle(0, GetUserCVar(pln, "samsara_cl_rott13ost"), 1);
+	int bstoneimf = middle(0, GetUserCVar(pln, "samsara_cl_bstoneimf"), 1);
+    int bloodcd = middle(0, GetUserCVar(pln, "samsara_cl_bloodcd"), 1);
+	int c7imf = middle(0, GetUserCVar(pln, "samsara_cl_c7imf"), 1);
+	int darkfpsx = middle(0, GetUserCVar(pln, "samsara_cl_darkfpsx"), 1);
+    int hexen2cd = middle(0, GetUserCVar(pln, "samsara_cl_hex2cd"), 1);
+	int c3dimf = middle(0, GetUserCVar(pln, "samsara_cl_c3dimf"), 1);
+    int descentcd = middle(0, GetUserCVar(pln, "samsara_cl_descentcd"), 1);
     int musictid = UniqueTID();
-
-    if (herosoundtrack > 3) { herosoundtrack = 3; }
-    else if (herosoundtrack < 0) { herosoundtrack = 0; }
-
-    // precautionary
-    if (wolf3dimf > 1) { wolf3dimf = 1; }
-    else if (wolf3dimf < 0) { wolf3dimf = 0; }
-
-    if (hexencd > 1) { hexencd = 1; }
-    else if (hexencd < 0) { hexencd = 0; }
-
-    if (rott13 > 1) { rott13 = 1; }
-    else if (rott13 < 0) { rott13 = 0; }
-
-    if (bstoneimf > 1) { bstoneimf = 1; }
-    else if (bstoneimf < 0) { bstoneimf = 0; }
-
-    if (bloodcd > 1) { bloodcd = 1; }
-    else if (bloodcd < 0) { bloodcd = 0; }
-
-    if (c7imf > 1) { c7imf = 1; }
-    else if (c7imf < 0) { c7imf = 0; }
-
-    if (darkfpsx > 1) { darkfpsx = 1; }
-    else if (darkfpsx < 0) { darkfpsx = 0; }
-
-    if (hexen2cd > 1) { hexen2cd = 1; }
-    else if (hexen2cd < 0) { hexen2cd = 0; }
-
-    if (c3dimf > 1) { c3dimf = 1; }
-    else if (c3dimf < 0) { c3dimf = 0; }
-
-    if (descentcd > 1) { descentcd = 1; }
-    else if (descentcd < 0) { descentcd = 0; }
 
     if (herosoundtrack > 0 && (!GetUserCVar(pln, "samsara_cl_xmasmusic") || !GetCVar("samsara_merrychristmas")))
     {
@@ -492,51 +458,17 @@ script "SamsaraOST_Enter" ENTER
     }
 
     altskin = CheckInventory("SamsaraModeCounter");
-    lastmode = GetUserCVar(pln,"samsara_cl_heromusic");
-	lastwolf3d = GetUserCVar(pln,"samsara_cl_wolf3dimf");
-	lasthex = GetUserCVar(pln,"samsara_cl_hexcd");
-	lastrott = GetUserCVar(pln,"samsara_cl_rott13ost");
-	lastbstone = GetUserCVar(pln,"samsara_cl_bstoneimf");
-    lastblud = GetUserCVar(pln,"samsara_cl_bloodcd");
-	lastc7 = GetUserCVar(pln,"samsara_cl_c7imf");
-	lastdarkf = GetUserCVar(pln,"samsara_cl_darkfpsx");
-    lasthex2 = GetUserCVar(pln,"samsara_cl_hex2cd");
-	lastc3d = GetUserCVar(pln,"samsara_cl_c3dimf");
-    lastdescent = GetUserCVar(pln,"samsara_cl_descentcd");
-
-    if (lastmode > 3) { lastmode = 3; }
-    else if (lastmode < 0) { lastmode = 0; }
-
-    // precautionary
-    if (lastwolf3d > 1) { lastwolf3d = 1; }
-    else if (lastwolf3d < 0) { lastwolf3d = 0; }
-
-    if (lasthex > 1) { lasthex = 1; }
-    else if (lasthex < 0) { lasthex = 0; }
-
-    if (lastrott > 1) { lastrott = 1; }
-    else if (lastrott < 0) { lastrott = 0; }
-
-    if (lastbstone > 1) { lastbstone = 1; }
-    else if (lastbstone < 0) { lastbstone = 0; }
-
-    if (lastblud > 1) { lastblud = 1; }
-    else if (lastblud < 0) { lastblud = 0; }
-
-    if (lastc7 > 1) { lastc7 = 1; }
-    else if (lastc7 < 0) { lastc7 = 0; }
-
-    if (lastdarkf > 1) { lastdarkf = 1; }
-    else if (lastdarkf < 0) { lastdarkf = 0; }
-
-    if (lasthex2 > 1) { lasthex2 = 1; }
-    else if (lasthex2 < 0) { lasthex2 = 0; }
-
-    if (lastc3d > 1) { lastc3d = 1; }
-    else if (lastc3d < 0) { lastc3d = 0; }
-
-    if (lastdescent > 1) { lastdescent = 1; }
-    else if (lastdescent < 0) { lastdescent = 0; }
+    lastmode = middle(0, GetUserCVar(pln,"samsara_cl_heromusic"), 3);
+	lastwolf3d = middle(0, GetUserCVar(pln,"samsara_cl_wolf3dimf"), 1);
+	lasthex = middle(0, GetUserCVar(pln,"samsara_cl_hexcd"), 1);
+	lastrott = middle(0, GetUserCVar(pln,"samsara_cl_rott13ost"), 1);
+	lastbstone = middle(0, GetUserCVar(pln,"samsara_cl_bstoneimf"), 1);
+    lastblud = middle(0, GetUserCVar(pln,"samsara_cl_bloodcd"), 1);
+	lastc7 = middle(0, GetUserCVar(pln,"samsara_cl_c7imf"), 1);
+	lastdarkf = middle(0, GetUserCVar(pln,"samsara_cl_darkfpsx"), 1);
+    lasthex2 = middle(0, GetUserCVar(pln,"samsara_cl_hex2cd"), 1);
+	lastc3d = middle(0, GetUserCVar(pln,"samsara_cl_c3dimf"), 1);
+    lastdescent = middle(0, GetUserCVar(pln,"samsara_cl_descentcd"), 1);
 
     Delay(1);
     restart;

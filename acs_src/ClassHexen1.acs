@@ -189,12 +189,9 @@ script "SamsaraHexenAmmoRefill" (int ammotype) // technically used by hexen 2 as
     str ammoname = "Placeholder";
     int ammoamount = 0;
 
-    int maxClip = GetCVar("samsara_max_clip");
-    int maxCell = GetCVar("samsara_max_cell");
+    int maxClip = max(0, GetCVar("samsara_max_clip"));
+    int maxCell = max(0, GetCVar("samsara_max_cell"));
     int hasBackPack = 1 + (CheckInventory("Backpack") || CheckInventory("BagOfHolding") || CheckInventory("AmmoSatchel") || CheckInventory("Zorchpack"));
-
-    if (maxClip < 0) { maxClip = 0; }
-    if (maxCell < 0) { maxCell = 0; }
 
     int increasingClip = 0;
     int increasingCell = 0;

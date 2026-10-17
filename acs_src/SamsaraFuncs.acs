@@ -611,12 +611,9 @@ function int GiveQuad(int toAdd)
 
 function int HandleUniqueSpawn (int respawning)
 {
-    int cs = GetCVar("samsara_uniquestart");
+    int cs = middle(0, GetCVar("samsara_uniquestart"), 4);
     int classnum = samsaraClassNum();
     int i;
-
-    if (cs > 4) { cs = 4; }
-    else if (cs < 0) { cs = 0; }
 
     if (cs == 0 || isLMS() || GetCVar("samsara_lmsrules")) { return 0; }
 
@@ -656,67 +653,64 @@ function int HandleSlotSpawn (int slot, int respawning)
         break;
 
       case SLOT_CHAINSAW:
-        cs = GetCVar("samsara_chainsawstart");
+        cs = middle(0, GetCVar("samsara_chainsawstart"), 2);
         giventoken = "SamsaraSlotIGiven";
         break;
 
       case SLOT_SHOTGUN:
-        cs = GetCVar("samsara_shotgunstart");
+        cs = middle(0, GetCVar("samsara_shotgunstart"), 2);
         giventoken = "SamsaraSlotIIGiven";
         break;
 
       case SLOT_SUPERSHOTGUN:
-        cs = GetCVar("samsara_ssgstart");
+        cs = middle(0, GetCVar("samsara_ssgstart"), 2);
         giventoken = "SamsaraSlotIIIGiven";
         break;
 
       case SLOT_CHAINGUN:
-        cs = GetCVar("samsara_chaingunstart");
+        cs = middle(0, GetCVar("samsara_chaingunstart"), 2);
         giventoken = "SamsaraSlotIVGiven";
         break;
 
       case SLOT_ROCKETLAUNCHER:
-        cs = GetCVar("samsara_rocketlauncherstart");
+        cs = middle(0, GetCVar("samsara_rocketlauncherstart"), 2);
         giventoken = "SamsaraSlotVGiven";
         break;
 
       case SLOT_PLASMARIFLE:
-        cs = GetCVar("samsara_plasmastart");
+        cs = middle(0, GetCVar("samsara_plasmastart"), 2);
         giventoken = "SamsaraSlotVIGiven";
         break;
 
       case SLOT_BFG9000:
-        cs = GetCVar("samsara_bfg9000start");
+        cs = middle(0, GetCVar("samsara_bfg9000start"), 2);
         giventoken = "SamsaraSlotVIIGiven";
         break;
 
       case SLOT_MINIGUN:
-        cs = GetCVar("samsara_minigunstart");
+        cs = middle(0, GetCVar("samsara_minigunstart"), 2);
         giventoken = "SamsaraSlotIVSGiven";
         if (!StrCmp(ClassWeapons[classnum][slot][S_WEP], "")) { slot = SLOT_CHAINGUN; } // classes without a 4S get a 4 instead
         break;
 
       case SLOT_GRENADELAUNCHER:
-        cs = GetCVar("samsara_grenadelauncherstart");
+        cs = middle(0, GetCVar("samsara_grenadelauncherstart"), 2);
         giventoken = "SamsaraSlotVSGiven";
         if (!StrCmp(ClassWeapons[classnum][slot][S_WEP], "")) { slot = SLOT_ROCKETLAUNCHER; } // classes without a 5S get a 5 instead
         break;
 
       case SLOT_RAILGUN:
-        cs = GetCVar("samsara_railgunstart");
+        cs = middle(0, GetCVar("samsara_railgunstart"), 2);
         giventoken = "SamsaraSlotVISGiven";
         if (!StrCmp(ClassWeapons[classnum][slot][S_WEP], "")) { slot = SLOT_PLASMARIFLE; } // classes without a 6S get a 6 instead
         break;
 
       case SLOT_BFG10K:
-        cs = GetCVar("samsara_bfg10kstart");
+        cs = middle(0, GetCVar("samsara_bfg10kstart"), 2);
         giventoken = "SamsaraSlotVIISGiven";
         if (!StrCmp(ClassWeapons[classnum][slot][S_WEP], "")) { slot = SLOT_BFG9000; } // classes without a 7S get a 7 instead
         break;
     }
-
-    if (cs > 2) { cs = 2; }
-    else if (cs < 0) { cs = 0; }
 
     if (cs == 0 || (respawning && (isSinglePlayer() || isCoop())) || isLMS() || GetCVar("samsara_lmsrules") || CheckInventory(giventoken)) { return 0; }
 
@@ -878,16 +872,12 @@ function void HandleAmmoCapacities (int pickedup)
 {
     int classNum = samsaraClassNum();
 
-    int maxClip = GetCVar("samsara_max_clip");
-    int maxShell = GetCVar("samsara_max_shell");
-    int maxRocket = GetCVar("samsara_max_rockets");
-    int maxCell = GetCVar("samsara_max_cell");
+    int maxClip = max(0, GetCVar("samsara_max_clip"));
+    int maxShell = max(0, GetCVar("samsara_max_shell"));
+    int maxRocket = max(0, GetCVar("samsara_max_rockets"));
+    int maxCell = max(0, GetCVar("samsara_max_cell"));
     int hasBackPack = 1 + (CheckInventory("Backpack") || CheckInventory("BagOfHolding") || CheckInventory("AmmoSatchel") || CheckInventory("Zorchpack"));
 
-    if (maxClip < 0) { maxClip = 0; }
-    if (maxShell < 0) { maxShell = 0; }
-    if (maxRocket < 0) { maxRocket = 0; }
-    if (maxCell < 0) { maxCell = 0; }
     if (hasBackPack == 1 && pickedup && !(classNum == CLASS_HEXEN || classNum == CLASS_DEMONESS || classNum == CLASS_CATACOMB || classNum == CLASS_QUAKE3)) { hasBackPack++; }
 
     int increasingClip = 0;

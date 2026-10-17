@@ -3,10 +3,8 @@ script "SamsaraWolf3DClipRefill" (void)
     str ammoname = "Placeholder";
     int ammoamount = 0;
 
-    int maxClip = GetCVar("samsara_max_clip");
+    int maxClip = max(0, GetCVar("samsara_max_clip"));
     int hasBackPack = 1 + (CheckInventory("Backpack") || CheckInventory("BagOfHolding") || CheckInventory("AmmoSatchel") || CheckInventory("Zorchpack"));
-
-    if (maxClip < 0) { maxClip = 0; }
 
     int increasingClip = 0;
     int increasingPerc = GetCVar("samsara_increasingammopercent");
