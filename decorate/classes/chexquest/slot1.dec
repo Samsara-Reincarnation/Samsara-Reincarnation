@@ -109,3 +109,150 @@ actor SamsaraChexSuperBootsporkAttackHandler : Trigger
         stop
     }
 }
+
+// To be polished later
+actor SamsaraChexZorchGlovesAnimationToken : Boolean {}
+
+actor "Zorch Gloves" : Weapon
+{
+    Weapon.SlotNumber 1
+	Weapon.SlotPriority 1
+    Weapon.SelectionOrder 3700
+    Weapon.Kickback 100
+    +WEAPON.WIMPY_WEAPON
+    +WEAPON.MELEEWEAPON
+    +WEAPON.NOALERT
+    +BLOODLESSIMPACT
+    +INVENTORY.UNDROPPABLE
+    Obituary "$SAMSARA_CHEX_OB_FALLBACKMELEE"
+	Inventory.RestrictedTo "ChexWarrior"
+    Tag "Zorch Gloves"
+    States
+    {
+      Spawn:
+        CSPR C -1
+        stop
+
+      Ready:
+        SAWC EJK 4 A_WeaponReady
+        loop
+
+      Deselect:
+        SAWC E 1 A_Lower
+        loop
+
+      Select: 
+        SAWC E 1 A_Raise
+        loop
+
+      Fire:
+        SAWC F 0 A_JumpIfInventory("SamsaraChexZorchGlovesAnimationToken",1,"Fire2")
+		SAWC F 3 A_GiveInventory("SamsaraChexZorchGlovesAnimationToken")
+        SAWC G 9 A_GiveInventory("SamsaraChexZorchGlovesAttackHandler")
+        SAWC F 3
+        SAWC E 3
+        SAWC B 0 A_ReFire
+        goto Ready
+
+      Fire2:
+		SAWC H 3 A_TakeInventory("SamsaraChexZorchGlovesAnimationToken")
+        SAWC I 9 A_GiveInventory("SamsaraChexZorchGlovesAttackHandler")
+        SAWC H 3
+        SAWC E 3
+        SAWC B 0 A_ReFire
+        goto Ready
+    }
+}
+
+actor SamsaraChexZorchGlovesAttackHandler : Trigger
+{
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"PickupBerserk")
+      // Normal
+      PickupNormal:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupNormalCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
+      PickupNormalDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalDMSpread") // A_CustomPunch doesn't support spread, multiply damage by 3 to compensate
+        TNT1 A 0 A_CustomPunch(random(1,10)*4,true,0,"ChexZorchGlovesPuff")
+        stop
+
+      PickupNormalDMSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*4)*3,true,0,"ChexZorchGlovesPuff")
+        stop
+
+      PickupNormalCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(1,10)*4,true,0,"ChexZorchGlovesPuffCoop")
+        stop
+
+      PickupNormalCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(1,10)*4)*3,true,0,"ChexZorchGlovesPuffCoop")
+        stop
+
+      // Berserk
+      PickupBerserk:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupBerserkCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkCoop")
+      PickupBerserkDM:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkDMSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"ChexZorchGlovesPuff")
+        stop
+
+      PickupBerserkDMSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"ChexZorchGlovesPuff")
+        stop
+
+      PickupBerserkCoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkCoopSpread")
+        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"ChexZorchGlovesPuffCoop")
+        stop
+
+      PickupBerserkCoopSpread:
+        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"ChexZorchGlovesPuffCoop")
+        stop
+    }
+}
+
+actor ChexZorchGlovesPuff : ChexSpoonPuff
+{
+    DamageType "ZorchPistol"
+    RenderStyle Add
+    -BLOODSPLATTER
+    +BLOODLESSIMPACT
+    +PUFFGETSOWNER
+    +PUFFONACTORS
+    Alpha 0.4
+    Scale 0.22
+    VSpeed 0
+    States
+    {
+      Spawn:
+      Melee:
+        CMIS D 0 Bright Light("CPUFF1") A_SpawnItemEx("Switchable_FlyingBlood_NonViolent",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),33)
+        TNT1 A 0 A_GiveInventory("SamsaraChexBootspoonHitActorSoundPlayer",1,AAPTR_TARGET)
+      SpawnFinish:
+        CMIS D 4 Bright Light("CPUFF1")
+        CMIS CB 4 Bright Light("CPUFF2")
+        stop
+
+      Crash:
+        TNT1 A 0 A_GiveInventory("SamsaraChexZorchGlovesHitWallSoundPlayer",1,AAPTR_TARGET)
+        goto SpawnFinish
+    }
+}
+
+actor ChexZorchGlovesPuffCoop : ChexZorchGlovesPuff { +MTHRUSPECIES }
+
+actor SamsaraChexZorchGlovesHitWallSoundPlayer : Trigger
+{
+    States
+    {
+      // Sound stuff
+      Pickup:
+        TNT1 A 0 A_PlaySound("doomguy/wallpunch2",CHAN_WEAPON)
+        stop
+    }
+}
