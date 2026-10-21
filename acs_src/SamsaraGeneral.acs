@@ -12834,6 +12834,11 @@ script "Samsara_GiveBackpack" (int startmode)
         if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
         else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
         break;
+
+       case SLOT_CHAINSAW:
+        if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_slot1") > 0, GetCVar("samsara_chex_slot1") - 1, GetUserCVar(pln, "samsara_cl_chex_slot1")), 1); }
+        else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutSlot1"), 1); }
+        break;
     }
 
     bool completeloadout = cond(startmode != 0, GetCVar("samsara_allloadoutequipment"), CheckInventory("SamsaraHasAllLoadoutEquipment"));
