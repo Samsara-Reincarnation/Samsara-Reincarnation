@@ -4517,14 +4517,14 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           default:
             break;
 
-          case SLOT_PISTOL:
-            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
-            else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
-            break;
-
           case SLOT_CHAINSAW:
             if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_slot1") > 0, GetCVar("samsara_chex_slot1") - 1, GetUserCVar(pln, "samsara_cl_chex_slot1")), 1); }
             else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutSlot1"), 1); }
+            break;
+
+          case SLOT_PISTOL:
+            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
+            else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
             break;
         }
         break;
@@ -5575,6 +5575,28 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
         {
           default:
             result = -1;
+            break;
+
+          case SLOT_CHAINSAW:
+            hasweapon = CheckInventory("Super Bootspork") || CheckInventory("Zorch Gloves");
+
+            if (loadoutchoice == 0 || completeloadout) // Super Bootspork
+            {
+                if (!hasweapon)
+                {
+                    GiveInventory("Super Bootspork", 1);
+                    result = 1;
+                }
+            }
+
+            if (loadoutchoice == 1 || completeloadout) // Zorch Gloves
+            {
+                if (!hasweapon)
+                {
+                    GiveInventory("Zorch Gloves", 1);
+                    result = 1;
+                }
+            }
             break;
 
           case SLOT_PISTOL:
@@ -12834,11 +12856,6 @@ script "Samsara_GiveBackpack" (int startmode)
       case CLASS_CHEX:
         if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
         else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
-        break;
-
-       case SLOT_CHAINSAW:
-        if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_slot1") > 0, GetCVar("samsara_chex_slot1") - 1, GetUserCVar(pln, "samsara_cl_chex_slot1")), 1); }
-        else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutSlot1"), 1); }
         break;
     }
 

@@ -1116,12 +1116,43 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 previousvalue = 0;
             }
 
+            SetInventory("SamsaraChexLoadoutSlot1", middle(0, cond(GetCVar("samsara_chex_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_chex_slot1") - 1, GetUserCVar(pln, "samsara_cl_chex_slot1")), 1));
             SetInventory("SamsaraChexLoadoutFallbackRanged", middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1));
+
+            if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraChexLoadoutSlot1"))
+            {
+                ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINSAW, CheckInventory("SamsaraChexLoadoutSlot1"), pln);
+                loadoutPrevValue[pln][SLOT_CHAINSAW] = CheckInventory("SamsaraChexLoadoutSlot1");
+            }
 
             if (loadoutPrevValue[pln][SLOT_PISTOL] != CheckInventory("SamsaraChexLoadoutFallbackRanged"))
             {
                 ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_PISTOL, CheckInventory("SamsaraChexLoadoutFallbackRanged"), pln);
                 loadoutPrevValue[pln][SLOT_PISTOL] = CheckInventory("SamsaraChexLoadoutFallbackRanged");
+            }
+
+            if (CheckInventory("Super Bootspork") || CheckInventory("Zorch Gloves"))
+            {
+                if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                {
+                    SetInventory("Super Bootspork", 1);
+                    SetInventory("Zorch Gloves", 1);
+                } else {
+                    if (!CheckInventory("SamsaraChexLoadoutSlot1"))
+                    {
+                        SetInventory("Super Bootspork", 1);
+
+                        if (CheckWeapon("Zorch Gloves")) { SetWeapon("Super Bootspork"); }
+
+                        SetInventory("Zorch Gloves", 0);
+                    } else if (CheckInventory("SamsaraChexLoadoutSlot1")) {
+                        SetInventory("Zorch Gloves", 1);
+
+                        if (CheckWeapon("Super Bootspork")) { SetWeapon("Zorch Gloves"); }
+
+                        SetInventory("Super Bootspork", 0);
+                    }
+                }
             }
 
             if (CheckInventory("Mini-Zorcher") || CheckInventory("Micro-Zorcher"))
@@ -1168,38 +1199,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         if (CheckWeapon("Dual Mini-Zorchers")) { SetWeapon("Dual Micro-Zorchers"); }
 
                         SetInventory("Dual Mini-Zorchers", 0);
-                    }
-                }
-            }
-
-            SetInventory("SamsaraChexLoadoutSlot1", middle(0, cond(GetCVar("samsara_chex_slot1") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_chex_slot1") - 1, GetUserCVar(pln, "samsara_cl_chex_slot1")), 1));
-
-            if (loadoutPrevValue[pln][SLOT_CHAINSAW] != CheckInventory("SamsaraChexLoadoutSlot1"))
-            {
-                ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINSAW, CheckInventory("SamsaraChexLoadoutSlot1"), pln);
-                loadoutPrevValue[pln][SLOT_CHAINSAW] = CheckInventory("SamsaraChexLoadoutSlot1");
-            }
-
-            if (CheckInventory("Super Bootspork") || CheckInventory("Zorch Gloves"))
-            {
-                if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
-                {
-                    SetInventory("Super Bootspork", 1);
-                    SetInventory("Zorch Gloves", 1);
-                } else {
-                    if (!CheckInventory("SamsaraChexLoadoutSlot1"))
-                    {
-                        SetInventory("Super Bootspork", 1);
-
-                        if (CheckWeapon("Zorch Gloves")) { SetWeapon("Super Bootspork"); }
-
-                        SetInventory("Zorch Gloves", 0);
-                    } else if (CheckInventory("SamsaraChexLoadoutSlot1")) {
-                        SetInventory("Zorch Gloves", 1);
-
-                        if (CheckWeapon("Super Bootspork")) { SetWeapon("Zorch Gloves"); }
-
-                        SetInventory("Super Bootspork", 0);
                     }
                 }
             }

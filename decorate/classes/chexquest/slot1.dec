@@ -117,12 +117,13 @@ actor SamsaraChexSuperBootsporkAttackHandler : Trigger
 }
 
 // Zorch Gloves
+
 actor SamsaraChexZorchGlovesAnimationToken : Boolean {}
 
 actor "Zorch Gloves" : Weapon
 {
     Weapon.SlotNumber 1
-	Weapon.SlotPriority 1
+	Weapon.SlotPriority 0
     Weapon.SelectionOrder 2200
     Weapon.Kickback 100
     Inventory.PickUpSound "chex/weaponget"
@@ -130,7 +131,7 @@ actor "Zorch Gloves" : Weapon
     +WEAPON.NOALERT
     +BLOODLESSIMPACT
     +INVENTORY.UNDROPPABLE
-    Obituary "$SAMSARA_CHEX_OB_SLOT1_LOADOUT"
+    Obituary "$SAMSARA_CHEX_OB_SLOT1_LOADOUT1"
 	Inventory.RestrictedTo "ChexWarrior"
     Tag "Zorch Gloves"
     States
@@ -152,20 +153,22 @@ actor "Zorch Gloves" : Weapon
         loop
 
       Fire:
-        SAWC F 0 A_JumpIfInventory("SamsaraChexZorchGlovesAnimationToken",1,"Fire2")
+        TNT1 A 0 A_JumpIfInventory("SamsaraChexZorchGlovesAnimationToken",1,"FireRight")
+      FireLeft:
 		SAWC F 3 A_GiveInventory("SamsaraChexZorchGlovesAnimationToken")
         SAWC G 9 A_GiveInventory("SamsaraChexZorchGlovesAttackHandler")
         SAWC F 3
-        SAWC E 3
-        SAWC B 0 A_ReFire
-        goto Ready
+        goto FireFinish
 
-      Fire2:
+      FireRight:
 		SAWC H 3 A_TakeInventory("SamsaraChexZorchGlovesAnimationToken")
         SAWC I 9 A_GiveInventory("SamsaraChexZorchGlovesAttackHandler")
         SAWC H 3
+        goto FireFinish
+
+      FireFinish:
         SAWC E 3
-        SAWC B 0 A_ReFire
+        TNT1 A 0 A_ReFire
         goto Ready
     }
 }
@@ -240,7 +243,7 @@ actor SamsaraChexZorchGlovesHitWallSoundPlayer : Trigger
     {
       // Sound stuff
       Pickup:
-        TNT1 A 0 A_PlaySound("doomguy/wallpunch2",CHAN_WEAPON)
+        TNT1 A 0 A_PlaySound("chex/wallpunch2",CHAN_WEAPON)
         stop
     }
 }
