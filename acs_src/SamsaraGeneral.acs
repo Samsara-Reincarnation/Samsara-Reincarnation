@@ -2308,6 +2308,7 @@ Script "Samsara_ResetInventory" (int takexp)
 
 		case CLASS_CHEX:
 			TakeInventory("Super Bootspork", INTMAX);
+			TakeInventory("Zorch Gloves", INTMAX);
 			TakeInventory("Dual Mini-Zorchers", INTMAX);
 			TakeInventory("Dual Micro-Zorchers", INTMAX);
 			TakeInventory("Large Zorcher", INTMAX);
@@ -4518,6 +4519,11 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
           case SLOT_PISTOL:
             if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_fallbackranged") > 0, GetCVar("samsara_chex_fallbackranged") - 1, GetUserCVar(pln, "samsara_cl_chex_fallbackranged")), 1); }
             else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutFallbackRanged"), 1); }
+            break;
+
+          case SLOT_CHAINSAW:
+            if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_chex_slot1") > 0, GetCVar("samsara_chex_slot1") - 1, GetUserCVar(pln, "samsara_cl_chex_slot1")), 1); }
+            else { loadoutchoice = middle(0, CheckInventory("SamsaraChexLoadoutSlot1"), 1); }
             break;
         }
         break;
@@ -14005,6 +14011,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_autoinventoryarmor", false);
 		SetCVar("samsara_cl_maxedinventoryarmorpickup", false);
 		SetCVar("samsara_cl_footstepsounds", true);
+		SetCVar("samsara_cl_vertspread", false);
 
 		// Class-Based Player Preferences
 		SetCVar("samsara_cl_berserkswitch", 2);
@@ -14113,6 +14120,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
+		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
 		SetCVar("samsara_cl_parias_unique3", false);
 		SetCVar("samsara_cl_pariasclassic_unique3", false);
@@ -14186,6 +14194,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_autoinventoryarmor", false);
 		SetCVar("samsara_cl_maxedinventoryarmorpickup", false);
 		SetCVar("samsara_cl_footstepsounds", true);
+		SetCVar("samsara_cl_vertspread", false);
 
 		// Class-Based Player Preferences
 		SetCVar("samsara_cl_berserkswitch", 0);
@@ -14294,6 +14303,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
+		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
 		SetCVar("samsara_cl_parias_unique3", false);
 		SetCVar("samsara_cl_pariasclassic_unique3", false);
@@ -14367,6 +14377,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_autoinventoryarmor", true);
 		SetCVar("samsara_cl_maxedinventoryarmorpickup", false);
 		SetCVar("samsara_cl_footstepsounds", true);
+		SetCVar("samsara_cl_vertspread", false);
 
 		// Class-Based Player Preferences
 		SetCVar("samsara_cl_berserkswitch", 2);
@@ -14475,6 +14486,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
+		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
 		SetCVar("samsara_cl_parias_unique3", false);
 		SetCVar("samsara_cl_pariasclassic_unique3", false);
@@ -14549,6 +14561,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_autoinventoryarmor", cond(isZDoom(), false, true));
 		SetCVar("samsara_cl_maxedinventoryarmorpickup", false);
 		SetCVar("samsara_cl_footstepsounds", true);
+		SetCVar("samsara_cl_vertspread", false);
 
 		// Class-Based Player Preferences
 		SetCVar("samsara_cl_berserkswitch", 0);
@@ -14657,6 +14670,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
+		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
 		SetCVar("samsara_cl_parias_unique3", false);
 		SetCVar("samsara_cl_pariasclassic_unique3", false);
@@ -14730,6 +14744,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_autoinventoryarmor", true);
 		SetCVar("samsara_cl_maxedinventoryarmorpickup", true);
 		SetCVar("samsara_cl_footstepsounds", true);
+		SetCVar("samsara_cl_vertspread", false);
 
 		// Class-Based Player Preferences
 		SetCVar("samsara_cl_berserkswitch", 0);
@@ -14838,6 +14853,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot6", true);
 		SetCVar("samsara_cl_doomguy_slot7", 2);
 		SetCVar("samsara_cl_chex_fallbackranged", true);
+		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
 		SetCVar("samsara_cl_parias_unique3", false);
 		SetCVar("samsara_cl_pariasclassic_unique3", false);
@@ -14911,6 +14927,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_restorehealth", 0);
 		SetCVar("samsara_keepmaxhealth", false);
 		SetCVar("samsara_forcefootstepsounds", false);
+		SetCVar("samsara_vertspread", 0);
 		SetCVar("samsara_merrychristmas", false);
 
 		// LMS Options
@@ -15293,6 +15310,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
+		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
 		SetCVar("samsara_parias_unique3", 0);
 		SetCVar("samsara_pariasclassic_unique3", 0);
@@ -15358,6 +15376,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_restorehealth", 0);
 		SetCVar("samsara_keepmaxhealth", false);
 		SetCVar("samsara_forcefootstepsounds", false);
+		SetCVar("samsara_vertspread", 0);
 		SetCVar("samsara_merrychristmas", false);
 
 		// LMS Options
@@ -15740,6 +15759,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
+		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
 		SetCVar("samsara_parias_unique3", 0);
 		SetCVar("samsara_pariasclassic_unique3", 0);
@@ -15805,6 +15825,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_restorehealth", 0);
 		SetCVar("samsara_keepmaxhealth", true);
 		SetCVar("samsara_forcefootstepsounds", false);
+		SetCVar("samsara_vertspread", 0);
 		SetCVar("samsara_merrychristmas", false);
 
 		// LMS Options
@@ -16187,6 +16208,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
+		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
 		SetCVar("samsara_parias_unique3", 0);
 		SetCVar("samsara_pariasclassic_unique3", 0);
@@ -16253,6 +16275,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_restorehealth", 0);
 		SetCVar("samsara_keepmaxhealth", true);
 		SetCVar("samsara_forcefootstepsounds", false);
+		SetCVar("samsara_vertspread", 0);
 		SetCVar("samsara_merrychristmas", false);
 
 		// LMS Options
@@ -16635,6 +16658,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
+		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
 		SetCVar("samsara_parias_unique3", 0);
 		SetCVar("samsara_pariasclassic_unique3", 0);
@@ -16706,6 +16730,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_restorehealth", 0);
 		SetCVar("samsara_keepmaxhealth", true);
 		SetCVar("samsara_forcefootstepsounds", false);
+		SetCVar("samsara_vertspread", 0);
 		SetCVar("samsara_merrychristmas", false);
 
 		// LMS Options
@@ -17088,6 +17113,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
+		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
 		SetCVar("samsara_parias_unique3", 0);
 		SetCVar("samsara_pariasclassic_unique3", 0);

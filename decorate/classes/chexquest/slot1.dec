@@ -1,3 +1,9 @@
+// Token
+
+actor SamsaraChexLoadoutSlot1 : Counter {}
+
+// Super Bootspork
+
 actor "Super Bootspork" : Weapon
 {
     Weapon.Kickback 0
@@ -110,21 +116,21 @@ actor SamsaraChexSuperBootsporkAttackHandler : Trigger
     }
 }
 
-// To be polished later
+// Zorch Gloves
 actor SamsaraChexZorchGlovesAnimationToken : Boolean {}
 
 actor "Zorch Gloves" : Weapon
 {
     Weapon.SlotNumber 1
 	Weapon.SlotPriority 1
-    Weapon.SelectionOrder 3700
+    Weapon.SelectionOrder 2200
     Weapon.Kickback 100
-    +WEAPON.WIMPY_WEAPON
+    Inventory.PickUpSound "chex/weaponget"
     +WEAPON.MELEEWEAPON
     +WEAPON.NOALERT
     +BLOODLESSIMPACT
     +INVENTORY.UNDROPPABLE
-    Obituary "$SAMSARA_CHEX_OB_FALLBACKMELEE"
+    Obituary "$SAMSARA_CHEX_OB_SLOT1_LOADOUT"
 	Inventory.RestrictedTo "ChexWarrior"
     Tag "Zorch Gloves"
     States
@@ -176,20 +182,20 @@ actor SamsaraChexZorchGlovesAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
       PickupNormalDM:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalDMSpread") // A_CustomPunch doesn't support spread, multiply damage by 3 to compensate
-        TNT1 A 0 A_CustomPunch(random(1,10)*4,true,0,"ChexZorchGlovesPuff")
+        TNT1 A 0 A_CustomPunch(random(4,12)*5,true,0,"ChexZorchGlovesPuff")
         stop
 
       PickupNormalDMSpread:
-        TNT1 A 0 A_CustomPunch((random(1,10)*4)*3,true,0,"ChexZorchGlovesPuff")
+        TNT1 A 0 A_CustomPunch((random(4,12)*5)*3,true,0,"ChexZorchGlovesPuff")
         stop
 
       PickupNormalCoop:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupNormalCoopSpread")
-        TNT1 A 0 A_CustomPunch(random(1,10)*4,true,0,"ChexZorchGlovesPuffCoop")
+        TNT1 A 0 A_CustomPunch(random(4,12)*5,true,0,"ChexZorchGlovesPuffCoop")
         stop
 
       PickupNormalCoopSpread:
-        TNT1 A 0 A_CustomPunch((random(1,10)*4)*3,true,0,"ChexZorchGlovesPuffCoop")
+        TNT1 A 0 A_CustomPunch((random(4,12)*5)*3,true,0,"ChexZorchGlovesPuffCoop")
         stop
 
       // Berserk
@@ -198,46 +204,28 @@ actor SamsaraChexZorchGlovesAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkCoop")
       PickupBerserkDM:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkDMSpread")
-        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"ChexZorchGlovesPuff")
+        TNT1 A 0 A_CustomPunch(random(20,35)*8,true,0,"ChexZorchGlovesPuff")
         stop
 
       PickupBerserkDMSpread:
-        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"ChexZorchGlovesPuff")
+        TNT1 A 0 A_CustomPunch((random(20,35)*8)*3,true,0,"ChexZorchGlovesPuff")
         stop
 
       PickupBerserkCoop:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,"PickupBerserkCoopSpread")
-        TNT1 A 0 A_CustomPunch(random(10,20)*12,true,0,"ChexZorchGlovesPuffCoop")
+        TNT1 A 0 A_CustomPunch(random(20,35)*8,true,0,"ChexZorchGlovesPuffCoop")
         stop
 
       PickupBerserkCoopSpread:
-        TNT1 A 0 A_CustomPunch((random(10,20)*12)*3,true,0,"ChexZorchGlovesPuffCoop")
+        TNT1 A 0 A_CustomPunch((random(20,35)*8)*3,true,0,"ChexZorchGlovesPuffCoop")
         stop
     }
 }
 
 actor ChexZorchGlovesPuff : ChexSpoonPuff
 {
-    DamageType "ZorchPistol"
-    RenderStyle Add
-    -BLOODSPLATTER
-    +BLOODLESSIMPACT
-    +PUFFGETSOWNER
-    +PUFFONACTORS
-    Alpha 0.4
-    Scale 0.22
-    VSpeed 0
     States
     {
-      Spawn:
-      Melee:
-        CMIS D 0 Bright Light("CPUFF1") A_SpawnItemEx("Switchable_FlyingBlood_NonViolent",0,0,0,random(-350,350)/100.00,random(-350,350)/100.00,random(500,1000)/100.00,random(-180,180),33)
-        TNT1 A 0 A_GiveInventory("SamsaraChexBootspoonHitActorSoundPlayer",1,AAPTR_TARGET)
-      SpawnFinish:
-        CMIS D 4 Bright Light("CPUFF1")
-        CMIS CB 4 Bright Light("CPUFF2")
-        stop
-
       Crash:
         TNT1 A 0 A_GiveInventory("SamsaraChexZorchGlovesHitWallSoundPlayer",1,AAPTR_TARGET)
         goto SpawnFinish
