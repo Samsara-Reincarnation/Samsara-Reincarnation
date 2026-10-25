@@ -8756,7 +8756,7 @@ model SamsaraSlotOnePickup
 
 	Path "Models/GoldFinger/pickups"
 	Model 0 "oddjobhat_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot1y.png"
 	Scale 0.8 0.8 0.8
@@ -8767,7 +8767,7 @@ model SamsaraSlotOnePickup
 
 model SamsaraSlotOnePickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot1n.png"
     Scale 0.8 0.8 0.8
@@ -8785,7 +8785,7 @@ model SamsaraSlotOneNoStay
 
 	Path "Models/GoldFinger/pickups"
 	Model 0 "oddjobhat_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot1y.png"
 	Scale 0.8 0.8 0.8
@@ -8796,7 +8796,7 @@ model SamsaraSlotOneNoStay
 
 model SamsaraSlotOneNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot1n.png"
     Scale 0.8 0.8 0.8
@@ -8814,7 +8814,7 @@ model SamsaraSlotOneDrop
 
 	Path "Models/GoldFinger/pickups"
 	Model 0 "oddjobhat_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot1y.png"
 	Scale 0.8 0.8 0.8
@@ -8825,7 +8825,7 @@ model SamsaraSlotOneDrop
 
 model SamsaraSlotOneDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot1n.png"
     Scale 0.8 0.8 0.8
@@ -8857,7 +8857,7 @@ Model SamsaraSlotOnePickup
 
 model SamsaraSlotOnePickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot1n.png"
     Scale 0.8 0.8 0.8
@@ -8889,7 +8889,7 @@ Model SamsaraSlotOneNoStay
 
 model SamsaraSlotOneNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot1n.png"
     Scale 0.8 0.8 0.8
@@ -8921,7 +8921,7 @@ Model SamsaraSlotOneDrop
 
 model SamsaraSlotOneDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot1n.png"
     Scale 0.8 0.8 0.8
@@ -8938,7 +8938,7 @@ model SamsaraSlotTwoPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "mp40_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot2y.png"
 	Scale 0.8 0.8 0.8
@@ -8949,7 +8949,7 @@ model SamsaraSlotTwoPickup
 
 model SamsaraSlotTwoPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot2n.png"
     Scale 0.8 0.8 0.8
@@ -8966,7 +8966,7 @@ model SamsaraSlotTwoNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "mp40_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot2y.png"
 	Scale 0.8 0.8 0.8
@@ -8977,7 +8977,7 @@ model SamsaraSlotTwoNoStay
 
 model SamsaraSlotTwoNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot2n.png"
     Scale 0.8 0.8 0.8
@@ -8994,7 +8994,7 @@ model SamsaraSlotTwoDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "mp40_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot2y.png"
 	Scale 0.8 0.8 0.8
@@ -9005,7 +9005,7 @@ model SamsaraSlotTwoDrop
 
 model SamsaraSlotTwoDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot2n.png"
     Scale 0.8 0.8 0.8
@@ -9022,7 +9022,7 @@ model SamsaraSlotThreePickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "remington_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot3y.png"
 	Scale 0.8 0.8 0.8
@@ -9033,7 +9033,7 @@ model SamsaraSlotThreePickup
 
 model SamsaraSlotThreePickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot3n.png"
     Scale 0.8 0.8 0.8
@@ -9050,7 +9050,7 @@ model SamsaraSlotThreeNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "remington_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot3y.png"
 	Scale 0.8 0.8 0.8
@@ -9061,7 +9061,7 @@ model SamsaraSlotThreeNoStay
 
 model SamsaraSlotThreeNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot3n.png"
     Scale 0.8 0.8 0.8
@@ -9078,7 +9078,7 @@ model SamsaraSlotThreeDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "remington_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot3y.png"
 	Scale 0.8 0.8 0.8
@@ -9089,7 +9089,7 @@ model SamsaraSlotThreeDrop
 
 model SamsaraSlotThreeDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot3n.png"
     Scale 0.8 0.8 0.8
@@ -9106,7 +9106,7 @@ model SamsaraSlotThreePickup
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "purdy_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot3y.png"
 	Scale 0.8 0.8 0.8
@@ -9117,7 +9117,7 @@ model SamsaraSlotThreePickup
 
 model SamsaraSlotThreePickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot3n.png"
     Scale 0.8 0.8 0.8
@@ -9134,7 +9134,7 @@ model SamsaraSlotThreeNoStay
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "purdy_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot3y.png"
 	Scale 0.8 0.8 0.8
@@ -9145,7 +9145,7 @@ model SamsaraSlotThreeNoStay
 
 model SamsaraSlotThreeNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot3n.png"
     Scale 0.8 0.8 0.8
@@ -9162,7 +9162,7 @@ model SamsaraSlotThreeDrop
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "purdy_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot3y.png"
 	Scale 0.8 0.8 0.8
@@ -9173,7 +9173,7 @@ model SamsaraSlotThreeDrop
 
 model SamsaraSlotThreeDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot3n.png"
     Scale 0.8 0.8 0.8
@@ -9190,7 +9190,7 @@ model SamsaraSlotFourPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ak47_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9201,7 +9201,7 @@ model SamsaraSlotFourPickup
 
 model SamsaraSlotFourPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9218,7 +9218,7 @@ model SamsaraSlotFourNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ak47_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9229,7 +9229,7 @@ model SamsaraSlotFourNoStay
 
 model SamsaraSlotFourNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9246,7 +9246,7 @@ model SamsaraSlotFourDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ak47_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9257,7 +9257,7 @@ model SamsaraSlotFourDrop
 
 model SamsaraSlotFourDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9274,7 +9274,7 @@ model SamsaraSlotFourPickupStanding
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ak47_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9285,7 +9285,7 @@ model SamsaraSlotFourPickupStanding
 
 model SamsaraSlotFourPickupStanding
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9302,7 +9302,7 @@ model SamsaraSlotFourNoStayStanding
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ak47_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9313,7 +9313,7 @@ model SamsaraSlotFourNoStayStanding
 
 model SamsaraSlotFourNoStayStanding
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9330,7 +9330,7 @@ model SamsaraSlotFourDropStanding
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ak47_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9341,7 +9341,7 @@ model SamsaraSlotFourDropStanding
 
 model SamsaraSlotFourDropStanding
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9358,7 +9358,7 @@ model SamsaraSlotFourSkulltagPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "thompsondrum_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9369,7 +9369,7 @@ model SamsaraSlotFourSkulltagPickup
 
 model SamsaraSlotFourSkulltagPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9386,7 +9386,7 @@ model SamsaraSlotFourSkulltagNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "thompsondrum_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9397,7 +9397,7 @@ model SamsaraSlotFourSkulltagNoStay
 
 model SamsaraSlotFourSkulltagNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9414,7 +9414,7 @@ model SamsaraSlotFourSkulltagDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "thompsondrum_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9425,7 +9425,7 @@ model SamsaraSlotFourSkulltagDrop
 
 model SamsaraSlotFourSkulltagDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9442,7 +9442,7 @@ model SamsaraSlotFourSkulltagPickup
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "thompson_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9453,7 +9453,7 @@ model SamsaraSlotFourSkulltagPickup
 
 model SamsaraSlotFourSkulltagPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9470,7 +9470,7 @@ model SamsaraSlotFourSkulltagNoStay
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "thompson_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9481,7 +9481,7 @@ model SamsaraSlotFourSkulltagNoStay
 
 model SamsaraSlotFourSkulltagNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9498,7 +9498,7 @@ model SamsaraSlotFourSkulltagDrop
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "thompson_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot4y.png"
 	Scale 0.8 0.8 0.8
@@ -9509,7 +9509,7 @@ model SamsaraSlotFourSkulltagDrop
 
 model SamsaraSlotFourSkulltagDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot4n.png"
     Scale 0.8 0.8 0.8
@@ -9526,7 +9526,7 @@ model SamsaraSlotFivePickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "bazooka_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot5y.png"
 	Scale 0.8 0.8 0.8
@@ -9537,7 +9537,7 @@ model SamsaraSlotFivePickup
 
 model SamsaraSlotFivePickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot5n.png"
     Scale 0.8 0.8 0.8
@@ -9554,7 +9554,7 @@ model SamsaraSlotFiveNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "bazooka_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot5y.png"
 	Scale 0.8 0.8 0.8
@@ -9565,7 +9565,7 @@ model SamsaraSlotFiveNoStay
 
 model SamsaraSlotFiveNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot5n.png"
     Scale 0.8 0.8 0.8
@@ -9582,7 +9582,7 @@ model SamsaraSlotFiveDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "bazooka_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot5y.png"
 	Scale 0.8 0.8 0.8
@@ -9593,7 +9593,7 @@ model SamsaraSlotFiveDrop
 
 model SamsaraSlotFiveDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot5n.png"
     Scale 0.8 0.8 0.8
@@ -9610,7 +9610,7 @@ model SamsaraSlotFiveSkulltagPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m79_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot5y.png"
 	Scale 0.8 0.8 0.8
@@ -9621,7 +9621,7 @@ model SamsaraSlotFiveSkulltagPickup
 
 model SamsaraSlotFiveSkulltagPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot5n.png"
     Scale 0.8 0.8 0.8
@@ -9638,7 +9638,7 @@ model SamsaraSlotFiveSkulltagNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m79_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot5y.png"
 	Scale 0.8 0.8 0.8
@@ -9649,7 +9649,7 @@ model SamsaraSlotFiveSkulltagNoStay
 
 model SamsaraSlotFiveSkulltagNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot5n.png"
     Scale 0.8 0.8 0.8
@@ -9666,7 +9666,7 @@ model SamsaraSlotFiveSkulltagDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m79_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot5y.png"
 	Scale 0.8 0.8 0.8
@@ -9677,7 +9677,7 @@ model SamsaraSlotFiveSkulltagDrop
 
 model SamsaraSlotFiveSkulltagDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot5n.png"
     Scale 0.8 0.8 0.8
@@ -9694,7 +9694,7 @@ model SamsaraSlotSixPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m1carbine_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9705,7 +9705,7 @@ model SamsaraSlotSixPickup
 
 model SamsaraSlotSixPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9722,7 +9722,7 @@ model SamsaraSlotSixNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m1carbine_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9733,7 +9733,7 @@ model SamsaraSlotSixNoStay
 
 model SamsaraSlotSixNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9750,7 +9750,7 @@ model SamsaraSlotSixDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m1carbine_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9761,7 +9761,7 @@ model SamsaraSlotSixDrop
 
 model SamsaraSlotSixDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9778,7 +9778,7 @@ model SamsaraSlotSixSkulltagPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "garand_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9789,7 +9789,7 @@ model SamsaraSlotSixSkulltagPickup
 
 model SamsaraSlotSixSkulltagPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9806,7 +9806,7 @@ model SamsaraSlotSixSkulltagNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "garand_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9817,7 +9817,7 @@ model SamsaraSlotSixSkulltagNoStay
 
 model SamsaraSlotSixSkulltagNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9834,7 +9834,7 @@ model SamsaraSlotSixSkulltagDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "garand_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9845,7 +9845,7 @@ model SamsaraSlotSixSkulltagDrop
 
 model SamsaraSlotSixSkulltagDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9862,7 +9862,7 @@ model SamsaraSlotSixSkulltagPickup
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "kar98k_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9873,7 +9873,7 @@ model SamsaraSlotSixSkulltagPickup
 
 model SamsaraSlotSixSkulltagPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9890,7 +9890,7 @@ model SamsaraSlotSixSkulltagNoStay
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "kar98k_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9901,7 +9901,7 @@ model SamsaraSlotSixSkulltagNoStay
 
 model SamsaraSlotSixSkulltagNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9918,7 +9918,7 @@ model SamsaraSlotSixSkulltagDrop
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "kar98k_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot6y.png"
 	Scale 0.8 0.8 0.8
@@ -9929,7 +9929,7 @@ model SamsaraSlotSixSkulltagDrop
 
 model SamsaraSlotSixSkulltagDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot6n.png"
     Scale 0.8 0.8 0.8
@@ -9946,7 +9946,7 @@ model SamsaraSlotSevenPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "laser_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot7y.png"
 	Scale 0.8 0.8 0.8
@@ -9957,7 +9957,7 @@ model SamsaraSlotSevenPickup
 
 model SamsaraSlotSevenPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot7n.png"
     Scale 0.8 0.8 0.8
@@ -9974,7 +9974,7 @@ model SamsaraSlotSevenNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "laser_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot7y.png"
 	Scale 0.8 0.8 0.8
@@ -9985,7 +9985,7 @@ model SamsaraSlotSevenNoStay
 
 model SamsaraSlotSevenNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot7n.png"
     Scale 0.8 0.8 0.8
@@ -10002,7 +10002,7 @@ model SamsaraSlotSevenDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "laser_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot7y.png"
 	Scale 0.8 0.8 0.8
@@ -10013,7 +10013,7 @@ model SamsaraSlotSevenDrop
 
 model SamsaraSlotSevenDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot7n.png"
     Scale 0.8 0.8 0.8
@@ -10030,7 +10030,7 @@ model SamsaraSlotSevenSkulltagPickup
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m14_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot7y.png"
 	Scale 0.8 0.8 0.8
@@ -10041,7 +10041,7 @@ model SamsaraSlotSevenSkulltagPickup
 
 model SamsaraSlotSevenSkulltagPickup
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot7n.png"
     Scale 0.8 0.8 0.8
@@ -10058,7 +10058,7 @@ model SamsaraSlotSevenSkulltagNoStay
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m14_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot7y.png"
 	Scale 0.8 0.8 0.8
@@ -10069,7 +10069,7 @@ model SamsaraSlotSevenSkulltagNoStay
 
 model SamsaraSlotSevenSkulltagNoStay
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot7n.png"
     Scale 0.8 0.8 0.8
@@ -10086,7 +10086,7 @@ model SamsaraSlotSevenSkulltagDrop
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "m14_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "slot7y.png"
 	Scale 0.8 0.8 0.8
@@ -10097,7 +10097,7 @@ model SamsaraSlotSevenSkulltagDrop
 
 model SamsaraSlotSevenSkulltagDrop
 {
-    Path "models"
+    Path "models/Samsara"
     Model 0 "slots/hybrid.md2"
     Skin 0 "slots/slot7n.png"
     Scale 0.8 0.8 0.8
@@ -10114,7 +10114,7 @@ Model SamsaraUniquePickup1
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "ar7_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "unique.png"
 	Scale 0.8 0.8 0.8
@@ -10132,7 +10132,7 @@ Model SamsaraUniquePickup2
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "uzi_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "unique.png"
 	Scale 0.8 0.8 0.8
@@ -10150,7 +10150,7 @@ Model SamsaraUniquePickup2
 	FrameIndex GF01 Z 0 0
 
 	Model 0 "sw22_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "unique.png"
 	Scale 0.8 0.8 0.8
@@ -10168,7 +10168,7 @@ Model SamsaraUniquePickup2
 	FrameIndex GF02 Z 0 0
 
 	Model 0 "sw36_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "unique.png"
 	Scale 0.8 0.8 0.8
@@ -10188,7 +10188,7 @@ Model SamsaraUniquePickup3
 	FrameIndex GF00 Z 0 0
 
 	Model 0 "briefcase_hybrid.md3"
-	Path "Models/Slots"
+	Path "Models/Samsara/Slots"
 	Model 1 "hybrid.md2"
 	Skin 1 "unique.png"
 	Scale 0.8 0.8 0.8
