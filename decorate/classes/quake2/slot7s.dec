@@ -533,9 +533,12 @@ Actor Q2Disruptor_Proj : Q2Rocket
     DamageType "BittermanTrap"
     DeathSound "Q2Weapons/DisruptorImpact"
     Decal ""
-    +SEEKERMISSILE
     +EXTREMEDEATH
+    +FORCERADIUSDMG
+    +HITTRACER
     +PAINLESS
+    +SEEKERMISSILE
+    -THRUGHOST
     var int user_radius;
     var int user_offsetz;
     var int user_angle;
@@ -564,15 +567,18 @@ Actor Q2Disruptor_Proj : Q2Rocket
         TNT1 A 0 A_SetUserVar("user_angle", CallACS("StickyLocation",3))
         TNT1 A 0 A_Warp(AAPTR_TRACER,user_radius >> 16,0,abs(user_offsetz),user_angle+180,WARPF_NOCHECKPOSITION|WARPF_COPYINTERPOLATION)
         TNT1 A 0 A_RadiusThrust(150,15,RTF_NOIMPACTDAMAGE)
-        TNT1 A 5 A_SpawnItemEx("Q2Disruptor_Proj_DamageExplosion")
+        TNT1 AAAAAAAAAAAAA 0 NoDelay A_SpawnItemEx("DisruptorParticle",frandom(0,12),0,frandom(-8,15),frandom(0,0.5),0,frandom(-1,-0.1),random(0,359))
+        TNT1 A 5 A_Explode(140,10,0)
         TNT1 A 0 A_JumpIf(CallACS("StickyLocation",4) == 1, "Vanish")
         TNT1 A 0 A_Warp(AAPTR_TRACER,user_radius >> 16,0,abs(user_offsetz),user_angle+180,WARPF_NOCHECKPOSITION|WARPF_COPYINTERPOLATION)
         TNT1 A 0 A_RadiusThrust(150,15,RTF_NOIMPACTDAMAGE)
-        TNT1 A 5 A_SpawnItemEx("Q2Disruptor_Proj_DamageExplosion")
+        TNT1 AAAAAAAAAAAAA 0 NoDelay A_SpawnItemEx("DisruptorParticle",frandom(0,12),0,frandom(-8,15),frandom(0,0.5),0,frandom(-1,-0.1),random(0,359))
+        TNT1 A 5 A_Explode(140,10,0)
         TNT1 A 0 A_JumpIf(CallACS("StickyLocation",4) == 1, "Vanish")
         TNT1 A 0 A_Warp(AAPTR_TRACER,user_radius >> 16,0,abs(user_offsetz),user_angle+180,WARPF_NOCHECKPOSITION|WARPF_COPYINTERPOLATION)
         TNT1 A 0 A_RadiusThrust(150,15,RTF_NOIMPACTDAMAGE)
-        TNT1 A 5 A_SpawnItemEx("Q2Disruptor_Proj_DamageExplosion")
+        TNT1 AAAAAAAAAAAAA 0 NoDelay A_SpawnItemEx("DisruptorParticle",frandom(0,12),0,frandom(-8,15),frandom(0,0.5),0,frandom(-1,-0.1),random(0,359))
+        TNT1 A 5 A_Explode(140,10,0)
         Stop
     Vanish:
         TNT1 A 5
@@ -580,7 +586,7 @@ Actor Q2Disruptor_Proj : Q2Rocket
     }
 }
 
-Actor Q2Disruptor_Proj_DamageExplosion
+/*Actor Q2Disruptor_Proj_DamageExplosion
 {
     DamageType "BittermanTrap"
     +NOINTERACTION
@@ -594,7 +600,7 @@ Actor Q2Disruptor_Proj_DamageExplosion
             TNT1 A 0 A_Explode(140,10,0)
             Stop
     }
-}
+}*/
 
 actor Q2Disruptor_ProjCoop : Q2Disruptor_Proj
 {
