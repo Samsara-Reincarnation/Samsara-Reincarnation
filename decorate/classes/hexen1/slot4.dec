@@ -798,15 +798,25 @@ actor "Jotunn's Flail" : SamsaraHexenWeapon
       FireNoAmmo:
         H122 B 4 Offset(15,32)
         H122 C 4 Offset(15,32) A_PlaySound("FighterHammerMiss",CHAN_WEAPON)
-        goto FireContinue1
+        goto FireContinue1Attack
 
       FireAmmo:
         H122 J 4 Bright Offset(15,32)
         H122 K 4 Bright Offset(15,32) A_PlaySound("FighterHammerMiss",CHAN_WEAPON)
-        goto FireContinue1
+        goto FireContinue1Attack
 
-      FireContinue1:
+      FireContinue1Attack:
+        TNT1 A 0 A_JumpIfCloser(128,"FireContinue1AttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenJotunnsFlailMeleePuffSpawned",1,"FireContinue1AttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue1Check")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireContinue1Check")
+        goto FireContinue1AttackMelee
+
+      FireContinue1AttackMelee:
         TNT1 A 0 A_GiveInventory("SamsaraHexenJotunnsFlailMeleeAttackHandler1")
+        goto FireContinue1Check
+
+      FireContinue1Check:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue1Ammo")
         TNT1 A 0 A_JumpIfInventory("Clip",1,"FireContinue1Ammo")
         goto FireContinue1NoAmmo
@@ -816,17 +826,27 @@ actor "Jotunn's Flail" : SamsaraHexenWeapon
         H122 D 1 Offset(-10,79)
         H122 D 1 Offset(-15,90)
         H122 D 1 Offset(-20,98)
-        goto FireContinue2
+        goto FireContinue2Attack
 
       FireContinue1Ammo:
         H122 L 1 Bright Offset(-5,70)
         H122 L 1 Bright Offset(-10,79)
         H122 L 1 Bright Offset(-15,90)
         H122 L 1 Bright Offset(-20,98)
-        goto FireContinue2
+        goto FireContinue2Attack
 
-      FireContinue2:
+      FireContinue2Attack:
+        TNT1 A 0 A_JumpIfCloser(128,"FireContinue2AttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenJotunnsFlailMeleePuffSpawned",1,"FireContinue2AttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue2Check")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireContinue2Check")
+        goto FireContinue2AttackMelee
+
+      FireContinue2AttackMelee:
         TNT1 A 0 A_GiveInventory("SamsaraHexenJotunnsFlailMeleeAttackHandler2")
+        goto FireContinue2Check
+
+      FireContinue2Check:
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinue2Ammo")
         TNT1 A 0 A_JumpIfInventory("Clip",1,"FireContinue2Ammo")
         goto FireContinue2NoAmmo
@@ -846,13 +866,18 @@ actor "Jotunn's Flail" : SamsaraHexenWeapon
         goto FireFinishAttack
 
       FireFinishAttack:
-        TNT1 A 0 A_JumpIfCloser(128,"FireFinishAttackMeleeOnly") // imperfect hack for non-bleeding actors
+        TNT1 A 0 A_JumpIfCloser(128,"FireFinishAttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenJotunnsFlailMeleePuffSpawned",1,"FireFinishAttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireFinishAttackRanged")
+        TNT1 A 0 A_JumpIfInventory("Clip",3,"FireFinishAttackRanged")
+        goto FireFinishAttackMelee
+
+      FireFinishAttackMelee:
         TNT1 A 0 A_GiveInventory("SamsaraHexenJotunnsFlailMeleeAttackHandler3")
-        TNT1 A 0 A_GiveInventory("SamsaraHexenJotunnsFlailRangedAttackHandler")
         goto FireFinish
 
-      FireFinishAttackMeleeOnly:
-        TNT1 A 0 A_GiveInventory("SamsaraHexenJotunnsFlailMeleeAttackHandler3")
+      FireFinishAttackRanged:
+        TNT1 A 0 A_GiveInventory("SamsaraHexenJotunnsFlailRangedAttackHandler")
         goto FireFinish
 
       FireFinish:
@@ -1115,7 +1140,7 @@ actor SamsaraHexenJotunnsFlailRangedAttackHandler : Trigger
     {
       // Ammo checking/taking stuff
       Pickup:
-        TNT1 A 0 A_JumpIfInventory("SamsaraHexenJotunnsFlailMeleePuffSpawned",1,"PickupStop")
+        //TNT1 A 0 A_JumpIfInventory("SamsaraHexenJotunnsFlailMeleePuffSpawned",1,"PickupStop") // see commented out version of weapon's FireContinue/FinishAttack state
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
         TNT1 A 0 A_JumpIfInventory("Clip",3,1)
         stop

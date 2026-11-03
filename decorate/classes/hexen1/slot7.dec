@@ -1052,20 +1052,9 @@ actor Quietus : SamsaraHexenWeapon
         H102 F 2 Bright Offset(5,36)
         goto FireContinueAttack
 
-      /*
-      FireContinueAttack:
-        TNT1 A 0 A_JumpIfCloser(128,"FireContinueAttackMeleeOnly") // imperfect hack for non-bleeding actors
-        TNT1 A 0 A_GiveInventory("SamsaraHexenQuietusMeleeAttackHandler")
-        TNT1 A 0 A_GiveInventory("SamsaraHexenQuietusRangedAttackHandler")
-        goto FireContinue
-
-      FireContinueAttackMeleeOnly:
-        TNT1 A 0 A_GiveInventory("SamsaraHexenQuietusMeleeAttackHandler")
-        goto FireContinue
-      */
-
       FireContinueAttack:
         TNT1 A 0 A_JumpIfCloser(128,"FireContinueAttackMelee")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHexenQuietusMeleePuffSpawned",1,"FireContinueAttackMelee")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireContinueAttackRanged")
         TNT1 A 0 A_JumpIfInventory("Clip",14,1)
         goto FireContinueAttackMelee
