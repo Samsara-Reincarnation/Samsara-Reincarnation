@@ -118,9 +118,7 @@ actor PartialInvisibility : SamsaraPowerupPickup
         goto PickupDisplay
 
       PickupQuake2:
-        TNT1 A 0 A_JumpIfInventory("Q2Silencer",0,1)
-        goto PickupDisplay
-        TNT1 A 0 A_JumpIfInventory("Q2DualFireDamage",0,"PickupFail")
+        TNT1 A 0 A_JumpIfInventory("Q2Silencer",0,"PickupFail")
         goto PickupDisplay
 
       PickupHexen2:
@@ -197,35 +195,22 @@ actor PartialInvisibility : SamsaraPowerupPickup
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 2)
         goto PickupSuccess
 
-      // Bitterman's pickup messages need special treatment due to being given a random item.
-      // This determines which item to jump to.
       PickupDisplayQuake2:
-        TNT1 A 0 A_Jump(256,"PickupDisplayQuake2Silencer","PickupDisplayQuake2DualFireDamage")
-      PickupDisplayQuake2Silencer:
-        TNT1 A 0 A_JumpIfInventory("Q2Silencer",0,"PickupDisplayQuake2")
         TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 0, 7)
         TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
         TNT1 A 0 A_PlaySound("Q2Misc/Pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 2)
-        goto PickupSuccessQuake2Silencer
-
-      PickupDisplayQuake2DualFireDamage:
-        TNT1 A 0 A_JumpIfInventory("Q2DualFireDamage",0,"PickupDisplayQuake2")
-        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 0, 8)
-        TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
-        TNT1 A 0 A_PlaySound("Q2Misc/Pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
-        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 2)
-        goto PickupSuccessQuake2DualFireDamage
+        goto PickupSuccess
 
       PickupDisplayHexen2:
-        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 0, random(9,10))
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 0, random(8,9))
         TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
         TNT1 A 0 A_PlaySound("Hexen2/ArtifactPickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 2)
         goto PickupSuccess
 
       PickupDisplayQuake3:
-        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 0, 11)
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 0, 10)
         TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
         TNT1 A 0 ACS_NamedExecuteAlways("Q3_Announcer", 0, 0) //A_PlaySound("Quake3/Items/Invisibility",CHAN_6)
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 2)
@@ -327,15 +312,7 @@ actor PartialInvisibility : SamsaraPowerupPickup
         stop
 
       PickupSuccessQuake2:
-        TNT1 A 0 A_Jump(256,"PickupSuccessQuake2Silencer","PickupSuccessQuake2DualFireDamage")
-      PickupSuccessQuake2Silencer:
-        TNT1 A 0 A_JumpIfInventory("Q2Silencer",0,"PickupSuccessQuake2")
         TNT1 A 0 A_GiveInventory("Q2Silencer")
-        stop
-
-      PickupSuccessQuake2DualFireDamage:
-        TNT1 A 0 A_JumpIfInventory("Q2DualFireDamage",0,"PickupSuccessQuake2")
-        TNT1 A 0 A_GiveInventory("Q2DualFireDamage")
         stop
 
       PickupSuccessHexen2:
@@ -1998,6 +1975,7 @@ actor SamsaraLesserTome : SamsaraPowerupPickup
       Pickup:
         TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupHeretic")
         TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupHexen1")
+        TNT1 A 0 A_JumpIfInventory("BittermanClass",1,"PickupQuake2")
         TNT1 A 0 A_Jump(256,"PickupDefault") // for inheriting actors
         goto PickupDefault
 
@@ -2012,10 +1990,15 @@ actor SamsaraLesserTome : SamsaraPowerupPickup
       PickupHexen1:
         goto PickupHeretic
 
+      PickupQuake2:
+        TNT1 A 0 A_JumpIfInventory("Q2DoubleDamage",0,"PickupFail")
+        goto PickupDisplay
+
       PickupDisplay:
         TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupDisplayHeretic")
         TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupDisplayHexen1")
         TNT1 A 0 A_JumpIfInventory("MarathonClass",1,"PickupDisplayMarathon")
+        TNT1 A 0 A_JumpIfInventory("BittermanClass",1,"PickupDisplayQuake2")
         TNT1 A 0 A_Jump(256,"PickupDisplayDefault") // for inheriting actors
         goto PickupDisplayDefault
 
@@ -2047,9 +2030,17 @@ actor SamsaraLesserTome : SamsaraPowerupPickup
         TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 9)
         goto PickupSuccess
 
+      PickupDisplayQuake2:
+        TNT1 A 0 ACS_NamedExecuteAlways("SamsaraPickupMessages", 0, 2, 16, 2)
+        TNT1 A 0 A_GiveInventory("SamsaraPowerupPickupBlend")
+        TNT1 A 0 A_PlaySound("Q2Misc/Pickup",CHAN_ITEM|CHAN_MAYBE_LOCAL)
+        TNT1 A 0 ACS_NamedExecuteWithResult("SamsaraPickupAnnouncerSounds", 9)
+        goto PickupSuccess
+
       PickupSuccess:
         TNT1 A 0 A_JumpIfInventory("CorvusClass",1,"PickupSuccessHeretic")
         TNT1 A 0 A_JumpIfInventory("HexenClass",1,"PickupSuccessHexen1")
+        TNT1 A 0 A_JumpIfInventory("BittermanClass",1,"PickupSuccessQuake2")
         TNT1 A 0 A_Jump(256,"PickupSuccessDefault") // for inheriting actors
         goto PickupSuccessDefault
 
@@ -2063,6 +2054,10 @@ actor SamsaraLesserTome : SamsaraPowerupPickup
 
       PickupSuccessHexen1:
         goto PickupSuccessHeretic
+
+      PickupSuccessQuake2:
+        TNT1 A 0 A_GiveInventory("Q2DoubleDamage")
+        stop
     }
 }
 
@@ -4727,9 +4722,7 @@ actor SamsaraRandomPowerup : SamsaraPowerupPickup
         goto PickupBlurSphereSuccess
 
       PickupBlurSphereQuake2:
-        TNT1 A 0 A_JumpIfInventory("Q2Silencer",0,1)
-        goto PickupBlurSphereSuccess
-        TNT1 A 0 A_JumpIfInventory("Q2DualFireDamage",0,"PickupJump")
+        TNT1 A 0 A_JumpIfInventory("Q2Silencer",0,"PickupJump")
         goto PickupBlurSphereSuccess
 
       PickupBlurSphereHexen2:
