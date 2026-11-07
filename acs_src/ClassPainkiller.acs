@@ -439,6 +439,7 @@ Script "Painkiller_Fire_Laser" (int sideOffset, int forwardOffset, int zOffset)
 
 	int angle = VectorAngle(vectorX,vectorY) + 0.5;
 	int pitch = VectorAngle(VectorLength(vectorX,vectorY),vectorZ);
+	int range = VectorLength(VectorLength(vectorX,vectorY),vectorZ);
 
 	LineAttack(0,angle,pitch,0,"Painkiller_Painkiller_LaserEnd","Painkiller",magnitudeThree_f(vectorX,vectorY,vectorZ),FHF_NORANDOMPUFFZ);
 
@@ -446,12 +447,20 @@ Script "Painkiller_Fire_Laser" (int sideOffset, int forwardOffset, int zOffset)
 
 	int giveAngle = angle;
 	int givePitch = pitch;
+	int giveRange = range >> 16;
+	/*Log(d:giveRange);
+	int giveRange2 = (CheckInventory("Painkiller_PainkillerAlt"));
+	Log(s:"alt:",d:giveRange2);
+	int giveRange3 = (CheckInventory("Painkiller_PainkillerReturned"));
+	Log(s:"returned:",d:giveRange3);*/
+
 
 	if(giveAngle < 0.0) giveAngle += 1.0;
 	if(givePitch < 0.0) givePitch += 1.0;
 
 	GiveInventory("Painkiller_RailAngle",giveAngle + 1.0);
 	GiveInventory("Painkiller_RailPitch",givePitch + 1.0);
+	SetInventory("Painkiller_RailRange",giveRange);
 }
 
 Script "Painkiller_Laser_Offsets" (int mode)
@@ -460,6 +469,7 @@ Script "Painkiller_Laser_Offsets" (int mode)
 	{
 		case 0: SetResultValue(CheckInventory("Painkiller_RailAngle") - 1.0); break;
 		case 1: SetResultValue(CheckInventory("Painkiller_RailPitch") - 1.0); break;
+		case 2: SetResultValue(CheckInventory("Painkiller_RailRange")); break;
 	}
 }
 
