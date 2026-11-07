@@ -1122,7 +1122,7 @@ script "Samsara_Keybinds" (int button) NET
 		switch (samsaraClassNum())
 		{
 		case CLASS_DOOM:
-			if (GetCVar("samsara_cl_doommode") >= 2) { cvarsetting = 0; }
+			if (GetCVar("samsara_cl_doommode") >= 3) { cvarsetting = 0; }
 			else if (GetCVar("samsara_cl_doommode") <= 0) { cvarsetting = 1; }
 			else { cvarsetting = GetCVar("samsara_cl_doommode") + 1; }
 
@@ -1347,7 +1347,8 @@ script "Samsara_Keybinds_Messages" (int button, int mode, int arg2) CLIENTSIDE
 		switch (arg2)
 		{
 		case CLASS_DOOM:
-			if (mode >= 2) { modestring = "Stronghold"; }
+			if (mode >= 3) { modestring = "Complex"; }
+			if (mode == 2) { modestring = "Stronghold"; }
 			else if (mode == 1) { modestring = "Doom 64"; }
 			else { modestring = "Original"; }
 
@@ -1907,6 +1908,10 @@ Script "Samsara_BotAltClassHandler" (int playernum)
 			if(StrCmp(playername,"Doomguy (Stronghold)") == 0)
 			{
 				SetUserCvar(playernum,"samsara_cl_doommode",2);
+			}
+			if(StrCmp(playername,"Doomguy (Complex)") == 0)
+			{
+				SetUserCvar(playernum,"samsara_cl_doommode",3);
 			}
 			break;
 		case 3:
@@ -4428,7 +4433,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
         break;
 
       case CLASS_DOOM:
-        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 2);
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 3);
         break;
 
       case CLASS_WOLFEN:
@@ -10916,7 +10921,7 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
         break;
 
       case CLASS_DOOM:
-        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 2);
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 3);
         break;
 
       case CLASS_WOLFEN:
@@ -12806,7 +12811,7 @@ script "Samsara_GiveBackpack" (int startmode)
         break;
 
       case CLASS_DOOM:
-        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 2);
+        altclasschoice = middle(0, cond(startmode != 0, GetUserCVar(pln, "samsara_cl_doommode"), CheckInventory("DoomClassMode")), 3);
         break;
 
       case CLASS_WOLFEN:
