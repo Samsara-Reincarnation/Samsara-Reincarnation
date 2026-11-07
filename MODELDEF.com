@@ -18,7 +18,6 @@ Model ComplexDoom_SGTracer
    FrameIndex CD28 \ 0 0
 }
 
-/*
 Model ComplexDoom_10KProjectile
 { 
    Path "Models/ComplexDoom"
@@ -28,4 +27,13 @@ Model ComplexDoom_10KProjectile
    PITCHFROMMOMENTUM
    FrameIndex CD29 Y 0 0
 }
-*/
+
+Model ComplexDoom_10KProjectileCoop
+{ 
+   Path "Models/ComplexDoom"
+   SKIN 0 "tracer2.png"
+   MODEL 0 "Tracer.md3"
+   Scale 10.0 10.0 5.0
+   PITCHFROMMOMENTUM
+   FrameIndex CD29 Y 0 0
+}
