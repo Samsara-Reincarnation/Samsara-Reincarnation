@@ -27,6 +27,7 @@ actor "B.F.G. 9000" : BFG9000
 
 	// Original
 	Ready:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"ReadyCom")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"ReadyStopSound")
@@ -43,6 +44,7 @@ actor "B.F.G. 9000" : BFG9000
 	Deselect:
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"DeselectStopSound")
 	DeselectStart:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectStartCom")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStartStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"DeselectStart64")
 		DBFG A 1 A_Lower
@@ -56,12 +58,14 @@ actor "B.F.G. 9000" : BFG9000
 
 	Select:
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"SelectCom")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
 		DBFG A 1 A_Raise
 		loop
 
 	Fire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"FireCom")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
@@ -184,17 +188,13 @@ actor "B.F.G. 9000" : BFG9000
 
 	Fire64Smooth:
 		64BF A 20
-		
 		64BF A 2 A_GunFlash("Flash64Smooth")
 		64BF A 8
-
 		64BF B 5
-		
 		64BF D 1 A_GiveInventory("SamsaraDoomguy64BFG9000AttackHandler")
 		64BF D 1
 		64BF EDC 2
 		64BF BA 1
-		
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
 		goto Nothing
@@ -346,8 +346,64 @@ actor "B.F.G. 9000" : BFG9000
 		TNT1 A 1 A_Light1
 		goto LightDone
 
+	// Complex Doom (BFG 9500)
+	ReadyCom:
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"ReadyComStopSound")
+	ReadyComContinue:
+		CD23 U 1 A_WeaponReady
+		goto Ready
+
+	ReadyComStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+		goto ReadyComContinue
+
+	DeselectStartCom:
+		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/weapondown")
+		CD23 U 1 A_Lower
+		goto DeselectStartCom+1
+
+	SelectCom:
+		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/bfgpickup")
+		CD23 U 1 A_Raise
+		goto SelectCom+1
+
+	FireCom:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
+		goto Nothing
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"FireComStopSound")
+	FireComStart:
+		TNT1 A 0 A_AlertMonsters
+		TNT1 A 0 A_Light1
+		CD23 U 2 Bright A_PlaySound("complexdoom/weapons/bfgf",CHAN_WEAPON)
+		CD23 LMNOP 2 Bright Radius_Quake(2,2,0,1,0)
+		CD23 QRST 1 Bright Radius_Quake(3,2,0,1,0)
+		CD23 QRSTQ 1 Bright Radius_Quake(4,2,0,1,0)
+		CD23 RS 1 Bright Radius_Quake(6,2,0,1,0)
+		TNT1 A 0 A_Light2
+		TNT1 A 0 Radius_Quake(12,4,0,1,0)
+		CD24 B 4 Bright A_GiveInventory("SamsaraDoomguyComBFG9500AttackHandler")
+		CD24 C 3 Bright
+		TNT1 A 0 A_Light0
+		CD23 VWXY 1
+		CD23 "Z[\" 2
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
+		goto Nothing
+		CD23 U 20 A_ReFire
+		goto Ready
+
+	FireComStopSound:
+		TNT1 A 0 A_PlaySound("silence",CHAN_6)
+		TNT1 A 0 A_StopSound(CHAN_6)
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+		goto FireComStart
+
 	Nothing:
         TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"NothingCom")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"NothingStr")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Nothing64")
         TNT1 A 0 A_JumpIfInventory("SamsaraDoomOriginalLoadoutFallbackRanged",1,2)
@@ -358,6 +414,7 @@ actor "B.F.G. 9000" : BFG9000
 
 	Nothing64:
 	NothingStr:
+	NothingCom:
         TNT1 A 0 A_SelectWeapon(" Pistol ")
         goto Deselect
 	}
@@ -1327,6 +1384,207 @@ actor SamsaraDoomguyStrPowerBFGBallNoAimCoopSoundDE : SamsaraDoomguyStrPowerBFGB
 	Species "Player"
 	+THRUSPECIES
 }
+
+actor SamsaraDoomguyComBFG9500AttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",40,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",40)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_JumpIfInventory("DoomNoBFGAim",1,"PickupAttackNoAim")
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackImproved")
+      // Vanilla
+      PickupAttackVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackVanillaCoop")
+      PickupAttackVanillaDM:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500Ball",0,false)
+        stop
+
+      PickupAttackVanillaCoop:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500BallCoop",0,false)
+        stop
+
+      // Improved
+      PickupAttackImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackImprovedCoop")
+      PickupAttackImprovedDM:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500BallImproved",0,false)
+        stop
+
+      PickupAttackImprovedCoop:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500BallImprovedCoop",0,false)
+        stop
+
+      // No aiming attack stuff
+      PickupAttackNoAim:
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackNoAimImproved")
+      // Vanilla
+      PickupAttackNoAimVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackNoAimVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackNoAimVanillaCoop")
+      PickupAttackNoAimVanillaDM:
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500Ball",0,0,32,25)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
+        stop
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500Ball",0,0,32,25,0,0,-15)
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500Ball",0,0,32,25,0,0,15)
+        stop
+
+      PickupAttackNoAimVanillaCoop:
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallCoop",0,0,32,25)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
+        stop
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallCoop",0,0,32,25,0,0,-15)
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallCoop",0,0,32,25,0,0,15)
+        stop
+
+      // Improved
+      PickupAttackNoAimImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackNoAimImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackNoAimImprovedCoop")
+      PickupAttackNoAimImprovedDM:
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImproved",0,0,32,25)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
+        stop
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImproved",0,0,32,25,0,0,-15)
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImproved",0,0,32,25,0,0,15)
+        stop
+
+      PickupAttackNoAimImprovedCoop:
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImprovedCoop",0,0,32,25)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
+        stop
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImprovedCoop",0,0,32,25,0,0,-15)
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImprovedCoop",0,0,32,25,0,0,15)
+        stop
+    }
+}
+
+actor ComplexDoom_BFG9500Ball : BFGBall
+{
+	+THRUSPECIES
+	Species "Player"
+	Obituary "%o was obliterated by %k's BFG9500 ball."
+	DeathSound "complexdoom/BFG9K/Explode"
+	DamageType "DoomDamageTypeBFG"
+	Decal "ComplexDoom_BFG9500Lightning"
+	States
+	{
+	Spawn:
+		CD23 "]]]" 1 Bright A_SpawnItemEx("ComplexDoom_BFGTrailParticleGreen",Random(-12,12),Random(-12,12),Random(-12,12),Random(-2,2),Random(-2,2),Random(-2,2),Random(-20,20),128)
+		CD24 AAA 1 Bright A_SpawnItemEx("ComplexDoom_BFGTrailParticleGreen",Random(-12,12),Random(-12,12),Random(-12,12),Random(-2,2),Random(-2,2),Random(-2,2),Random(-20,20),128)
+		Loop
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGShockwave", 0, 0, 0, 0, 0, 0, 0, 128)
+		TNT1 AAAAAA 0 A_CustomMissile("ComplexDoom_BFGExplosion", 0, 0, random(0,360), 2, random(0,360))
+		CD23 FG 8 Bright A_SpawnItemEx("ComplexDoom_BFGParticleSpawner", 0, 0, 0, 0, 0, 0, 0, 128)
+		CD23 H 8 Bright A_BFGSpray("ComplexDoom_BFGSpray")
+		CD23 IJK 8 Bright
+		Stop    
+    }
+}
+
+actor ComplexDoom_BFG9500BallCoop : ComplexDoom_BFG9500Ball
+{
+	Species "Player"
+	+THRUSPECIES
+	States
+	{
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGShockwave", 0, 0, 0, 0, 0, 0, 0, 128)
+		TNT1 AAAAAA 0 A_CustomMissile("ComplexDoom_BFGExplosion", 0, 0, random(0,360), 2, random(0,360))
+		CD23 FG 8 Bright A_SpawnItemEx("ComplexDoom_BFGParticleSpawner", 0, 0, 0, 0, 0, 0, 0, 128)
+		CD23 H 8 Bright A_BFGSpray("ComplexDoom_BFGSprayCoop")
+		CD23 IJK 8 Bright
+		Stop    
+    }
+}
+
+actor ComplexDoom_BFG9500BallImproved : ComplexDoom_BFG9500Ball { Damage (800) }
+
+actor ComplexDoom_BFG9500BallImprovedCoop : ComplexDoom_BFG9500BallImproved
+{
+	Species "Player"
+	+THRUSPECIES
+	States
+	{
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGShockwave", 0, 0, 0, 0, 0, 0, 0, 128)
+		TNT1 AAAAAA 0 A_CustomMissile("ComplexDoom_BFGExplosion", 0, 0, random(0,360), 2, random(0,360))
+		CD23 FG 8 Bright A_SpawnItemEx("ComplexDoom_BFGParticleSpawner", 0, 0, 0, 0, 0, 0, 0, 128)
+		CD23 H 8 Bright A_BFGSpray("ComplexDoom_BFGSprayCoop")
+		CD23 IJK 8 Bright
+		Stop    
+    }
+}
+
+actor ComplexDoom_BFGSpray
+{
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+ACTIVATEPCROSS
+	+ACTIVATEIMPACT
+	+NOTELEPORT
+	+DROPOFF
+	+EXTREMEDEATH
+	RENDERSTYLE ADD
+	Radius 1
+	Height 1
+	Damage 0
+	Speed 0
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		CD23 B 6 Bright A_SpawnItemEx("ComplexDoom_BFGSprayParticleSpawner", 0, 0, 0, 0, 0, 0, 0, 128)
+		CD23 CDE 6 Bright 
+		Stop
+   }
+}
+
+actor ComplexDoom_BFGSprayCoop : ComplexDoom_BFGSpray { +MTHRUSPECIES }
+
+actor ComplexDoom_BFGSprayParticleSpawner
+{
+	+CLIENTSIDEONLY
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+NOTELEPORT
+	+DONTSPLASH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGSprayParticle1",0,0,0,Random(4,-4),Random(4,-4),Random(4,-4),0,128)
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGSprayParticle2",0,0,0,Random(4,-4),Random(4,-4),Random(4,-4),0,128)
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGSprayParticle3",0,0,0,Random(4,-4),Random(4,-4),Random(4,-4),0,128)
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGSprayParticle4",0,0,0,Random(4,-4),Random(4,-4),Random(4,-4),0,128)
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGSprayParticle5",0,0,0,Random(4,-4),Random(4,-4),Random(4,-4),0,128)
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFGSprayParticle6",0,0,0,Random(4,-4),Random(4,-4),Random(4,-4),0,128)
+		TNT1 A 1
+		Stop
+	}
+}
+
+actor ComplexDoom_BFGSprayParticle1 : ComplexDoom_BFGParticle { Scale 0.04 }
+actor ComplexDoom_BFGSprayParticle2 : ComplexDoom_BFGParticle { Scale 0.035 }
+actor ComplexDoom_BFGSprayParticle3 : ComplexDoom_BFGParticle { Scale 0.03 }
+actor ComplexDoom_BFGSprayParticle4 : ComplexDoom_BFGParticle { Scale 0.025 }
+actor ComplexDoom_BFGSprayParticle5 : ComplexDoom_BFGParticle { Scale 0.02 }
+actor ComplexDoom_BFGSprayParticle6 : ComplexDoom_BFGParticle { Scale 0.015 }
 
 // B.F.G. 2704
 
