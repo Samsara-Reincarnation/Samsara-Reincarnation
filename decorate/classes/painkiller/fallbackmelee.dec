@@ -432,7 +432,6 @@ Actor Painkiller_Painkiller_Head : PainkillerProjectile
 			goto Super::Death
 
 		Death:
-		Crash:
 			TNT1 A 1 A_PlaySound("Painkiller/Painkiller/HitWall",CHAN_VOICE)
 			goto Stay
 
@@ -441,6 +440,11 @@ Actor Painkiller_Painkiller_Head : PainkillerProjectile
 			TNT1 A 0 A_GiveInventory("Painkiller_BloodGenerator",1,AAPTR_TRACER)
 			TNT1 A 0 A_TakeFromTarget("Painkiller_PainkillerAlt")
 			TNT1 A 1 A_PlaySound("Painkiller/Painkiller/Hit",CHAN_VOICE)
+			goto Return
+			
+		Crash:
+			TNT1 A 0 A_TakeFromTarget("Painkiller_PainkillerAlt")
+			TNT1 A 1 A_PlaySound("Painkiller/Painkiller/HitWall",CHAN_VOICE)
 			goto Return
 	}
 }
