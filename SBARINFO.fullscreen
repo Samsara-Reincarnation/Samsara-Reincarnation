@@ -2826,8 +2826,28 @@ StatusBar Fullscreen, ForceScaled
             // Ammo
             InInventory PistolModeOn
             {
-                IsSelected " Pistol ", " Rifle "
+                IsSelected " Pistol "
                 {
+                    InInventory DoomClassMode, 3 // Complex
+                    {
+                        InInventory SamsaraReloadMode, 2
+                        {
+                            DrawImage "HUDBAR", 250, 192;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 193;
+                            DrawNumber 4, INDEXFONT, White, Ammo Clip, 270, 186;
+                        } else {
+                            DrawImage "HUDBAR", 250, 180;
+                            DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo Clip, 298, 185;
+                        }
+                    } else { // Original/Doom 64/Stronghold
+                        DrawImage "HUDBAR", 250, 180;
+                        DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 181;
+                        DrawNumber 4, INDEXFONT, White, Ammo Clip, 298, 185;
+                    }
+
+                    DrawImage "AMSMA0", 238, 185, Center;
+                } else IsSelected " Rifle " {
                     DrawImage "HUDBAR", 250, 180;
                     DrawBar "HAMBAR", "HEMPTY", Ammo Clip, Horizontal, Reverse, 251, 181;
                     DrawNumber 4, INDEXFONT, White, Ammo Clip, 298, 185;
@@ -3182,6 +3202,19 @@ StatusBar Fullscreen, ForceScaled
                     }
 
                     DrawImage "AMSMA0", 238, 185, Center;
+                }
+            }
+
+            IsSelected " Pistol "
+            {
+                InInventory DoomClassMode, 3 // Complex
+                {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_PistolMagazine, Horizontal, Reverse, 251, 181;
+                        DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_PistolMagazine, 298, 185;
+                    }
                 }
             }
 
