@@ -30,37 +30,29 @@ actor "B.F.G. 9000" : BFG9000
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"ReadyCom")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"ReadyStopSound")
-	ReadyContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 		DBFG A 1 A_WeaponReady
 		goto Ready
 
-	ReadyStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto ReadyContinue
-
 	Deselect:
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"DeselectStopSound")
-	DeselectStart:
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectStartCom")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStartStr")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"DeselectStart64")
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectCom")
+	DeselectActual:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectActualCom")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectActualStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"DeselectActual64")
 		DBFG A 1 A_Lower
-		goto Deselect
-
-	DeselectStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto DeselectStart
+		loop
 
 	Select:
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"SelectCom")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
+	SelectActual:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"SelectActualCom")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectActualStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"SelectActual64")
 		DBFG A 1 A_Raise
 		loop
 
@@ -71,7 +63,7 @@ actor "B.F.G. 9000" : BFG9000
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
 		goto Nothing
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"FireStopSound")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 	FireStart:
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_GiveInventory("SamsaraDoomguyBFG9000PreFireSoundPlayer")
@@ -129,12 +121,6 @@ actor "B.F.G. 9000" : BFG9000
 		SFGG A 14
 		goto Ready
 
-	FireStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto FireStart
-
 	Flash:
 		DBFF A 11 bright A_Light1
 		DBFF B 6 bright A_Light2
@@ -147,30 +133,23 @@ actor "B.F.G. 9000" : BFG9000
 
 	// Doom 64 (fires slightly slower, has blend effect on projectile impact)
 	Ready64:
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"Ready64StopSound")
-	Ready64Continue:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 		64BF A 1 A_WeaponReady
 		goto Ready
 
-	Ready64StopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto Ready64Continue
-
-	DeselectStart64:
+	DeselectActual64:
 		64BF A 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
-	Select64:
+	SelectActual64:
 		64BF A 1 A_Raise
-		goto Select
+		goto SelectActual
 
 	Fire64:
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
 		goto Nothing
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"Fire64StopSound")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 	Fire64Start:
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_PlaySound("doom64guy/bfgf",CHAN_WEAPON)
@@ -201,12 +180,6 @@ actor "B.F.G. 9000" : BFG9000
 		64BF A 25 A_ReFire
 		goto Ready
 
-	Fire64StopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto Fire64Start
-
 	Flash64:
 		64BM A 11 Bright A_Light1
 		64BM B 5 Bright
@@ -230,27 +203,26 @@ actor "B.F.G. 9000" : BFG9000
 
 	// Stronghold
 	ReadyStr:
-		TNT1 A 0 A_PlaySound("doomguy/stronghold/bfghum",CHAN_6,1,true)
-		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStarter")
 		DBFG DEFG 3 Bright A_WeaponReady
 		goto Ready
 
 	// Unpowered
-	DeselectStartStr:
-		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStartStrPowered")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStartStrPowered")
-	DeselectStartStrContinue:
+	DeselectActualStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectActualStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectActualStrPowered")
+	DeselectActualStrContinue:
 		TNT1 A 0 A_Lower
 		DBFG R 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
-	SelectStr:
-		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectStrPowered")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectStrPowered")
-	SelectStrContinue:
+	SelectActualStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectActualStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"SelectActualStrPowered")
+	SelectActualStrContinue:
 		TNT1 A 0 A_Raise
 		DBFG R 1 A_Raise
-		goto Select
+		goto SelectActual
 
 	FireStr:
 		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"FireStrPowered")
@@ -258,7 +230,7 @@ actor "B.F.G. 9000" : BFG9000
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
 		goto Nothing
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"FireStrStopSound")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 	FireStrStart:
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFG9000PreFireSoundPlayer")
@@ -296,12 +268,6 @@ actor "B.F.G. 9000" : BFG9000
 		DBFG H 5 Bright A_ReFire
 		goto Ready
 
-	FireStrStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto FireStrStart
-
 	FlashStr:
 		TNT1 A 5 A_Light1
 		TNT1 A 5 A_Light2
@@ -309,19 +275,19 @@ actor "B.F.G. 9000" : BFG9000
 		goto LightDone
 
 	// Powered
-	DeselectStartStrPowered:
+	DeselectActualStrPowered:
 		TNT1 A 0 A_Lower
-		goto DeselectStartStrContinue
+		goto DeselectActualStrContinue
 
-	SelectStrPowered:
+	SelectActualStrPowered:
 		TNT1 A 0 A_Raise
-		goto SelectStrContinue
+		goto SelectActualStrContinue
 
 	FireStrPowered:
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",5,1)
 		goto Nothing
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"FireStrPoweredStopSound")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 	FireStrPoweredStart:
 		TNT1 A 0 A_AlertMonsters
 		DBFG IKM 1 Bright
@@ -334,12 +300,6 @@ actor "B.F.G. 9000" : BFG9000
 		DBFG H 7 Bright A_ReFire
 		goto Ready
 
-	FireStrPoweredStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto FireStrPoweredStart
-
 	FlashStrPowered:
 		TNT1 A 1 A_Light1
 		TNT1 A 1 A_Light2
@@ -348,32 +308,31 @@ actor "B.F.G. 9000" : BFG9000
 
 	// Complex Doom (B.F.G. 9500)
 	ReadyCom:
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"ReadyComStopSound")
-	ReadyComContinue:
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 		CD23 U 1 A_WeaponReady
 		goto Ready
 
-	ReadyComStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto ReadyComContinue
-
-	DeselectStartCom:
+	DeselectCom:
 		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/weapondown")
+		goto DeselectActual
+
+	DeselectActualCom:
 		CD23 U 1 A_Lower
-		goto DeselectStartCom+1
+		goto DeselectActual
 
 	SelectCom:
 		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/bfgpickup")
+		goto SelectActual
+
+	SelectActualCom:
 		CD23 U 1 A_Raise
-		goto SelectCom+1
+		goto SelectActual
 
 	FireCom:
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Cell",40,1)
 		goto Nothing
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,"FireComStopSound")
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundStopper")
 	FireComStart:
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_Light1
@@ -394,12 +353,6 @@ actor "B.F.G. 9000" : BFG9000
 		goto Nothing
 		CD23 U 20 A_ReFire
 		goto Ready
-
-	FireComStopSound:
-		TNT1 A 0 A_PlaySound("silence",CHAN_6)
-		TNT1 A 0 A_StopSound(CHAN_6)
-		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
-		goto FireComStart
 
 	Nothing:
         TNT1 A 0 A_ClearReFire
@@ -1149,6 +1102,35 @@ actor SamsaraDoomguyStrBFG9000PoweredAttackHandler : Trigger
     }
 }
 
+// Sound handlers
+
+actor SamsaraDoomguyStrBFGReadySoundStarter : Trigger
+{
+    States
+    {
+      // Sound starting stuff
+      Pickup:
+		TNT1 A 0 A_PlaySound("doomguy/stronghold/bfghum",CHAN_6,1,true)
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+        stop
+    }
+}
+
+actor SamsaraDoomguyStrBFGReadySoundStopper : Trigger
+{
+    States
+    {
+      // Sound stopping stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrBFGReadySoundCheck",1,1)
+        stop
+        TNT1 A 0 A_PlaySound("silence",CHAN_6)
+        TNT1 A 0 A_StopSound(CHAN_6)
+        TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrBFGReadySoundCheck")
+        stop
+    }
+}
+
 // BFG ball
 
 actor SamsaraDoomguyStrBFGBall : BFGBall
@@ -1407,11 +1389,11 @@ actor SamsaraDoomguyComBFG9500AttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackVanillaCoop")
       PickupAttackVanillaDM:
         TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500Ball",0,false)
-        stop
+        goto PickupFinish
 
       PickupAttackVanillaCoop:
         TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500BallCoop",0,false)
-        stop
+        goto PickupFinish
 
       // Improved
       PickupAttackImproved:
@@ -1419,11 +1401,11 @@ actor SamsaraDoomguyComBFG9500AttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackImprovedCoop")
       PickupAttackImprovedDM:
         TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500BallImproved",0,false)
-        stop
+        goto PickupFinish
 
       PickupAttackImprovedCoop:
         TNT1 A 0 A_FireCustomMissile("ComplexDoom_BFG9500BallImprovedCoop",0,false)
-        stop
+        goto PickupFinish
 
       // No aiming attack stuff
       PickupAttackNoAim:
@@ -1435,18 +1417,18 @@ actor SamsaraDoomguyComBFG9500AttackHandler : Trigger
       PickupAttackNoAimVanillaDM:
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500Ball",0,0,32,25)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
-        stop
+        goto PickupFinish
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500Ball",0,0,32,25,0,0,-15)
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500Ball",0,0,32,25,0,0,15)
-        stop
+        goto PickupFinish
 
       PickupAttackNoAimVanillaCoop:
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallCoop",0,0,32,25)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
-        stop
+        goto PickupFinish
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallCoop",0,0,32,25,0,0,-15)
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallCoop",0,0,32,25,0,0,15)
-        stop
+        goto PickupFinish
 
       // Improved
       PickupAttackNoAimImproved:
@@ -1455,17 +1437,22 @@ actor SamsaraDoomguyComBFG9500AttackHandler : Trigger
       PickupAttackNoAimImprovedDM:
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImproved",0,0,32,25)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
-        stop
+        goto PickupFinish
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImproved",0,0,32,25,0,0,-15)
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImproved",0,0,32,25,0,0,15)
-        stop
+        goto PickupFinish
 
       PickupAttackNoAimImprovedCoop:
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImprovedCoop",0,0,32,25)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasSpread",1,1)
-        stop
+        goto PickupFinish
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImprovedCoop",0,0,32,25,0,0,-15)
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_BFG9500BallImprovedCoop",0,0,32,25,0,0,15)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 Radius_Quake(12,4,0,1,0)
         stop
     }
 }
