@@ -92,6 +92,7 @@ actor DoomStrifeUnique1 : Trigger
     States
     {
       Pickup:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupMessageInitDone")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupMessageInitStronghold")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupMessageInitDoom64")
         goto PickupMessageInitDone
@@ -137,6 +138,7 @@ actor DoomStrifeUnique1 : Trigger
         TNT1 A 0 A_GiveInventory("DoomZerkCounter")
         TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyInDoom64CE",1,2)
         TNT1 A 0 A_GiveInventory("SamsaraDoom64UnmakerArtifact")
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupNotStronghold")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupStronghold")
         TNT1 A 0 A_Jump(256,"PickupNotStronghold") // for inheriting actors
       PickupNotStronghold:

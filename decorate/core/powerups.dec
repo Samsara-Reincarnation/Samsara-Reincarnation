@@ -248,6 +248,7 @@ actor PartialInvisibility : SamsaraPowerupPickup
         stop
 
       PickupSuccessDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupSuccessComplex")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupSuccessStronghold")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupSuccessDoom64")
         goto PickupSuccessDefault
@@ -257,6 +258,9 @@ actor PartialInvisibility : SamsaraPowerupPickup
         stop
 
       PickupSuccessStronghold:
+        goto PickupSuccessDefault
+
+      PickupSuccessComplex:
         goto PickupSuccessDefault
 
       PickupSuccessHeretic:
@@ -767,6 +771,7 @@ actor InvulnPowerup : SamsaraPowerupPickup
         stop
 
       PickupSuccessDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupSuccessComplex")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupSuccessStronghold")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupSuccessDoom64")
         goto PickupSuccessDefault
@@ -776,6 +781,9 @@ actor InvulnPowerup : SamsaraPowerupPickup
         stop
 
       PickupSuccessStronghold:
+        goto PickupSuccessDefault
+
+      PickupSuccessComplex:
         goto PickupSuccessDefault
 
       PickupSuccessHeretic:
@@ -1267,6 +1275,7 @@ actor BioSuit : SamsaraPowerupPickup
         stop
 
       PickupSuccessDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupSuccessComplex")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupSuccessStronghold")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupSuccessDoom64")
         goto PickupSuccessDefault
@@ -1276,6 +1285,9 @@ actor BioSuit : SamsaraPowerupPickup
         stop
 
       PickupSuccessStronghold:
+        goto PickupSuccessDefault
+
+      PickupSuccessComplex:
         goto PickupSuccessDefault
 
       PickupSuccessQuake1:
@@ -3674,12 +3686,16 @@ actor SamsaraTimeFreeze : SamsaraPowerupPickup
         stop
 
       PickupSuccessDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupSuccessComplex")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupSuccessStronghold")
         goto PickupSuccessDefault
 
       PickupSuccessStronghold:
         TNT1 A 0 A_GiveInventory("SamsaraPowerTimeFreezerGiverStronghold")
         stop
+
+      PickupSuccessComplex:
+        goto PickupSuccessDefault
 
       PickupSuccessHeretic:
         TNT1 A 0 A_GiveInventory("SamsaraTimeFreezeInventoryHeretic")
@@ -4099,12 +4115,16 @@ actor SamsaraDefenseBooster : SamsaraPowerupPickup
         stop
 
       PickupSuccessDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupSuccessComplex")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupSuccessStronghold")
         goto PickupSuccessDefault
 
       PickupSuccessStronghold:
         TNT1 A 0 A_GiveInventory("SamsaraPowerDefenseBoosterGiverStronghold")
         stop
+
+      PickupSuccessComplex:
+        goto PickupSuccessDefault
 
       PickupSuccessHeretic:
         TNT1 A 0 A_GiveInventory("SamsaraDefenseBoosterInventoryHeretic")
