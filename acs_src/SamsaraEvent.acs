@@ -683,7 +683,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					}
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_strongholddoomsounds"));
 				}
-				else if (doommode == 1)
+				else if (doommode == 1 || doommode == 3)
 				{
 					SetInventory("SamsaraAlternateSoundToken", 0);
 				}
@@ -6306,7 +6306,7 @@ script "SamsaraDeath" DEATH //619 -- SAMSARA_DEATH
 				}
 
 				deadtimer++;
-			} else { // Original/Stronghold
+			} else { // Original/Stronghold/Complex
 				if (deadtimer > 0) { deadtimer = 0; }
 			}
 
@@ -6596,7 +6596,7 @@ script "HandleInstagibWeapons" (void)
 			// Special cases involving the Uniques are a bit more involved, but
 			// ultimatly managable. Basically, if it's an upgrade to an existing
 			// weapon or an inventory item, just give them the Slot IV.
-			if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) <= 1) {
+			if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) != 2) {
 				GiveInventory(ClassWeapons[classnum][0][0],1);
 			}
 			else if (CheckInventory("CMClass")) {
@@ -6625,7 +6625,7 @@ script "HandleInstagibWeapons" (void)
 			break;
 		case 14:
 			// Special cases involving the Unique 2.
-			if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) <= 1) {
+			if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) != 2) {
 				GiveInventory(ClassWeapons[classnum][0][0],1);
 			}
 			else if (CheckInventory("CMClass")) {
@@ -6660,7 +6660,7 @@ script "HandleInstagibWeapons" (void)
 			break;
 		case 15:
 			// Special cases involving the Unique 3.
-			if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) <= 1) {
+			if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) != 2) {
 				GiveInventory(ClassWeapons[classnum][0][0],1);
 			}
 			else if (CheckInventory("DoomguyClass") && (CheckInventory("DoomClassMode")) == 2) {
