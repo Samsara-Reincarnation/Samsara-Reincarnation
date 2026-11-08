@@ -54,7 +54,14 @@ actor " Chainsaw " : Chainsaw
 
 	Fire:
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"FireCom")
+	FireCheck:
 		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"FireSmooth")
+		goto FireVanilla
+
+	Hold:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"HoldCom")
+		goto FireCheck
+
 	FireVanilla:
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
@@ -252,13 +259,10 @@ actor " Chainsaw " : Chainsaw
 
 	FireCom:
 		CD01 FG 1
-	FireComContinue:
-		TNT1 A 0 Radius_Quake(1,2,0,1,0)
-		CD01 H 2 A_GiveInventory("SamsaraDoomguyComChainsawAttackHandler")
-		TNT1 A 0 Radius_Quake(1,2,0,1,0)
-		CD01 I 2 A_GiveInventory("SamsaraDoomguyComChainsawAttackHandler")
-		TNT1 A 0 A_Refire("FireComContinue")
-		CD01 GF 1
+	HoldCom:
+		CD01 HI 2 A_GiveInventory("SamsaraDoomguyComChainsawAttackHandler")
+		CD01 G 1 A_ReFire
+		CD01 F 1
 		goto FireFinish
 	}
 }
@@ -685,11 +689,11 @@ actor SamsaraDoomguyComChainsawAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupNormalCoop")
       PickupNormalDM:
         TNT1 A 0 A_Saw("complexdoom/weapons/sawfull","complexdoom/saw/flesh",2,"ComplexDoom_SawScreech",SF_NOUSEAMMO)
-        stop
+        goto PickupFinish
 
       PickupNormalCoop:
         TNT1 A 0 A_Saw("complexdoom/weapons/sawfull","complexdoom/saw/flesh",2,"ComplexDoom_SawScreechCoop",SF_NOUSEAMMO)
-        stop
+        goto PickupFinish
 
       // Berserk
       PickupBerserk:
@@ -697,10 +701,15 @@ actor SamsaraDoomguyComChainsawAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupBerserkCoop")
       PickupBerserkDM:
         TNT1 A 0 A_Saw("complexdoom/weapons/sawfull","complexdoom/saw/flesh",7,"ComplexDoom_SawScreech",SF_NOUSEAMMO)
-        stop
+        goto PickupFinish
 
       PickupBerserkCoop:
         TNT1 A 0 A_Saw("complexdoom/weapons/sawfull","complexdoom/saw/flesh",7,"ComplexDoom_SawScreechCoop",SF_NOUSEAMMO)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 Radius_Quake(1,2,0,1,0)
         stop
     }
 }
