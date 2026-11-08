@@ -2,6 +2,7 @@ actor " Shotgun " : Shotgun
 {
 	Weapon.AmmoGive 8
 	Weapon.SlotNumber 2
+    +AMMO_OPTIONAL
 	//+ALT_USES_BOTH
 	+UNDROPPABLE
 	+NOALERT
@@ -43,6 +44,9 @@ actor " Shotgun " : Shotgun
 
 	Fire:
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"FireCom")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
 		DSHT A 3 A_JumpIfInventory("DoomClassMode",1,"Fire64")
@@ -62,6 +66,9 @@ actor " Shotgun " : Shotgun
 		DSHT K 4
 		DSHT JI 5
 		DSHT A 3
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		DSHT A 7 A_ReFire
 		goto ReadyActual
 
@@ -81,6 +88,9 @@ actor " Shotgun " : Shotgun
 		XTS1 JK 3
 		XTS1 LMN 2
 		XTS1 OPQ 1
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		DSHT A 7 A_ReFire
 		goto ReadyActual
 
@@ -96,6 +106,9 @@ actor " Shotgun " : Shotgun
 		XTS1 K 3
 		XTS1 LMN 2
 		XTS1 OPQ 1
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		DSHT A 7 A_ReFire
 		goto ReadyActual
 
@@ -124,11 +137,11 @@ actor " Shotgun " : Shotgun
 		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"Deselect64Smooth")
 	Deselect64Vanilla:
 		64SG A 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
 	Deselect64Smooth:
 		64SG M 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
 	Select64:
 		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"Select64Smooth")
@@ -149,6 +162,9 @@ actor " Shotgun " : Shotgun
 		64SG C 21
 		64SG B 5
 		64SG A 7
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		64SG A 7 A_ReFire
 		goto ReadyActual
 
@@ -166,6 +182,9 @@ actor " Shotgun " : Shotgun
 		64SG G 2
 		64SG F 2
 		64SG E 2
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		64SG M 7 A_ReFire
 		goto ReadyActual
 
@@ -194,7 +213,7 @@ actor " Shotgun " : Shotgun
 	DeselectActualStrContinue:
 		TNT1 A 0 A_Lower
 		DSHT L 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
 	SelectStr:
 		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectStrPowered")
@@ -223,6 +242,9 @@ actor " Shotgun " : Shotgun
 		DSHT O 4
 		DSHT NM 5
 		DSHT L 3
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		DSHT L 7 A_ReFire
 		goto ReadyActual
 
@@ -243,6 +265,9 @@ actor " Shotgun " : Shotgun
 		DSHT QR 2 Bright
 		DSHT MNONM 4
 		DSHT L 2
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		DSHT L 5 A_ReFire
 		goto ReadyActual
 
@@ -279,8 +304,46 @@ actor " Shotgun " : Shotgun
 		DSHT Q 3 Bright
 		DSHT R 2 Bright
 		DSHT MNONM 2
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
 		DSHT L 1 A_ReFire
 		goto ReadyActual
+
+/*
+	AltFire:
+		DSHT L 3 A_AlertMonsters
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltFireAttack")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,"AltFireAttack")
+		goto AltFireContinue
+
+	AltFireAttack:
+		TNT1 A 0 A_GunFlash
+	AltFireContinue:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrShotgunPoweredSecondaryAttackHandler")
+		DSHT PQR 3 Bright
+		DSHT MNONM 3
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto Nothing
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"AltFireFinishReFire")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"AltFireFinishReFire")
+	AltFireFinish:
+		DSHT L 1
+		goto ReadyActual
+
+	AltFireFinishReFire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"AltFireFinish")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,1)
+		goto AltFireFinish
+		TNT1 A 0 A_ReFire
+		goto AltFireFinish
+
+	AltFlash:
+		TNT1 A 4 Bright A_Light1
+		TNT1 A 5 Bright A_Light2
+		goto LightDone
+*/
 
 	FlashStrPowered:
 		TNT1 A 3 Bright A_Light1
@@ -289,13 +352,13 @@ actor " Shotgun " : Shotgun
 
 	// Complex Doom (Combat Shotgun)
     ReadyCom:
-        TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/12gsgcock")
-        CD04 BCDEF 1
+        CD04 B 1 A_PlayWeaponSound("complexdoom/weapons/12gsgcock")
+        CD04 CDEF 1
         CD04 G 2
         CD04 H 3
         CD04 GF 2
         CD04 I 1
-        Goto ReadyActualCom
+        Goto ReadyActual
 
     ReadyActualCom:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualComReloadable")
@@ -358,22 +421,37 @@ actor " Shotgun " : Shotgun
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_GunFlash("FlashCom")
         TNT1 A 0 A_GiveInventory("SamsaraDoomguyComCombatShotgunAttackHandler")
-        CD04 N 2 Bright
+        CD04 N 2 Bright A_Light1
         CD04 O 2 Bright A_Light2
-        TNT1 A 0 A_Light0
-        CD04 PQRS 1
-        CD04 UVWXYZ 1
+        CD04 P 1 A_Light0
+        CD04 QRSUVWXYZ 1
         CD04 Z 1 A_PlaySound("complexdoom/weapons/12gsgcock")
         CD04 "[\" 2
         CD04 "]" 2 A_SpawnItemEx("ComplexDoom_ShellCasing",30,-2,25,Random(2,4),Random(3,6),Random(3,6),0)
         CD04 "\[ZY" 2
         CD04 XWVU 1
-        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",1,3)
-        CD04 M 2
-        TNT1 A 0 A_ReFire
-        Goto ReadyActualComNonReloadableNoAmmo
-        CD04 T 2
-        TNT1 A 0 A_ReFire
+	FireComContinue:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireComContinueReloadable")
+	FireComContinueNonReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireComContinueAmmo")
+		TNT1 A 0 A_JumpIfInventory("Shell",1,"FireComContinueAmmo")
+		goto FireComContinueNoAmmo
+
+	FireComContinueReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireComContinueAmmo")
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",1,"FireComContinueAmmo")
+        goto FireComContinueNoAmmo
+
+    FireComContinueNoAmmo:
+		CD04 M 2
+		goto FireComFinish
+
+    FireComContinueAmmo:
+		CD04 T 2
+		goto FireComFinish
+
+	FireComFinish:
+		TNT1 A 0 A_ReFire
         Goto ReadyActual
 
 	FlashCom:
@@ -382,79 +460,110 @@ actor " Shotgun " : Shotgun
 
     Reload:
         TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
-        goto ReadyActualCom
-        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",0,"ReadyActualCom")
+        goto ReadyActual
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",0,"ReadyActual")
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
         TNT1 A 0 A_JumpIfInventory("Shell",1,"ReloadStart")
-        Goto ReadyActualCom
+        Goto ReadyActual
 
     ReloadStart:
         CD04 UVW 1
         CD04 XYZ 2
-        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",1,"ReloadContinue")
-        CD05 ABC 1	
-        CD05 D 1 A_PlaySound("complexdoom/Weapons/ShellLoad")
-        CD05 E 1
-        TNT1 A 0 A_TakeInventory("Shell",1)
-        TNT1 A 0 A_GiveInventory("ComplexDoom_ShotgunMagazine",1)
-        CD05 FGHI 1
-        CD04 K 1 A_WeaponReady(WRF_NOBOB|WRF_NOSECONDARY)
-        CD04 L 2
-        CD04 Z 2 A_PlayWeaponSound("complexdoom/weapons/12gsgcock")
-        CD04 "[\]\[" 2
+    ReloadLoop:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_JumpIfInventory("Shell",1,1)
-        Goto ReloadFinish	
-        CD04 LK 2
-    ReloadContinue:
-        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",8,"ReloadFinish")   
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",1,"ReloadLoopLoaded")
+    ReloadLoopEmpty:
         CD05 ABC 1
         CD05 D 1 A_PlaySound("complexdoom/Weapons/ShellLoad")
         CD05 E 1
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
-        TNT1 A 0 A_TakeInventory("Shell",1)
-        TNT1 A 0 A_GiveInventory("ComplexDoom_ShotgunMagazine",1)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoEmpty")
+    ReloadLoopEmptyContinue:
         CD05 FGHI 1
-        CD05 A 1 A_WeaponReady(WRF_NOBOB|WRF_NOSECONDARY)
-        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadContinue")
-        TNT1 A 0 A_JumpIfInventory("Shell",1,"ReloadContinue")
+        CD04 K 1
+        CD04 L 2
+        CD04 Z 2 A_PlayWeaponSound("complexdoom/weapons/12gsgcock")
+        CD04 "[\]\" 2
+        CD04 "[" 2 A_WeaponReady(WRF_NOBOB)
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        Goto ReloadFinish
+        CD04 LK 2
+        goto ReloadLoop
+
+    ReloadLoopLoaded:
+        CD05 ABC 1
+        CD05 D 1 A_PlaySound("complexdoom/Weapons/ShellLoad")
+        CD05 E 1
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoLoaded")
+    ReloadLoopLoadedContinue:
+        CD05 FGHI 1
+        CD05 A 1 A_WeaponReady(WRF_NOBOB)
+        goto ReloadLoop
+
     ReloadFinish:
         CD04 ZYXWVU 1
         CD04 T 3
-        Goto ReadyActualCom
+        Goto ReadyActual
 
-/*
-	AltFire:
-		DSHT L 3
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"AltFireAttack")
-		TNT1 A 0 A_JumpIfInventory("Shell",1,"AltFireAttack")
-		goto AltFireContinue
+    ReloadAmmoEmpty:
+        TNT1 A 0 A_TakeInventory("SamsaraReloadCalcs") // reset
+    ReloadAmmoEmptyCalc:
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",0,"ReloadLoopEmptyContinue")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadCalcs",1,"ReloadLoopEmptyContinue")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReloadLoopEmptyContinue
+        TNT1 A 0 A_GiveInventory("SamsaraReloadCalcs")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        TNT1 A 0 A_GiveInventory("ComplexDoom_ShotgunMagazine")
+        loop
 
-	AltFireAttack:
-		TNT1 A 0 A_GunFlash
-	AltFireContinue:
-		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrShotgunPoweredSecondaryAttackHandler")
-		DSHT PQR 3 Bright
-		DSHT MNONM 3
-		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"AltFireFinishReFire")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"AltFireFinishReFire")
-		TNT1 A 0 A_CheckReload
-	AltFireFinish:
-		DSHT L 1
-		goto ReadyActual
+    ReloadAmmoLoaded:
+        TNT1 A 0 A_TakeInventory("SamsaraReloadCalcs") // reset
+    ReloadAmmoLoadedCalc:
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_ShotgunMagazine",0,"ReloadLoopLoadedContinue")
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadCalcs",1,"ReloadLoopLoadedContinue")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+        goto ReloadLoopLoadedContinue
+        TNT1 A 0 A_GiveInventory("SamsaraReloadCalcs")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Shell",1)
+        TNT1 A 0 A_GiveInventory("ComplexDoom_ShotgunMagazine")
+        loop
 
-	AltFireFinishReFire:
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
-		TNT1 A 0 A_CheckReload
-		goto AltFireFinish
-		TNT1 A 0 A_ReFire
-		goto AltFireFinish
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"NothingCom")
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"NothingStr")
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Nothing64")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomOriginalLoadoutFallbackRanged",1,2)
+        TNT1 A 0 A_SelectWeapon(" Pistol ")
+        goto Deselect
+        TNT1 A 0 A_SelectWeapon(" Rifle ")
+        goto Deselect
 
-	AltFlash:
-		TNT1 A 4 Bright A_Light1
-		TNT1 A 5 Bright A_Light2
-		goto LightDone
-*/
+	Nothing64:
+	NothingStr:
+	NothingCom:
+        TNT1 A 0 A_SelectWeapon(" Pistol ")
+        goto Deselect
 	}
 }
 

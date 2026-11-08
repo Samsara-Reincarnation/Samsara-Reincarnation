@@ -385,6 +385,7 @@ actor " Pistol " : Weapon
 		goto Nothing
 
 	AltFireFinish:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"AltFireFinishAmmoCheck")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,1)
 		goto AltFireFinishAmmoCheck
 		TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,1)
@@ -406,8 +407,8 @@ actor " Pistol " : Weapon
 
 	// Complex Doom (Handgun)
 	ReadyCom:
-		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/pickuptp")
-		CD02 BCDE 1
+		CD02 B 1 A_PlayWeaponSound("complexdoom/weapons/pickuptp")
+		CD02 CDE 1
 		Goto ReadyActualComNoFireCheck
 
 	ReadyActualCom:
@@ -420,12 +421,12 @@ actor " Pistol " : Weapon
 		TNT1 A 0 A_JumpIfInventory("Clip",1,"ReadyActualComNonReloadableAmmo")
 		Goto ReadyActualComNonReloadableNoAmmo
 
-	ReadyActualComNonReloadableAmmo:
-		CD02 L 1 A_WeaponReady
-		Goto ReadyActual
-
 	ReadyActualComNonReloadableNoAmmo:
 		CD02 J 1 A_WeaponReady
+		Goto ReadyActual
+
+	ReadyActualComNonReloadableAmmo:
+		CD02 L 1 A_WeaponReady
 		Goto ReadyActual
 
 	ReadyActualComReloadable:
@@ -433,12 +434,12 @@ actor " Pistol " : Weapon
 		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PistolMagazine",1,"ReadyActualComReloadableAmmo")
 		Goto ReadyActualComReloadableNoAmmo
 
-	ReadyActualComReloadableAmmo:
-		CD02 L 1 A_WeaponReady(WRF_ALLOWRELOAD)
-		Goto ReadyActual
-
 	ReadyActualComReloadableNoAmmo:
 		CD02 J 1 A_WeaponReady(WRF_ALLOWRELOAD)
+		Goto ReadyActual
+
+	ReadyActualComReloadableAmmo:
+		CD02 L 1 A_WeaponReady(WRF_ALLOWRELOAD)
 		Goto ReadyActual
 
 	ReadyActualComNoFire:
@@ -451,12 +452,12 @@ actor " Pistol " : Weapon
 		TNT1 A 0 A_JumpIfInventory("Clip",1,"ReadyActualComNoFireNonReloadableAmmo")
 		Goto ReadyActualComNoFireNonReloadableNoAmmo
 
-	ReadyActualComNoFireNonReloadableAmmo:
-		CD02 L 1 A_WeaponReady(WRF_NOFIRE)
-		Goto ReadyActualComNoFireCheck
-
 	ReadyActualComNoFireNonReloadableNoAmmo:
 		CD02 J 1 A_WeaponReady(WRF_NOFIRE)
+		Goto ReadyActualComNoFireCheck
+
+	ReadyActualComNoFireNonReloadableAmmo:
+		CD02 L 1 A_WeaponReady(WRF_NOFIRE)
 		Goto ReadyActualComNoFireCheck
 
 	ReadyActualComNoFireReloadable:
@@ -464,12 +465,12 @@ actor " Pistol " : Weapon
 		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PistolMagazine",1,"ReadyActualComNoFireReloadableAmmo")
 		Goto ReadyActualComNoFireReloadableNoAmmo
 
-	ReadyActualComNoFireReloadableAmmo:
-		CD02 L 1 A_WeaponReady(WRF_NOFIRE|WRF_ALLOWRELOAD)
-		Goto ReadyActualComNoFireCheck
-
 	ReadyActualComNoFireReloadableNoAmmo:
 		CD02 J 1 A_WeaponReady(WRF_NOFIRE|WRF_ALLOWRELOAD)
+		Goto ReadyActualComNoFireCheck
+
+	ReadyActualComNoFireReloadableAmmo:
+		CD02 L 1 A_WeaponReady(WRF_NOFIRE|WRF_ALLOWRELOAD)
 		Goto ReadyActualComNoFireCheck
 
 	ReadyActualComNoFireCheck:
@@ -531,6 +532,12 @@ actor " Pistol " : Weapon
 		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PistolMagazine",1,"FireComContinueAmmo")
         goto FireComContinueNoAmmo
 
+	FireComContinueNoAmmo:
+		CD02 FGHI 2
+	FireComFinishNoAmmo:
+		CD02 J 1
+		Goto ReadyActualComNoFireCheck
+
 	FireComContinueAmmo:
 		CD02 N 2
 	FireComContinueAmmoNoAutoFireCheck1:
@@ -550,12 +557,6 @@ actor " Pistol " : Weapon
 		CD02 Q 2 A_WeaponReady(WRF_NOFIRE)
 	FireComFinishAmmo:
 		CD02 L 1
-		Goto ReadyActualComNoFireCheck
-
-	FireComContinueNoAmmo:
-		CD02 FGHI 2
-	FireComFinishNoAmmo:
-		CD02 J 1
 		Goto ReadyActualComNoFireCheck
 
 	FlashCom:

@@ -439,6 +439,7 @@ ACTOR " Minigun " : Weapon
 		goto FireStrFinishAnim
 
 	AltFireFinishReFireVanilla:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,2)
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStrFinish")
 		TNT1 A 0 A_CheckReload
 		goto FireStrFinishAnim
@@ -471,6 +472,7 @@ ACTOR " Minigun " : Weapon
 		goto FireStrFinishAnimSmooth
 
 	AltFireFinishReFireSmooth:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,2)
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStrFinishSmooth")
 		TNT1 A 0 A_CheckReload
 		goto FireStrFinishAnimSmooth
@@ -488,8 +490,8 @@ ACTOR " Minigun " : Weapon
 
 	// Complex Doom
 	ReadyCom:
-		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/minigunpickup")
-		CD13 OPQRS 1
+		CD13 O 1 A_PlayWeaponSound("complexdoom/weapons/minigunpickup")
+		CD13 PQRS 1
 		goto ReadyActual
 
 	ReadyActualCom:
@@ -517,14 +519,16 @@ ACTOR " Minigun " : Weapon
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Clip",1,1)
 		goto FireComEmptySpinDown
-		CD13 CD 1 A_Light0
+		CD13 C 1 A_Light0
+		CD13 D 1
 		TNT1 A 0 A_GunFlash("FlashCom")
 		TNT1 A 0 A_GiveInventory("SamsaraDoomguyComMinigunAttackHandler")
 		CD13 E 1 Bright A_Light2
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("Clip",1,1)
 		goto FireComEmptySpinDown
-		CD13 FG 1 A_Light0
+		CD13 F 1 A_Light0
+		CD13 G 1
 		TNT1 A 0 A_GunFlash("FlashCom")
 		TNT1 A 0 A_GiveInventory("SamsaraDoomguyComMinigunAttackHandler")
 		CD13 H 1 Bright A_Light1
