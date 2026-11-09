@@ -211,3 +211,4 @@ complexdoom/casing/cell3			"sounds/ComplexDoom/complexdoom_DSECELL3.wav"
 complexdoom/casing/cell4			"sounds/ComplexDoom/complexdoom_DSECELL4.wav"
 
 complexdoom/weapons/emptymagazine		"sounds/ComplexDoom/complexdoom_DSCLIP.wav"
+complexdoom/pickups/berserk				"sounds/ComplexDoom/complexdoom_DSBERSK.wav"
