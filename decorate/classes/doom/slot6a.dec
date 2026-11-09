@@ -13,6 +13,8 @@ actor "Plasma Rifle" : PlasmaRifle
 	Weapon.SlotNumber 6
 	Weapon.AmmoGive 0
 	+INVENTORY.UNDROPPABLE
+	+AMMO_OPTIONAL
+	+NOALERT
 	//+ALT_USES_BOTH
 	Tag "Plasma Rifle"
 	Inventory.RestrictedTo "DoomguyPlayer"
@@ -24,27 +26,33 @@ actor "Plasma Rifle" : PlasmaRifle
 
 	// Original
 	Ready:
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyStr")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Ready64")
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"ReadyStopSound")
-		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"ReadyStopSound")
-	ReadyContinue:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"ReadyCom")
+	ReadyActual:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"ReadyActualCom")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"ReadyActualStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"ReadyActual64")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"ReadyActualStopSound")
+		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"ReadyActualStopSound")
+	ReadyActualContinue:
 		DPLS A 1 A_WeaponReady
-		goto Ready
+		goto ReadyActual
 
-	ReadyStopSound:
+	ReadyActualStopSound:
 		TNT1 A 0 A_PlaySound("silence",CHAN_6)
 		TNT1 A 0 A_StopSound(CHAN_6)
 		TNT1 A 0 A_TakeInventory("SamsaraDoom64PlasmaRifleSoundActive")
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
-		goto ReadyContinue
+		goto ReadyActualContinue
 
 	Deselect:
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"DeselectStopSound")
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck",1,"DeselectStopSound")
 	DeselectStart:
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStartStr")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"DeselectStart64")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectStartCom")
+	DeselectActual:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectStartActualCom")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"DeselectStartActualStr")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"DeselectStartActual64")
 		DPLS A 1 A_Lower
 		goto Deselect
 
@@ -57,6 +65,7 @@ actor "Plasma Rifle" : PlasmaRifle
 
 	Select:
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"SelectCom")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"SelectStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Select64")
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"SelectStopSound")
@@ -71,6 +80,11 @@ actor "Plasma Rifle" : PlasmaRifle
 		goto SelectContinue
 
 	Fire:
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"FireCom")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto Nothing
+		TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"FireStr")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Fire64")
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoom64PlasmaRifleSoundActive",1,"FireStopSound")
@@ -80,7 +94,7 @@ actor "Plasma Rifle" : PlasmaRifle
 		TNT1 A 0 A_GunFlash("Flash",GFF_NOEXTCHANGE)
 		TNT1 A 3 Bright A_GiveInventory("SamsaraDoomguyPlasmaRifleAttackHandler")
 		DPLS B 20 A_ReFire
-		goto Ready
+		goto ReadyActual
 
 	Flash:
 		TNT1 A 0 A_Jump(256,1,2)
@@ -98,14 +112,14 @@ actor "Plasma Rifle" : PlasmaRifle
 		KPLS E 6
 		KPLS EDCB 2
 		KPLS A 1
-		goto Ready
+		goto ReadyActual
 
 	FireSmoothRage:
 		KPLS BCD 1
 		KPLS E 4
 		KPLS DCB 1
 		KPLS A 1
-		goto Ready
+		goto ReadyActual
 
 	FireStopSound:
 		TNT1 A 0 A_PlaySound("silence",CHAN_6)
@@ -130,9 +144,9 @@ actor "Plasma Rifle" : PlasmaRifle
 		TNT1 A 0 A_GiveInventory("SamsaraDoom64PlasmaRifleSoundActive")
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
 		64PR BCD 2 A_WeaponReady
-		goto Ready
+		goto ReadyActual
 
-	DeselectStart64:
+	DeselectStartActual64:
 		64PR A 1 A_Lower
 		goto Deselect
 
@@ -155,7 +169,7 @@ actor "Plasma Rifle" : PlasmaRifle
 		64PR A 5 A_GiveInventory("SamsaraDoomguy64PlasmaRifleAttackHandler")
 	Fire64Finish:
 		TNT1 A 0 A_ReFire
-		goto Ready
+		goto ReadyActual
 
 	Fire64ImprovedBalance:
 		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"Fire64ImprovedBalanceSmooth")
@@ -163,7 +177,7 @@ actor "Plasma Rifle" : PlasmaRifle
 		TNT1 A 0 A_GunFlash("Flash64Improved",GFF_NOEXTCHANGE)
 		64PR A 4 A_GiveInventory("SamsaraDoomguy64PlasmaRifleAttackHandler")
 		64PR A 20 A_ReFire
-		goto Ready
+		goto ReadyActual
 
 	Flash64:
 		64RF A 4 Bright A_Light1
@@ -192,7 +206,7 @@ actor "Plasma Rifle" : PlasmaRifle
 		64PR K 1 Bright
 		64PR E 3 A_ReFire
 		64PR FGHGF 3
-		goto Ready
+		goto ReadyActual
 
 	Flash64Smooth:
 		TNT1 A 4 Bright A_Light1
@@ -252,12 +266,12 @@ actor "Plasma Rifle" : PlasmaRifle
 		//TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"ReadyStr9Powered")
 		//TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"ReadyStr9Powered")
 		DPLS K 1 Bright A_WeaponReady
-		goto Ready
+		goto ReadyActual
 
-	DeselectStartStr:
-		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStartStrPowered")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStartStrPowered")
-	DeselectStartStrContinue:
+	DeselectStartActualStr:
+		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"DeselectStartActualStrPowered")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"DeselectStartActualStrPowered")
+	DeselectStartActualStrContinue:
 		TNT1 A 0 A_Lower
 		DPLS M 1 A_Lower
 		goto Deselect
@@ -287,7 +301,7 @@ actor "Plasma Rifle" : PlasmaRifle
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,2)
 		DPLS OP 1 Bright
 		DPLS L 20 Bright A_ReFire
-		goto Ready
+		goto ReadyActual
 
 	FireStrStopSound:
 		TNT1 A 0 A_PlaySound("silence",CHAN_6)
@@ -363,14 +377,14 @@ actor "Plasma Rifle" : PlasmaRifle
 	ReadyStr9Powered:
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
 		DPLS K 1 Bright A_WeaponReady(WRF_NOSECONDARY)
-		goto Ready
+		goto ReadyActual
 		DPLS K 1 Bright A_WeaponReady
-		goto Ready
+		goto ReadyActual
 */
 
-	DeselectStartStrPowered:
+	DeselectStartActualStrPowered:
 		TNT1 A 0 A_Lower
-		goto DeselectStartStrContinue
+		goto DeselectStartActualStrContinue
 
 	SelectStartStrPowered:
 		TNT1 A 0 A_Raise
@@ -390,7 +404,7 @@ actor "Plasma Rifle" : PlasmaRifle
 		TNT1 A 0 A_CheckReload
 	AltFireFinish:
 		DPLS L 20 Bright
-		goto Ready
+		goto ReadyActual
 
 	AltFireFinishReFire:
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
@@ -406,6 +420,125 @@ actor "Plasma Rifle" : PlasmaRifle
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrPlasmaRifleReadySoundCheck")
 		goto AltFireStart
 */
+
+	// Complex Doom
+    ReadyCom:
+        TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/pickuphr")
+        CD19 EFGHIJK 1
+        Goto ReadyActual
+
+    ReadyActualCom:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReadyActualComReloadable")
+    ReadyActualComNonReloadable:
+        CD18 B 1 A_WeaponReady
+        Goto ReadyActual
+
+    ReadyActualComReloadable:
+        CD18 B 1 A_WeaponReady(WRF_ALLOWRELOAD)
+        Goto ReadyActual
+
+    DeselectStartCom:
+        TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/weapondown")
+        goto DeselectActual
+
+    DeselectStartActualCom:
+        CD18 B 1 A_Lower
+        goto DeselectActual
+
+    SelectCom:
+        TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Raise
+        TNT1 A 1 A_Raise
+        goto Select
+
+    FireCom:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireComReloadable")
+	FireComNonReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireComStart")
+		TNT1 A 0 A_JumpIfInventory("Cell",1,"FireComStart")
+		goto FireComEmpty
+
+	FireComReloadable:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireComStart")
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PlasmaCell",1,"FireComStart")
+        goto FireComEmpty
+
+    FireComEmpty:
+        CD18 B 10 A_PlayWeaponSound("complexdoom/weapons/click3")
+        Goto Reload
+
+    FireComStart:
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_GunFlash("FlashCom")
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyComPlasmaRifleAttackHandler")
+        CD18 O 2
+        CD18 B 1 Bright
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_PlasmaCell",1,1)
+        Goto FireComFinish
+        TNT1 A 0 A_ReFire
+	FireComFinish:
+		CD18 EFG 1
+		CD18 H 10
+		CD18 GFEDCB 1
+		Goto ReadyActual
+
+	Reload:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
+		goto ReadyActual
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PlasmaCell",0,"ReadyActual")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadStart")
+		TNT1 A 0 A_JumpIfInventory("Cell",1,"ReloadStart")
+		Goto ReadyActual
+
+	ReloadStart:
+		TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/plasmacellout")
+		CD18 V 1 A_SpawnItemEx("ComplexDoom_CellCasing",2,0,-8,1,0,0,Random(-100,-110),128)
+		CD18 WX 2
+		CD18 Y 10
+		CD18 "Z[\" 1
+		goto ReloadAmmo
+
+	ReloadFinish:
+		CD18 "]" 2
+		CD19 A 8 A_PlayWeaponSound("complexdoom/weapons/plasmacellin")
+		CD19 BC 2
+		CD19 D 1
+		CD18 B 2
+		Goto ReadyActual
+
+	ReloadAmmo:
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_PlasmaCell",0,"ReloadFinish")
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        goto ReloadFinish
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        TNT1 A 0 A_GiveInventory("ComplexDoom_PlasmaCell")
+        goto ReloadAmmo
+
+	FlashCom:
+		TNT1 A 2 Bright A_Light1
+		CD18 N 2 Bright A_Light2
+		Goto LightDone
+
+	Nothing:
+        TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"NothingCom")
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"NothingStr")
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Nothing64")
+        TNT1 A 0 A_JumpIfInventory("SamsaraDoomOriginalLoadoutFallbackRanged",1,2)
+        TNT1 A 0 A_SelectWeapon(" Pistol ")
+        goto Deselect
+        TNT1 A 0 A_SelectWeapon(" Rifle ")
+        goto Deselect
+
+	Nothing64:
+	NothingStr:
+	NothingCom:
+        TNT1 A 0 A_SelectWeapon(" Pistol ")
+        goto Deselect
 	}
 }
 
@@ -791,6 +924,104 @@ actor SamsaraDoomguyStrPowerPlasmaBallTrail : SamsaraDoomguyStrElectricalPuff
 	Decal ""
 	+CLIENTSIDEONLY
 	+NOTONAUTOMAP
+}
+
+actor SamsaraDoomguyComPlasmaRifleAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"PickupReloadable")
+      PickupNonReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("Cell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("Cell",1)
+        goto PickupAttack
+
+      PickupReloadable:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_PlasmaCell",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("ComplexDoom_PlasmaCell",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("complexdoom/weapons/hrfire",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackCoop")
+      PickupAttackDM:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_PlasmaBall",0,false)
+        goto PickupFinish
+
+      PickupAttackCoop:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_PlasmaBallCoop",0,false)
+        goto PickupFinish
+
+      // Finishing stuff
+      PickupFinish:
+        TNT1 A 0 A_Quake(1,2,0,64,"nosoundforyoubitch")
+        stop
+    }
+}
+
+actor ComplexDoom_PlasmaCell : Ammo
+{
+	Inventory.MaxAmount 50
+	Tag "Plasma Rifle Magazine"
+	+IGNORESKILL
+	+UNTOSSABLE
+}
+
+actor ComplexDoom_PlasmaBall
+{
+	Radius 7
+	Height 7
+	Speed 28
+	Damage 5
+	Projectile
+	+RANDOMIZE
+	Scale 0.22
+	RenderStyle Add
+	Alpha 0.75
+	Obituary "%o became a crispy corpse by %k's Plasma Rifle."
+	DeathSound "complexdoom/weapons/hrballexplode"
+	DamageType "DoomDamageTypePlasma"
+	Decal "ComplexDoom_HeatScorch"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		CD18 PQRSTU 2 Bright
+		Loop
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ComplexDoom_PlasmaParticleSpawner",0,0,0,0,0,0,0,128)
+		TNT1 AAA 0 A_CustomMissile("ComplexDoom_PlasmaExplosion", 0, 0, random(0,360), 2, random(0,360))
+		TNT1 AAA 0 A_CustomMissile("ComplexDoom_ExplosionSmoke2", 0, 0, random(0,360), 2, random(0,360))
+		TNT1 A 1 A_SpawnItem("ComplexDoom_PlasmaEx")   
+		Stop
+    }
+}
+
+actor ComplexDoom_PlasmaBallCoop : ComplexDoom_PlasmaBall
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+actor ComplexDoom_PlasmaExplosion : ComplexDoom_Explosion
+{
+	Speed 1
+	Scale 0.45
+	States
+	{
+	Spawn:
+		CD32 AABBCDEFGHIJKLM 1 Bright A_FadeOut(0.05)
+		Stop
+	}
 }
 
 // Incinerator
