@@ -3665,7 +3665,8 @@ StatusBar Fullscreen, ForceScaled
                 {
                     // No specific checks
                     // [tv50] also fuck you zdoom for making me do this
-                    IsSelected not " Shotgun " {
+                    IsSelected not " Shotgun ", "Super Shotgun" {
+                    IsSelected not ComplexDoom_AssaultShotgun {
                     IsSelected not "Automatic Shotgun", " RailGun " {
                     IsSelected not "Gigazorcher 2100", "Glock 17" {
                     IsSelected not Duke3D_M16, "Golden Desert Eagle" {
@@ -3763,7 +3764,7 @@ StatusBar Fullscreen, ForceScaled
                                 DrawImage AmmoIcon2, 228, 192, Center;
                             }
                         }
-                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
                     // Doom Characters
                     IsSelected " Shotgun "
@@ -3791,7 +3792,32 @@ StatusBar Fullscreen, ForceScaled
                         DrawImage AmmoIcon1, 238, 185, Center;
                     }
 
-                    IsSelected "Automatic Shotgun"
+                    IsSelected "Super Shotgun"
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory DoomClassMode, 3 // Complex
+                        {
+                            InInventory SamsaraReloadMode, 2
+                            {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_SSGShell, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_SSGShell, 298, 185;
+
+                                DrawImage "HUDBAR", 250, 192;
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 193;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 270, 186;
+                            } else {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                            }
+                        } else { // Original/Doom 64/Stronghold
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon1, 238, 185, Center;
+                    }
+
+                    IsSelected ComplexDoom_AssaultShotgun, "Automatic Shotgun"
                     {
                         DrawImage "HUDBAR", 250, 180;
                         InInventory SamsaraReloadMode, 2
@@ -6636,7 +6662,8 @@ StatusBar Fullscreen, ForceScaled
                     InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
                 }
 
-                IsSelected "Super Shotgun", "Automatic Shotgun" { DrawImage "STY2NUM3", 146, 10; }
+                IsSelected "Super Shotgun", ComplexDoom_AssaultShotgun { DrawImage "STY2NUM3", 146, 10; }
+                IsSelected "Automatic Shotgun" { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected "Super Large Zorcher" { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected "Ethereal Crossbow" { DrawImage "STY2NUM3", 146, 10; }
                 IsSelected "Mauser Rifle" { DrawImage "STY2NUM3", 146, 10; }

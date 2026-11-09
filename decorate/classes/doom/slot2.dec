@@ -328,13 +328,15 @@ actor " Shotgun " : Shotgun
         goto Nothing
 		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"AltFireFinishReFire")
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"AltFireFinishReFire")
+		//TNT1 A 0 A_CheckReload
 	AltFireFinish:
 		DSHT L 1
 		goto ReadyActual
 
 	AltFireFinishReFire:
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"AltFireFinish")
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,1)
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"AltFireFinish") // 2
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,1) // 2
+		//TNT1 A 0 A_CheckReload
 		goto AltFireFinish
 		TNT1 A 0 A_ReFire
 		goto AltFireFinish
