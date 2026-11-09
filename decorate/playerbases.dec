@@ -2238,12 +2238,28 @@ actor SamsaraPlayerBasePainSoundTrigger : Trigger
 
       // Doom
       PickupDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupComplexDoom")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupDefault")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupDoom64")
         goto PickupDefault
 
       PickupDoom64:
         TNT1 A 0 A_PlaySound("doom64guy/pain",CHAN_VOICE)
+        stop
+
+      PickupComplexDoom:
+        TNT1 A 0 A_JumpIfHealthLower(25,"PickupComplexDoom25")
+        TNT1 A 0 A_JumpIfHealthLower(75,"PickupComplexDoom75")
+      PickupComplexDoom100:
+        TNT1 A 0 A_PlaySound("complexdoom/player/pain100",CHAN_VOICE)
+        stop
+
+      PickupComplexDoom75:
+        TNT1 A 0 A_PlaySound("complexdoom/player/pain75",CHAN_VOICE)
+        stop
+
+      PickupComplexDoom25:
+        TNT1 A 0 A_PlaySound("complexdoom/player/pain25",CHAN_VOICE)
         stop
 
       // Wolfenstein 3D
@@ -2375,12 +2391,17 @@ actor SamsaraPlayerBaseDeathSoundTrigger : Trigger
 
       // Doom
       PickupDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupComplexDoom")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupDefault")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupDoom64")
         goto PickupDefault
 
       PickupDoom64:
         TNT1 A 0 A_PlaySound("doom64guy/die",CHAN_VOICE)
+        stop
+
+      PickupComplexDoom:
+        TNT1 A 0 A_PlaySound("complexdoom/player/death",CHAN_VOICE)
         stop
 
       // Wolfenstein 3D
@@ -2529,12 +2550,17 @@ actor SamsaraPlayerBaseXDeathSoundTrigger : Trigger // currently used for doomgu
 
       // Doom
       PickupDoom:
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"PickupComplexDoom")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"PickupDefault")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"PickupDoom64")
         goto PickupDefault
 
       PickupDoom64:
         TNT1 A 0 A_PlaySound("doom64guy/crush",CHAN_VOICE)
+        stop
+
+      PickupComplexDoom:
+        TNT1 A 0 A_PlaySound("complexdoom/player/gibbed",CHAN_VOICE)
         stop
 
       // Wolfenstein 3D

@@ -160,6 +160,22 @@ actor DoomguyStrDiesWhenHeIsKilled: PeopleDieParticle
     }
 }
 
+actor DoomguyComDiesWhenHeIsKilled: PeopleDieParticle
+{
+    RenderStyle Add
+    Scale 2.0
+
+    States
+    {
+      Spawn:
+        CD14 O 0 bright
+        CD14 O 0 bright A_PlaySound("complexdoom/weapons/rocklx", CHAN_BODY, 1, 0, ATTN_NONE)
+		CD14 O 6 Bright
+		CD14 PQ 5 Bright
+        stop
+    }
+}
+
 actor ChexguyDiesWhenHeIsKilled: PeopleDieParticle
 {
     RenderStyle Add
@@ -416,6 +432,39 @@ actor DoomguysStrDiePulse: PeopleDieParticle
       Spawn:
         TNT1 A 0
         TNT1 A 0 A_SpawnItemEx("DoomguysStrDieParticle", 0,0,0, random(100,200)/250.0,0,random(-25,25)/250.0, random(0,360))
+        TNT1 A 0 A_Countdown
+        loop
+
+      Death:
+        TNT1 A 0
+        stop
+    }
+}
+
+actor DoomguysComDieParticle: PeopleDieParticle
+{
+    RenderStyle Add
+    Alpha 0.75
+
+    Scale 0.25
+
+    States
+    {
+      Spawn:
+        CD18 PPPQQQRRRSSS 1 bright A_FadeOut(0.02)
+        loop
+    }
+}
+
+actor DoomguysComDiePulse: PeopleDieParticle
+{
+    ReactionTime 35
+
+    States
+    {
+      Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("DoomguysComDieParticle", 0,0,0, random(100,200)/250.0,0,random(-25,25)/250.0, random(0,360))
         TNT1 A 0 A_Countdown
         loop
 
