@@ -13106,14 +13106,29 @@ script "Samsara_GiveBackpack" (int startmode)
           default: // Original/Doom 64
             int curmines = CheckInventory("DoomguyStrMines");
             int curgas = CheckInventory("DoomguyStrGas");
+            int curgrenades = CheckInventory("ComplexDoom_HandGrenadeAmmo");
 
             GiveInventory("Backpack", 1);
             SetInventory("DoomguyStrMines", curmines); // leave our mines untouched because we cannot use them
             SetInventory("DoomguyStrGas", curgas); // ditto with gas
+            SetInventory("ComplexDoom_HandGrenadeAmmo", curgrenades); // and grenades
             break;
 
           case 2: // Stronghold
+            curgrenades = CheckInventory("ComplexDoom_HandGrenadeAmmo");
+
             GiveInventory("Backpack", 1);
+            SetInventory("ComplexDoom_HandGrenadeAmmo", curgrenades); // leave our grenades untouched because we cannot use them
+            break;
+
+          case 3: // Complex Doom
+            curmines = CheckInventory("DoomguyStrMines");
+            curgas = CheckInventory("DoomguyStrGas");
+
+            GiveInventory("Backpack", 1);
+            GiveInventory("ComplexDoom_HandGrenade", 1);
+            SetInventory("DoomguyStrMines", curmines); // leave our mines untouched because we cannot use them
+            SetInventory("DoomguyStrGas", curgas); // ditto with gas
             break;
         }
         break;
