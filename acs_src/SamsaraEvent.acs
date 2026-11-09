@@ -619,7 +619,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 				if(doommode == 2)
 				{
-					if(CheckInventory("Super Shotgun"))
+					if(CheckInventory("Super Shotgun") || CheckInventory("ComplexDoom_AssaultShotgun")) // loadout still checked because we haven't hit that point yet
 					{
 						GiveInventory("Automatic Shotgun", 1);
 					}
@@ -792,6 +792,65 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 							SetActorProperty(0,APROP_SoundClass,"Doomguy");
 							TakeInventory(" Unmaker ", 0x7FFFFFFF);
 						}
+						else if(doommode == 3)
+						{
+							if(CheckInventory("Doom64_IHaveUnmaker"))
+							{
+								if(CheckWeapon(" Unmaker "))
+									SetWeapon("B.F.G. 9000");
+							}
+							if(CheckInventory("DGStrHasAutoShotgun"))
+							{
+								if(CheckWeapon("Automatic Shotgun"))
+								{
+									if (CheckInventory("SamsaraHasAllLoadoutEquipment")) { SetWeapon("Super Shotgun"); }
+									else { GiveInventory("SamsaraAltClassWeaponSwitchHackSlot3", 1); }
+								}
+							}
+							if(CheckInventory("DGStrHasFlamethrower"))
+							{
+								if(CheckWeapon(" Flamer "))
+									SetWeapon(" Chaingun ");
+							}
+							if(CheckInventory("DGStrHasLandMines"))
+							{
+								if(CheckWeapon("Land Mine Layer"))
+									SetWeapon("Rocket Launcher");
+							}
+							if(CheckInventory("DGStrHasStunnerRifle"))
+							{
+								if(CheckWeapon("Stunner Rifle"))
+									SetWeapon("Plasma Rifle");
+							}
+							if(CheckInventory("DGStrHasPyroCannon"))
+							{
+								if(CheckWeapon("Pyro Cannon"))
+									SetWeapon("B.F.G. 9000");
+							}
+							if(CheckInventory("DGStrHasHomingRocketLauncher"))
+							{
+								if(CheckWeapon("Homing Rocket Launcher"))
+									SetWeapon(" Fist ");
+							}
+							if(CheckInventory("DGStrHasPlasmaRepeater"))
+							{
+								if(CheckWeapon("Plasma Repeater"))
+									SetWeapon(" Fist ");
+							}
+
+							TakeInventory("Automatic Shotgun", 1);
+							TakeInventory(" Flamer ", 1);
+							TakeInventory("Land Mine Layer", 1);
+							TakeInventory("Stunner Rifle", 1);
+							TakeInventory("Pyro Cannon", 1);
+							TakeInventory("Homing Rocket Launcher", 1);
+							TakeInventory("Plasma Repeater", 1);
+							SetInventory("SamsaraDoomguyStrWeaponPowerItem", 0);
+
+							GiveInventory("DoomGuyScalar",1);
+							SetActorProperty(0,APROP_SoundClass,"Doomguy");
+							TakeInventory(" Unmaker ", 0x7FFFFFFF);
+						}
 						else
 						{
 							if(CheckInventory("Doom64_IHaveUnmaker"))
@@ -859,18 +918,26 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 							GiveInventory("DoomGuyScalar",1);
 							SetActorProperty(0,APROP_SoundClass,"Doomguy");
 							TakeInventory(" Unmaker ", 0x7FFFFFFF);
-							}
 						}
+					}
 					ACS_NamedExecuteAlways("SAMSARA_CLIENT_ALTERNATIVECLASS", 0, doommode, pln);
 					previousvalue = doommode;
 				}
 
-                if (doommode >= 1)
+                if (doommode >= 3)
                 {
+                    SetInventory("SamsaraDoomComplexLoadoutSlot3", middle(0, cond(GetCVar("samsara_doomguycom_slot3") > 0 && !CheckInventory("SamsaraHasAllLoadoutEquipment"), GetCVar("samsara_doomguycom_slot3") - 1, GetUserCVar(pln, "samsara_cl_doomguycom_slot3")), 1));
+
                     if (loadoutPrevValue[pln][SLOT_PISTOL] != 0)
                     {
                         ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_PISTOL, 0, pln);
                         loadoutPrevValue[pln][SLOT_PISTOL] = 0;
+                    }
+
+                    if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != CheckInventory("SamsaraDoomComplexLoadoutSlot3"))
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, CheckInventory("SamsaraDoomComplexLoadoutSlot3"), pln);
+                        loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = CheckInventory("SamsaraDoomComplexLoadoutSlot3");
                     }
 
                     if (loadoutPrevValue[pln][SLOT_CHAINGUN] != 0)
@@ -898,6 +965,130 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         if (CheckWeapon(" Rifle ") || CheckInventory("SamsaraPistolStartMapChangeHack")) { SetWeapon(" Pistol "); }
 
                         SetInventory(" Rifle ", 0);
+                    }
+
+                    if (CheckInventory("Super Shotgun") || CheckInventory("ComplexDoom_AssaultShotgun"))
+                    {
+                        if (CheckInventory("SamsaraHasAllLoadoutEquipment"))
+                        {
+                            SetInventory("Super Shotgun", 1);
+                            SetInventory("ComplexDoom_AssaultShotgun", 1);
+                        } else {
+                            if (!CheckInventory("SamsaraDoomComplexLoadoutSlot3"))
+                            {
+                                SetInventory("Super Shotgun", 1);
+
+                                if (CheckWeapon("ComplexDoom_AssaultShotgun") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("Super Shotgun");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
+
+                                SetInventory("ComplexDoom_AssaultShotgun", 0);
+                            } else if (CheckInventory("SamsaraDoomComplexLoadoutSlot3")) {
+                                SetInventory("ComplexDoom_AssaultShotgun", 1);
+
+                                if (CheckWeapon("Super Shotgun") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                                {
+                                    SetWeapon("ComplexDoom_AssaultShotgun");
+                                    SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                                }
+
+                                SetInventory("Super Shotgun", 0);
+                            }
+                        }
+                    }
+
+                    if (CheckInventory(" Machine Gun "))
+                    {
+                        SetInventory(" Chaingun ", 1);
+
+                        if (CheckWeapon(" Machine Gun ") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot4"))
+                        {
+                            SetWeapon(" Chaingun ");
+                            SetInventory("SamsaraAltClassWeaponSwitchHackSlot4", 0);
+                        }
+
+                        SetInventory(" Machine Gun ", 0);
+                    }
+
+                    if (CheckInventory(" Incinerator "))
+                    {
+                        SetInventory("Plasma Rifle", 1);
+
+                        if (CheckWeapon(" Incinerator ") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot6"))
+                        {
+                            SetWeapon("Plasma Rifle");
+                            SetInventory("SamsaraAltClassWeaponSwitchHackSlot6", 0);
+                        }
+
+                        SetInventory(" Incinerator ", 0);
+                    }
+
+                    if (CheckInventory("B.F.G. 2704") || CheckInventory("Calamity Blade"))
+                    {
+                        SetInventory("B.F.G. 9000", 1);
+
+                        if (CheckWeapon("B.F.G. 2704") || CheckWeapon("Calamity Blade") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot7"))
+                        {
+                            SetWeapon("B.F.G. 9000");
+                            SetInventory("SamsaraAltClassWeaponSwitchHackSlot7", 0);
+                        }
+
+                        SetInventory("B.F.G. 2704", 0);
+                        SetInventory("Calamity Blade", 0);
+                    }
+                } else if (doommode >= 1) {
+                    if (loadoutPrevValue[pln][SLOT_PISTOL] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_PISTOL, 0, pln);
+                        loadoutPrevValue[pln][SLOT_PISTOL] = 0;
+                    }
+
+                    if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, 0, pln);
+                        loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = 0;
+                    }
+
+                    if (loadoutPrevValue[pln][SLOT_CHAINGUN] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINGUN, 0, pln);
+                        loadoutPrevValue[pln][SLOT_CHAINGUN] = 0;
+                    }
+
+                    if (loadoutPrevValue[pln][SLOT_PLASMARIFLE] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_PLASMARIFLE, 0, pln);
+                        loadoutPrevValue[pln][SLOT_PLASMARIFLE] = 0;
+                    }
+
+                    if (loadoutPrevValue[pln][SLOT_BFG9000] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_BFG9000, 0, pln);
+                        loadoutPrevValue[pln][SLOT_BFG9000] = 0;
+                    }
+
+                    if (CheckInventory(" Rifle "))
+                    {
+                        SetInventory(" Pistol ", 1);
+
+                        if (CheckWeapon(" Rifle ") || CheckInventory("SamsaraPistolStartMapChangeHack")) { SetWeapon(" Pistol "); }
+
+                        SetInventory(" Rifle ", 0);
+                    }
+
+                    if (CheckInventory("ComplexDoom_AssaultShotgun"))
+                    {
+                        SetInventory("Super Shotgun", 1);
+
+                        if (CheckWeapon("ComplexDoom_AssaultShotgun") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                        {
+                            SetWeapon("Super Shotgun");
+                            SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                        }
+
+                        SetInventory("ComplexDoom_AssaultShotgun", 0);
                     }
 
                     if (CheckInventory(" Machine Gun "))
@@ -951,6 +1142,12 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                         loadoutPrevValue[pln][SLOT_PISTOL] = CheckInventory("SamsaraDoomOriginalLoadoutFallbackRanged");
                     }
 
+                    if (loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] != 0)
+                    {
+                        ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_SUPERSHOTGUN, 0, pln);
+                        loadoutPrevValue[pln][SLOT_SUPERSHOTGUN] = 0;
+                    }
+
                     if (loadoutPrevValue[pln][SLOT_CHAINGUN] != CheckInventory("SamsaraDoomOriginalLoadoutSlot4"))
                     {
                         ACS_NamedExecuteAlways("SAMSARA_CLIENT_CLASSLOADOUT", 0, SLOT_CHAINGUN, CheckInventory("SamsaraDoomOriginalLoadoutSlot4"), pln);
@@ -991,6 +1188,19 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory(" Pistol ", 0);
                             }
                         }
+                    }
+
+                    if (CheckInventory("ComplexDoom_AssaultShotgun"))
+                    {
+                        SetInventory("Super Shotgun", 1);
+
+                        if (CheckWeapon("ComplexDoom_AssaultShotgun") || CheckInventory("SamsaraAltClassWeaponSwitchHackSlot3"))
+                        {
+                            SetWeapon("Super Shotgun");
+                            SetInventory("SamsaraAltClassWeaponSwitchHackSlot3", 0);
+                        }
+
+                        SetInventory("ComplexDoom_AssaultShotgun", 0);
                     }
 
                     if (CheckInventory(" Chaingun ") || CheckInventory(" Machine Gun "))

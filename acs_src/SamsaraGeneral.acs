@@ -2252,6 +2252,7 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("Super Shotgun", INTMAX);
 			TakeInventory("SamsaraDoomguyComSSGFired", INTMAX);
 			TakeInventory("SamsaraDoomguyComSSGAlternate", INTMAX);
+			TakeInventory("ComplexDoom_AssaultShotgun", INTMAX);
 			TakeInventory("Automatic Shotgun", INTMAX);
 			TakeInventory(" Chaingun ", INTMAX);
             SetInventory("SamsaraDoom64ChaingunSoundChannelCount", 0);
@@ -4517,6 +4518,19 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 break;
             }
             break;
+
+          case 3: // Complex
+            switch (slot)
+            {
+              default:
+                break;
+
+              case SLOT_SUPERSHOTGUN:
+                if (startmode != 0) { loadoutchoice = middle(0, cond(GetCVar("samsara_doomguycom_slot3") > 0, GetCVar("samsara_doomguycom_slot3") - 1, GetUserCVar(pln, "samsara_cl_doomguycom_slot3")), 1); }
+                else { loadoutchoice = middle(0, CheckInventory("SamsaraDoomguyComplexLoadoutSlot3"), 1); }
+                break;
+            }
+            break;
         }
         break;
 
@@ -5567,6 +5581,200 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     result = 1;
                 } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
                     GiveInventory("Cell", 60);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1) { GiveInventory("DGHasBFG10K", 1); }
+                break;
+            }
+            break;
+
+          case 3: // Complex
+            switch (slot)
+            {
+              default:
+                result = -1;
+                break;
+
+              case SLOT_SUPERSHOTGUN:
+                hasweapon = CheckInventory("Super Shotgun") || CheckInventory("ComplexDoom_AssaultShotgun");
+
+                if (loadoutchoice == 0 || completeloadout) // Double Barrel Shotgun
+                {
+                    if (!hasweapon)
+                    {
+                        GiveInventory("Super Shotgun", 1);
+                        GiveInventory("Shell", cond(dmextraammo, 8 / tossedammo * 5 / 2, 8 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("Shell", 8 / tossedammo);
+                        result = 1;
+                    }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
+                }
+
+                if (loadoutchoice == 1 || completeloadout) // Assault Shotgun
+                {
+                    if (!hasweapon)
+                    {
+                        GiveInventory("ComplexDoom_AssaultShotgun", 1);
+                        GiveInventory("Shell", cond(dmextraammo, 8 / tossedammo * 5 / 2, 8 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("Shell", 8 / tossedammo);
+                        result = 1;
+                    }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1) { GiveInventory("DGStrHasAutoShotgun", 1); }
+                break;
+
+              case SLOT_CHAINGUN:
+                if (!CheckInventory(" Chaingun "))
+                {
+                    GiveInventory(" Chaingun ", 1);
+                    GiveInventory("Clip", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
+                    result = 1;
+                } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Clip", 20 / tossedammo);
+                    result = 1;
+                }
+
+                if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("DGHasChaingun", 1);
+                    GiveInventory("DGStrHasFlamethrower", 1);
+                }
+                break;
+
+              case SLOT_ROCKETLAUNCHER:
+                if (!CheckInventory("Rocket Launcher"))
+                {
+                    GiveInventory("Rocket Launcher", 1);
+                    result = 1;
+                } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Rocket Launcher", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("DGHasRocketLauncher", 1);
+                    GiveInventory("DGStrHasLandMines", 1);
+                }
+                break;
+
+              case SLOT_PLASMARIFLE:
+                if (!CheckInventory("Plasma Rifle"))
+                {
+                    GiveInventory("Plasma Rifle", 1);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Cell", 40 / tossedammo);
+                    result = 1;
+                }
+
+                if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("DGHasPlasmaRifle", 1);
+                    GiveInventory("DGStrHasStunnerRifle", 1);
+                }
+                break;
+
+              case SLOT_BFG9000:
+                if (!CheckInventory("B.F.G. 9000"))
+                {
+                    GiveInventory("B.F.G. 9000", 1);
+                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Cell", 40 / tossedammo);
+                    result = 1;
+                }
+
+                if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    GiveInventory("DGHasBFG9000", 1);
+                    GiveInventory("Doom64_IHaveUnmaker", 1);
+                    GiveInventory("DGStrHasPyroCannon", 1);
+                }
+                break;
+
+              case SLOT_MINIGUN:
+                if (!CheckInventory(" Minigun "))
+                {
+                    GiveInventory(" Minigun ", 1);
+                    result = 1;
+                } else if (CheckInventory("Clip") < GetAmmoCapacity("Clip") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory(" Minigun ", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1) { GiveInventory("DGHasMinigun", 1); }
+                break;
+
+              case SLOT_GRENADELAUNCHER:
+                if (!CheckInventory(" GrenadeLauncher "))
+                {
+                    GiveInventory(" GrenadeLauncher ", 1);
+                    result = 1;
+                } else if (CheckInventory("RocketAmmo") < GetAmmoCapacity("RocketAmmo") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory(" GrenadeLauncher ", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1) { GiveInventory("DGHasGrenadeLauncher", 1); }
+                break;
+
+              case SLOT_RAILGUN:
+                if (!CheckInventory(" RailGun "))
+                {
+                    GiveInventory(" RailGun ", 1);
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory(" RailGun ", 1);
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1) { GiveInventory("DGHasRailGun", 1); }
+                break;
+
+              case SLOT_BFG10K:
+                if (!CheckInventory(" BFG10K "))
+                {
+                    GiveInventory(" BFG10K ", 1);
+                    GiveInventory("Cell", cond(dmextraammo, 40 * 5 / 2, 40));
+                    result = 1;
+                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") / tosseddiv && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                    GiveInventory("Cell", 40);
                     result = 1;
                 }
 
@@ -14151,6 +14359,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot4", false);
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
+		SetCVar("samsara_cl_doomguycom_slot3", false);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
 		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
@@ -14334,6 +14543,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot4", false);
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
+		SetCVar("samsara_cl_doomguycom_slot3", false);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
 		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
@@ -14517,6 +14727,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot4", false);
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
+		SetCVar("samsara_cl_doomguycom_slot3", false);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
 		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
@@ -14701,6 +14912,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot4", false);
 		SetCVar("samsara_cl_doomguy_slot6", false);
 		SetCVar("samsara_cl_doomguy_slot7", 0);
+		SetCVar("samsara_cl_doomguycom_slot3", false);
 		SetCVar("samsara_cl_chex_fallbackranged", false);
 		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
@@ -14884,6 +15096,7 @@ script "SamsaraClientSidePresetSelection" (void)
 		SetCVar("samsara_cl_doomguy_slot4", true);
 		SetCVar("samsara_cl_doomguy_slot6", true);
 		SetCVar("samsara_cl_doomguy_slot7", 2);
+		SetCVar("samsara_cl_doomguycom_slot3", false);
 		SetCVar("samsara_cl_chex_fallbackranged", true);
 		SetCVar("samsara_cl_chex_slot1", false);
 		SetCVar("samsara_cl_parias_slot3", false);
@@ -15341,6 +15554,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot4", 0);
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
+		SetCVar("samsara_doomguycom_slot3", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
 		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
@@ -15790,6 +16004,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot4", 0);
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
+		SetCVar("samsara_doomguycom_slot3", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
 		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
@@ -16239,6 +16454,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot4", 0);
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
+		SetCVar("samsara_doomguycom_slot3", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
 		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
@@ -16689,6 +16905,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot4", 0);
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
+		SetCVar("samsara_doomguycom_slot3", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
 		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
@@ -17144,6 +17361,7 @@ script "SamsaraServerSidePresetSelection" (void)
 		SetCVar("samsara_doomguy_slot4", 0);
 		SetCVar("samsara_doomguy_slot6", 0);
 		SetCVar("samsara_doomguy_slot7", 0);
+		SetCVar("samsara_doomguycom_slot3", 0);
 		SetCVar("samsara_chex_fallbackranged", 0);
 		SetCVar("samsara_chex_slot1", 0);
 		SetCVar("samsara_parias_slot3", 0);
