@@ -3666,7 +3666,9 @@ StatusBar Fullscreen, ForceScaled
                     // No specific checks
                     // [tv50] also fuck you zdoom for making me do this
                     IsSelected not " Shotgun ", "Super Shotgun" {
-                    IsSelected not ComplexDoom_AssaultShotgun {
+                    IsSelected not ComplexDoom_AssaultShotgun, " Chaingun " {
+					IsSelected not "Rocket Launcher", " GrenadeLauncher " {
+					IsSelected not "Plasma Rifle" {
                     IsSelected not "Automatic Shotgun", " RailGun " {
                     IsSelected not "Gigazorcher 2100", "Glock 17" {
                     IsSelected not Duke3D_M16, "Golden Desert Eagle" {
@@ -3764,7 +3766,7 @@ StatusBar Fullscreen, ForceScaled
                                 DrawImage AmmoIcon2, 228, 192, Center;
                             }
                         }
-                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+                    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
                     // Doom Characters
                     IsSelected " Shotgun "
@@ -3836,10 +3838,125 @@ StatusBar Fullscreen, ForceScaled
                         DrawImage AmmoIcon2, 238, 185, Center;
                     }
 
+                    IsSelected " Chaingun "
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory DoomClassMode, 3 // Complex
+                        {
+                            InInventory SamsaraReloadMode, 2
+                            {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_ARMagazine, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_ARMagazine, 298, 185;
+
+                                DrawImage "HUDBAR", 250, 192;
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 193;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 270, 186;
+                            } else {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                            }
+                        } else { // Original/Doom 64/Stronghold
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon1, 238, 185, Center;
+                    }
+
+                    IsSelected "Rocket Launcher"
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory DoomClassMode, 3 // Complex
+                        {
+                            InInventory SamsaraReloadMode, 2
+                            {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_RocketDrum, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_RocketDrum, 298, 185;
+
+                                DrawImage "HUDBAR", 250, 192;
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 193;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 270, 186;
+                            } else {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                            }
+                        } else { // Original/Doom 64/Stronghold
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon1, 238, 185, Center;
+                    }
+
+                    IsSelected " GrenadeLauncher "
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory DoomClassMode, 3 // Complex
+                        {
+                            InInventory SamsaraReloadMode, 2
+                            {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_GrenadeDrum, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_GrenadeDrum, 298, 185;
+
+                                DrawImage "HUDBAR", 250, 192;
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 193;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 270, 186;
+                            } else {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                            }
+                        } else { // Original/Doom 64/Stronghold
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon1, 238, 185, Center;
+                    }
+
+                    IsSelected "Plasma Rifle"
+                    {
+                        DrawImage "HUDBAR", 250, 180;
+                        InInventory DoomClassMode, 3 // Complex
+                        {
+                            InInventory SamsaraReloadMode, 2
+                            {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_PlasmaCell, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_PlasmaCell, 298, 185;
+
+                                DrawImage "HUDBAR", 250, 192;
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 193;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 270, 186;
+                            } else {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                            }
+                        } else { // Original/Doom 64/Stronghold
+                            DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                            DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                        }
+
+                        DrawImage AmmoIcon1, 238, 185, Center;
+                    }
+
                     IsSelected " RailGun "
                     {
                         DrawImage "HUDBAR", 250, 180;
-                        InInventory DoomClassMode, 2 // Stronghold
+                        InInventory DoomClassMode, 3 // Complex
+                        {
+                            InInventory SamsaraReloadMode, 2
+                            {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo ComplexDoom_CellCharge, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo ComplexDoom_CellCharge, 298, 185;
+
+                                DrawImage "HUDBAR", 250, 192;
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 193;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 270, 186;
+                            } else {
+                                DrawBar "HAMBAR", "HEMPTY", Ammo1, Horizontal, Reverse, 251, 181;
+                                DrawNumber 4, INDEXFONT, White, Ammo1, 298, 185;
+                            }
+                        }
+						else InInventory DoomClassMode, 2 // Stronghold
                         {
                             DrawBar "HAMBAR", "HEMPTY", Ammo2, Horizontal, Reverse, 251, 181;
                             DrawNumber 4, INDEXFONT, White, Ammo2, 298, 185;
