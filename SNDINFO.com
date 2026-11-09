@@ -48,9 +48,9 @@ complexdoom/Weapons/ShellLoad	"sounds/ComplexDoom/complexdoom_DSSHLOD1.ogg"
 complexdoom/weapons/pickupssg		"sounds/ComplexDoom/complexdoom_DSGTSSG.wav"
 complexdoom/weapons/sshotf			"sounds/ComplexDoom/complexdoom_DSDSHTGN.wav"
 complexdoom/weapons/ssgsingleshot	"sounds/ComplexDoom/complexdoom_DSSGOB.wav"
-complexdoom/weapons/sawedopen		"sounds/ComplexDoom/complexdoom_DSSAWOPN"
+complexdoom/weapons/sawedopen		"sounds/ComplexDoom/complexdoom_DSSAWOPN.lmp"
 complexdoom/weapons/shellslide		"sounds/ComplexDoom/complexdoom_DSSLSLID.wav"
-complexdoom/weapons/sawedclose		"sounds/ComplexDoom/complexdoom_DSSAWCLS"
+complexdoom/weapons/sawedclose		"sounds/ComplexDoom/complexdoom_DSSAWCLS.lmp"
 
 // Assault Shotgun
 complexdoom/AShotgun/Fire 				"sounds/ComplexDoom/complexdoom_DSASGFR1.wav"
