@@ -4562,7 +4562,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 					if (dualpickupcheck > 0)
 					{
-						ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 3 + dualpickupcheck - 1);
+						ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 4 + dualpickupcheck - 1);
 						dualpickupcheck = 0;
 					}
 
@@ -5139,7 +5139,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 
 					if (dualpickupcheck > 0)
 					{
-						ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 6 + dualpickupcheck - 1);
+						ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 7 + dualpickupcheck - 1);
 						dualpickupcheck = 0;
 					}
 
@@ -5360,13 +5360,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                     // flipped because order is handled the opposite in hexen (this also affects netplay OUTSIDE of hexen ???)
                     if ((IsNetworkGame() && GetCVar("samsara_currentgame") != GAME_HEXEN) || GetCVar("samsara_currentgame") == GAME_HEXEN)
                     {
-                        if (CheckInventory("RTCW_StG44") && !CheckInventory("RTCW_BAR")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 9); }
-                        if (CheckInventory("RTCW_K43") && !CheckInventory("RTCW_M1Garand")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 10); }
-                        if (CheckInventory("RTCW_MG42") && !CheckInventory("RTCW_Browning")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 11); }
+                        if (CheckInventory("RTCW_StG44") && !CheckInventory("RTCW_BAR")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 10); }
+                        if (CheckInventory("RTCW_K43") && !CheckInventory("RTCW_M1Garand")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 11); }
+                        if (CheckInventory("RTCW_MG42") && !CheckInventory("RTCW_Browning")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 12); }
                     } else {
-                        if (CheckInventory("RTCW_MG42") && !CheckInventory("RTCW_Browning")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 11); }
-                        if (CheckInventory("RTCW_K43") && !CheckInventory("RTCW_M1Garand")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 10); }
-                        if (CheckInventory("RTCW_StG44") && !CheckInventory("RTCW_BAR")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 9); }
+                        if (CheckInventory("RTCW_MG42") && !CheckInventory("RTCW_Browning")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 12); }
+                        if (CheckInventory("RTCW_K43") && !CheckInventory("RTCW_M1Garand")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 11); }
+                        if (CheckInventory("RTCW_StG44") && !CheckInventory("RTCW_BAR")) { ACS_NamedExecuteWithResult("SamsaraSpecialPickupDisplayNetplayHack", 10); }
                     }
 
                     if (CheckInventory("RTCW_StG44") && !CheckInventory("RTCW_BAR")) { GiveInventory("RTCW_BAR", 1); }
@@ -5818,7 +5818,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                                 SetInventory("StrifeSigilPiecePreferred", sigilCounter);
                                 GiveInventory(" Sigil ", 1);
 
-                                ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 30, -1, 0);
+                                ACS_NamedExecuteAlways("SamsaraClientMiscPickup", 0, 31, -1, 0);
                             }
                         } else {
                             for (int a = 0; a < SIGILCOUNT; a++) { SetInventory(SpectralTogglers[a], 0); }
