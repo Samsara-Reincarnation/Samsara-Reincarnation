@@ -1,0 +1,158 @@
+actor ComplexDoom_HandGrenade : Weapon
+{
+    Scale 0.3
+    Weapon.SlotNumber 8
+    Weapon.KickBack 100
+    Inventory.PickupSound "complexdoom/weapons/hgrenadepickup"
+    Weapon.AmmoGive 1
+    Weapon.AmmoUse 1
+    Weapon.AmmoType "ComplexDoom_HandGrenadeAmmo"
+    Inventory.Pickupmessage "Hand Grenade"
+    Tag "Hand Grenades"
+    Obituary "%o was fragged by %k's hand grenade."
+    AttackSound ""
+    +WEAPON.NOALERT
+    +WEAPON.NOAUTOAIM
+    +WEAPON.NOAUTOFIRE
+    +WEAPON.NO_AUTO_SWITCH
+    +INVENTORY.UNDROPPABLE
+	+EXPLOSIVE
+	Inventory.RestrictedTo "DoomguyPlayer"
+    States 
+    {
+    Spawn:
+        CD26 A -1
+        Stop
+    Ready:
+        CD26 KLM 1
+        Goto Ready2
+    Ready2:
+        CD26 N 1 A_WeaponReady 
+        Loop
+    Deselect:
+        TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/weapondown")
+        CD26 N 1 A_Lower
+        TNT1 A 0 A_Lower	  
+        Goto Deselect+1	  
+    Select:
+        TNT1 A 0 A_Raise
+        Wait
+    Fire: 
+        CD26 OPQ 1
+        CD26 RS 2
+        TNT1 A 15 A_PlayWeaponSound("complexdoom/weapons/hgrenadepin")
+        TNT1 A 0 A_GiveInventory("SamsaraDoomguyComHandGrenadeAttackHandler")
+        CD26 J 1
+        CD26 T 1
+        CD26 UVW 2
+        CD26 XY 1
+        TNT1 A 6
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_HandGrenadeAmmo",1,2)
+        TNT1 A 0 A_TakeInventory("ComplexDoom_HandGrenade",1)
+        TNT1 A 0
+        TNT1 A 6
+        CD26 KLM 1
+        Goto Ready2
+    }
+}
+
+actor SamsaraDoomguyComHandGrenadeAttackHandler : Trigger
+{
+    States
+    {
+      // Ammo checking/taking stuff
+      Pickup:
+        TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"PickupAttack")
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_HandGrenadeAmmo",1,1)
+        stop
+        TNT1 A 0 A_TakeInventory("ComplexDoom_HandGrenadeAmmo",1)
+        goto PickupAttack
+
+      // Attack stuff
+      PickupAttack:
+        TNT1 A 0 A_PlaySound("complexdoom/weapons/hgrenadethrow",CHAN_WEAPON)
+        TNT1 A 0 A_JumpIfInventory("SamsaraImprovedBalance",1,"PickupAttackImproved")
+      // Vanilla
+      PickupAttackVanilla:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackVanillaCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackVanillaCoop")
+      PickupAttackVanillaDM:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_ThrownHandGrenade",0,false,0,0)
+        stop
+
+      PickupAttackVanillaCoop:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_ThrownHandGrenadeCoop",0,false,0,0)
+        stop
+
+      // Improved
+      PickupAttackImproved:
+        TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackImprovedCoop")
+        TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackImprovedCoop")
+      PickupAttackImprovedDM:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_ThrownHandGrenade",0,false,0,0)
+        stop
+
+      PickupAttackImprovedCoop:
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_ThrownHandGrenadeCoop",0,false,0,0)
+        stop
+    }
+}
+
+actor ComplexDoom_ThrownHandGrenade
+{  
+    Radius 2
+    Height 2
+    Speed 30
+    Damage 8
+    Scale 0.4
+    SeeSound "complexdoom/weapons/hgrenadebounce"
+    +MTHRUSPECIES
+    +MISSILE
+    +DONTFALL
+    +CANBOUNCEWATER
+    +DOOMBOUNCE
+    +NOTELEPORT
+    WallBounceFactor 0.16
+    BounceFactor 0.36
+    Gravity 0.6
+    Mass 400
+    Decal "Scorch"
+    DamageType "DoomDamageTypeExplosion"
+    Obituary "%o was fragged by %k's hand grenade."
+    States
+    {
+    Spawn:
+        TNT1 A 0
+        CD26 B 3 A_StopSound
+        CD26 CDEFGHIBCDEFGHIBCDEFGHI 3
+        Goto Death      
+    Death: 
+        TNT1 A 0
+        TNT1 A 0 A_Explode  
+        TNT1 A 0 A_AlertMonsters
+        TNT1 A 0 A_PlaySound("complexdoom/weapons/hgrenadeex")
+        TNT1 A 0 A_SpawnItemEx("ComplexDoom_ExplosionParticleSpawner", 0, 0, 0, 0, 0, 0, 0, 128) 
+        TNT1 AAA 0 A_CustomMissile("ComplexDoom_Explosion", 0, 0, random(0,360), 2, random(0,360))
+        TNT1 AAA 0 A_CustomMissile("ComplexDoom_ExplosionSmoke", 0, 0, random(0,360), 2, random(0,360))
+        TNT1 AAAA 0 A_SpawnItemEx("ComplexDoom_ExplosionDebris",0,0,0,Random(4,-4),Random(4,-4),Random(4,8),0,128)
+        TNT1 A 1 A_SpawnItem("ComplexDoom_RocketEx")
+        Stop
+    }
+}
+
+actor ComplexDoom_ThrownHandGrenadeCoop : ComplexDoom_ThrownHandGrenade
+{
+	Species "Player"
+	+THRUSPECIES
+}
+
+actor ComplexDoom_HandGrenadeAmmo : Ammo
+{
+	Inventory.PickupMessage "Hand Grenades"
+	Inventory.Icon "AMSMS0"
+	Inventory.Amount 1
+	Inventory.MaxAmount 5
+	Ammo.BackpackAmount 0
+	Ammo.BackpackMaxAmount 10
+	Tag "Hand Grenades"
+}
