@@ -32,6 +32,7 @@ actor " Chaingun " : Weapon
 
 	// Original
 	Ready:
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChaingunFiringSoundCheck")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"ReadyCom")
 	ReadyActual:
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChaingunFiringSoundCheck")
@@ -42,6 +43,7 @@ actor " Chaingun " : Weapon
 		loop
 
 	Deselect:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChaingunFiringSoundStopper")
 		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"DeselectCom")
 	DeselectActual:
 		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChaingunFiringSoundStopper")
@@ -437,6 +439,7 @@ actor " Chaingun " : Weapon
 
 /*
 	AltFire:
+        TNT1 A 0 A_AlertMonsters
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyStrChaingunPoweredAttackAmount") // reset
 	AltFireLoop:
 		TNT1 A 0 A_JumpIfInventory("SamsaraUsingSmoothAnims",1,"AltFireLoopSmooth")
@@ -541,6 +544,7 @@ actor " Chaingun " : Weapon
         goto Select
 
     FireCom:
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyStrChaingunFiringSoundStopper")
 		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireComReloadable")
 	FireComNonReloadable:
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireComStart")
