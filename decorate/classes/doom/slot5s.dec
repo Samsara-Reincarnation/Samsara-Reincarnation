@@ -926,7 +926,7 @@ actor ComplexDoom_Grenade
 	Projectile
 	+DONTSPLASH
 	+THRUSPECIES
-	+DOOMBOUNCE
+	BounceType "Doom"
 	-NOGRAVITY
 	-GRENADETRAIL
 	-ROCKETTRAIL
@@ -936,15 +936,14 @@ actor ComplexDoom_Grenade
 	ExplosionDamage 128
 	ExplosionRadius 128
 	Obituary "%o successfully played catch with %k's Grenade."
-	SeeSound "complexdoom/Weapons/GrenadeBounce"
+	BounceSound "complexdoom/Weapons/GrenadeBounce"
 	DeathSound "complexdoom/Weapons/RockLX"
-	DamageType "DoomDamageTypeExplosion"
+	DamageType "DoomDamageTypeExplosive"
 	Decal "ComplexDoom_RocketScorch"
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_StopSound
+		CD16 "\" 0
 	SpawnLoop:
 		CD16 "\" 1 A_CustomMissile("ComplexDoom_GrenadeTrail",Random(-1,1),Random(-1,1))     		
 		Loop

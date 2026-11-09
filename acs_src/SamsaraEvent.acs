@@ -615,6 +615,15 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraDoomguyStrBFGReadySoundCheck", 0);
 				}
 
+				if (!CheckInventory("SamsaraHasInfiniteAmmo"))
+				{
+					if (CheckInventory("SamsaraDoomguyComHasHandGrenade") && !CheckWeapon("ComplexDoom_HandGrenade") && !CheckInventory("ComplexDoom_HandGrenadeAmmo"))
+					{
+						TakeInventory("ComplexDoom_HandGrenade", 1);
+						SetInventory("SamsaraDoomguyComHasHandGrenade", 0);
+					}
+				}
+
 				doommode = middle(0, GetUserCVar(pln, "samsara_cl_doommode"), 3);
 
 				if(doommode == 2)
@@ -762,6 +771,7 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 							TakeInventory("Homing Rocket Launcher", 1);
 							TakeInventory("Plasma Repeater", 1);
 							SetInventory("SamsaraDoomguyStrWeaponPowerItem", 0);
+							TakeInventory("ComplexDoom_HandGrenade", 1);
 
 							SetActorProperty(0,APROP_SoundClass,"Doom64Guy");
 						}
@@ -788,12 +798,21 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 								if(CheckWeapon(" Unmaker ")) { SetWeapon("Pyro Cannon"); }
 							}
 
+							TakeInventory(" Unmaker ", 0x7FFFFFFF);
+							TakeInventory("ComplexDoom_HandGrenade", 1);
+
 							GiveInventory("DoomGuyScalar",1);
 							SetActorProperty(0,APROP_SoundClass,"Doomguy");
-							TakeInventory(" Unmaker ", 0x7FFFFFFF);
 						}
 						else if(doommode == 3)
 						{
+                            if (CheckInventory("SamsaraDoomguyComHasHandGrenade") && !CheckInventory("ComplexDoom_HandGrenade"))
+                            {
+                                storedammopriname = "ComplexDoom_HandGrenadeAmmo", storedammopri = CheckInventory(storedammopriname);
+                                SetInventory("ComplexDoom_HandGrenade", 1);
+                                SetInventory(storedammopriname, storedammopri);
+                            }
+
 							if(CheckInventory("Doom64_IHaveUnmaker"))
 							{
 								if(CheckWeapon(" Unmaker "))
@@ -910,14 +929,15 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 							TakeInventory(" Flamer ", 1);
 							TakeInventory("Land Mine Layer", 1);
 							TakeInventory("Stunner Rifle", 1);
+							TakeInventory(" Unmaker ", 0x7FFFFFFF);
 							TakeInventory("Pyro Cannon", 1);
 							TakeInventory("Homing Rocket Launcher", 1);
 							TakeInventory("Plasma Repeater", 1);
 							SetInventory("SamsaraDoomguyStrWeaponPowerItem", 0);
+							TakeInventory("ComplexDoom_HandGrenade", 1);
 
 							GiveInventory("DoomGuyScalar",1);
 							SetActorProperty(0,APROP_SoundClass,"Doomguy");
-							TakeInventory(" Unmaker ", 0x7FFFFFFF);
 						}
 					}
 					ACS_NamedExecuteAlways("SAMSARA_CLIENT_ALTERNATIVECLASS", 0, doommode, pln);

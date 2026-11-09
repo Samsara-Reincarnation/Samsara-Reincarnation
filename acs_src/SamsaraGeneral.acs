@@ -2278,6 +2278,7 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("Homing Rocket Launcher", INTMAX);
 			TakeInventory("Plasma Repeater", INTMAX);
 			TakeInventory("SamsaraDoomguyStrWeaponPowerItem", INTMAX);
+            TakeInventory("ComplexDoom_HandGrenade", INTMAX);
 			TakeInventory("DGStrHasAutoShotgun", INTMAX);
 			TakeInventory("DGHasChaingun", INTMAX);
 			TakeInventory("DGStrHasFlamethrower", INTMAX);
@@ -2296,6 +2297,7 @@ Script "Samsara_ResetInventory" (int takexp)
 			TakeInventory("DGStrHasHomingRocketLauncher", INTMAX);
 			TakeInventory("DGStrHasPlasmaRepeater", INTMAX);
 			TakeInventory("DGStrHasWPK", INTMAX);
+            TakeInventory("SamsaraDoomguyComHasHandGrenade", INTMAX);
 			SetInventory("SamsaraPermaWeaponLevel2ToggleMemory", 1);
 
 			if (!CheckInventory("SamsaraDoom64StartingUnmakerArtifactsGiven"))
@@ -2313,7 +2315,12 @@ Script "Samsara_ResetInventory" (int takexp)
 			SetInventory("ComplexDoom_SSGShell", 2);
 			SetInventory("ComplexDoom_ASGMagazine", 8);
 			SetInventory("DoomguyStrASGClip", 20);
+			SetInventory("ComplexDoom_ARMagazine", 40);
+			SetInventory("ComplexDoom_RocketDrum", 6);
+			SetInventory("ComplexDoom_GrenadeDrum", 6);
+			SetInventory("ComplexDoom_PlasmaCell", 50);
 			SetInventory("DoomguyRailgunClip", 4);
+			SetInventory("ComplexDoom_CellCharge", 5);
 			SetInventory("SamsaraDoomguyStrPistolLoaded", 0);
 			SetWeapon(" Pistol ");
 			break;
@@ -3989,6 +3996,7 @@ script "Samsara_FillInventory" (void)
 			GiveInventory("DGStrHasHomingRocketLauncher",1);
 			GiveInventory("DGStrHasPlasmaRepeater",1);
 			GiveInventory("DGStrHasWPK",3);
+            GiveInventory("SamsaraDoomguyComHasHandGrenade",1);
 			break;
 
 		case CLASS_HERETIC:
@@ -13101,34 +13109,30 @@ script "Samsara_GiveBackpack" (int startmode)
         break;
 
       case CLASS_DOOM:
+        int curmines = CheckInventory("DoomguyStrMines");
+        int curgas = CheckInventory("DoomguyStrGas");
+
         switch (altclasschoice)
         {
           default: // Original/Doom 64
-            int curmines = CheckInventory("DoomguyStrMines");
-            int curgas = CheckInventory("DoomguyStrGas");
-            int curgrenades = CheckInventory("ComplexDoom_HandGrenadeAmmo");
-
             GiveInventory("Backpack", 1);
             SetInventory("DoomguyStrMines", curmines); // leave our mines untouched because we cannot use them
             SetInventory("DoomguyStrGas", curgas); // ditto with gas
-            SetInventory("ComplexDoom_HandGrenadeAmmo", curgrenades); // and grenades
+            if (CheckInventory("SamsaraHasInfiniteAmmo") || CheckInventory("ComplexDoom_HandGrenadeAmmo")) { GiveInventory("SamsaraDoomguyComHasHandGrenade", 1); }
             break;
 
           case 2: // Stronghold
-            curgrenades = CheckInventory("ComplexDoom_HandGrenadeAmmo");
-
             GiveInventory("Backpack", 1);
-            SetInventory("ComplexDoom_HandGrenadeAmmo", curgrenades); // leave our grenades untouched because we cannot use them
+            if (CheckInventory("SamsaraHasInfiniteAmmo") || CheckInventory("ComplexDoom_HandGrenadeAmmo")) { GiveInventory("SamsaraDoomguyComHasHandGrenade", 1); }
             break;
 
-          case 3: // Complex Doom
-            curmines = CheckInventory("DoomguyStrMines");
-            curgas = CheckInventory("DoomguyStrGas");
-
+          case 3: // Complex
             GiveInventory("Backpack", 1);
             GiveInventory("ComplexDoom_HandGrenade", 1);
+            if (startmode <= -1) { GiveInventory("ComplexDoom_HandGrenadeAmmo", GetAmmoCapacity("ComplexDoom_HandGrenadeAmmo")); }
             SetInventory("DoomguyStrMines", curmines); // leave our mines untouched because we cannot use them
             SetInventory("DoomguyStrGas", curgas); // ditto with gas
+            if (CheckInventory("SamsaraHasInfiniteAmmo") || CheckInventory("ComplexDoom_HandGrenadeAmmo")) { GiveInventory("SamsaraDoomguyComHasHandGrenade", 1); }
             break;
         }
         break;
