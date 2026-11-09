@@ -153,20 +153,35 @@ complexdoom/player/death1 "sounds/ComplexDoom/complexdoom_DSCPDE1.wav"
 complexdoom/player/death2 "sounds/ComplexDoom/complexdoom_DSCPDE2.wav"
 complexdoom/player/death3 "sounds/ComplexDoom/complexdoom_DSCPDE3.wav"
 
-/*
-$playersound	Marine	male	*pain100	"sounds/ComplexDoom/complexdoom_dscppa1.wav"
-$playersound	Marine	male	*pain75		"sounds/ComplexDoom/complexdoom_dscppa2.wav"
-$playersound	Marine	male	*pain50		"sounds/ComplexDoom/complexdoom_dscppa2.wav"
-$playersound	Marine	male	*pain25		"sounds/ComplexDoom/complexdoom_dscppa3.wav"
-$playersound	Marine	male	*land		"sounds/ComplexDoom/complexdoom_dscpoof.wav"
-$playersound	Marine	male	*grunt		"sounds/ComplexDoom/complexdoom_dscpoof.wav"
-$playersound	Marine	male	*jump		"sounds/ComplexDoom/complexdoom_dscpoof.wav"
-$playersound	Marine	male	*usefail	"sounds/ComplexDoom/complexdoom_dscpnwy.wav"
-$playersound	Marine	male	*xdeath		"sounds/ComplexDoom/complexdoom_dscpdhi.wav"
-$playersound	Marine	male	*taunt		"sounds/ComplexDoom/complexdoom_dscptau.wav"
-$playeralias    Marine  male    *death		complexdoom/player/death
-$playeralias 	Marine	male	*gibbed		misc/gibbed
-*/
+$random complexdoom/player/gibbed { complexdoom/player/gib1 omplexdoom/player/gib2 omplexdoom/player/gib3 omplexdoom/player/gib4 }
+omplexdoom/player/gib1 "sounds/ComplexDoom/complexdoom_SPLAT1.wav"
+omplexdoom/player/gib2 "sounds/ComplexDoom/complexdoom_SPLAT2.wav"
+omplexdoom/player/gib3 "sounds/ComplexDoom/complexdoom_SPLAT3.wav"
+omplexdoom/player/gib4 "sounds/ComplexDoom/complexdoom_SPLAT4.wav"
+
+$random complexdoom/player/land	{ complexdoom/player/land1 omplexdoom/player/land2 omplexdoom/player/land3 omplexdoom/player/land4 }
+omplexdoom/player/land1 "sounds/ComplexDoom/complexdoom_LAND1.wav"
+omplexdoom/player/land2 "sounds/ComplexDoom/complexdoom_LAND2.wav"
+omplexdoom/player/land3 "sounds/ComplexDoom/complexdoom_LAND3.wav"
+omplexdoom/player/land4 "sounds/ComplexDoom/complexdoom_LAND4.wav"
+
+$playersound	DoomguyCom  male	*death			complexdoom/player/death
+$playersound	DoomguyCom  male	*xdeath			sounds/ComplexDoom/complexdoom_dscpdhi.wav
+$playersound	DoomguyCom  male	*burndeath		dgdethf
+$playersound	DoomguyCom  male	*crazydeath		sounds/ComplexDoom/complexdoom_dscpdhi.wav
+$playersounddup DoomguyCom  male	*wimpydeath 	*death
+$playersound	DoomguyCom  male	*gibbed			complexdoom/player/gibbed
+$playersound	DoomguyCom  male	*falling		dgfall
+$playersound	DoomguyCom  male	*pain100		ounds/ComplexDoom/complexdoom_dscppa1.wav
+$playersound	DoomguyCom  male	*pain75			sounds/ComplexDoom/complexdoom_dscppa2.wav
+$playersound	DoomguyCom  male	*pain50			sounds/ComplexDoom/complexdoom_dscppa2.wav
+$playersound	DoomguyCom  male	*pain25			sounds/ComplexDoom/complexdoom_dscppa3.wav
+$playersound	DoomguyCom  male	*grunt			sounds/ComplexDoom/complexdoom_dscpoof.wav
+$playersound	DoomguyCom  male	*land			complexdoom/player/land
+$playersound	DoomguyCom  male	*usefail		sounds/ComplexDoom/complexdoom_dscpnwy.wav
+$playersound	DoomguyCom  male	*puzzfail		sounds/ComplexDoom/complexdoom_dscpnwy.wav
+$playersound	DoomguyCom  male	*taunt			sounds/ComplexDoom/complexdoom_dscptau.wav
+$playersound    DoomguyCom  male	*poison         silence
 
 // Misc. Sounds
 complexdoom/weapons/weapondown		"sounds/ComplexDoom/complexdoom_DSWEPDWN.wav"
