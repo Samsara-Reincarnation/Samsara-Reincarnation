@@ -57,6 +57,9 @@ actor "Rocket Launcher" : RocketLauncher
 		DMIS B 12 A_GiveInventory("SamsaraDoomguyRocketLauncherAttackHandler")
 		// 20 frames total
 	FireFinish:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto Nothing
 		TNT1 A 0 A_ReFire
 		goto ReadyActual
 
@@ -96,7 +99,7 @@ actor "Rocket Launcher" : RocketLauncher
 
 	DeselectActual64:
 		64ML A 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
 	Select64:
 		64ML A 1 A_Raise
@@ -143,7 +146,7 @@ actor "Rocket Launcher" : RocketLauncher
 	DeselectActualStrContinue:
 		TNT1 A 0 A_Lower
 		DMIS H 1 A_Lower
-		goto Deselect
+		goto DeselectActual
 
 	SelectStr:
 		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"SelectStrPowered")
@@ -190,6 +193,10 @@ actor "Rocket Launcher" : RocketLauncher
 
 /*
 	AltFire:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto Nothing
+        TNT1 A 0 A_AlertMonsters
 		DMSF H 4 Bright A_GunFlash("FlashStrPowered")
 		DMSF I 2 Bright A_GiveInventory("SamsaraDoomguyStrRocketLauncherPoweredSecondaryAttackHandler1")
 		DMSF H 4 Bright A_GunFlash("FlashStrPowered")
@@ -198,14 +205,18 @@ actor "Rocket Launcher" : RocketLauncher
 		DMSF I 2 Bright A_GiveInventory("SamsaraDoomguyStrRocketLauncherPoweredSecondaryAttackHandler3")
 		DMSF JK 4 Bright
 	AltFireFinish:
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
+        goto Nothing
 		TNT1 A 0 A_JumpIfInventory("PowerSamsaraDoomguyStrWeaponPower",1,"AltFireFinishReFire")
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasPermaWeaponLevel2",1,"AltFireFinishReFire")
-		TNT1 A 0 A_CheckReload
+		//TNT1 A 0 A_CheckReload
 		goto ReadyActual
 
 	AltFireFinishReFire:
-		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,2)
-		TNT1 A 0 A_CheckReload
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"ReadyActual") // 2
+		TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,1) // 2
+		//TNT1 A 0 A_CheckReload
 		goto ReadyActual
 		TNT1 A 0 A_ReFire
 		goto ReadyActual
@@ -219,8 +230,8 @@ actor "Rocket Launcher" : RocketLauncher
 
 	// Complex Doom
     ReadyCom:
-        TNT1 A 0 A_PlayWeaponSound("complexdoom/weapons/pickupml")
-        CD15 BCDEF 1
+        CD15 B 1 A_PlayWeaponSound("complexdoom/weapons/pickupml")
+        CD15 CDEF 1
         Goto ReadyActual
 
     ReadyActualCom:
@@ -266,11 +277,10 @@ actor "Rocket Launcher" : RocketLauncher
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_GunFlash("FlashCom")
         TNT1 A 0 A_Light1 
-        TNT1 A 0 A_Quake(4,3,0,64,"nosoundforyoubitch")
-        CD14 CD 1 Bright
+        CD14 C 1 Bright A_Quake(4,3,0,64,"nosoundforyoubitch")
+        CD14 D 1 Bright
         CD14 E 1 Bright A_Light2
-        TNT1 A 0 A_GiveInventory("SamsaraDoomguyComRocketLauncherAttackHandler")
-        CD14 F 1 Bright
+        CD14 F 1 Bright A_GiveInventory("SamsaraDoomguyComRocketLauncherAttackHandler")
         CD14 G 2 A_Light0
         CD14 HIJK 1
         CD14 L 3 A_PlaySound("complexdoom/rocket/drumspin")
@@ -289,7 +299,7 @@ actor "Rocket Launcher" : RocketLauncher
 		Goto ReadyActual
 
 	ReloadStart:
-        TNT1 A 0 A_JumpIfInventory("ComplexDoom_RocketDrum",1,"ReloadStartMax")
+        TNT1 A 0 A_JumpIfInventory("ComplexDoom_RocketDrum",1,"ReloadStartLoaded")
         CD14 R 2 A_PlaySound("complexdoom/weapons/rocketdrumin")
         CD14 S 2
         CD14 T 2 A_SpawnItemEx("ComplexDoom_RocketEmptyDrum",2,0,-12,1,0,0,Random(-100,-110),128)
@@ -303,7 +313,8 @@ actor "Rocket Launcher" : RocketLauncher
         CD14 L 5 A_PlaySound("complexdoom/rocket/drumspin")
         CD14 M 3
         CD14 N 2
-		goto ReloadAmmo
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmo")
+		goto ReadyActual
 
 	ReloadAmmo:
         TNT1 A 0 A_JumpIfInventory("ComplexDoom_RocketDrum",0,"ReadyActual")
@@ -315,9 +326,9 @@ actor "Rocket Launcher" : RocketLauncher
         TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
         TNT1 A 0 A_TakeInventory("RocketAmmo",1)
         TNT1 A 0 A_GiveInventory("ComplexDoom_RocketDrum")
-        goto ReloadAmmo
+        loop
 
-	ReloadStartMax:
+	ReloadStartLoaded:
         CD14 R 2 A_PlayWeaponSound("complexdoom/weapons/rocketdrumin")
         CD14 S 2
         CD14 T 2 A_SpawnItemEx("ComplexDoom_RocketEmptyDrum",2,0,-12,1,0,0,Random(-100,-110),128)
@@ -325,26 +336,25 @@ actor "Rocket Launcher" : RocketLauncher
         CD14 W 8
         CD14 XY 2
         CD14 Z 3
-        goto ReloadAmmoMax
-
-	ReloadFinishMax:
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoLoaded")
+	ReloadFinishLoaded:
         CD14 "[" 5
         CD14 "\]" 2
         CD15 A 1
         CD14 N 2
 		Goto ReadyActual
 
-	ReloadAmmoMax:
-		TNT1 A 0 A_JumpIfInventory("ComplexDoom_RocketDrum",0,"ReloadFinishMax")
+	ReloadAmmoLoaded:
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_RocketDrum",0,"ReloadFinishLoaded")
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_JumpIfInventory("RocketAmmo",1,1)
-		goto ReloadFinishMax
+		goto ReloadFinishLoaded
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
 		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 		TNT1 A 0 A_TakeInventory("RocketAmmo",1)
 		TNT1 A 0 A_GiveInventory("ComplexDoom_RocketDrum")
-		goto ReloadAmmoMax
+		loop
 
 	FlashCom:
 		TNT1 A 0
