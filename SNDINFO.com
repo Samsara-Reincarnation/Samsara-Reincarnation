@@ -206,6 +206,11 @@ complexdoom/weapons/bullet1			"sounds/ComplexDoom/complexdoom_DSCASING.wav"
 complexdoom/weapons/bullet2			"sounds/ComplexDoom/complexdoom_DSCASIN2.wav"
 complexdoom/weapons/bullet3			"sounds/ComplexDoom/complexdoom_DSCASIN3.wav"
 
+$random complexdoom/weapons/casing2	{ complexdoom/weapons/shell1 complexdoom/weapons/shell2 complexdoom/weapons/shell3 }
+complexdoom/weapons/shell1			"sounds/ComplexDoom/complexdoom_DSSHELL1.wav"
+complexdoom/weapons/shell2			"sounds/ComplexDoom/complexdoom_DSSHELL2.wav"
+complexdoom/weapons/shell3			"sounds/ComplexDoom/complexdoom_DSSHELL3.wav"
+
 $random complexdoom/weapons/cellcasing { complexdoom/casing/cell1 complexdoom/casing/cell2 complexdoom/casing/cell3 complexdoom/casing/cell4 }
 complexdoom/casing/cell1			"sounds/ComplexDoom/complexdoom_DSECELL1.wav"
 complexdoom/casing/cell2			"sounds/ComplexDoom/complexdoom_DSECELL2.wav"
