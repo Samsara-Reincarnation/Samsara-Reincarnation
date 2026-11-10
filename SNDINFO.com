@@ -108,6 +108,7 @@ complexdoom/weapons/rgcharge		"sounds/ComplexDoom/complexdoom_DSRGCHAR.ogg"
 complexdoom/weapons/cellreload		"sounds/ComplexDoom/complexdoom_DSCERL.wav"
 complexdoom/weapons/railgunhum		"sounds/ComplexDoom/complexdoom_DSRAHUM.wav"
 complexdoom/weapons/railselect		"sounds/ComplexDoom/complexdoom_DSRGSEL.wav"
+$alias complexdoom/weapons/railfire doomguy/railgf
 
 // BFG9500
 complexdoom/weapons/bfgpickup		"sounds/ComplexDoom/complexdoom_DSGETBFG.wav"

@@ -578,7 +578,11 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
                 if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraDoomguyComSSGAlternate", CheckInventory("ComplexDoom_SSGShell") % 2); }
                 else if (CheckInventory("SamsaraReloadMode") == 1) { SetInventory("SamsaraDoomguyComSSGAlternate", CheckInventory("SamsaraDoomguyComSSGFired") % 2); }
 
-				if (CheckInventory("SamsaraDoomguyStrRailgunScope") && !CheckWeapon(" RailGun ")) { SetInventory("SamsaraDoomguyStrRailgunScope", 0); }
+				if (!CheckWeapon(" RailGun "))
+				{
+					if (CheckInventory("SamsaraDoomguyStrRailgunScope")) { SetInventory("SamsaraDoomguyStrRailgunScope", 0); }
+					if (CheckInventory("SamsaraDoomguyComRailgunScope")) { SetInventory("SamsaraDoomguyComRailgunScope", 0); }
+				}
 
 				if (CheckInventory("SamsaraDoomguyStrChaingunFiringSoundCheck") && !CheckWeapon(" Chaingun "))
 				{
