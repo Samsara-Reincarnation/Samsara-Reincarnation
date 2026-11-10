@@ -898,11 +898,11 @@ actor SamsaraDoomguyComGrenadeLauncherAttackHandler : Trigger
         TNT1 A 0 A_JumpIfInventory("SPModeOn",1,"PickupAttackImprovedCoop")
         TNT1 A 0 A_JumpIfInventory("CoopModeOn",1,"PickupAttackImprovedCoop")
       PickupAttackImprovedDM:
-        TNT1 A 0 A_FireCustomMissile("ComplexDoom_Grenade",0,false,0,0,0,6.328125)
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_GrenadeImproved",0,false,0,0,0,6.328125)
         stop
 
       PickupAttackImprovedCoop:
-        TNT1 A 0 A_FireCustomMissile("ComplexDoom_GrenadeCoop",0,false,0,0,0,6.328125)
+        TNT1 A 0 A_FireCustomMissile("ComplexDoom_GrenadeImprovedCoop",0,false,0,0,0,6.328125)
         stop
     }
 }
@@ -928,6 +928,7 @@ actor ComplexDoom_Grenade
 	-NOGRAVITY
 	-GRENADETRAIL
 	-ROCKETTRAIL
+	-BLOODSPLATTER
 	Gravity 0.4
 	WallBounceFactor 0.25
 	BounceFactor 0.36
@@ -954,10 +955,14 @@ actor ComplexDoom_Grenade
 	}
 }
 
+actor ComplexDoom_GrenadeImproved : ComplexDoom_Grenade { Damage 32 }
+
 actor ComplexDoom_GrenadeCoop : ComplexDoom_Grenade
 {
 	Species "Player"
 	+THRUSPECIES
 }
+
+actor ComplexDoom_GrenadeImprovedCoop : ComplexDoom_GrenadeImproved { +THRUSPECIES Species "Player" }
 
 actor ComplexDoom_GrenadeTrail : ComplexDoom_MissileTrail { Scale 0.075 }

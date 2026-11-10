@@ -154,7 +154,7 @@ actor ComplexDoom_ThrownHandGrenade
     Radius 2
     Height 2
     Speed 30
-    Damage 8
+    Damage 15
     Scale 0.4
     BounceSound "complexdoom/weapons/hgrenadebounce"
     +MISSILE
@@ -162,6 +162,7 @@ actor ComplexDoom_ThrownHandGrenade
     +CANBOUNCEWATER
     BounceType "Doom"
     +NOTELEPORT
+	-BLOODSPLATTER
     WallBounceFactor 0.16
     BounceFactor 0.36
     Gravity 0.6
@@ -176,7 +177,7 @@ actor ComplexDoom_ThrownHandGrenade
         Goto Death
     Death: 
         TNT1 A 0
-        TNT1 A 0 A_Explode  
+        TNT1 A 0 A_Explode
         TNT1 A 0 A_AlertMonsters
         TNT1 A 0 A_PlaySound("complexdoom/weapons/hgrenadeex")
         TNT1 A 0 A_SpawnItemEx("ComplexDoom_ExplosionParticleSpawner", 0, 0, 0, 0, 0, 0, 0, 128) 
@@ -188,11 +189,15 @@ actor ComplexDoom_ThrownHandGrenade
     }
 }
 
+actor ComplexDoom_ThrownHandGrenadeImproved : ComplexDoom_ThrownHandGrenade { Damage 24 }
+
 actor ComplexDoom_ThrownHandGrenadeCoop : ComplexDoom_ThrownHandGrenade
 {
 	Species "Player"
 	+THRUSPECIES
 }
+
+actor ComplexDoom_ThrownHandGrenadeImprovedCoop : ComplexDoom_ThrownHandGrenadeCoop { +THRUSPECIES Species "Player" }
 
 actor ComplexDoom_HandGrenadeAmmo : Ammo
 {
