@@ -164,10 +164,10 @@ complexdoom/player/gib3 "sounds/ComplexDoom/complexdoom_SPLAT3.wav"
 complexdoom/player/gib4 "sounds/ComplexDoom/complexdoom_SPLAT4.wav"
 
 $random complexdoom/player/land	{ complexdoom/player/land1 complexdoom/player/land2 complexdoom/player/land3 complexdoom/player/land4 }
-complexdoom/player/land1 "sounds/ComplexDoom/complexdoom_LAND1.wav"
-complexdoom/player/land2 "sounds/ComplexDoom/complexdoom_LAND2.wav"
-complexdoom/player/land3 "sounds/ComplexDoom/complexdoom_LAND3.wav"
-complexdoom/player/land4 "sounds/ComplexDoom/complexdoom_LAND4.wav"
+complexdoom/player/land1 "sounds/ComplexDoom/complexdoom_LAND1.ogg"
+complexdoom/player/land2 "sounds/ComplexDoom/complexdoom_LAND2.ogg"
+complexdoom/player/land3 "sounds/ComplexDoom/complexdoom_LAND3.ogg"
+complexdoom/player/land4 "sounds/ComplexDoom/complexdoom_LAND4.ogg"
 
 complexdoom/player/pain100 "sounds/ComplexDoom/complexdoom_dscppa1.wav"
 complexdoom/player/pain75 "sounds/ComplexDoom/complexdoom_dscppa2.wav"
@@ -187,6 +187,7 @@ $playersounddup	DoomguyCom  male	*pain50			*pain75
 $playeralias	DoomguyCom  male	*pain25			complexdoom/player/pain25
 $playersound	DoomguyCom  male	*grunt			sounds/ComplexDoom/complexdoom_dscpoof.wav
 $playeralias	DoomguyCom  male	*land			complexdoom/player/land
+$playersound	DoomguyCom  male    *jump           sounds/ComplexDoom/complexdoom_dscpnwy.wav
 $playersound	DoomguyCom  male	*usefail		sounds/ComplexDoom/complexdoom_dscpnwy.wav
 $playersound	DoomguyCom  male	*puzzfail		sounds/ComplexDoom/complexdoom_dscpnwy.wav
 $playersound	DoomguyCom  male	*taunt			sounds/ComplexDoom/complexdoom_dscptau.wav
