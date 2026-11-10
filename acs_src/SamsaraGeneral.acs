@@ -11612,6 +11612,46 @@ script "Samsara_GiveCustomUnique" (int unum, int startmode)
                 break;
             }
             break;
+
+          case 3: // Complex
+            switch (unum)
+            {
+              default:
+                result = -1;
+                break;
+
+              case SLOT_UNIQUE1:
+              case SLOT_UNIQUE2:
+              case SLOT_UNIQUE3:
+                if (unum == SLOT_UNIQUE1 || startmode == 0 || startmode == 1 || startmode == 3) // do not give again if giving all uniques on spawn
+                {
+                    GiveInventory("DoomguyBerserker", 1);
+                    if (!CheckInventory("SamsaraDoomguyInDoom64CE")) { GiveInventory("SamsaraDoom64UnmakerArtifact", 1); }
+                    result = 1;
+                }
+
+                if (startmode != 0) { result = 1; }
+
+                if (result == 1)
+                {
+                    switch (unum)
+                    {
+                      case SLOT_UNIQUE1:
+                        GiveInventory("DGStrHasHomingRocketLauncher", 1);
+                        break;
+
+                      case SLOT_UNIQUE2:
+                        GiveInventory("DGStrHasPlasmaRepeater", 1);
+                        break;
+
+                      case SLOT_UNIQUE3:
+                        if (CheckInventory("DGStrHasWPK") < 3) { GiveInventory("DGStrHasWPK", 1); }
+                        break;
+                    }
+                }
+                break;
+            }
+            break;
         }
         break;
 
