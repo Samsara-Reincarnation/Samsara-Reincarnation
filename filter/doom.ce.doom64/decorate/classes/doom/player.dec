@@ -1205,8 +1205,9 @@ ACTOR ComplexDoom_BulletPuff : BulletPuff
 	States
 	{
 	Spawn:
-		CD27 A 2 Bright
-		CD27 B 2 Bright A_Jump(24,"RicochetPuff","RicochetPuffAlt")
+		CD27 A 2 Bright Light("COMPLEXPUFFLIGHT")
+		CD27 B 2 Bright Light("COMPLEXPUFFLIGHT") 
+		TNT1 A 0 A_Jump(24,"RicochetPuff","RicochetPuffAlt")
 		CD27 CDEF 2
 		Stop
 	RicochetPuff:
@@ -1235,7 +1236,7 @@ ACTOR ComplexDoom_RicochetSpark
 	States
 	{
 	Spawn:
-		CD27 GHIJKLMNOP 1 Bright
+		CD27 GHIJKLMNOP 1 Bright Light("COMPLEXPUFFLIGHT")
 		Stop
 	}
 }
@@ -1245,7 +1246,7 @@ ACTOR ComplexDoom_RicochetSpark2 : ComplexDoom_RicochetSpark
 	States
 	{
 	Spawn:
-		CD27 QRSTUVWXYZ 1 Bright
+		CD27 QRSTUVWXYZ 1 Bright Light("COMPLEXPUFFLIGHT")
 		Stop
 	}
 }
@@ -1262,13 +1263,13 @@ ACTOR ComplexDoom_BulletCasing
 	+MISSILE
     +CLIENTSIDEONLY
 	+NOTELEPORT	
-	+DOOMBOUNCE
+	BounceType "Doom"
 	+THRUACTORS
 	+DROPOFF
 	BounceFactor 0.5
 	WallBounceFactor 0.25
 	BounceCount 3
-	Seesound "complexdoom/weapons/casing1"
+	BounceSound "complexdoom/weapons/casing1"
 	States
 	{
 	Spawn:
@@ -1289,7 +1290,7 @@ ACTOR ComplexDoom_BulletCasing
 ACTOR ComplexDoom_ShellCasing : ComplexDoom_BulletCasing
 {
 	Scale 0.24
-	Seesound "complexdoom/weapons/casing2"
+	BounceSound "complexdoom/weapons/casing2"
 	States
 	{
 	Spawn:
@@ -1320,7 +1321,7 @@ ACTOR ComplexDoom_SSGShellCasing : ComplexDoom_ShellCasing
 ACTOR ComplexDoom_RifleCasing : ComplexDoom_BulletCasing
 {
 	Scale 0.18
-	Seesound "complexdoom/weapons/casing1"
+	BounceSound "complexdoom/weapons/casing1"
 	States
 	{
 	Spawn:
@@ -1341,7 +1342,7 @@ ACTOR ComplexDoom_RifleCasing : ComplexDoom_BulletCasing
 ACTOR ComplexDoom_PistolEmptyMag : ComplexDoom_BulletCasing
 {
 	Scale 0.5
-	SeeSound "complexdoom/weapons/emptymagazine"
+	BounceSound "complexdoom/weapons/emptymagazine"
 	States
 	{
 	Spawn:
@@ -1362,7 +1363,7 @@ ACTOR ComplexDoom_PistolEmptyMag : ComplexDoom_BulletCasing
 ACTOR ComplexDoom_AREmptyMag : ComplexDoom_BulletCasing
 {
 	Scale 0.85
-	SeeSound "complexdoom/weapons/emptymagazine"
+	BounceSound "complexdoom/weapons/emptymagazine"
 	States
 	{
 	Spawn:
@@ -1383,7 +1384,7 @@ ACTOR ComplexDoom_AREmptyMag : ComplexDoom_BulletCasing
 ACTOR ComplexDoom_RocketEmptyDrum : ComplexDoom_BulletCasing
 {
 	Scale 1
-	SeeSound "complexdoom/weapons/rocketdrumbounce"
+	BounceSound "complexdoom/weapons/rocketdrumbounce"
 	States
 	{
 	Spawn:
@@ -1404,7 +1405,7 @@ ACTOR ComplexDoom_RocketEmptyDrum : ComplexDoom_BulletCasing
 ACTOR ComplexDoom_CellCasing : ComplexDoom_BulletCasing
 {
 	Scale 0.55
-	Seesound "complexdoom/weapons/cellcasing"
+	BounceSound "complexdoom/weapons/cellcasing"
 	States
 	{
 	Spawn:
@@ -1619,8 +1620,9 @@ ACTOR ComplexDoom_RocketEx
 	States
 	{
 	Spawn:
-		CD14 O 6 Bright
-		CD14 PQ 5 Bright
+		CD14 O 6 Bright Light("COMPLEXMISSILEEX1")
+		CD14 P 5 Bright Light("COMPLEXMISSILEEX2")
+		CD14 Q 5 Bright Light("COMPLEXMISSILEEX3")
 		Stop
 	}
 }
@@ -1689,7 +1691,10 @@ ACTOR ComplexDoom_PlasmaEx
 	States
 	{
 	Spawn:
-		CD18 IJKL 3 Bright A_FadeOut(0.1)
+		CD18 I 3 Bright Light("COMPLEXPLASMAEX1") A_FadeOut(0.1)
+		CD18 J 3 Bright Light("COMPLEXPLASMAEX2") A_FadeOut(0.1)
+		CD18 K 3 Bright Light("COMPLEXPLASMAEX3") A_FadeOut(0.1)
+		CD18 L 3 Bright Light("COMPLEXPLASMAEX4") A_FadeOut(0.1)
 		Stop
 	}
 }
