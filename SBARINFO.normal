@@ -2,7 +2,333 @@ StatusBar Normal, ForceScaled
 {
     PlayerType DoomguyPlayer
     {
-        InInventory DoomClassMode, 2 // Stronghold
+        InInventory DoomClassMode, 3 // Complex Doom
+        {
+           DrawImage "DOOMBAR", 0, 168;
+
+            IsSelected " Pistol "
+            {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_PistolMagazine, 44, 171, 0, Untranslated, 0, Untranslated, 17; }
+                else InInventory PistolModeOn { DrawNumber 3, CMDMHUDF, Gold, Ammo Clip, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected " Shotgun " {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_ShotgunMagazine, 44, 171, 0, Untranslated, 0, Untranslated, 8; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo Shell, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected "Super Shotgun" {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_SSGShell, 44, 171, 0, Untranslated, 0, Untranslated, 2; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo Shell, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected "ComplexDoom_AssaultShotgun" {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_ASGMagazine, 44, 171, 0, Untranslated, 0, Untranslated, 8; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo Shell, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected " Chaingun " {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_ARMagazine, 44, 171, 0, Untranslated, 0, Untranslated, 40; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo Clip, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected "Rocket Launcher" {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_RocketDrum, 44, 171, 0, Untranslated, 0, Untranslated, 6; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo RocketAmmo, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected " Grenade Launcher " {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_GrenadeDrum, 44, 171, 0, Untranslated, 0, Untranslated, 6; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo RocketAmmo, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected "Plasma Rifle" {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_PlasmaCell, 44, 171, 0, Untranslated, 0, Untranslated, 50; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo Cell, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            } else IsSelected " RailGun " {
+                InInventory SamsaraReloadMode, 2 { DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_CellCharge, 44, 171, 0, Untranslated, 0, Untranslated, 5; }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo Cell, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+            }
+            else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, 44, 171, 0, Untranslated, 0, Untranslated, 20; }
+
+            DrawNumber 3, CMDMHUDF, Gold, Health, 94, 171, 0, White, 24, Untranslated, 50;
+            DrawNumber 3, CMDMHUDF, Gold, Armor, 219, 171, 0, Untranslated, 0, Untranslated, 50;
+
+            // Doom keys
+            InInventory BlueCard { DrawImage "STKEYS0", 226, 172; }
+            InInventory YellowCard { DrawImage "STKEYS1", 238, 172; }
+            InInventory RedCard { DrawImage "STKEYS2", 250, 172; }
+            InInventory BlueSkull { DrawImage "STKEYS3", 226, 182; }
+            InInventory YellowSkull { DrawImage "STKEYS4", 238, 182; }
+            InInventory RedSkull { DrawImage "STKEYS5", 250, 182; }
+            // Chex keys
+            InInventory ChexBlueCard { DrawImage "STKEYS0", 222, 172; }
+            InInventory ChexYellowCard { DrawImage "STKEYS1", 235, 172; }
+            InInventory ChexRedCard { DrawImage "STKEYS2", 248, 172; }
+            InInventory BlueFlemKey { DrawImage "STKEYS3", 222, 182; }
+            InInventory YellowFlemKey { DrawImage "STKEYS4", 235, 182; }
+            InInventory RedFlemKey { DrawImage "STKEYS5", 248, 182; }
+            // Heretic keys
+            InInventory KeyYellow { DrawImage "YKEYICON", 224, 180; }
+            InInventory KeyGreen { DrawImage "GKEYICON", 238, 180; }
+            InInventory KeyBlue { DrawImage "BKEYICON", 251, 180; }
+            // Hexen keys
+            InInventory KeySteel { DrawImage "HEXKEY1", 223, 171; }
+            InInventory KeyCave { DrawImage "HEXKEY2", 223, 181; }
+            InInventory KeyAxe { DrawImage "HEXKEY3", 223, 191; }
+            InInventory KeyFire { DrawImage "HEXKEY4", 233, 171; }
+            InInventory KeyEmerald { DrawImage "HEXKEY5", 233, 181; }
+            InInventory KeyDungeon { DrawImage "HEXKEY6", 233, 191; }
+            InInventory KeySilver { DrawImage "HEXKEY7", 243, 171; }
+            InInventory KeyRusted { DrawImage "HEXKEY8", 243, 181; }
+            InInventory KeyHorn { DrawImage "HEXKEY9", 243, 191; }
+            InInventory KeySwamp { DrawImage "HEXKEYA", 253, 171; }
+            InInventory KeyCastle { DrawImage "HEXKEYB", 253, 181; }
+            // Strife keys
+            InInventory BaseKey { DrawImage "STRIKEY1", 223, 171; }
+            InInventory GovsKey { DrawImage "STRIKEY2", 229, 171; }
+            InInventory PassCard { DrawImage "STRIKEY3", 235, 171; }
+            InInventory IDBadge { DrawImage "STRIKEY4", 242, 171; }
+            InInventory PrisonKey { DrawImage "STRIKEY5", 248, 171; }
+            InInventory SeveredHand { DrawImage "STRIKEY6", 255, 171; }
+            InInventory Power1Key { DrawImage "STRIKEY7", 223, 178; }
+            InInventory Power2Key { DrawImage "STRIKEY8", 229, 178; }
+            InInventory Power3Key { DrawImage "STRIKEY9", 235, 178; }
+            InInventory GoldKey { DrawImage "STRIKEYA", 242, 178; }
+            InInventory IDCard { DrawImage "STRIKEYB", 248, 178; }
+            InInventory SilverKey { DrawImage "STRIKEYC", 255, 178; }
+            InInventory OracleKey { DrawImage "STRIKEYD", 223, 185; }
+            InInventory MilitaryID { DrawImage "STRIKEYE", 229, 185; }
+            InInventory OrderKey { DrawImage "STRIKEYF", 235, 185; }
+            InInventory BrassKey { DrawImage "STRIKEYG", 242, 185; }
+            InInventory RedCrystalKey { DrawImage "STRIKEYH", 248, 185; }
+            InInventory BlueCrystalKey { DrawImage "STRIKEYI", 255, 185; }
+            InInventory ChapelKey { DrawImage "STRIKEYJ", 223, 192; }
+            InInventory CatacombKey { DrawImage "STRIKEYK", 229, 192; }
+            InInventory CoreKey { DrawImage "STRIKEYL", 235, 192; }
+            InInventory MaulerKey { DrawImage "STRIKEYM", 242, 192; }
+            InInventory FactoryKey { DrawImage "STRIKEYN", 248, 192; }
+            InInventory MineKey { DrawImage "STRIKEYO", 255, 192; }
+
+            DrawNumber 3, INDEXFONT, Gold, Ammo Clip, 289, 173;
+            DrawNumber 3, INDEXFONT, Gold, Ammo Shell, 289, 179;
+            DrawNumber 3, INDEXFONT, Gold, Ammo RocketAmmo, 289, 185;
+            DrawNumber 3, INDEXFONT, Gold, Ammo Cell, 289, 191;
+
+            DrawNumber 3, INDEXFONT, Gold, AmmoCapacity Clip, 315, 173;
+            DrawNumber 3, INDEXFONT, Gold, AmmoCapacity Shell, 315, 179;
+            DrawNumber 3, INDEXFONT, Gold, AmmoCapacity RocketAmmo, 315, 185;
+            DrawNumber 3, INDEXFONT, Gold, AmmoCapacity Cell, 315, 191;
+
+            InInventory ChickenModeOn { DrawNumber 3, CMDMHUDF, Untranslated, ChickenKillCount, 142, 171; }
+            else
+            {
+                GameMode Deathmatch, Possession, TeamGame { DrawNumber 3, CMDMHUDF, Untranslated, Frags, 142, 171; }
+                else GameMode SinglePlayer, Cooperative, Invasion, Survival
+                {
+                    DrawNumber 3, CMDMHUDF, Untranslated, KillCountAmount, 142, 171;
+                    InInventory KillCountNotch, 1 { DrawImage "DOMNOTCH", 99, 167; }
+                    InInventory KillCountNotch, 2 { DrawImage "DOMNOTCH", 104, 167; }
+                    InInventory KillCountNotch, 3 { DrawImage "DOMNOTCH", 109, 167; }
+                    InInventory KillCountNotch, 4 { DrawImage "DOMNOTCH", 114, 167; }
+                    InInventory KillCountNotch, 5 { DrawImage "DOMNOTCH", 119, 167; }
+                    InInventory KillCountNotch, 6 { DrawImage "DOMNOTCH", 124, 167; }
+                    InInventory KillCountNotch, 7 { DrawImage "DOMNOTCH", 129, 167; }
+                    InInventory KillCountNotch, 8 { DrawImage "DOMNOTCH", 134, 167; }
+                    InInventory KillCountNotch, 9 { DrawImage "DOMNOTCH", 139, 167; }
+                }
+            }
+
+            InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 40, Center; }
+
+            DrawSelectedInventory AlwaysShowCounter, CMDMHUDF, 290, 22, 293, 30, Untranslated;
+
+            GameMode TeamGame, CTF, OneFlagCTF, Skulltag, TeamPossession, TeamLMS, Domination
+            {
+                DrawImage Translatable "CLRDOOM", 145, 169;
+
+                InInventory SamsaraTeamTextActivated
+                {
+                    InInventory SamsaraCurrentTeamIndicator, 8 { DrawString CMPSDUKE, Purple, "PURPLE", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 7 { DrawString CMPSDUKE, Orange, "ORANGE", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 6 { DrawString CMPSDUKE, White, "WHITE", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 5 { DrawString CMPSDUKE, Black, "BLACK", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 4 { DrawString CMPSDUKE, Gold, "GOLD", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 3 { DrawString CMPSDUKE, Green, "GREEN", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 2 { DrawString CMPSDUKE, Red, "RED", 10, 158; }
+                    else InInventory SamsaraCurrentTeamIndicator, 1 { DrawString CMPSDUKE, Blue, "BLUE", 10, 158; }
+                }
+            }
+
+            InInventory PowerFakeInvulnerable { DrawImage "CDGYGOD0", 143, 168; }
+            else InInventory PowerSamsaraDamageBooster { DrawImage "DGYARNO0", 143, 168; }
+            else { DrawMugShot 5, 143, 168; }
+
+            InInventory ExpandedHud
+            {
+                DrawImage "DOOMBART", 0, 0;
+
+                // Slot 1
+                InInventory GotWeapon0
+                {
+                    DrawImage "DOOM1BNT", 63, 2;
+                    DrawImage "WPDOOM1N", 52, 10;
+                }
+
+                IsSelected " Chainsaw "
+                {
+                    DrawImage "DOOM1BRT", 63, 2;
+                    DrawImage "WPDOOM1Y", 52, 10;
+                }
+
+                // Slot 2
+                InInventory GotWeapon2
+                {
+                    DrawImage "DOOM2BNT", 93, 2;
+                    DrawImage "WPDOOM2N", 84, 10;
+                }
+
+                IsSelected " Shotgun "
+                {
+                    DrawImage "DOOM2BRT", 93, 2;
+                    DrawImage "WPDOOM2Y", 84, 10;
+                }
+
+                // Slot 3
+                InInventory GotWeapon3
+                {
+                    DrawImage "DOOM3BNT", 124, 2;
+                    DrawImage "WPDOOM3N", 116, 10;
+                }
+
+                IsSelected "Super Shotgun"
+                {
+                    DrawImage "DOOM3BRT", 124, 2;
+                    DrawImage "WPDOOM3Y", 116, 10;
+                }
+
+                // Slot 4
+                InInventory GotWeapon4
+                {
+                    DrawImage "DOOM4BNT", 155, 2;
+
+                    InInventory SamsaraDoomOriginalLoadoutSlot4 { DrawImage "WPDOM4N1", 148, 10; } // Machine Gun
+                    else { DrawImage "WPDOOM4N", 148, 10; } // Chaingun
+                }
+
+                IsSelected " Chaingun "
+                {
+                    DrawImage "DOOM4BRT", 155, 2;
+                    DrawImage "WPDOOM4Y", 148, 10;
+                } else IsSelected " Machine Gun " {
+                    DrawImage "DOOM4BRT", 155, 2;
+                    DrawImage "WPDOM4Y1", 148, 10;
+                }
+
+                // Slot 4S
+                InInventory not GotWeapon4
+                {
+                    InInventory " Minigun "
+                    {
+                        DrawImage "DOOM4BNT", 155, 2;
+                        DrawImage "WPDOM4NS", 148, 10;
+                    }
+                }
+
+                IsSelected " Minigun "
+                {
+                    DrawImage "DOOM4BRT", 155, 2;
+                    DrawImage "WPDOM4YS", 148, 10;
+                }
+
+                // Slot 5
+                InInventory GotWeapon5
+                {
+                    DrawImage "DOOM5BNT", 189, 2;
+                    DrawImage "WPDOOM5N", 180, 10;
+                }
+
+                IsSelected "Rocket Launcher"
+                {
+                    DrawImage "DOOM5BRT", 189, 2;
+                    DrawImage "WPDOOM5Y", 180, 10;
+                }
+
+                // Slot 5S
+                InInventory not GotWeapon5
+                {
+                    InInventory " GrenadeLauncher "
+                    {
+                        DrawImage "DOOM5BNT", 189, 2;
+                        DrawImage "WPDOM5NS", 180, 10;
+                    }
+                }
+
+                IsSelected " GrenadeLauncher "
+                {
+                    DrawImage "DOOM5BRT", 189, 2;
+                    DrawImage "WPDOM5YS", 180, 10;
+                }
+
+                // Slot 6
+                InInventory GotWeapon6
+                {
+                    DrawImage "DOOM6BNT", 219, 2;
+
+                    InInventory SamsaraDoomOriginalLoadoutSlot6 { DrawImage "WPDOM6N1", 212, 10; } // Incinerator
+                    else { DrawImage "WPDOOM6N", 212, 10; } // Plasma Rifle
+                }
+
+                IsSelected "Plasma Rifle"
+                {
+                    DrawImage "DOOM6BRT", 219, 2;
+                    DrawImage "WPDOOM6Y", 212, 10;
+                } else IsSelected " Incinerator " {
+                    DrawImage "DOOM6BRT", 219, 2;
+                    DrawImage "WPDOM6Y1", 212, 10;
+                }
+
+                // Slot 6S
+                InInventory not GotWeapon6
+                {
+                    InInventory " RailGun "
+                    {
+                        DrawImage "DOOM6BNT", 219, 2;
+                        DrawImage "WPDOM6NS", 212, 10;
+                    }
+                }
+
+                IsSelected " RailGun "
+                {
+                    DrawImage "DOOM6BRT", 219, 2;
+                    DrawImage "WPDOM6YS", 212, 10;
+                }
+
+                // Slot 7
+                InInventory GotWeapon7
+                {
+                    DrawImage "DOOM7BNT", 250, 2;
+
+                    InInventory SamsaraDoomOriginalLoadoutSlot7, 2 { DrawImage "WPDOM7N2", 244, 10; } // Calamity Blade
+                    else InInventory SamsaraDoomOriginalLoadoutSlot7, 1 { DrawImage "WPDOM7N1", 244, 10; } // B.F.G. 2704
+                    else { DrawImage "WPDOOM7N", 244, 10; } // B.F.G. 9000
+                }
+
+                IsSelected "B.F.G. 9000"
+                {
+                    DrawImage "DOOM7BRT", 250, 2;
+                    DrawImage "WPDOOM7Y", 244, 10;
+                } else IsSelected "B.F.G. 2704" {
+                    DrawImage "DOOM7BRT", 250, 2;
+                    DrawImage "WPDOM7Y1", 244, 10;
+                } else IsSelected "Calamity Blade" {
+                    DrawImage "DOOM7BRT", 250, 2;
+                    DrawImage "WPDOM7Y2", 244, 10;
+                }
+
+                // Slot 7S
+                InInventory not GotWeapon7
+                {
+                    InInventory " BFG10K "
+                    {
+                        DrawImage "DOOM7BNT", 250, 2;
+                        DrawImage "WPDOM7NS", 244, 10;
+                    }
+                }
+
+                IsSelected " BFG10K "
+                {
+                    DrawImage "DOOM7BRT", 250, 2;
+                    DrawImage "WPDOM7YS", 244, 10;
+                }
+            }
+        } else InInventory DoomClassMode, 2 // Stronghold
         {
             DrawImage "STRHBAR", -56, 164;
 
