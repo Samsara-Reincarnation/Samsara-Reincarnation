@@ -4,8 +4,165 @@ StatusBar Fullscreen, ForceScaled
     {
         InInventory DoomguyClass //By SuperDave938 :D
         {
-            InInventory DoomClassMode, 2 // Stronghold
+            InInventory DoomClassMode, 3 // Complex
             {
+                DrawImage "DGYTEXT", 0, 0;
+
+                // Health
+                DrawNumber 3, CMDMHUDF, Gold, Health, Alignment(Center), 48, 176, 0, White, 24, Untranslated, 50;
+
+                // Armor
+                DrawNumber 3, CMDMHUDF, Gold, Armor, Alignment(Center), 272, 176, 0, Untranslated, 0, Untranslated, 50;
+
+                // Ammo
+                IsSelected " Pistol "
+                {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_PistolMagazine, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 17;
+                        InInventory PistolModeOn { DrawNumber 3, CMPSCMDM, Gold, Ammo Clip, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20; }
+                    }
+                    else InInventory PistolModeOn { DrawNumber 3, CMDMHUDF, Gold, Ammo Clip, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected " Shotgun " {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_ShotgunMagazine, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 8;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo1, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected "Super Shotgun" {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_SSGShell, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 2;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo1, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected ComplexDoom_AssaultShotgun {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 8;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo2, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo2, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected " Chaingun " {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_ARMagazine, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 40;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo1, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected "Rocket Launcher" {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_RocketDrum, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 6;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo1, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected " GrenadeLauncher " {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_GrenadeDrum, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 6;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo1, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected "Plasma Rifle" {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_PlasmaCell, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 50;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo1, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                } else IsSelected " RailGun " {
+                    InInventory SamsaraReloadMode, 2
+                    {
+                        DrawNumber 3, CMDMHUDF, Gold, Ammo ComplexDoom_CellCharge, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 5;
+                        DrawNumber 3, CMPSCMDM, Gold, Ammo2, Alignment(Center), 160, 192, 0, Untranslated, 0, Untranslated, 20;
+                    }
+                    else { DrawNumber 3, CMDMHUDF, Gold, Ammo2, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+                }
+                else { DrawNumber 3, CMDMHUDF, Gold, Ammo1, Alignment(Center), 160, 176, 0, Untranslated, 0, Untranslated, 20; }
+
+                // Frags
+                InInventory ChickenModeOn { DrawNumber 3, CMPSCMDM, Untranslated, ChickenKillCount, Alignment(Center), 272, 161; }
+                else
+                {
+                    GameMode Deathmatch, Possession, TeamGame { DrawNumber 3, CMPSCMDM, Untranslated, Frags, Alignment(Center), 272, 161; }
+                    else GameMode SinglePlayer, Cooperative, Invasion, Survival
+                    {
+                        DrawNumber 3, CMPSCMDM, Untranslated, KillCountAmount, Alignment(Center), 272, 161;
+                        InInventory KillCountNotch, 1 { DrawImage "DOMNOTCH", 250, 148; }
+                        InInventory KillCountNotch, 2 { DrawImage "DOMNOTCH", 255, 148; }
+                        InInventory KillCountNotch, 3 { DrawImage "DOMNOTCH", 260, 148; }
+                        InInventory KillCountNotch, 4 { DrawImage "DOMNOTCH", 265, 148; }
+                        InInventory KillCountNotch, 5 { DrawImage "DOMNOTCH", 270, 148; }
+                        InInventory KillCountNotch, 6 { DrawImage "DOMNOTCH", 275, 148; }
+                        InInventory KillCountNotch, 7 { DrawImage "DOMNOTCH", 280, 148; }
+                        InInventory KillCountNotch, 8 { DrawImage "DOMNOTCH", 285, 148; }
+                        InInventory KillCountNotch, 9 { DrawImage "DOMNOTCH", 290, 148; }
+                    }
+                }
+
+                // Rune icon
+                InInventory SamsaraIsPlayingInZandronum { DrawImage RuneIcon, 20, 153, Center; }
+
+                // Keys
+                GameMode SinglePlayer, Cooperative, Invasion, Survival { DrawKeyBar 100, Horizontal, ReverseRows, 10, 75, 180, 0, 6, 12; }
+
+                // Inventory
+                DrawSelectedInventory AlwaysShowCounter, CMDMHUDF, 290, 22, 293, 30, Untranslated;
+
+                // Mugshot
+                InInventory PowerFakeInvulnerable { DrawImage "CDGYGOD0", 32, 135; }
+                else InInventory PowerSamsaraDamageBooster { DrawImage "DGYARNO0", 32, 135; }
+                else { DrawMugShot 5, 32, 135; }
+
+                // Equipment
+                InInventory ExpandedHud
+                {
+                    // Slot 1
+                    InInventory GotWeapon0 { DrawImage "STYSNUM1", 126, 10; }
+
+                    IsSelected " Chainsaw " { DrawImage "STY2NUM1", 126, 10; }
+
+                    // Slot 2
+                    InInventory GotWeapon2 { DrawImage "STYSNUM2", 136, 10; }
+
+                    IsSelected " Shotgun " { DrawImage "STY2NUM2", 136, 10; }
+
+                    // Slot 3
+                    InInventory GotWeapon3 { DrawImage "STYSNUM3", 146, 10; }
+
+                    IsSelected "Super Shotgun", ComplexDoom_AssaultShotgun { DrawImage "STY2NUM3", 146, 10; }
+
+                    // Slot 4 + Slot 4S
+                    InInventory GotWeapon4 || " Minigun " { DrawImage "STYSNUM4", 156, 10; }
+
+                    IsSelected " Chaingun " { DrawImage "STY2NUM4", 156, 10; }
+
+                    IsSelected " Minigun " { DrawImage "STY3NUM4", 156, 10; }
+
+                    // Slot 5 + Slot 5S
+                    InInventory GotWeapon5 || " GrenadeLauncher " { DrawImage "STYSNUM5", 166, 10; }
+
+                    IsSelected "Rocket Launcher" { DrawImage "STY2NUM5", 166, 10; }
+
+                    IsSelected " GrenadeLauncher " { DrawImage "STY3NUM5", 166, 10; }
+
+                    // Slot 6 + Slot 6S
+                    InInventory GotWeapon6 || " RailGun " { DrawImage "STYSNUM6", 176, 10; }
+
+                    IsSelected "Plasma Rifle" { DrawImage "STY2NUM6", 176, 10; }
+
+                    IsSelected " RailGun " { DrawImage "STY3NUM6", 176, 10; }
+
+                    // Slot 7 + Slot 7S
+                    InInventory GotWeapon7 || " BFG10K " { DrawImage "STYSNUM7", 186, 10; }
+
+                    IsSelected "B.F.G. 9000" { DrawImage "STY2NUM7", 186, 10; }
+
+                    IsSelected " BFG10K " { DrawImage "STY3NUM7", 186, 10; }
+                }
+            } else InInventory DoomClassMode, 2 { // Stronghold
                 DrawImage "STRTEXT", 0, 0;
 
                 // Health
