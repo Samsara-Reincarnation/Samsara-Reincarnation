@@ -707,7 +707,10 @@ ACTOR " RailGun " : Weapon
         goto FireComEmpty
 
     FireComEmpty:
-        CD20 "[" 15 A_PlaySound("complexdoom/weapons/click2")
+        TNT1 A 0 A_PlaySound("complexdoom/weapons/click2")
+        CD20 "[" 15 A_JumpIfInventory("SamsaraDoomguyComRailgunScope",1,1)
+        Goto ReloadCom
+        CD22 E 15
         Goto ReloadCom
 
 	FireComStart:
@@ -730,13 +733,13 @@ ACTOR " RailGun " : Weapon
 		CD20 BCDE 2
 		CD20 FGH 1
 		CD20 "[" 40
-		goto FireComFinish
+		goto ReadyActual
 
 	FireComContinueAmmo:
 		CD20 PQRS 2
 		CD20 TUV 1
 		CD20 W 40
-		goto FireComFinish
+		goto ReadyActual
 
 	FireComStartZoomed:
 		TNT1 A 0 A_Light2
@@ -753,7 +756,7 @@ ACTOR " RailGun " : Weapon
     FireComContinueZoomedNoAmmo:
 		TNT1 A 0 A_ZoomFactor(1)
 		CD20 "[" 50 A_TakeInventory("SamsaraDoomguyComRailgunScope")
-		goto FireComFinish
+		goto ReadyActual
 
     FireComContinueZoomed:
 		TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireZoom",1,"FireComStartUnZoom")
@@ -766,7 +769,7 @@ ACTOR " RailGun " : Weapon
 		CD22 E 10 A_JumpIfInventory("SamsaraSynthFireRight",1,"FireComStartUnZoom4")
 		TNT1 A 0 A_JumpIfInventory("SamsaraSynthFireZoom",1,"FireComStartUnZoom5")
 		CD22 E 10 A_JumpIfInventory("SamsaraSynthFireRight",1,"FireComStartUnZoom5")
-        goto FireComFinish
+        goto ReadyActual
 
 	FireComStartUnZoom:
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyComRailgunScope")
@@ -792,15 +795,6 @@ ACTOR " RailGun " : Weapon
 		TNT1 A 0 A_TakeInventory("SamsaraDoomguyComRailgunScope")
 		CD20 W 10 A_ZoomFactor(1)
 		Goto ReadyActual
-
-    FireComFinish:
-		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
-		goto FireComReFireCheck
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireComReFireCheck")
-		TNT1 A 0 A_JumpIfInventory("ComplexDoom_CellCharge",1,"FireComReFireCheck")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ReloadComStart")
-		TNT1 A 0 A_JumpIfInventory("Cell",10,"ReloadComStart")
-		goto FireComReFireCheck
 
 	ReloadCom:
 		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,1)
@@ -859,34 +853,45 @@ ACTOR " RailGun " : Weapon
 	ZoomCom:
 		TNT1 A 0 A_JumpIfInventory("SamsaraDoomguyComRailgunScope",1,"UnzoomCom")
 		TNT1 A 0 A_ZoomFactor(5)
-		CD20 X 3 A_GiveInventory("SamsaraDoomguyComRailgunScope")
-		CD20 YZ 3
+		TNT1 A 0 A_GiveInventory("SamsaraDoomguyComRailgunScope")
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"ZoomComAmmo")
+		TNT1 A 0 A_JumpIfInventory("Cell",10,"ZoomComAmmo")
+        goto ZoomComNoAmmo
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"ZoomComAmmo")
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_CellCharge",1,"ZoomComAmmo")
+        goto ZoomComNoAmmo
+
+    ZoomComNoAmmo:
+		CD20 "[[[" 3
+		goto ReadyActual
+
+    ZoomComAmmo:
+		CD20 XYZ 3
 		goto ReadyActual
 
 	UnzoomCom:
 		TNT1 A 0 A_ZoomFactor(1)
-		CD20 X 3 A_TakeInventory("SamsaraDoomguyComRailgunScope")
-		CD20 YZ 3
+		TNT1 A 0 A_TakeInventory("SamsaraDoomguyComRailgunScope")
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,3)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"UnzoomComAmmo")
+		TNT1 A 0 A_JumpIfInventory("Cell",10,"UnzoomComAmmo")
+        goto UnzoomComNoAmmo
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"UnzoomComAmmo")
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_CellCharge",1,"UnzoomComAmmo")
+        goto UnzoomComNoAmmo
+
+    UnzoomComNoAmmo:
+		CD20 "[[[" 3
 		goto ReadyActual
 
-	FireComReFireCheck:
-		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"FireComReFireReloadable")
-		goto FireComReFireNonReloadable
-
-	FireComReFireNonReloadable:
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireReFire")
-		TNT1 A 0 A_JumpIfInventory("Cell",10,"FireReFire")
-		goto Nothing
-
-	FireComReFireReloadable:
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,"FireReFire")
-		TNT1 A 0 A_JumpIfInventory("ComplexDoom_CellCharge",1,"FireReFire")
-		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,"FireReFire")
-		TNT1 A 0 A_JumpIfInventory("Cell",10,"FireReFire")
-		goto Nothing
+    UnzoomComAmmo:
+		CD20 XYZ 3
+		goto ReadyActual
 
 	Nothing:
         TNT1 A 0 A_ClearReFire
+        TNT1 A 0 A_JumpIfInventory("DoomClassMode",3,"NothingCom")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",2,"NothingStr")
         TNT1 A 0 A_JumpIfInventory("DoomClassMode",1,"Nothing64")
         TNT1 A 0 A_JumpIfInventory("SamsaraDoomOriginalLoadoutFallbackRanged",1,2)
@@ -897,6 +902,7 @@ ACTOR " RailGun " : Weapon
 
 	Nothing64:
 	NothingStr:
+	NothingCom:
         TNT1 A 0 A_SelectWeapon(" Pistol ")
         goto Deselect
 	}
