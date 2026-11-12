@@ -1471,7 +1471,7 @@ actor SamsaraDoomguyComRailgunAttackHandler : Trigger
 
       // Finishing stuff
       PickupFinish:
-		TNT1 A 0 A_FireCustomMissile("ComplexDoom_RailgunImpact",0,0)
+		TNT1 A 0 A_FireCustomMissile("ComplexDoom_RailgunImpact",0,false)
         TNT1 A 0 A_Quake(12,4,0,64,"nosoundforyoubitch")
         stop
     }
@@ -1511,6 +1511,8 @@ actor ComplexDoom_RailgunImpact : FastProjectile
 	Height 1
 	RenderStyle Add
 	Alpha 0.85
+    +DONTBLAST
+    +NOTIMEFREEZE
 	+RANDOMIZE
 	+THRUACTORS
 	States
