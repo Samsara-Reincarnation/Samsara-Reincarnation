@@ -845,6 +845,48 @@ Sprite "CD23A0", 56, 24
 	Patch "CD23A0", 0, 0
 }
 
+Sprite "CD23V0", 130, 74
+{
+	Offset -95, -114
+	Patch "CD23U0", 0, 0
+}
+
+Sprite "CD23W0", 130, 74
+{
+	Offset -95, -117
+	Patch "CD23U0", 0, 0
+}
+
+Sprite "CD23X0", 130, 74
+{
+	Offset -95, -121
+	Patch "CD23U0", 0, 0
+}
+
+Sprite "CD23Y0", 130, 74
+{
+	Offset -95, -117
+	Patch "CD23U0", 0, 0
+}
+
+Sprite "CD23Z0", 130, 74
+{
+	Offset -95, -113
+	Patch "CD23U0", 0, 0
+}
+
+Sprite "CD23[0", 130, 74
+{
+	Offset -95, -109
+	Patch "CD23U0", 0, 0
+}
+
+Sprite "CD23\0", 130, 74
+{
+	Offset -95, -100
+	Patch "CD23U0", 0, 0
+}
+
 Sprite "CD25A0", 67, 24
 {
 	XScale 1.200
