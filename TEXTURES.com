@@ -673,4 +673,58 @@ Sprite "CD25A0", 67, 24
 	Patch "CD25A0", 0, 0
 }
 
+Sprite "CD26L0", 136, 104
+{
+	Offset -166, -127
+	Patch "CD26K0", 0, 0
+}
+
+Sprite "CD26M0", 136, 104
+{
+	Offset -153, -113
+	Patch "CD26K0", 0, 0
+}
+
+Sprite "CD26N0", 136, 104
+{
+	Offset -138, -103
+	Patch "CD26K0", 0, 0
+}
+
+Sprite "CD26R0", 180, 73
+{
+	Offset -99, -130
+	Patch "CD26Q0", 0, 0
+}
+
+Sprite "CD26S0", 180, 73
+{
+	Offset -119, -149
+	Patch "CD26Q0", 0, 0
+}
+
+Sprite "CD26T0", 188, 148
+{
+	Offset -237, -13
+	Patch "CD26J0", 0, 0
+}
+
+Sprite "CD26U0", 188, 148
+{
+	Offset -199, -35
+	Patch "CD26J0", 0, 0
+}
+
+Sprite "CD26W0", 167, 114
+{
+	Offset -157, -103
+	Patch "CD26V0", 0, 0
+}
+
+Sprite "CD26X0", 167, 114
+{
+	Offset -143, -123
+	Patch "CD26V0", 0, 0
+}
+
 // End of texture definitions
