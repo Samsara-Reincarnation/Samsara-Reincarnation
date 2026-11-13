@@ -545,6 +545,102 @@ Sprite "CD14A0", 60, 25
 	Patch "CD14A0", 0, 0
 }
 
+Sprite "CD14J0", 112, 72
+{
+	Offset -115, -112
+	Patch "CD14I0", 0, 0
+}
+
+Sprite "CD14K0", 112, 72
+{
+	Offset -115, -105
+	Patch "CD14I0", 0, 0
+}
+
+Sprite "CD14N0", 112, 72
+{
+	Offset -115, -98
+	Patch "CD14I0", 0, 0
+}
+
+Sprite "CD15B0", 89, 42
+{
+	Offset -158, -143
+	Patch "CD14T0", 0, 0
+}
+
+Sprite "CD15C0", 89, 42
+{
+	Offset -148, -129
+	Patch "CD14T0", 0, 0
+}
+
+Sprite "CD15D0", 98, 59
+{
+	Offset -147, -117
+	Patch "CD14S0", 0, 0
+}
+
+Sprite "CD15E0", 98, 59
+{
+	Offset -136, -109
+	Patch "CD14S0", 0, 0
+}
+
+Sprite "CD15F0", 107, 67
+{
+	Offset -125, -103
+	Patch "CD14R0", 0, 0
+}
+
+Sprite "CD16I0", 320, 168
+{
+	Offset 0, -8
+	Patch "CD16H0", 0, 0
+}
+
+Sprite "CD16J0", 320, 168
+{
+	Offset 0, -3
+	Patch "CD16H0", 0, 0
+}
+
+Sprite "CD16L0", 139, 99
+{
+	Offset -100, -95
+	Patch "CD16K0", 0, 0
+}
+
+Sprite "CD16]0", 320, 168
+{
+	Offset -87, -57
+	Patch "CD16H0", 0, 0
+}
+
+Sprite "CD17A0", 320, 168
+{
+	Offset -69, -40
+	Patch "CD16H0", 0, 0
+}
+
+Sprite "CD17B0", 320, 168
+{
+	Offset -49, -26
+	Patch "CD16H0", 0, 0
+}
+
+Sprite "CD17C0", 320, 168
+{
+	Offset -33, -15
+	Patch "CD16H0", 0, 0
+}
+
+Sprite "CD17D0", 320, 168
+{
+	Offset -16, -7
+	Patch "CD16H0", 0, 0
+}
+
 Sprite "CD18A0", 53, 16
 {
 	XScale 1.200
