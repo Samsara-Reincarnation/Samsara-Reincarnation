@@ -927,25 +927,25 @@ Sprite "CD26S0", 180, 73
 	Patch "CD26Q0", 0, 0
 }
 
-Sprite "CD26T0", 320, 187
+Sprite "CD26T0", 334, 233
 {
 	Offset -237, -13
 	Patch "CD26J0", 0, 0
 }
 
-Sprite "CD26U0", 320, 164
+Sprite "CD26U0", 334, 233
 {
 	Offset -199, -35
 	Patch "CD26J0", 0, 0
 }
 
-Sprite "CD26W0", 243, 114
+Sprite "CD26W0", 264, 191
 {
 	Offset -157, -103
 	Patch "CD26V0", 0, 0
 }
 
-Sprite "CD26X0", 246, 114
+Sprite "CD26X0", 264, 191
 {
 	Offset -143, -123
 	Patch "CD26V0", 0, 0
