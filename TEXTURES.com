@@ -853,6 +853,12 @@ Sprite "CD25A0", 67, 24
 	Patch "CD25A0", 0, 0
 }
 
+Sprite "CD25V0", 132, 108
+{
+	Offset -94, -74
+	Patch "CD25J0", 0, 0
+}
+
 Sprite "CD26L0", 136, 104
 {
 	Offset -166, -127
