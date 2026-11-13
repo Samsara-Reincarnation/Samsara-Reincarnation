@@ -353,6 +353,72 @@ Sprite "CD09A0", 57, 16
 	Patch "CD09A0", 0, 0
 }
 
+Sprite "CD09G0", 102, 120
+{
+	Offset -294, -48
+	Patch "CD09B0", 0, 0
+}
+
+Sprite "CD09M0", 78, 77
+{
+	Offset -114, -109
+	Patch "CD09J0", 0, 0
+}
+
+Sprite "CD09N0", 78, 77
+{
+	Offset -114, -103
+	Patch "CD09J0", 0, 0
+}
+
+Sprite "CD09O0", 78, 77
+{
+	Offset -114, -95
+	Patch "CD09J0", 0, 0
+}
+
+Sprite "CD09U0", 100, 102
+{
+	Offset -114, -79
+	Patch "CD09F0", 0, 0
+}
+
+Sprite "CD09V0", 100, 102
+{
+	Offset -128, -73
+	Patch "CD09F0", 0, 0
+}
+
+Sprite "CD09W0", 100, 102
+{
+	Offset -143, -69
+	Patch "CD09F0", 0, 0
+}
+
+Sprite "CD09X0", 300, 102
+{
+	Offset 46, -66
+	Patch "CD09E0", 0, 0
+}
+
+Sprite "CD09Y0", 300, 120
+{
+	Offset 29, -58
+	Patch "CD09D0", 0, 0
+}
+
+Sprite "CD09Z0", 300, 120
+{
+	Offset 21, -50
+	Patch "CD09C0", 0, 0
+}
+
+Sprite "CD09[0", 102, 120
+{
+	Offset -177, -50
+	Patch "CD09B0", 0, 0
+}
+
 Sprite "CD11A0", 54, 14
 {
 	XScale 1.000
