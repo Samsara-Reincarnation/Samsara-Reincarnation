@@ -101,7 +101,6 @@ Sprite "CD03E0", 80, 80
 	Patch "CD02B0", 0, 0
 }
 
-//
 Sprite "CD04A0", 61, 11
 {
 	XScale 1.200
@@ -230,6 +229,120 @@ Sprite "CD06A0", 55, 15
 	YScale 1.200
 	Offset 28, 16
 	Patch "CD06A0", 0, 0
+}
+
+Sprite "CD06[0", 68, 54
+{
+	Offset -123, -120
+	Patch "CD06Z0", 0, 0
+}
+
+Sprite "CD07B0", 68, 54
+{
+	Offset -119, -120
+	Patch "CD07A0", 0, 0
+}
+
+Sprite "CD07D0", 121, 74
+{
+	Offset -134, -126
+	Patch "CD07C0", 0, 0
+}
+
+Sprite "CD07F0", 81, 80
+{
+	Offset -114, -88
+	Patch "CD06U0", 0, 0
+}
+
+Sprite "CD07G0", 90, 118
+{
+	Offset -105, -76
+	Patch "CD06O0", 0, 0
+}
+
+Sprite "CD07H0", 90, 98
+{
+	Offset -101, -70
+	Patch "CD06N0", 0, 0
+}
+
+Sprite "CD07J0", 90, 111
+{
+	Offset -100, -101
+	Patch "CD06M0", 0, 0
+}
+
+Sprite "CD07L0", 83, 103
+{
+	Offset -81, -74
+	Patch "CD07I0", 0, 0
+}
+
+Sprite "CD07M0", 83, 103
+{
+	Offset -58, -66
+	Patch "CD07I0", 0, 0
+}
+
+Sprite "CD07O0", 123, 134
+{
+	Offset -16, -41
+	Patch "CD07N0", 0, 0
+}
+
+Sprite "CD07P0", 123, 134
+{
+	Offset 0, -34
+	Patch "CD07N0", 0, 0
+}
+
+Sprite "CD07Q0", 90, 118
+{
+	Offset -109, -77
+	Patch "CD06O0", 0, 0
+}
+
+Sprite "CD07R0", 81, 80
+{
+	Offset -118, -88
+	Patch "CD06U0", 0, 0
+}
+
+Sprite "CD07Y0", 121, 74
+{
+	Offset -124, -120
+	Patch "CD07C0", 0, 0
+}
+
+Sprite "CD07Z0", 103, 80
+{
+	Offset -114, -98
+	Patch "CD07E0", 0, 0
+}
+
+Sprite "CD07[0", 83, 103
+{
+	Offset -104, -86
+	Patch "CD07I0", 0, 0
+}
+
+Sprite "CD07\0", 90, 111
+{
+	Offset -100, -101
+	Patch "CD06M0", 0, 0
+}
+
+Sprite "CD07]0", 68, 54
+{
+	Offset -121, -114
+	Patch "CD07A0", 0, 0
+}
+
+Sprite "CD08A0", 68, 54
+{
+	Offset -121, -114
+	Patch "CD06Z0", 0, 0
 }
 
 Sprite "CD09A0", 57, 16
