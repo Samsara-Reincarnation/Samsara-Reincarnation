@@ -649,12 +649,192 @@ Sprite "CD18A0", 53, 16
 	Patch "CD18A0", 0, 0
 }
 
+Sprite "CD18D0", 320, 168
+{
+	Offset 0, 0
+	Patch "CD18C0", 0, 0
+}
+
+Sprite "CD18F0", 320, 168
+{
+	Offset 22, 0
+	Patch "CD18E0", 0, 0
+}
+
+Sprite "CD18H0", 320, 168
+{
+	Offset 17, -6
+	Patch "CD18G0", 0, 0
+}
+
+Sprite "CD19D0", 320, 168
+{
+	Offset 0, 0
+	Patch "CD18V0", 0, 0
+}
+
+Sprite "CD19E0", 320, 168
+{
+	Offset 127, 0
+	Patch "CD18G0", 0, 0
+}
+
+Sprite "CD19F0", 320, 168
+{
+	Offset 101, 0
+	Patch "CD18G0", 0, 0
+}
+
+Sprite "CD19G0", 320, 168
+{
+	Offset 75, -2
+	Patch "CD18G0", 0, 0
+}
+
+Sprite "CD19H0", 320, 168
+{
+	Offset 84, -8
+	Patch "CD18E0", 0, 0
+}
+
+Sprite "CD19I0", 320, 168
+{
+	Offset 60, -11
+	Patch "CD18E0", 0, 0
+}
+
+Sprite "CD19J0", 320, 168
+{
+	Offset 32, -15
+	Patch "CD18E0", 0, 0
+}
+
+Sprite "CD19K0", 320, 168
+{
+	Offset 25, 0
+	Patch "CD18C0", 0, 0
+}
+
 Sprite "CD20A0", 78, 24
 {
 	XScale 1.250
 	YScale 1.250
 	Offset 39, 24
 	Patch "CD20A0", 0, 0
+}
+
+Sprite "CD20E0", 163, 75
+{
+	Offset -69, -107
+	Patch "CD20D0", 0, 0
+}
+
+Sprite "CD20F0", 163, 75
+{
+	Offset -69, -104
+	Patch "CD20D0", 0, 0
+}
+
+Sprite "CD20G0", 163, 75
+{
+	Offset -69, -100
+	Patch "CD20D0", 0, 0
+}
+
+Sprite "CD20H0", 163, 75
+{
+	Offset -69, -96
+	Patch "CD20D0", 0, 0
+}
+
+Sprite "CD20J0", 125, 71
+{
+	Offset -47, -132
+	Patch "CD20I0", 0, 0
+}
+
+Sprite "CD20L0", 139, 74
+{
+	Offset -70, -105
+	Patch "CD20K0", 0, 0
+}
+
+Sprite "CD20M0", 163, 75
+{
+	Offset -61, -98
+	Patch "CD20D0", 0, 0
+}
+
+Sprite "CD20S0", 163, 75
+{
+	Offset -69, -107
+	Patch "CD20R0", 0, 0
+}
+
+Sprite "CD20T0", 163, 75
+{
+	Offset -69, -104
+	Patch "CD20R0", 0, 0
+}
+
+Sprite "CD20U0", 163, 75
+{
+	Offset -69, -100
+	Patch "CD20R0", 0, 0
+}
+
+Sprite "CD20V0", 163, 75
+{
+	Offset -69, -96
+	Patch "CD20R0", 0, 0
+}
+
+Sprite "CD20W0", 163, 75
+{
+	Offset -69, -93
+	Patch "CD20R0", 0, 0
+}
+
+Sprite "CD20[0", 163, 75
+{
+	Offset -69, -93
+	Patch "CD20D0", 0, 0
+}
+
+Sprite "CD20\0", 139, 74
+{
+	Offset -80, -94
+	Patch "CD20K0", 0, 0
+}
+
+Sprite "CD20]0", 125, 71
+{
+	Offset -86, -97
+	Patch "CD20I0", 0, 0
+}
+
+Sprite "CD21Y0", 131, 71
+{
+	Offset -42, -133
+	Patch "CD21X0", 0, 0
+}
+
+Sprite "CD21[0", 145, 72
+{
+	Offset -63, -106
+	Patch "CD21Z0", 0, 0
+}
+
+Sprite "CD21\0", 163, 75
+{
+	Offset -61, -98
+	Patch "CD20X0", 0, 0
+}
+
+Sprite "CD22D0", 163, 75
+{
+	Offset -69, -93
+	Patch "CD20D0", 0, 0
 }
 
 Sprite "CD23A0", 56, 24
