@@ -427,12 +427,114 @@ Sprite "CD11A0", 54, 14
 	Patch "CD11A0", 0, 0
 }
 
+Sprite "CD11I0", 195, 69
+{
+	Offset -155, -116
+	Patch "CD11H0", 0, 0
+}
+
+Sprite "CD11R0", 96, 67
+{
+	Offset -150, -103
+	Patch "CD11M0", 0, 0
+}
+
+Sprite "CD11S0", 96, 67
+{
+	Offset -159, -104
+	Patch "CD11M0", 0, 0
+}
+
+Sprite "CD11T0", 154, 69
+{
+	Offset -143, -102
+	Patch "CD11L0", 0, 0
+}
+
+Sprite "CD11U0", 162, 69
+{
+	Offset -136, -101
+	Patch "CD11K0", 0, 0
+}
+
+Sprite "CD11V0", 182, 69
+{
+	Offset -126, -102
+	Patch "CD11J0", 0, 0
+}
+
+Sprite "CD11W0", 195, 69
+{
+	Offset -120, -103
+	Patch "CD11H0", 0, 0
+}
+
+Sprite "CD12A0", 154, 80
+{
+	Offset -150, -98
+	Patch "CD11]0", 0, 0
+}
+
+Sprite "CD12B0", 154, 80
+{
+	Offset -147, -108
+	Patch "CD11]0", 0, 0
+}
+
+Sprite "CD12E0", 154, 69
+{
+	Offset -133, -103
+	Patch "CD11L0", 0, 0
+}
+
+Sprite "CD12G0", 96, 67
+{
+	Offset -146, -101
+	Patch "CD11M0", 0, 0
+}
+
 Sprite "CD13A0", 63, 29
 {
 	XScale 1.300
 	YScale 1.300
 	Offset 31, 31
 	Patch "CD13A0", 0, 0
+}
+
+Sprite "CD13K0", 217, 126
+{
+	Offset -79, -48
+	Patch "CD13J0", 0, 0
+}
+
+Sprite "CD13L0", 217, 126
+{
+	Offset -79, -48
+	Patch "CD13G0", 0, 0
+}
+
+Sprite "CD13M0", 217, 126
+{
+	Offset -79, -48
+	Patch "CD13D0", 0, 0
+}
+
+Sprite "CD13P0", 247, 190
+{
+	Offset -143, -53
+	Patch "CD13O0", 0, 0
+}
+
+Sprite "CD13R0", 235, 160
+{
+	Offset -107, -43
+	Patch "CD13Q0", 0, 0
+}
+
+Sprite "CD13S0", 217, 126
+{
+	Offset -99, -52
+	Patch "CD13J0", 0, 0
 }
 
 Sprite "CD14A0", 60, 25
