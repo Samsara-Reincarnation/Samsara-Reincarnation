@@ -5312,6 +5312,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					SetInventory("SamsaraUnrealStingerPrimaryFiringSoundCheck", 0);
 				}
 
+				if (CheckInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck") && !CheckWeapon("Unreal_Duster"))
+				{
+					StopSound(0, CHAN_WEAPON);
+
+					SetInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck", 0);
+				}
+
 				if (CheckInventory("SamsaraUnrealMinigunFiringSoundCheck") && !CheckWeapon("Unreal_Minigun"))
 				{
 					StopSound(0, CHAN_WEAPON);
@@ -5324,13 +5331,6 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 					StopSound(0, CHAN_WEAPON);
 
 					SetInventory("SamsaraUnrealGESBioRifleSecondaryChargingSoundCheck", 0);
-				}
-
-				if (CheckInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck") && !CheckWeapon("Unreal_Duster"))
-				{
-					StopSound(0, CHAN_WEAPON);
-
-					SetInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck", 0);
 				}
 
 				TakeInventory("SamsaraUnrealCARifleSecondaryCooldown", 1 + CheckInventory("SamsaraHasDoubleFiringSpeed"));
