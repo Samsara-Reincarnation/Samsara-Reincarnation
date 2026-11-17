@@ -901,7 +901,19 @@ Actor Unreal_EightballRocket
 			Loop
 		Death:
 			TNT1 A 0 A_Explode(85, 200)
+			TNT1 A 0 A_Jump(256,"Death1","Death2","Death3")
+			wait
+		Death1:
+			TNT1 A 0 A_SpawnItemEx("Unreal_EightballExplosiveEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			Stop
+		Death2:
 			TNT1 A 5 A_SpawnItemEx("Unreal_EightballExplosiveEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_EightballExplosiveEffect",frandom(-10.0,10.0),frandom(-10.0,10.0),frandom(-10.0,10.0),0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			Stop
+		Death3:
+			TNT1 A 5 A_SpawnItemEx("Unreal_EightballExplosiveEffect",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 5 A_SpawnItemEx("Unreal_EightballExplosiveEffect",frandom(-10.0,10.0),frandom(-10.0,10.0),frandom(-10.0,10.0),0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_EightballExplosiveEffect",frandom(-10.0,10.0),frandom(-10.0,10.0),frandom(-10.0,10.0),0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
 			Stop
 	}
 }

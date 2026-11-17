@@ -445,11 +445,11 @@ Actor Unreal_BioRGel
 		Death:
 			UN01 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStatic", 0,0,0,0,0,0, angle, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStatic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStatic", 0,0,0,0,0,0, angle, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStatic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Crash:
 		XDeath:
@@ -461,12 +461,12 @@ Actor Unreal_BioRGel
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeathEnd:
 			TNT1 A 0 A_PlaySound("Unreal/BRifle/Explode",CHAN_VOICE)
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(2,7), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob",0,0,0,frandom(0,2),0,frandom(2,7),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 5 A_SpawnItemEx("UnrealToxicGasPuff",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			Stop
 		/*
@@ -499,14 +499,14 @@ Actor Unreal_BioRGelCoop : Unreal_BioRGel
 		Death:
 			UN01 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoop",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoop",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -518,6 +518,7 @@ Actor Unreal_BioRGelStatic
 	+VULNERABLE
 	+ISMONSTER
 	+FRIENDLY
+	+STANDSTILL
 	-COUNTKILL
 	+NOGRAVITY
 	+MOVEWITHSECTOR
@@ -525,6 +526,7 @@ Actor Unreal_BioRGelStatic
 	+THRUACTORS
 	+FORCERADIUSDMG
 	+LOOKALLAROUND
+	+DONTTHRUST
 	Mass 10000
 	Radius 2
 	Height 2
@@ -532,12 +534,13 @@ Actor Unreal_BioRGelStatic
 	States
 	{
 		Spawn:
-			TNT1 A 0
-			TNT1 A 0 A_CheckFloor("HitFloor")
-			TNT1 A 0 A_CheckCeiling("HitCeiling")
+			TNT1 A 0 
+			TNT1 A 0 A_JumpIf(abs(z - floorz) <= 4, "HitFloor")
+			TNT1 A 0 A_JumpIf(z >= ceilingz - 4, "HitCeiling")
 			UN00 A 0 A_SetPitch(0)
 			UN00 A 0 A_SetAngle(angle)
 		Spawn2:
+			UN01 A 0 A_ClearTarget
 			UN01 A 0 A_SetPitch(90)
 			UN01 ABCDE 2
 			UN03 ABC 2
@@ -584,6 +587,7 @@ Actor Unreal_BioRGelStatic
 			UN03 C 1 A_SetPitch(90)
 			Loop
 		HitFloor:
+			UN01 A 0 A_ClearTarget
 			UN01 A 2 A_SetPitch(0)
 			UN01 BCDE 2
 			UN01 A 0 A_JumpIf(scaleX == 0.7, "FloorLoop1")
@@ -629,6 +633,7 @@ Actor Unreal_BioRGelStatic
 			UN01 A 1 A_SetPitch(0)
 			Loop
 		HitCeiling:
+			UN01 A 0 A_ClearTarget
 			UN01 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_ChangeFlag(NOGRAVITY, TRUE)
 			UN01 A 2 A_SetPitch(180)
@@ -688,12 +693,12 @@ Actor Unreal_BioRGelStatic
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeathEnd:
 			TNT1 A 0 A_PlaySound("Unreal/BRifle/Explode",CHAN_VOICE)
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(2,7), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob",0,0,0,frandom(0,2),0,frandom(2,7),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 5 A_SpawnItemEx("UnrealToxicGasPuff",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			Stop
 		/*
@@ -724,7 +729,7 @@ Actor Unreal_BioRGelStaticCoop : Unreal_BioRGelStatic
 	States
 	{
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -737,11 +742,11 @@ Actor Unreal_BioRGelSoundUnreal : Unreal_BioRGel
 		Death:
 			UN01 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticSoundUnreal", 0,0,0,0,0,0, angle, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticSoundUnreal", 0,0,0,0,0,0, angle, SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Crash:
 		XDeath:
@@ -753,11 +758,11 @@ Actor Unreal_BioRGelSoundUnreal : Unreal_BioRGel
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 		XDeathEnd:
 			TNT1 A 0 A_PlaySound("UnrealOld/BRifle/Explode",CHAN_VOICE)
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(2,7), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob",0,0,0,frandom(0,2),0,frandom(2,7),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 5 A_SpawnItemEx("UnrealToxicGasPuff",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			Stop
 	}
@@ -772,14 +777,14 @@ Actor Unreal_BioRGelCoopSoundUnreal : Unreal_BioRGelSoundUnreal
 		Death:
 			UN01 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -790,6 +795,7 @@ Actor Unreal_BioRGelStaticSoundUnreal : Unreal_BioRGelStatic
 	States
 	{
 		HitCeiling:
+			UN01 A 0 A_ClearTarget
 			UN01 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_ChangeFlag(NOGRAVITY, TRUE)
 			UN01 A 2 A_SetPitch(180)
@@ -813,12 +819,12 @@ Actor Unreal_BioRGelStaticSoundUnreal : Unreal_BioRGelStatic
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto XDeathEnd
 		XDeathEnd:
 			TNT1 A 0 A_PlaySound("UnrealOld/BRifle/Explode",CHAN_VOICE)
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(2,7), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_GreenBlob",0,0,0,frandom(0,2),0,frandom(2,7),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 5 A_SpawnItemEx("UnrealToxicGasPuff",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 			Stop
 	}
@@ -831,7 +837,7 @@ Actor Unreal_BioRGelStaticCoopSoundUnreal : Unreal_BioRGelStaticSoundUnreal
 	States
 	{
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*40, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -852,7 +858,7 @@ Actor Unreal_BigBioRGelStatic : Unreal_BioRGelStatic
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -865,7 +871,7 @@ Actor Unreal_BigBioRGelStaticCoop : Unreal_BigBioRGelStatic
 	States
 	{
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -886,7 +892,7 @@ Actor Unreal_BigBioRGelStaticSoundUnreal : Unreal_BioRGelStaticSoundUnreal
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -899,7 +905,7 @@ Actor Unreal_BigBioRGelStaticCoopSoundUnreal : Unreal_BigBioRGelStaticSoundUnrea
 	States
 	{
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -916,7 +922,7 @@ Actor Unreal_BioDrop : Unreal_BioRGel
 		Death:
 			TNT1 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
 			//UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStatic",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStatic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Detonate:
 			/*
@@ -939,7 +945,7 @@ Actor Unreal_BioDropCoop : Unreal_BioDrop
 	{
 		Death:
 			TNT1 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStaticCoop",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStaticCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 	}
 }
@@ -978,7 +984,7 @@ Actor Unreal_BioDropSoundUnreal : Unreal_BioRGelSoundUnreal
 		Death:
 			TNT1 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
 			//UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStaticSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStaticSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Detonate:
 			/*
@@ -1001,7 +1007,7 @@ Actor Unreal_BioDropCoopSoundUnreal : Unreal_BioDropSoundUnreal
 	{
 		Death:
 			TNT1 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStaticCoopSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BioDropStaticCoopSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 	}
 }
@@ -1041,11 +1047,11 @@ Actor Unreal_BigBioRGel1 : Unreal_BioRGel
 		Death:
 			UN01 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStatic",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStatic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStatic",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStatic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Detonate:
 			TNT1 A 0 A_JumpIf(scaleX >= 0.7, "XDeath1")
@@ -1058,7 +1064,7 @@ Actor Unreal_BigBioRGel1 : Unreal_BioRGel
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDrop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -1073,14 +1079,14 @@ Actor Unreal_BigBioRGel1Coop : Unreal_BigBioRGel1
 		Death:
 			UN01 A 0 A_PlaySound("Unreal/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoop",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoop",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoop",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoop",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -1107,11 +1113,11 @@ Actor Unreal_BigBioRGel1SoundUnreal : Unreal_BioRGelSoundUnreal
 		Death:
 			UN01 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Detonate:
 			TNT1 A 0 A_JumpIf(scaleX >= 0.7, "XDeath1")
@@ -1124,7 +1130,7 @@ Actor Unreal_BigBioRGel1SoundUnreal : Unreal_BioRGelSoundUnreal
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
@@ -1139,14 +1145,14 @@ Actor Unreal_BigBioRGel1CoopSoundUnreal : Unreal_BigBioRGel1SoundUnreal
 		Death:
 			UN01 A 0 A_PlaySound("UnrealOld/BRifle/GelHit",CHAN_VOICE)
 			UN01 A 0 A_JumpIf(scaleX >= 0.7, "Death2")
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		Death2:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
-			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,angle,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
+			TNT1 A 0 A_SpawnItemEx("Unreal_BigBioRGelStaticCoopSoundUnreal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE)
 			stop
 		XDeath1:
-			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal", Random(-5,5), Random(-5,5), Random(-5,5), Random(0,2), Random(0,2), Random(0,5), Random(1,360), SXF_NOCHECKPOSITION)
+			TNT1 AAA 0 A_SpawnItemEx("Unreal_BioDropCoopSoundUnreal",0,0,0,frandom(0,2),0,frandom(0,5),Random(0,359),SXF_NOCHECKPOSITION)
 			TNT1 A 0 A_Explode(scalex*75, scalex*120)
 			Goto Super::XDeathEnd
 	}
