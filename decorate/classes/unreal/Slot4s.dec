@@ -1,9 +1,9 @@
 actor SamsaraUnrealCARifleInFireState : Boolean {}
+actor SamsaraUnrealCARifleFireRate : Boolean {}
 actor SamsaraUnrealCARiflePrimaryFiringSoundCheck : Boolean {}
 actor SamsaraUnrealCARifleCanAltFire : Boolean {}
 actor SamsaraUnrealCARifleSecondaryCooldown : Counter {}
 actor SamsaraUnrealCARifleSecondaryCooldownEndSoundCheck : Boolean {}
-actor SamsaraUnrealCARifleFireRate : Boolean {}
 
 Actor Unreal_Duster : UnrealWeapon
 {
@@ -27,6 +27,7 @@ Actor Unreal_Duster : UnrealWeapon
 			loop
 
 		ReadyActual:
+			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
 			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleInFireState")
 			UN04 I 0 A_TakeInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck")
 			UN04 I 0 A_GiveInventory("SamsaraUnrealCARifleCanAltFire")
@@ -43,7 +44,6 @@ Actor Unreal_Duster : UnrealWeapon
 			goto ReadyActual
 
 		Deselect:
-			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
 			UN04 I 0 A_JumpIfInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck",1,1)
 			goto DeselectStart
 			UN04 I 0 A_PlaySound("silence",CHAN_WEAPON)
@@ -53,6 +53,7 @@ Actor Unreal_Duster : UnrealWeapon
 
 		DeselectStart:
 			UN04 I 0 A_TakeInventory("Unreal_CARSelected")
+			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
 			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleInFireState")
 			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleCanAltFire")
 			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleSecondaryCooldownEndSoundCheck")
@@ -64,13 +65,15 @@ Actor Unreal_Duster : UnrealWeapon
 		Ready: // our "Select" state
 			UN04 A 0 A_GiveInventory("Unreal_CARSelected")
 			UN04 A 0 A_PlaySound("Unreal/CAR/Select")
-			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleInFireState") // map change hack
+			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleFireRate") // map change hack
+			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleInFireState")
 			UN04 A 0 A_TakeInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck")
 			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleCanAltFire")
 			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleSecondaryCooldownEndSoundCheck")
 			UN04 A 0 A_JumpIfInventory("SamsaraHasDoubleFiringSpeed",1,2)
 			UN04 A 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
-			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleInFireState") // map change hack
+			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleFireRate") // map change hack
+			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleInFireState")
 			UN04 A 0 A_TakeInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck")
 			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleCanAltFire")
 			UN04 A 0 A_TakeInventory("SamsaraUnrealCARifleSecondaryCooldownEndSoundCheck")
@@ -82,7 +85,9 @@ Actor Unreal_Duster : UnrealWeapon
 			UN03 A 0 A_AlertMonsters
 			UN03 A 0 A_GiveInventory("SamsaraUnrealCARifleInFireState")
 			UN03 A 0 A_GiveInventory("SamsaraUnrealCARiflePrimaryAttackHandler")
-			UN03 AB 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			UN03 A 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			UN03 B 0
+			UN03 C 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 			UN04 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 			UN04 I 0 A_JumpIfInventory("Clip",1,1)
 			goto FireContinue
@@ -99,7 +104,6 @@ Actor Unreal_Duster : UnrealWeapon
 
 		FireFinish:
 			UN04 I 0 A_CheckReload
-			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
 			goto ReadyActual
 
 		AltFire:
@@ -215,12 +219,13 @@ actor SamsaraUnrealCARiflePrimaryAttackHandler : Trigger
 
       // Finishing stuff
       PickupFinish:
-	    TNT1 A 0 A_JumpIfInventory("SamsaraUnrealCARifleFireRate",1,"PickupFinishNoRecoil")
+        TNT1 A 0 A_JumpIfInventory("SamsaraUnrealCARifleFireRate",1,"PickupFinishNoRecoil")
         TNT1 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
-		TNT1 A 0 A_GiveInventory("SamsaraUnrealCARifleFireRate")
+        TNT1 A 0 A_GiveInventory("SamsaraUnrealCARifleFireRate")
         stop
-	  PickupFinishNoRecoil:
-		TNT1 A 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
+
+      PickupFinishNoRecoil:
+        TNT1 A 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
         stop
     }
 }
