@@ -3,6 +3,7 @@ actor SamsaraUnrealCARiflePrimaryFiringSoundCheck : Boolean {}
 actor SamsaraUnrealCARifleCanAltFire : Boolean {}
 actor SamsaraUnrealCARifleSecondaryCooldown : Counter {}
 actor SamsaraUnrealCARifleSecondaryCooldownEndSoundCheck : Boolean {}
+actor SamsaraUnrealCARifleFireRate : Boolean {}
 
 Actor Unreal_Duster : UnrealWeapon
 {
@@ -42,6 +43,7 @@ Actor Unreal_Duster : UnrealWeapon
 			goto ReadyActual
 
 		Deselect:
+			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
 			UN04 I 0 A_JumpIfInventory("SamsaraUnrealCARiflePrimaryFiringSoundCheck",1,1)
 			goto DeselectStart
 			UN04 I 0 A_PlaySound("silence",CHAN_WEAPON)
@@ -80,7 +82,7 @@ Actor Unreal_Duster : UnrealWeapon
 			UN03 A 0 A_AlertMonsters
 			UN03 A 0 A_GiveInventory("SamsaraUnrealCARifleInFireState")
 			UN03 A 0 A_GiveInventory("SamsaraUnrealCARiflePrimaryAttackHandler")
-			UN03 ABC 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
+			UN03 AB 1 Bright A_WeaponReady(WRF_NOSWITCH|WRF_NOFIRE)
 			UN04 I 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
 			UN04 I 0 A_JumpIfInventory("Clip",1,1)
 			goto FireContinue
@@ -97,6 +99,7 @@ Actor Unreal_Duster : UnrealWeapon
 
 		FireFinish:
 			UN04 I 0 A_CheckReload
+			UN04 I 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
 			goto ReadyActual
 
 		AltFire:
@@ -212,7 +215,12 @@ actor SamsaraUnrealCARiflePrimaryAttackHandler : Trigger
 
       // Finishing stuff
       PickupFinish:
+	    TNT1 A 0 A_JumpIfInventory("SamsaraUnrealCARifleFireRate",1,"PickupFinishNoRecoil")
         TNT1 A 0 ACS_NamedExecuteWithResult("Unreal_Recoil")
+		TNT1 A 0 A_GiveInventory("SamsaraUnrealCARifleFireRate")
+        stop
+	  PickupFinishNoRecoil:
+		TNT1 A 0 A_TakeInventory("SamsaraUnrealCARifleFireRate")
         stop
     }
 }
