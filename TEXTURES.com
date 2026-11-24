@@ -77,12 +77,6 @@ Sprite "CD02Q0", 89, 102
 	Patch "CD02P0", 0, 0
 }
 
-Sprite "CD02W0", 132, 103
-{
-	Offset -161, -65
-	Patch "CD02R0", 0, 0
-}
-
 Sprite "CD03C0", 143, 103
 {
 	Offset -125, -90

@@ -575,6 +575,7 @@ actor " Pistol " : Weapon
 		Goto ReadyActualComNoFireCheck
 
 	ReloadStart:
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PistolMagazine",1,"ReloadStartLoaded")
 		CD02 R 1 A_PlaySound("complexdoom/weapons/pistolclipout",CHAN_WEAPON)
 		CD02 ST 1
 		CD02 U 2
@@ -606,6 +607,38 @@ actor " Pistol " : Weapon
 		TNT1 A 0 A_TakeInventory("Clip",1)
 		TNT1 A 0 A_GiveInventory("ComplexDoom_PistolMagazine")
 		goto ReloadAmmo
+
+	ReloadStartLoaded:
+		CD03 F 1 A_PlaySound("complexdoom/weapons/pistolclipout",CHAN_WEAPON)
+		CD03 GH 1
+		CD03 I 2
+		CD03 J 2 A_SpawnItemEx("ComplexDoom_PistolEmptyMag",2,0,-12,1,0,0,Random(-100,-110),128)
+		CD03 K 5
+		CD03 LMN 2
+		CD03 O 2 A_PlayWeaponSound("complexdoom/weapons/pistolclipin")
+		CD03 PQ 2
+		TNT1 A 0 A_JumpIfInventory("SamsaraReloadMode",2,"ReloadAmmoLoaded")
+	ReloadFinishLoaded:
+		CD03 ABCDE 1
+		Goto ReadyActualComNoFireCheck
+
+	ReloadAmmoLoaded:
+		TNT1 A 0 A_JumpIfInventory("PistolModeOn",1,"ReloadAmmoReserveLoaded")
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PistolMagazine",0,"ReloadFinishLoaded")
+		TNT1 A 0 A_GiveInventory("ComplexDoom_PistolMagazine")
+		loop
+
+	ReloadAmmoReserveLoaded:
+		TNT1 A 0 A_JumpIfInventory("ComplexDoom_PistolMagazine",0,"ReloadFinishLoaded")
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_JumpIfInventory("Clip",1,1)
+		goto ReloadFinishLoaded
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",0,2)
+		TNT1 A 0 A_JumpIfInventory("SamsaraHasInfiniteAmmo",1,2)
+		TNT1 A 0 A_TakeInventory("Clip",1)
+		TNT1 A 0 A_GiveInventory("ComplexDoom_PistolMagazine")
+		goto ReloadAmmoLoaded
 
 	Nothing:
 		TNT1 A 0 A_ClearReFire
