@@ -4910,7 +4910,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; } // allow giving tokens specific to altclass switching at all times in LMS or equipment start
 
-                if (result == 1) { GiveInventory("DGStrHasAutoShotgun", 1); }
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasAutoShotgun", 1); }
                 break;
 
               case SLOT_CHAINGUN:
@@ -4948,11 +4948,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasChaingun", 1);
-                    GiveInventory("DGStrHasFlamethrower", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasChaingun", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasFlamethrower", 1); }
                 break;
 
               case SLOT_ROCKETLAUNCHER:
@@ -4968,11 +4966,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasRocketLauncher", 1);
-                    GiveInventory("DGStrHasLandMines", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasRocketLauncher", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasLandMines", 1); }
                 break;
 
               case SLOT_PLASMARIFLE:
@@ -5010,11 +5006,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasPlasmaRifle", 1);
-                    GiveInventory("DGStrHasStunnerRifle", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasPlasmaRifle", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasStunnerRifle", 1); }
                 break;
 
               case SLOT_BFG9000:
@@ -5071,8 +5065,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 {
                     GiveInventory("DGHasBFG9000", 1);
                     GiveInventory("Doom64_IHaveUnmaker", 1);
-                    GiveInventory("DGStrHasPyroCannon", 1);
                 }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasPyroCannon", 1); }
                 break;
 
               case SLOT_MINIGUN:
@@ -5162,7 +5157,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1) { GiveInventory("DGStrHasAutoShotgun", 1); }
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasAutoShotgun", 1); }
                 break;
 
               case SLOT_CHAINGUN:
@@ -5180,11 +5175,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasChaingun", 1);
-                    GiveInventory("DGStrHasFlamethrower", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasChaingun", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasFlamethrower", 1); }
                 break;
 
               case SLOT_ROCKETLAUNCHER:
@@ -5200,11 +5193,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasRocketLauncher", 1);
-                    GiveInventory("DGStrHasLandMines", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasRocketLauncher", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasLandMines", 1); }
                 break;
 
               case SLOT_PLASMARIFLE:
@@ -5222,11 +5213,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasPlasmaRifle", 1);
-                    GiveInventory("DGStrHasStunnerRifle", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasPlasmaRifle", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasStunnerRifle", 1); }
                 break;
 
               case SLOT_BFG9000:
@@ -5260,7 +5249,6 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 {
                     GiveInventory("DGHasBFG9000", 1);
                     GiveInventory("Doom64_IHaveUnmaker", 1);
-                    GiveInventory("DGStrHasPyroCannon", 1);
 
                     if (startmode == 0)
                     {
@@ -5269,6 +5257,8 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                         SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
                     }
                 }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasPyroCannon", 1); }
                 break;
 
               case SLOT_MINIGUN:
@@ -5356,31 +5346,34 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
 
-                if (!CheckInventory("Automatic Shotgun"))
+                if (!CheckInventory("SamsaraDoomguyStrInStronghold"))
                 {
-                    GiveInventory("Automatic Shotgun", 1);
-                    GiveInventory("Shell", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
-                    result = 1;
-                } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("Shell", 20 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DGStrHasAutoShotgun", 1);
-
-                    if (startmode == 0)
+                    if (!CheckInventory("Automatic Shotgun"))
                     {
-                        SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 5);
-                        SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
-                        SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        GiveInventory("Automatic Shotgun", 1);
+                        GiveInventory("Shell", cond(dmextraammo, 20 / tossedammo * 5 / 2, 20 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("Shell") < GetAmmoCapacity("Shell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("Shell", 20 / tossedammo);
+                        result = 1;
                     }
-                }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("Shell", GetAmmoCapacity("Shell")); }
+
+                    if (startmode != 0) { result = 1; }
+
+                    if (result == 1)
+                    {
+                        GiveInventory("DGStrHasAutoShotgun", 1);
+
+                        if (startmode == 0)
+                        {
+                            SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 5);
+                            SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
+                            SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        }
+                    }
+				}
                 break;
 
               case SLOT_CHAINGUN:
@@ -5396,30 +5389,34 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Clip", GetAmmoCapacity("Clip")); }
 
-                if (!CheckInventory(" Flamer "))
+                if (result == 1) { GiveInventory("DGHasChaingun", 1); }
+
+                if (!CheckInventory("SamsaraDoomguyStrInStronghold"))
                 {
-                    GiveInventory(" Flamer ", 1);
-                    GiveInventory("DoomguyStrGas", cond(dmextraammo, 48 / tossedammo * 5 / 2, 48 / tossedammo));
-                    result = 1;
-                } else if (CheckInventory("DoomguyStrGas") < GetAmmoCapacity("DoomguyStrGas") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("DoomguyStrGas", 48 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("DoomguyStrGas", GetAmmoCapacity("DoomguyStrGas")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DGHasChaingun", 1);
-                    GiveInventory("DGStrHasFlamethrower", 1);
-
-                    if (startmode == 0)
+                    if (!CheckInventory(" Flamer "))
                     {
-                        SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 6);
-                        SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
-                        SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        GiveInventory(" Flamer ", 1);
+                        GiveInventory("DoomguyStrGas", cond(dmextraammo, 48 / tossedammo * 5 / 2, 48 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("DoomguyStrGas") < GetAmmoCapacity("DoomguyStrGas") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("DoomguyStrGas", 48 / tossedammo);
+                        result = 1;
+                    }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("DoomguyStrGas", GetAmmoCapacity("DoomguyStrGas")); }
+
+                    if (startmode != 0) { result = 1; }
+
+                    if (result == 1)
+                    {
+                        GiveInventory("DGStrHasFlamethrower", 1);
+
+                        if (startmode == 0)
+                        {
+                            SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 6);
+                            SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
+                            SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        }
                     }
                 }
                 break;
@@ -5435,30 +5432,34 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                     result = 1;
                 }
 
-                if (!CheckInventory("Land Mine Layer"))
+                if (result == 1) { GiveInventory("DGHasRocketLauncher", 1); }
+
+                if (!CheckInventory("SamsaraDoomguyStrInStronghold"))
                 {
-                    GiveInventory("Land Mine Layer", 1);
-                    GiveInventory("DoomguyStrMines", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
-                    result = 1;
-                } else if (CheckInventory("DoomguyStrMines") < GetAmmoCapacity("DoomguyStrMines") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("DoomguyStrMines", 5 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("DoomguyStrMines", GetAmmoCapacity("DoomguyStrMines")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DGHasRocketLauncher", 1);
-                    GiveInventory("DGStrHasLandMines", 1);
-
-                    if (startmode == 0)
+                    if (!CheckInventory("Land Mine Layer"))
                     {
-                        SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 7);
-                        SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
-                        SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        GiveInventory("Land Mine Layer", 1);
+                        GiveInventory("DoomguyStrMines", cond(dmextraammo, 5 / tossedammo * 5 / 2, 5 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("DoomguyStrMines") < GetAmmoCapacity("DoomguyStrMines") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("DoomguyStrMines", 5 / tossedammo);
+                        result = 1;
+                    }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("DoomguyStrMines", GetAmmoCapacity("DoomguyStrMines")); }
+
+                    if (startmode != 0) { result = 1; }
+
+                    if (result == 1)
+                    {
+                        GiveInventory("DGStrHasLandMines", 1);
+
+                        if (startmode == 0)
+                        {
+                            SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 7);
+                            SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
+                            SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        }
                     }
                 }
                 break;
@@ -5476,30 +5477,34 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
 
-                if (!CheckInventory("Stunner Rifle"))
+                if (result == 1) { GiveInventory("DGHasPlasmaRifle", 1); }
+
+                if (!CheckInventory("SamsaraDoomguyStrInStronghold"))
                 {
-                    GiveInventory("Stunner Rifle", 1);
-                    GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
-                    result = 1;
-                } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("Cell", 40 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DGHasPlasmaRifle", 1);
-                    GiveInventory("DGStrHasStunnerRifle", 1);
-
-                    if (startmode == 0)
+                    if (!CheckInventory("Stunner Rifle"))
                     {
-                        SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 8);
-                        SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
-                        SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        GiveInventory("Stunner Rifle", 1);
+                        GiveInventory("Cell", cond(dmextraammo, 40 / tossedammo * 5 / 2, 40 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("Cell") < GetAmmoCapacity("Cell") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("Cell", 40 / tossedammo);
+                        result = 1;
+                    }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
+
+                    if (startmode != 0) { result = 1; }
+
+                    if (result == 1)
+                    {
+                        GiveInventory("DGStrHasStunnerRifle", 1);
+
+                        if (startmode == 0)
+                        {
+                            SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 8);
+                            SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
+                            SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        }
                     }
                 }
                 break;
@@ -5517,31 +5522,34 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode <= -1 || startmode >= 2) { GiveInventory("Cell", GetAmmoCapacity("Cell")); }
 
-                if (!CheckInventory("Pyro Cannon"))
+                if (result == 1) { GiveInventory("DGHasBFG9000", 1); GiveInventory("Doom64_IHaveUnmaker", 1); }
+
+                if (!CheckInventory("SamsaraDoomguyStrInStronghold"))
                 {
-                    GiveInventory("Pyro Cannon", 1);
-                    GiveInventory("DoomguyStrGas", cond(dmextraammo, 48 / tossedammo * 5 / 2, 48 / tossedammo));
-                    result = 1;
-                } else if (CheckInventory("DoomguyStrGas") < GetAmmoCapacity("DoomguyStrGas") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
-                    GiveInventory("DoomguyStrGas", 48 / tossedammo);
-                    result = 1;
-                }
-
-                if (startmode <= -1 || startmode >= 2) { GiveInventory("DoomguyStrGas", GetAmmoCapacity("DoomguyStrGas")); }
-
-                if (startmode != 0) { result = 1; }
-
-                if (result == 1)
-                {
-                    GiveInventory("DGHasBFG9000", 1);
-                    GiveInventory("Doom64_IHaveUnmaker", 1);
-                    GiveInventory("DGStrHasPyroCannon", 1);
-
-                    if (startmode == 0)
+                    if (!CheckInventory("Pyro Cannon"))
                     {
-                        SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 9);
-                        SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
-                        SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        GiveInventory("Pyro Cannon", 1);
+                        GiveInventory("DoomguyStrGas", cond(dmextraammo, 48 / tossedammo * 5 / 2, 48 / tossedammo));
+                        result = 1;
+                    } else if (CheckInventory("DoomguyStrGas") < GetAmmoCapacity("DoomguyStrGas") && (dropped >= 1 || startmode != 0 || !weaponstay)) {
+                        GiveInventory("DoomguyStrGas", 48 / tossedammo);
+                        result = 1;
+                    }
+
+                    if (startmode <= -1 || startmode >= 2) { GiveInventory("DoomguyStrGas", GetAmmoCapacity("DoomguyStrGas")); }
+
+                    if (startmode != 0) { result = 1; }
+
+                    if (result == 1)
+                    {
+                        GiveInventory("DGStrHasPyroCannon", 1);
+
+                        if (startmode == 0)
+                        {
+                            SetInventory("SamsaraMiscPickupDisplayExtraChoice1", 9);
+                            SetInventory("SamsaraMiscPickupDisplayExtraLoadout1", 0);
+                            SetInventory("SamsaraMiscPickupDisplayExtraDropped1", dropped);
+                        }
                     }
                 }
                 break;
@@ -5653,7 +5661,7 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1) { GiveInventory("DGStrHasAutoShotgun", 1); }
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasAutoShotgun", 1); }
                 break;
 
               case SLOT_CHAINGUN:
@@ -5671,11 +5679,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasChaingun", 1);
-                    GiveInventory("DGStrHasFlamethrower", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasChaingun", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasFlamethrower", 1); }
                 break;
 
               case SLOT_ROCKETLAUNCHER:
@@ -5691,11 +5697,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasRocketLauncher", 1);
-                    GiveInventory("DGStrHasLandMines", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasRocketLauncher", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasLandMines", 1); }
                 break;
 
               case SLOT_PLASMARIFLE:
@@ -5713,11 +5717,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
 
                 if (startmode != 0) { result = 1; }
 
-                if (result == 1)
-                {
-                    GiveInventory("DGHasPlasmaRifle", 1);
-                    GiveInventory("DGStrHasStunnerRifle", 1);
-                }
+                if (result == 1) { GiveInventory("DGHasPlasmaRifle", 1); }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasStunnerRifle", 1); }
                 break;
 
               case SLOT_BFG9000:
@@ -5739,8 +5741,9 @@ script "Samsara_GiveCustomSlot" (int slot, int dropped, int startmode)
                 {
                     GiveInventory("DGHasBFG9000", 1);
                     GiveInventory("Doom64_IHaveUnmaker", 1);
-                    GiveInventory("DGStrHasPyroCannon", 1);
                 }
+
+                if ((result == 1) && !CheckInventory("SamsaraDoomguyStrInStronghold")) { GiveInventory("DGStrHasPyroCannon", 1); }
                 break;
 
               case SLOT_MINIGUN:

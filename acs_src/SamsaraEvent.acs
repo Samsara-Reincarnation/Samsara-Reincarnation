@@ -698,14 +698,23 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						TakeInventory("Pyro Cannon", 1);
 					}
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_strongholddoomsounds"));
+
+					/*
+					if(CheckInventory("StrAlreadyGotCredits")) // Samsarahold compatibility
+					{
+						GiveInventory("SamsaraDoomguyStrInStronghold", 1);
+					}
+					*/
 				}
 				else if (doommode == 1 || doommode == 3)
 				{
 					SetInventory("SamsaraAlternateSoundToken", 0);
+					//SetInventory("SamsaraDoomguyStrInStronghold", 0);
 				}
 				else
 				{
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_originaldoomsounds"));
+					//SetInventory("SamsaraDoomguyStrInStronghold", 0);
 				}
 
 				if(doommode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
