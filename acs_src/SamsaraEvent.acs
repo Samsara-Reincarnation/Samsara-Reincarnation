@@ -575,6 +575,13 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 			case CLASS_DOOM:
                 if (CheckInventory("SamsaraDoomguyInDoom64CE")) { SetInventory("SamsaraDoom64UnmakerArtifact", CheckInventory("UnmakerUpgrades")); }
 
+				/*
+				if(CheckInventory("StrAlreadyGotCredits")) // SamsaraHold compatibility
+				{
+					SetInventory("SamsaraDoomguyStrInStronghold", 1);
+				}
+				*/
+
                 if (CheckInventory("SamsaraReloadMode") >= 2 && CheckInventory("SamsaraHasInfiniteAmmo") <= 1) { SetInventory("SamsaraDoomguyComSSGAlternate", CheckInventory("ComplexDoom_SSGShell") % 2); }
                 else if (CheckInventory("SamsaraReloadMode") == 1) { SetInventory("SamsaraDoomguyComSSGAlternate", CheckInventory("SamsaraDoomguyComSSGFired") % 2); }
 
@@ -698,23 +705,14 @@ script "SamsaraSpawn" (int respawning) //624 -- SAMSARA_SPAWN
 						TakeInventory("Pyro Cannon", 1);
 					}
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_strongholddoomsounds"));
-
-					/*
-					if(CheckInventory("StrAlreadyGotCredits")) // Samsarahold compatibility
-					{
-						GiveInventory("SamsaraDoomguyStrInStronghold", 1);
-					}
-					*/
 				}
 				else if (doommode == 1 || doommode == 3)
 				{
 					SetInventory("SamsaraAlternateSoundToken", 0);
-					//SetInventory("SamsaraDoomguyStrInStronghold", 0);
 				}
 				else
 				{
 					SetInventory("SamsaraAlternateSoundToken", GetUserCVar(pln, "samsara_cl_originaldoomsounds"));
-					//SetInventory("SamsaraDoomguyStrInStronghold", 0);
 				}
 
 				if(doommode != previousvalue || CheckInventory("Samsara_ModeWeaponChange"))
